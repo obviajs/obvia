@@ -1,0 +1,297 @@
+/* Polyfill dialog */
+dialog {
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: auto;
+    padding: 30px 35px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, .05);
+    background: white;
+    color: black;
+    width: -moz-fit-content;
+    display: none;
+	-webkit-box-sizing: content-box;
+	box-sizing: content-box;
+}
+
+dialog[open] {
+	display: block;
+}
+
+.dynamsoft-backdrop {
+    position: fixed;
+    background: rgba(0,0,0,0.1);
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: -99999999;
+}
+
+/* progress bar */
+.dynamsoft-finalMessage {
+    margin: 0 0 15px 0;
+    color: #3a3a3a;
+    font: 22px/26px Arial, sans-serif;
+}
+
+.dynamsoft-status {
+    color: #555;
+    font: 14px/22px Arial,sans-serif;
+    margin-bottom: 5px;
+}
+
+.dynamsoft-progressBar {
+    -webkit-appearance: none;
+    width: 300px;
+    margin-bottom: 20px;
+    height: 14px;
+    background-color: #e7e7e7;
+    border-radius: 7px;
+}
+
+.dynamsoft-progressBar::-webkit-progress-bar {
+	border-radius: 7px;
+	background-color: #e7e7e7;
+}
+
+.dynamsoft-progressBar::-webkit-progress-value {
+	background-color: #fe8e14;
+	border-radius: 7px;
+}
+
+.dynamsoft-progressBar::-moz-progress-bar {
+	background-color: #fe8e14;
+	border-radius: 7px;
+}
+
+.dynamsoft-btnCancel {
+    color: #999;
+    font: 14px/22px Arial, sans-serif;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    border-radius: 3px;
+    padding: 2px 8px;
+    min-width: 75px;
+    cursor: pointer;
+}
+
+.dynamsoft-btnCancel:focus {
+	outline: none;
+}
+
+.dynamsoft-btnCancel:hover {
+	color: #555;
+	box-shadow: 0 1px 2px rgba(0,0,0,.06);
+}
+
+/* Image Editor */
+.dynamsoft-dwt-noPadding {
+    padding: 0;
+}
+
+.dynamsoft-dwt-noPaddingnoMarginInside > div {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.dynamsoft-dwt-thinborder {
+    border: solid 1px #AAAAAA;
+}
+
+.dynamsoft-dwt-notdisplayed {
+    display: none;
+}
+
+.dynamsoft-dwt-container-box {
+	background-color: white;
+}
+
+/* toolbar */
+.dynamsoft-dwt-viewerToolbar {
+    background-color: lightgray;
+}
+
+.dynamsoft-dwt-viewerToolbar > ul {
+	padding: 0;
+	margin: 0;
+	list-style: none;
+}
+
+.dynamsoft-dwt-viewerToolbar > ul > li {
+	padding: 0 0 0 2px;
+	margin: 0;
+	float: left;
+	z-index: 1;
+}
+
+.dynamsoft-dwt-viewerToolbar img {
+	cursor: pointer;
+}
+
+.dynamsoft-dwt-imgTag{
+	position: absolute;
+	left:0;
+	top:0;
+	padding: 0;
+	padding-top: 2px;
+	text-align: center;
+}
+
+.dynamsoft-dwt-imgTag_Normal{
+	color: black;
+	border: 1px solid #CCCCCC;
+	background-color: white;
+}
+
+.dynamsoft-dwt-imgTag_Selected{
+	color: #FFFFFF;
+	background-color: #7DA2CE;
+	border: 1px solid #7DA2CE;
+}
+
+
+/* image change size */
+
+.dynamsoft-dwt-imgSizeEditor{
+	position: absolute;
+
+	text-align:left;
+	padding: 0 0 0 15px;
+	margin:0;
+	
+	height: 150px; 
+	width: 315px;
+	
+	font-size: 12px;
+	border:3px solid #cE5E04; 
+	border-collapse:collapse;
+	
+	background-color: #f0f0f0;
+	z-index: 9999;
+}
+
+.dynamsoft-dwt-imgSizeEditor ul {
+	padding:15px 0 0 0;
+	margin:0;
+	list-style: none;
+}
+.dynamsoft-dwt-imgSizeEditor div{
+	margin: 5px 0 0 0;
+	text-align:center;
+}
+.dynamsoft-dwt-imgSizeEditor span{
+	margin: 0 0 0 10px;
+}
+
+
+.dynamsoft-dwt-imgSizeEditor input, .dynamsoft-dwt-imgSizeEditor select
+{
+	font-size: 12px;
+}
+
+.dynamsoft-dwt-EditorButton-selected
+{
+	border: 1px solid #777;
+	border-right: 1px solid #DDD;
+	border-bottom: 1px solid #DDD;
+	background-color: #BBB;
+	line-height:1px;
+}
+
+.dynamsoft-dwt-box-title {
+    color: #333333;
+    font-family: helvetica,arial,sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+    clear: both
+}
+
+
+.dynamsoft-dwt-red {
+    color: red;
+    margin-left: 5px
+}
+
+.dynamsoft-dwt-button {
+    background-image: url('btn-download.png');
+    background-repeat: no-repeat;
+    width: 180px;
+    height: 34px;
+    position: relative;
+    margin: 20px auto 0;
+    cursor: pointer
+}
+
+.dynamsoft-dwt-button:hover {
+    background-position: 0 -34px
+}
+
+.dynamsoft-dwt-button:active {
+    background-position: 0 -68px
+}
+
+.dynamsoft-dwt-dialogProgress{
+	width:300px
+}
+
+.dynamsoft-dwt-DYNLogo
+{
+    background:url(logo.gif) left top no-repeat; 
+    width:159px; 
+    height:39px;
+}
+
+
+/* dialog/mask body */
+
+.dynamsoft-dialog {
+    font-family: "verdana","sans-serif";
+    font-size: 12px;
+    line-height: 20px;
+    margin: 0 auto;
+    padding: 5px;
+    width: 392px;
+    border: 1px solid #e7e7e7;
+    background-color: #F1F2F2;
+    -webkit-tap-highlight-color: rgba(0,0,0,0)
+}
+
+.dynamsoft-dialog a {
+    text-decoration: none
+}
+
+.dynamsoft-dialog ul {
+    margin: 10px 0 10px 20px;
+    padding-left: 10px;
+    list-style-type: disc
+}
+
+.dynamsoft-dialog .dynamsoft-dialog-body {
+    margin: 0;
+    padding: 15px;
+	background-color: #FFFFFF;
+	border: 1px solid #E7E7E7;
+}
+
+.dynamsoft-dialog .dynamsoft-dialog-body img{
+	position:absolute;
+	left:0;
+	top:0;
+}
+
+.dynamsoft-dialog-wrap{
+	position : fixed; 
+	left : 0;
+	top : 20%;
+	width : 90%;
+}
+
+.dynamsoft-dwt-overlay {
+    position: absolute;
+    z-index: 1000;
+}
+

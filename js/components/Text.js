@@ -1,0 +1,59 @@
+/**
+ * This is a Text Input Element
+ * 
+ * Kreatx 2018
+ */
+
+//component definition
+var Text = KxGenerator.createComponent({
+    //model binds to the template
+    //if you want variables to bind, you must declare them in the model object
+    initModel: function () {
+        return {
+            fieldName: this.fieldName,
+            label: this.label,
+            type: this.typeName,
+            blockProcessAttr: this.blockProcessAttr,
+            versionStyle: '',
+            value: this.value
+        }
+    },
+
+    beforeAttach: function () {
+
+    },
+
+    afterAttach: function () {
+       
+    },
+
+    getValue: function () {
+        return this.getModelValue('value');
+    },
+
+    setValue: function (value) {
+        this.setModelValue('value', value);
+    },
+
+    template: function () {         
+        return  "<div id='" + this.id + "'>" +
+                    "<div class='form-group col-lg-" + this.colspan + "' rowspan" + this.rowspan + " resizable '>" +
+                        "<div id='" + this.field_name + "-block'>" + 
+                            "<label rv-for='fieldName'>{label} {required}</label>" + 
+                            "<span class='block-process'> {blockProcessAttribute} </span>" + 
+                                "<input rv-type='type'" + 
+                                    "id='" + this.fieldName + "' name='" + this.fieldName + "' rv-value='value'" +
+                                    "class='form-control rowspan"+ this.rowspan +"'" +
+                                    "rv-placeholder='label' autofocus/>" +
+                        "</div>" +
+                    "</div>" + 
+                "</div>";    
+    },
+
+    render: function () {
+        return this.$el;
+    }
+});
+
+//component prototype
+Text.type = 'text';

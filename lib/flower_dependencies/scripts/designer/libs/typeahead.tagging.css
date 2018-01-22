@@ -1,0 +1,77 @@
+ul.tagging_ul {
+  background-color: #ffffff;
+  border-radius: 4px;
+  border: 1px solid #cccccc;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  display: block;
+  height: inherit;
+  list-style: none;
+  padding: 6px 12px;
+  -webkit-transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+  -o-transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+  transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+  width: 100%;
+}
+ul.tagging_ul li {
+  margin-right: 5px;
+  margin-top: 5px;
+  white-space: nowrap;
+}
+ul.tagging_ul li.tagging_tag {
+  background-color: #6caec9;
+  border-radius: 5.6px;
+  border: 1px solid #387c97;
+  color: #ffffff;
+  display: inline-block;
+  height: 28px;
+  padding: 2.8px;
+  padding-left: 8.4px;
+  padding-right: 5.6px;
+}
+ul.tagging_ul li.tagging_tag span.tag_delete {
+  color: #387c97;
+  margin-left: 5.6px;
+  cursor: pointer;
+}
+ul.tagging_ul li.tagging_tag span.tag_delete:hover {
+  color: #dcecf2;
+}
+ul.tagging_ul li.tagging_new {
+  display: inline-block;
+  height: 28px;
+  margin-left: 0;
+  max-width: 200px;
+}
+ul.tagging_ul li.tagging_new input.tagging_new_input {
+  border: none;
+  outline: none;
+  box-shadow: none;
+  display: inline;
+  height: inherit;
+  padding-bottom: 0;
+  padding-top: 0;
+  max-width: inherit;
+}
+.tt-dropdown-menu {
+  background-color: #ffffff;
+  border-radius: 4px;
+  border: 1px solid #666666;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  color: #666666;
+  max-height: 400px;
+  overflow: scroll;
+  overflow-x: hidden;
+}
+.tt-dropdown-menu .tt-suggestion {
+  padding: 3px 20px;
+  line-height: 24px;
+}
+.tt-dropdown-menu .tt-suggestion p {
+  margin: 0;
+}
+.tt-dropdown-menu .tt-cursor {
+  color: #fff;
+  background-color: #0097cf;
+}

@@ -1,0 +1,234 @@
+.form-gorup {
+    min-height: 60px;
+}
+
+.three-columns {
+    position: relative;
+    width: 150px;
+    float: left;
+    margin-right: 15px;
+}
+
+.error{
+    color:red;
+}
+
+.tooltip_ {
+    position: absolute;
+    right: 0px;
+    top: 0px;
+}
+
+.tooltip_ .pointer_ {
+    padding: 5px;
+}
+
+.tooltip_ .container_ {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    display: none;
+    padding: 5px;
+    background-color: white;
+    border: 1px solid gray;
+    border-radius: 5px;
+    width: 200px;
+}
+
+.tooltip_:hover .container_ {
+    display: none;
+}
+
+.checkstyle {
+    margin-left: 0px; 
+}
+
+.rowspan1{
+    height: 105px !important;
+    float:left;
+}
+
+.rowspan2{
+    height: 180px !important;
+    float:left;
+}
+
+.rowspan3{
+    height: 253px !important;
+    float:left;
+}
+
+.rowspan4{
+    height: 330px !important;
+    float:left;
+}
+
+.rowspan5{
+    height: 405px !important;
+    float:left;
+}
+
+.colspan1{
+    width: 512px !important;
+    float:left;
+}
+
+.colspan2{
+    width: 774px !important;
+    float:left;
+}
+
+.colspan3{
+    width: 1036px !important;
+    float:left;
+}
+
+.colspan4{
+    width: 1298px !important;
+    float:left;
+} 
+
+.select2-container {
+    width: 100%;
+}
+
+[data-role="add"] input {
+    display: none;
+}
+
+.multiselect-container {
+    padding: 5px !important;
+}
+
+.multiselect-container li > a {
+    padding: 3px;
+}
+
+.multiselect-container li > a .checkbox {
+    margin: 3px 0;
+}
+
+.multiselect-container input {
+    display: none
+}
+/*
+.input-group .select2-container {
+    padding: 0;
+}
+
+.input-group .select2-container ul {
+    margin: 0;
+    border: 0 none transparent !important;
+}
+*/
+
+[data-role=\"add\"] input {
+    display: none;
+}
+
+.multiselect-container {
+    padding: 5px !important;
+}
+
+.multiselect-container li > a {
+    padding: 3px;
+}
+
+.multiselect-container li > a .checkbox {
+    margin: 3px 0;
+}
+
+.multiselect-container input {
+    display: none
+}
+
+#form_loader .modal-content {
+    position: absolute;
+    padding: 10px 50px !important;
+    width: 30px;
+    box-sizing: content-box;
+    top: 50%;
+    margin-top: -25px;
+    left: 50%;
+    margin-left: -65px;
+}
+
+#form_loader_ .modal-content {
+    position: absolute;
+    padding: 10px 50px !important;
+    width: 30px;
+    box-sizing: content-box;
+    top: 50%;
+    margin-top: -25px;
+    left: 50%;
+    margin-left: -65px;
+}
+.panel-body label {
+    margin-bottom: 2px !important;
+    margin-top: 5px !important;
+}
+
+.validation-result > div {
+    margin-bottom: 5px;
+    font-size: 12px;
+    color: #ff2222;
+}
+
+.validation-result > div:last-child {
+    margin-bottom: 0px;
+}
+
+.validation-result > div:first-child {
+    margin-top: 10px;
+}
+#result{
+	margin-left:5px;
+}
+
+.short{
+	color:#FF0000;
+        font-weight: bold;
+}
+
+.weak{
+	color:#D2691E;
+        font-weight: bold;
+}
+
+.good{
+	color:#2D98F3;
+        font-weight: bold;
+}
+
+.strong{
+	color:#32CD32;
+        font-weight: bold;
+}
+
+.invisibleElement * {
+	color: #D9534F;
+	border-color: #D9534F;
+}
+hr {
+	width: 100%;
+	height: 1px;
+	border-top: #ccc 1px dotted;
+}
+.attribute-text{
+	width: 43%; 
+	display: inline;
+	margin-left: 2%;    
+	margin-top: 2%;
+	padding: 0px 0px !important;
+	font-size: 10px;
+}
+
+.attribute-button{
+	display: inline;
+	float: right;
+	padding-top: 6%;
+}
+
+.block-process{
+	color:red;
+}
