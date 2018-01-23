@@ -73,10 +73,11 @@ var myAutoComplete = new AutoComplete({
     colspan: '6',
     label: 'Ministrite',
     fieldName: 'autocomplete',
-    blockProcessAttr: '',
+    blockProcessAttr: false,
+    required: false,
     multipleSelection: true,
     tableData: [["Ministria e Puneve te Jashtme"], ["Ministria e Drejtesise"], ["Ministria e Brendshme"]],
-    optionsData: [{ "id": "1", "text": "Ministria e Puneve te Jashtme" }, { "id": "2", "text": "Ministria e Drejtesise" }, { "id": "3", "text": "Ministria e Brendshme" }],
+    dataProvider: [{ "id": "1", "text": "Ministria e Puneve te Jashtme" }, { "id": "2", "text": "Ministria e Drejtesise" }, { "id": "3", "text": "Ministria e Brendshme" }],
     value: [{ "id": "1", "text": "Ministria e Puneve te Jashtme" }]
 });
 

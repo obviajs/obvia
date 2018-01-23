@@ -12,10 +12,12 @@ var AutoComplete = KxGenerator.createComponent({
         return {
             fieldName: this.fieldName,
             label: this.label,
-            blockProcessAttr: this.blockProcessAttr,
+            blockProcessAttr: this.required ? false : this.blockProcessAttr,
+            versionStyle: this.versionStyle,
+            required: this.required,
             openModal: this.openModal.bind(this),
             multipleSelection: this.multipleSelection,
-            optionsData: this.optionsData,
+            optionsData: this.dataProvider,
             selectedOptions: this.value
         }
     },
@@ -113,6 +115,8 @@ var AutoComplete = KxGenerator.createComponent({
     },
 
     setValue: function (value) {
+        this.value = value;
+
         var values = value.map(function (obj) {
             return obj.id;
         }).join(",");
@@ -124,9 +128,9 @@ var AutoComplete = KxGenerator.createComponent({
     template: function () {
         return "<div id='" + this.id + "'>" +
                     "<div class='form-group col-lg-" + this.colspan + "' rowspan" + this.rowspan + " resizable' id='" + this.fieldName + "_container' >" +
-                    "<label rv-for='fieldName'>{label} {required}</label>" +
+                    "<label rv-style='versionStyle' rv-for='fieldName'>{label} <span rv-if='required'>*</span></label>" +
                     "<div class='input-group'>" +
-                        "<span class='block-process'>{blockProcessAttr}</span>" + 
+                        "<span rv-if='blockProcessAttr' class='block-process'> * </span>" +
                         "<input type='hidden' name='" + this.fieldName + "_select[]' id='" + this.fieldName + "_select' />" +
                         "<span class='input-group-btn'>" +
                             "<button type='button' style='margin-left: 5px;'" +

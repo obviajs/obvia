@@ -102,6 +102,15 @@ var Repeater = KxGenerator.createComponent({
         container.find('#' + this.id + '-repeated-block-' + index).remove();
         container.find('#' + this.id + '-repeated-block-hr-' + index).remove();
 
+        //remove dp row
+        this.dataProvider.items.splice(index - 1, 1);
+
+        //delete component instances on that row
+        this.components.forEach(function (component) {
+            _self[component.props.id][index - 1].destruct();
+            _self[component.props.id].splice(index - 1, 1);
+        });
+
         this.$el.trigger('onRowDelete');
         return null;
     },
