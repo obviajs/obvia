@@ -12,17 +12,67 @@ var ComboBox = KxGenerator.createComponent({
         return {
             fieldName: this.fieldName,
             label: this.label,
-            blockProcessAttr: this.blockProcessAttr,
-            versionStyle: ''
+            blockProcessAttr: this.required ? false : this.blockProcessAttr,
+            versionStyle: this.versionStyle,
+            required: this.required 
         }
     },
 
+    getData: function (provider) {
+        if (typeof url == "string") {
+            //ajax call
+            return $.get(provider);
+        } else {
+            //json 
+            return provider;
+        }  
+    },
+
+    setData: function (data, element) {
+        $(element).children().remove();
+        $(element).closest('.multiselect-container').children().remove();
+        $(element).append(
+            $("<option></option>")
+                .val("0")
+                .text("Zgjidh")
+        );
+        $(element).append(
+            $("<option></option>").attr("data-role", "divider")
+        );
+
+        for (var i = 0; i < data.length; i++)
+            $(element).append(
+                $("<option></option>").val(data[i].value).text(data[i].text).attr("title", data[i].text)
+            );
+    },
+
     beforeAttach: function () {
-        
+
     },
 
     afterAttach: function () {
         var _self = this;
+        
+        var element = "#" + _self.fieldName;
+        KxRequest.promise(this.getData(this.dataProvider)).done(function (result) {
+            if (typeof result == "string")
+                result = JSON.parse(result);
+            
+            _self.setData(result, element);
+
+            $(element).multiselect({
+                enableFiltering: true,
+                maxHeight: 250,
+                minWidth: 350,
+                templates: {
+                    divider: "<div class=\"divider\" data-role=\"divider\"></div>"
+                }
+            });
+            if (_self.value.length > 0) {
+                $(element).multiselect('select', _self.value);
+            }
+        });
+
         $('#' + this.fieldName).change(function (e) {
             var thisVal = $('#' + _self.fieldName).val();
             _self.value = thisVal;
@@ -32,12 +82,11 @@ var ComboBox = KxGenerator.createComponent({
                 $('#' + _self.fieldName).multiselect('deselect', '#' + _self.fieldName + ' _new');
             }
         });
-        
-        getData(this.retrieveAction, '#' + this.fieldName, this.value);
     },
 
     setValue: function (value) {
         $('#' + this.fieldName).multiselect('select', value);
+        this.value = value;
 
         return this;
     },
@@ -50,8 +99,8 @@ var ComboBox = KxGenerator.createComponent({
         return  "<div id='" + this.id + "'>" +
                     "<div class='col-lg-"+ this.colspan +"' form-group rowspan"+ this.rowspan +" resizable' id='"+ this.fieldName +"_container'>" +
                         "<div id='" + this.fieldName + "-block'>" +
-                        "<label rv-style='versionStyle' rv-for='fieldName'>{label} {required}</label>" +
-                        "<span class='block-process'> {blockProcessAttr} </span>" +
+                        "<label rv-style='versionStyle' rv-for='fieldName'>{label} <span rv-if='required'>*</span></label>" +
+                        "<span rv-if='blockProcessAttr' class='block-process'> * </span>" +
                         "<select class='form-control' name='" + this.fieldName + "[]' control-blocked='controlBlocked' style='min-width: 250px;' id='" + this.fieldName + "'></select>" +
                     "</div>" +
                 "</div>";
