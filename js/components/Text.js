@@ -24,7 +24,8 @@ var Text = KxGenerator.createComponent({
     },
 
     afterAttach: function () {
-       
+        if(this.hasOwnProperty('mask'))
+            $('#' + this.fieldName).inputmask(this.mask); 
     },
 
     getValue: function () {
@@ -32,6 +33,7 @@ var Text = KxGenerator.createComponent({
     },
 
     setValue: function (value) {
+        this.value = value;
         this.setModelValue('value', value);
     },
 
