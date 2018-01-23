@@ -12,9 +12,9 @@ var Text = KxGenerator.createComponent({
         return {
             fieldName: this.fieldName,
             label: this.label,
-            type: this.typeName,
-            blockProcessAttr: this.blockProcessAttr,
-            versionStyle: '',
+            blockProcessAttr: this.required ? false : this.blockProcessAttr,
+            versionStyle: this.versionStyle,
+            required: this.required,
             value: this.value
         }
     },
@@ -39,8 +39,8 @@ var Text = KxGenerator.createComponent({
         return  "<div id='" + this.id + "'>" +
                     "<div class='form-group col-lg-" + this.colspan + "' rowspan" + this.rowspan + " resizable '>" +
                         "<div id='" + this.field_name + "-block'>" + 
-                            "<label rv-for='fieldName'>{label} {required}</label>" + 
-                            "<span class='block-process'> {blockProcessAttribute} </span>" + 
+                            "<label rv-style='versionStyle' rv-for='fieldName'>{label} <span rv-if='required'>*</span></label>" + 
+                            "<span rv-if='blockProcessAttr' class='block-process'> * </span>" + 
                                 "<input rv-type='type'" + 
                                     "id='" + this.fieldName + "' name='" + this.fieldName + "' rv-value='value'" +
                                     "class='form-control rowspan"+ this.rowspan +"'" +
