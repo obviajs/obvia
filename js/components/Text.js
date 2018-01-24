@@ -19,6 +19,15 @@ var Text = KxGenerator.createComponent({
         }
     },
 
+    registerEvents: function () {
+        var _self = this;
+        var model = this.getModel();
+
+        this.$el.on('change', function () {
+            _self.value = model.value;
+        });
+    },
+
     beforeAttach: function () {
 
     },
@@ -29,12 +38,15 @@ var Text = KxGenerator.createComponent({
     },
 
     getValue: function () {
-        return this.getModelValue('value');
+        return this.value;
     },
 
     setValue: function (value) {
         this.value = value;
         this.setModelValue('value', value);
+        this.$el.trigger('change');
+
+        return this;
     },
 
     template: function () {         

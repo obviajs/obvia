@@ -14,6 +14,14 @@ var Template = KxGenerator.createComponent({
         }
     },
 
+    registerEvents: function () {
+        var _self = this;
+
+        this.$el.on('change', function (e) {
+        
+        });
+    },
+
     beforeAttach: function () {
 
     },
@@ -27,7 +35,7 @@ var Template = KxGenerator.createComponent({
     },
 
     setValue: function (value) {
-    
+        
     },
 
     template: function () {

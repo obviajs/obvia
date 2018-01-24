@@ -21,7 +21,7 @@ var Repeater = KxGenerator.createComponent({
     },
 
     genRandomId: function(){
-        return Math.random().toString(36).substring(12);
+        return Math.floor(Math.random() * 1000000);
     },
 
     afterAttach: function () {
@@ -32,7 +32,7 @@ var Repeater = KxGenerator.createComponent({
         //handle row add click
         $('#add_' + this.id).on('click', function () {
             //add dataProvider Row
-            model.currentItem = _self.dataProvider.defaultItem;
+            model.currentItem = _self.defaultItem;
             _self.dataProvider.items.push(model.currentItem); 
             model.map[++model.currentIndex] = _self.genRandomId();
             _self.addRow(model.currentItem, model.currentIndex, model.map[model.currentIndex], container);    
@@ -43,6 +43,15 @@ var Repeater = KxGenerator.createComponent({
             _self.removeRow(model.currentIndex, model.map[model.currentIndex], container);
             model.currentItem = _self.dataProvider.items[--model.currentIndex];
         });
+
+        // this.$el.on('onRowAdd', function (e, sender) {
+        //     console.log(e.currentTarget);
+        //     e.stopPropagation();
+        // })
+
+        // $(document).on('onRowAdd', function (e, sender) {
+        //     console.log(e.currentTarget);
+        // })
     },
 
     //renders a new row, adds components in stack
@@ -98,7 +107,10 @@ var Repeater = KxGenerator.createComponent({
                 .append(el.render());
         });
 
-        //this.$el.trigger('onRowAdd', );
+        this.$el.trigger(
+            'onRowAdd',
+            _self
+        );
 
         return { items: rowItems }; 
     },

@@ -50,6 +50,20 @@ var ComboBox = KxGenerator.createComponent({
 
     },
 
+    registerEvents: function () {
+        var _self = this;
+
+        this.$el.on('change', function (e) {
+            var thisVal = $('#' + _self.fieldName).val();
+            _self.value = thisVal;
+
+            if (thisVal[0] == '#' + this.fieldName + '_new') {
+                $('#' + _self.fieldName + ' _popup').fadeIn();
+                $('#' + _self.fieldName).multiselect('deselect', '#' + _self.fieldName + ' _new');
+            }
+        });
+    },
+
     afterAttach: function () {
         var _self = this;
         
@@ -72,27 +86,17 @@ var ComboBox = KxGenerator.createComponent({
                 $(element).multiselect('select', _self.value);
             }
         });
-
-        $('#' + this.fieldName).change(function (e) {
-            var thisVal = $('#' + _self.fieldName).val();
-            _self.value = thisVal;
-
-            if (thisVal[0] == '#' + this.fieldName + '_new') {
-                $('#' + _self.fieldName + ' _popup').fadeIn();
-                $('#' + _self.fieldName).multiselect('deselect', '#' + _self.fieldName + ' _new');
-            }
-        });
     },
 
     setValue: function (value) {
         $('#' + this.fieldName).multiselect('select', value);
-        this.value = value;
+        this.$el.trigger('change');
 
         return this;
     },
 
     getValue: function () {
-        return $('#' + this.fieldName).val();
+        return this.value;
     },
 
     destruct: function () {

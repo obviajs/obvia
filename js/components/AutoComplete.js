@@ -73,6 +73,26 @@ var AutoComplete = KxGenerator.createComponent({
         this.modal.show();
     },
 
+    registerEvents: function () {
+        var _self = this;
+        var model = this.getModel();
+
+        this.$el.on('change', function (e) {
+            model.selectedOptions = [];
+            var selected = $('#' + _self.fieldName + '_select').val().split(",");
+            if (selected[0] != "")
+                selected.forEach(function (item) {
+                    var option = model.optionsData.filter(function (option) {
+                        return option.id == item;
+                    });
+                    model.selectedOptions.push(option[0]);
+                });
+            
+            _self.value = model.selectedOptions;
+            _self.setModelValue('selectedOptions', _self.value);
+        });
+    },
+
     renderSelect2: function () {
         var _self = this;
 
@@ -96,37 +116,24 @@ var AutoComplete = KxGenerator.createComponent({
                     callback(_self.getModelValue('selectedOptions')[0]) :
                     callback(_self.getModelValue('selectedOptions'));
             }
-        }).on('change', function () {
-            var model = _self.getModel();
-            model.selectedOptions = [];
-            var selected = $('#' + _self.fieldName + '_select').val().split(",");
-            if(selected[0] != "")
-                selected.forEach(function (item) {
-                    var option = model.optionsData.filter(function (option) {
-                        return option.id == item;
-                    });
-                    model.selectedOptions.push(option[0]);
-                });
-          
         });
-        
+
         $('#' + this.fieldName + '_select').select2('val', '222');
         $('#' + this.fieldName + '_select').addClass('form-control');
     },
 
     getValue: function () {
-        return this.getModelValue('selectedOptions');
+        return this.value;
     },
 
     setValue: function (value) {
-        this.value = value;
-
+        
         var values = value.map(function (obj) {
             return obj.id;
         }).join(",");
 
         $('#' + this.fieldName + '_select').val(values);
-        this.setModelValue('selectedOptions', value);
+        this.$el.trigger('change');
     },
 
     destruct: function () {
