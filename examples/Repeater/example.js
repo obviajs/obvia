@@ -1,19 +1,18 @@
 var myRepeater = new Repeater({
     id: 'repeater',
+    defaultItem: {
+        comboLabel: 'Zgjidh Shtetin',
+        comboValue: "",
+        autocompleteLabel: 'Ministrite',
+        autocompleteValue: [],
+        textLabel: 'Emri',
+        textValue: ''
+    },
     dataProvider: {
-        defaultItem: {
-            comboLabel: 'Zgjidh Shtetin',
-            comboValue: "",
-            autocompleteLabel: 'Ministrite',
-            autocompleteValue: [],
-            textLabel: 'Emri',
-            textValue: ''
-        },
-
         items: [
             {
                 comboLabel: 'Zgjidh Shtetin',
-                comboValue: "1",
+                comboValue: "",
                 autocompleteLabel: 'Ministrite',
                 autocompleteValue: [{ "id": "2", "text": "Ministria e Drejtesise" }],
                 textLabel: 'Emri',
@@ -21,7 +20,7 @@ var myRepeater = new Repeater({
             },
             {
                 comboLabel: 'Zgjidh Shtetin',
-                comboValue: "",
+                comboValue: "1",
                 autocompleteLabel: 'Ministrite',
                 autocompleteValue: [{ "id": "3", "text": "Ministria e Brendshme" }],
                 textLabel: 'Emri',
@@ -43,6 +42,19 @@ var myRepeater = new Repeater({
                 tableData: [["Ministria e Puneve te Jashtme"], ["Ministria e Drejtesise"], ["Ministria e Brendshme"]],
                 dataProvider: [{ "id": "1", "text": "Ministria e Puneve te Jashtme" }, { "id": "2", "text": "Ministria e Drejtesise" }, { "id": "3", "text": "Ministria e Brendshme" }],
                 value: '{autocompleteValue}'
+            }
+        },
+        {
+            constructor: ComboBox,
+            props: {
+                id: 'combo',
+                colspan: '6',
+                label: '{comboLabel}',
+                fieldName: 'combobox',
+                blockProcessAttr: false,
+                required: true,
+                dataProvider: [{ "value": "1", "text": "Shqiperi" }, { "value": "2", "text": "Greqi" }, { "value": "3", "text": "SHBA" }],
+                value: '{comboValue}'
             }
         },
         {

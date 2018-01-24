@@ -95,6 +95,10 @@ var ComboBox = KxGenerator.createComponent({
         return $('#' + this.fieldName).val();
     },
 
+    destruct: function () {
+        this.$el.remove();
+    },
+
     template: function () {
         return  "<div id='" + this.id + "'>" +
                     "<div class='col-lg-"+ this.colspan +"' form-group rowspan"+ this.rowspan +" resizable' id='"+ this.fieldName +"_container'>" +

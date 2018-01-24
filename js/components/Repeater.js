@@ -27,7 +27,7 @@ var Repeater = KxGenerator.createComponent({
         //handle row add click
         $('#add_' + this.id).on('click', function () {
             //add dataProvider Row
-            model.currentItem = _self.dataProvider.defaultItem;
+            model.currentItem = _self.defaultItem;
             _self.dataProvider.items.push(model.currentItem);  
             _self.addRow(model.currentItem, ++model.currentIndex, container);    
         });
@@ -107,7 +107,6 @@ var Repeater = KxGenerator.createComponent({
 
         //delete component instances on that row
         this.components.forEach(function (component) {
-            _self[component.props.id][index - 1].destruct();
             _self[component.props.id].splice(index - 1, 1);
         });
 

@@ -32,6 +32,8 @@ var AutoComplete = KxGenerator.createComponent({
     },
 
     createModal: function () {
+        var _self = this;
+
         this.modal = new Modal({
             id: 'autocomplete-modal-' + this.id,
             size: 'modal-lg',
@@ -52,8 +54,8 @@ var AutoComplete = KxGenerator.createComponent({
                 '</div>'
         });
 
-        $('#autoselect_modal').html(
-            this.modal.render()
+        $('#' + this.id + '-autoselect-modal').html(
+            _self.modal.render()
         );
       
     },
@@ -98,12 +100,14 @@ var AutoComplete = KxGenerator.createComponent({
             var model = _self.getModel();
             model.selectedOptions = [];
             var selected = $('#' + _self.fieldName + '_select').val().split(",");
-            selected.forEach(function (item) {
-                var option = _self.optionsData.filter(function (option) {
-                    return option.id == item;
+            if(selected[0] != "")
+                selected.forEach(function (item) {
+                    var option = model.optionsData.filter(function (option) {
+                        return option.id == item;
+                    });
+                    model.selectedOptions.push(option[0]);
                 });
-                model.selectedOptions.push(option[0]);
-            });
+          
         });
         
         $('#' + this.fieldName + '_select').select2('val', '222');
@@ -125,6 +129,11 @@ var AutoComplete = KxGenerator.createComponent({
         this.setModelValue('selectedOptions', value);
     },
 
+    destruct: function () {
+        $('#' + this.fieldName + '_select').select2('destroy');
+        this.$el.remove();
+    },
+
     template: function () {
         return "<div id='" + this.id + "'>" +
                     "<div class='form-group col-lg-" + this.colspan + "' rowspan" + this.rowspan + " resizable' id='" + this.fieldName + "_container' >" +
@@ -141,6 +150,7 @@ var AutoComplete = KxGenerator.createComponent({
                         "</span>" +
                     "</div>" +
                 "</div>" +
+                "<div id='" + this.id + "-autoselect-modal'></div>" +
             "</div>";
     },
 
