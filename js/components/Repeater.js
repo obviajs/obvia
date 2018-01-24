@@ -32,16 +32,10 @@ var Repeater = KxGenerator.createComponent({
         //handle row add click
         $('#add_' + this.id).on('click', function () {
             //add dataProvider Row
-<<<<<<< HEAD
-            model.currentItem = _self.defaultItem;
-            _self.dataProvider.items.push(model.currentItem);  
-            _self.addRow(model.currentItem, ++model.currentIndex, container);    
-=======
             model.currentItem = _self.dataProvider.defaultItem;
             _self.dataProvider.items.push(model.currentItem); 
             model.map[++model.currentIndex] = _self.genRandomId();
             _self.addRow(model.currentItem, model.currentIndex, model.map[model.currentIndex], container);    
->>>>>>> 197133f73730ed95d16382793bfd718d72c4360a
         });
 
         //handle row add delete
