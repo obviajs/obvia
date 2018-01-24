@@ -24,34 +24,29 @@ var Repeater = KxGenerator.createComponent({
         return Math.floor(Math.random() * 1000000);
     },
 
-    afterAttach: function () {
+    registerEvents: function () {
         var _self = this;
         var model = this.getModel();
         var container = this.$el.find('#' + this.id + '-container');
-   
+
         //handle row add click
-        $('#add_' + this.id).on('click', function () {
+        this.$el.find('#add_' + this.id).on('click', function () {
             //add dataProvider Row
             model.currentItem = _self.defaultItem;
-            _self.dataProvider.items.push(model.currentItem); 
+            _self.dataProvider.items.push(model.currentItem);
             model.map[++model.currentIndex] = _self.genRandomId();
-            _self.addRow(model.currentItem, model.currentIndex, model.map[model.currentIndex], container);    
+            _self.addRow(model.currentItem, model.currentIndex, model.map[model.currentIndex], container);
         });
 
         //handle row add delete
-        $('#remove_' + this.id).on('click', function () {
+        this.$el.find('#remove_' + this.id).on('click', function () {
             _self.removeRow(model.currentIndex, model.map[model.currentIndex], container);
             model.currentItem = _self.dataProvider.items[--model.currentIndex];
         });
+    },
 
-        // this.$el.on('onRowAdd', function (e, sender) {
-        //     console.log(e.currentTarget);
-        //     e.stopPropagation();
-        // })
-
-        // $(document).on('onRowAdd', function (e, sender) {
-        //     console.log(e.currentTarget);
-        // })
+    afterAttach: function () {
+       
     },
 
     //renders a new row, adds components in stack
@@ -92,6 +87,10 @@ var Repeater = KxGenerator.createComponent({
             cmp[index - 1] = el;
             rowItems.push(el);
         
+            //render component
+            container.find("#" + _self.id + "-repeated-block-" + hash)
+                .append(el.render());
+            
             //handle component change event and delegate it to repeater
             el.$el.on('onchange', function (e, sender) {
                 var currentItem = _self.dataProvider.items[index - 1];
@@ -100,17 +99,13 @@ var Repeater = KxGenerator.createComponent({
                     data[bindedValue] = sender.getValue();
                 }
 
+                //add row edit event
             });
 
-            //render component
-            container.find("#" + _self.id + "-repeated-block-" + hash)
-                .append(el.render());
         });
 
-        this.$el.trigger(
-            'onRowAdd',
-            _self
-        );
+        //trigger row add event
+        this.$el.trigger('onRowAdd', [ new RepeaterEventArgs(rowItems, data, index), _self ]);
 
         return { items: rowItems }; 
     },
@@ -128,7 +123,7 @@ var Repeater = KxGenerator.createComponent({
             _self[component.props.id].splice(index - 1, 1);
         });
 
-        this.$el.trigger('onRowDelete');
+        this.$el.trigger('onRowDelete', _self);
         return null;
     },
 
@@ -169,3 +164,8 @@ var Repeater = KxGenerator.createComponent({
 //component prototype
 Repeater.type = 'repeater';
 
+var RepeaterEventArgs = function (row, item, index) {
+    this.currentRow = row;
+    this.currentIndex = index;
+    this.currentItem = item;    
+}

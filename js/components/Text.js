@@ -29,7 +29,7 @@ var Text = KxGenerator.createComponent({
     },
 
     beforeAttach: function () {
-
+        
     },
 
     afterAttach: function () {
@@ -42,7 +42,6 @@ var Text = KxGenerator.createComponent({
     },
 
     setValue: function (value) {
-        this.value = value;
         this.setModelValue('value', value);
         this.$el.trigger('change');
 
