@@ -11,12 +11,17 @@ var Repeater = KxGenerator.createComponent({
     initModel: function () {
         return {
             currentIndex: 1,
-            currentItem: {}
+            currentItem: {},
+            map: {}
         }
     },
 
     beforeAttach: function () {
         this.$el.trigger('onBeginDraw');
+    },
+
+    genRandomId: function(){
+        return Math.random().toString(36).substring(12);
     },
 
     afterAttach: function () {
@@ -28,22 +33,23 @@ var Repeater = KxGenerator.createComponent({
         $('#add_' + this.id).on('click', function () {
             //add dataProvider Row
             model.currentItem = _self.dataProvider.defaultItem;
-            _self.dataProvider.items.push(model.currentItem);  
-            _self.addRow(model.currentItem, ++model.currentIndex, container);    
+            _self.dataProvider.items.push(model.currentItem); 
+            model.map[++model.currentIndex] = _self.genRandomId();
+            _self.addRow(model.currentItem, model.currentIndex, model.map[model.currentIndex], container);    
         });
 
         //handle row add delete
         $('#remove_' + this.id).on('click', function () {
-            _self.removeRow(model.currentIndex, container);
+            _self.removeRow(model.currentIndex, model.map[model.currentIndex], container);
             model.currentItem = _self.dataProvider.items[--model.currentIndex];
         });
     },
 
     //renders a new row, adds components in stack
-    addRow: function (data, index, container) {
+    addRow: function (data, index, hash, container) {
         var rowItems = [];
         var _self = this;
-        container.append('<div id="' + this.id + '-repeated-block-' + index + '" class="col-md-12"></div><hr id="' + this.id + '-repeated-block-hr-' + index + '">');
+        container.append('<div id="' + this.id + '-repeated-block-' + hash + '" class="col-md-12"></div><hr id="' + this.id + '-repeated-block-hr-' + hash + '">');
 
         this.components.forEach(function (component) {
             //clone objects
@@ -57,8 +63,8 @@ var Repeater = KxGenerator.createComponent({
             if (cmp[index - 1] == undefined)
                 cmp[index - 1] = {}
             
-            p.id += "_" + index;
-            p.fieldName += "_" + index;
+            p.id += "_" + hash;
+            p.fieldName += "_" + hash;
 
             for (var prop in p) {
                 if (typeof prop == 'string') {
@@ -88,7 +94,7 @@ var Repeater = KxGenerator.createComponent({
             });
 
             //render component
-            container.find("#" + _self.id + "-repeated-block-" + index)
+            container.find("#" + _self.id + "-repeated-block-" + hash)
                 .append(el.render());
         });
 
@@ -97,10 +103,10 @@ var Repeater = KxGenerator.createComponent({
         return { items: rowItems }; 
     },
 
-    removeRow: function (index, container) {
+    removeRow: function (index, hash, container) {
         var _self = this;
-        container.find('#' + this.id + '-repeated-block-' + index).remove();
-        container.find('#' + this.id + '-repeated-block-hr-' + index).remove();
+        container.find('#' + this.id + '-repeated-block-' + hash).remove();
+        container.find('#' + this.id + '-repeated-block-hr-' + hash).remove();
 
         //remove dp row
         this.dataProvider.items.splice(index - 1, 1);
@@ -139,7 +145,8 @@ var Repeater = KxGenerator.createComponent({
         dp.forEach(function (data, index) {  
             model.currentIndex = index + 1;
             model.currentItem = data;
-            _self.addRow(data, model.currentIndex, container);
+            model.map[model.currentIndex] = _self.genRandomId();
+            _self.addRow(data, model.currentIndex, model.map[model.currentIndex], container);
         });
        
         this.$el.trigger('onEndDraw');
