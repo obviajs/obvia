@@ -43,6 +43,10 @@ var Repeater = KxGenerator.createComponent({
             _self.removeRow(model.currentIndex, model.map[model.currentIndex], container);
             model.currentItem = _self.dataProvider.items[--model.currentIndex];
         });
+
+        this.$el.on('onRowEdit', function (e, repeater, args) {
+            console.log(args);
+        })
     },
 
     afterAttach: function () {
@@ -99,13 +103,13 @@ var Repeater = KxGenerator.createComponent({
                     data[bindedValue] = sender.getValue();
                 }
 
-                //add row edit event
+                _self.$el.trigger('onRowEdit', [ _self, new RepeaterEventArgs(rowItems, data, index) ]);
             });
 
         });
 
         //trigger row add event
-        this.$el.trigger('onRowAdd', [ new RepeaterEventArgs(rowItems, data, index), _self ]);
+        this.$el.trigger('onRowAdd', [ _self, new RepeaterEventArgs(rowItems, data, index) ]);
 
         return { items: rowItems }; 
     },
@@ -123,7 +127,7 @@ var Repeater = KxGenerator.createComponent({
             _self[component.props.id].splice(index - 1, 1);
         });
 
-        this.$el.trigger('onRowDelete', _self);
+        this.$el.trigger('onRowDelete', [ _self, new RepeaterEventArgs(rowItems, data, index) ]);
         return null;
     },
 
