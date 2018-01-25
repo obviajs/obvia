@@ -90,7 +90,7 @@ var GoogleMap = KxGenerator.createComponent({
     },
 
     setValue: function (value) {
-        
+
     },
 
     openMap: function () {
@@ -118,12 +118,12 @@ var GoogleMap = KxGenerator.createComponent({
         var model = this.getModel();
 
         if (marker != null)
-            marker.setMap(null);
-        
-        marker = new google.maps.Marker({
-            position: location,
-            map: map
-        });
+            marker.setPosition(location);
+        else
+            marker = new google.maps.Marker({
+                position: location,
+                map: map
+            });
         
         var location = marker.getPosition();
         model.latitude = location.lat();
