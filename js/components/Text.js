@@ -70,3 +70,6 @@ var Text = KxGenerator.createComponent({
 
 //component prototype
 Text.type = 'text';
+
+//register dom element for this component
+KxGenerator.registerDOMElement(Text, 'kx-text');

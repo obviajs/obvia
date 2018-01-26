@@ -55,7 +55,7 @@ var GoogleMap = KxGenerator.createComponent({
     beforeAttach: function () {
         var _self = this;
         var model = this.getModel();
-        
+        // console.log(model);
         //get data
         if (this.dataProvider != undefined || this.dataProvider != '') {
             if (typeof this.dataProvider == 'string') {
@@ -199,7 +199,7 @@ var GoogleMap = KxGenerator.createComponent({
                 "</div>" +
                 "<div class='col-sm-4' style='padding:0px'>" +
                     "<label> Longtitude: </label>" +
-                    "<input type='text' class='form-control' rv-value='longtitude' rv-placeholder='longitude' disabled>" +
+                    "<input type='text' class='form-control' rv-value='longtitude' rv-placeholder='longtitude' disabled>" +
                 "</div>" + 
                 "<div class='col-sm-4' style='padding:0px'>" +
                     "<button class='form-control btn btn-default' rv-on-click='openMap'><span style='color:#f39c12'>Harta</span> <span style='color:#f39c12' class='glyphicon glyphicon-map-marker'></span></button>" +
@@ -263,3 +263,6 @@ var GoogleMap = KxGenerator.createComponent({
 
 //component prototype
 GoogleMap.type = 'map';
+
+//register dom element for this component
+KxGenerator.registerDOMElement(GoogleMap, 'kx-map');

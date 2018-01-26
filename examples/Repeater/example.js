@@ -6,7 +6,12 @@ var myRepeater = new Repeater({
         autocompleteLabel: 'Ministrite',
         autocompleteValue: [],
         textLabel: 'Emri',
-        textValue: ''
+        textValue: '',
+        mapValue: {
+            latitude: 41.1533,
+            longtitude: 20.1683,
+            zoomLevel: 7
+        }
     },
     dataProvider: {
         items: [
@@ -16,7 +21,12 @@ var myRepeater = new Repeater({
                 autocompleteLabel: 'Ministrite',
                 autocompleteValue: [{ "id": "2", "text": "Ministria e Drejtesise" }],
                 textLabel: 'Emri',
-                textValue: 'Mateo Jovani'
+                textValue: 'Mateo Jovani',
+                mapValue: {
+                    latitude: 51.1533,
+                    longtitude: 30.1683,
+                    zoomLevel: 7
+                }
             },
             {
                 comboLabel: 'Zgjidh Shtetin',
@@ -24,7 +34,12 @@ var myRepeater = new Repeater({
                 autocompleteLabel: 'Ministrite',
                 autocompleteValue: [{ "id": "3", "text": "Ministria e Brendshme" }],
                 textLabel: 'Emri',
-                textValue: ''
+                textValue: '',
+                mapValue: {
+                    latitude: 41.1533,
+                    longtitude: 20.1683,
+                    zoomLevel: 7
+                }
             }
         ]
     },
@@ -67,6 +82,19 @@ var myRepeater = new Repeater({
                 blockProcessAttr: false,
                 required: false,
                 value: '{textValue}'
+            }
+        },
+        {
+            constructor: GoogleMap,
+            props: {
+                id: 'map3',
+                colspan: '6',
+                label: 'Vendodhja Gjeografike',
+                fieldName: 'mapField3',
+                versionStyle: "",
+                blockProcessAttr: false,
+                required: false,
+                dataProvider: '{mapValue}'
             }
         }
     ]
