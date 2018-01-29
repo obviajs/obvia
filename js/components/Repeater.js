@@ -47,7 +47,7 @@ var Repeater = KxGenerator.createComponent({
         });
 
         this.$el.on('onRowEdit', function (e, repeater, args) {
-            console.log(args);
+           
         })
     },
 
@@ -99,6 +99,7 @@ var Repeater = KxGenerator.createComponent({
             
             //handle component change event and delegate it to repeater
             el.$el.on('onchange', function (e, sender) {
+                console.log(sender);
                 var currentItem = _self.dataProvider.items[index - 1];
                 if (tempComponent.props.value[0] == '{' && tempComponent.props.value[tempComponent.props.value.length - 1] == '}') {
                     var bindedValue = tempComponent.props.value.slice(1, -1);

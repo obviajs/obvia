@@ -6,7 +6,7 @@ var myMap = new GoogleMap({
     versionStyle: "",
     blockProcessAttr: false,
     required: false,
-    dataProvider: {
+    value: {
         latitude: 41.1533,
         longtitude: 20.1683,
         zoomLevel: 7

@@ -94,7 +94,7 @@ var myRepeater = new Repeater({
                 versionStyle: "",
                 blockProcessAttr: false,
                 required: false,
-                dataProvider: '{mapValue}'
+                value: '{mapValue}'
             }
         }
     ]
