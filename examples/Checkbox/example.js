@@ -2,7 +2,7 @@ var myCheckbox = new Checkbox({
     id: 'checkbox',
     colspan: '6',
     label: 'Arensas checkbox',
-    fieldName: 'checkbox',
+    fieldName: 'checkboxInput',
     blockProcessAttr: false,
     required: false,
     value:true,

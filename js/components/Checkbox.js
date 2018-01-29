@@ -34,38 +34,26 @@ var Checkbox = KxGenerator.createComponent({
 
     registerEvents: function () {
         var _self = this;
+        var model = this.getModel();
 
         this.$el.on('change', function (e) {
-           
-            var thisVal = $('#' + _self.fieldName).val();
-            console.log(_self.value);
-            _self.value = thisVal;
-            //console.log(thisVal);
-
-            // if(thisVal.checked == true){
-            //     console.log("Hello");
-            // }
-            // _self.value = thisVal;
-
-            // if (thisVal[0] == '#' + this.fieldName + '_new') {
-            //     $('#' + _self.fieldName + ' _popup').fadeIn();
-            //     $('#' + _self.fieldName).multiselect('deselect', '#' + _self.fieldName + ' _new');
-            // }
+            _self.value = model.checked;
         });
     },
 
     afterAttach: function () {
         var _self = this;
-        
         var element = "#" + _self.fieldName;
       
     },
 
     setValue: function (value) {
-        
-        $('#' + this.fieldName).val();
-        this.$el.trigger('checked');
-        //console.log(this.$el.trigger('checked'));
+        var model = this.getModel();
+        model.checked = value;
+        this.$el.trigger('change');
+        this.$el.find('#' + this.fieldName).bootstrapToggle('destroy');
+        this.$el.find('#' + this.fieldName).bootstrapToggle();
+        return this;
     },
 
     getValue: function () {
@@ -85,7 +73,7 @@ var Checkbox = KxGenerator.createComponent({
             "<div class='row'>" +
             "<div class='col-xs-12'>" +
             " <div class='col-xs-2'>" +
-            "<input  type='checkbox' rv-checked='checked' switch-toggle='toggle' data-on='"+this.checkedLabel+"' data-off='"+this.unCheckedLabel+"'+ data-style='slow'  id='" +this.fieldName+" class='checkbox'  name='" + this.fieldName + "'/>"+
+            "<input  type='checkbox' rv-checked='checked' switch-toggle='toggle' data-on='"+this.checkedLabel+"' data-off='"+this.unCheckedLabel+"'+ data-style='slow'  id='" +this.fieldName+"'   name='" + this.fieldName + "'/>"+
             "</div>" +
             "<div class='col-xs-10' style='padding-left:20px;'>" +
             "<div style='padding-top: 5px;'>" +
