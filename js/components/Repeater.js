@@ -10,13 +10,15 @@ var Repeater = KxGenerator.createComponent({
     //if you want variables to bind, you must declare them in the model object
     initModel: function () {
         return {
-            currentIndex: 1,
-            currentItem: {},
+            // currentIndex: 1,
+            // currentItem: {},
             map: {}
         }
     },
 
     beforeAttach: function () {
+        this.currentIndex = 1;
+        this.currentItem = {};
         this.$el.trigger('onBeginDraw');
     },
 
@@ -32,20 +34,20 @@ var Repeater = KxGenerator.createComponent({
         //handle row add click
         this.$el.find('#add_' + this.id).on('click', function () {
             //add dataProvider Row
-            model.currentItem = _self.defaultItem;
-            _self.dataProvider.items.push(model.currentItem);
-            model.map[++model.currentIndex] = _self.genRandomId();
-            _self.addRow(model.currentItem, model.currentIndex, model.map[model.currentIndex], container);
+            _self.currentItem = _self.defaultItem;
+            _self.dataProvider.items.push(_self.currentItem);
+            model.map[++_self.currentIndex] = _self.genRandomId();
+            _self.addRow(_self.currentItem, _self.currentIndex, model.map[_self.currentIndex], container);
         });
 
         //handle row add delete
         this.$el.find('#remove_' + this.id).on('click', function () {
-            _self.removeRow(model.currentIndex, model.map[model.currentIndex], container);
-            model.currentItem = _self.dataProvider.items[--model.currentIndex];
+            _self.removeRow(_self.currentIndex, model.map[_self.currentIndex], container);
+            _self.currentItem = _self.dataProvider.items[--_self.currentIndex];
         });
 
         this.$el.on('onRowEdit', function (e, repeater, args) {
-            console.log(args);
+           
         })
     },
 
@@ -97,6 +99,7 @@ var Repeater = KxGenerator.createComponent({
             
             //handle component change event and delegate it to repeater
             el.$el.on('onchange', function (e, sender) {
+                console.log(sender);
                 var currentItem = _self.dataProvider.items[index - 1];
                 if (tempComponent.props.value[0] == '{' && tempComponent.props.value[tempComponent.props.value.length - 1] == '}') {
                     var bindedValue = tempComponent.props.value.slice(1, -1);
@@ -116,6 +119,9 @@ var Repeater = KxGenerator.createComponent({
 
     removeRow: function (index, hash, container) {
         var _self = this;
+        var rowItems = [];
+        var model = this.getModel();
+
         container.find('#' + this.id + '-repeated-block-' + hash).remove();
         container.find('#' + this.id + '-repeated-block-hr-' + hash).remove();
 
@@ -124,10 +130,11 @@ var Repeater = KxGenerator.createComponent({
 
         //delete component instances on that row
         this.components.forEach(function (component) {
+            rowItems.push(_self[component.props.id][index - 1]);
             _self[component.props.id].splice(index - 1, 1);
         });
 
-        this.$el.trigger('onRowDelete', [ _self, new RepeaterEventArgs(rowItems, data, index) ]);
+        this.$el.trigger('onRowDelete', [ _self, new RepeaterEventArgs(rowItems, model.currentItem, index) ]);
         return null;
     },
 
@@ -153,10 +160,10 @@ var Repeater = KxGenerator.createComponent({
         var dp = this.dataProvider.items;
 
         dp.forEach(function (data, index) {  
-            model.currentIndex = index + 1;
-            model.currentItem = data;
-            model.map[model.currentIndex] = _self.genRandomId();
-            _self.addRow(data, model.currentIndex, model.map[model.currentIndex], container);
+            _self.currentIndex = index + 1;
+            _self.currentItem = data;
+            model.map[_self.currentIndex] = _self.genRandomId();
+            _self.addRow(data, _self.currentIndex, model.map[_self.currentIndex], container);
         });
        
         this.$el.trigger('onEndDraw');
@@ -173,3 +180,6 @@ var RepeaterEventArgs = function (row, item, index) {
     this.currentIndex = index;
     this.currentItem = item;    
 }
+
+//register dom element for this component
+KxGenerator.registerDOMElement(Repeater, 'kx-repeater');

@@ -9,11 +9,18 @@ var GoogleMap = KxGenerator.createComponent({
     //model binds to the template
     //if you want variables to bind, you must declare them in the model object
     initModel: function () {
+        if (!this.value || this.value == null) {
+            this.value = {}
+        }
+
         return {
             //hardcoded coordinates
-            latitude: '41.1533',
-            longtitude: '20.1683',
-            zoomLevel: '7',
+            latitude: this.value.latitude || '41.1533',
+            longtitude: this.value.longtitude || '20.1683',
+            zoomLevel: this.value.zoomLevel || '7',
+
+            modalLatitude: this.value.latitude || '41.1533',
+            modalLongtitude: this.value.longtitude || '20.1683',
 
             marker: null,
             map: null,
@@ -48,36 +55,28 @@ var GoogleMap = KxGenerator.createComponent({
             }
             
             _self.moveMarker(model.map, model.marker, model.latitude, model.longtitude);
-        })
+        });
+
+        this.$el.on('setValue', function () {
+            model.latitude = _self.value.latitude;
+            model.longtitude = _self.value.longtitude;
+            model.zoomLevel = _self.value.zoomLevel;
+            _self.moveMarker(model.map, model.marker, model.latitude, model.longtitude);
+        });
+
+        this.$el.on('valueSet', function () {
+            _self.value.latitude = model.latitude;
+            _self.value.longtitude = model.longtitude;
+            _self.value.zoomLevel = model.zoomLevel;
+
+            _self.$el.trigger('change');
+        });
     },
 
 
     beforeAttach: function () {
         var _self = this;
         var model = this.getModel();
-        
-        //get data
-        if (this.dataProvider != undefined || this.dataProvider != '') {
-            if (typeof this.dataProvider == 'string') {
-                //ajax call
-                KxRequest.promise($.get(_self.dataProvider)).done(function (result) {
-                    model.latitude = result.latitude;
-                    model.longtitude = result.longtitude;
-                    model.zoomLevel = result.zoomLevel;
-
-                    this.value = result;
-                });
-
-            } else {
-                model.latitude = this.dataProvider.latitude;
-                model.longtitude = this.dataProvider.longtitude;
-                model.zoomLevel = this.dataProvider.zoomLevel;
-                
-                this.value = this.dataProvider;
-            }
-        }
-
-
     },
 
     afterAttach: function () {
@@ -90,7 +89,8 @@ var GoogleMap = KxGenerator.createComponent({
     },
 
     setValue: function (value) {
-
+        this.value = value;
+        this.$el.trigger('setValue');
     },
 
     openMap: function () {
@@ -103,6 +103,11 @@ var GoogleMap = KxGenerator.createComponent({
         var location = model.marker.getPosition();
         var zoom = model.map.getZoom();
 
+        model.latitude = location.lat();
+        model.longtitude = location.lng();
+        model.zoomLevel = zoom;
+
+        this.$el.trigger('valueSet');
         $('#' + this.fieldName + '_map-modal').modal('hide');
     },
 
@@ -126,8 +131,8 @@ var GoogleMap = KxGenerator.createComponent({
             });
         
         var location = marker.getPosition();
-        model.latitude = location.lat();
-        model.longtitude = location.lng();
+        model.modalLatitude = location.lat();
+        model.modalLongtitude = location.lng();
     },
 
     initMap: function () {
@@ -177,12 +182,12 @@ var GoogleMap = KxGenerator.createComponent({
     setLatLngManually: function (action) {
         var model = this.getModel();
 
-        if (action === false) {
+        if (action == 'false') {
             model.mapCheckSetLatLng = false;
             this.changeCoordinatesManually();
         }
-        else if (action === true) {
-            moveMarker(model.map, model.marker, model.latitude, model.longtitude);
+        else if (action == 'true') {
+            this.moveMarker(model.map, model.marker, model.modalLatitude, model.modalLongtitude);
             model.mapCheckSetLatLng = false;
            
             this.changeCoordinatesManually();
@@ -193,15 +198,11 @@ var GoogleMap = KxGenerator.createComponent({
         return "<div id='" + this.id + "'>" +
             "<div class='form-group form-inline col-lg-" + this.colspan + " rowspan" + (this.rowspan ? this.rowspan : '') + " resizable'>" +
                 "<label>{label}</label><br>" +
-                "<div class='col-sm-4' style='padding:0px'>" + 
-                    "<label> Latitude: </label>" +
+                    "<div class='col-sm-12' style='padding:0px'>" + 
+                    "<label style='margin-right:5px'>Latitude: </label>" + 
                     "<input type='text' class='form-control' rv-value='latitude' rv-placeholder='latitude'  disabled>" +
-                "</div>" +
-                "<div class='col-sm-4' style='padding:0px'>" +
-                    "<label> Longtitude: </label>" +
-                    "<input type='text' class='form-control' rv-value='longtitude' rv-placeholder='longitude' disabled>" +
-                "</div>" + 
-                "<div class='col-sm-4' style='padding:0px'>" +
+                    "<label style='margin-right:5px; margin-left:5px'>Longtitude: </label>" + 
+                    "<input type='text' class='form-control' rv-value='longtitude' rv-placeholder='longtitude' disabled>" +
                     "<button class='form-control btn btn-default' rv-on-click='openMap'><span style='color:#f39c12'>Harta</span> <span style='color:#f39c12' class='glyphicon glyphicon-map-marker'></span></button>" +
                 "</div>" + 
             "</div>" +
@@ -227,7 +228,7 @@ var GoogleMap = KxGenerator.createComponent({
                                         "<label for='" + this.fieldName + "_mapSetLat'>Lat:</label>" + 
                                     "</div>" +
                                     "<div class='col-xs-9' style='padding:0px'>" +
-                                        "<input type='number' class='form-control' rv-value='latitude' rv-placeholder='latitude' rv-disabled='mapSetLatDisabled'>" +
+                                        "<input type='number' class='form-control' rv-value='modalLatitude' rv-placeholder='latitude' rv-disabled='mapSetLatDisabled'>" +
                                     "</div>" +
                                 "</div>" +
                                 "<div class='col-xs-4' style='padding:0px'>" +
@@ -235,7 +236,7 @@ var GoogleMap = KxGenerator.createComponent({
                                         "<label for='" + this.fieldName + "_mapSetLng' > Lng: </label>" +
                                     "</div>" +
                                     "<div class='col-xs-9' style='padding:0px'>" +
-                                        "<input type='number'  class='form-control' rv-value='longtitude' rv-placeholder='latitude' rv-disabled='mapSetLongDisabled'>" +
+                                        "<input type='number'  class='form-control' rv-value='modalLongtitude' rv-placeholder='latitude' rv-disabled='mapSetLongDisabled'>" +
                                     "</div>" +
                                 "</div>" +
                                "<div class='col-xs-2 pull-right' style='padding-right:0px'>" +
@@ -263,3 +264,6 @@ var GoogleMap = KxGenerator.createComponent({
 
 //component prototype
 GoogleMap.type = 'map';
+
+//register dom element for this component
+KxGenerator.registerDOMElement(GoogleMap, 'kx-map');

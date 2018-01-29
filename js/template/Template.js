@@ -52,3 +52,6 @@ var Template = KxGenerator.createComponent({
 
 //component prototype
 Template.type = 'template';
+
+//register dom element for this component
+KxGenerator.registerDOMElement(Template, 'template');

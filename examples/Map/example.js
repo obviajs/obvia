@@ -1,12 +1,12 @@
 var myMap = new GoogleMap({
-    id: 'map',
+    id: 'map3',
     colspan: '6',
     label: 'Vendodhja Gjeografike',
-    fieldName: 'mapField',
+    fieldName: 'mapField3',
     versionStyle: "",
     blockProcessAttr: false,
     required: false,
-    dataProvider: {
+    value: {
         latitude: 41.1533,
         longtitude: 20.1683,
         zoomLevel: 7
