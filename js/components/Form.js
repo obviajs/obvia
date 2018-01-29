@@ -1,16 +1,16 @@
 /**
- * This is a Template for a default component
+ * This is a Trippleswitch component
  * 
  * Kreatx 2018
  */
 
 //component definition
-var Template = KxGenerator.createComponent({
+var Trippleswitch = KxGenerator.createComponent({
     //model binds to the template
     //if you want variables to bind, you must declare them in the model object
     initModel: function () {
         return {
-            
+
         }
     },
 
@@ -18,7 +18,7 @@ var Template = KxGenerator.createComponent({
         var _self = this;
 
         this.$el.on('change', function (e) {
-        
+
         });
     },
 
@@ -27,21 +27,21 @@ var Template = KxGenerator.createComponent({
     },
 
     afterAttach: function () {
-        
+
     },
 
     getValue: function () {
-       
+
     },
 
     setValue: function (value) {
-        
+
     },
 
     template: function () {
         return
-            "<div id='" + this.id + "'>" +
-            
+        "<div id='" + this.id + "'>" +
+
             "</div>";
     },
 
@@ -51,7 +51,7 @@ var Template = KxGenerator.createComponent({
 });
 
 //component prototype
-Template.type = 'template';
+Trippleswitch.type = 'trippleswitch';
 
 //register dom element for this component
-KxGenerator.registerDOMElement(Template, 'kx-template');
+KxGenerator.registerDOMElement(Trippleswitch, 'kx-trippleswitch');
