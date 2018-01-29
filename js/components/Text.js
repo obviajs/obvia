@@ -10,7 +10,7 @@ var Text = KxGenerator.createComponent({
     //if you want variables to bind, you must declare them in the model object
     initModel: function () {
         return {
-            fieldName: this.fieldName,
+            fieldName: this.fieldName, //this is the object(component)//all the properties are found as the properties 
             label: this.label,
             blockProcessAttr: this.required ? false : this.blockProcessAttr,
             versionStyle: this.versionStyle,
@@ -28,7 +28,8 @@ var Text = KxGenerator.createComponent({
         });
     },
 
-    beforeAttach: function () {
+    beforeAttach: function () { //function that is executed before you render the  component in the DOM
+        //life0-cycle method //futet ne DOM qe te besh inicimet e plugineve
         
     },
 

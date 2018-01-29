@@ -81,7 +81,18 @@ var myAutoComplete = new AutoComplete({
     value: [{ "id": "1", "text": "Ministria e Puneve te Jashtme" }]
 });
 
-$('#root').append(myAutoComplete.render());
+
+var myCheckbox = new Checkbox({
+    id: 'checkbox',
+    colspan: '6',
+    label: 'My checkbox',
+    fieldName: 'combobox',
+    dataProvider: [{ "value": "1", "text": "Shqiperi" }, { "value": "2", "text": "Greqi" }, { "value": "3", "text": "SHBA" }],
+    versionStyle: "",
+    blockProcessAttr: false,
+    required: false,
+    value: "2",
+});
 
 /**
  * Repeater Component
