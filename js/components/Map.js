@@ -15,6 +15,9 @@ var GoogleMap = KxGenerator.createComponent({
             longtitude: '20.1683',
             zoomLevel: '7',
 
+            modalLatitude: '41.1533',
+            modalLongtitude: '20.1683',
+
             marker: null,
             map: null,
             mapCheckSetLatLng: false,
@@ -55,7 +58,7 @@ var GoogleMap = KxGenerator.createComponent({
     beforeAttach: function () {
         var _self = this;
         var model = this.getModel();
-        // console.log(model);
+        
         //get data
         if (this.dataProvider != undefined || this.dataProvider != '') {
             if (typeof this.dataProvider == 'string') {
@@ -64,6 +67,8 @@ var GoogleMap = KxGenerator.createComponent({
                     model.latitude = result.latitude;
                     model.longtitude = result.longtitude;
                     model.zoomLevel = result.zoomLevel;
+                    model.modalLatitude = result.latitude;
+                    model.modalLongtitude = result.longtitude;
 
                     this.value = result;
                 });
@@ -72,6 +77,8 @@ var GoogleMap = KxGenerator.createComponent({
                 model.latitude = this.dataProvider.latitude;
                 model.longtitude = this.dataProvider.longtitude;
                 model.zoomLevel = this.dataProvider.zoomLevel;
+                model.modalLatitude = this.dataProvider.latitude;
+                model.modalLongtitude = this.dataProvider.longtitude;
                 
                 this.value = this.dataProvider;
             }
@@ -193,15 +200,11 @@ var GoogleMap = KxGenerator.createComponent({
         return "<div id='" + this.id + "'>" +
             "<div class='form-group form-inline col-lg-" + this.colspan + " rowspan" + (this.rowspan ? this.rowspan : '') + " resizable'>" +
                 "<label>{label}</label><br>" +
-                "<div class='col-sm-4' style='padding:0px'>" + 
-                    "<label> Latitude: </label>" +
+                    "<div class='col-sm-12' style='padding:0px'>" + 
+                    "<label style='margin-right:5px'>Latitude: </label>" + 
                     "<input type='text' class='form-control' rv-value='latitude' rv-placeholder='latitude'  disabled>" +
-                "</div>" +
-                "<div class='col-sm-4' style='padding:0px'>" +
-                    "<label> Longtitude: </label>" +
+                    "<label style='margin-right:5px; margin-left:5px'>Longtitude: </label>" + 
                     "<input type='text' class='form-control' rv-value='longtitude' rv-placeholder='longtitude' disabled>" +
-                "</div>" + 
-                "<div class='col-sm-4' style='padding:0px'>" +
                     "<button class='form-control btn btn-default' rv-on-click='openMap'><span style='color:#f39c12'>Harta</span> <span style='color:#f39c12' class='glyphicon glyphicon-map-marker'></span></button>" +
                 "</div>" + 
             "</div>" +
