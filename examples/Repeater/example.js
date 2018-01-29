@@ -26,7 +26,8 @@ var myRepeater = new Repeater({
                     latitude: 51.1533,
                     longtitude: 30.1683,
                     zoomLevel: 7
-                }
+                },
+                checkboxValue:true
             },
             {
                 comboLabel: 'Zgjidh Shtetin',
@@ -39,7 +40,8 @@ var myRepeater = new Repeater({
                     latitude: 41.1533,
                     longtitude: 20.1683,
                     zoomLevel: 7
-                }
+                },
+                checkboxValue:false
             }
         ]
     },
@@ -82,6 +84,20 @@ var myRepeater = new Repeater({
                 blockProcessAttr: false,
                 required: false,
                 value: '{textValue}'
+            }
+        },
+        {
+            constructor: Checkbox,
+            props: {
+                id: 'checkbox',
+                colspan: '6',
+                label: 'Aktiv',
+                fieldName: 'checkbox',
+                blockProcessAttr: false,
+                required: true,
+                value: '{checkboxValue}',
+                unCheckedLabel:"Jo",
+                checkedLabel:"Po"
             }
         },
         {

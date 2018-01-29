@@ -5,7 +5,7 @@
  */
 
 //component definition
-var Checkbox = KxGenerator.createComponent({
+var CheckboxGroup= KxGenerator.createComponent({
     //model binds to the template
     //if you want variables to bind, you must declare them in the model object
     initModel: function () {
@@ -91,4 +91,3 @@ var Checkbox = KxGenerator.createComponent({
 
 //component prototype
 Checkbox.type = 'checkbox';
-KxGenerator.registerDOMElement(Template, 'kx-checkbox');
