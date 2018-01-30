@@ -20,13 +20,7 @@ var Checkbox = KxGenerator.createComponent({
         }
     },
 
-    getData: function (provider) {
-       
-    },
-
-    setData: function (data, element) {
-      
-    },
+   
 
     beforeAttach: function () {
 
@@ -97,3 +91,4 @@ var Checkbox = KxGenerator.createComponent({
 
 //component prototype
 Checkbox.type = 'checkbox';
+KxGenerator.registerDOMElement(Checkbox, 'kx-checkbox');
