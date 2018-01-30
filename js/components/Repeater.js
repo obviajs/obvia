@@ -45,12 +45,18 @@ var Repeater = KxGenerator.createComponent({
             _self.dataProvider.items.push(_self.currentItem);
             model.map[++_self.currentIndex] = _self.genRandomId();
             _self.addRow(_self.currentItem, _self.currentIndex, model.map[_self.currentIndex], container);
+            if (_self.currentIndex > 1) {
+                _self.$el.find('#remove_' + _self.id).show();
+            }
         });
 
         //handle row add delete
         this.$el.find('#remove_' + this.id).on('click', function () {
             _self.removeRow(_self.currentIndex, model.map[_self.currentIndex], container);
             _self.currentItem = _self.dataProvider.items[--_self.currentIndex];
+            if (_self.currentIndex == 1) {
+                $(this).hide();
+            }
         });
 
         this.$el.on('onRowEdit', function (e, repeater, args) {
