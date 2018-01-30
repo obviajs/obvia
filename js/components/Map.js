@@ -93,7 +93,8 @@ var GoogleMap = KxGenerator.createComponent({
         this.$el.trigger('setValue');
     },
 
-    openMap: function () {
+    openMap: function (e) {
+        e.preventDefault();
         $('#' + this.fieldName + '_map-modal').modal('show');
     },
 
