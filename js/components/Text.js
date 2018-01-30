@@ -10,12 +10,13 @@ var Text = KxGenerator.createComponent({
     //if you want variables to bind, you must declare them in the model object
     initModel: function () {
         return {
-            fieldName: this.fieldName, //this is the object(component)//all the properties are found as the properties 
+            fieldName: this.fieldName, 
             label: this.label,
             blockProcessAttr: this.required ? false : this.blockProcessAttr,
             versionStyle: this.versionStyle,
             required: this.required,
-            value: this.value
+            value: this.value,
+            enabled: true
         }
     },
 
@@ -28,8 +29,8 @@ var Text = KxGenerator.createComponent({
         });
     },
 
-    beforeAttach: function () { //function that is executed before you render the  component in the DOM
-        //life0-cycle method //futet ne DOM qe te besh inicimet e plugineve
+    //function that is executed before you render the  component in the DOM
+    beforeAttach: function () { 
         
     },
 
@@ -49,6 +50,20 @@ var Text = KxGenerator.createComponent({
         return this;
     },
 
+    enable: function () {
+        var model = this.getModel();
+        model.enabled = true;
+
+        return this;
+    },
+
+    disable: function () {
+        var model = this.getModel();
+        model.enabled = false;
+
+        return this;
+    },
+
     template: function () {         
         return  "<div id='" + this.id + "'>" +
                     "<div class='form-group col-lg-" + this.colspan + "' rowspan" + this.rowspan + " resizable '>" +
@@ -58,7 +73,7 @@ var Text = KxGenerator.createComponent({
                                 "<input rv-type='type'" + 
                                     "id='" + this.fieldName + "' name='" + this.fieldName + "' rv-value='value'" +
                                     "class='form-control rowspan"+ this.rowspan +"'" +
-                                    "rv-placeholder='label' autofocus/>" +
+                                    "rv-placeholder='label' rv-enabled='enabled' autofocus/>" +
                         "</div>" +
                     "</div>" + 
                 "</div>";    

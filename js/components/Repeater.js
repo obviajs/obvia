@@ -64,10 +64,6 @@ var Repeater = KxGenerator.createComponent({
         })
     },
 
-    afterAttach: function () {
-       
-    },
-
     //renders a new row, adds components in stack
     addRow: function (data, index, hash, container) {
         var rowItems = [];
@@ -149,6 +145,30 @@ var Repeater = KxGenerator.createComponent({
 
         this.$el.trigger('onRowDelete', [ _self, new RepeaterEventArgs(rowItems, model.currentItem, index) ]);
         return null;
+    },
+
+    enable: function () {
+        var _self = this;
+
+        for (var i = 0; i < this.dataProvider.items.length; i++) {
+            this.components.forEach(function (component) {
+                _self[component.props.id][i].enable();
+            });
+        }
+
+        return this; 
+    },
+
+    disable: function () {
+        var _self = this;
+
+        for (var i = 0; i < this.dataProvider.items.length; i++){
+            this.components.forEach(function (component) {
+                _self[component.props.id][i].disable();
+            });
+        }
+
+        return this;  
     },
 
     template: function () {

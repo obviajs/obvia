@@ -96,7 +96,7 @@ var AutoComplete = KxGenerator.createComponent({
     renderSelect2: function () {
         var _self = this;
 
-        $('#' + this.fieldName + '_select').select2({
+        this.select2Instance = $('#' + this.fieldName + '_select').select2({
             multiple: _self.getModelValue('multipleSelection'),
             minimumInputLength: 2,
             placeholder: 'Search',
@@ -139,6 +139,16 @@ var AutoComplete = KxGenerator.createComponent({
     destruct: function () {
         $('#' + this.fieldName + '_select').select2('destroy');
         this.$el.remove();
+    },
+
+    enable: function () {
+        this.select2Instance.enable(true);
+        return this;
+    },
+
+    disable: function () {
+        this.select2Instance.enable(false);
+        return this;
     },
 
     template: function () {

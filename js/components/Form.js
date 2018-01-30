@@ -29,22 +29,6 @@ var Form = KxGenerator.createComponent({
         });
     },
 
-    beforeAttach: function () {
-
-    },
-
-    afterAttach: function () {
-
-    },
-
-    getValue: function () {
-
-    },
-
-    setValue: function (value) {
-
-    },
-
     validate: function () {
         
     },

@@ -16,14 +16,7 @@ var Checkbox = KxGenerator.createComponent({
             versionStyle: this.versionStyle,
             required: this.required,
             checked: this.value
-            
         }
-    },
-
-   
-
-    beforeAttach: function () {
-
     },
 
     registerEvents: function () {
@@ -54,8 +47,14 @@ var Checkbox = KxGenerator.createComponent({
         return this.value;
     },
 
-    destruct: function () {
-        this.$el.remove();
+    enable: function () {
+        this.$el.find('#' + this.fieldName).bootstrapToggle('enable');
+        return this;    
+    },
+
+    disable: function () {
+        this.$el.find('#' + this.fieldName).bootstrapToggle('disable');
+        return this;
     },
 
     template: function () {
