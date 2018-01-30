@@ -22,8 +22,15 @@ var Repeater = KxGenerator.createComponent({
         this.$el.trigger('onBeginDraw');
     },
 
-    genRandomId: function(){
-        return Math.floor(Math.random() * 1000000);
+    genRandomId: function () {
+        var model = this.getModel();
+        var id = Math.floor(Math.random() * 1000000);
+        for (var index in model.map) {
+            if (model.map[index] == id)
+                return this.genRandomId();    
+        }
+        
+        return id;
     },
 
     registerEvents: function () {
