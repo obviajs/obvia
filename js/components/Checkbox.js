@@ -91,4 +91,4 @@ var Checkbox = KxGenerator.createComponent({
 
 //component prototype
 Checkbox.type = 'checkbox';
-KxGenerator.registerDOMElement(Template, 'kx-checkbox');
+KxGenerator.registerDOMElement(Checkbox, 'kx-checkbox');

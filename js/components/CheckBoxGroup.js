@@ -15,7 +15,8 @@ var CheckboxGroup= KxGenerator.createComponent({
             blockProcessAttr: this.required ? false : this.blockProcessAttr,
             versionStyle: this.versionStyle,
             required: this.required,
-            checked: this.value
+            checkedOptions: this.value,
+            optionsData: this.dataProvider
             
         }
     },
@@ -29,15 +30,11 @@ var CheckboxGroup= KxGenerator.createComponent({
     registerEvents: function () {
         var _self = this;
         var model = this.getModel();
-
-        this.$el.on('change', function (e) {
-            _self.value = model.checked;
-        });
+        
     },
 
     afterAttach: function () {
-        var _self = this;
-        var element = "#" + _self.fieldName;
+      
       
     },
 
@@ -59,28 +56,21 @@ var CheckboxGroup= KxGenerator.createComponent({
     },
 
     template: function () {
-
-            return "<div id='" + this.id + "'>" +
-            "<div id='checkbox_" + this.fieldName + "' class='form-group col-lg-"+ this.colspan +" rowspan"+ this.rowspan +" resizable'>" +
-            "<div  id='" + this.fieldName + "-block'>" +
-            "<label rv-style='versionStyle' rv-for='fieldName'>{label}<span rv-if='required'>*</span></label>" +
-            "<div class='row'>" +
-            "<div class='col-xs-12'>" +
-            " <div class='col-xs-2'>" +
-            "<input  type='checkbox' rv-checked='checked' switch-toggle='toggle' data-on='"+this.checkedLabel+"' data-off='"+this.unCheckedLabel+"'+ data-style='slow'  id='" +this.fieldName+"'   name='" + this.fieldName + "'/>"+
-            "</div>" +
-            "<div class='col-xs-10' style='padding-left:20px;'>" +
-            "<div style='padding-top: 5px;'>" +
-            "<div>"+
-    		"<span rv-if='blockProcessAttr' class='block-process'> * </span>" +
-    		"</div>" +
-            "</div>" +
-            "</div>" +
-            "</div>" +
-            "</div>" +
-            "</div>" +
+      var html =  
+              "<div class='form-group col-lg-"+ this.colspan +" "+ this.rowspan +" resizable' id='"+this.fieldName+"_container'>"+
+              "<div id='" + this.fieldName + "-block'>"+
+			  "<label rv-for='fieldName'>{label}<span rv-if='required'>*</span></label>"+
+              "<span rv-if='blockProcessAttr' class='block-process'> * </span>";
+            for(var i= 0;i<this.dataProvider.length;i++)
+            {
+                html+="<div class='checkbox-group'>"+
+                "<label><input type='checkbox'  name='" + this.dataProvider[i][fieldName] + "[]' id='"+this.id+"' value='"+item.id+"'>"+item.checkedOptions+"</label>"+
             "</div>";
-   
+            }
+			html+="</div>"+
+            "</div>";
+
+       return html;      
       
     },
 
@@ -90,4 +80,7 @@ var CheckboxGroup= KxGenerator.createComponent({
 });
 
 //component prototype
-Checkbox.type = 'checkbox';
+CheckboxGroup.type = 'checkboxgroup';
+//register dom element for this component
+KxGenerator.registerDOMElement(CheckboxGroup, 'kx-checkboxgroup');
+
