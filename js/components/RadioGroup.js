@@ -15,40 +15,36 @@ var RadioGroup = KxGenerator.createComponent({
             blockProcessAttr: this.required ? false : this.blockProcessAttr,
             versionStyle: this.versionStyle,
             required: this.required,
+            optionsData: this.dataProvider,
+            labelField: this.labelField,
+            valueField: this.valueField,
             checked: this.value,
-            optionsData: this.dataProvider
-            
-        }
+            changeHandler: this.changeHandler.bind(this)
+        };
     },
-
-   
 
     beforeAttach: function () {
 
     },
 
-    registerEvents: function () {
-          var _self = this;
-        var model = this.getModel();
-
-        this.$el.on('change', function (e) {
-            _self.value = model.checked;
-        });
+    changeHandler: function(){
+        this.value = this.getModelValue('checked');
+        this.$el.trigger('change');
     },
 
     afterAttach: function () {
         var _self = this;
         var element = "#" + _self.fieldName;
-      
     },
 
     setValue: function (value) {
-        // var model = this.getModel();
-        // model.checked = value;
-        // this.$el.trigger('change');
-        // this.$el.find('#' + this.fieldName).bootstrapToggle('destroy');
-        // this.$el.find('#' + this.fieldName).bootstrapToggle();
-        // return this;
+        var model = this.getModel();
+        
+        model.checked = value;
+        this.value = value;
+        this.$el.trigger('change');
+        
+        return this;
     },
 
     getValue: function () {
@@ -60,22 +56,22 @@ var RadioGroup = KxGenerator.createComponent({
     },
 
     template: function () {
-        // if(isNullOrEmpty("+ this.colspan +") || ("+ this.colspan +" == 0))
-        // "+ this.colspan +" = 2;
-        		
-        return 
+       var html=
+        
 			"<div class='form-group col-lg-"+ this.colspan +" rowspan"+ this.rowspan +" resizable' id='" + this.fieldName + "_container'>"+
             "<div id=id='" + this.fieldName + "-block'>"+
-            "<label rv-style='versionStyle' rv-for='fieldName'>{label}<span rv-if='required'>*</span></label>" +
-			this.dataProvider.forEach(function(item){
-                "<div class='radiogroup'>"+
-                "<label><input type='radiogroup'  name='" + this.fieldName + "' id='"+this.id+"' value='"+item.id+"'>"+item.value+"</label>"+
+            "<label rv-style='versionStyle' rv-for='fieldName'>{label}<span rv-if='required'>*</span></label>";
+            for(var i= 0;i<this.dataProvider.length;i++)
+            {
+                var cid = this.fieldName+"_"+i;
+                html+="<div class='radiogroup'>"+
+                "<label><input type='radio' rv-on-change='changeHandler' rv-checked='checked' name='" + this.fieldName +"' id='"+cid+"' value='"+this.dataProvider[i][this.valueField]+"'>"+this.dataProvider[i][this.labelField]+"</label>"+
             "</div>";
-              });
+            }
 			html+="</div>"+
             "</div>";
 
-   
+   return html;
     },
 
     render: function () {

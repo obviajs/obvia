@@ -62,6 +62,36 @@ var myCombo = new ComboBox({
 
 $('#root').append(myCombo.render());
 
+//Colspan component
+
+var myColspan = new Colspan({
+    id: 'colspan',
+    colspan: '3',
+    label: 'My colspan',
+    fieldName: 'colspanContainer',
+    versionStyle: "",
+    blockProcessAttr: false
+    
+});
+$('#root').append(myColspan.render());
+//$('#root').append("<div><b>COMBOBOX</b></div>");
+
+//Checkbox component
+
+var myCheckbox = new Checkbox({
+    id: 'checkbox',
+    colspan: '6',
+    label: 'My checkbox',
+    fieldName: 'checkbox',
+    versionStyle: "",
+    blockProcessAttr: false,
+    required: false,
+    value:true,
+    unCheckedLabel:"Jo",
+    checkedLabel:"Po"
+});
+$('#root').append(myCheckbox.render());
+
 /**
  * AutoComplete Component
  */
@@ -81,18 +111,6 @@ var myAutoComplete = new AutoComplete({
     value: [{ "id": "1", "text": "Ministria e Puneve te Jashtme" }]
 });
 
-
-var myCheckbox = new Checkbox({
-    id: 'checkbox',
-    colspan: '6',
-    label: 'My checkbox',
-    fieldName: 'combobox',
-    dataProvider: [{ "value": "1", "text": "Shqiperi" }, { "value": "2", "text": "Greqi" }, { "value": "3", "text": "SHBA" }],
-    versionStyle: "",
-    blockProcessAttr: false,
-    required: false,
-    value: "2",
-});
 
 /**
  * Repeater Component

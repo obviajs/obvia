@@ -5,7 +5,7 @@
  */
 
 //component definition
-var CheckboxGroup= KxGenerator.createComponent({
+var CheckboxGroup = KxGenerator.createComponent({
     //model binds to the template
     //if you want variables to bind, you must declare them in the model object
     initModel: function () {
@@ -15,10 +15,10 @@ var CheckboxGroup= KxGenerator.createComponent({
             blockProcessAttr: this.required ? false : this.blockProcessAttr,
             versionStyle: this.versionStyle,
             required: this.required,
-            checkedOptions: this.value,
-            optionsData: this.dataProvider
-            
-        }
+            optionsData: this.dataProvider,
+            labelField: this.labelField,
+            valueField: this.valueField
+        };
     },
 
    
@@ -29,8 +29,12 @@ var CheckboxGroup= KxGenerator.createComponent({
 
     registerEvents: function () {
         var _self = this;
+       
         var model = this.getModel();
-        
+        //console.log("fkdk");
+        this.$el.on('change', function (e) {
+            _self.value = model.checked;
+        });
     },
 
     afterAttach: function () {
@@ -39,12 +43,14 @@ var CheckboxGroup= KxGenerator.createComponent({
     },
 
     setValue: function (value) {
-        var model = this.getModel();
-        model.checked = value;
-        this.$el.trigger('change');
-        this.$el.find('#' + this.fieldName).bootstrapToggle('destroy');
-        this.$el.find('#' + this.fieldName).bootstrapToggle();
-        return this;
+        // var model = this.getModel();
+        // model.checked = value;
+        // this.$el.trigger('change');
+        // this.$el.find('#' + this.fieldName).bootstrapToggle('destroy');
+        // this.$el.find('#' + this.fieldName).bootstrapToggle();
+        // return this;
+
+        
     },
 
     getValue: function () {
@@ -63,8 +69,9 @@ var CheckboxGroup= KxGenerator.createComponent({
               "<span rv-if='blockProcessAttr' class='block-process'> * </span>";
             for(var i= 0;i<this.dataProvider.length;i++)
             {
+                var cid = this.fieldName+"_"+i;
                 html+="<div class='checkbox-group'>"+
-                "<label><input type='checkbox'  name='" + this.dataProvider[i][fieldName] + "[]' id='"+this.id+"' value='"+item.id+"'>"+item.checkedOptions+"</label>"+
+                "<label><input type='checkbox' rv-checked='optionsData." + i + "." + this.checkedField + "' name='" + this.fieldName + "[]' id='"+cid+"'>{optionsData." + i + "." + this.labelField + "}</label>"+
             "</div>";
             }
 			html+="</div>"+
