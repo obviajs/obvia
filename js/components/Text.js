@@ -81,7 +81,7 @@ var Text = KxGenerator.createComponent({
     template: function () {         
         return  "<div id='" + this.id + "'>" +
                     "<div class='form-group col-lg-" + this.colspan + "' rowspan" + this.rowspan + " resizable '>" +
-                        "<div id='" + this.field_name + "-block'>" + 
+                        "<div id='" + this.fieldName + "-block'>" + 
                             "<label rv-style='versionStyle' rv-for='fieldName'>{label} <span rv-if='required'>*</span></label>" + 
                             "<span rv-if='blockProcessAttr' class='block-process'> * </span>" + 
                                 "<input rv-type='type'" + 
