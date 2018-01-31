@@ -99,8 +99,16 @@ var ComboBox = KxGenerator.createComponent({
         return this.value;
     },
 
-    destruct: function () {
-        this.$el.remove();
+    enable: function () {
+        $('#' + this.fieldName).multiselect('enable');
+
+        return this;
+    },
+
+    disable: function () {
+        $('#' + this.fieldName).multiselect('disable');
+
+        return this;
     },
 
     template: function () {

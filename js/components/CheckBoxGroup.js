@@ -17,8 +17,9 @@ var CheckboxGroup = KxGenerator.createComponent({
             required: this.required,
             optionsData: this.dataProvider,
             labelField: this.labelField,
-            valueField: this.valueField
-        };
+            valueField: this.valueField,
+            checkedField: this.checkedField       
+         };
     },
 
    
@@ -43,18 +44,23 @@ var CheckboxGroup = KxGenerator.createComponent({
     },
 
     setValue: function (value) {
-        // var model = this.getModel();
+        var model = this.getModel();
+        
+        for(var i=0;i<model.length;i++){
+                
+        }
+        //for(var i=0;i<model.)
         // model.checked = value;
         // this.$el.trigger('change');
         // this.$el.find('#' + this.fieldName).bootstrapToggle('destroy');
         // this.$el.find('#' + this.fieldName).bootstrapToggle();
         // return this;
 
-        
+
     },
 
     getValue: function () {
-        return this.value;
+       
     },
 
     destruct: function () {
