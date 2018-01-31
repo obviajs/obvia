@@ -45,22 +45,30 @@ var CheckboxGroup = KxGenerator.createComponent({
 
     setValue: function (value) {
         var model = this.getModel();
-        
-        for(var i=0;i<model.length;i++){
-                
+
+      for(var i=0;i<model.optionsData.length;i++){
+            if(value.contains(model.optionsData[i][this.valueField]))
+            {
+               model.optionsData[i][this.checkedField]= true;
+            }
+            else{
+                model.optionsData[i][this.checkedField] = false;
+            }
         }
-        //for(var i=0;i<model.)
-        // model.checked = value;
-        // this.$el.trigger('change');
-        // this.$el.find('#' + this.fieldName).bootstrapToggle('destroy');
-        // this.$el.find('#' + this.fieldName).bootstrapToggle();
-        // return this;
-
-
+       
+        this.$el.trigger('change');
+        return value;
     },
 
     getValue: function () {
-       
+        var model = this.getModel();
+        var results = [];
+        for(var i=0;i<model.optionsData.length;i++){
+            results.push(model.optionsData[i][this.checkedField]);
+
+    }
+     //console.log(results);
+     return results;
     },
 
     destruct: function () {
