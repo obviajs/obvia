@@ -64,6 +64,20 @@ var Text = KxGenerator.createComponent({
         return this;
     },
 
+    validate: function () {
+        var model = this.getModel();
+        if (model.required) {
+            if (this.value == "" || this.value == undefined) {
+                this.errorList = [
+                    KxGenerator.getErrorList().call(this)['empty']
+                ];
+                return false;
+            } else
+                return true;    
+        } else
+            return true;    
+    },
+
     template: function () {         
         return  "<div id='" + this.id + "'>" +
                     "<div class='form-group col-lg-" + this.colspan + "' rowspan" + this.rowspan + " resizable '>" +

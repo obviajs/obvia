@@ -99,7 +99,8 @@ var GoogleMap = KxGenerator.createComponent({
         $('#' + this.fieldName + '_map-modal').modal('show');
     },
 
-    mapAcceptPosition: function () {
+    mapAcceptPosition: function (e) {
+        e.preventDefault();
         var model = this.getModel();
 
         var location = model.marker.getPosition();

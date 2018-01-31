@@ -10,9 +10,9 @@ var myForm = new Form({
             fieldName: 'textField',
             versionStyle: '',
             blockProcessAttr: false,
-            required: false,
-            mask: 'currency',
-            value: '34,444.00'
+            required: true,
+            mask: false,
+            value: ""
         }),
         new AutoComplete({
             id: 'autocomplete',
@@ -67,6 +67,7 @@ var myForm = new Form({
             defaultItem: {
                 comboLabel: 'Zgjidh Shtetin',
                 comboValue: "",
+                checkboxValue: true,
                 autocompleteLabel: 'Ministrite',
                 autocompleteValue: [],
                 textLabel: 'Emri',
@@ -82,6 +83,7 @@ var myForm = new Form({
                     {
                         comboLabel: 'Zgjidh Shtetin',
                         comboValue: "",
+                        checkboxValue: true,
                         autocompleteLabel: 'Ministrite',
                         autocompleteValue: [{ "id": "2", "text": "Ministria e Drejtesise" }],
                         textLabel: 'Emri',
@@ -95,6 +97,7 @@ var myForm = new Form({
                     {
                         comboLabel: 'Zgjidh Shtetin',
                         comboValue: "1",
+                        checkboxValue: true,
                         autocompleteLabel: 'Ministrite',
                         autocompleteValue: [{ "id": "3", "text": "Ministria e Brendshme" }],
                         textLabel: 'Emri',
@@ -144,8 +147,22 @@ var myForm = new Form({
                         label: '{textLabel}',
                         fieldName: 'textR',
                         blockProcessAttr: false,
-                        required: false,
+                        required: true,
                         value: '{textValue}'
+                    }
+                },
+                {
+                    constructor: Checkbox,
+                    props: {
+                        id: 'checkboxR',
+                        colspan: '6',
+                        label: 'Aktiv',
+                        fieldName: 'checkboxR',
+                        blockProcessAttr: false,
+                        required: true,
+                        value: '{checkboxValue}',
+                        unCheckedLabel: "Jo",
+                        checkedLabel: "Po"
                     }
                 },
                 {
