@@ -30,8 +30,7 @@ var Checkbox = KxGenerator.createComponent({
 
     afterAttach: function () {
         var _self = this;
-        var element = "#" + _self.fieldName;
-      
+        this.$el.find('#' + this.fieldName).bootstrapToggle(); 
     },
 
     setValue: function (value) {

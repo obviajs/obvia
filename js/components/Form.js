@@ -30,7 +30,18 @@ var Form = KxGenerator.createComponent({
     },
 
     validate: function () {
-        
+        var _self = this;
+        var valid = true;
+        this.errorList = [];
+
+        this.components.forEach(function (component) {
+            if (!component.validate()) {
+                _self.errorList = _self.errorList.concat(component.errorList)
+                valid = false;
+            }
+        });
+
+        return valid;
     },
 
     addComponent: function (component, container) {
