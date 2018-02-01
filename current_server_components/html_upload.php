@@ -167,7 +167,7 @@ class html_upload extends html_element {
 						</div>
 					</div>
 				</div>
-			</div>
+		</div>
 			
 			<script>
 			
