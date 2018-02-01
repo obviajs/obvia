@@ -117,3 +117,18 @@ var myAutoComplete = new AutoComplete({
  */
 $('#root').append("<hr>");
 $('#root').append("<div><b>Repeater</b></div>");
+
+var myTextarea = new Textarea({
+    id: 'textarea',
+    colspan: '6',
+    label: 'Textarea Label',
+    fieldName: 'textareaField',
+    versionStyle: '',
+    blockProcessAttr: false,
+    required: true,
+    defaultDictionary:'English',//Albanian
+    value: ''
+});
+
+$('#root').append("<hr>");
+$('#root').append(myTextarea.render());
