@@ -62,6 +62,21 @@ var myForm = new Form({
             unCheckedLabel: "Jo",
             checkedLabel: "Po"
         }),
+        new Trippleswitch({
+            id: 'trippleswitch',
+            colspan: '6',
+            label: 'This is a survey. Are you happy?',
+            fieldName: 'tripple',
+            versionStyle: "",
+            blockProcessAttr: false,
+            required: false,
+            dataProvider: {
+                left: "Yes", //1
+                middle: "Somewhat",//-1
+                right: "No" //0
+            },
+            value: "1" //1,-1,0
+        }),
         new Repeater({
             id: 'repeater',
             defaultItem: {
@@ -72,6 +87,7 @@ var myForm = new Form({
                 autocompleteValue: [],
                 textLabel: 'Emri',
                 textValue: '',
+                trippleValue: "-1",
                 mapValue: {
                     latitude: 41.1533,
                     longtitude: 20.1683,
@@ -88,6 +104,7 @@ var myForm = new Form({
                         autocompleteValue: [{ "id": "2", "text": "Ministria e Drejtesise" }],
                         textLabel: 'Emri',
                         textValue: 'Mateo Jovani',
+                        trippleValue: "-1",
                         mapValue: {
                             latitude: 51.1533,
                             longtitude: 30.1683,
@@ -102,6 +119,7 @@ var myForm = new Form({
                         autocompleteValue: [{ "id": "3", "text": "Ministria e Brendshme" }],
                         textLabel: 'Emri',
                         textValue: '',
+                        trippleValue: "1",
                         mapValue: {
                             latitude: 41.1533,
                             longtitude: 20.1683,
@@ -176,6 +194,24 @@ var myForm = new Form({
                         blockProcessAttr: false,
                         required: false,
                         value: '{mapValue}'
+                    }
+                },
+                {
+                    constructor: Trippleswitch,
+                    props: {
+                        id: 'trippleswitchR',
+                        colspan: '6',
+                        label: 'This is a survey. Are you happy?',
+                        fieldName: 'trippleR',
+                        versionStyle: "",
+                        blockProcessAttr: false,
+                        required: false,
+                        dataProvider: {
+                            left: "Yes", //1
+                            middle: "Somewhat",//-1
+                            right: "No" //0
+                        },
+                        value: "{trippleValue}" //1,-1,0
                     }
                 }
             ]

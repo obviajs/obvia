@@ -21,14 +21,6 @@ var Form = KxGenerator.createComponent({
         }
     },
 
-    registerEvents: function () {
-        var _self = this;
-
-        this.$el.on('change', function (e) {
-
-        });
-    },
-
     validate: function () {
         var _self = this;
         var valid = true;
@@ -49,6 +41,22 @@ var Form = KxGenerator.createComponent({
         
         //expose component model
         this[component.id] = component;
+    },
+
+    enable: function () {
+        this.components.forEach(function (component) {
+            component.enable();
+        });
+
+        return this;
+    },
+
+    disable: function () {
+        this.components.forEach(function (component) {
+            component.disable();
+        });
+
+        return this;
     },
 
     renderFormHeader: function (viewMode) {
