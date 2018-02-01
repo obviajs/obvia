@@ -10,12 +10,13 @@ var Text = KxGenerator.createComponent({
     //if you want variables to bind, you must declare them in the model object
     initModel: function () {
         return {
-            fieldName: this.fieldName, //this is the object(component)//all the properties are found as the properties 
+            fieldName: this.fieldName, 
             label: this.label,
             blockProcessAttr: this.required ? false : this.blockProcessAttr,
             versionStyle: this.versionStyle,
             required: this.required,
-            value: this.value
+            value: this.value,
+            enabled: true
         }
     },
 
@@ -28,8 +29,8 @@ var Text = KxGenerator.createComponent({
         });
     },
 
-    beforeAttach: function () { //function that is executed before you render the  component in the DOM
-        //life0-cycle method //futet ne DOM qe te besh inicimet e plugineve
+    //function that is executed before you render the  component in the DOM
+    beforeAttach: function () { 
         
     },
 
@@ -49,16 +50,44 @@ var Text = KxGenerator.createComponent({
         return this;
     },
 
+    enable: function () {
+        var model = this.getModel();
+        model.enabled = true;
+
+        return this;
+    },
+
+    disable: function () {
+        var model = this.getModel();
+        model.enabled = false;
+
+        return this;
+    },
+
+    validate: function () {
+        var model = this.getModel();
+        if (model.required) {
+            if (this.value == "" || this.value == undefined) {
+                this.errorList = [
+                    KxGenerator.getErrorList().call(this)['empty']
+                ];
+                return false;
+            } else
+                return true;    
+        } else
+            return true;    
+    },
+
     template: function () {         
         return  "<div id='" + this.id + "'>" +
                     "<div class='form-group col-lg-" + this.colspan + "' rowspan" + this.rowspan + " resizable '>" +
-                        "<div id='" + this.field_name + "-block'>" + 
+                        "<div id='" + this.fieldName + "-block'>" + 
                             "<label rv-style='versionStyle' rv-for='fieldName'>{label} <span rv-if='required'>*</span></label>" + 
                             "<span rv-if='blockProcessAttr' class='block-process'> * </span>" + 
                                 "<input rv-type='type'" + 
                                     "id='" + this.fieldName + "' name='" + this.fieldName + "' rv-value='value'" +
                                     "class='form-control rowspan"+ this.rowspan +"'" +
-                                    "rv-placeholder='label' autofocus/>" +
+                                    "rv-placeholder='label' rv-enabled='enabled' autofocus/>" +
                         "</div>" +
                     "</div>" + 
                 "</div>";    

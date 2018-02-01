@@ -22,11 +22,13 @@ var myRepeater = new Repeater({
                 autocompleteValue: [{ "id": "2", "text": "Ministria e Drejtesise" }],
                 textLabel: 'Emri',
                 textValue: 'Mateo Jovani',
+                radioValue: "1",
                 mapValue: {
                     latitude: 51.1533,
                     longtitude: 30.1683,
                     zoomLevel: 7
-                }
+                },
+                checkboxValue:true
             },
             {
                 comboLabel: 'Zgjidh Shtetin',
@@ -35,11 +37,13 @@ var myRepeater = new Repeater({
                 autocompleteValue: [{ "id": "3", "text": "Ministria e Brendshme" }],
                 textLabel: 'Emri',
                 textValue: '',
+                radioValue: "3",
                 mapValue: {
                     latitude: 41.1533,
                     longtitude: 20.1683,
                     zoomLevel: 7
-                }
+                },
+                checkboxValue:false
             }
         ]
     },
@@ -85,6 +89,20 @@ var myRepeater = new Repeater({
             }
         },
         {
+            constructor: Checkbox,
+            props: {
+                id: 'checkbox',
+                colspan: '6',
+                label: 'Aktiv',
+                fieldName: 'checkbox',
+                blockProcessAttr: false,
+                required: true,
+                value: '{checkboxValue}',
+                unCheckedLabel:"Jo",
+                checkedLabel:"Po"
+            }
+        },
+        {
             constructor: GoogleMap,
             props: {
                 id: 'map3',
@@ -96,7 +114,22 @@ var myRepeater = new Repeater({
                 required: false,
                 value: '{mapValue}'
             }
-        }
+        },
+        {
+            constructor: RadioGroup,
+            props: {
+                id: 'radiogroup',
+                colspan: '6',
+                label: 'Radio',
+                fieldName: 'radioInput',
+                blockProcessAttr: false,
+                required: false,
+                dataProvider: [{ "id": "1", "text": "Ministria e Puneve te Jashtme"}, { "id": "2", "text": "Ministria e Drejtesise"}, { "id": "3", "text": "Ministria e Brendshme"}],
+                labelField: 'text',
+                valueField: 'id',
+                value: "{radioValue}" 
+            }
+        },
     ]
 });
 

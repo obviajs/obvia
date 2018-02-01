@@ -5,21 +5,22 @@
  */
 
 //component definition
-var Template = KxGenerator.createComponent({
+var Colspan = KxGenerator.createComponent({
     //model binds to the template
     //if you want variables to bind, you must declare them in the model object
     initModel: function () {
         return {
+            fieldName: this.fieldName,
+            label: this.label,
+            blockProcessAttr: this.required ? false : this.blockProcessAttr,
+            versionStyle: this.versionStyle
+      
             
         }
     },
 
     registerEvents: function () {
-        var _self = this;
-
-        this.$el.on('change', function (e) {
         
-        });
     },
 
     beforeAttach: function () {
@@ -40,9 +41,8 @@ var Template = KxGenerator.createComponent({
 
     template: function () {
         return
-            "<div id='" + this.id + "'>" +
-            
-            "</div>";
+         
+        "<div class='col-lg-"+ this.colspan +" rowspan"+ this.rowspan +" resizable' style='background-color: #ccc; margin-bottom: 5px;'><label></label></div>";
     },
 
     render: function () {
@@ -51,7 +51,7 @@ var Template = KxGenerator.createComponent({
 });
 
 //component prototype
-Template.type = 'template';
+Colspan.type = 'colspan';
 
 //register dom element for this component
-KxGenerator.registerDOMElement(Template, 'kx-template');
+KxGenerator.registerDOMElement(Colspan, 'kx-colspan');

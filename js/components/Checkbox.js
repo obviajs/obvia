@@ -16,20 +16,7 @@ var Checkbox = KxGenerator.createComponent({
             versionStyle: this.versionStyle,
             required: this.required,
             checked: this.value
-            
         }
-    },
-
-    getData: function (provider) {
-       
-    },
-
-    setData: function (data, element) {
-      
-    },
-
-    beforeAttach: function () {
-
     },
 
     registerEvents: function () {
@@ -43,8 +30,7 @@ var Checkbox = KxGenerator.createComponent({
 
     afterAttach: function () {
         var _self = this;
-        var element = "#" + _self.fieldName;
-      
+        this.$el.find('#' + this.fieldName).bootstrapToggle(); 
     },
 
     setValue: function (value) {
@@ -60,8 +46,14 @@ var Checkbox = KxGenerator.createComponent({
         return this.value;
     },
 
-    destruct: function () {
-        this.$el.remove();
+    enable: function () {
+        this.$el.find('#' + this.fieldName).bootstrapToggle('enable');
+        return this;    
+    },
+
+    disable: function () {
+        this.$el.find('#' + this.fieldName).bootstrapToggle('disable');
+        return this;
     },
 
     template: function () {
@@ -97,3 +89,4 @@ var Checkbox = KxGenerator.createComponent({
 
 //component prototype
 Checkbox.type = 'checkbox';
+KxGenerator.registerDOMElement(Checkbox, 'kx-checkbox');

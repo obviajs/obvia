@@ -62,6 +62,36 @@ var myCombo = new ComboBox({
 
 $('#root').append(myCombo.render());
 
+//Colspan component
+
+var myColspan = new Colspan({
+    id: 'colspan',
+    colspan: '3',
+    label: 'My colspan',
+    fieldName: 'colspanContainer',
+    versionStyle: "",
+    blockProcessAttr: false
+    
+});
+$('#root').append(myColspan.render());
+//$('#root').append("<div><b>COMBOBOX</b></div>");
+
+//Checkbox component
+
+var myCheckbox = new Checkbox({
+    id: 'checkbox',
+    colspan: '6',
+    label: 'My checkbox',
+    fieldName: 'checkbox',
+    versionStyle: "",
+    blockProcessAttr: false,
+    required: false,
+    value:true,
+    unCheckedLabel:"Jo",
+    checkedLabel:"Po"
+});
+$('#root').append(myCheckbox.render());
+
 /**
  * AutoComplete Component
  */
@@ -82,20 +112,23 @@ var myAutoComplete = new AutoComplete({
 });
 
 
-var myCheckbox = new Checkbox({
-    id: 'checkbox',
-    colspan: '6',
-    label: 'My checkbox',
-    fieldName: 'combobox',
-    dataProvider: [{ "value": "1", "text": "Shqiperi" }, { "value": "2", "text": "Greqi" }, { "value": "3", "text": "SHBA" }],
-    versionStyle: "",
-    blockProcessAttr: false,
-    required: false,
-    value: "2",
-});
-
 /**
  * Repeater Component
  */
 $('#root').append("<hr>");
 $('#root').append("<div><b>Repeater</b></div>");
+
+var myTextarea = new Textarea({
+    id: 'textarea',
+    colspan: '6',
+    label: 'Textarea Label',
+    fieldName: 'textareaField',
+    versionStyle: '',
+    blockProcessAttr: false,
+    required: true,
+    defaultDictionary:'English',//Albanian
+    value: ''
+});
+
+$('#root').append("<hr>");
+$('#root').append(myTextarea.render());

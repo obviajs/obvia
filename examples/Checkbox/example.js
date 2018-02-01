@@ -8,7 +8,6 @@ var myCheckbox = new Checkbox({
     value:true,
     unCheckedLabel:"Jo",
     checkedLabel:"Po"
-   
 });
 
 $('#root').append(myCheckbox.render());

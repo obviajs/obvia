@@ -38,7 +38,8 @@ var GoogleMap = KxGenerator.createComponent({
             fieldName: this.fieldName,
             blockProcessAttr: this.required ? false : this.blockProcessAttr,
             versionStyle: this.versionStyle,
-            required: this.required 
+            required: this.required,
+            disabled: false
         }
     },
 
@@ -93,11 +94,13 @@ var GoogleMap = KxGenerator.createComponent({
         this.$el.trigger('setValue');
     },
 
-    openMap: function () {
+    openMap: function (e) {
+        e.preventDefault();
         $('#' + this.fieldName + '_map-modal').modal('show');
     },
 
-    mapAcceptPosition: function () {
+    mapAcceptPosition: function (e) {
+        e.preventDefault();
         var model = this.getModel();
 
         var location = model.marker.getPosition();
@@ -194,6 +197,20 @@ var GoogleMap = KxGenerator.createComponent({
         }
     },
 
+    enable: function () {
+        var model = this.getModel();
+        model.disabled = false;
+
+        return this;    
+    },
+
+    disable: function () {
+        var model = this.getModel();
+        model.disabled = true;
+
+        return this;
+    },
+
     template: function () {
         return "<div id='" + this.id + "'>" +
             "<div class='form-group form-inline col-lg-" + this.colspan + " rowspan" + (this.rowspan ? this.rowspan : '') + " resizable'>" +
@@ -203,7 +220,7 @@ var GoogleMap = KxGenerator.createComponent({
                     "<input type='text' class='form-control' rv-value='latitude' rv-placeholder='latitude'  disabled>" +
                     "<label style='margin-right:5px; margin-left:5px'>Longtitude: </label>" + 
                     "<input type='text' class='form-control' rv-value='longtitude' rv-placeholder='longtitude' disabled>" +
-                    "<button class='form-control btn btn-default' rv-on-click='openMap'><span style='color:#f39c12'>Harta</span> <span style='color:#f39c12' class='glyphicon glyphicon-map-marker'></span></button>" +
+                    "<button class='form-control btn btn-default' rv-disabled='disabled' rv-on-click='openMap'><span style='color:#f39c12'>Harta</span> <span style='color:#f39c12' class='glyphicon glyphicon-map-marker'></span></button>" +
                 "</div>" + 
             "</div>" +
             "<div id='" + this.fieldName + "_map-modal' class='modal fade' role='dialog'>" + 

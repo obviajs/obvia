@@ -7,7 +7,7 @@ var myCombo = new ComboBox({
     versionStyle: "",
     blockProcessAttr: false,
     required: false,
-    value: "2",
+    value: "2"
 });
 
 $('#root').append(myCombo.render());
