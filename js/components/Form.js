@@ -41,6 +41,10 @@ var Form = KxGenerator.createComponent({
         
         //expose component model
         this[component.id] = component;
+
+        component.parent = this;
+        component.parentType = 'form';
+        component.parentForm = this;
     },
 
     enable: function () {

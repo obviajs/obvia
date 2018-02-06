@@ -14,15 +14,15 @@ var Repeater = KxGenerator.createComponent({
     
             addRowHandler: this.addRowHandler.bind(this),
             removeRowHandler: this.removeRowHandler.bind(this),
-            displayAddButton: true,
-            displayRemoveButton: true
+            displayAddButton: this.rendering.actions,
+            displayRemoveButton: this.rendering.actions
         }
     },
 
     beforeAttach: function () {
         this.currentIndex = 1;
         this.currentItem = {};
-        this.$el.trigger('onBeginDraw');
+        this.rowItems = {};
     },
 
     genRandomId: function () {
@@ -55,120 +55,187 @@ var Repeater = KxGenerator.createComponent({
 
     //handle row add click
     addRowHandler: function () {
-        var model = this.getModel();
-        var container = this.$el.find('#' + this.id + '-container');
-
-        //add dataProvider Row
-        this.currentItem = this.defaultItem;
-        this.dataProvider.items.push(this.currentItem);
-        model.map[++this.currentIndex] = this.genRandomId();
-        this.addRow(this.currentItem, this.currentIndex, model.map[this.currentIndex], container);
-        if (this.currentIndex > 1) {
-            model.displayRemoveButton = true;
-        }
+        this.addRow(this.defaultItem, this.currentIndex + 1, true)
     },
 
     //renders a new row, adds components in stack
-    addRow: function (data, index, hash, container) {
-        var rowItems = [];
+    addRow: function (data, index, isPreventable = false) {
         var _self = this;
-        container.append('<div id="' + this.id + '-repeated-block-' + hash + '" class="col-md-12"></div><hr id="' + this.id + '-repeated-block-hr-' + hash + '">');
+        var model = this.getModel();
+        var container = this.$el.find('#' + this.id + '-container');
+        var hash = this.genRandomId();
 
-        this.components.forEach(function (component) {
-            //clone objects
-            var tempComponent = Object.assign({}, component);
-            var p = Object.assign({}, tempComponent.props);
-            
-            //build components properties, check bindings
-            if (_self[p.id] == undefined)
-                _self[p.id] = [];
-            var cmp = _self[p.id];
-            if (cmp[index - 1] == undefined)
-                cmp[index - 1] = {}
-            
-            p.id += "_" + hash;
-            p.fieldName += "_" + hash;
+        var renderedRow = $('<div ' + (_self.rendering.direction == 'vertical' ? "class='col-md-12'" : "") + '>')
+        var rowItems = {};
 
-            for (var prop in p) {
-                if (typeof prop == 'string') {
-                    //check for binding
-                    if (p[prop][0] == '{' && p[prop][p[prop].length - 1] == '}') {
-                        cmp[index - 1][prop] = data[p[prop].slice(1, -1)];
-                    } else {
-                        //no binding
-                        cmp[index - 1][prop] = p[prop];
+        var buildRow = function () {
+            _self.components.forEach(function (component) {
+                //clone objects
+                var tempComponent = Object.assign({}, component);
+                var p = Object.assign({}, tempComponent.props);
+
+                //build components properties, check bindings
+                if (_self[p.id] == undefined)
+                    _self[p.id] = [];
+                var cmp = _self[p.id];
+                var cmpId = p.id;
+                if (cmp[index - 1] == undefined)
+                    cmp[index - 1] = {}
+
+                p.id += "_" + hash;
+                p.fieldName += "_" + hash;
+
+                for (var prop in p) {
+                    if (typeof prop == 'string') {
+                        //check for binding
+                        if (p[prop][0] == '{' && p[prop][p[prop].length - 1] == '}') {
+                            cmp[index - 1][prop] = data[p[prop].slice(1, -1)];
+                        } else {
+                            //no binding
+                            cmp[index - 1][prop] = p[prop];
+                        }
                     }
                 }
-            }
 
-            //construct the component
-            var el = new tempComponent.constructor(cmp[index - 1]);
-            cmp[index - 1] = el;
-            rowItems.push(el);
+                //construct the component
+                var el = new tempComponent.constructor(cmp[index - 1]);
+                el.parent = _self;
+                el.parentType = 'repeater';
+                el.parentForm = _self.parentForm;
+                el.repeaterIndex = index - 1;
 
-            //render component
-            container.find("#" + _self.id + "-repeated-block-" + hash)
-                .append(el.render());
-            
-            //handle component change event and delegate it to repeater
-            el.$el.on('onchange', function (e, sender) {
-                var currentItem = _self.dataProvider.items[index - 1];
-                if (tempComponent.props.value[0] == '{' && tempComponent.props.value[tempComponent.props.value.length - 1] == '}') {
-                    var bindedValue = tempComponent.props.value.slice(1, -1);
-                    data[bindedValue] = sender.getValue();
-                }
+                cmp[index - 1] = el;
+                rowItems[cmpId] = el;
 
-                _self.$el.trigger('onRowEdit', [ _self, new RepeaterEventArgs(rowItems, data, index) ]);
+                //render component in row
+                renderedRow.append(el.render());
+
+                //handle component change event and delegate it to repeater
+                el.$el.on('onchange', function (e, sender) {
+                    var currentItem = _self.dataProvider.items[index - 1];
+                    if (tempComponent.props.value[0] == '{' && tempComponent.props.value[tempComponent.props.value.length - 1] == '}') {
+                        var bindedValue = tempComponent.props.value.slice(1, -1);
+                        data[bindedValue] = sender.getValue();
+                    }
+
+                    _self.$el.trigger('onRowEdit', [_self, new RepeaterEventArgs(rowItems, data, index)]);
+                });
+
             });
 
-        });
+            //render row in dom
+            container  
+                .append('<div id="' + _self.id + '-repeated-block-' + hash + '" ' + (_self.rendering.direction == 'vertical' ? "class='row'": "") + '></div>')
+                .find("#" + _self.id + "-repeated-block-" + hash)
+                .append((_self.rendering.seperator ? '<hr id="' + _self.id + '-repeated-block-hr-' + hash + '">' : ''))  
+                .append(renderedRow)
+                
+            
+            //trigger row add event
+            _self.$el.trigger('onRowAdd', [_self, new RepeaterEventArgs(rowItems, data, index)]);
 
-        //trigger row add event
-        this.$el.trigger('onRowAdd', [ _self, new RepeaterEventArgs(rowItems, data, index) ]);
+            //manage dp
+            _self.currentItem = _self.defaultItem;
+            _self.currentIndex = index;
+            model.map[index] = hash;
+            if (_self.currentIndex > 1 && _self.rendering.actions) {
+                model.displayRemoveButton = true;
+            }
 
-        return { items: rowItems }; 
+            //skip dp if it already exist
+            if (index > _self.dataProvider.items.length) {
+                _self.dataProvider.items.push(_self.currentItem);
+            }
+            
+            _self.rowItems[index - 1] = rowItems;
+            return rowItems;
+        }
+
+        //trigger before row add event
+        if (isPreventable) {
+            //the before add event is preventable
+            var beforeRowAddEvent = jQuery.Event("onBeforeRowAdd");
+            this.$el.trigger(beforeRowAddEvent, [this, new RepeaterEventArgs([], data, index)]);
+
+            if (!beforeRowAddEvent.isDefaultPrevented()) {
+                //the event is not canceled outside
+                return buildRow();
+            } else {
+                //the event default is canceled outside
+                return false;
+            }
+
+        } else {
+            //the before add event is not preventable so buildRow anyway
+            return buildRow();    
+        }
+        
     },
 
     //handle row delete click
     removeRowHandler: function () {
-        var model = this.getModel();
-        var container = this.$el.find('#' + this.id + '-container');
-
-        this.removeRow(this.currentIndex, model.map[this.currentIndex], container);
-        this.currentItem = this.dataProvider.items[--this.currentIndex];
-        if (this.currentIndex == 1) {
-            model.displayRemoveButton = false;
-        }
+        this.removeRow(this.currentIndex, true);
     },
 
-    removeRow: function (index, hash, container) {
+    removeRow: function (index, isPreventable = false) {
         var _self = this;
-        var rowItems = [];
+        var rowItems = {};
         var model = this.getModel();
+        hash = model.map[index];
+        var container = this.$el.find('#' + this.id + '-container');
 
-        container.find('#' + this.id + '-repeated-block-' + hash).remove();
-        container.find('#' + this.id + '-repeated-block-hr-' + hash).remove();
+        var removeRow = function () {
+            container.find('#' + _self.id + '-repeated-block-' + hash).remove();
+            container.find('#' + _self.id + '-repeated-block-hr-' + hash).remove();
 
-        //remove dp row
-        this.dataProvider.items.splice(index - 1, 1);
+            //remove dp row
+            var removedItem = _self.dataProvider.items.splice(index - 1, 1);
 
-        //delete component instances on that row
-        this.components.forEach(function (component) {
-            rowItems.push(_self[component.props.id][index - 1]);
-            _self[component.props.id].splice(index - 1, 1);
-        });
+            //delete component instances on that row
+            _self.components.forEach(function (component) {
+                rowItems[component.props.id] = [_self[component.props.id][index - 1]];
+                _self[component.props.id].splice(index - 1, 1);
+            });
 
-        this.$el.trigger('onRowDelete', [ _self, new RepeaterEventArgs(rowItems, model.currentItem, index) ]);
-        return null;
+            //manage dp
+            _self.currentIndex--;
+            _self.currentItem = _self.dataProvider.items[_self.dataProvider.items.length - 1];
+            if (_self.currentIndex == 1 && _self.rendering.actions) {
+                model.displayRemoveButton = false;
+            }
+
+            _self.$el.trigger('onRowDelete', [_self, new RepeaterEventArgs([], _self.currentItem, index, rowItems)]);
+            delete _self.rowItems[index - 1];
+
+            return removedItem;
+        }
+
+        //trigger before row delete event
+        if (isPreventable) {
+            //trigger before row delete event
+            var beforeRowDeleteEvent = jQuery.Event("onBeforeRowDelete");
+            this.$el.trigger(beforeRowDeleteEvent, [_self, new RepeaterEventArgs(rowItems, model.currentItem, index)]);
+
+            if (!beforeRowDeleteEvent.isDefaultPrevented()) {
+                return removeRow();
+            } else {
+                return false;
+            }
+        } else {
+            return removeRow();
+        }
+  
     },
 
     enable: function () {
         var _self = this;
         var model = this.getModel();
         
-        model.displayAddButton = true;
-        model.displayRemoveButton = true;
-
+        if (this.rendering.actions) {
+            model.displayAddButton = true;
+            model.displayRemoveButton = true;
+        }
+        
         for (var i = 0; i < this.dataProvider.items.length; i++) {
             this.components.forEach(function (component) {
                 _self[component.props.id][i].enable();
@@ -182,8 +249,10 @@ var Repeater = KxGenerator.createComponent({
         var _self = this;
         var model = this.getModel();
 
-        model.displayAddButton = false;
-        model.displayRemoveButton = false;
+        if (this.rendering.actions) {
+            model.displayAddButton = false;
+            model.displayRemoveButton = false;
+        }
 
         for (var i = 0; i < this.dataProvider.items.length; i++){
             this.components.forEach(function (component) {
@@ -196,8 +265,8 @@ var Repeater = KxGenerator.createComponent({
 
     template: function () {
         return  "<div id='" + this.id + "'>" +
-                    "<div id='" + this.id + "-container'></div>" +  
-                    "<div id='actions_" + this.id  + "' class='col-md-offset-10 col-lg-2'>" +
+                    "<div id='" + this.id + "-container' class='col-md-12'></div>" +  
+                    "<div id='actions_" + this.id  + "' class='col-md-offset-10 col-lg-2' style='overflow:hidden;'>" +
                         "<button type='button' class='btn btn-default' rv-if='displayAddButton' rv-on-click='addRowHandler'>" +
                             "<span class='glyphicon glyphicon-plus'></span>" +
                         "</button>" +
@@ -212,16 +281,15 @@ var Repeater = KxGenerator.createComponent({
         var _self = this;
         var model = this.getModel();
         
+        this.$el.trigger('onBeginDraw');
+
         var container = this.$el.find('#' + this.id + '-container'); 
-        container.append("<hr>");
+        //container.append("<hr>");
         
         var dp = this.dataProvider.items;
 
         dp.forEach(function (data, index) {  
-            _self.currentIndex = index + 1;
-            _self.currentItem = data;
-            model.map[_self.currentIndex] = _self.genRandomId();
-            _self.addRow(data, _self.currentIndex, model.map[_self.currentIndex], container);
+            _self.addRow(data, index + 1);
         });
        
         this.$el.trigger('onEndDraw');
@@ -233,10 +301,11 @@ var Repeater = KxGenerator.createComponent({
 //component prototype
 Repeater.type = 'repeater';
 
-var RepeaterEventArgs = function (row, item, index) {
+var RepeaterEventArgs = function (row, item, index, deletedRows) {
     this.currentRow = row;
     this.currentIndex = index;
-    this.currentItem = item;    
+    this.currentItem = item;
+    this.deletedRows = deletedRows;
 }
 
 //register dom element for this component

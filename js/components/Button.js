@@ -13,35 +13,37 @@ var Button = KxGenerator.createComponent({
             type:this.type,
             value: this.value,
             class:this.class,
-            style:this.style,
-            onclick:this.onclick.bind(this)
+            style: this.style,
+            clickHandler: this.clickHandler.bind(this)
         }
     },
 
     registerEvents: function () {
-
+        return {
+            'click': function () {
+                
+            }
+        }
     },
 
-    beforeAttach: function () { //function that is executed before you render the  component in the DOM
-        //life0-cycle method //futet ne DOM qe te besh inicimet e plugineve
-        
-    },
-    onclick: function(){
-        // action goes here
-    },
-    afterAttach: function () {
-
+    clickHandler: function (e) {
+        //execute custom click
+        if (typeof this.onclick == 'function')
+            this.onclick(e, this.repeaterIndex, this, this.parent);
     },
 
     getValue: function () {
+        return this.value;
     },
 
     setValue: function (value) {
+        this.value = value;
+        this.$el.trigger('change');
     },
 
     template: function () {         
-        return  "<div id='" + this.id + "' rv-style='style'>" +
-                "<button rv-type='type' rv-class='class' rv-on-click='onclick' >{value}</button>"
+        return  "<div id='" + this.id + "'>" +
+                    "<button rv-type='type'  rv-style='style' rv-class='class' rv-on-click='clickHandler'>{value}</button>"
                 "</div>";    
     },
 

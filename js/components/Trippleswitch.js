@@ -94,6 +94,7 @@ var Trippleswitch = KxGenerator.createComponent({
         return  "<div id='" + this.id + "'>" +
                     "<div class='col-lg-" + this.colspan + "' id='" + this.fieldName + "-block' resizable' style='padding-bottom: 10px;'>" +
                         "<label rv-style='versionStyle' rv-for='fieldName'>{label} <span rv-if='required'>*</span></label>" +
+                        "<span rv-if='blockProcessAttr' class='block-process'> * </span>" +
                         "<br>" +
                         "<div class='btn btn-group' role='group' style='padding:0'>" +
                             "<button type='button' rv-enabled='enabled' rv-on-click='handleClick' data-on-click='btnLeft' rv-class='btnLeft'>{options.left}</button> " +

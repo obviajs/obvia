@@ -77,8 +77,33 @@ var myForm = new Form({
             },
             value: "1" //1,-1,0
         }),
+        new MultiSwitch({
+            id: 'multiswitch',
+            colspan: '6',
+            label: 'Ministrite',
+            fieldName: 'multiswitchInput',
+            blockProcessAttr: false,
+            required: true,
+            multiselect: false,
+            dataProvider: [
+                { "id": "1", "text": "Ministria e Puneve te Jashtme" },
+                { "id": "2", "text": "Ministria e Drejtesise" },
+                { "id": "3", "text": "Ministria e Brendshme" },
+                { "id": "4", "text": "Ministria e Mbrojtjes" }
+            ],
+            valueField: "id",
+            labelField: "text",
+            defaultClassField: 'btn btn-xs btn-default',
+            selectedClassField: 'btn btn-xs btn-success',
+            value: []
+        }),
         new Repeater({
             id: 'repeater',
+            rendering: {
+                direction: 'vertical',
+                seperator: true,
+                actions: true
+            },
             defaultItem: {
                 comboLabel: 'Zgjidh Shtetin',
                 comboValue: "",
@@ -88,6 +113,7 @@ var myForm = new Form({
                 textLabel: 'Emri',
                 textValue: '',
                 trippleValue: "-1",
+                multiValue: [],
                 mapValue: {
                     latitude: 41.1533,
                     longtitude: 20.1683,
@@ -105,6 +131,7 @@ var myForm = new Form({
                         textLabel: 'Emri',
                         textValue: 'Mateo Jovani',
                         trippleValue: "-1",
+                        multiValue: [{ "id": "3", "text": "Ministria e Brendshme" }],
                         mapValue: {
                             latitude: 51.1533,
                             longtitude: 30.1683,
@@ -120,6 +147,7 @@ var myForm = new Form({
                         textLabel: 'Emri',
                         textValue: '',
                         trippleValue: "1",
+                        multiValue: [{ "id": "3", "text": "Ministria e Brendshme" }, { "id": "2", "text": "Ministria e Drejtesise" }],
                         mapValue: {
                             latitude: 41.1533,
                             longtitude: 20.1683,
@@ -213,6 +241,29 @@ var myForm = new Form({
                         },
                         value: "{trippleValue}" //1,-1,0
                     }
+                },
+                {
+                    constructor: MultiSwitch,
+                    props: {
+                        id: 'multiswitchR',
+                        colspan: '6',
+                        label: 'Ministrite',
+                        fieldName: 'multiswitchInputR',
+                        blockProcessAttr: false,
+                        required: true,
+                        multiselect: true,
+                        dataProvider: [
+                            { "id": "1", "text": "Ministria e Puneve te Jashtme"},
+                            { "id": "2", "text": "Ministria e Drejtesise" },
+                            { "id": "3", "text": "Ministria e Brendshme" },
+                            { "id": "4", "text": "Ministria e Mbrojtjes" }
+                        ],
+                        valueField: "id",
+                        labelField: "text",
+                        defaultClassField: 'btn btn-xs btn-default',
+                        selectedClassField: 'btn btn-xs btn-success',
+                        value: '{multiValue}'
+                    }
                 }
             ]
         })
@@ -220,3 +271,24 @@ var myForm = new Form({
 });
 
 $('#root').append(myForm.render());
+
+$(document).on('onBeforeRowAdd', function (e, repeater, args) {
+    e.preventDefault();
+    
+    bootbox.confirm("Do you want to add row?", function (result) {
+        if (result) {
+            repeater.addRow(args.currentItem, args.currentIndex);
+        }
+    })
+    
+});
+
+$(document).on('onBeforeRowDelete', function (e, repeater, args) {
+    e.preventDefault();
+
+    bootbox.confirm("Do you want to remove row?", function (result) {
+        if (result) {
+            repeater.removeRow(args.currentIndex);
+        }
+    })
+});
