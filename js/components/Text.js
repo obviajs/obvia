@@ -5,7 +5,7 @@
  */
 
 //component definition
-var Text = KxGenerator.createComponent({
+var TextInput = KxGenerator.createComponent({
     //model binds to the template
     //if you want variables to bind, you must declare them in the model object
     initModel: function () {
@@ -23,10 +23,18 @@ var Text = KxGenerator.createComponent({
     registerEvents: function () {
         var _self = this;
         var model = this.getModel();
+       
+        // this.on('change', function () {
+        //     _self.value = model.value;
+        //     console.log('change event inside text with value: ', _self.value);
+        // });
 
-        this.$el.on('change', function () {
-            _self.value = model.value;
-        });
+        return {
+            'change': function () {
+                _self.value = model.value;
+                console.log('change event inside text with value: ', _self.value);
+            }
+        }
     },
 
     //function that is executed before you render the  component in the DOM
@@ -99,7 +107,7 @@ var Text = KxGenerator.createComponent({
 });
 
 //component prototype
-Text.type = 'text';
+TextInput.type = 'text';
 
 //register dom element for this component
-KxGenerator.registerDOMElement(Text, 'kx-text');
+KxGenerator.registerDOMElement(TextInput, 'kx-text');

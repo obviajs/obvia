@@ -19,11 +19,11 @@ var Button = KxGenerator.createComponent({
     },
 
     registerEvents: function () {
-        return {
-            'click': function () {
+        // return {
+        //     'click': function () {
                 
-            }
-        }
+        //     }
+        // }
     },
 
     clickHandler: function (e) {

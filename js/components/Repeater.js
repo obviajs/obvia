@@ -25,6 +25,10 @@ var Repeater = KxGenerator.createComponent({
         this.rowItems = {};
     },
 
+    registerEvents: function () {
+        
+    },
+
     genRandomId: function () {
         var model = this.getModel();
         var id = Math.floor(Math.random() * 1000000);
@@ -111,15 +115,18 @@ var Repeater = KxGenerator.createComponent({
                 renderedRow.append(el.render());
 
                 //handle component change event and delegate it to repeater
-                el.$el.on('onchange', function (e, sender) {
-                    var currentItem = _self.dataProvider.items[index - 1];
-                    if (tempComponent.props.value[0] == '{' && tempComponent.props.value[tempComponent.props.value.length - 1] == '}') {
-                        var bindedValue = tempComponent.props.value.slice(1, -1);
-                        data[bindedValue] = sender.getValue();
-                    }
+                el.on('afterAttach', function () {
+                    el.on('change', function (e, sender) {
+                        console.log('change event outside text (in repeater) with value: ', sender.getValue());
+                        var currentItem = _self.dataProvider.items[index - 1];
+                        if (tempComponent.props.value[0] == '{' && tempComponent.props.value[tempComponent.props.value.length - 1] == '}') {
+                            var bindedValue = tempComponent.props.value.slice(1, -1);
+                            data[bindedValue] = sender.getValue();
+                        }
 
-                    _self.$el.trigger('onRowEdit', [_self, new RepeaterEventArgs(rowItems, data, index)]);
-                });
+                        _self.$el.trigger('onRowEdit', [_self, new RepeaterEventArgs(rowItems, data, index)]);
+                    });
+                });                 
 
             });
 
@@ -300,13 +307,6 @@ var Repeater = KxGenerator.createComponent({
 
 //component prototype
 Repeater.type = 'repeater';
-
-var RepeaterEventArgs = function (row, item, index, deletedRows) {
-    this.currentRow = row;
-    this.currentIndex = index;
-    this.currentItem = item;
-    this.deletedRows = deletedRows;
-}
 
 //register dom element for this component
 KxGenerator.registerDOMElement(Repeater, 'kx-repeater');

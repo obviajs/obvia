@@ -1,4 +1,4 @@
-var myText = new Text({
+var myText = new TextInput({
     id: 'text',
     colspan: '6',
     label: 'Text Label',

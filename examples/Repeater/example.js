@@ -77,7 +77,7 @@ var myRepeater = new Repeater({
             }
         },
         {
-            constructor: Text,
+            constructor: TextInput,
             props: {
                 id: 'text',
                 colspan: '6',

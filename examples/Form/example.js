@@ -3,7 +3,7 @@ var myForm = new Form({
     formName: 'My Form',
     viewMode: 'steps',
     components: [
-        new Text({
+        new TextInput({
             id: 'text',
             colspan: '6',
             label: 'Text Label',
@@ -186,31 +186,31 @@ var myForm = new Form({
                     }
                 },
                 {
-                    constructor: Text,
+                    constructor: TextInput,
                     props: {
                         id: 'textR',
                         colspan: '6',
                         label: '{textLabel}',
-                        fieldName: 'textR',
+                        fieldName: 'textRInput',
                         blockProcessAttr: false,
                         required: true,
                         value: '{textValue}'
                     }
                 },
-                {
-                    constructor: Checkbox,
-                    props: {
-                        id: 'checkboxR',
-                        colspan: '6',
-                        label: 'Aktiv',
-                        fieldName: 'checkboxR',
-                        blockProcessAttr: false,
-                        required: true,
-                        value: '{checkboxValue}',
-                        unCheckedLabel: "Jo",
-                        checkedLabel: "Po"
-                    }
-                },
+                // {
+                //     constructor: Checkbox,
+                //     props: {
+                //         id: 'checkboxR',
+                //         colspan: '6',
+                //         label: 'Aktiv',
+                //         fieldName: 'checkboxRInput',
+                //         blockProcessAttr: false,
+                //         required: true,
+                //         value: '{checkboxValue}',
+                //         unCheckedLabel: "Jo",
+                //         checkedLabel: "Po"
+                //     }
+                // },
                 {
                     constructor: GoogleMap,
                     props: {
@@ -272,23 +272,34 @@ var myForm = new Form({
 
 $('#root').append(myForm.render());
 
-$(document).on('onBeforeRowAdd', function (e, repeater, args) {
-    e.preventDefault();
+// $(document).on('onBeforeRowAdd', function (e, repeater, args) {
+//     e.preventDefault();
     
-    bootbox.confirm("Do you want to add row?", function (result) {
-        if (result) {
-            repeater.addRow(args.currentItem, args.currentIndex);
-        }
-    })
+//     bootbox.confirm("Do you want to add row?", function (result) {
+//         if (result) {
+//             repeater.addRow(args.currentItem, args.currentIndex);
+//         }
+//     })
     
-});
+// });
 
-$(document).on('onBeforeRowDelete', function (e, repeater, args) {
-    e.preventDefault();
+// $(document).on('onBeforeRowDelete', function (e, repeater, args) {
+//     e.preventDefault();
 
-    bootbox.confirm("Do you want to remove row?", function (result) {
-        if (result) {
-            repeater.removeRow(args.currentIndex);
-        }
-    })
+//     bootbox.confirm("Do you want to remove row?", function (result) {
+//         if (result) {
+//             repeater.removeRow(args.currentIndex);
+//         }
+//     })
+// });
+
+myForm.on('afterAttach', function () {
+    myForm.text.on('change', function (e, sender) {
+        console.log('change event outside text (in document) with value: ', sender.getValue());
+    });
+
+    myForm.repeater.textR[0].on('change', function (e, sender) {
+        console.log('change event outside text (in document) with value: ', sender.getValue());
+    });
+
 });
