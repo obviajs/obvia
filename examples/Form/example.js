@@ -37,7 +37,7 @@ var myForm = new Form({
             required: false,
             value: "2"
         }),
-        new GoogleMap({
+        /*new GoogleMap({
             id: 'map3',
             colspan: '6',
             label: 'Vendodhja Gjeografike',
@@ -50,7 +50,7 @@ var myForm = new Form({
                 longtitude: 20.1683,
                 zoomLevel: 7
             }
-        }),
+        }),*/
         new Checkbox({
             id: 'checkbox',
             colspan: '6',
@@ -211,7 +211,7 @@ var myForm = new Form({
                 //         checkedLabel: "Po"
                 //     }
                 // },
-                {
+               /* {
                     constructor: GoogleMap,
                     props: {
                         id: 'mapR',
@@ -223,7 +223,7 @@ var myForm = new Form({
                         required: false,
                         value: '{mapValue}'
                     }
-                },
+                },*/
                 {
                     constructor: Trippleswitch,
                     props: {
@@ -270,7 +270,6 @@ var myForm = new Form({
     ]
 });
 
-$('#root').append(myForm.render());
 
 // $(document).on('onBeforeRowAdd', function (e, repeater, args) {
 //     e.preventDefault();
@@ -294,6 +293,7 @@ $('#root').append(myForm.render());
 // });
 
 myForm.on('afterAttach', function () {
+    console.log("MainForm Attached");
     myForm.text.on('change', function (e, sender) {
         console.log('change event outside text (in document) with value: ', sender.getValue());
     });
@@ -303,3 +303,4 @@ myForm.on('afterAttach', function () {
     });
 
 });
+$('#root').append(myForm.render());

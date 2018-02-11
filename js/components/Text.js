@@ -52,9 +52,11 @@ var TextInput = KxGenerator.createComponent({
     },
 
     setValue: function (value) {
-        this.setModelValue('value', value);
-        this.$el.trigger('change');
-
+        if(this.value != value)
+        {
+            this.setModelValue('value', value);
+            this.$el.trigger('change');
+        }    
         return this;
     },
 
