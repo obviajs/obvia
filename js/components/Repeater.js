@@ -269,7 +269,7 @@ var Repeater = KxGenerator.createComponent({
     },
 
     template: function () {
-        return  "<div id='" + this.id + "'>" +
+        return "<div id='" + this.id + "-wrapper'>" +
                     "<div id='" + this.id + "-container' class='col-md-12'></div>" +  
                     "<div id='actions_" + this.id  + "' class='col-md-offset-10 col-lg-2' style='overflow:hidden;'>" +
                         "<button type='button' class='btn btn-default' rv-if='model.displayAddButton' rv-on-click='model.addRowHandler'>" +

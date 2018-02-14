@@ -47,7 +47,7 @@ var TextInput = KxGenerator.createComponent({
     },
 
     template: function () {         
-        return  "<div>" +
+        return  "<div id='" + this.id + "-wrapper'>" +
                     "<div class='form-group col-lg-" + this.colspan + "' rowspan" + this.rowspan + " resizable '>" +
                         "<div id='" + this.id + "-block'>" + 
                             "<label rv-style='versionStyle' rv-for='id'>{label} <span rv-if='required'>*</span></label>" + 

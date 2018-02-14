@@ -30,7 +30,7 @@ var Template = KxGenerator.createComponent({
     },
 
     template: function () {
-        return  "<div>" +
+        return  "<div id='" + this.id + "-wrapper'>" +
             
                 "</div>";
     },

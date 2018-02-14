@@ -54,7 +54,7 @@ var GoogleMap = KxGenerator.createComponent({
                 model.map.setCenter(model.marker.getPosition());
             }
 
-            _self.moveMarker(model.map, model.marker, value.latitude, value.longtitude);
+            _self.moveMarker(model.map, model.marker, _self.value.latitude, _self.value.longtitude);
         });
 
         setTimeout(function () { _self.initMap(); }, 200)
@@ -67,7 +67,7 @@ var GoogleMap = KxGenerator.createComponent({
     setValue: function (value) {
         var model = this.getModel();
         this.value = value;
-        this.moveMarker(model.map, model.marker, value.latitude, value.longtitude);
+        this.moveMarker(model.map, model.marker, this.value.latitude, this.value.longtitude);
 
         this.$el.trigger('change');
 
@@ -75,7 +75,6 @@ var GoogleMap = KxGenerator.createComponent({
     },
 
     openMap: function (e) {
-        console.log(e)
         e.preventDefault();
         $('#' + this.id + '_map-modal').modal('show');
     },
@@ -87,9 +86,9 @@ var GoogleMap = KxGenerator.createComponent({
         var location = model.marker.getPosition();
         var zoom = model.map.getZoom();
 
-        value.latitude = location.lat();
-        value.longtitude = location.lng();
-        value.zoomLevel = zoom;
+        this.value.latitude = location.lat();
+        this.value.longtitude = location.lng();
+        this.value.zoomLevel = zoom;
 
         this.$el.trigger('change');
 
@@ -125,13 +124,13 @@ var GoogleMap = KxGenerator.createComponent({
         var model = this.getModel();
 
         var pos = {
-            lat: value.latitude,
-            lng: value.longtitude
+            lat: this.value.latitude,
+            lng: this.value.longtitude
         };
 
         model.map = new google.maps.Map(document.getElementById(this.id + '_map'), {
             center: pos,
-            zoom: model.zoomLevel
+            zoom: this.value.zoomLevel
         });
         
         model.marker = new google.maps.Marker({
@@ -198,7 +197,7 @@ var GoogleMap = KxGenerator.createComponent({
     },
 
     template: function () {
-        return "<div>" +
+        return "<div id='" + this.id + "-wrapper'>" +
             "<div class='form-group form-inline col-lg-" + this.colspan + " rowspan" + (this.rowspan ? this.rowspan : '') + " resizable'>" +
                 "<label>{label}</label><br>" +
                     "<div class='col-sm-12' style='padding:0px'>" + 
