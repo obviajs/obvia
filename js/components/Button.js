@@ -13,23 +13,34 @@ var Button = KxGenerator.createComponent({
             type:this.type,
             value: this.value,
             class:this.class,
-            style: this.style,
-            clickHandler: this.clickHandler.bind(this)
+            style: this.style
         }
     },
-
+    
     registerEvents: function () {
-        // return {
-        //     'click': function () {
-                
-        //     }
-        // }
-    },
-
-    clickHandler: function (e) {
-        //execute custom click
-        if (typeof this.onclick == 'function')
-            this.onclick(e, this.repeaterIndex, this, this.parent);
+         return [
+            {
+                registerTo: this.$el,
+                events:
+                { 
+                    'click': function (e) {
+                        console.log("click per elementin $el");
+                    } 
+                }
+            },
+            {
+                registerTo: this.$btn,
+                events:
+                { 
+                    'click': function (e) {
+                        console.log("click per butonin e brendshem $btn");
+                        //execute custom click
+                        if (typeof this.onclick == 'function')
+                        this.onclick(e, this.repeaterIndex, this, this.parent);
+                    } 
+                }
+            }
+        ]
     },
 
     getValue: function () {
@@ -42,14 +53,17 @@ var Button = KxGenerator.createComponent({
     },
 
     template: function () {         
-        return  "<div id='" + this.id + "'>" +
-                    "<button rv-type='type'  rv-style='style' rv-class='class' rv-on-click='clickHandler'>{value}</button>"
+        return  "<div id='" + this.id + "-wrapper'>" +
+                    "<button rv-type='type'  rv-style='style' rv-class='class'>{value}</button>"
                 "</div>";    
     },
-
+    afterAttach: function(){
+        this.$btn = this.$el.find("button");
+    },
     render: function () {
         return this.$el;
     }
+    
 });
 
 //component prototype

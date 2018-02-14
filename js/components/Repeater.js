@@ -25,7 +25,7 @@ var Repeater = KxGenerator.createComponent({
     },
 
     registerEvents: function () {
-        
+        return [];
     },
 
     genRandomId: function () {
@@ -123,6 +123,10 @@ var Repeater = KxGenerator.createComponent({
                         }
 
                         _self.$el.trigger('onRowEdit', [_self, new RepeaterEventArgs(rowItems, data, index)]);
+                    });
+
+                    el.on('click', function (e, sender) {
+                        console.log('click event outside text (in repeater) with value: ', sender.getValue());
                     });
                 });                 
 

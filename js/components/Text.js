@@ -14,6 +14,29 @@ var TextInput = KxGenerator.createComponent({
         }
     },
 
+   registerEvents: function () {
+         return [
+            {
+                registerTo: this.$el,
+                events:
+                { 
+                    'click': function (e) {
+                        console.log("click per elementin $el");
+                    } 
+                }
+            },
+            {
+                registerTo: this.$input,
+                events:
+                { 
+                    'click': function (e) {
+                        console.log("click per input e brendshem $input");
+                    } 
+                }
+            }
+        ]
+    },
+
     afterAttach: function () {
         if(this.hasOwnProperty('mask'))
             $('#' + this.fieldName).inputmask(this.mask); 
@@ -60,7 +83,9 @@ var TextInput = KxGenerator.createComponent({
                     "</div>" + 
                 "</div>";    
     },
-
+    afterAttach: function(){
+        this.$input = this.$el.find("#"+this.id);
+    },
     render: function () {
         return this.$el;
     }

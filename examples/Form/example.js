@@ -36,19 +36,19 @@ var myForm = new Form({
         //     required: false,
         //     value: "2"
         // }),
-        new GoogleMap({
-            id: 'map3',
-            colspan: '6',
-            label: 'Vendodhja Gjeografike',
-            versionStyle: "",
-            blockProcessAttr: false,
-            required: false,
-            value: {
-                latitude: 41.1533,
-                longtitude: 20.1683,
-                zoomLevel: 7
-            }
-        }),
+        // new GoogleMap({
+        //     id: 'map3',
+        //     colspan: '6',
+        //     label: 'Vendodhja Gjeografike',
+        //     versionStyle: "",
+        //     blockProcessAttr: false,
+        //     required: false,
+        //     value: {
+        //         latitude: 41.1533,
+        //         longtitude: 20.1683,
+        //         zoomLevel: 7
+        //     }
+        // }),
         // new Checkbox({
         //     id: 'checkbox',
         //     colspan: '6',
@@ -184,6 +184,17 @@ var myForm = new Form({
                 //     }
                 // },
                 {
+                    constructor: Button,
+                    props: {
+                        id: 'button',
+                        type: "button",
+                        value: "Clicked Me",
+                        style: '',
+                        class: "btn btn-success",
+                        onclick : function(e){console.log("From ClickAction");}
+                    }
+                },
+                {
                     constructor: TextInput,
                     props: {
                         id: 'textR',
@@ -294,9 +305,18 @@ myForm.on('afterAttach', function () {
     myForm.text.on('change', function (e, sender) {
         console.log('change event outside text (in document) with value: ', sender.getValue());
     });
+    myForm.text.on('click', function (e, sender) {
+        console.log('click event outside text (in document) with value: ', sender.getValue());
+    });
 
     myForm.repeater.textR[0].on('change', function (e, sender) {
         console.log('change event outside text (in document) with value: ', sender.getValue());
+    });
+    myForm.repeater.textR[0].on('click', function (e, sender) {
+        console.log('click event outside text (in document) with value: ', sender.getValue());
+    });
+    myForm.repeater.button[0].on('click', function (e, sender) {
+        console.log('click event outside button (in document) with value: ', sender.getValue());
     });
 
 })
