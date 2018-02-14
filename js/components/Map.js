@@ -6,21 +6,17 @@
 
 //component definition
 var GoogleMap = KxGenerator.createComponent({
-    //model binds to the template
-    //if you want variables to bind, you must declare them in the model object
+
+    value: {
+        latitude: 41.1533,
+        longtitude: 20.1683,
+        zoomLevel: 7
+    },
+
     initModel: function () {
-        if (!this.value || this.value == null) {
-            this.value = {}
-        }
-
         return {
-            //hardcoded coordinates
-            latitude: this.value.latitude || '41.1533',
-            longtitude: this.value.longtitude || '20.1683',
-            zoomLevel: this.value.zoomLevel || '7',
-
-            modalLatitude: this.value.latitude || '41.1533',
-            modalLongtitude: this.value.longtitude || '20.1683',
+            modalLatitude: this.value.latitude,
+            modalLongtitude: this.value.longtitude,
 
             marker: null,
             map: null,
@@ -34,54 +30,33 @@ var GoogleMap = KxGenerator.createComponent({
             setLatLngManually: this.setLatLngManually.bind(this),
             mapAcceptPosition: this.mapAcceptPosition.bind(this),
 
-            label: this.label,
-            fieldName: this.fieldName,
             blockProcessAttr: this.required ? false : this.blockProcessAttr,
-            versionStyle: this.versionStyle,
-            required: this.required,
             disabled: false
         }
     },
 
     registerEvents: function () {
+        // return {
+        //     'change'
+        // }
+    },
+
+
+    afterAttach: function () {
         var _self = this;
         var model = this.getModel();
-
-        this.$el.find('#' + this.fieldName + '_map-modal').on('shown.bs.modal', function () {
+        
+        this.$el.find('#' + this.id + '_map-modal').on('shown.bs.modal', function () {
             google.maps.event.trigger(model.map, 'resize');
 
             // after the resize event, we need to adjust the center of the map
             if (model.marker) {
                 model.map.setCenter(model.marker.getPosition());
             }
-            
-            _self.moveMarker(model.map, model.marker, model.latitude, model.longtitude);
+
+            _self.moveMarker(model.map, model.marker, value.latitude, value.longtitude);
         });
 
-        this.$el.on('setValue', function () {
-            model.latitude = _self.value.latitude;
-            model.longtitude = _self.value.longtitude;
-            model.zoomLevel = _self.value.zoomLevel;
-            _self.moveMarker(model.map, model.marker, model.latitude, model.longtitude);
-        });
-
-        this.$el.on('valueSet', function () {
-            _self.value.latitude = model.latitude;
-            _self.value.longtitude = model.longtitude;
-            _self.value.zoomLevel = model.zoomLevel;
-
-            _self.$el.trigger('change');
-        });
-    },
-
-
-    beforeAttach: function () {
-        var _self = this;
-        var model = this.getModel();
-    },
-
-    afterAttach: function () {
-        var _self = this;
         setTimeout(function () { _self.initMap(); }, 200)
     },
 
@@ -90,13 +65,19 @@ var GoogleMap = KxGenerator.createComponent({
     },
 
     setValue: function (value) {
+        var model = this.getModel();
         this.value = value;
-        this.$el.trigger('setValue');
+        this.moveMarker(model.map, model.marker, value.latitude, value.longtitude);
+
+        this.$el.trigger('change');
+
+        return this;
     },
 
     openMap: function (e) {
+        console.log(e)
         e.preventDefault();
-        $('#' + this.fieldName + '_map-modal').modal('show');
+        $('#' + this.id + '_map-modal').modal('show');
     },
 
     mapAcceptPosition: function (e) {
@@ -106,12 +87,13 @@ var GoogleMap = KxGenerator.createComponent({
         var location = model.marker.getPosition();
         var zoom = model.map.getZoom();
 
-        model.latitude = location.lat();
-        model.longtitude = location.lng();
-        model.zoomLevel = zoom;
+        value.latitude = location.lat();
+        value.longtitude = location.lng();
+        value.zoomLevel = zoom;
 
-        this.$el.trigger('valueSet');
-        $('#' + this.fieldName + '_map-modal').modal('hide');
+        this.$el.trigger('change');
+
+        $('#' + this.id + '_map-modal').modal('hide');
     },
 
     moveMarker: function(map, marker, lat, lng) {
@@ -143,11 +125,11 @@ var GoogleMap = KxGenerator.createComponent({
         var model = this.getModel();
 
         var pos = {
-            lat: model.latitude,
-            lng: model.longtitude
+            lat: value.latitude,
+            lng: value.longtitude
         };
 
-        model.map = new google.maps.Map(document.getElementById(this.fieldName + '_map'), {
+        model.map = new google.maps.Map(document.getElementById(this.id + '_map'), {
             center: pos,
             zoom: model.zoomLevel
         });
@@ -163,7 +145,9 @@ var GoogleMap = KxGenerator.createComponent({
     
     },
 
-    changeCoordinatesManually: function () {
+    changeCoordinatesManually: function (e) {
+        e.preventDefault();
+    
         var model = this.getModel();
 
         if (model.mapCheckSetLatLng) {
@@ -182,7 +166,9 @@ var GoogleMap = KxGenerator.createComponent({
         }
     },
 
-    setLatLngManually: function (action) {
+    setLatLngManually: function (e, action) {
+        e.preventDefault();
+
         var model = this.getModel();
 
         if (action == 'false') {
@@ -212,18 +198,18 @@ var GoogleMap = KxGenerator.createComponent({
     },
 
     template: function () {
-        return "<div id='" + this.id + "'>" +
+        return "<div>" +
             "<div class='form-group form-inline col-lg-" + this.colspan + " rowspan" + (this.rowspan ? this.rowspan : '') + " resizable'>" +
                 "<label>{label}</label><br>" +
                     "<div class='col-sm-12' style='padding:0px'>" + 
                     "<label style='margin-right:5px'>Latitude: </label>" + 
-                    "<input type='text' class='form-control' rv-value='latitude' rv-placeholder='latitude'  disabled>" +
+                    "<input type='text' class='form-control' rv-value='value.latitude' rv-placeholder='value.latitude' disabled>" +
                     "<label style='margin-right:5px; margin-left:5px'>Longtitude: </label>" + 
-                    "<input type='text' class='form-control' rv-value='longtitude' rv-placeholder='longtitude' disabled>" +
-                    "<button class='form-control btn btn-default' rv-disabled='disabled' rv-on-click='openMap'><span style='color:#f39c12'>Harta</span> <span style='color:#f39c12' class='glyphicon glyphicon-map-marker'></span></button>" +
+                    "<input type='text' class='form-control' rv-value='value.longtitude' rv-placeholder='value.longtitude' disabled>" +
+                    "<button class='form-control btn btn-default' rv-disabled='model.disabled' rv-on-click='model.openMap'><span style='color:#f39c12'>Harta</span> <span style='color:#f39c12' class='glyphicon glyphicon-map-marker'></span></button>" +
                 "</div>" + 
             "</div>" +
-            "<div id='" + this.fieldName + "_map-modal' class='modal fade' role='dialog'>" + 
+            "<div id='" + this.id + "_map-modal' class='modal fade' role='dialog'>" + 
                 "<div class='modal-dialog'>" +
                     "<div class='modal-content'>" +
                         "<div class='modal-header'>" +
@@ -236,36 +222,36 @@ var GoogleMap = KxGenerator.createComponent({
                                 "<div class='col-xs-2' style='padding-top:8px'>" +
                                    "<div>" +
                                         "<label class='control-label'>" +
-                                            "<input type='checkbox' rv-checked='mapCheckSetLatLng' rv-on-change='changeCoordinatesManually'><strong>Ndrysho</strong>" + 
+                                            "<input type='checkbox' rv-checked='model.mapCheckSetLatLng' rv-on-change='model.changeCoordinatesManually'><strong>Ndrysho</strong>" + 
                                         "</label>" +
                                     "</div>" +
                                 "</div>" +
                                 "<div class='col-xs-4' style='padding:0px'>" +
                                     "<div class='col-xs-3' style='padding-right:0px; padding-top:10px'>" +
-                                        "<label for='" + this.fieldName + "_mapSetLat'>Lat:</label>" + 
+                                        "<label for='" + this.id + "_mapSetLat'>Lat:</label>" + 
                                     "</div>" +
                                     "<div class='col-xs-9' style='padding:0px'>" +
-                                        "<input type='number' class='form-control' rv-value='modalLatitude' rv-placeholder='latitude' rv-disabled='mapSetLatDisabled'>" +
+                                        "<input type='number' class='form-control' rv-value='model.modalLatitude' rv-placeholder='value.latitude' rv-disabled='model.mapSetLatDisabled'>" +
                                     "</div>" +
                                 "</div>" +
                                 "<div class='col-xs-4' style='padding:0px'>" +
                                     "<div class='col-xs-3' style='padding-right:0px; padding-top:10px'>" +
-                                        "<label for='" + this.fieldName + "_mapSetLng' > Lng: </label>" +
+                                        "<label for='" + this.id + "_mapSetLng' > Lng: </label>" +
                                     "</div>" +
                                     "<div class='col-xs-9' style='padding:0px'>" +
-                                        "<input type='number'  class='form-control' rv-value='modalLongtitude' rv-placeholder='latitude' rv-disabled='mapSetLongDisabled'>" +
+                                        "<input type='number' class='form-control' rv-value='model.modalLongtitude' rv-placeholder='value.longtitude' rv-disabled='model.mapSetLongDisabled'>" +
                                     "</div>" +
                                 "</div>" +
                                "<div class='col-xs-2 pull-right' style='padding-right:0px'>" +
-                                    "<button rv-class='setLatLongOkBtnClass' rv-on-click='setLatLngManually' data-on-click='true'>Ok</button>" +
-                                    "<button rv-class='setLatLongCancelBtnClass' rv-on-click='setLatLngManually' data-on-click='false'>X</button>" +
+                                    "<button rv-class='model.setLatLongOkBtnClass' rv-on-click='model.setLatLngManually' data-on-click='true'>Ok</button>" +
+                                    "<button rv-class='model.setLatLongCancelBtnClass' rv-on-click='model.setLatLngManually' data-on-click='false'>X</button>" +
                                 "</div>" +
                             "</div>" +
                         "</div>" +
-                        "<div id='" + this.fieldName + "_map' style='height: 400px;width: 100%;'></div>" +
+                        "<div id='" + this.id + "_map' style='height: 400px;width: 100%;'></div>" +
                     "</div>" +
                     "<div class='modal-footer'>" +
-                        "<button class='btn btn-success' rv-on-click='mapAcceptPosition'>Ruaj Koordinatat</button>" +
+                        "<button class='btn btn-success' rv-on-click='model.mapAcceptPosition'>Ruaj Koordinatat</button>" +
                     "</div>" +
                 "</div>" +
             "</div>" +

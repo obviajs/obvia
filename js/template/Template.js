@@ -6,20 +6,11 @@
 
 //component definition
 var Template = KxGenerator.createComponent({
-    //model binds to the template
-    //if you want variables to bind, you must declare them in the model object
+    //model variables are private and they bind to the template
     initModel: function () {
         return {
             
         }
-    },
-
-    registerEvents: function () {
-        var _self = this;
-
-        this.$el.on('change', function (e) {
-        
-        });
     },
 
     beforeAttach: function () {
@@ -39,7 +30,7 @@ var Template = KxGenerator.createComponent({
     },
 
     template: function () {
-        return  "<div id='" + this.id + "'>" +
+        return  "<div>" +
             
                 "</div>";
     },

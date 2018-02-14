@@ -6,58 +6,17 @@
 
 //component definition
 var TextInput = KxGenerator.createComponent({
-    //model binds to the template
-    //if you want variables to bind, you must declare them in the model object
+
     initModel: function () {
         return {
-            fieldName: this.fieldName, 
-            label: this.label,
-            blockProcessAttr: this.required ? false : this.blockProcessAttr,
-            versionStyle: this.versionStyle,
-            required: this.required,
-            value: this.value,
-            enabled: true
+            enabled: true,
+            blockProcessAttr: this.required ? false : this.blockProcessAttr
         }
-    },
-
-    registerEvents: function () {
-        var _self = this;
-        var model = this.getModel();
-       
-        // this.on('change', function () {
-        //     _self.value = model.value;
-        //     console.log('change event inside text with value: ', _self.value);
-        // });
-
-        return {
-            'change': function () {
-                _self.value = model.value;
-                console.log('change event inside text with value: ', _self.value);
-            }
-        }
-    },
-
-    //function that is executed before you render the  component in the DOM
-    beforeAttach: function () { 
-        
     },
 
     afterAttach: function () {
         if(this.hasOwnProperty('mask'))
             $('#' + this.fieldName).inputmask(this.mask); 
-    },
-
-    getValue: function () {
-        return this.value;
-    },
-
-    setValue: function (value) {
-        if(this.value != value)
-        {
-            this.setModelValue('value', value);
-            this.$el.trigger('change');
-        }    
-        return this;
     },
 
     enable: function () {
@@ -75,8 +34,7 @@ var TextInput = KxGenerator.createComponent({
     },
 
     validate: function () {
-        var model = this.getModel();
-        if (model.required) {
+        if (this.required) {
             if (this.value == "" || this.value == undefined) {
                 this.errorList = [
                     KxGenerator.getErrorList().call(this)['empty']
@@ -89,15 +47,15 @@ var TextInput = KxGenerator.createComponent({
     },
 
     template: function () {         
-        return  "<div id='" + this.id + "'>" +
+        return  "<div>" +
                     "<div class='form-group col-lg-" + this.colspan + "' rowspan" + this.rowspan + " resizable '>" +
-                        "<div id='" + this.fieldName + "-block'>" + 
-                            "<label rv-style='versionStyle' rv-for='fieldName'>{label} <span rv-if='required'>*</span></label>" + 
+                        "<div id='" + this.id + "-block'>" + 
+                            "<label rv-style='versionStyle' rv-for='id'>{label} <span rv-if='required'>*</span></label>" + 
                             "<span rv-if='blockProcessAttr' class='block-process'> * </span>" + 
                                 "<input rv-type='type'" + 
-                                    "id='" + this.fieldName + "' name='" + this.fieldName + "' rv-value='value'" +
+                                    "id='" + this.id + "' name='" + this.id + "' rv-value='value'" +
                                     "class='form-control rowspan"+ this.rowspan +"'" +
-                                    "rv-placeholder='label' rv-enabled='enabled' autofocus/>" +
+                                    "rv-placeholder='label' rv-enabled='model.enabled' autofocus/>" +
                         "</div>" +
                     "</div>" + 
                 "</div>";    

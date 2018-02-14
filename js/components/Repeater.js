@@ -6,8 +6,13 @@
 
 //component definition
 var Repeater = KxGenerator.createComponent({
-    //model binds to the template
-    //if you want variables to bind, you must declare them in the model object
+    
+    currentIndex: 1,
+
+    currentItem: {},
+
+    rowItems: {},
+
     initModel: function () {
         return {
             map: {},
@@ -17,12 +22,6 @@ var Repeater = KxGenerator.createComponent({
             displayAddButton: this.rendering.actions,
             displayRemoveButton: this.rendering.actions
         }
-    },
-
-    beforeAttach: function () {
-        this.currentIndex = 1;
-        this.currentItem = {};
-        this.rowItems = {};
     },
 
     registerEvents: function () {
@@ -87,8 +86,7 @@ var Repeater = KxGenerator.createComponent({
                     cmp[index - 1] = {}
 
                 p.id += "_" + hash;
-                p.fieldName += "_" + hash;
-
+        
                 for (var prop in p) {
                     if (typeof prop == 'string') {
                         //check for binding
@@ -274,10 +272,10 @@ var Repeater = KxGenerator.createComponent({
         return  "<div id='" + this.id + "'>" +
                     "<div id='" + this.id + "-container' class='col-md-12'></div>" +  
                     "<div id='actions_" + this.id  + "' class='col-md-offset-10 col-lg-2' style='overflow:hidden;'>" +
-                        "<button type='button' class='btn btn-default' rv-if='displayAddButton' rv-on-click='addRowHandler'>" +
+                        "<button type='button' class='btn btn-default' rv-if='model.displayAddButton' rv-on-click='model.addRowHandler'>" +
                             "<span class='glyphicon glyphicon-plus'></span>" +
                         "</button>" +
-                        "<button style='margin-left: 5px' type='button' class='btn btn-danger' rv-if='displayRemoveButton' rv-on-click='removeRowHandler'>" +
+                        "<button style='margin-left: 5px' type='button' class='btn btn-danger' rv-if='model.displayRemoveButton' rv-on-click='model.removeRowHandler'>" +
                             "<span class='glyphicon glyphicon-remove'></span>" + 
                         "</button>" +
                     "</div>";

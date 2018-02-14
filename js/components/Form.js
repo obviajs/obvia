@@ -6,20 +6,12 @@
 
 //component definition
 var Form = KxGenerator.createComponent({
-    //model binds to the template
-    //if you want variables to bind, you must declare them in the model object
-    initModel: function () {
-        return {
-            formName: this.formName,
-            formID: '26',
-            processID: '116',
-            caseID: '203',
-            formSubmitID: '329',
-            formDOMId: 'view_form_26',
-            formAction: (this.viewMode == "steps") ? "?forms/modify_form_submit" : "#",
-            componentContainerID: 'view_form_26_component_container'
-        }
-    },
+
+    formDOMId: 'view_form_26',
+
+    formAction: (this.viewMode == "steps") ? "?forms/modify_form_submit" : "#",
+
+    componentContainerID: 'view_form_26_component_container',
 
     validate: function () {
         var _self = this;
@@ -113,8 +105,7 @@ var Form = KxGenerator.createComponent({
 
     render: function () {
         var _self = this;
-        var model = this.getModel();
-        var container = this.$el.find('#' + model.componentContainerID);
+        var container = this.$el.find('#' + this.componentContainerID);
 
         this.components.forEach(function (component) {
             _self.addComponent(component, container)
