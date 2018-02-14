@@ -109,8 +109,7 @@ var Repeater = KxGenerator.createComponent({
                 cmp[index - 1] = el;
                 rowItems[cmpId] = el;
 
-                //render component in row
-                renderedRow.append(el.render());
+              
 
                 //handle component change event and delegate it to repeater
                 el.on('afterAttach', function () {
@@ -129,7 +128,8 @@ var Repeater = KxGenerator.createComponent({
                         console.log('click event outside text (in repeater) with value: ', sender.getValue());
                     });
                 });                 
-
+                //render component in row
+                renderedRow.append(el.render());    
             });
 
             //render row in dom

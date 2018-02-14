@@ -191,7 +191,7 @@ var myForm = new Form({
                         value: "Clicked Me",
                         style: '',
                         class: "btn btn-success",
-                        onclick : function(e){console.log("From ClickAction");}
+                        onclick : function(e){console.log("From ClickAction");console.log(arguments);}
                     }
                 },
                 {
@@ -202,7 +202,8 @@ var myForm = new Form({
                         label: '{textLabel}',
                         blockProcessAttr: false,
                         required: true,
-                        value: '{textValue}'
+                        value: '{textValue}',
+                        onchange: function(e){console.log("From TextInput CahngeAction"); console.log(arguments);}
                     }
                 },
                 // {
@@ -302,23 +303,25 @@ $(document).on('onBeforeRowDelete', function (e, repeater, args) {
 
 myForm.on('afterAttach', function () {
     console.log("MainForm Attached");
-    myForm.text.on('change', function (e, sender) {
-        console.log('change event outside text (in document) with value: ', sender.getValue());
+    myForm.text.on('change', function (e) {
+        console.log('change event outside text (in document) with value: ', this.getValue());
     });
-    myForm.text.on('click', function (e, sender) {
-        console.log('click event outside text (in document) with value: ', sender.getValue());
-    });
-
-    myForm.repeater.textR[0].on('change', function (e, sender) {
-        console.log('change event outside text (in document) with value: ', sender.getValue());
-    });
-    myForm.repeater.textR[0].on('click', function (e, sender) {
-        console.log('click event outside text (in document) with value: ', sender.getValue());
-    });
-    myForm.repeater.button[0].on('click', function (e, sender) {
-        console.log('click event outside button (in document) with value: ', sender.getValue());
+    myForm.text.on('click', function (e) {
+        console.log('click event outside text (in document) with value: ', this.getValue());
     });
 
+    myForm.repeater.textR[0].on('change', function (e) {
+        console.log('change event outside text (in document) with value: ', this.getValue());
+    });
+    myForm.repeater.textR[0].on('click', function (e) {
+        console.log('click event outside text (in document) with value: ', this.getValue());
+    });
+    myForm.repeater.button[0].on('click', function (e) {
+        console.log('click event outside button (in document) with value: ', this.getValue());
+    });
+    myForm.repeater.button[1].on('click', function (e) {
+        console.log('click event outside button (in document) with value: ', this.getValue());
+    });
 })
 
 $('#root').append(myForm.render());

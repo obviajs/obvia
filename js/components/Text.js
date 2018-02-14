@@ -33,6 +33,18 @@ var TextInput = KxGenerator.createComponent({
                         console.log("click per input e brendshem $input");
                     } 
                 }
+            },
+            {
+                registerTo: this.$input,
+                events:
+                { 
+                    'change': function (e) {
+                        console.log("change per input e brendshem $input");
+                        if (typeof this.onchange == 'function')
+                        this.onchange(e, this.repeaterIndex, this, this.parent);
+                        //this.onchange.apply(this, arguments);
+                    } 
+                }
             }
         ]
     },
