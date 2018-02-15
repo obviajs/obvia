@@ -6,34 +6,59 @@
 
 //component definition
 var AutoComplete = KxGenerator.createComponent({
-    //model binds to the template
-    //if you want variables to bind, you must declare them in the model object
+    //component data
     initModel: function () {
         return {
-            fieldName: this.fieldName,
-            label: this.label,
             blockProcessAttr: this.required ? false : this.blockProcessAttr,
-            versionStyle: this.versionStyle,
-            required: this.required,
-            openModal: this.openModal.bind(this),
-            multipleSelection: this.multipleSelection,
             optionsData: this.dataProvider,
             selectedOptions: this.value
         }
     },
 
-    beforeAttach: function () {
-        
+    registerEvents: function () {
+        // var _self = this;
+        // var model = this.getModel();
+
+        // this.$el.on('change', function (e) {
+        //     model.selectedOptions = [];
+        //     var selected = $('#' + _self.fieldName + '_select').val().split(",");
+        //     if (selected[0] != "")
+        //         selected.forEach(function (item) {
+        //             var option = model.optionsData.filter(function (option) {
+        //                 return option.id == item;
+        //             });
+        //             model.selectedOptions.push(option[0]);
+        //         });
+
+        //     _self.value = model.selectedOptions;
+        //     _self.setModelValue('selectedOptions', _self.value);
+        // });
+
+        this.$modalContainer = $('#' + this.id + '-autoselect-modal');
+        this.$openModalBtn = this.$el.find('#' + this.id + '_openModal');
+
+        return [
+            {
+                registerTo: this.$el, events: {
+                    'afterAttach': this.afterAttach.bind(this)
+                }
+            },
+            {
+                registerTo: this.$openModalBtn, events: {
+                    'click': this.openModal.bind(this)
+                }
+            }
+        ]
     },
 
-    afterAttach: function () {
+    afterAttach: function (e) {
         this.createModal();
         this.renderSelect2();
+
+        this.trigger('creationComplete');
     },
 
     createModal: function () {
-        var _self = this;
-
         this.modal = new Modal({
             id: 'autocomplete-modal-' + this.id,
             size: 'modal-lg',
@@ -54,13 +79,13 @@ var AutoComplete = KxGenerator.createComponent({
                 '</div>'
         });
 
-        $('#' + this.id + '-autoselect-modal').html(
-            _self.modal.render()
+        this.$modalContainer.html(
+            this.modal.render()
         );
       
     },
 
-    openModal: function () {
+    openModal: function (e) {
         var $combo_category_table;
         $('#combo_category_table').DataTable().destroy();
         $combo_category_table = $('#combo_category_table').DataTable({
@@ -71,26 +96,6 @@ var AutoComplete = KxGenerator.createComponent({
         });
         
         this.modal.show();
-    },
-
-    registerEvents: function () {
-        var _self = this;
-        var model = this.getModel();
-
-        this.$el.on('change', function (e) {
-            model.selectedOptions = [];
-            var selected = $('#' + _self.fieldName + '_select').val().split(",");
-            if (selected[0] != "")
-                selected.forEach(function (item) {
-                    var option = model.optionsData.filter(function (option) {
-                        return option.id == item;
-                    });
-                    model.selectedOptions.push(option[0]);
-                });
-            
-            _self.value = model.selectedOptions;
-            _self.setModelValue('selectedOptions', _self.value);
-        });
     },
 
     renderSelect2: function () {
@@ -152,16 +157,16 @@ var AutoComplete = KxGenerator.createComponent({
     },
 
     template: function () {
-        return "<div id='" + this.id + "'>" +
-                    "<div class='form-group col-lg-" + this.colspan + "' rowspan" + this.rowspan + " resizable' id='" + this.fieldName + "_container' >" +
+        return "<div id='" + this.id + "-wrapper'>" +
+                    "<div class='form-group col-lg-" + this.colspan + "' rowspan" + this.rowspan + " resizable' id='" + this.id + "_container' >" +
                     "<label rv-style='versionStyle' rv-for='fieldName'>{label} <span rv-if='required'>*</span></label>" +
                     "<div class='input-group'>" +
                         "<span rv-if='blockProcessAttr' class='block-process'> * </span>" +
-                        "<input type='hidden' name='" + this.fieldName + "_select[]' id='" + this.fieldName + "_select' />" +
+                        "<input type='hidden' name='" + this.id + "_select[]' id='" + this.id + "_select' />" +
                         "<span class='input-group-btn'>" +
                             "<button type='button' style='margin-left: 5px;'" +
                                 "class='glyphicon glyphicon-folder-open btn btn-default'" +
-                                "title='go' id='" + this.fieldName + "_btn'  rv-on-click='openModal'>" +
+                                "title='go' id='" + this.id + "_openModal'>" +
                                 "<b class='caret'></b>" +
                             "</button>" +
                         "</span>" +

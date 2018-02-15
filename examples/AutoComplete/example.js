@@ -2,7 +2,6 @@ var myAutoComplete = new AutoComplete({
     id: 'autocomplete',
     colspan: '6',
     label: 'Ministrite',
-    fieldName: 'autocomplete',
     blockProcessAttr: false,
     required: false,
     multipleSelection: true,

@@ -6,80 +6,72 @@
 
 //component definition
 var Checkbox = KxGenerator.createComponent({
-    //model binds to the template
-    //if you want variables to bind, you must declare them in the model object
+    //component data
     initModel: function () {
         return {
-            fieldName: this.fieldName,
-            label: this.label,
             blockProcessAttr: this.required ? false : this.blockProcessAttr,
-            versionStyle: this.versionStyle,
-            required: this.required,
-            checked: this.value
         }
     },
 
     registerEvents: function () {
-        var _self = this;
-        var model = this.getModel();
+        this.$input = this.$el.find("#" + this.id);
 
-        this.$el.on('change', function (e) {
-            _self.value = model.checked;
-        });
+        return [
+            {
+                registerTo: this.$el, events: {
+                    'afterAttach': this.afterAttach.bind(this)
+                }
+            }
+        ]
     },
 
     afterAttach: function () {
-        var _self = this;
-        this.$el.find('#' + this.fieldName).bootstrapToggle(); 
+        this.$input.bootstrapToggle(); 
     },
 
     setValue: function (value) {
-        var model = this.getModel();
-        model.checked = value;
-        this.$el.trigger('change');
-        this.$el.find('#' + this.fieldName).bootstrapToggle('destroy');
-        this.$el.find('#' + this.fieldName).bootstrapToggle();
+        if (this.value != value) {
+            this.value = value;
+
+            this.$input.bootstrapToggle('destroy');
+            this.$input.bootstrapToggle();
+        }
+        
         return this;
     },
 
-    getValue: function () {
-        return this.value;
-    },
-
     enable: function () {
-        this.$el.find('#' + this.fieldName).bootstrapToggle('enable');
+        this.$input.bootstrapToggle('enable');
         return this;    
     },
 
     disable: function () {
-        this.$el.find('#' + this.fieldName).bootstrapToggle('disable');
+        this.$input.bootstrapToggle('disable');
         return this;
     },
 
     template: function () {
-
-            return "<div id='" + this.id + "'>" +
-            "<div id='checkbox_" + this.fieldName + "' class='form-group col-lg-"+ this.colspan +" rowspan"+ this.rowspan +" resizable'>" +
-            "<div  id='" + this.fieldName + "-block'>" +
-            "<label rv-style='versionStyle' rv-for='fieldName'>{label}<span rv-if='required'>*</span></label>" +
-            "<div class='row'>" +
-            "<div class='col-xs-12'>" +
-            " <div class='col-xs-2'>" +
-            "<input  type='checkbox' rv-checked='checked' switch-toggle='toggle' data-on='"+this.checkedLabel+"' data-off='"+this.unCheckedLabel+"'+ data-style='slow'  id='" +this.fieldName+"'   name='" + this.fieldName + "'/>"+
+        return "<div id='" + this.id + "-wrapper'>" +
+            "<div class='form-group col-lg-" + this.colspan + " rowspan"+ this.rowspan +" resizable'>" +
+                "<div id='" + this.id + "-block'>" +
+                    "<label rv-style='versionStyle' rv-for='id'>{label}<span rv-if='required'>*</span></label>" +
+                    "<div class='row'>" +
+                        "<div class='col-xs-12'>" +
+                            "<div class='col-xs-2'>" +
+                                "<input type='checkbox' rv-checked='value' switch-toggle='toggle' data-on='"+this.checkedLabel+"' data-off='"+this.unCheckedLabel+"'+ data-style='slow'  id='"+this.id+"'  name='" + this.id + "'/>"+
+                            "</div>" +
+                            "<div class='col-xs-10' style='padding-left:20px;'>" +
+                                "<div style='padding-top: 5px;'>" +
+                                    "<div>"+
+                                        "<span rv-if='model.blockProcessAttr' class='block-process'> * </span>" +
+                                    "</div>" +
+                                "</div>" +
+                            "</div>" +
+                        "</div>" +
+                    "</div>" +
+                "</div>" +
             "</div>" +
-            "<div class='col-xs-10' style='padding-left:20px;'>" +
-            "<div style='padding-top: 5px;'>" +
-            "<div>"+
-    		"<span rv-if='blockProcessAttr' class='block-process'> * </span>" +
-    		"</div>" +
-            "</div>" +
-            "</div>" +
-            "</div>" +
-            "</div>" +
-            "</div>" +
-            "</div>";
-   
-      
+        "</div>";
     },
 
     render: function () {
@@ -89,4 +81,5 @@ var Checkbox = KxGenerator.createComponent({
 
 //component prototype
 Checkbox.type = 'checkbox';
+
 KxGenerator.registerDOMElement(Checkbox, 'kx-checkbox');

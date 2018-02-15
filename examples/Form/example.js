@@ -13,53 +13,50 @@ var myForm = new Form({
             mask: 'currency',
             value: "33"
         }),
-        // new AutoComplete({
-        //     id: 'autocomplete',
-        //     colspan: '6',
-        //     label: 'Ministrite',
-        //     fieldName: 'autocomplete',
-        //     blockProcessAttr: false,
-        //     required: false,
-        //     multipleSelection: true,
-        //     tableData: [["Ministria e Puneve te Jashtme"], ["Ministria e Drejtesise"], ["Ministria e Brendshme"]],
-        //     dataProvider: [{ "id": "1", "text": "Ministria e Puneve te Jashtme" }, { "id": "2", "text": "Ministria e Drejtesise" }, { "id": "3", "text": "Ministria e Brendshme" }],
-        //     value: [{ "id": "1", "text": "Ministria e Puneve te Jashtme" }]
-        // }),
-        // new ComboBox({
-        //     id: 'combo',
-        //     colspan: '6',
-        //     label: 'Zgjidh Shtetin',
-        //     fieldName: 'combobox',
-        //     dataProvider: [{ "value": "1", "text": "Shqiperi" }, { "value": "2", "text": "Greqi" }, { "value": "3", "text": "SHBA" }],
-        //     versionStyle: "",
-        //     blockProcessAttr: false,
-        //     required: false,
-        //     value: "2"
-        // }),
-        // new GoogleMap({
-        //     id: 'map3',
-        //     colspan: '6',
-        //     label: 'Vendodhja Gjeografike',
-        //     versionStyle: "",
-        //     blockProcessAttr: false,
-        //     required: false,
-        //     value: {
-        //         latitude: 41.1533,
-        //         longtitude: 20.1683,
-        //         zoomLevel: 7
-        //     }
-        // }),
-        // new Checkbox({
-        //     id: 'checkbox',
-        //     colspan: '6',
-        //     label: 'Arensas checkbox',
-        //     fieldName: 'checkboxInput',
-        //     blockProcessAttr: false,
-        //     required: false,
-        //     value: true,
-        //     unCheckedLabel: "Jo",
-        //     checkedLabel: "Po"
-        // }),
+        new AutoComplete({
+            id: 'autocomplete',
+            colspan: '6',
+            label: 'Ministrite',
+            blockProcessAttr: false,
+            required: false,
+            multipleSelection: true,
+            tableData: [["Ministria e Puneve te Jashtme"], ["Ministria e Drejtesise"], ["Ministria e Brendshme"]],
+            dataProvider: [{ "id": "1", "text": "Ministria e Puneve te Jashtme" }, { "id": "2", "text": "Ministria e Drejtesise" }, { "id": "3", "text": "Ministria e Brendshme" }],
+            value: [{ "id": "1", "text": "Ministria e Puneve te Jashtme" }]
+        }),
+        new ComboBox({
+            id: 'combo',
+            colspan: '6',
+            label: 'Zgjidh Shtetin',
+            dataProvider: [{ "value": "1", "text": "Shqiperi" }, { "value": "2", "text": "Greqi" }, { "value": "3", "text": "SHBA" }],
+            versionStyle: "",
+            blockProcessAttr: false,
+            required: false,
+            value: "2"
+        }),
+        new GoogleMap({
+            id: 'map',
+            colspan: '6',
+            label: 'Vendodhja Gjeografike',
+            versionStyle: "",
+            blockProcessAttr: false,
+            required: false,
+            value: {
+                latitude: 41.1533,
+                longtitude: 20.1683,
+                zoomLevel: 7
+            }
+        }),
+        new Checkbox({
+            id: 'checkbox',
+            colspan: '6',
+            label: 'Checkbox',
+            blockProcessAttr: false,
+            required: false,
+            value: true,
+            unCheckedLabel: "Jo",
+            checkedLabel: "Po"
+        }),
         // new Trippleswitch({
         //     id: 'trippleswitch',
         //     colspan: '6',
@@ -105,7 +102,7 @@ var myForm = new Form({
             defaultItem: {
                 comboLabel: 'Zgjidh Shtetin',
                 comboValue: "",
-                checkboxValue: true,
+                checkboxValue: false,
                 autocompleteLabel: 'Ministrite',
                 autocompleteValue: [],
                 textLabel: 'Emri',
@@ -118,82 +115,68 @@ var myForm = new Form({
                     zoomLevel: 7
                 }
             },
-            dataProvider: {
-                items: [
-                    {
-                        comboLabel: 'Zgjidh Shtetin',
-                        comboValue: "",
-                        checkboxValue: true,
-                        autocompleteLabel: 'Ministrite',
-                        autocompleteValue: [{ "id": "2", "text": "Ministria e Drejtesise" }],
-                        textLabel: 'Emri',
-                        textValue: 'Mateo Jovani',
-                        trippleValue: "-1",
-                        multiValue: [{ "id": "3", "text": "Ministria e Brendshme" }],
-                        mapValue: {
-                            latitude: 51.1533,
-                            longtitude: 30.1683,
-                            zoomLevel: 7
-                        }
-                    },
-                    {
-                        comboLabel: 'Zgjidh Shtetin',
-                        comboValue: "1",
-                        checkboxValue: true,
-                        autocompleteLabel: 'Ministrite',
-                        autocompleteValue: [{ "id": "3", "text": "Ministria e Brendshme" }],
-                        textLabel: 'Emri',
-                        textValue: '',
-                        trippleValue: "1",
-                        multiValue: [{ "id": "3", "text": "Ministria e Brendshme" }, { "id": "2", "text": "Ministria e Drejtesise" }],
-                        mapValue: {
-                            latitude: 41.1533,
-                            longtitude: 20.1683,
-                            zoomLevel: 7
-                        }
+            dataProvider: [
+                {
+                    comboLabel: 'Zgjidh Shtetin',
+                    comboValue: "",
+                    checkboxValue: true,
+                    autocompleteLabel: 'Ministrite',
+                    autocompleteValue: [{ "id": "2", "text": "Ministria e Drejtesise" }],
+                    textLabel: 'Emri',
+                    textValue: 'Mateo Jovani',
+                    trippleValue: "-1",
+                    multiValue: [{ "id": "3", "text": "Ministria e Brendshme" }],
+                    mapValue: {
+                        latitude: 51.1533,
+                        longtitude: 30.1683,
+                        zoomLevel: 7
                     }
-                ]
-            },
+                },
+                {
+                    comboLabel: 'Zgjidh Shtetin',
+                    comboValue: "1",
+                    checkboxValue: true,
+                    autocompleteLabel: 'Ministrite',
+                    autocompleteValue: [{ "id": "3", "text": "Ministria e Brendshme" }],
+                    textLabel: 'Emri',
+                    textValue: '',
+                    trippleValue: "1",
+                    multiValue: [{ "id": "3", "text": "Ministria e Brendshme" }, { "id": "2", "text": "Ministria e Drejtesise" }],
+                    mapValue: {
+                        latitude: 41.1533,
+                        longtitude: 20.1683,
+                        zoomLevel: 7
+                    }
+                }
+            ],
             components: [
-                // {
-                //     constructor: AutoComplete,
-                //     props: {
-                //         id: 'autocompleteR',
-                //         colspan: '6',
-                //         label: '{autocompleteLabel}',
-                //         fieldName: 'autocompleteR',
-                //         blockProcessAttr: false,
-                //         required: false,
-                //         multipleSelection: true,
-                //         tableData: [["Ministria e Puneve te Jashtme"], ["Ministria e Drejtesise"], ["Ministria e Brendshme"]],
-                //         dataProvider: [{ "id": "1", "text": "Ministria e Puneve te Jashtme" }, { "id": "2", "text": "Ministria e Drejtesise" }, { "id": "3", "text": "Ministria e Brendshme" }],
-                //         value: '{autocompleteValue}'
-                //     }
-                // },
-                // {
-                //     constructor: ComboBox,
-                //     props: {
-                //         id: 'comboR',
-                //         colspan: '6',
-                //         label: '{comboLabel}',
-                //         fieldName: 'comboboxR',
-                //         blockProcessAttr: false,
-                //         required: true,
-                //         dataProvider: [{ "value": "1", "text": "Shqiperi" }, { "value": "2", "text": "Greqi" }, { "value": "3", "text": "SHBA" }],
-                //         value: '{comboValue}'
-                //     }
-                // },
-                // {
-                //     constructor: Button,
-                //     props: {
-                //         id: 'button',
-                //         type: "button",
-                //         value: "Clicked Me",
-                //         style: '',
-                //         class: "btn btn-success",
-                //         onclick : function(e){console.log("From ClickAction");console.log(arguments);}
-                //     }
-                // },
+                {
+                    constructor: AutoComplete,
+                    props: {
+                        id: 'autocompleteR',
+                        colspan: '6',
+                        label: '{autocompleteLabel}',
+                        fieldName: 'autocompleteR',
+                        blockProcessAttr: false,
+                        required: false,
+                        multipleSelection: true,
+                        tableData: [["Ministria e Puneve te Jashtme"], ["Ministria e Drejtesise"], ["Ministria e Brendshme"]],
+                        dataProvider: [{ "id": "1", "text": "Ministria e Puneve te Jashtme" }, { "id": "2", "text": "Ministria e Drejtesise" }, { "id": "3", "text": "Ministria e Brendshme" }],
+                        value: '{autocompleteValue}'
+                    }
+                },
+                {
+                    constructor: ComboBox,
+                    props: {
+                        id: 'comboR',
+                        colspan: '6',
+                        label: '{comboLabel}',
+                        blockProcessAttr: false,
+                        required: true,
+                        dataProvider: [{ "value": "1", "text": "Shqiperi" }, { "value": "2", "text": "Greqi" }, { "value": "3", "text": "SHBA" }],
+                        value: '{comboValue}'
+                    }
+                },
                 {
                     constructor: TextInput,
                     props: {
@@ -205,21 +188,20 @@ var myForm = new Form({
                         value: '{textValue}'
                     }
                 },
-                // {
-                //     constructor: Checkbox,
-                //     props: {
-                //         id: 'checkboxR',
-                //         colspan: '6',
-                //         label: 'Aktiv',
-                //         fieldName: 'checkboxRInput',
-                //         blockProcessAttr: false,
-                //         required: true,
-                //         value: '{checkboxValue}',
-                //         unCheckedLabel: "Jo",
-                //         checkedLabel: "Po"
-                //     }
-                // },
-               /* {
+                {
+                    constructor: Checkbox,
+                    props: {
+                        id: 'checkboxR',
+                        colspan: '6',
+                        label: 'Aktiv',
+                        blockProcessAttr: false,
+                        required: false,
+                        value: '{checkboxValue}',
+                        unCheckedLabel: "Jo",
+                        checkedLabel: "Po"
+                    }
+                },
+                {
                     constructor: GoogleMap,
                     props: {
                         id: 'mapR',
@@ -231,7 +213,7 @@ var myForm = new Form({
                         required: false,
                         value: '{mapValue}'
                     }
-                },*/
+                },
                 // {
                 //     constructor: Trippleswitch,
                 //     props: {
@@ -300,47 +282,4 @@ $(document).on('onBeforeRowDelete', function (e, repeater, args) {
     })
 });
 
-myForm.on('creationComplete', function () {
-    console.log("MainForm creationComplete in document");
-    myForm.text.on('change', function (e) {
-        console.log('change event outside text (in document) with value: ', this.getValue());
-    });
-    
-    myForm.text.on('click', function (e) {
-        console.log('click event outside text (in document) with value: ', this.getValue());
-    });
-
-    myForm.repeater.textR[0].on('change', function (e) {
-        console.log('change event outside text (in document) with value: ', this.getValue());
-    });
-    myForm.repeater.textR[0].on('click', function (e) {
-        console.log('click event outside text (in document) with value: ', this.getValue());
-    });
-    // myForm.repeater.button[0].on('click', function (e) {
-    //     console.log('click event outside button (in document) with value: ', this.getValue());
-    // });
-    // myForm.repeater.button[1].on('click', function (e) {
-    //     console.log('click event outside button (in document) with value: ', this.getValue());
-    // });
-})
-
 $('#root').append(myForm.render());
-
-
-// var myButton = new Button({
-//     id: 'button',
-//     type: "button",
-//     value: "Im so lonely button",
-//     style: '',
-//     class: "btn btn-success",
-//     onclick : function(e){console.log("From ClickAction");}
-// });
-
-
-// myButton.on('creationComplete', function () {
-//     console.log("creationComplete in document for "+this.id);
-//     myButton.on('click', function (e) {
-//         console.log('click event outside button (in document) with value: '+this.id);
-//     });
-// });
-// $('#root').append(myButton.render());

@@ -6,15 +6,10 @@
 
 //component definition
 var ComboBox = KxGenerator.createComponent({
-    //model binds to the template
-    //if you want variables to bind, you must declare them in the model object
+    //component data
     initModel: function () {
         return {
-            fieldName: this.fieldName,
-            label: this.label,
             blockProcessAttr: this.required ? false : this.blockProcessAttr,
-            versionStyle: this.versionStyle,
-            required: this.required 
         }
     },
 
@@ -46,28 +41,28 @@ var ComboBox = KxGenerator.createComponent({
             );
     },
 
-    beforeAttach: function () {
-
-    },
-
     registerEvents: function () {
-        var _self = this;
+        this.$input = this.$el.find('#' + this.id);
+        this.$popup = this.$el.find('#' + this.id + ' _popup');
 
-        this.$el.on('change', function (e) {
-            var thisVal = $('#' + _self.fieldName).val();
-            _self.value = thisVal;
-
-            if (thisVal[0] == '#' + this.fieldName + '_new') {
-                $('#' + _self.fieldName + ' _popup').fadeIn();
-                $('#' + _self.fieldName).multiselect('deselect', '#' + _self.fieldName + ' _new');
+        return [
+            {
+                registerTo: this.$el, events: {
+                    'afterAttach': this.afterAttach.bind(this),
+                }
+            },
+            {
+                registerTo: this.$input, events: {
+                    'change': this.handleChange.bind(this)
+                }
             }
-        });
+        ]
     },
 
-    afterAttach: function () {
+    afterAttach: function (e) {
         var _self = this;
         
-        var element = "#" + _self.fieldName;
+        var element = "#" + this.id;
         KxRequest.promise(this.getData(this.dataProvider)).done(function (result) {
             if (typeof result == "string")
                 result = JSON.parse(result);
@@ -86,38 +81,51 @@ var ComboBox = KxGenerator.createComponent({
                 $(element).multiselect('select', _self.value);
             }
         });
+
+        this.trigger('creationComplete');
+    },
+
+    handleChange: function (e) {
+        e.stopPropagation();
+        
+        var thisVal = this.$input.val();
+        this.value = thisVal;
+
+        if (thisVal[0] == '#' + this.id + '_new') {
+            this.$popup.fadeIn();
+            this.$input.multiselect('deselect', '#' + this.id + ' _new');
+        }
     },
 
     setValue: function (value) {
-        $('#' + this.fieldName).multiselect('select', value);
-        this.$el.trigger('change');
-
+        if (this.value != value) {
+            this.value = value;
+            this.$input.multiselect('select', value);
+            this.trigger('change');
+        }
+        
         return this;
     },
 
-    getValue: function () {
-        return this.value;
-    },
-
     enable: function () {
-        $('#' + this.fieldName).multiselect('enable');
+        this.$input.multiselect('enable');
 
         return this;
     },
 
     disable: function () {
-        $('#' + this.fieldName).multiselect('disable');
+        this.$input.multiselect('disable');
 
         return this;
     },
 
     template: function () {
-        return  "<div id='" + this.id + "'>" +
-                    "<div class='col-lg-"+ this.colspan +"' form-group rowspan"+ this.rowspan +" resizable' id='"+ this.fieldName +"_container'>" +
-                        "<div id='" + this.fieldName + "-block'>" +
+        return  "<div id='" + this.id + "-wrapper'>" +
+                    "<div class='col-lg-"+ this.colspan +"' form-group rowspan"+ this.rowspan +" resizable' id='"+ this.id +"_container'>" +
+                        "<div id='" + this.id + "-block'>" +
                         "<label rv-style='versionStyle' rv-for='fieldName'>{label} <span rv-if='required'>*</span></label>" +
                         "<span rv-if='blockProcessAttr' class='block-process'> * </span>" +
-                        "<select class='form-control' name='" + this.fieldName + "[]' control-blocked='controlBlocked' style='min-width: 250px;' id='" + this.fieldName + "'></select>" +
+                        "<select class='form-control' name='" + this.id + "[]' control-blocked='controlBlocked' style='min-width: 250px;' id='" + this.id + "'></select>" +
                     "</div>" +
                 "</div>";
     },

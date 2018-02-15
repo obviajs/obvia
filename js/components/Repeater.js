@@ -136,24 +136,24 @@ var Repeater = KxGenerator.createComponent({
 
                         //skip dp if it already exist
                         var addRowFlag = false;
-                        if (index > _self.dataProvider.items.length) {
-                            _self.dataProvider.items.push(_self.currentItem);
+                        if (index > _self.dataProvider.length) {
+                            _self.dataProvider.push(_self.currentItem);
                             addRowFlag = true;
                         }
                         
                         
-                        if(index == _self.dataProvider.items.length && !addRowFlag)
+                        if(index == _self.dataProvider.length && !addRowFlag)
                             _self.trigger('creationComplete');
                     
                     }
                 });
 
-                el.on('change', function (e, sender) {
-                    console.log('change event outside text (in repeater) with value: ', sender.getValue());
-                    var currentItem = _self.dataProvider.items[index - 1];
+                el.on('change', function (e) {
+                    console.log(this.value)
+                    var currentItem = _self.dataProvider[index - 1];
                     if (tempComponent.props.value[0] == '{' && tempComponent.props.value[tempComponent.props.value.length - 1] == '}') {
                         var bindedValue = tempComponent.props.value.slice(1, -1);
-                        data[bindedValue] = sender.getValue();
+                        data[bindedValue] = this.getValue();
                     }
 
                     _self.$el.trigger('onRowEdit', [_self, new RepeaterEventArgs(rowItems, data, index)]);
@@ -219,7 +219,7 @@ var Repeater = KxGenerator.createComponent({
             container.find('#' + _self.id + '-repeated-block-hr-' + hash).remove();
 
             //remove dp row
-            var removedItem = _self.dataProvider.items.splice(index - 1, 1);
+            var removedItem = _self.dataProvider.splice(index - 1, 1);
 
             //delete component instances on that row
             _self.components.forEach(function (component) {
@@ -229,7 +229,7 @@ var Repeater = KxGenerator.createComponent({
 
             //manage dp
             _self.currentIndex--;
-            _self.currentItem = _self.dataProvider.items[_self.dataProvider.items.length - 1];
+            _self.currentItem = _self.dataProvider[_self.dataProvider.length - 1];
             if (_self.currentIndex == 1 && _self.rendering.actions) {
                 model.displayRemoveButton = false;
             }
@@ -266,7 +266,7 @@ var Repeater = KxGenerator.createComponent({
             model.displayRemoveButton = true;
         }
         
-        for (var i = 0; i < this.dataProvider.items.length; i++) {
+        for (var i = 0; i < this.dataProvider.length; i++) {
             this.components.forEach(function (component) {
                 _self[component.props.id][i].enable();
             });
@@ -284,7 +284,7 @@ var Repeater = KxGenerator.createComponent({
             model.displayRemoveButton = false;
         }
 
-        for (var i = 0; i < this.dataProvider.items.length; i++){
+        for (var i = 0; i < this.dataProvider.length; i++){
             this.components.forEach(function (component) {
                 _self[component.props.id][i].disable();
             });
@@ -314,13 +314,8 @@ var Repeater = KxGenerator.createComponent({
         this.$el.trigger('onBeginDraw');
 
         var container = this.$el.find('#' + this.id + '-container'); 
-        //container.append("<hr>");
-        
-        var dp = this.dataProvider.items;
 
-        var ccComponents = [];
-
-        dp.forEach(function (data, index) {  
+        this.dataProvider.forEach(function (data, index) {  
             _self.addRow(data, index + 1);
         });
        

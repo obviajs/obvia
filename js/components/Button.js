@@ -6,57 +6,38 @@
 
 //component definition
 var Button = KxGenerator.createComponent({
-    //model binds to the template
-    //if you want variables to bind, you must declare them in the model object
+    
+    //inner component data
     initModel: function () {
         return {
-            type:this.type,
-            value: this.value,
-            class:this.class,
-            style: this.style
+            
         }
     },
     
     registerEvents: function () {
-         return [
+        this.$btn = this.$el.find("button");
+
+        return [
             {
-                registerTo: this.$el,
-                events:
-                { 
-                    'click': function (e) {
-                        console.log("click per elementin $el");
-                    },
-                    'afterAttach': function (e) {
-                        console.log('afterAttach_BUTTON');
-                        this.trigger('creationComplete');
-                        if (typeof this.onchange == 'function')
-                        this.onafterAttach(e, this.repeaterIndex, this, this.parent);
-                        //this.onafterAttach.apply(this, arguments);
-                    }  
+                registerTo: this.$el, events: { 
+                    'afterAttach': this.afterAttach.bind(this)
                 }
             },
             {
-                registerTo: this.$btn,
-                events:
-                { 
-                    'click': function (e) {
-                        console.log("click per butonin e brendshem $btn");
-                        //execute custom click
-                        if (typeof this.onclick == 'function')
-                        this.onclick(e, this.repeaterIndex, this, this.parent);
-                    } 
+                registerTo: this.$btn, events: { 
+                    'click': this.clickHandler.bind(this)
                 }
             }
         ]
     },
 
-    getValue: function () {
-        return this.value;
+    afterAttach: function (e) {
+        this.trigger('creationComplete');
     },
 
-    setValue: function (value) {
-        this.value = value;
-        this.$el.trigger('change');
+    clickHandler: function (e) {
+        if (typeof this.onclick == 'function')
+            this.onclick(e, this.repeaterIndex, this, this.parent);
     },
 
     template: function () {         
@@ -64,9 +45,7 @@ var Button = KxGenerator.createComponent({
                     "<button rv-type='type'  rv-style='style' rv-class='class'>{value}</button>"
                 "</div>";    
     },
-    afterAttach: function(){
-        this.$btn = this.$el.find("button");
-    },
+    
     render: function () {
         return this.$el;
     }

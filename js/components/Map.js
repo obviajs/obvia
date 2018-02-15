@@ -6,13 +6,14 @@
 
 //component definition
 var GoogleMap = KxGenerator.createComponent({
-
+    //default value
     value: {
         latitude: 41.1533,
         longtitude: 20.1683,
         zoomLevel: 7
     },
 
+    //component data
     initModel: function () {
         return {
             modalLatitude: this.value.latitude,
@@ -25,10 +26,6 @@ var GoogleMap = KxGenerator.createComponent({
             mapSetLongDisabled: true,
             setLatLongOkBtnClass: 'btn btn-success hide',
             setLatLongCancelBtnClass: 'btn btn-danger hide',
-            openMap: this.openMap.bind(this),
-            changeCoordinatesManually: this.changeCoordinatesManually.bind(this),
-            setLatLngManually: this.setLatLngManually.bind(this),
-            mapAcceptPosition: this.mapAcceptPosition.bind(this),
 
             blockProcessAttr: this.required ? false : this.blockProcessAttr,
             disabled: false
@@ -36,51 +33,92 @@ var GoogleMap = KxGenerator.createComponent({
     },
 
     registerEvents: function () {
-        // return {
-        //     'change'
-        // }
-    },
+        this.$modal = this.$el.find('#' + this.id + '_map-modal');
+        this.$openMapBtn = this.$el.find('#' + this.id + '_openMapBtn');
+        this.$changeCoordiantesBtn = this.$el.find('#' + this.id + '_changeCoordinates');
+        this.$acceptBtn = this.$el.find('#' + this.id + '_acceptBtn');
+        this.$dismissBtn = this.$el.find('#' + this.id + '_dismissBtn');
+        this.$mapAcceptPositionBtn = this.$el.find('#' + this.id + '_mapAcceptPosition');
 
-
-    afterAttach: function () {
-        var _self = this;
-        var model = this.getModel();
-        
-        this.$el.find('#' + this.id + '_map-modal').on('shown.bs.modal', function () {
-            google.maps.event.trigger(model.map, 'resize');
-
-            // after the resize event, we need to adjust the center of the map
-            if (model.marker) {
-                model.map.setCenter(model.marker.getPosition());
+        return [
+            {
+                registerTo: this.$el, events: { 'afterAttach': this.afterAttach.bind(this) }
+            },
+            {
+                registerTo: this.$openMapBtn, events: { 'click': this.openMap.bind(this) }
+            },
+            {
+                registerTo: this.$changeCoordiantesBtn, events: { 'change': this.changeCoordinatesManually.bind(this) }
+            },
+            {
+                registerTo: this.$acceptBtn, events: {
+                    'click': function () {
+                        var args = [];
+                        for (var i = 0; i < arguments.length; i++) {
+                            args.push(arguments[i]);
+                        }
+                        args.splice(1, 0, true);
+                        this.setLatLngManually.apply(this, args); 
+                    }
+                }
+            },
+            {
+                registerTo: this.$dismissBtn, events: {
+                    'click': function () {
+                        var args = [];
+                        for (var i = 0; i < arguments.length; i++) {
+                            args.push(arguments[i]);
+                        }
+                        args.splice(1, 0, false);
+                        this.setLatLngManually.apply(this, args);
+                    }
+                }    
+            },
+            {
+                registerTo: this.$mapAcceptPositionBtn, events: { 'click': this.mapAcceptPosition.bind(this) }
+            },
+            {
+                registerTo: this.$modal, events: { 'shown.bs.modal': this.modalOpenedHandler.bind(this) }
             }
-
-            _self.moveMarker(model.map, model.marker, _self.value.latitude, _self.value.longtitude);
-        });
-
-        setTimeout(function () { _self.initMap(); }, 200)
+        ]
     },
 
-    getValue: function () {
-        return this.value;
+    afterAttach: function (e) {
+        var _self = this;
+        setTimeout(function () { _self.initMap(); }, 200)
+
+        this.trigger('creationComplete');
+    },
+
+    modalOpenedHandler: function (e) {
+        var model = this.getModel();
+
+        google.maps.event.trigger(model.map, 'resize');
+
+        // after the resize event, we need to adjust the center of the map
+        if (model.marker) {
+            model.map.setCenter(model.marker.getPosition());
+        }
+
+        this.moveMarker(model.map, model.marker, this.value.latitude, this.value.longtitude);
     },
 
     setValue: function (value) {
         var model = this.getModel();
+        
         this.value = value;
         this.moveMarker(model.map, model.marker, this.value.latitude, this.value.longtitude);
 
-        this.$el.trigger('change');
+        this.trigger('change');
 
         return this;
     },
 
     openMap: function (e) {
-        e.preventDefault();
-        $('#' + this.id + '_map-modal').modal('show');
+        this.$modal.modal('show');
     },
 
     mapAcceptPosition: function (e) {
-        e.preventDefault();
         var model = this.getModel();
 
         var location = model.marker.getPosition();
@@ -90,9 +128,9 @@ var GoogleMap = KxGenerator.createComponent({
         this.value.longtitude = location.lng();
         this.value.zoomLevel = zoom;
 
-        this.$el.trigger('change');
+        this.trigger('change');
 
-        $('#' + this.id + '_map-modal').modal('hide');
+        this.$modal.modal('hide');
     },
 
     moveMarker: function(map, marker, lat, lng) {
@@ -145,10 +183,7 @@ var GoogleMap = KxGenerator.createComponent({
     },
 
     changeCoordinatesManually: function (e) {
-        e.preventDefault();
-    
         var model = this.getModel();
-
         if (model.mapCheckSetLatLng) {
             model.mapSetLatDisabled = false;
             model.mapSetLongDisabled = false;
@@ -166,15 +201,13 @@ var GoogleMap = KxGenerator.createComponent({
     },
 
     setLatLngManually: function (e, action) {
-        e.preventDefault();
-
         var model = this.getModel();
 
-        if (action == 'false') {
+        if (action == false) {
             model.mapCheckSetLatLng = false;
             this.changeCoordinatesManually();
         }
-        else if (action == 'true') {
+        else if (action == true) {
             this.moveMarker(model.map, model.marker, model.modalLatitude, model.modalLongtitude);
             model.mapCheckSetLatLng = false;
            
@@ -205,7 +238,7 @@ var GoogleMap = KxGenerator.createComponent({
                     "<input type='text' class='form-control' rv-value='value.latitude' rv-placeholder='value.latitude' disabled>" +
                     "<label style='margin-right:5px; margin-left:5px'>Longtitude: </label>" + 
                     "<input type='text' class='form-control' rv-value='value.longtitude' rv-placeholder='value.longtitude' disabled>" +
-                    "<button class='form-control btn btn-default' rv-disabled='model.disabled' rv-on-click='model.openMap'><span style='color:#f39c12'>Harta</span> <span style='color:#f39c12' class='glyphicon glyphicon-map-marker'></span></button>" +
+                    "<button id='" + this.id + "_openMapBtn' type='button' class='form-control btn btn-default' rv-disabled='model.disabled'><span style='color:#f39c12'>Harta</span> <span style='color:#f39c12' class='glyphicon glyphicon-map-marker'></span></button>" +
                 "</div>" + 
             "</div>" +
             "<div id='" + this.id + "_map-modal' class='modal fade' role='dialog'>" + 
@@ -221,7 +254,7 @@ var GoogleMap = KxGenerator.createComponent({
                                 "<div class='col-xs-2' style='padding-top:8px'>" +
                                    "<div>" +
                                         "<label class='control-label'>" +
-                                            "<input type='checkbox' rv-checked='model.mapCheckSetLatLng' rv-on-change='model.changeCoordinatesManually'><strong>Ndrysho</strong>" + 
+                                            "<input id='" + this.id + "_changeCoordinates' type='checkbox' rv-checked='model.mapCheckSetLatLng'><strong>Ndrysho</strong>" + 
                                         "</label>" +
                                     "</div>" +
                                 "</div>" +
@@ -242,15 +275,15 @@ var GoogleMap = KxGenerator.createComponent({
                                     "</div>" +
                                 "</div>" +
                                "<div class='col-xs-2 pull-right' style='padding-right:0px'>" +
-                                    "<button rv-class='model.setLatLongOkBtnClass' rv-on-click='model.setLatLngManually' data-on-click='true'>Ok</button>" +
-                                    "<button rv-class='model.setLatLongCancelBtnClass' rv-on-click='model.setLatLngManually' data-on-click='false'>X</button>" +
+                                    "<button type='button' id='" + this.id + "_acceptBtn' rv-class='model.setLatLongOkBtnClass'>Ok</button>" +
+                                    "<button type='button' id='" + this.id + "_dismissBtn' rv-class='model.setLatLongCancelBtnClass'>X</button>" +
                                 "</div>" +
                             "</div>" +
                         "</div>" +
                         "<div id='" + this.id + "_map' style='height: 400px;width: 100%;'></div>" +
                     "</div>" +
                     "<div class='modal-footer'>" +
-                        "<button class='btn btn-success' rv-on-click='model.mapAcceptPosition'>Ruaj Koordinatat</button>" +
+                        "<button type='button' id='" + this.id + "_mapAcceptPosition' class='btn btn-success'>Ruaj Koordinatat</button>" +
                     "</div>" +
                 "</div>" +
             "</div>" +

@@ -1,8 +1,7 @@
 var myMap = new GoogleMap({
-    id: 'map3',
+    id: 'map',
     colspan: '6',
     label: 'Vendodhja Gjeografike',
-    fieldName: 'mapField3',
     versionStyle: "",
     blockProcessAttr: false,
     required: false,
