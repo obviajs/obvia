@@ -301,8 +301,8 @@ $(document).on('onBeforeRowDelete', function (e, repeater, args) {
     })
 });
 
-myForm.on('afterAttach', function () {
-    console.log("MainForm Attached");
+myForm.on('creationComplete', function () {
+    console.log("MainForm creationComplete in document");
     myForm.text.on('change', function (e) {
         console.log('change event outside text (in document) with value: ', this.getValue());
     });
@@ -325,3 +325,22 @@ myForm.on('afterAttach', function () {
 })
 
 $('#root').append(myForm.render());
+
+
+var myButton = new Button({
+    id: 'button',
+    type: "button",
+    value: "Im so lonely button",
+    style: '',
+    class: "btn btn-success",
+    onclick : function(e){console.log("From ClickAction");}
+});
+
+
+myButton.on('creationComplete', function () {
+    console.log("creationComplete in document for "+this.id);
+    myButton.on('click', function (e) {
+        console.log('click event outside button (in document) with value: '+this.id);
+    });
+});
+$('#root').append(myButton.render());
