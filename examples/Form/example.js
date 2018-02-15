@@ -302,7 +302,7 @@ $(document).on('onBeforeRowDelete', function (e, repeater, args) {
 });
 
 myForm.on('afterAttach', function () {
-    console.log("MainForm Attached");
+    console.log("MainForm Attached", this.id);
     myForm.text.on('change', function (e) {
         console.log('change event outside text (in document) with value: ', this.getValue());
     });
