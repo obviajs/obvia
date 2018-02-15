@@ -6,7 +6,7 @@
 
 //component definition
 var Template = KxGenerator.createComponent({
-    //model variables are private and they bind to the template
+    //inner component data
     initModel: function () {
         return {
             
@@ -17,16 +17,17 @@ var Template = KxGenerator.createComponent({
 
     },
 
-    afterAttach: function () {
-        
-    },
-
-    getValue: function () {
-       
-    },
-
-    setValue: function (value) {
-        
+    registerEvents: function () {
+        return [
+            {
+                registerTo: this.$el,
+                events:{
+                    'afterAttach': function (e) {
+                        this.trigger('creationComplete');
+                    }
+                }
+            }
+        ]
     },
 
     template: function () {

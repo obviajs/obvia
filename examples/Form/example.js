@@ -10,8 +10,8 @@ var myForm = new Form({
             versionStyle: '',
             blockProcessAttr: false,
             required: true,
-            mask: false,
-            value: ""
+            mask: 'currency',
+            value: "33"
         }),
         // new AutoComplete({
         //     id: 'autocomplete',
@@ -183,17 +183,17 @@ var myForm = new Form({
                 //         value: '{comboValue}'
                 //     }
                 // },
-                {
-                    constructor: Button,
-                    props: {
-                        id: 'button',
-                        type: "button",
-                        value: "Clicked Me",
-                        style: '',
-                        class: "btn btn-success",
-                        onclick : function(e){console.log("From ClickAction");console.log(arguments);}
-                    }
-                },
+                // {
+                //     constructor: Button,
+                //     props: {
+                //         id: 'button',
+                //         type: "button",
+                //         value: "Clicked Me",
+                //         style: '',
+                //         class: "btn btn-success",
+                //         onclick : function(e){console.log("From ClickAction");console.log(arguments);}
+                //     }
+                // },
                 {
                     constructor: TextInput,
                     props: {
@@ -202,8 +202,7 @@ var myForm = new Form({
                         label: '{textLabel}',
                         blockProcessAttr: false,
                         required: true,
-                        value: '{textValue}',
-                        onchange: function(e){console.log("From TextInput CahngeAction"); console.log(arguments);}
+                        value: '{textValue}'
                     }
                 },
                 // {
@@ -306,6 +305,7 @@ myForm.on('creationComplete', function () {
     myForm.text.on('change', function (e) {
         console.log('change event outside text (in document) with value: ', this.getValue());
     });
+    
     myForm.text.on('click', function (e) {
         console.log('click event outside text (in document) with value: ', this.getValue());
     });
@@ -316,31 +316,31 @@ myForm.on('creationComplete', function () {
     myForm.repeater.textR[0].on('click', function (e) {
         console.log('click event outside text (in document) with value: ', this.getValue());
     });
-    myForm.repeater.button[0].on('click', function (e) {
-        console.log('click event outside button (in document) with value: ', this.getValue());
-    });
-    myForm.repeater.button[1].on('click', function (e) {
-        console.log('click event outside button (in document) with value: ', this.getValue());
-    });
+    // myForm.repeater.button[0].on('click', function (e) {
+    //     console.log('click event outside button (in document) with value: ', this.getValue());
+    // });
+    // myForm.repeater.button[1].on('click', function (e) {
+    //     console.log('click event outside button (in document) with value: ', this.getValue());
+    // });
 })
 
 $('#root').append(myForm.render());
 
 
-var myButton = new Button({
-    id: 'button',
-    type: "button",
-    value: "Im so lonely button",
-    style: '',
-    class: "btn btn-success",
-    onclick : function(e){console.log("From ClickAction");}
-});
+// var myButton = new Button({
+//     id: 'button',
+//     type: "button",
+//     value: "Im so lonely button",
+//     style: '',
+//     class: "btn btn-success",
+//     onclick : function(e){console.log("From ClickAction");}
+// });
 
 
-myButton.on('creationComplete', function () {
-    console.log("creationComplete in document for "+this.id);
-    myButton.on('click', function (e) {
-        console.log('click event outside button (in document) with value: '+this.id);
-    });
-});
-$('#root').append(myButton.render());
+// myButton.on('creationComplete', function () {
+//     console.log("creationComplete in document for "+this.id);
+//     myButton.on('click', function (e) {
+//         console.log('click event outside button (in document) with value: '+this.id);
+//     });
+// });
+// $('#root').append(myButton.render());

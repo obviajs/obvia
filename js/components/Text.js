@@ -7,6 +7,7 @@
 //component definition
 var TextInput = KxGenerator.createComponent({
 
+    //inner component data
     initModel: function () {
         return {
             enabled: true,
@@ -14,50 +15,21 @@ var TextInput = KxGenerator.createComponent({
         }
     },
 
-   registerEvents: function () {
-         return [
+    registerEvents: function () {
+        this.$input = this.$el.find("#" + this.id);
+
+        return [
             {
-                registerTo: this.$el,
-                events:
-                { 
-                    'click': function (e) {
-                        console.log("click per elementin $el");
-                    },
-                    'afterAttach': function (e) {
-                        this.trigger('creationComplete');
-                        if (typeof this.onafterAttach == 'function')
-                        this.onafterAttach(e, this.repeaterIndex, this, this.parent);
-                        //this.onafterAttach.apply(this, arguments);
-                    }  
+                registerTo: this.$el, events: {
+                    'afterAttach': this.afterAttach.bind(this),
                 }
             },
             {
-                registerTo: this.$input,
-                events:
-                { 
-                    'click': function (e) {
-                        console.log("click per input e brendshem $input");
-                    } 
-                }
-            },
-            {
-                registerTo: this.$input,
-                events:
-                { 
-                    'change': function (e) {
-                        console.log("change per input e brendshem $input");
-                        if (typeof this.onchange == 'function')
-                        this.onchange(e, this.repeaterIndex, this, this.parent);
-                        //this.onchange.apply(this, arguments);
-                    } 
+                registerTo: this.$input, events: { 
+                    'change': this.changeHandler.bind(this),
                 }
             }
         ]
-    },
-
-    afterAttach: function () {
-        if(this.hasOwnProperty('mask'))
-            $('#' + this.fieldName).inputmask(this.mask); 
     },
 
     enable: function () {
@@ -72,6 +44,22 @@ var TextInput = KxGenerator.createComponent({
         model.enabled = false;
 
         return this;
+    },
+
+    afterAttach: function (e) {
+        //init input mask
+        if (this.hasOwnProperty('mask'))
+            $('#' + this.fieldName).inputmask(this.mask);
+
+        if (typeof this.onafterAttach == 'function')
+            this.onafterAttach(e, this.repeaterIndex, this, this.parent);
+
+        this.trigger('creationComplete');
+    },
+
+    changeHandler: function (e) {
+        if (typeof this.onchange == 'function')
+            this.onchange(e, this.repeaterIndex, this, this.parent);
     },
 
     validate: function () {
@@ -101,9 +89,7 @@ var TextInput = KxGenerator.createComponent({
                     "</div>" + 
                 "</div>";    
     },
-    afterAttach: function(){
-        this.$input = this.$el.find("#"+this.id);
-    },
+ 
     render: function () {
         return this.$el;
     }

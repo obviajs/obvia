@@ -107,26 +107,24 @@ var Form = KxGenerator.createComponent({
         var _self = this;
         var container = this.$el.find('#' + this.componentContainerID);
         var ccComponents = [];
-        for(var i;i<this.components.length;i++)
-        {
+        for(var i=0; i<this.components.length; i++)
             ccComponents.push(this.components[i].id);
-        }
+        
         this.components.forEach(function (component, cIndex) {
-            component.on('creationComplete', function(e){
-                var ax = -1;
-                while ((ax = ccComponents.indexOf(_self.id)) !== -1) 
-                {
-                    ccComponents.splice(ax, 1);
-                }
-                console.log("creationComplete ne FORM per "+ component.id);
+            component.on('creationComplete', function (e) {
                 e.stopImmediatePropagation();
                 e.stopPropagation();
-                if(ccComponents.length==0)
-                {
-                    console.log("creationComplete per FORM");
+
+                var ax = -1;
+                while ((ax = ccComponents.indexOf(this.id)) !== -1) 
+                    ccComponents.splice(ax, 1);
+                
+                if (ccComponents.length == 0) {
                     _self.trigger('creationComplete');
                 }
+                    
             });
+
             _self.addComponent(component, container, cIndex)
         })
         

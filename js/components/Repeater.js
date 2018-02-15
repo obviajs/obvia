@@ -110,73 +110,63 @@ var Repeater = KxGenerator.createComponent({
 
                 cmp[index - 1] = el;
                 rowItems[cmpId] = el;
-
               
-
                 //handle component change event and delegate it to repeater
-                el.on('afterAttach', function (e) {
-
-                    ccComponents.push(el.id);
-                    el.on('creationComplete', function(e){
-                                
-                        e.stopImmediatePropagation();
-                        e.stopPropagation();
-                        console.log("creationComplete ne Repeater per "+ el.id);
-                        var ax = -1;
-                        while ((ax = ccComponents.indexOf(this.id)) !== -1) 
-                        {
-                            ccComponents.splice(ax, 1);
-                        }
-                        if(ccComponents.length==0 && vcolIndex==(_self.components.length-1))
-                        {
-                            //trigger row add event
-                            _self.$el.trigger('onRowAdd', [_self, new RepeaterEventArgs(rowItems, data, index)]);
-                            //duhet te shtojme nje flag qe ne rast se metoda addRow eshte thirrur nga addRowHangler te mos e exec kodin meposhte
-                            
-                            //manage dp
-                            _self.currentItem = _self.defaultItem;
-                            _self.currentIndex = index;
-                            model.map[index] = hash;
-                            if (_self.currentIndex > 1 && _self.rendering.actions) {
-                                model.displayRemoveButton = true;
-                            }
-
-                            //skip dp if it already exist
-                            var addRowFlag = false;
-                            if (index > _self.dataProvider.items.length) {
-                                _self.dataProvider.items.push(_self.currentItem);
-                                addRowFlag = true;
-                            }
-                            
-                            
-                            if(index == _self.dataProvider.items.length && !addRowFlag)
-                            {
-                                console.log("creationComplete per Repeater");
-                                _self.trigger('creationComplete');
-                            }
-
-                        }
-                    });
-
-                    el.on('change', function (e, sender) {
-                        console.log('change event outside text (in repeater) with value: ', sender.getValue());
-                        var currentItem = _self.dataProvider.items[index - 1];
-                        if (tempComponent.props.value[0] == '{' && tempComponent.props.value[tempComponent.props.value.length - 1] == '}') {
-                            var bindedValue = tempComponent.props.value.slice(1, -1);
-                            data[bindedValue] = sender.getValue();
-                        }
-
-                        _self.$el.trigger('onRowEdit', [_self, new RepeaterEventArgs(rowItems, data, index)]);
-                    });
-
-                    el.on('click', function (e, sender) {
-                        console.log('click event outside (in repeater) with value: ', sender.getValue());
-                    });
+                el.on('creationComplete', function(e){  
+                    e.stopImmediatePropagation();
+                    e.stopPropagation();
                     
-                });                 
+                    ccComponents.push(el.id);
+                    var ax = -1;
+                    while ((ax = ccComponents.indexOf(this.id)) !== -1) 
+                        ccComponents.splice(ax, 1);
+                    
+                    if(ccComponents.length==0 && vcolIndex==(_self.components.length-1)){
+                        //trigger row add event
+                        _self.$el.trigger('onRowAdd', [_self, new RepeaterEventArgs(rowItems, data, index)]);
+                        //duhet te shtojme nje flag qe ne rast se metoda addRow eshte thirrur nga addRowHangler te mos e exec kodin meposhte
+                        
+                        //manage dp
+                        _self.currentItem = _self.defaultItem;
+                        _self.currentIndex = index;
+                        model.map[index] = hash;
+                        if (_self.currentIndex > 1 && _self.rendering.actions) {
+                            model.displayRemoveButton = true;
+                        }
+
+                        //skip dp if it already exist
+                        var addRowFlag = false;
+                        if (index > _self.dataProvider.items.length) {
+                            _self.dataProvider.items.push(_self.currentItem);
+                            addRowFlag = true;
+                        }
+                        
+                        
+                        if(index == _self.dataProvider.items.length && !addRowFlag)
+                            _self.trigger('creationComplete');
+                    
+                    }
+                });
+
+                el.on('change', function (e, sender) {
+                    console.log('change event outside text (in repeater) with value: ', sender.getValue());
+                    var currentItem = _self.dataProvider.items[index - 1];
+                    if (tempComponent.props.value[0] == '{' && tempComponent.props.value[tempComponent.props.value.length - 1] == '}') {
+                        var bindedValue = tempComponent.props.value.slice(1, -1);
+                        data[bindedValue] = sender.getValue();
+                    }
+
+                    _self.$el.trigger('onRowEdit', [_self, new RepeaterEventArgs(rowItems, data, index)]);
+                });
+
+                // el.on('click', function (e, sender) {
+                //     console.log('click event outside (in repeater) with value: ', sender.getValue());
+                // });
+
                 //render component in row
-                renderedRow.append(el.render());    
-            });
+                renderedRow.append(el.render());
+                    
+            });   
 
             //render row in dom
             container  
@@ -185,10 +175,7 @@ var Repeater = KxGenerator.createComponent({
                 .append((_self.rendering.seperator ? '<hr id="' + _self.id + '-repeated-block-hr-' + hash + '">' : ''))  
                 .append(renderedRow);
                 
-            
-            
-           
-            
+       
             _self.rowItems[index - 1] = rowItems;
             return rowItems;
         }
