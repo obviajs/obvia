@@ -132,7 +132,24 @@ var Repeater = KxGenerator.createComponent({
                             //trigger row add event
                             _self.$el.trigger('onRowAdd', [_self, new RepeaterEventArgs(rowItems, data, index)]);
                             //duhet te shtojme nje flag qe ne rast se metoda addRow eshte thirrur nga addRowHangler te mos e exec kodin meposhte
-                            if(index == _self.dataProvider.items.length)
+                            
+                            //manage dp
+                            _self.currentItem = _self.defaultItem;
+                            _self.currentIndex = index;
+                            model.map[index] = hash;
+                            if (_self.currentIndex > 1 && _self.rendering.actions) {
+                                model.displayRemoveButton = true;
+                            }
+
+                            //skip dp if it already exist
+                            var addRowFlag = false;
+                            if (index > _self.dataProvider.items.length) {
+                                _self.dataProvider.items.push(_self.currentItem);
+                                addRowFlag = true;
+                            }
+                            
+                            
+                            if(index == _self.dataProvider.items.length && !addRowFlag)
                             {
                                 console.log("creationComplete per Repeater");
                                 _self.trigger('creationComplete');
@@ -170,18 +187,7 @@ var Repeater = KxGenerator.createComponent({
                 
             
             
-            //manage dp
-            _self.currentItem = _self.defaultItem;
-            _self.currentIndex = index;
-            model.map[index] = hash;
-            if (_self.currentIndex > 1 && _self.rendering.actions) {
-                model.displayRemoveButton = true;
-            }
-
-            //skip dp if it already exist
-            if (index > _self.dataProvider.items.length) {
-                _self.dataProvider.items.push(_self.currentItem);
-            }
+           
             
             _self.rowItems[index - 1] = rowItems;
             return rowItems;
@@ -328,30 +334,6 @@ var Repeater = KxGenerator.createComponent({
         var ccComponents = [];
 
         dp.forEach(function (data, index) {  
-            // ccComponents.push(el.id);
-            // el.on('creationComplete', function(e){
-                        
-            //     e.stopImmediatePropagation();
-            //     e.stopPropagation();
-                
-            //     var ax = -1;
-            //     while ((ax = ccComponents.indexOf(this.id)) !== -1) 
-            //     {
-            //         ccComponents.splice(ax, 1);
-            //     }
-            //     if(ccComponents.length==0 && vcolIndex==(_self.components.length-1))
-            //     {
-            //         //trigger row add event
-            //         _self.$el.trigger('onRowAdd', [_self, new RepeaterEventArgs(rowItems, data, index)]);
-
-            //         if(index == _self.dataProvider.items.length)
-            //         {
-            //             _self.trigger('creationComplete');
-            //         }
-
-            //     }
-            // });
-
             _self.addRow(data, index + 1);
         });
        
