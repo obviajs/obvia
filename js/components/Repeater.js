@@ -70,11 +70,13 @@ var Repeater = KxGenerator.createComponent({
 
         var renderedRow = $('<div ' + (_self.rendering.direction == 'vertical' ? "class='col-md-12'" : "") + '>')
         var rowItems = {};
+        var rowHTML = "";
+        var ccComponents = [];
 
         var buildRow = function () {
-            _self.components.forEach(function (component) {
+            _self.components.forEach(function (component, vcolIndex) {
                 //clone objects
-                var tempComponent = Object.assign({}, component);
+                var tempComponent = component;//Object.assign({}, component);
                 var p = Object.assign({}, tempComponent.props);
 
                 //build components properties, check bindings
@@ -112,7 +114,50 @@ var Repeater = KxGenerator.createComponent({
               
 
                 //handle component change event and delegate it to repeater
-                el.on('afterAttach', function () {
+                el.on('afterAttach', function (e) {
+
+                    ccComponents.push(el.id);
+                    el.on('creationComplete', function(e){
+                                
+                        e.stopImmediatePropagation();
+                        e.stopPropagation();
+                        console.log("creationComplete ne Repeater per "+ el.id);
+                        var ax = -1;
+                        while ((ax = ccComponents.indexOf(this.id)) !== -1) 
+                        {
+                            ccComponents.splice(ax, 1);
+                        }
+                        if(ccComponents.length==0 && vcolIndex==(_self.components.length-1))
+                        {
+                            //trigger row add event
+                            _self.$el.trigger('onRowAdd', [_self, new RepeaterEventArgs(rowItems, data, index)]);
+                            //duhet te shtojme nje flag qe ne rast se metoda addRow eshte thirrur nga addRowHangler te mos e exec kodin meposhte
+                            
+                            //manage dp
+                            _self.currentItem = _self.defaultItem;
+                            _self.currentIndex = index;
+                            model.map[index] = hash;
+                            if (_self.currentIndex > 1 && _self.rendering.actions) {
+                                model.displayRemoveButton = true;
+                            }
+
+                            //skip dp if it already exist
+                            var addRowFlag = false;
+                            if (index > _self.dataProvider.items.length) {
+                                _self.dataProvider.items.push(_self.currentItem);
+                                addRowFlag = true;
+                            }
+                            
+                            
+                            if(index == _self.dataProvider.items.length && !addRowFlag)
+                            {
+                                console.log("creationComplete per Repeater");
+                                _self.trigger('creationComplete');
+                            }
+
+                        }
+                    });
+
                     el.on('change', function (e, sender) {
                         console.log('change event outside text (in repeater) with value: ', sender.getValue());
                         var currentItem = _self.dataProvider.items[index - 1];
@@ -125,8 +170,9 @@ var Repeater = KxGenerator.createComponent({
                     });
 
                     el.on('click', function (e, sender) {
-                        console.log('click event outside text (in repeater) with value: ', sender.getValue());
+                        console.log('click event outside (in repeater) with value: ', sender.getValue());
                     });
+                    
                 });                 
                 //render component in row
                 renderedRow.append(el.render());    
@@ -137,24 +183,11 @@ var Repeater = KxGenerator.createComponent({
                 .append('<div id="' + _self.id + '-repeated-block-' + hash + '" ' + (_self.rendering.direction == 'vertical' ? "class='row'": "") + '></div>')
                 .find("#" + _self.id + "-repeated-block-" + hash)
                 .append((_self.rendering.seperator ? '<hr id="' + _self.id + '-repeated-block-hr-' + hash + '">' : ''))  
-                .append(renderedRow)
+                .append(renderedRow);
                 
             
-            //trigger row add event
-            _self.$el.trigger('onRowAdd', [_self, new RepeaterEventArgs(rowItems, data, index)]);
-
-            //manage dp
-            _self.currentItem = _self.defaultItem;
-            _self.currentIndex = index;
-            model.map[index] = hash;
-            if (_self.currentIndex > 1 && _self.rendering.actions) {
-                model.displayRemoveButton = true;
-            }
-
-            //skip dp if it already exist
-            if (index > _self.dataProvider.items.length) {
-                _self.dataProvider.items.push(_self.currentItem);
-            }
+            
+           
             
             _self.rowItems[index - 1] = rowItems;
             return rowItems;
@@ -181,7 +214,8 @@ var Repeater = KxGenerator.createComponent({
         
     },
 
-    //handle row delete click
+    //handle row delete click, nese i shtojme te register events remove dhe add kemi mundesine te heqim/shtojme ne cdo index
+    //remove dhe add duhet te modifikojne dhe dataProvider - splice
     removeRowHandler: function () {
         this.removeRow(this.currentIndex, true);
     },
@@ -296,6 +330,8 @@ var Repeater = KxGenerator.createComponent({
         //container.append("<hr>");
         
         var dp = this.dataProvider.items;
+
+        var ccComponents = [];
 
         dp.forEach(function (data, index) {  
             _self.addRow(data, index + 1);

@@ -25,7 +25,14 @@ var Button = KxGenerator.createComponent({
                 { 
                     'click': function (e) {
                         console.log("click per elementin $el");
-                    } 
+                    },
+                    'afterAttach': function (e) {
+                        console.log('afterAttach_BUTTON');
+                        this.trigger('creationComplete');
+                        if (typeof this.onchange == 'function')
+                        this.onafterAttach(e, this.repeaterIndex, this, this.parent);
+                        //this.onafterAttach.apply(this, arguments);
+                    }  
                 }
             },
             {

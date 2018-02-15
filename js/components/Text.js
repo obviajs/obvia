@@ -22,7 +22,13 @@ var TextInput = KxGenerator.createComponent({
                 { 
                     'click': function (e) {
                         console.log("click per elementin $el");
-                    } 
+                    },
+                    'afterAttach': function (e) {
+                        this.trigger('creationComplete');
+                        if (typeof this.onafterAttach == 'function')
+                        this.onafterAttach(e, this.repeaterIndex, this, this.parent);
+                        //this.onafterAttach.apply(this, arguments);
+                    }  
                 }
             },
             {
