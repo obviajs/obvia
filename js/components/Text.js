@@ -49,7 +49,7 @@ var TextInput = KxGenerator.createComponent({
     afterAttach: function (e) {
         //init input mask
         if (this.hasOwnProperty('mask'))
-            $('#' + this.fieldName).inputmask(this.mask);
+            this.$input.inputmask(this.mask);
 
         if (typeof this.onafterAttach == 'function')
             this.onafterAttach(e, this.repeaterIndex, this, this.parent);
