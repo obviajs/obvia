@@ -1,8 +1,7 @@
-var myTrippleswitch = new Trippleswitch({
+var myTrippleswitch = new TrippleSwitch({
     id: 'trippleswitch',
     colspan: '6',
     label: 'This is a survey. Are you happy?',
-    fieldName: 'tripple',
     versionStyle: "",
     blockProcessAttr: false,
     required: false,

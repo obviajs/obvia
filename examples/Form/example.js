@@ -47,7 +47,7 @@ var myForm = new Form({
                 zoomLevel: 7
             }
         }),
-        new ToggleSwitch({
+        new Toggle({
             id: 'checkbox',
             colspan: '6',
             label: 'Checkbox',
@@ -57,21 +57,20 @@ var myForm = new Form({
             unCheckedLabel: "Jo",
             checkedLabel: "Po"
         }),
-        // new Trippleswitch({
-        //     id: 'trippleswitch',
-        //     colspan: '6',
-        //     label: 'This is a survey. Are you happy?',
-        //     fieldName: 'tripple',
-        //     versionStyle: "",
-        //     blockProcessAttr: false,
-        //     required: false,
-        //     dataProvider: {
-        //         left: "Yes", //1
-        //         middle: "Somewhat",//-1
-        //         right: "No" //0
-        //     },
-        //     value: "1" //1,-1,0
-        // }),
+        new TrippleSwitch({
+            id: 'trippleswitch',
+            colspan: '6',
+            label: 'This is a survey. Are you happy?',
+            versionStyle: "",
+            blockProcessAttr: false,
+            required: false,
+            dataProvider: {
+                left: "Yes", //1
+                middle: "Somewhat",//-1
+                right: "No" //0
+            },
+            value: "1" //1,-1,0
+        }),
         // new MultiSwitch({
         //     id: 'multiswitch',
         //     colspan: '6',
@@ -188,7 +187,7 @@ var myForm = new Form({
                     }
                 },
                 {
-                    constructor: ToggleSwitch,
+                    constructor: Toggle,
                     props: {
                         id: 'checkboxR',
                         colspan: '6',
@@ -213,24 +212,23 @@ var myForm = new Form({
                         value: '{mapValue}'
                     }
                 },
-                // {
-                //     constructor: Trippleswitch,
-                //     props: {
-                //         id: 'trippleswitchR',
-                //         colspan: '6',
-                //         label: 'This is a survey. Are you happy?',
-                //         fieldName: 'trippleR',
-                //         versionStyle: "",
-                //         blockProcessAttr: false,
-                //         required: false,
-                //         dataProvider: {
-                //             left: "Yes", //1
-                //             middle: "Somewhat",//-1
-                //             right: "No" //0
-                //         },
-                //         value: "{trippleValue}" //1,-1,0
-                //     }
-                // },
+                {
+                    constructor: TrippleSwitch,
+                    props: {
+                        id: 'trippleswitchR',
+                        colspan: '6',
+                        label: 'This is a survey. Are you happy?',
+                        versionStyle: "",
+                        blockProcessAttr: false,
+                        required: false,
+                        dataProvider: {
+                            left: "Yes", //1
+                            middle: "Somewhat",//-1
+                            right: "No" //0
+                        },
+                        value: "{trippleValue}" //1,-1,0
+                    }
+                },
                 // {
                 //     constructor: MultiSwitch,
                 //     props: {
