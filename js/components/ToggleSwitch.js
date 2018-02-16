@@ -1,11 +1,11 @@
 /**
- * This is a ComboBox/Dropdown Element
+ * This is a ToggleSwitch Element
  * 
  * Kreatx 2018
  */
 
 //component definition
-var Checkbox = KxGenerator.createComponent({
+var ToggleSwitch = KxGenerator.createComponent({
     //component data
     initModel: function () {
         return {
@@ -80,6 +80,6 @@ var Checkbox = KxGenerator.createComponent({
 });
 
 //component prototype
-Checkbox.type = 'checkbox';
+ToggleSwitch.type = 'toggleswitch';
 
-KxGenerator.registerDOMElement(Checkbox, 'kx-checkbox');
+KxGenerator.registerDOMElement(ToggleSwitch, 'kx-toggleswitch');

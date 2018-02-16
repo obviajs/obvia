@@ -47,7 +47,7 @@ var myForm = new Form({
                 zoomLevel: 7
             }
         }),
-        new Checkbox({
+        new ToggleSwitch({
             id: 'checkbox',
             colspan: '6',
             label: 'Checkbox',
@@ -189,7 +189,7 @@ var myForm = new Form({
                     }
                 },
                 {
-                    constructor: Checkbox,
+                    constructor: ToggleSwitch,
                     props: {
                         id: 'checkboxR',
                         colspan: '6',
