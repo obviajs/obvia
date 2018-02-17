@@ -13,17 +13,17 @@ var myForm = new Form({
             mask: 'currency',
             value: "33"
         }),
-        new AutoComplete({
-            id: 'autocomplete',
-            colspan: '6',
-            label: 'Ministrite',
-            blockProcessAttr: false,
-            required: false,
-            multipleSelection: true,
-            tableData: [["Ministria e Puneve te Jashtme"], ["Ministria e Drejtesise"], ["Ministria e Brendshme"]],
-            dataProvider: [{ "id": "1", "text": "Ministria e Puneve te Jashtme" }, { "id": "2", "text": "Ministria e Drejtesise" }, { "id": "3", "text": "Ministria e Brendshme" }],
-            value: [{ "id": "1", "text": "Ministria e Puneve te Jashtme" }]
-        }),
+        // new AutoComplete({
+        //     id: 'autocomplete',
+        //     colspan: '6',
+        //     label: 'Ministrite',
+        //     blockProcessAttr: false,
+        //     required: false,
+        //     multipleSelection: true,
+        //     tableData: [["Ministria e Puneve te Jashtme"], ["Ministria e Drejtesise"], ["Ministria e Brendshme"]],
+        //     dataProvider: [{ "id": "1", "text": "Ministria e Puneve te Jashtme" }, { "id": "2", "text": "Ministria e Drejtesise" }, { "id": "3", "text": "Ministria e Brendshme" }],
+        //     value: [{ "id": "1", "text": "Ministria e Puneve te Jashtme" }]
+        // }),
         new ComboBox({
             id: 'combo',
             colspan: '6',
@@ -150,21 +150,21 @@ var myForm = new Form({
                 }
             ],
             components: [
-                {
-                    constructor: AutoComplete,
-                    props: {
-                        id: 'autocompleteR',
-                        colspan: '6',
-                        label: '{autocompleteLabel}',
-                        fieldName: 'autocompleteR',
-                        blockProcessAttr: false,
-                        required: false,
-                        multipleSelection: true,
-                        tableData: [["Ministria e Puneve te Jashtme"], ["Ministria e Drejtesise"], ["Ministria e Brendshme"]],
-                        dataProvider: [{ "id": "1", "text": "Ministria e Puneve te Jashtme" }, { "id": "2", "text": "Ministria e Drejtesise" }, { "id": "3", "text": "Ministria e Brendshme" }],
-                        value: '{autocompleteValue}'
-                    }
-                },
+                // {
+                //     constructor: AutoComplete,
+                //     props: {
+                //         id: 'autocompleteR',
+                //         colspan: '6',
+                //         label: '{autocompleteLabel}',
+                //         fieldName: 'autocompleteR',
+                //         blockProcessAttr: false,
+                //         required: false,
+                //         multipleSelection: true,
+                //         tableData: [["Ministria e Puneve te Jashtme"], ["Ministria e Drejtesise"], ["Ministria e Brendshme"]],
+                //         dataProvider: [{ "id": "1", "text": "Ministria e Puneve te Jashtme" }, { "id": "2", "text": "Ministria e Drejtesise" }, { "id": "3", "text": "Ministria e Brendshme" }],
+                //         value: '{autocompleteValue}'
+                //     }
+                // },
                 {
                     constructor: ComboBox,
                     props: {
@@ -232,46 +232,75 @@ var myForm = new Form({
                 //         value: "{trippleValue}" //1,-1,0
                 //     }
                 // },
-                // {
-                //     constructor: MultiSwitch,
-                //     props: {
-                //         id: 'multiswitchR',
-                //         colspan: '6',
-                //         label: 'Ministrite',
-                //         fieldName: 'multiswitchInputR',
-                //         blockProcessAttr: false,
-                //         required: true,
-                //         multiselect: true,
-                //         dataProvider: [
-                //             { "id": "1", "text": "Ministria e Puneve te Jashtme"},
-                //             { "id": "2", "text": "Ministria e Drejtesise" },
-                //             { "id": "3", "text": "Ministria e Brendshme" },
-                //             { "id": "4", "text": "Ministria e Mbrojtjes" }
-                //         ],
-                //         valueField: "id",
-                //         labelField: "text",
-                //         defaultClassField: 'btn btn-xs btn-default',
-                //         selectedClassField: 'btn btn-xs btn-success',
-                //         value: '{multiValue}'
-                //     }
-                // }
+                {
+                    constructor: MultiSwitch,
+                    props: {
+                        id: 'multiswitchR',
+                        colspan: '6',
+                        label: 'Ministrite',
+                        fieldName: 'multiswitchInputR',
+                        blockProcessAttr: false,
+                        required: true,
+                        multiselect: true,
+                        dataProvider: [
+                            { "id": "1", "text": "Ministria e Puneve te Jashtme"},
+                            { "id": "2", "text": "Ministria e Drejtesise" },
+                            { "id": "3", "text": "Ministria e Brendshme" },
+                            { "id": "4", "text": "Ministria e Mbrojtjes" }
+                        ],
+                        valueField: "id",
+                        labelField: "text",
+                        defaultClassField: 'btn btn-xs btn-default',
+                        selectedClassField: 'btn btn-xs btn-success',
+                        value: '{multiValue}',
+                        onclick : function(e){
+                            console.log("From MultiSwitch ClickAction"); 
+                            //e.preventDefault();
+                        }
+                    }
+                }
             ]
         })
     ]
 });
 
 
-// $(document).on('onBeforeRowAdd', function (e, repeater, args) {
-//     e.preventDefault();
+// // $(document).on('onBeforeRowAdd', function (e, repeater, args) {
+// //     e.preventDefault();
     
-//     bootbox.confirm("Do you want to add row?", function (result) {
-//         if (result) {
-//             repeater.addRow(args.currentItem, args.currentIndex);
-//         }
-//     })
+// //     bootbox.confirm("Do you want to add row?", function (result) {
+// //         if (result) {
+// //             repeater.addRow(args.currentItem, args.currentIndex);
+// //         }
+// //     })
     
-// });
+// // });
 
+
+var ms = new MultiSwitch({
+                        id: 'multiswitchLonelyBitch',
+                        colspan: '6',
+                        label: 'Ministrite',
+                        fieldName: 'multiswitchInputR',
+                        blockProcessAttr: false,
+                        required: true,
+                        multiselect: false,
+                        dataProvider: [
+                            { "id": "1", "text": "Ministria e Puneve te Jashtme", "buttonClass": 'btn btn-xs btn-default'},
+                            { "id": "2", "text": "Ministria e Drejtesise", "buttonClass": 'btn btn-xs btn-default'},
+                            { "id": "3", "text": "Ministria e Brendshme", "buttonClass": 'btn btn-xs btn-success'},
+                            { "id": "4", "text": "Ministria e Mbrojtjes", "buttonClass": 'btn btn-xs btn-default'}
+                        ],
+                        valueField: "id",
+                        labelField: "text",
+                        defaultClass: 'btn btn-xs btn-default',
+                        selectedClass: 'btn btn-xs btn-success',
+                        value: [{ "id": "3", "text": "Ministria e Brendshme", "buttonClass": 'btn btn-xs btn-success'}],
+                        onclick : function(e){
+                            console.log("From MultiSwitch ClickAction"); 
+                            //e.preventDefault();
+                        }
+                    });
 $(document).on('onBeforeRowDelete', function (e, repeater, args) {
     e.preventDefault();
 
@@ -282,4 +311,5 @@ $(document).on('onBeforeRowDelete', function (e, repeater, args) {
     })
 });
 
-$('#root').append(myForm.render());
+// $('#root').append(myForm.render());
+$('#root').append(ms.render());
