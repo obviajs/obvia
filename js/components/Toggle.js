@@ -1,11 +1,11 @@
 /**
- * This is a ToggleSwitch Element
+ * This is a Toggle Element
  * 
  * Kreatx 2018
  */
 
 //component definition
-var ToggleSwitch = KxGenerator.createComponent({
+var Toggle = KxGenerator.createComponent({
     //component data
     initModel: function () {
         return {
@@ -80,6 +80,6 @@ var ToggleSwitch = KxGenerator.createComponent({
 });
 
 //component prototype
-ToggleSwitch.type = 'toggleswitch';
+Toggle.type = 'toggle';
 
-KxGenerator.registerDOMElement(ToggleSwitch, 'kx-toggleswitch');
+KxGenerator.registerDOMElement(Toggle, 'kx-toggle');

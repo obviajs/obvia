@@ -10,37 +10,27 @@ var AutoComplete = KxGenerator.createComponent({
     initModel: function () {
         return {
             blockProcessAttr: this.required ? false : this.blockProcessAttr,
-            optionsData: this.dataProvider,
-            selectedOptions: this.value
         }
     },
 
     registerEvents: function () {
-        // var _self = this;
-        // var model = this.getModel();
-
-        // this.$el.on('change', function (e) {
-        //     model.selectedOptions = [];
-        //     var selected = $('#' + _self.fieldName + '_select').val().split(",");
-        //     if (selected[0] != "")
-        //         selected.forEach(function (item) {
-        //             var option = model.optionsData.filter(function (option) {
-        //                 return option.id == item;
-        //             });
-        //             model.selectedOptions.push(option[0]);
-        //         });
-
-        //     _self.value = model.selectedOptions;
-        //     _self.setModelValue('selectedOptions', _self.value);
-        // });
-
-        this.$modalContainer = $('#' + this.id + '-autoselect-modal');
+        this.$modalContainer = this.$el.find('#' + this.id + '-autoselect-modal');
         this.$openModalBtn = this.$el.find('#' + this.id + '_openModal');
+        this.$input = this.$el.find('#' + this.id + '_select');
+        this.$select2Instance = null;
+        this.$modal = null;
+        this.$comboCategoryTableSelector = null;
+        this.$dataTable = null;
 
         return [
             {
                 registerTo: this.$el, events: {
                     'afterAttach': this.afterAttach.bind(this)
+                }
+            },
+            {
+                registerTo: this.$input, events: {
+                    'change': this.handleChange.bind(this)
                 }
             },
             {
@@ -52,10 +42,28 @@ var AutoComplete = KxGenerator.createComponent({
     },
 
     afterAttach: function (e) {
-        this.createModal();
-        this.renderSelect2();
+        if (e.target.id == this.id + '-wrapper') {
+            this.createModal();
+            this.renderSelect2(function () {
+                var _self = this;
+                this.modal.on('creationComplete', function () {
+                    //trigger autocomplete complete
+                    _self.trigger('creationComplete');
+                })
+            });
+        }
+    },
 
-        this.trigger('creationComplete');
+    handleChange: function (e) {
+        this.value = [];
+
+        var _self = this;
+        this.select2Instance.select2('val').forEach(function (item) {
+            var option = _self.dataProvider.filter(function (option) {
+                return option.id == item;
+            });
+            _self.value.push(option[0]);
+        });
     },
 
     createModal: function () {
@@ -66,7 +74,7 @@ var AutoComplete = KxGenerator.createComponent({
             body: '<div class="row">' +
                 '<div class="col-md-12">' +
                 '<div class="table-responsive" style="margin-left:10px;">' +
-                '<table id="combo_category_table" class="table table-striped table-bordered table-hover display" style="width: 100%">' +
+                '<table id="combo_category_table_' + this.id + '" class="table table-striped table-bordered table-hover display" style="width: 100%">' +
                 '<thead>' +
                 '<tr>' +
                 '<th>Emri</th>' +
@@ -79,34 +87,37 @@ var AutoComplete = KxGenerator.createComponent({
                 '</div>'
         });
 
-        this.$modalContainer.html(
-            this.modal.render()
-        );
-      
+        this.modal.render();
+        this.modal.parent = this;
+        this.modal.parentType = 'autocomplete';
+        
+        this.$modal = this.modal.$el;
+        this.$modalContainer.html(this.$modal);
+        this.$modal.on('shown.bs.modal', this.renderTable.bind(this))
     },
 
     openModal: function (e) {
-        var $combo_category_table;
-        $('#combo_category_table').DataTable().destroy();
-        $combo_category_table = $('#combo_category_table').DataTable({
-            columns: [
-                {"title": "Emri"},
-            ],
-            data: this.tableData
-        });
-        
         this.modal.show();
     },
 
-    renderSelect2: function () {
+    renderTable: function (e) {
+        if (!$.fn.dataTable.isDataTable(this.$dataTable))
+            this.$dataTable = this.$modal.find('#combo_category_table_' + this.id)
+                .DataTable({
+                    columns: [{ "title": "Emri" }],
+                    data: this.tableData
+                });
+    },
+
+    renderSelect2: function (done) {
         var _self = this;
 
-        this.select2Instance = $('#' + this.fieldName + '_select').select2({
-            multiple: _self.getModelValue('multipleSelection'),
+        this.select2Instance = this.$input.select2({
+            multiple: this.multipleSelection,
             minimumInputLength: 2,
             placeholder: 'Search',
             allowClear: true,
-            data: _self.getModelValue('optionsData'),
+            data: this.dataProvider,
             formatResult: function (data) {
                 return '<div class=\"select2-user-result\">' + data.text + '</div>';
             },
@@ -117,32 +128,27 @@ var AutoComplete = KxGenerator.createComponent({
             separator: ',',
             width: 'off',
             initSelection: function (element, callback) {
-                !_self.getModelValue('multipleSelection') ?
-                    callback(_self.getModelValue('selectedOptions')[0]) :
-                    callback(_self.getModelValue('selectedOptions'));
+                !_self.multipleSelection ?
+                    callback(_self.value[0]) :
+                    callback(_self.value);
             }
-        });
+        }).select2('val', []);
 
-        $('#' + this.fieldName + '_select').select2('val', '222');
-        $('#' + this.fieldName + '_select').addClass('form-control');
-    },
-
-    getValue: function () {
-        return this.value;
+        this.$input.addClass('form-control');
+        done.call(this);
     },
 
     setValue: function (value) {
-        
-        var values = value.map(function (obj) {
-            return obj.id;
-        }).join(",");
+        this.value = value;
 
-        $('#' + this.fieldName + '_select').val(values);
-        this.$el.trigger('change');
+        this.select2Instance.select2('val', value);
+        this.trigger('change');
+
+        return this;
     },
 
     destruct: function () {
-        $('#' + this.fieldName + '_select').select2('destroy');
+        this.select2Instance.select2('destroy');
         this.$el.remove();
     },
 

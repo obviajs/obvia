@@ -38,7 +38,7 @@ var Modal = KxGenerator.createComponent({
     },
 
     template: function () {
-        return '<div id="' + this.id + '-wrapper">'
+        return '<div id="' + this.id + '-wrapper">' +
             '<div class="modal" id="' + this.id + '" data-backdrop="static">' +
                 '<div class="modal-dialog '+ this.size +'">' +
                     '<div class="modal-content">' +
