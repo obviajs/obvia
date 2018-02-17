@@ -27,9 +27,7 @@ var MultiSwitch = KxGenerator.createComponent({
                     seperator: false,
                     actions: false
                 },
-                dataProvider: {
-                    items: this.dataProvider
-                },
+                dataProvider: this.dataProvider,
                 components: [
                     {
                         constructor: Button,
@@ -39,11 +37,12 @@ var MultiSwitch = KxGenerator.createComponent({
                             value: "{text}",
                             class: "{buttonClass}",
                             style: "float: left; border-radius: 0px",
-                            onclick: this.handleButtonClick.bind(this)
+                            onclick: this.clickHandler.bind(this)
                         }
                     }
                 ]
-            })
+            }).on('creationComplete', function(){alert('creation Complete per Repeater ne Multiswitch')})
+
         }
     },
 
@@ -58,16 +57,16 @@ var MultiSwitch = KxGenerator.createComponent({
 
         //add correct rendering classes
         this.dataProvider.forEach(function (item, index) {
-            item["buttonClass"] = _self.defaultClassField;
+            item["buttonClass"] = _self.defaultClass;
             
             if(manualRender)
                 for(var cmp in model.repeater.rowItems[index]) {
-                    model.repeater.rowItems[index][cmp].setModelValue("class", _self.defaultClassField);
+                    model.repeater.rowItems[index][cmp].setModelValue("class", _self.defaultClass);
                 }
             
             _self.value.forEach(function (valueItem) {
                 if (valueItem[_self.valueField] == item[_self.valueField]) {
-                    item["buttonClass"] = _self.selectedClassField;
+                    item["buttonClass"] = _self.selectedClass;
                     
                     var dpIndex;
                     _self.dataProvider.forEach(function (itemDp, indexDp) {
@@ -79,7 +78,7 @@ var MultiSwitch = KxGenerator.createComponent({
 
                     if (manualRender)
                         for(var cmp in model.repeater.rowItems[dpIndex]) {
-                            model.repeater.rowItems[dpIndex][cmp].setModelValue("class", _self.selectedClassField);
+                            model.repeater.rowItems[dpIndex][cmp].setModelValue("class", _self.selectedClass);
                         }
 
                     return false;
@@ -92,51 +91,79 @@ var MultiSwitch = KxGenerator.createComponent({
         
     },
 
+    registerEvents: function () {
+        return [];
+    },
+
+    afterAttach: function (e) {
+        this.trigger('creationComplete');
+    },
+
+    clickHandler: function (e) {
+        if (typeof this.onclick == 'function')
+            this.onclick.apply(this, arguments);
+        
+        if(!e.isDefaultPrevented())
+        {
+            this.handleButtonClick.apply(this, arguments);
+        }
+    },
+
+
     beforeAttach: function () {
         this.setValue(this.value, false);
     },
+/*
+new RepeaterEventArgs(
+                                        component.parent.rowItems[component.repeaterIndex],
+                                        component.parent.dataProvider[component.repeaterIndex],
+                                        component.repeaterIndex
 
-    handleButtonClick: function (e, index, button, repeater) {
+                                        indexOfObject(ac, key,  matchingValue)
+                                        getMatching(ac, key,  matchingValue, stopAtFirstOcurrence)	
+
+*/
+    handleButtonClick: function (e, repeaterEventArgs) {
         var _self = this;
+        var model = this.getModel();
+        var button = repeaterEventArgs.currentRow["buttonR"];
+        var index = repeaterEventArgs.currentIndex;
         
+        button.$btn.toggleClass(this.defaultClass);
+        button.$btn.toggleClass(this.selectedClass);
+        
+
+        var arrValueIndex = indexOfObject(_self.value, _self.valueField,  repeaterEventArgs.currentItem[_self.valueField]);         
         if (this.multiselect) {
             //allow multiple selects
             //toggle class
-            if (button.getModelValue("class") == this.defaultClassField) {
-                button.setModelValue("class", this.selectedClassField);
-                //get + push dp row
+            if (arrValueIndex==-1) {
+                 //get + push dp row
                 this.value.push(this.dataProvider[index]);
             } else {
-                button.setModelValue("class", this.defaultClassField);  
-                //delete value
-                var dpVal = this.dataProvider[index][this.valueField];
-
-                this.value.forEach(function (item, valueIndex) {
-                    if (item[_self.valueField] == dpVal) {
-                        _self.value.splice(valueIndex, 1);
-                        return false;
-                    }
-                });
+                _self.value.splice(arrValueIndex, 1);
             }
                   
         } else {
-            //disallow multiple selects
-            if (button.getModelValue("class") == this.defaultClassField) {
-                for(var row in repeater.rowItems) {
-                    for(var cmp in repeater.rowItems[row]) {
-                        repeater.rowItems[row][cmp].setModelValue("class", this.defaultClassField);
+            this.dataProvider.forEach(function (item, i) {
+                if((index == i && arrValueIndex!=-1) || index != i){
+                    for(var cmp in model.repeater.rowItems[i]) {
+                        model.repeater.rowItems[i][cmp].$btn.removeClass(_self.selectedClass);
+                        model.repeater.rowItems[i][cmp].$btn.addClass(_self.defaultClass);
                     }
                 }
+            });
 
-                button.setModelValue("class", this.selectedClassField);
-            } 
-
-            this.value = [this.dataProvider[index]]
+            if (arrValueIndex==-1) {
+                this.value = [this.dataProvider[index]]
+            }else{
+                this.value = [];
+            }
         }
     },
 
     template: function () {
-        return "<div id='" + this.id + "'>" +
+        return "<div id='" + this.id + "-wrapper'>" +
                     "<div class='col-lg-" + this.colspan + "' id='" + this.fieldName + "-block' resizable' style='padding-top: 10px; padding-bottom: 10px; overflow:hidden'>" +
                         "<label rv-style='versionStyle' rv-for='fieldName'>{label} <span rv-if='required'>*</span></label>" +
                         "<span rv-if='blockProcessAttr' class='block-process'> * </span>" +
@@ -153,7 +180,8 @@ var MultiSwitch = KxGenerator.createComponent({
         var repeater = model.repeater;
 
         repeater.$el.children()[0].classList = '';
-        this.$el.find('#' + this.id + '-container').append(repeater.render());
+        this.$container = this.$el.find('#' + this.id + '-container');
+        this.$container.append(repeater.render());
 
         return this.$el;
     }

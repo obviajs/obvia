@@ -52,14 +52,14 @@ var TextInput = KxGenerator.createComponent({
             this.$input.inputmask(this.mask);
 
         if (typeof this.onafterAttach == 'function')
-            this.onafterAttach(e, this.repeaterIndex, this, this.parent);
+            this.onafterAttach.apply(this, arguments);;
 
         this.trigger('creationComplete');
     },
 
-    changeHandler: function (e) {
+    changeHandler: function () {
         if (typeof this.onchange == 'function')
-            this.onchange(e, this.repeaterIndex, this, this.parent);
+            this.onchange.apply(this, arguments);
     },
 
     validate: function () {

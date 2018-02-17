@@ -35,9 +35,9 @@ var Button = KxGenerator.createComponent({
         this.trigger('creationComplete');
     },
 
-    clickHandler: function (e) {
+    clickHandler: function () {
         if (typeof this.onclick == 'function')
-            this.onclick(e, this.repeaterIndex, this, this.parent);
+            this.onclick.apply(this, arguments);
     },
 
     template: function () {         

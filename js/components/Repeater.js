@@ -16,16 +16,25 @@ var Repeater = KxGenerator.createComponent({
     initModel: function () {
         return {
             map: {},
-    
-            addRowHandler: this.addRowHandler.bind(this),
-            removeRowHandler: this.removeRowHandler.bind(this),
             displayAddButton: this.rendering.actions,
             displayRemoveButton: this.rendering.actions
         }
     },
 
     registerEvents: function () {
-        return [];
+        return ([].concat((this.rendering.actions ? 
+        [
+            {
+                registerTo: this.$btnRemoveRow, events: { 
+                    'click': this.removeRowHandler.bind(this)
+                }
+            },
+            {
+                registerTo: this.$btnAddRow, events: { 
+                    'click': this.addRowHandler.bind(this)
+                }
+            }
+        ]:[])));
     },
 
     genRandomId: function () {
@@ -65,7 +74,6 @@ var Repeater = KxGenerator.createComponent({
     addRow: function (data, index, isPreventable = false) {
         var _self = this;
         var model = this.getModel();
-        var container = this.$el.find('#' + this.id + '-container');
         var hash = this.genRandomId();
 
         var renderedRow = $('<div ' + (_self.rendering.direction == 'vertical' ? "class='col-md-12'" : "") + '>')
@@ -169,7 +177,7 @@ var Repeater = KxGenerator.createComponent({
             });   
 
             //render row in dom
-            container  
+            _self.$container  
                 .append('<div id="' + _self.id + '-repeated-block-' + hash + '" ' + (_self.rendering.direction == 'vertical' ? "class='row'": "") + '></div>')
                 .find("#" + _self.id + "-repeated-block-" + hash)
                 .append((_self.rendering.seperator ? '<hr id="' + _self.id + '-repeated-block-hr-' + hash + '">' : ''))  
@@ -212,11 +220,11 @@ var Repeater = KxGenerator.createComponent({
         var rowItems = {};
         var model = this.getModel();
         hash = model.map[index];
-        var container = this.$el.find('#' + this.id + '-container');
+        
 
         var removeRow = function () {
-            container.find('#' + _self.id + '-repeated-block-' + hash).remove();
-            container.find('#' + _self.id + '-repeated-block-hr-' + hash).remove();
+            _self.$container.find('#' + _self.id + '-repeated-block-' + hash).remove();
+            _self.$container.find('#' + _self.id + '-repeated-block-hr-' + hash).remove();
 
             //remove dp row
             var removedItem = _self.dataProvider.splice(index - 1, 1);
@@ -297,10 +305,10 @@ var Repeater = KxGenerator.createComponent({
         return "<div id='" + this.id + "-wrapper'>" +
                     "<div id='" + this.id + "-container' class='col-md-12'></div>" +  
                     "<div id='actions_" + this.id  + "' class='col-md-offset-10 col-lg-2' style='overflow:hidden;'>" +
-                        "<button type='button' class='btn btn-default' rv-if='model.displayAddButton' rv-on-click='model.addRowHandler'>" +
+                        "<button id='btnAddRow_" + this.id  + "' type='button' class='btn btn-default' rv-if='model.displayAddButton'>" +
                             "<span class='glyphicon glyphicon-plus'></span>" +
                         "</button>" +
-                        "<button style='margin-left: 5px' type='button' class='btn btn-danger' rv-if='model.displayRemoveButton' rv-on-click='model.removeRowHandler'>" +
+                        "<button id='btnRemoveRow_" + this.id  + "' style='margin-left: 5px' type='button' class='btn btn-danger' rv-if='model.displayRemoveButton'>" +
                             "<span class='glyphicon glyphicon-remove'></span>" + 
                         "</button>" +
                     "</div>";
@@ -313,7 +321,9 @@ var Repeater = KxGenerator.createComponent({
         
         this.$el.trigger('onBeginDraw');
 
-        var container = this.$el.find('#' + this.id + '-container'); 
+        this.$container = this.$el.find('#' + this.id + '-container'); 
+        this.$btnAddRow = this.$el.find('#btnAddRow_' + this.id);
+        this.$btnRemoveRow = this.$el.find('#btnRemoveRow_' + this.id);
 
         this.dataProvider.forEach(function (data, index) {  
             _self.addRow(data, index + 1);
