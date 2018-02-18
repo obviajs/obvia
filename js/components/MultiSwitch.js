@@ -9,40 +9,39 @@ var MultiSwitch = KxGenerator.createComponent({
     //model binds to the template
     //if you want variables to bind, you must declare them in the model object
     initModel: function () {
+        this.repeater = new Repeater({
+            id: 'multiswitchRepeater',
+            defaultItem: {
+                text: 'Button',
+                buttonClass: 'btn btn-xs btn-default'
+            },
+            rendering: {
+                direction: 'horizontal',
+                seperator: false,
+                actions: false
+            },
+            dataProvider: this.dataProvider,
+            components: [
+                {
+                    constructor: Button,
+                    props: {
+                        id: 'buttonR',
+                        type: "button",
+                        value: "{text}",
+                        class: "{buttonClass}",
+                        style: "float: left; border-radius: 0px",
+                        onclick: this.clickHandler.bind(this)
+                    }
+                }
+            ]
+        })//.on('creationComplete', function(){alert('creation Complete per Repeater ne Multiswitch')})
+
         return {
             fieldName: this.fieldName,
             label: this.label,
             blockProcessAttr: this.required ? false : this.blockProcessAttr,
             versionStyle: this.versionStyle,
             required: this.required,
-
-            repeater: new Repeater({
-                id: 'multiswitchRepeater',
-                defaultItem: {
-                    text: 'Button',
-                    buttonClass: 'btn btn-xs btn-default'
-                },
-                rendering: {
-                    direction: 'horizontal',
-                    seperator: false,
-                    actions: false
-                },
-                dataProvider: this.dataProvider,
-                components: [
-                    {
-                        constructor: Button,
-                        props: {
-                            id: 'buttonR',
-                            type: "button",
-                            value: "{text}",
-                            class: "{buttonClass}",
-                            style: "float: left; border-radius: 0px",
-                            onclick: this.clickHandler.bind(this)
-                        }
-                    }
-                ]
-            }).on('creationComplete', function(){alert('creation Complete per Repeater ne Multiswitch')})
-
         }
     },
 
@@ -60,8 +59,8 @@ var MultiSwitch = KxGenerator.createComponent({
             item["buttonClass"] = _self.defaultClass;
             
             if(manualRender)
-                for(var cmp in model.repeater.rowItems[index]) {
-                    model.repeater.rowItems[index][cmp].setModelValue("class", _self.defaultClass);
+                for(var cmp in _self.repeater.rowItems[index]) {
+                    _self.repeater.rowItems[index][cmp].setModelValue("class", _self.defaultClass);
                 }
             
             _self.value.forEach(function (valueItem) {
@@ -77,8 +76,8 @@ var MultiSwitch = KxGenerator.createComponent({
                     });
 
                     if (manualRender)
-                        for(var cmp in model.repeater.rowItems[dpIndex]) {
-                            model.repeater.rowItems[dpIndex][cmp].setModelValue("class", _self.selectedClass);
+                        for(var cmp in _self.repeater.rowItems[dpIndex]) {
+                            _self.repeater.rowItems[dpIndex][cmp].setModelValue("class", _self.selectedClass);
                         }
 
                     return false;
@@ -147,9 +146,9 @@ new RepeaterEventArgs(
         } else {
             this.dataProvider.forEach(function (item, i) {
                 if((index == i && arrValueIndex!=-1) || index != i){
-                    for(var cmp in model.repeater.rowItems[i]) {
-                        model.repeater.rowItems[i][cmp].$btn.removeClass(_self.selectedClass);
-                        model.repeater.rowItems[i][cmp].$btn.addClass(_self.defaultClass);
+                    for(var cmp in _self.repeater.rowItems[i]) {
+                        _self.repeater.rowItems[i][cmp].$btn.removeClass(_self.selectedClass);
+                        _self.repeater.rowItems[i][cmp].$btn.addClass(_self.defaultClass);
                     }
                 }
             });
@@ -177,7 +176,7 @@ new RepeaterEventArgs(
 
     render: function () {
         var model = this.getModel();
-        var repeater = model.repeater;
+        var repeater = this.repeater;
 
         repeater.$el.children()[0].classList = '';
         this.$container = this.$el.find('#' + this.id + '-container');

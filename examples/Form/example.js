@@ -149,7 +149,7 @@ var myForm = new Form({
                     autocompleteLabel: 'Ministrite',
                     autocompleteValue: [{ "id": "3", "text": "Ministria e Brendshme" }],
                     textLabel: 'Emri',
-                    textValue: '',
+                    textValue: 'Lejdi Koci',
                     trippleValue: "1",
                     multiValue: [{ "id": "3", "text": "Ministria e Brendshme" }, { "id": "2", "text": "Ministria e Drejtesise" }],
                     mapValue: {
@@ -175,6 +175,17 @@ var myForm = new Form({
                 //         value: '{autocompleteValue}'
                 //     }
                 // },
+                {
+                    constructor: Button,
+                    props: {
+                        id: 'buttonRv',
+                        type: "button",
+                        value: "{textValue}",
+                        class: "btn btn-xs btn-default",
+                        style: "float: left; border-radius: 0px",
+                        onclick: function(){console.log(arguments)}
+                    }
+                },
                 {
                     constructor: AutoComplete,
                     props: {
@@ -274,8 +285,8 @@ var myForm = new Form({
                         ],
                         valueField: "id",
                         labelField: "text",
-                        defaultClassField: 'btn btn-xs btn-default',
-                        selectedClassField: 'btn btn-xs btn-success',
+                        defaultClass: 'btn btn-xs btn-default',
+                        selectedClass: 'btn btn-xs btn-success',
                         value: '{multiValue}',
                         onclick : function(e){
                             console.log("From MultiSwitch ClickAction"); 
@@ -341,30 +352,7 @@ var myForm = new Form({
 // // });
 
 
-var ms = new MultiSwitch({
-                        id: 'multiswitchLonelyBitch',
-                        colspan: '6',
-                        label: 'Ministrite',
-                        fieldName: 'multiswitchInputR',
-                        blockProcessAttr: false,
-                        required: true,
-                        multiselect: false,
-                        dataProvider: [
-                            { "id": "1", "text": "Ministria e Puneve te Jashtme", "buttonClass": 'btn btn-xs btn-default'},
-                            { "id": "2", "text": "Ministria e Drejtesise", "buttonClass": 'btn btn-xs btn-default'},
-                            { "id": "3", "text": "Ministria e Brendshme", "buttonClass": 'btn btn-xs btn-success'},
-                            { "id": "4", "text": "Ministria e Mbrojtjes", "buttonClass": 'btn btn-xs btn-default'}
-                        ],
-                        valueField: "id",
-                        labelField: "text",
-                        defaultClass: 'btn btn-xs btn-default',
-                        selectedClass: 'btn btn-xs btn-success',
-                        value: [{ "id": "3", "text": "Ministria e Brendshme", "buttonClass": 'btn btn-xs btn-success'}],
-                        onclick : function(e){
-                            console.log("From MultiSwitch ClickAction"); 
-                            //e.preventDefault();
-                        }
-                    });
+
 $(document).on('onBeforeRowDelete', function (e, repeater, args) {
     e.preventDefault();
 
@@ -375,5 +363,5 @@ $(document).on('onBeforeRowDelete', function (e, repeater, args) {
     })
 });
 
-// $('#root').append(myForm.render());
-$('#root').append(ms.render());
+$('#root').append(myForm.render());
+

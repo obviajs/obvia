@@ -77,14 +77,14 @@ var Repeater = KxGenerator.createComponent({
         var hash = this.genRandomId();
 
         var renderedRow = $('<div ' + (_self.rendering.direction == 'vertical' ? "class='col-md-12'" : "") + '>')
-        var rowItems = {};
+        
         var rowHTML = "";
         var ccComponents = [];
-
         var buildRow = function () {
+            var rowItems = {};
             _self.components.forEach(function (component, vcolIndex) {
                 //clone objects
-                var tempComponent = component;//Object.assign({}, component);
+                var tempComponent = Object.assign({}, component);
                 var p = Object.assign({}, tempComponent.props);
 
                 //build components properties, check bindings
@@ -118,7 +118,8 @@ var Repeater = KxGenerator.createComponent({
 
                 cmp[index - 1] = el;
                 rowItems[cmpId] = el;
-              
+                _self.rowItems[index - 1] = rowItems;
+
                 //handle component change event and delegate it to repeater
                 el.on('creationComplete', function(e){  
                     e.stopImmediatePropagation();
@@ -131,7 +132,7 @@ var Repeater = KxGenerator.createComponent({
                     
                     if(ccComponents.length==0 && vcolIndex==(_self.components.length-1)){
                         //trigger row add event
-                        _self.$el.trigger('onRowAdd', [_self, new RepeaterEventArgs(rowItems, data, index)]);
+                        _self.$el.trigger('onRowAdd', [_self, new RepeaterEventArgs(_self.rowItems, data, index)]);
                         //duhet te shtojme nje flag qe ne rast se metoda addRow eshte thirrur nga addRowHangler te mos e exec kodin meposhte
                         
                         //manage dp
@@ -184,7 +185,7 @@ var Repeater = KxGenerator.createComponent({
                 .append(renderedRow);
                 
        
-            _self.rowItems[index - 1] = rowItems;
+            
             return rowItems;
         }
 
@@ -324,7 +325,8 @@ var Repeater = KxGenerator.createComponent({
         this.$container = this.$el.find('#' + this.id + '-container'); 
         this.$btnAddRow = this.$el.find('#btnAddRow_' + this.id);
         this.$btnRemoveRow = this.$el.find('#btnRemoveRow_' + this.id);
-
+     
+        // this.rowItems = {}; we need this if we create Repeater instances via Object.assign
         this.dataProvider.forEach(function (data, index) {  
             _self.addRow(data, index + 1);
         });
