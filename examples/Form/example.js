@@ -25,6 +25,18 @@ var myForm = new Form({
             },
             value: ''
         }),
+        new TextEditor({
+            id: 'texteditor',
+            colspan: '6',
+            label: 'TextEditor',
+            versionStyle: '',
+            blockProcessAttr: false,
+            required: false,
+            spellCheck: {
+                defaultDictionary: 'English',//Albanian
+            },
+            value: 'Test'
+        }),
         new AutoComplete({
             id: 'autocomplete',
             colspan: '6',
@@ -127,7 +139,8 @@ var myForm = new Form({
                     longtitude: 20.1683,
                     zoomLevel: 7
                 },
-                textAreaValue: ""
+                textAreaValue: "",
+                textEditorValue: ""
             },
             dataProvider: [
                 {
@@ -145,7 +158,8 @@ var myForm = new Form({
                         longtitude: 30.1683,
                         zoomLevel: 7
                     },
-                    textAreaValue: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+                    textAreaValue: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+                    textEditorValue: ""
                 },
                 {
                     comboLabel: 'Zgjidh Shtetin',
@@ -162,7 +176,8 @@ var myForm = new Form({
                         longtitude: 20.1683,
                         zoomLevel: 7
                     },
-                    textAreaValue: "Lorem Ipsum"
+                    textAreaValue: "Lorem Ipsum",
+                    textEditorValue: "Lorem Ipsum"
                 }
             ],
             components: [
@@ -201,6 +216,18 @@ var myForm = new Form({
                         blockProcessAttr: false,
                         required: true,
                         value: '{textValue}'
+                    }
+                },
+                {
+                    constructor: TextEditor,
+                    props: {
+                        id: 'texteditorR',
+                        colspan: '6',
+                        label: 'TextEditor',
+                        versionStyle: '',
+                        blockProcessAttr: false,
+                        required: false,
+                        value: '{textEditorValue}'
                     }
                 },
                 {

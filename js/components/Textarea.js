@@ -64,8 +64,7 @@ var TextArea = KxGenerator.createComponent({
     },
 
     validate: function () {
-        var model = this.getModel();
-        if (model.required) {
+        if (this.required) {
             if (this.value == "" || this.value == undefined) {
                 this.errorList = [
                     KxGenerator.getErrorList().call(this)['empty']
