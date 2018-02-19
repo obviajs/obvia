@@ -1,12 +1,13 @@
-var myTextarea = new Textarea({
+var myTextarea = new TextArea({
     id: 'textarea',
     colspan: '6',
     label: 'Textarea Label',
-    fieldName: 'textareaField',
     versionStyle: '',
     blockProcessAttr: false,
     required: true,
-    defaultDictionary:'English',//Albanian
+    spellCheck: {
+        defaultDictionary: 'English',//Albanian
+    },
     value: ''
 });
 

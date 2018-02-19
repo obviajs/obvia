@@ -13,6 +13,18 @@ var myForm = new Form({
             mask: 'currency',
             value: "33"
         }),
+        new TextArea({
+            id: 'textarea',
+            colspan: '6',
+            label: 'Textarea Label',
+            versionStyle: '',
+            blockProcessAttr: false,
+            required: true,
+            spellCheck: {
+                defaultDictionary: 'English',//Albanian
+            },
+            value: ''
+        }),
         new AutoComplete({
             id: 'autocomplete',
             colspan: '6',
@@ -77,7 +89,7 @@ var myForm = new Form({
             label: 'Ministrite',
             blockProcessAttr: false,
             required: true,
-            multiselect: true,
+            multiselect: false,
             dataProvider: [
                 { "id": "1", "text": "Ministria e Puneve te Jashtme" },
                 { "id": "2", "text": "Ministria e Drejtesise" },
@@ -114,7 +126,8 @@ var myForm = new Form({
                     latitude: 41.1533,
                     longtitude: 20.1683,
                     zoomLevel: 7
-                }
+                },
+                textAreaValue: ""
             },
             dataProvider: [
                 {
@@ -131,7 +144,8 @@ var myForm = new Form({
                         latitude: 51.1533,
                         longtitude: 30.1683,
                         zoomLevel: 7
-                    }
+                    },
+                    textAreaValue: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
                 },
                 {
                     comboLabel: 'Zgjidh Shtetin',
@@ -147,7 +161,8 @@ var myForm = new Form({
                         latitude: 41.1533,
                         longtitude: 20.1683,
                         zoomLevel: 7
-                    }
+                    },
+                    textAreaValue: "Lorem Ipsum"
                 }
             ],
             components: [
@@ -186,6 +201,18 @@ var myForm = new Form({
                         blockProcessAttr: false,
                         required: true,
                         value: '{textValue}'
+                    }
+                },
+                {
+                    constructor: TextArea,
+                    props: {
+                        id: 'textareaR',
+                        colspan: '6',
+                        label: 'Textarea Label',
+                        versionStyle: '',
+                        blockProcessAttr: false,
+                        required: true,
+                        value: '{textAreaValue}'
                     }
                 },
                 {
