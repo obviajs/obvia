@@ -162,12 +162,12 @@ new RepeaterEventArgs(
     },
 
     template: function () {
-        return "<div id='" + this.id + "-wrapper'>" +
-                    "<div class='col-lg-" + this.colspan + "' id='" + this.fieldName + "-block' resizable' style='padding-top: 10px; padding-bottom: 10px; overflow:hidden'>" +
+        return "<div id='" + this.domID + "-wrapper'>" +
+                    "<div class='col-lg-" + this.colspan + "' id='" + this.domID + "-block' resizable' style='padding-top: 10px; padding-bottom: 10px; overflow:hidden'>" +
                         "<label rv-style='versionStyle' rv-for='fieldName'>{label} <span rv-if='required'>*</span></label>" +
                         "<span rv-if='blockProcessAttr' class='block-process'> * </span>" +
                         "<br>" +
-                        "<div id='" + this.id + "-container' role='group' style='padding:0'>" +
+                        "<div id='" + this.domID + "-container' role='group' style='padding:0'>" +
                             
                         "</div>" +
                     "</div>" +
@@ -179,7 +179,7 @@ new RepeaterEventArgs(
         var repeater = this.repeater;
 
         repeater.$el.children()[0].classList = '';
-        this.$container = this.$el.find('#' + this.id + '-container');
+        this.$container = this.$el.find('#' + this.domID + '-container');
         this.$container.append(repeater.render());
 
         return this.$el;

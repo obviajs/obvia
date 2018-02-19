@@ -32,9 +32,9 @@ var TrippleSwitch = KxGenerator.createComponent({
     },
 
     registerEvents: function(){
-        this.$btnLeft = this.$el.find("#btnLeft-" + this.id);
-        this.$btnMiddle = this.$el.find("#btnMiddle-" + this.id);
-        this.$btnRight = this.$el.find("#btnRight-" + this.id);
+        this.$btnLeft = this.$el.find("#btnLeft-" + this.domID);
+        this.$btnMiddle = this.$el.find("#btnMiddle-" + this.domID);
+        this.$btnRight = this.$el.find("#btnRight-" + this.domID);
 
         return [
             {
@@ -135,15 +135,15 @@ var TrippleSwitch = KxGenerator.createComponent({
     },
 
     template: function () {
-        return  "<div id='" + this.id + "-wrapper'>" +
-                    "<div class='col-lg-" + this.colspan + "' id='" + this.id + "-block' resizable' style='padding-bottom: 10px;'>" +
+        return  "<div id='" + this.domID + "-wrapper'>" +
+                    "<div class='col-lg-" + this.colspan + "' id='" + this.domID + "-block' resizable' style='padding-bottom: 10px;'>" +
                         "<label rv-style='versionStyle' rv-for='fieldName'>{label} <span rv-if='required'>*</span></label>" +
                         "<span rv-if='blockProcessAttr' class='block-process'> * </span>" +
                         "<br>" +
                         "<div class='btn btn-group' role='group' style='padding:0'>" +
-                            "<button type='button' rv-enabled='model.enabled' id='btnLeft-" + this.id + "' rv-class='model.btnLeft'>{dataProvider.left}</button> " +
-                            "<button type='button' rv-enabled='model.enabled' id='btnMiddle-" + this.id + "' rv-class='model.btnMiddle'>{dataProvider.middle}</button>" +
-                            "<button type='button' rv-enabled='model.enabled' id='btnRight-" + this.id + "' rv-class='model.btnRight'>{dataProvider.right}</button>" +
+                            "<button type='button' rv-enabled='model.enabled' id='btnLeft-" + this.domID + "' rv-class='model.btnLeft'>{dataProvider.left}</button> " +
+                            "<button type='button' rv-enabled='model.enabled' id='btnMiddle-" + this.domID + "' rv-class='model.btnMiddle'>{dataProvider.middle}</button>" +
+                            "<button type='button' rv-enabled='model.enabled' id='btnRight-" + this.domID + "' rv-class='model.btnRight'>{dataProvider.right}</button>" +
                         "</div>" +
                     "</div>" +
                 "</div>";

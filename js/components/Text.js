@@ -16,7 +16,7 @@ var TextInput = KxGenerator.createComponent({
     },
 
     registerEvents: function () {
-        this.$input = this.$el.find("#" + this.id);
+        this.$input = this.$el.find("#" + this.domID);
 
         return [
             {
@@ -76,13 +76,13 @@ var TextInput = KxGenerator.createComponent({
     },
 
     template: function () {         
-        return  "<div id='" + this.id + "-wrapper'>" +
+        return  "<div id='" + this.domID + "-wrapper'>" +
                     "<div class='form-group col-lg-" + this.colspan + "' rowspan" + this.rowspan + " resizable '>" +
-                        "<div id='" + this.id + "-block'>" + 
+                        "<div id='" + this.domID + "-block'>" + 
                             "<label rv-style='versionStyle' rv-for='id'>{label} <span rv-if='required'>*</span></label>" + 
                             "<span rv-if='blockProcessAttr' class='block-process'> * </span>" + 
                                 "<input rv-type='type'" + 
-                                    "id='" + this.id + "' name='" + this.id + "' rv-value='value'" +
+                                    "id='" + this.domID + "' name='" + this.domID + "' rv-value='value'" +
                                     "class='form-control rowspan"+ this.rowspan +"'" +
                                     "rv-placeholder='label' rv-enabled='model.enabled' autofocus/>" +
                         "</div>" +

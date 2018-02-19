@@ -74,7 +74,6 @@ var Repeater = KxGenerator.createComponent({
     addRow: function (data, index, isPreventable = false) {
         var _self = this;
         var model = this.getModel();
-        var hash = this.genRandomId();
 
         var renderedRow = $('<div ' + (_self.rendering.direction == 'vertical' ? "class='col-md-12'" : "") + '>')
         
@@ -93,9 +92,7 @@ var Repeater = KxGenerator.createComponent({
                 var cmp = _self[p.id];
                 var cmpId = p.id;
                 if (cmp[index - 1] == undefined)
-                    cmp[index - 1] = {}
-
-                p.id += "_" + hash;
+                    cmp[index - 1] = {};
         
                 for (var prop in p) {
                     if (typeof prop == 'string') {
@@ -138,7 +135,6 @@ var Repeater = KxGenerator.createComponent({
                         //manage dp
                         _self.currentItem = _self.defaultItem;
                         _self.currentIndex = index;
-                        model.map[index] = hash;
                         if (_self.currentIndex > 1 && _self.rendering.actions) {
                             model.displayRemoveButton = true;
                         }
@@ -179,9 +175,9 @@ var Repeater = KxGenerator.createComponent({
 
             //render row in dom
             _self.$container  
-                .append('<div id="' + _self.id + '-repeated-block-' + hash + '" ' + (_self.rendering.direction == 'vertical' ? "class='row'": "") + '></div>')
-                .find("#" + _self.id + "-repeated-block-" + hash)
-                .append((_self.rendering.seperator ? '<hr id="' + _self.id + '-repeated-block-hr-' + hash + '">' : ''))  
+                .append('<div id="' + _self.domID + '-repeated-block-' + index + '" ' + (_self.rendering.direction == 'vertical' ? "class='row'": "") + '></div>')
+                .find("#" + _self.domID + "-repeated-block-" + index)
+                .append((_self.rendering.seperator ? '<hr id="' + _self.domID + '-repeated-block-hr-' + index + '">' : ''))  
                 .append(renderedRow);
                 
        
@@ -220,12 +216,11 @@ var Repeater = KxGenerator.createComponent({
         var _self = this;
         var rowItems = {};
         var model = this.getModel();
-        hash = model.map[index];
         
 
         var removeRow = function () {
-            _self.$container.find('#' + _self.id + '-repeated-block-' + hash).remove();
-            _self.$container.find('#' + _self.id + '-repeated-block-hr-' + hash).remove();
+            _self.$container.find('#' + _self.domID + '-repeated-block-' + index).remove();
+            _self.$container.find('#' + _self.domID + '-repeated-block-hr-' + index).remove();
 
             //remove dp row
             var removedItem = _self.dataProvider.splice(index - 1, 1);
@@ -303,13 +298,13 @@ var Repeater = KxGenerator.createComponent({
     },
 
     template: function () {
-        return "<div id='" + this.id + "-wrapper'>" +
-                    "<div id='" + this.id + "-container' class='col-md-12'></div>" +  
-                    "<div id='actions_" + this.id  + "' class='col-md-offset-10 col-lg-2' style='overflow:hidden;'>" +
-                        "<button id='btnAddRow_" + this.id  + "' type='button' class='btn btn-default' rv-if='model.displayAddButton'>" +
+        return "<div id='" + this.domID + "-wrapper'>" +
+                    "<div id='" + this.domID + "-container' class='col-md-12'></div>" +  
+                    "<div id='actions_" + this.domID  + "' class='col-md-offset-10 col-lg-2' style='overflow:hidden;'>" +
+                        "<button id='btnAddRow_" + this.domID  + "' type='button' class='btn btn-default' rv-if='model.displayAddButton'>" +
                             "<span class='glyphicon glyphicon-plus'></span>" +
                         "</button>" +
-                        "<button id='btnRemoveRow_" + this.id  + "' style='margin-left: 5px' type='button' class='btn btn-danger' rv-if='model.displayRemoveButton'>" +
+                        "<button id='btnRemoveRow_" + this.domID  + "' style='margin-left: 5px' type='button' class='btn btn-danger' rv-if='model.displayRemoveButton'>" +
                             "<span class='glyphicon glyphicon-remove'></span>" + 
                         "</button>" +
                     "</div>";
@@ -322,9 +317,9 @@ var Repeater = KxGenerator.createComponent({
         
         this.$el.trigger('onBeginDraw');
 
-        this.$container = this.$el.find('#' + this.id + '-container'); 
-        this.$btnAddRow = this.$el.find('#btnAddRow_' + this.id);
-        this.$btnRemoveRow = this.$el.find('#btnRemoveRow_' + this.id);
+        this.$container = this.$el.find('#' + this.domID + '-container'); 
+        this.$btnAddRow = this.$el.find('#btnAddRow_' + this.domID);
+        this.$btnRemoveRow = this.$el.find('#btnRemoveRow_' + this.domID);
      
         // this.rowItems = {}; we need this if we create Repeater instances via Object.assign
         this.dataProvider.forEach(function (data, index) {  

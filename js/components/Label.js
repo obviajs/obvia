@@ -34,7 +34,7 @@ var Label = KxGenerator.createComponent({
     },
 
     template: function () {         
-        return  "<div id="+this.id+" rv-class='class' rv-style='style'>"+
+        return  "<div id="+this.domID+" rv-class='class' rv-style='style'>"+
                     "<label>{label} </label>"+
                 "</div>";    
     },

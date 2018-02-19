@@ -6,7 +6,6 @@
 
 //component definition
 var Button = KxGenerator.createComponent({
-    
     //inner component data
     initModel: function () {
         return {
@@ -41,7 +40,7 @@ var Button = KxGenerator.createComponent({
     },
 
     template: function () {         
-        return  "<div id='" + this.id + "-wrapper'>" +
+        return  "<div id='" + this.domID + "-wrapper'>" +
                     "<button rv-type='type'  rv-style='style' rv-class='class'>{value}</button>"
                 "</div>";    
     },

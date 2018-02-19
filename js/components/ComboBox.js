@@ -42,8 +42,8 @@ var ComboBox = KxGenerator.createComponent({
     },
 
     registerEvents: function () {
-        this.$input = this.$el.find('#' + this.id);
-        this.$popup = this.$el.find('#' + this.id + ' _popup');
+        this.$input = this.$el.find('#' + this.domID)
+        this.$popup = this.$el.find('#' + this.domID + ' _popup');
 
         return [
             {
@@ -62,7 +62,7 @@ var ComboBox = KxGenerator.createComponent({
     afterAttach: function (e) {
         var _self = this;
         
-        var element = "#" + this.id;
+        var element = "#" + this.domID;
         KxRequest.promise(this.getData(this.dataProvider)).done(function (result) {
             if (typeof result == "string")
                 result = JSON.parse(result);
@@ -91,9 +91,9 @@ var ComboBox = KxGenerator.createComponent({
         var thisVal = this.$input.val();
         this.value = thisVal;
 
-        if (thisVal[0] == '#' + this.id + '_new') {
+        if (thisVal[0] == '#' + this.domID + '_new') {
             this.$popup.fadeIn();
-            this.$input.multiselect('deselect', '#' + this.id + ' _new');
+            this.$input.multiselect('deselect', '#' + this.domID + ' _new');
         }
     },
 
@@ -120,12 +120,12 @@ var ComboBox = KxGenerator.createComponent({
     },
 
     template: function () {
-        return  "<div id='" + this.id + "-wrapper'>" +
-                    "<div class='col-lg-"+ this.colspan +"' form-group rowspan"+ this.rowspan +" resizable' id='"+ this.id +"_container'>" +
-                        "<div id='" + this.id + "-block'>" +
+        return  "<div id='" + this.domID + "-wrapper'>" +
+                    "<div class='col-lg-"+ this.colspan +"' form-group rowspan"+ this.rowspan +" resizable' id='"+ this.domID +"_container'>" +
+                        "<div id='" + this.domID + "-block'>" +
                         "<label rv-style='versionStyle' rv-for='fieldName'>{label} <span rv-if='required'>*</span></label>" +
                         "<span rv-if='blockProcessAttr' class='block-process'> * </span>" +
-                        "<select class='form-control' name='" + this.id + "[]' control-blocked='controlBlocked' style='min-width: 250px;' id='" + this.id + "'></select>" +
+                        "<select class='form-control' name='" + this.domID + "[]' control-blocked='controlBlocked' style='min-width: 250px;' id='" + this.domID + "'></select>" +
                     "</div>" +
                 "</div>";
     },

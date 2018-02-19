@@ -91,7 +91,7 @@ var Textarea = KxGenerator.createComponent({
 
     template: function () {
 
-        return "<div id='" + this.id + "'>" +
+        return "<div id='" + this.domID + "'>" +
                 "<div class='form-group col-lg-" + this.colspan + "' rowspan" + this.rowspan + " resizable '>" +
                     "<div id='" + this.fieldName + "-block'> " +
                         "<label rv-style='versionStyle' rv-for='fieldName'>{label}<span rv-if='required'>*</span></label>" +

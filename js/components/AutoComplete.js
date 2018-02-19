@@ -14,9 +14,9 @@ var AutoComplete = KxGenerator.createComponent({
     },
 
     registerEvents: function () {
-        this.$modalContainer = this.$el.find('#' + this.id + '-autoselect-modal');
-        this.$openModalBtn = this.$el.find('#' + this.id + '_openModal');
-        this.$input = this.$el.find('#' + this.id + '_select');
+        this.$modalContainer = this.$el.find('#' + this.domID + '-autoselect-modal');
+        this.$openModalBtn = this.$el.find('#' + this.domID + '_openModal');
+        this.$input = this.$el.find('#' + this.domID + '_select');
         this.$select2Instance = null;
         this.$modal = null;
         this.$comboCategoryTableSelector = null;
@@ -42,7 +42,7 @@ var AutoComplete = KxGenerator.createComponent({
     },
 
     afterAttach: function (e) {
-        if (e.target.id == this.id + '-wrapper') {
+        if (e.target.id == this.domID + '-wrapper') {
             this.createModal();
             this.renderSelect2(function () {
                 var _self = this;
@@ -68,13 +68,13 @@ var AutoComplete = KxGenerator.createComponent({
 
     createModal: function () {
         this.modal = new Modal({
-            id: 'autocomplete-modal-' + this.id,
+            id: 'autocomplete-modal-' + this.domID,
             size: 'modal-lg',
             title: 'Vlerat e Autocomplete',
             body: '<div class="row">' +
                 '<div class="col-md-12">' +
                 '<div class="table-responsive" style="margin-left:10px;">' +
-                '<table id="combo_category_table_' + this.id + '" class="table table-striped table-bordered table-hover display" style="width: 100%">' +
+                '<table id="combo_category_table_' + this.domID + '" class="table table-striped table-bordered table-hover display" style="width: 100%">' +
                 '<thead>' +
                 '<tr>' +
                 '<th>Emri</th>' +
@@ -102,7 +102,7 @@ var AutoComplete = KxGenerator.createComponent({
 
     renderTable: function (e) {
         if (!$.fn.dataTable.isDataTable(this.$dataTable))
-            this.$dataTable = this.$modal.find('#combo_category_table_' + this.id)
+            this.$dataTable = this.$modal.find('#combo_category_table_' + this.domID)
                 .DataTable({
                     columns: [{ "title": "Emri" }],
                     data: this.tableData
@@ -163,22 +163,22 @@ var AutoComplete = KxGenerator.createComponent({
     },
 
     template: function () {
-        return "<div id='" + this.id + "-wrapper'>" +
-                    "<div class='form-group col-lg-" + this.colspan + "' rowspan" + this.rowspan + " resizable' id='" + this.id + "_container' >" +
+        return "<div id='" + this.domID + "-wrapper'>" +
+                    "<div class='form-group col-lg-" + this.colspan + "' rowspan" + this.rowspan + " resizable' id='" + this.domID + "_container' >" +
                     "<label rv-style='versionStyle' rv-for='fieldName'>{label} <span rv-if='required'>*</span></label>" +
                     "<div class='input-group'>" +
                         "<span rv-if='blockProcessAttr' class='block-process'> * </span>" +
-                        "<input type='hidden' name='" + this.id + "_select[]' id='" + this.id + "_select' />" +
+                        "<input type='hidden' name='" + this.domID + "_select[]' id='" + this.domID + "_select' />" +
                         "<span class='input-group-btn'>" +
                             "<button type='button' style='margin-left: 5px;'" +
                                 "class='glyphicon glyphicon-folder-open btn btn-default'" +
-                                "title='go' id='" + this.id + "_openModal'>" +
+                                "title='go' id='" + this.domID + "_openModal'>" +
                                 "<b class='caret'></b>" +
                             "</button>" +
                         "</span>" +
                     "</div>" +
                 "</div>" +
-                "<div id='" + this.id + "-autoselect-modal'></div>" +
+                "<div id='" + this.domID + "-autoselect-modal'></div>" +
             "</div>";
     },
 

@@ -33,12 +33,12 @@ var GoogleMap = KxGenerator.createComponent({
     },
 
     registerEvents: function () {
-        this.$modal = this.$el.find('#' + this.id + '_map-modal');
-        this.$openMapBtn = this.$el.find('#' + this.id + '_openMapBtn');
-        this.$changeCoordiantesBtn = this.$el.find('#' + this.id + '_changeCoordinates');
-        this.$acceptBtn = this.$el.find('#' + this.id + '_acceptBtn');
-        this.$dismissBtn = this.$el.find('#' + this.id + '_dismissBtn');
-        this.$mapAcceptPositionBtn = this.$el.find('#' + this.id + '_mapAcceptPosition');
+        this.$modal = this.$el.find('#' + this.domID + '_map-modal');
+        this.$openMapBtn = this.$el.find('#' + this.domID + '_openMapBtn');
+        this.$changeCoordiantesBtn = this.$el.find('#' + this.domID + '_changeCoordinates');
+        this.$acceptBtn = this.$el.find('#' + this.domID + '_acceptBtn');
+        this.$dismissBtn = this.$el.find('#' + this.domID + '_dismissBtn');
+        this.$mapAcceptPositionBtn = this.$el.find('#' + this.domID + '_mapAcceptPosition');
 
         return [
             {
@@ -166,7 +166,7 @@ var GoogleMap = KxGenerator.createComponent({
             lng: this.value.longtitude
         };
 
-        model.map = new google.maps.Map(document.getElementById(this.id + '_map'), {
+        model.map = new google.maps.Map(document.getElementById(this.domID + '_map'), {
             center: pos,
             zoom: this.value.zoomLevel
         });
@@ -230,7 +230,7 @@ var GoogleMap = KxGenerator.createComponent({
     },
 
     template: function () {
-        return "<div id='" + this.id + "-wrapper'>" +
+        return "<div id='" + this.domID + "-wrapper'>" +
             "<div class='form-group form-inline col-lg-" + this.colspan + " rowspan" + (this.rowspan ? this.rowspan : '') + " resizable'>" +
                 "<label>{label}</label><br>" +
                     "<div class='col-sm-12' style='padding:0px'>" + 
@@ -238,10 +238,10 @@ var GoogleMap = KxGenerator.createComponent({
                     "<input type='text' class='form-control' rv-value='value.latitude' rv-placeholder='value.latitude' disabled>" +
                     "<label style='margin-right:5px; margin-left:5px'>Longtitude: </label>" + 
                     "<input type='text' class='form-control' rv-value='value.longtitude' rv-placeholder='value.longtitude' disabled>" +
-                    "<button id='" + this.id + "_openMapBtn' type='button' class='form-control btn btn-default' rv-disabled='model.disabled'><span style='color:#f39c12'>Harta</span> <span style='color:#f39c12' class='glyphicon glyphicon-map-marker'></span></button>" +
+                    "<button id='" + this.domID + "_openMapBtn' type='button' class='form-control btn btn-default' rv-disabled='model.disabled'><span style='color:#f39c12'>Harta</span> <span style='color:#f39c12' class='glyphicon glyphicon-map-marker'></span></button>" +
                 "</div>" + 
             "</div>" +
-            "<div id='" + this.id + "_map-modal' class='modal fade' role='dialog'>" + 
+            "<div id='" + this.domID + "_map-modal' class='modal fade' role='dialog'>" + 
                 "<div class='modal-dialog'>" +
                     "<div class='modal-content'>" +
                         "<div class='modal-header'>" +
@@ -254,13 +254,13 @@ var GoogleMap = KxGenerator.createComponent({
                                 "<div class='col-xs-2' style='padding-top:8px'>" +
                                    "<div>" +
                                         "<label class='control-label'>" +
-                                            "<input id='" + this.id + "_changeCoordinates' type='checkbox' rv-checked='model.mapCheckSetLatLng'><strong>Ndrysho</strong>" + 
+                                            "<input id='" + this.domID + "_changeCoordinates' type='checkbox' rv-checked='model.mapCheckSetLatLng'><strong>Ndrysho</strong>" + 
                                         "</label>" +
                                     "</div>" +
                                 "</div>" +
                                 "<div class='col-xs-4' style='padding:0px'>" +
                                     "<div class='col-xs-3' style='padding-right:0px; padding-top:10px'>" +
-                                        "<label for='" + this.id + "_mapSetLat'>Lat:</label>" + 
+                                        "<label for='" + this.domID + "_mapSetLat'>Lat:</label>" + 
                                     "</div>" +
                                     "<div class='col-xs-9' style='padding:0px'>" +
                                         "<input type='number' class='form-control' rv-value='model.modalLatitude' rv-placeholder='value.latitude' rv-disabled='model.mapSetLatDisabled'>" +
@@ -268,22 +268,22 @@ var GoogleMap = KxGenerator.createComponent({
                                 "</div>" +
                                 "<div class='col-xs-4' style='padding:0px'>" +
                                     "<div class='col-xs-3' style='padding-right:0px; padding-top:10px'>" +
-                                        "<label for='" + this.id + "_mapSetLng' > Lng: </label>" +
+                                        "<label for='" + this.domID + "_mapSetLng' > Lng: </label>" +
                                     "</div>" +
                                     "<div class='col-xs-9' style='padding:0px'>" +
                                         "<input type='number' class='form-control' rv-value='model.modalLongtitude' rv-placeholder='value.longtitude' rv-disabled='model.mapSetLongDisabled'>" +
                                     "</div>" +
                                 "</div>" +
                                "<div class='col-xs-2 pull-right' style='padding-right:0px'>" +
-                                    "<button type='button' id='" + this.id + "_acceptBtn' rv-class='model.setLatLongOkBtnClass'>Ok</button>" +
-                                    "<button type='button' id='" + this.id + "_dismissBtn' rv-class='model.setLatLongCancelBtnClass'>X</button>" +
+                                    "<button type='button' id='" + this.domID + "_acceptBtn' rv-class='model.setLatLongOkBtnClass'>Ok</button>" +
+                                    "<button type='button' id='" + this.domID + "_dismissBtn' rv-class='model.setLatLongCancelBtnClass'>X</button>" +
                                 "</div>" +
                             "</div>" +
                         "</div>" +
-                        "<div id='" + this.id + "_map' style='height: 400px;width: 100%;'></div>" +
+                        "<div id='" + this.domID + "_map' style='height: 400px;width: 100%;'></div>" +
                     "</div>" +
                     "<div class='modal-footer'>" +
-                        "<button type='button' id='" + this.id + "_mapAcceptPosition' class='btn btn-success'>Ruaj Koordinatat</button>" +
+                        "<button type='button' id='" + this.domID + "_mapAcceptPosition' class='btn btn-success'>Ruaj Koordinatat</button>" +
                     "</div>" +
                 "</div>" +
             "</div>" +
