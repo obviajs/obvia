@@ -1,12 +1,11 @@
 /**
- * This is a Text Input Element
+ * This is a Day Month Year Element
  * 
  * Kreatx 2018
  */
 
 //component definition
-var TextInput = KxGenerator.createComponent({
-
+var DayMonthYear = KxGenerator.createComponent({
     //inner component data
     initModel: function () {
         return {
@@ -26,7 +25,7 @@ var TextInput = KxGenerator.createComponent({
             },
             {
                 registerTo: this.$input, events: { 
-                    'change': this.changeHandler.bind(this),
+                    'dp.change': this.changeHandler.bind(this),
                 }
             }
         ]
@@ -47,19 +46,24 @@ var TextInput = KxGenerator.createComponent({
     },
 
     afterAttach: function (e) {
-        //init input mask
-        if (this.hasOwnProperty('mask'))
-            this.$input.inputmask(this.mask);
-
-        if (typeof this.onafterAttach == 'function')
-            this.onafterAttach.apply(this, arguments);;
+        //init datepicker
+        this.$input.datetimepicker({
+            format: 'DD/MM/YYYY',
+            // minDate: '01/01/1900',
+            // maxDate: '01/01/2100',
+            showTodayButton: true,
+            showClear: true,
+            widgetPositioning: {
+                horizontal: 'left',
+                vertical: 'auto'
+            }
+        });
 
         this.trigger('creationComplete');
     },
 
     changeHandler: function () {
-        if (typeof this.onchange == 'function')
-            this.onchange.apply(this, arguments);
+     
     },
 
     validate: function () {
@@ -77,11 +81,11 @@ var TextInput = KxGenerator.createComponent({
 
     template: function () {         
         return  "<div id='" + this.domID + "-wrapper'>" +
-                    "<div class='form-group col-lg-" + this.colspan + "' rowspan" + this.rowspan + " resizable '>" +
+                    "<div class='form-group col-lg-" + this.colspan + "' resizable'>" +
                         "<div id='" + this.domID + "-block'>" + 
                             "<label rv-style='versionStyle' rv-for='id'>{label} <span rv-if='required'>*</span></label>" + 
                             "<span rv-if='model.blockProcessAttr' class='block-process'> * </span>" + 
-                                "<input rv-type='type'" + 
+                                "<input type='text'" + 
                                     "id='" + this.domID + "' name='" + this.domID + "' rv-value='value'" +
                                     "class='form-control rowspan"+ this.rowspan +"'" +
                                     "rv-placeholder='label' rv-enabled='model.enabled' autofocus/>" +
@@ -96,7 +100,7 @@ var TextInput = KxGenerator.createComponent({
 });
 
 //component prototype
-TextInput.type = 'text';
+DayMonthYear.type = 'day_month_year';
 
 //register dom element for this component
-KxGenerator.registerDOMElement(TextInput, 'kx-text');
+KxGenerator.registerDOMElement(DayMonthYear, 'kx-daymonthyear');

@@ -1,12 +1,11 @@
 /**
- * This is a Text Input Element
+ * This is a DateTime Input Element
  * 
  * Kreatx 2018
  */
 
 //component definition
-var TextInput = KxGenerator.createComponent({
-
+var DateTime = KxGenerator.createComponent({
     //inner component data
     initModel: function () {
         return {
@@ -26,7 +25,7 @@ var TextInput = KxGenerator.createComponent({
             },
             {
                 registerTo: this.$input, events: { 
-                    'change': this.changeHandler.bind(this),
+                    'changeDate': this.changeHandler.bind(this),
                 }
             }
         ]
@@ -47,19 +46,32 @@ var TextInput = KxGenerator.createComponent({
     },
 
     afterAttach: function (e) {
-        //init input mask
-        if (this.hasOwnProperty('mask'))
-            this.$input.inputmask(this.mask);
-
-        if (typeof this.onafterAttach == 'function')
-            this.onafterAttach.apply(this, arguments);;
+        //init datepicker
+        var _self = this;
+        this.$input.datepicker({
+            format: {
+                toDisplay: function (date, format, language) {
+                    return moment(date).format(_self.displayFormat);
+                },
+                toValue: function (date, format, language) {
+                    return moment(date).format(_self.outputFormat);
+                }
+            }
+        });
 
         this.trigger('creationComplete');
     },
 
-    changeHandler: function () {
-        if (typeof this.onchange == 'function')
-            this.onchange.apply(this, arguments);
+    changeHandler: function (e) {
+        this.value = moment(this.$input.datepicker("getDate")).format(this.outputFormat);
+    },
+
+    setValue: function (value) {
+        this.value = value;
+        this.$input.val(value);
+
+        this.trigger('change');
+        return this;
     },
 
     validate: function () {
@@ -77,11 +89,11 @@ var TextInput = KxGenerator.createComponent({
 
     template: function () {         
         return  "<div id='" + this.domID + "-wrapper'>" +
-                    "<div class='form-group col-lg-" + this.colspan + "' rowspan" + this.rowspan + " resizable '>" +
+                    "<div class='form-group col-lg-" + this.colspan + "' resizable'>" +
                         "<div id='" + this.domID + "-block'>" + 
                             "<label rv-style='versionStyle' rv-for='id'>{label} <span rv-if='required'>*</span></label>" + 
                             "<span rv-if='model.blockProcessAttr' class='block-process'> * </span>" + 
-                                "<input rv-type='type'" + 
+                                "<input type='text'" + 
                                     "id='" + this.domID + "' name='" + this.domID + "' rv-value='value'" +
                                     "class='form-control rowspan"+ this.rowspan +"'" +
                                     "rv-placeholder='label' rv-enabled='model.enabled' autofocus/>" +
@@ -96,7 +108,7 @@ var TextInput = KxGenerator.createComponent({
 });
 
 //component prototype
-TextInput.type = 'text';
+DateTime.type = 'datetime';
 
 //register dom element for this component
-KxGenerator.registerDOMElement(TextInput, 'kx-text');
+KxGenerator.registerDOMElement(DateTime, 'kx-datetime');

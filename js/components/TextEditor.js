@@ -40,6 +40,7 @@ var TextEditor = KxGenerator.createComponent({
         this.$input.summernote('code', value);
 
         this.trigger('change');
+        return this;
     },
 
     spellCheckClickHandler: function (e) {
@@ -133,7 +134,7 @@ var TextEditor = KxGenerator.createComponent({
 });
 
 //component prototype
-TextEditor.type = 'texteditor';
+TextEditor.type = 'text_editor';
 
 //register dom element for this component
 KxGenerator.registerDOMElement(TextEditor, 'kx-texteditor');

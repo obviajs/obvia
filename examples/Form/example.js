@@ -37,6 +37,18 @@ var myForm = new Form({
             },
             value: 'Test'
         }),
+        new DateTime({
+            id: 'datetime',
+            colspan: '6',
+            label: 'Date',
+            versionStyle: '',
+            blockProcessAttr: false,
+            required: true,
+            inputFormat: 'DD/MM/YYYY',
+            outputFormat: 'DD-MM-YYYY',
+            displayFormat: 'MM/DD/YYYY',
+            value: '04/11/1994'
+        }),
         new AutoComplete({
             id: 'autocomplete',
             colspan: '6',
