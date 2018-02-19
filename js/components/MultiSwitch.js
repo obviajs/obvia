@@ -45,10 +45,6 @@ var MultiSwitch = KxGenerator.createComponent({
         }
     },
 
-    getValue: function () {
-        return this.value;
-    },
-
     setValue: function (value, manualRender = true) {
         var model = this.getModel();
         var _self = this;

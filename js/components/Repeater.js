@@ -15,7 +15,6 @@ var Repeater = KxGenerator.createComponent({
 
     initModel: function () {
         return {
-            map: {},
             displayAddButton: this.rendering.actions,
             displayRemoveButton: this.rendering.actions
         }
@@ -35,17 +34,6 @@ var Repeater = KxGenerator.createComponent({
                 }
             }
         ]:[])));
-    },
-
-    genRandomId: function () {
-        var model = this.getModel();
-        var id = Math.floor(Math.random() * 1000000);
-        for (var index in model.map) {
-            if (model.map[index] == id)
-                return this.genRandomId();    
-        }
-        
-        return id;
     },
 
     validate: function () {
@@ -77,7 +65,6 @@ var Repeater = KxGenerator.createComponent({
 
         var renderedRow = $('<div ' + (_self.rendering.direction == 'vertical' ? "class='col-md-12'" : "") + '>')
         
-        var rowHTML = "";
         var ccComponents = [];
         var buildRow = function () {
             var rowItems = {};
