@@ -47,7 +47,7 @@ var myForm = new Form({
             inputFormat: 'DD/MM/YYYY',
             outputFormat: 'DD-MM-YYYY',
             displayFormat: 'MM/DD/YYYY',
-            value: '04/11/1994'
+            value: '10/02/2018'
         }),
         new AutoComplete({
             id: 'autocomplete',
@@ -171,7 +171,8 @@ var myForm = new Form({
                         zoomLevel: 7
                     },
                     textAreaValue: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-                    textEditorValue: ""
+                    textEditorValue: "",
+                    dateValue: "10/02/2013"
                 },
                 {
                     comboLabel: 'Zgjidh Shtetin',
@@ -189,7 +190,8 @@ var myForm = new Form({
                         zoomLevel: 7
                     },
                     textAreaValue: "Lorem Ipsum",
-                    textEditorValue: "Lorem Ipsum"
+                    textEditorValue: "Lorem Ipsum",
+                    dateValue: ""
                 }
             ],
             components: [
@@ -252,6 +254,21 @@ var myForm = new Form({
                         blockProcessAttr: false,
                         required: true,
                         value: '{textAreaValue}'
+                    }
+                },
+                {
+                    constructor: DateTime,
+                    props: {
+                        id: 'datetime',
+                        colspan: '6',
+                        label: 'Date',
+                        versionStyle: '',
+                        blockProcessAttr: false,
+                        required: true,
+                        inputFormat: 'DD/MM/YYYY',
+                        outputFormat: 'DD-MM-YYYY',
+                        displayFormat: 'MM/DD/YYYY',
+                        value: '{dateValue}'
                     }
                 },
                 {

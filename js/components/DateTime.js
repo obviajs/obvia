@@ -22,11 +22,6 @@ var DateTime = KxGenerator.createComponent({
                 registerTo: this.$el, events: {
                     'afterAttach': this.afterAttach.bind(this),
                 }
-            },
-            {
-                registerTo: this.$input, events: { 
-                    'changeDate': this.changeHandler.bind(this),
-                }
             }
         ]
     },
@@ -48,27 +43,33 @@ var DateTime = KxGenerator.createComponent({
     afterAttach: function (e) {
         //init datepicker
         var _self = this;
+        if (this.value != "")
+            this.value = moment(this.$input.val()).format(this.inputFormat)
+    
         this.$input.datepicker({
             format: {
                 toDisplay: function (date, format, language) {
                     return moment(date).format(_self.displayFormat);
                 },
                 toValue: function (date, format, language) {
-                    return moment(date).format(_self.outputFormat);
+                    return moment(date).format(_self.displayFormat);
                 }
-            }
+            },
+            autoclose: true,
+            todayBtn: true,
+            todayHighlight: true
         });
 
         this.trigger('creationComplete');
     },
 
-    changeHandler: function (e) {
-        this.value = moment(this.$input.datepicker("getDate")).format(this.outputFormat);
+    getValue: function () {
+        var date = moment(this.$input.val()).format(this.outputFormat);
+        return  (date == "Invalid date" || date == "") ? "" : date
     },
 
     setValue: function (value) {
-        this.value = value;
-        this.$input.val(value);
+        this.value = moment(value).format(this.inputFormat);
 
         this.trigger('change');
         return this;
@@ -76,7 +77,7 @@ var DateTime = KxGenerator.createComponent({
 
     validate: function () {
         if (this.required) {
-            if (this.value == "" || this.value == undefined) {
+            if (this.getValue() == "" || this.getValue() == undefined) {
                 this.errorList = [
                     KxGenerator.getErrorList().call(this)['empty']
                 ];
