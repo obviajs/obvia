@@ -49,6 +49,19 @@ var myForm = new Form({
             displayFormat: 'MM/DD/YYYY',
             value: '10/02/2018'
         }),
+        new DayMonthYear({
+            id: 'dayMonthYear',
+            colspan: '6',
+            label: 'Date Mode 2',
+            versionStyle: '',
+            blockProcessAttr: false,
+            required: false,
+            startYear: '2005',
+            endYear: '2020',
+            inputFormat: 'MM/DD/YYYY H:i',
+            outputFormat: 'DD-MM-YYYY H:i',
+            value: '02/10/2006'
+        }),
         new AutoComplete({
             id: 'autocomplete',
             colspan: '6',
@@ -152,7 +165,9 @@ var myForm = new Form({
                     zoomLevel: 7
                 },
                 textAreaValue: "",
-                textEditorValue: ""
+                textEditorValue: "",
+                dateValue: "",
+                dayMonthYearValue: ""
             },
             dataProvider: [
                 {
@@ -172,7 +187,8 @@ var myForm = new Form({
                     },
                     textAreaValue: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
                     textEditorValue: "",
-                    dateValue: "10/02/2013"
+                    dateValue: "10/02/2013",
+                    dayMonthYearValue: "10/02/2013"
                 },
                 {
                     comboLabel: 'Zgjidh Shtetin',
@@ -191,7 +207,8 @@ var myForm = new Form({
                     },
                     textAreaValue: "Lorem Ipsum",
                     textEditorValue: "Lorem Ipsum",
-                    dateValue: ""
+                    dateValue: "",
+                    dayMonthYearValue: ""
                 }
             ],
             components: [
@@ -269,6 +286,20 @@ var myForm = new Form({
                         outputFormat: 'DD-MM-YYYY',
                         displayFormat: 'MM/DD/YYYY',
                         value: '{dateValue}'
+                    }
+                },
+                {
+                    constructor: DayMonthYear,
+                    props: {
+                        id: 'dayMonthYear',
+                        colspan: '6',
+                        label: 'Date Mode 2',
+                        versionStyle: '',
+                        blockProcessAttr: false,
+                        required: false,
+                        inputFormat: 'DD/MM/YYYY',
+                        outputFormat: 'DD-MM-YYYY',
+                        value: '{dayMonthYearValue}'
                     }
                 },
                 {
