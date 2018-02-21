@@ -13,6 +13,56 @@ var myForm = new Form({
             mask: 'currency',
             value: "33"
         }),
+        new TextArea({
+            id: 'textarea',
+            colspan: '6',
+            label: 'Textarea Label',
+            versionStyle: '',
+            blockProcessAttr: false,
+            required: true,
+            spellCheck: {
+                defaultDictionary: 'English',//Albanian
+            },
+            value: ''
+        }),
+        new TextEditor({
+            id: 'texteditor',
+            colspan: '6',
+            label: 'TextEditor',
+            versionStyle: '',
+            blockProcessAttr: false,
+            required: false,
+            spellCheck: {
+                defaultDictionary: 'English',//Albanian
+            },
+            value: 'Test'
+        }),
+        new DateTime({
+            id: 'datetime',
+            colspan: '6',
+            label: 'Date',
+            versionStyle: '',
+            blockProcessAttr: false,
+            required: true,
+            inputFormat: 'DD/MM/YYYY',
+            outputFormat: 'DD-MM-YYYY',
+            displayFormat: 'MM/DD/YYYY',
+            value: '10/02/2018'
+        }),
+        new DateTimeCb({
+            id: 'dayMonthYear',
+            colspan: '6',
+            label: 'Date Mode 2',
+            versionStyle: '',
+            blockProcessAttr: false,
+            required: false,
+            startYear: '2005',
+            endYear: '2020',
+            mode: "datetime",
+            inputFormat: 'MM/DD/YYYY H:m',
+            outputFormat: 'DD-MM-YYYY H:m',
+            value: '02/10/2006 03:34'
+        }),
         new AutoComplete({
             id: 'autocomplete',
             colspan: '6',
@@ -77,7 +127,7 @@ var myForm = new Form({
             label: 'Ministrite',
             blockProcessAttr: false,
             required: true,
-            multiselect: true,
+            multiselect: false,
             dataProvider: [
                 { "id": "1", "text": "Ministria e Puneve te Jashtme" },
                 { "id": "2", "text": "Ministria e Drejtesise" },
@@ -114,7 +164,11 @@ var myForm = new Form({
                     latitude: 41.1533,
                     longtitude: 20.1683,
                     zoomLevel: 7
-                }
+                },
+                textAreaValue: "",
+                textEditorValue: "",
+                dateValue: "",
+                dayMonthYearValue: ""
             },
             dataProvider: [
                 {
@@ -131,7 +185,11 @@ var myForm = new Form({
                         latitude: 51.1533,
                         longtitude: 30.1683,
                         zoomLevel: 7
-                    }
+                    },
+                    textAreaValue: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+                    textEditorValue: "",
+                    dateValue: "10/02/2013",
+                    dayMonthYearValue: "10/02/2013"
                 },
                 {
                     comboLabel: 'Zgjidh Shtetin',
@@ -147,7 +205,11 @@ var myForm = new Form({
                         latitude: 41.1533,
                         longtitude: 20.1683,
                         zoomLevel: 7
-                    }
+                    },
+                    textAreaValue: "Lorem Ipsum",
+                    textEditorValue: "Lorem Ipsum",
+                    dateValue: "",
+                    dayMonthYearValue: ""
                 }
             ],
             components: [
@@ -186,6 +248,60 @@ var myForm = new Form({
                         blockProcessAttr: false,
                         required: true,
                         value: '{textValue}'
+                    }
+                },
+                {
+                    constructor: TextEditor,
+                    props: {
+                        id: 'texteditorR',
+                        colspan: '6',
+                        label: 'TextEditor',
+                        versionStyle: '',
+                        blockProcessAttr: false,
+                        required: false,
+                        value: '{textEditorValue}'
+                    }
+                },
+                {
+                    constructor: TextArea,
+                    props: {
+                        id: 'textareaR',
+                        colspan: '6',
+                        label: 'Textarea Label',
+                        versionStyle: '',
+                        blockProcessAttr: false,
+                        required: true,
+                        value: '{textAreaValue}'
+                    }
+                },
+                {
+                    constructor: DateTime,
+                    props: {
+                        id: 'datetime',
+                        colspan: '6',
+                        label: 'Date',
+                        versionStyle: '',
+                        blockProcessAttr: false,
+                        required: true,
+                        inputFormat: 'DD/MM/YYYY',
+                        outputFormat: 'DD-MM-YYYY',
+                        displayFormat: 'MM/DD/YYYY',
+                        value: '{dateValue}'
+                    }
+                },
+                {
+                    constructor: DateTimeCb,
+                    props: {
+                        id: 'dayMonthYear',
+                        colspan: '6',
+                        label: 'Date Mode 2',
+                        versionStyle: '',
+                        blockProcessAttr: false,
+                        required: false,
+                        mode: "date",
+                        inputFormat: 'DD/MM/YYYY',
+                        outputFormat: 'DD-MM-YYYY',
+                        value: '{dayMonthYearValue}'
                     }
                 },
                 {

@@ -1,7 +1,7 @@
-var myTextarea = new TextArea({
-    id: 'textarea',
+var myTextEditor = new TextEditor({
+    id: 'textEditor',
     colspan: '6',
-    label: 'Textarea Label',
+    label: 'TextEditor',
     versionStyle: '',
     blockProcessAttr: false,
     required: true,
@@ -11,4 +11,4 @@ var myTextarea = new TextArea({
     value: ''
 });
 
-$('#root').append(myTextarea.render());
+$('#root').append(myTextEditor.render());

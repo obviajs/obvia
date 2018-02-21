@@ -58,12 +58,13 @@ var AutoComplete = KxGenerator.createComponent({
         this.value = [];
 
         var _self = this;
-        this.select2Instance.select2('val').forEach(function (item) {
-            var option = _self.dataProvider.filter(function (option) {
-                return option.id == item;
+        if (this.select2Instance.select2('val').length > 0)
+            this.select2Instance.select2('val').forEach(function (item) {
+                var option = _self.dataProvider.filter(function (option) {
+                    return option.id == item;
+                });
+                _self.value.push(option[0]);
             });
-            _self.value.push(option[0]);
-        });
     },
 
     createModal: function () {

@@ -31,7 +31,7 @@ var Template = KxGenerator.createComponent({
     },
 
     template: function () {
-        return  "<div id='" + this.id + "-wrapper'>" +
+        return  "<div id='" + this.domID + "-wrapper'>" +
             
                 "</div>";
     },

@@ -141,7 +141,7 @@ var Repeater = KxGenerator.createComponent({
                 });
 
                 el.on('change', function (e) {
-                    console.log(this.value)
+                    console.log(this.getValue())
                     var currentItem = _self.dataProvider[index - 1];
                     if (tempComponent.props.value[0] == '{' && tempComponent.props.value[tempComponent.props.value.length - 1] == '}') {
                         var bindedValue = tempComponent.props.value.slice(1, -1);
@@ -166,8 +166,6 @@ var Repeater = KxGenerator.createComponent({
                 .find("#" + _self.domID + "-repeated-block-" + index)
                 .append((_self.rendering.seperator ? '<hr id="' + _self.domID + '-repeated-block-hr-' + index + '">' : ''))  
                 .append(renderedRow);
-                
-       
             
             return rowItems;
         }
