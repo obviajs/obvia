@@ -49,7 +49,7 @@ var myForm = new Form({
             displayFormat: 'MM/DD/YYYY',
             value: '10/02/2018'
         }),
-        new DayMonthYear({
+        new DateTimeCb({
             id: 'dayMonthYear',
             colspan: '6',
             label: 'Date Mode 2',
@@ -58,9 +58,10 @@ var myForm = new Form({
             required: false,
             startYear: '2005',
             endYear: '2020',
-            inputFormat: 'MM/DD/YYYY H:i',
-            outputFormat: 'DD-MM-YYYY H:i',
-            value: '02/10/2006'
+            mode: "datetime",
+            inputFormat: 'MM/DD/YYYY H:m',
+            outputFormat: 'DD-MM-YYYY H:m',
+            value: '02/10/2006 03:34'
         }),
         new AutoComplete({
             id: 'autocomplete',
@@ -289,7 +290,7 @@ var myForm = new Form({
                     }
                 },
                 {
-                    constructor: DayMonthYear,
+                    constructor: DateTimeCb,
                     props: {
                         id: 'dayMonthYear',
                         colspan: '6',
@@ -297,6 +298,7 @@ var myForm = new Form({
                         versionStyle: '',
                         blockProcessAttr: false,
                         required: false,
+                        mode: "date",
                         inputFormat: 'DD/MM/YYYY',
                         outputFormat: 'DD-MM-YYYY',
                         value: '{dayMonthYearValue}'

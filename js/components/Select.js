@@ -58,6 +58,19 @@ var Select = KxGenerator.createComponent({
         return this;
     },
 
+    selectByText: function (text) {
+        var _self = this;
+
+        this.$select.find('option').each(function () {
+            if ($(this).html() == text) {
+                _self.setValue($(this).attr('value'));
+                return;
+            }
+        });
+
+        return this;
+    },
+
     enable: function () {
         var model = this.getModel();
         model.enabled = true;
