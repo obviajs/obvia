@@ -157,6 +157,16 @@ new RepeaterEventArgs(
         }
     },
 
+    enable: function () {         
+        this.repeater.enable();
+        return this; 
+    },
+
+    disable: function () {
+        this.repeater.disable();
+        return this;  
+    },
+
     template: function () {
         return "<div id='" + this.domID + "-wrapper'>" +
                     "<div class='col-lg-" + this.colspan + "' id='" + this.domID + "-block' resizable' style='padding-top: 10px; padding-bottom: 10px; overflow:hidden'>" +
