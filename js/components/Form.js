@@ -13,44 +13,67 @@ var Form = KxGenerator.createComponent({
 
     componentContainerID: 'view_form_26_component_container',
 
+    beforeAttach: function () {
+        this.ccComponents = [];
+        for (var i = 0; i < this.components.length; i++)
+            this.ccComponents.push(this.components[i].props.id);
+        
+        this.$container = this.$el.find('#' + this.componentContainerID);
+    },
+
+    addComponent: function (component, container, cIndex) {
+        var cmp = new component.constructor(component.props);
+
+        cmp.on('creationComplete', function (e) {
+            e.stopImmediatePropagation();
+            e.stopPropagation();
+
+            var ax = -1;
+            while ((ax = this.ccComponents.indexOf(this.id)) !== -1)
+                this.ccComponents.splice(ax, 1);
+
+            if (this.ccComponents.length == 0) {
+                this.trigger('creationComplete');
+            }
+
+        }.bind(this));
+
+        container.append(cmp.render());
+        
+        //expose component model
+        this[cmp.id] = cmp;
+
+        cmp.parent = this;
+        cmp.parentType = 'form';
+        cmp.parentForm = this;
+    },
+
     validate: function () {
-        var _self = this;
         var valid = true;
         this.errorList = [];
 
         this.components.forEach(function (component) {
-            if (!component.validate()) {
-                _self.errorList = _self.errorList.concat(component.errorList)
+            if (!this[component.props.id].validate()) {
+                this.errorList = this.errorList.concat(this[component.props.id].errorList)
                 valid = false;
             }
-        });
+        }.bind(this));
 
         return valid;
     },
 
-    addComponent: function (component, container, cIndex) {
-        container.append(component.render());
-        
-        //expose component model
-        this[component.id] = component;
-
-        component.parent = this;
-        component.parentType = 'form';
-        component.parentForm = this;
-    },
-
     enable: function () {
         this.components.forEach(function (component) {
-            component.enable();
-        });
+            this[component.props.id].enable();
+        }.bind(this));
 
         return this;
     },
 
     disable: function () {
         this.components.forEach(function (component) {
-            component.disable();
-        });
+            this[component.props.id].disable();
+        }.bind(this));
 
         return this;
     },
@@ -104,29 +127,9 @@ var Form = KxGenerator.createComponent({
     },
 
     render: function () {
-        var _self = this;
-        var container = this.$el.find('#' + this.componentContainerID);
-        var ccComponents = [];
-        for(var i=0; i<this.components.length; i++)
-            ccComponents.push(this.components[i].id);
-        
         this.components.forEach(function (component, cIndex) {
-            component.on('creationComplete', function (e) {
-                e.stopImmediatePropagation();
-                e.stopPropagation();
-
-                var ax = -1;
-                while ((ax = ccComponents.indexOf(this.id)) !== -1) 
-                    ccComponents.splice(ax, 1);
-                
-                if (ccComponents.length == 0) {
-                    _self.trigger('creationComplete');
-                }
-                    
-            });
-
-            _self.addComponent(component, container, cIndex)
-        })
+            this.addComponent(component, this.$container, cIndex);
+        }.bind(this));
         
         return this.$el;
     }
