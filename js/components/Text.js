@@ -74,7 +74,7 @@ var TextInput = KxGenerator.createComponent({
         } else
             return true;    
     },
-
+//The autofocus attribute is a boolean attribute. When present, it specifies that an <input> element should automatically get focus when the page loads.
     template: function () {         
         return  "<div id='" + this.domID + "-wrapper'>" +
                     "<div class='form-group col-lg-" + this.colspan + "' rowspan" + this.rowspan + " resizable '>" +
@@ -84,7 +84,7 @@ var TextInput = KxGenerator.createComponent({
                                 "<input rv-type='type'" + 
                                     "id='" + this.domID + "' name='" + this.domID + "' rv-value='value'" +
                                     "class='form-control rowspan"+ this.rowspan +"'" +
-                                    "rv-placeholder='label' rv-enabled='model.enabled' autofocus/>" +
+                                    "rv-placeholder='label' rv-enabled='enabled' autofocus/>" +
                         "</div>" +
                     "</div>" + 
                 "</div>";    
