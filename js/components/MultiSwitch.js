@@ -9,39 +9,8 @@ var MultiSwitch = KxGenerator.createComponent({
     //model binds to the template
     //if you want variables to bind, you must declare them in the model object
     initModel: function () {
-        this.repeater = new Repeater({
-            id: 'multiswitchRepeater',
-            defaultItem: {
-                text: 'Button',
-                buttonClass: 'btn btn-xs btn-default'
-            },
-            rendering: {
-                direction: 'horizontal',
-                seperator: false,
-                actions: false
-            },
-            dataProvider: this.dataProvider,
-            components: [
-                {
-                    constructor: Button,
-                    props: {
-                        id: 'buttonR',
-                        type: "button",
-                        value: "{text}",
-                        class: "{buttonClass}",
-                        style: "float: left; border-radius: 0px",
-                        onclick: this.clickHandler.bind(this)
-                    }
-                }
-            ]
-        })//.on('creationComplete', function(){alert('creation Complete per Repeater ne Multiswitch')})
-
         return {
-            fieldName: this.fieldName,
-            label: this.label,
             blockProcessAttr: this.required ? false : this.blockProcessAttr,
-            versionStyle: this.versionStyle,
-            required: this.required,
         }
     },
 
@@ -87,6 +56,35 @@ var MultiSwitch = KxGenerator.createComponent({
     },
 
     beforeAttach: function () {
+        this.$container = this.$el.find('#' + this.domID + '-container');
+
+        this.repeater = new Repeater({
+            id: 'multiswitchRepeater',
+            defaultItem: {
+                text: 'Button',
+                buttonClass: 'btn btn-xs btn-default'
+            },
+            rendering: {
+                direction: 'horizontal',
+                seperator: false,
+                actions: false
+            },
+            dataProvider: this.dataProvider,
+            components: [
+                {
+                    constructor: Button,
+                    props: {
+                        id: 'buttonR',
+                        type: "button",
+                        value: "{text}",
+                        class: "{buttonClass}",
+                        style: "float: left; border-radius: 0px",
+                        onclick: this.clickHandler.bind(this)
+                    }
+                }
+            ]
+        });
+
         this.setValue(this.value, false);
     },
 
@@ -102,8 +100,7 @@ var MultiSwitch = KxGenerator.createComponent({
         if (typeof this.onclick == 'function')
             this.onclick.apply(this, arguments);
         
-        if(!e.isDefaultPrevented())
-        {
+        if(!e.isDefaultPrevented()){
             this.handleButtonClick.apply(this, arguments);
         }
     },
@@ -169,8 +166,8 @@ new RepeaterEventArgs(
     template: function () {
         return "<div id='" + this.domID + "-wrapper'>" +
                     "<div class='col-lg-" + this.colspan + "' id='" + this.domID + "-block' resizable' style='padding-top: 10px; padding-bottom: 10px; overflow:hidden'>" +
-                        "<label rv-style='versionStyle' rv-for='fieldName'>{label} <span rv-if='required'>*</span></label>" +
-                        "<span rv-if='blockProcessAttr' class='block-process'> * </span>" +
+                        "<label rv-style='versionStyle' rv-for='domID'>{label} <span rv-if='required'>*</span></label>" +
+                        "<span rv-if='model.blockProcessAttr' class='block-process'> * </span>" +
                         "<br>" +
                         "<div id='" + this.domID + "-container' role='group' style='padding:0'>" +
                             
@@ -180,12 +177,8 @@ new RepeaterEventArgs(
     },
 
     render: function () {
-        var model = this.getModel();
-        var repeater = this.repeater;
-
-        repeater.$el.children()[0].classList = '';
-        this.$container = this.$el.find('#' + this.domID + '-container');
-        this.$container.append(repeater.render());
+        this.repeater.$el.children()[0].classList = '';
+        this.$container.append(this.repeater.render());
 
         return this.$el;
     }
