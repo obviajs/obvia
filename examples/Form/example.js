@@ -20,8 +20,11 @@ var myForm = new Form({
             versionStyle: '',
             blockProcessAttr: false,
             required: true,
-            mask: 'decimal',
-            value: "33"
+            mask: {
+                alias: "currency",
+                prefix: ''
+            },
+            value: ""
         }),
         new TextArea({
             id: 'textarea',
@@ -83,6 +86,18 @@ var myForm = new Form({
             tableData: [["Ministria e Puneve te Jashtme"], ["Ministria e Drejtesise"], ["Ministria e Brendshme"]],
             dataProvider: [{ "id": "1", "text": "Ministria e Puneve te Jashtme" }, { "id": "2", "text": "Ministria e Drejtesise" }, { "id": "3", "text": "Ministria e Brendshme" }],
             value: [{ "id": "1", "text": "Ministria e Puneve te Jashtme" }]
+        }),
+        new Amount({
+            id: 'amount',
+            colspan: '6',
+            label: 'Pagesa',
+            blockProcessAttr: false,
+            required: true,
+            currencyList: [{ "id": "1", "text": "EUR" }, { "id": "2", "text": "ALL" }, { "id": "3", "text": "GBP" }],
+            value: {
+                amount: "132323",
+                currency: "2"
+            }
         }),
         new ComboBox({
             id: 'combo',
@@ -178,7 +193,8 @@ var myForm = new Form({
                 textAreaValue: "",
                 textEditorValue: "",
                 dateValue: "",
-                dayMonthYearValue: ""
+                dayMonthYearValue: "",
+                amountValue: {}
             },
             dataProvider: [
                 {
@@ -199,7 +215,8 @@ var myForm = new Form({
                     textAreaValue: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
                     textEditorValue: "",
                     dateValue: "10/02/2013",
-                    dayMonthYearValue: "10/02/2013"
+                    dayMonthYearValue: "10/02/2013",
+                    amountValue: {currency: "2", amount: "33433"}
                 },
                 {
                     comboLabel: 'Zgjidh Shtetin',
@@ -219,7 +236,8 @@ var myForm = new Form({
                     textAreaValue: "Lorem Ipsum",
                     textEditorValue: "Lorem Ipsum",
                     dateValue: "",
-                    dayMonthYearValue: ""
+                    dayMonthYearValue: "",
+                    amountValue: {}
                 }
             ],
             components: [
@@ -258,6 +276,18 @@ var myForm = new Form({
                         blockProcessAttr: false,
                         required: true,
                         value: '{textValue}'
+                    }
+                },
+                {
+                    constructor: Amount,
+                    props: {
+                        id: 'amount',
+                        colspan: '6',
+                        label: 'Pagesa',
+                        blockProcessAttr: false,
+                        required: true,
+                        currencyList: [{ "id": "1", "text": "EUR" }, { "id": "2", "text": "ALL" }, { "id": "3", "text": "GBP" }],
+                        value: '{amountValue}'
                     }
                 },
                 {

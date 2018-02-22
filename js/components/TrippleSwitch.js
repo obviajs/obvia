@@ -31,11 +31,13 @@ var TrippleSwitch = KxGenerator.createComponent({
         }
     },
 
-    registerEvents: function(){
+    beforeAttach: function () {
         this.$btnLeft = this.$el.find("#btnLeft-" + this.domID);
         this.$btnMiddle = this.$el.find("#btnMiddle-" + this.domID);
         this.$btnRight = this.$el.find("#btnRight-" + this.domID);
+    },
 
+    registerEvents: function(){
         return [
             {
                 registerTo: this.$el, events: { 'afterAttach': this.afterAttach.bind(this) }

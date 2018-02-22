@@ -13,9 +13,11 @@ var Button = KxGenerator.createComponent({
         }
     },
     
-    registerEvents: function () {
+    beforeAttach: function () {
         this.$btn = this.$el.find("button");
+    },
 
+    registerEvents: function () {
         return [
             {
                 registerTo: this.$el, events: { 

@@ -32,7 +32,7 @@ var GoogleMap = KxGenerator.createComponent({
         }
     },
 
-    registerEvents: function () {
+    beforeAttach: function () {
         this.$modal = this.$el.find('#' + this.domID + '_map-modal');
         this.$openMapBtn = this.$el.find('#' + this.domID + '_openMapBtn');
         this.$changeCoordiantesBtn = this.$el.find('#' + this.domID + '_changeCoordinates');
@@ -40,6 +40,9 @@ var GoogleMap = KxGenerator.createComponent({
         this.$dismissBtn = this.$el.find('#' + this.domID + '_dismissBtn');
         this.$mapAcceptPositionBtn = this.$el.find('#' + this.domID + '_mapAcceptPosition');
 
+    },
+
+    registerEvents: function () {
         return [
             {
                 registerTo: this.$el, events: { 'afterAttach': this.afterAttach.bind(this) }

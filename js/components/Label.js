@@ -14,9 +14,11 @@ var Label = KxGenerator.createComponent({
         }
     },
 
-    registerEvents: function () {
-        this.$label = this.$el.find("label");
+    beforeAttach: function () {
+        this.$label = this.$el.find("label"); 
+    },
 
+    registerEvents: function () {
         return [
             {
                 registerTo: this.$el, events: {

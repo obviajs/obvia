@@ -15,8 +15,6 @@ var DateTime = KxGenerator.createComponent({
     },
 
     registerEvents: function () {
-        this.$input = this.$el.find("#" + this.domID);
-
         return [
             {
                 registerTo: this.$el, events: {
@@ -38,6 +36,10 @@ var DateTime = KxGenerator.createComponent({
         model.enabled = false;
 
         return this;
+    },
+
+    beforeAttach: function () {
+        this.$input = this.$el.find("#" + this.domID);
     },
 
     afterAttach: function (e) {

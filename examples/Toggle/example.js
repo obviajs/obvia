@@ -1,4 +1,4 @@
-var myToggleSwitch = new ToggleSwitch({
+var myToggle = new Toggle({
     id: 'checkbox',
     colspan: '6',
     label: 'Checkbox',
@@ -9,4 +9,4 @@ var myToggleSwitch = new ToggleSwitch({
     checkedLabel: "Po"
 });
 
-$('#root').append(myToggleSwitch.render());
+$('#root').append(myToggle.render());

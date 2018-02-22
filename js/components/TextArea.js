@@ -14,10 +14,15 @@ var TextArea = KxGenerator.createComponent({
         }
     },
 
-    registerEvents: function () {
+    beforeAttach: function () {
         this.$input = this.$el.find("#" + this.domID);
         this.$spellCheckBtn = null;
 
+        if (this.spellCheck != false) 
+            this.$spellCheckBtn = this.$el.find('#' + this.domID + '-spellCheck');
+    },
+
+    registerEvents: function () {
         var events = [
             {
                 registerTo: this.$el, events: {
@@ -28,8 +33,6 @@ var TextArea = KxGenerator.createComponent({
 
         if (this.hasOwnProperty('spellCheck')) {
             if (this.spellCheck != false) {
-                this.$spellCheckBtn = this.$el.find('#' + this.domID + '-spellCheck');
-
                 events.push({
                     registerTo: this.$spellCheckBtn, events: {
                         'click': this.spellCHeckClickHandler.bind(this)

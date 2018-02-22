@@ -86,6 +86,10 @@ var MultiSwitch = KxGenerator.createComponent({
         
     },
 
+    beforeAttach: function () {
+        this.setValue(this.value, false);
+    },
+
     registerEvents: function () {
         return [];
     },
@@ -102,11 +106,6 @@ var MultiSwitch = KxGenerator.createComponent({
         {
             this.handleButtonClick.apply(this, arguments);
         }
-    },
-
-
-    beforeAttach: function () {
-        this.setValue(this.value, false);
     },
 /*
 new RepeaterEventArgs(
