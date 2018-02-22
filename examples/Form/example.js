@@ -11,6 +11,16 @@ var myForm = new Form({
             blockProcessAttr: false,
             required: true,
             mask: 'currency',
+            value: "1000"
+        }),
+        new TextInput({
+            id: 'number',
+            colspan: '6',
+            label: 'Number Label',
+            versionStyle: '',
+            blockProcessAttr: false,
+            required: true,
+            mask: 'decimal',
             value: "33"
         }),
         new TextArea({
