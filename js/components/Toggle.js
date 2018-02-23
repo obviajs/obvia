@@ -13,9 +13,11 @@ var Toggle = KxGenerator.createComponent({
         }
     },
 
-    registerEvents: function () {
+    beforeAttach: function () {
         this.$input = this.$el.find("#" + this.domID);
+    },
 
+    registerEvents: function () {
         return [
             {
                 registerTo: this.$el, events: {

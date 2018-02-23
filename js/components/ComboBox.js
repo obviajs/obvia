@@ -41,10 +41,12 @@ var ComboBox = KxGenerator.createComponent({
             );
     },
 
-    registerEvents: function () {
+    beforeAttach: function () {
         this.$input = this.$el.find('#' + this.domID)
         this.$popup = this.$el.find('#' + this.domID + ' _popup');
+    },
 
+    registerEvents: function () {
         return [
             {
                 registerTo: this.$el, events: {

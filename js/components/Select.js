@@ -13,10 +13,12 @@ var Select = KxGenerator.createComponent({
             enabled: true
         }
     },
+
+    beforeAttach: function () {
+        this.$select = this.$el.find("#" + this.domID);
+    },
     
     registerEvents: function () {
-        this.$select = this.$el.find("#" + this.domID);
-
         return [
             {
                 registerTo: this.$el, events: { 

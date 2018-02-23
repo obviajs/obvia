@@ -13,7 +13,7 @@ var AutoComplete = KxGenerator.createComponent({
         }
     },
 
-    registerEvents: function () {
+    beforeAttach: function () {
         this.$modalContainer = this.$el.find('#' + this.domID + '-autoselect-modal');
         this.$openModalBtn = this.$el.find('#' + this.domID + '_openModal');
         this.$input = this.$el.find('#' + this.domID + '_select');
@@ -21,7 +21,9 @@ var AutoComplete = KxGenerator.createComponent({
         this.$modal = null;
         this.$comboCategoryTableSelector = null;
         this.$dataTable = null;
+    },
 
+    registerEvents: function () {
         return [
             {
                 registerTo: this.$el, events: {
@@ -166,9 +168,9 @@ var AutoComplete = KxGenerator.createComponent({
     template: function () {
         return "<div id='" + this.domID + "-wrapper'>" +
                     "<div class='form-group col-lg-" + this.colspan + "' rowspan" + this.rowspan + " resizable' id='" + this.domID + "_container' >" +
-                    "<label rv-style='versionStyle' rv-for='fieldName'>{label} <span rv-if='required'>*</span></label>" +
+                    "<label rv-style='versionStyle' rv-for='domID'>{label} <span rv-if='required'>*</span></label>" +
                     "<div class='input-group'>" +
-                        "<span rv-if='blockProcessAttr' class='block-process'> * </span>" +
+                        "<span rv-if='model.blockProcessAttr' class='block-process'> * </span>" +
                         "<input type='hidden' name='" + this.domID + "_select[]' id='" + this.domID + "_select' />" +
                         "<span class='input-group-btn'>" +
                             "<button type='button' style='margin-left: 5px;'" +

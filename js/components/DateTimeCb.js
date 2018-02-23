@@ -19,9 +19,11 @@ var DateTimeCb = KxGenerator.createComponent({
         }
     },
 
-    registerEvents: function () {
+    beforeAttach: function () {
         this.$dateContainer = this.$el.find("#dateContainer-" + this.domID);
+    },
 
+    registerEvents: function () {
         return [
             {
                 registerTo: this.$el, events: {

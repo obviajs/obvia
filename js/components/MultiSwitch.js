@@ -9,6 +9,14 @@ var MultiSwitch = KxGenerator.createComponent({
     //model binds to the template
     //if you want variables to bind, you must declare them in the model object
     initModel: function () {
+        return {
+            blockProcessAttr: this.required ? false : this.blockProcessAttr,
+        }
+    },
+
+    beforeAttach: function () {
+        this.$container = this.$el.find('#' + this.domID + '-container');
+
         this.repeater = new Repeater({
             id: 'multiswitchRepeater',
             defaultItem: {
@@ -25,7 +33,7 @@ var MultiSwitch = KxGenerator.createComponent({
                 {
                     constructor: Button,
                     props: {
-                        id: 'buttonR',
+                        id: 'button',
                         type: "button",
                         value: "{text}",
                         class: "{buttonClass}",
@@ -34,101 +42,84 @@ var MultiSwitch = KxGenerator.createComponent({
                     }
                 }
             ]
-        })//.on('creationComplete', function(){alert('creation Complete per Repeater ne Multiswitch')})
+        });
 
-        return {
-            fieldName: this.fieldName,
-            label: this.label,
-            blockProcessAttr: this.required ? false : this.blockProcessAttr,
-            versionStyle: this.versionStyle,
-            required: this.required,
-        }
+        this.setValue(this.value, false);
+    },
+
+    registerEvents: function () {
+        return [
+            {
+                registerTo: this.$el, events: {
+                    'afterAttach': this.afterAttach.bind(this)
+                }
+            }
+        ];
+    },
+
+    afterAttach: function (e) {
+        this.repeater.on('creationComplete', function () {
+            this.trigger('creationComplete');   
+        }.bind(this));
     },
 
     setValue: function (value, manualRender = true) {
-        var model = this.getModel();
-        var _self = this;
         this.value = value;
 
         //add correct rendering classes
         this.dataProvider.forEach(function (item, index) {
-            item["buttonClass"] = _self.defaultClass;
-            
-            if(manualRender)
-                for(var cmp in _self.repeater.rowItems[index]) {
-                    _self.repeater.rowItems[index][cmp].setModelValue("class", _self.defaultClass);
+            item["buttonClass"] = this.defaultClass;
+
+            if (manualRender)
+                for (var cmp in this.repeater.rowItems[index]) {
+                    this.repeater.rowItems[index][cmp]["class"] = this.defaultClass;
                 }
             
-            _self.value.forEach(function (valueItem) {
-                if (valueItem[_self.valueField] == item[_self.valueField]) {
-                    item["buttonClass"] = _self.selectedClass;
-                    
+            this.value.forEach(function (valueItem) {
+                if (valueItem[this.valueField] == item[this.valueField]) {
+                    item["buttonClass"] = this.selectedClass;
+
                     var dpIndex;
-                    _self.dataProvider.forEach(function (itemDp, indexDp) {
-                        if (itemDp[_self.valueField] == valueItem[_self.valueField]) {
+                    this.dataProvider.forEach(function (itemDp, indexDp) {
+                        if (itemDp[this.valueField] == valueItem[this.valueField]) {
                             dpIndex = indexDp;
                             return false;
                         }
-                    });
+                    }.bind(this));
 
                     if (manualRender)
-                        for(var cmp in _self.repeater.rowItems[dpIndex]) {
-                            _self.repeater.rowItems[dpIndex][cmp].setModelValue("class", _self.selectedClass);
+                        for (var cmp in this.repeater.rowItems[dpIndex]) {
+                            this.repeater.rowItems[dpIndex][cmp]["class"] = this.selectedClass;
                         }
 
                     return false;
                 }
-            });
+            }.bind(this));
 
-        });
+        }.bind(this));
+
+        this.$el.trigger('change');
 
         return this;
-        
-    },
-
-    registerEvents: function () {
-        return [];
-    },
-
-    afterAttach: function (e) {
-        this.trigger('creationComplete');
     },
 
     clickHandler: function (e) {
         if (typeof this.onclick == 'function')
             this.onclick.apply(this, arguments);
         
-        if(!e.isDefaultPrevented())
-        {
+        if(!e.isDefaultPrevented()){
             this.handleButtonClick.apply(this, arguments);
         }
     },
 
-
-    beforeAttach: function () {
-        this.setValue(this.value, false);
-    },
-/*
-new RepeaterEventArgs(
-                                        component.parent.rowItems[component.repeaterIndex],
-                                        component.parent.dataProvider[component.repeaterIndex],
-                                        component.repeaterIndex
-
-                                        indexOfObject(ac, key,  matchingValue)
-                                        getMatching(ac, key,  matchingValue, stopAtFirstOcurrence)	
-
-*/
     handleButtonClick: function (e, repeaterEventArgs) {
-        var _self = this;
-        var model = this.getModel();
-        var button = repeaterEventArgs.currentRow["buttonR"];
+        var button = repeaterEventArgs.currentRow["button"];
         var index = repeaterEventArgs.currentIndex;
         
-        button.$btn.toggleClass(this.defaultClass);
-        button.$btn.toggleClass(this.selectedClass);
+        //toggle class
+        button.class == this.defaultClass ? button.class = this.selectedClass : button.class = this.defaultClass;
         
-
-        var arrValueIndex = indexOfObject(_self.value, _self.valueField,  repeaterEventArgs.currentItem[_self.valueField]);         
+        var arrValueIndex = indexOfObject(this.value, this.valueField,  repeaterEventArgs.currentItem[this.valueField]);         
         if (this.multiselect) {
             //allow multiple selects
             //toggle class
@@ -136,18 +127,18 @@ new RepeaterEventArgs(
                  //get + push dp row
                 this.value.push(this.dataProvider[index]);
             } else {
-                _self.value.splice(arrValueIndex, 1);
+                this.value.splice(arrValueIndex, 1);
             }
                   
         } else {
             this.dataProvider.forEach(function (item, i) {
                 if((index == i && arrValueIndex!=-1) || index != i){
-                    for(var cmp in _self.repeater.rowItems[i]) {
-                        _self.repeater.rowItems[i][cmp].$btn.removeClass(_self.selectedClass);
-                        _self.repeater.rowItems[i][cmp].$btn.addClass(_self.defaultClass);
+                    for(var cmp in this.repeater.rowItems[i]) {
+                        this.repeater.rowItems[i][cmp].$btn.removeClass(this.selectedClass);
+                        this.repeater.rowItems[i][cmp].$btn.addClass(this.defaultClass);
                     }
                 }
-            });
+            }.bind(this));
 
             if (arrValueIndex==-1) {
                 this.value = [this.dataProvider[index]]
@@ -155,6 +146,8 @@ new RepeaterEventArgs(
                 this.value = [];
             }
         }
+
+        this.trigger('change');
     },
 
     enable: function () {         
@@ -170,8 +163,8 @@ new RepeaterEventArgs(
     template: function () {
         return "<div id='" + this.domID + "-wrapper'>" +
                     "<div class='col-lg-" + this.colspan + "' id='" + this.domID + "-block' resizable' style='padding-top: 10px; padding-bottom: 10px; overflow:hidden'>" +
-                        "<label rv-style='versionStyle' rv-for='fieldName'>{label} <span rv-if='required'>*</span></label>" +
-                        "<span rv-if='blockProcessAttr' class='block-process'> * </span>" +
+                        "<label rv-style='versionStyle' rv-for='domID'>{label} <span rv-if='required'>*</span></label>" +
+                        "<span rv-if='model.blockProcessAttr' class='block-process'> * </span>" +
                         "<br>" +
                         "<div id='" + this.domID + "-container' role='group' style='padding:0'>" +
                             
@@ -181,12 +174,8 @@ new RepeaterEventArgs(
     },
 
     render: function () {
-        var model = this.getModel();
-        var repeater = this.repeater;
-
-        repeater.$el.children()[0].classList = '';
-        this.$container = this.$el.find('#' + this.domID + '-container');
-        this.$container.append(repeater.render());
+        this.repeater.$el.children()[0].classList = '';
+        this.$container.append(this.repeater.render());
 
         return this.$el;
     }

@@ -6,10 +6,12 @@
 
 //component definition
 var Modal = KxGenerator.createComponent({
-    registerEvents: function () {
+    beforeAttach: function () {
         this.$body = this.$el.find('#' + this.domID + '-modal-body');
         this.$modal = this.$el.find('#' + this.domID);
+    },
 
+    registerEvents: function () {
         return [
             {
                 registerTo: this.$el, events: {

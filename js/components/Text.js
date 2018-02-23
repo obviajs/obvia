@@ -15,9 +15,11 @@ var TextInput = KxGenerator.createComponent({
         }
     },
 
-    registerEvents: function () {
+    beforeAttach: function () {
         this.$input = this.$el.find("#" + this.domID);
+    },
 
+    registerEvents: function () {
         return [
             {
                 registerTo: this.$el, events: {
@@ -48,8 +50,9 @@ var TextInput = KxGenerator.createComponent({
 
     afterAttach: function (e) {
         //init input mask
-        if (this.hasOwnProperty('mask'))
-            this.$input.inputmask(this.mask);
+        if (this.hasOwnProperty('mask')) {
+                this.$input.inputmask(this.mask);
+        }
 
         if (typeof this.onafterAttach == 'function')
             this.onafterAttach.apply(this, arguments);;
@@ -79,12 +82,12 @@ var TextInput = KxGenerator.createComponent({
         return  "<div id='" + this.domID + "-wrapper'>" +
                     "<div class='form-group col-lg-" + this.colspan + "' rowspan" + this.rowspan + " resizable '>" +
                         "<div id='" + this.domID + "-block'>" + 
-                            "<label rv-style='versionStyle' rv-for='id'>{label} <span rv-if='required'>*</span></label>" + 
+                            "<label rv-style='versionStyle' rv-for='domID'>{label} <span rv-if='required'>*</span></label>" + 
                             "<span rv-if='model.blockProcessAttr' class='block-process'> * </span>" + 
                                 "<input rv-type='type'" + 
                                     "id='" + this.domID + "' name='" + this.domID + "' rv-value='value'" +
                                     "class='form-control rowspan"+ this.rowspan +"'" +
-                                    "rv-placeholder='label' rv-enabled='enabled' autofocus/>" +
+                                    "rv-placeholder='label' rv-enabled='model.enabled' autofocus/>" +
                         "</div>" +
                     "</div>" + 
                 "</div>";    

@@ -9,13 +9,15 @@ var Button = KxGenerator.createComponent({
     //inner component data
     initModel: function () {
         return {
-            
+            enabled: true
         }
     },
     
-    registerEvents: function () {
+    beforeAttach: function () {
         this.$btn = this.$el.find("button");
+    },
 
+    registerEvents: function () {
         return [
             {
                 registerTo: this.$el, events: { 
@@ -34,6 +36,20 @@ var Button = KxGenerator.createComponent({
         this.trigger('creationComplete');
     },
 
+    enable: function () {
+        var model = this.getModel();
+        model.enabled = true;
+
+        return this;
+    },
+
+    disable: function () {
+        var model = this.getModel();
+        model.enabled = false;
+
+        return this;
+    },
+
     clickHandler: function () {
         if (typeof this.onclick == 'function')
             this.onclick.apply(this, arguments);
@@ -41,7 +57,7 @@ var Button = KxGenerator.createComponent({
 
     template: function () {         
         return  "<div id='" + this.domID + "-wrapper'>" +
-                    "<button rv-type='type'  rv-style='style' rv-class='class'>{value}</button>" +
+                    "<button rv-type='type' rv-enabled='model.enabled' rv-style='style' rv-class='class'>{value}</button>" +
                 "</div>";    
     },
     
