@@ -13,8 +13,7 @@ var CheckBox = KxGenerator.createComponent({
         return {
             
         }
-    },
-    
+    }, 
     registerEvents: function () {
         return [
             {
@@ -30,13 +29,12 @@ var CheckBox = KxGenerator.createComponent({
             }
         ]
     },
-
+ 
     afterAttach: function (e) {
         this.trigger('creationComplete');
     },
 
     changeHandler: function () {
-        this.value = this.$chkb.prop('checked');
         if (typeof this.onchange == 'function')
             this.onchange.apply(this, arguments);
     },
@@ -60,18 +58,11 @@ var CheckBox = KxGenerator.createComponent({
         }
         return this;
     },
-    get checked(){
-        return this["$chkb"]!=undefined?this["$chkb"].prop('checked'):undefined;
-    },
-    set checked(v){
-        this.$chkb.prop('checked', v);
-    },
-    template: function () {       
-        
+    template: function () {      
         return  "<div id='" + this.domID + "-wrapper' class='checkbox'>" +
                     "<span rv-if='blockProcessAttr' class='block-process'> * </span>" + 
                     "<label><input id='" + this.domID + "' name='" + this.domID + "' rv-value='value' " +                    
-                    "rv-enabled='enabled' type='checkbox' value=''>{label}</label>" +
+                    "rv-enabled='enabled' rv-checked='checked' type='checkbox' rv-value='value'>{label}</label>" +
                 "</div>"; 
     },
     
