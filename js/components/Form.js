@@ -17,19 +17,19 @@ var Form = KxGenerator.createComponent({
         this.ccComponents = [];
         for (var i = 0; i < this.components.length; i++)
             this.ccComponents.push(this.components[i].props.id);
-        
+
         this.$container = this.$el.find('#' + this.componentContainerID);
     },
 
     addComponent: function (component, container, cIndex) {
         var cmp = new component.constructor(component.props);
-
+     
         cmp.on('creationComplete', function (e) {
             e.stopImmediatePropagation();
             e.stopPropagation();
 
             var ax = -1;
-            while ((ax = this.ccComponents.indexOf(this.id)) !== -1)
+            while ((ax = this.ccComponents.indexOf(component.props.id)) !== -1)
                 this.ccComponents.splice(ax, 1);
 
             if (this.ccComponents.length == 0) {

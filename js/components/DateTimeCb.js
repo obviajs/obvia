@@ -96,6 +96,11 @@ var DateTimeCb = KxGenerator.createComponent({
             value: value,
         });
 
+        this.daySelect.on('creationComplete', function (e) {
+            e.stopPropagation();
+        });
+
+
         return this.daySelect.render();
     },
 
@@ -114,6 +119,11 @@ var DateTimeCb = KxGenerator.createComponent({
             value: value,
         });
 
+        this.monthSelect.on('creationComplete', function (e) {
+            e.stopPropagation();
+        });
+
+
         return this.monthSelect.render();
     },
 
@@ -130,6 +140,11 @@ var DateTimeCb = KxGenerator.createComponent({
             valueField: "value",
             value: value,
         });
+
+        this.yearSelect.on('creationComplete', function (e) {
+            e.stopPropagation();
+        });
+
 
         return this.yearSelect.render();
     },
@@ -148,6 +163,11 @@ var DateTimeCb = KxGenerator.createComponent({
             value: value,
         });
 
+        this.hourSelect.on('creationComplete', function (e) {
+            e.stopPropagation();
+        });
+
+
         return this.hourSelect.render();
     },
 
@@ -165,6 +185,11 @@ var DateTimeCb = KxGenerator.createComponent({
             value: value,
         });
 
+        this.minSelect.on('creationComplete', function (e) {
+            e.stopPropagation();
+        });
+
+
         return this.minSelect.render();
     },
 
@@ -180,6 +205,10 @@ var DateTimeCb = KxGenerator.createComponent({
             textField: "text",
             valueField: "value",
             value: value,
+        });
+
+        this.secSelect.on('creationComplete', function (e) {
+            e.stopPropagation();
         });
 
         return this.secSelect.render();
@@ -218,6 +247,7 @@ var DateTimeCb = KxGenerator.createComponent({
     },
 
     afterAttach: function (e) {
+        // console.log(e);
         if (e.target.id == this.domID + '-wrapper') {
             var day, month, year, hour, min;
             if (this.value != "" && this.value != undefined) {
@@ -247,6 +277,7 @@ var DateTimeCb = KxGenerator.createComponent({
                 this.renderTime(hour, min, sec);
             }
 
+            // console.log('here');
             this.trigger('creationComplete');
         }
     },

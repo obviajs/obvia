@@ -513,28 +513,33 @@ var myForm = new Form({
     ]
 });
 
+myForm.on('creationComplete', function () {
+    // console.log('creationComplete')
+    myForm.repeater.on('onBeforeRowAdd', function (e) {
+        e.preventDefault();
+        var repeater = this;
+        
+        bootbox.confirm("Do you want to add row?", function (result) {
+            if (result) {
+                repeater.addRow(repeater.defaultItem, repeater.currentIndex + 1);
+            }
+        })
 
-// // $(document).on('onBeforeRowAdd', function (e, repeater, args) {
-// //     e.preventDefault();
-    
-// //     bootbox.confirm("Do you want to add row?", function (result) {
-// //         if (result) {
-// //             repeater.addRow(args.currentItem, args.currentIndex);
-// //         }
-// //     })
-    
-// // });
+    });
 
 
 
-$(document).on('onBeforeRowDelete', function (e, repeater, args) {
-    e.preventDefault();
+    myForm.repeater.on('onBeforeRowDelete', function (e) {
+        e.preventDefault();
+        var repeater = this;
 
-    bootbox.confirm("Do you want to remove row?", function (result) {
-        if (result) {
-            repeater.removeRow(args.currentIndex);
-        }
-    })
+        bootbox.confirm("Do you want to remove row?", function (result) {
+            if (result) {
+                repeater.removeRow(repeater.currentIndex);
+            }
+        })
+    });
+
 });
 
 $('#root').append(myForm.render());

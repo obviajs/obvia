@@ -54,7 +54,7 @@ var Amount = KxGenerator.createComponent({
             
             this.amountInput.$input.css({ 'width': '85%', 'float': 'left' });
             this.currencySelect.$el.css({ 'width': '15%', 'float': 'left'});
-            
+       
             this.trigger('creationComplete');
         }
     },
@@ -70,6 +70,10 @@ var Amount = KxGenerator.createComponent({
             value: value
         });
 
+        this.amountInput.on('creationComplete', function (e) {
+            e.stopPropagation(); 
+        });
+
         return this.amountInput.render();
     },
 
@@ -80,6 +84,10 @@ var Amount = KxGenerator.createComponent({
             textField: "text",
             valueField: "id",
             value: selected,
+        });
+
+        this.currencySelect.on('creationComplete', function (e) {
+            e.stopPropagation();
         });
 
         return this.currencySelect.render();
