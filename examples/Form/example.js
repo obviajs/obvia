@@ -209,6 +209,30 @@ var myForm = new Form({
             }   
         },
         {
+            constructor: RadioGroup,
+            props: {
+                id: 'radiogroup',
+                colspan: '6',
+                label: 'Ministrite',
+                blockProcessAttr: false,
+                required: true,
+                dataProvider: [
+                    { "id": "1", "text": "Ministria e Puneve te Jashtme" },
+                    { "id": "2", "text": "Ministria e Drejtesise" },
+                    { "id": "3", "text": "Ministria e Brendshme" },
+                    { "id": "4", "text": "Ministria e Mbrojtjes" }
+                ],
+                valueField: "id",
+                labelField: "text",
+                defaultClass: 'btn btn-xs btn-default',
+                selectedClass: 'btn btn-xs btn-success',
+                value: "3",
+                onclick: function (e) {
+                    console.log("From Radio ClickAction");
+                }
+            }
+        },
+        {
             constructor: Repeater,
             props: {
                 id: 'repeater',

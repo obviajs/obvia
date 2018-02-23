@@ -1,7 +1,7 @@
 var myRadioGroup = new RadioGroup({
     id: 'radiogroup',
     colspan: '6',
-    label: 'Arensas radiogroup',
+    label: 'Radiogroup',
     fieldName: 'radioInput',
     blockProcessAttr: false,
     required: false,

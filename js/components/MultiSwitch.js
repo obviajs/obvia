@@ -35,7 +35,7 @@ var MultiSwitch = KxGenerator.createComponent({
                     props: {
                         id: 'button',
                         type: "button",
-                        value: "{text}",
+                        value: "{" + this.labelField + "}",
                         class: "{buttonClass}",
                         style: "float: left; border-radius: 0px",
                         onclick: this.clickHandler.bind(this)
