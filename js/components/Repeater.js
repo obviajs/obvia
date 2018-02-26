@@ -325,11 +325,11 @@ var Repeater = KxGenerator.createComponent({
     template: function () {
         return "<div id='" + this.domID + "-wrapper'>" +
                     "<div id='" + this.domID + "-container'></div>" +  
-                    "<div id='actions_" + this.domID  + "' class='col-md-offset-10 col-lg-2' style='overflow:hidden;'>" +
-                        "<button id='btnAddRow_" + this.domID  + "' type='button' class='btn btn-secondary' rv-if='model.displayAddButton'>" +
+                    "<div id='actions_" + this.domID  + "' class='col-md-offset-10 col-md-2 float-right' style='overflow:hidden;'>" +
+                        "<button id='btnAddRow_" + this.domID  + "' type='button' class='mx-1 float-right btn btn-sm btn-secondary' rv-if='model.displayAddButton'>" +
                             "<i class='fas fa-plus'></i> Add" +
                         "</button>" +
-                        "<button id='btnRemoveRow_" + this.domID  + "' style='margin-left: 5px' type='button' class='btn btn-danger' rv-if='model.displayRemoveButton'>" +
+                        "<button id='btnRemoveRow_" + this.domID  + "' type='button' class='mx-1 float-right btn btn-sm btn-danger' rv-if='model.displayRemoveButton'>" +
                             "<i class='fas fa-minus'></i> Remove" + 
                         "</button>" +
                     "</div>";

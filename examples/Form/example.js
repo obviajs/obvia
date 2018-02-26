@@ -8,9 +8,6 @@ var myForm = new Form({
             props: {
                 id: 'text',
                 colspan: '6',
-                // spacing: {
-                //     ml
-                // },
                 label: 'Text Label',
                 versionStyle: '',
                 blockProcessAttr: false,
