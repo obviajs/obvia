@@ -32,12 +32,11 @@ var List = KxGenerator.createComponent({
             },
             dataProvider: this.dataProvider,
             components: this.components
-        });
-        this.repeater.on('creationComplete', function () {
+        }).on('creationComplete', function () {
             var v = this.value.slice();
             this.value = [];
-            this.setValue(v, false); 
-            this.trigger('creationComplete');  
+            this.setValue(v, false);
+            this.trigger('creationComplete');
         }.bind(this));
     },
 
@@ -52,12 +51,7 @@ var List = KxGenerator.createComponent({
                 registerTo: this, events: {
                     'change': this.changeHandler.bind(this)
                 }
-            },
-            // {
-            //     registerTo: this.repeater, events: {
-            //         'click': this.clickHandler.bind(this)
-            //     }
-            // }
+            }
         ];
     },
 

@@ -514,7 +514,6 @@ var myForm = new Form({
 });
 
 myForm.on('creationComplete', function () {
-    // console.log('creationComplete')
     myForm.repeater.on('onBeforeRowAdd', function (e) {
         e.preventDefault();
         var repeater = this;
@@ -526,8 +525,6 @@ myForm.on('creationComplete', function () {
         })
 
     });
-
-
 
     myForm.repeater.on('onBeforeRowDelete', function (e) {
         e.preventDefault();
