@@ -240,45 +240,35 @@ var GoogleMap = KxGenerator.createComponent({
                             "<label style='margin-right:5px; margin-left:5px'>Longtitude: <input type='text' class='form-control' rv-value='value.longtitude' rv-placeholder='value.longtitude' disabled> </label>" + 
                             "<button id='" + this.domID + "_openMapBtn' type='button' class='form-control btn btn-primary' rv-disabled='model.disabled'><i class='fas fa-map-marker'></i> Harta</button>" +
                         "</div>" + 
-                "<div id='" + this.domID + "_map-modal' class='modal fade' role='dialog'>" + 
-                    "<div class='modal-dialog'>" +
+                "<div id='" + this.domID + "_map-modal' class='modal' role='dialog'>" + 
+                    "<div class='modal-dialog modal-lg'>" +
                         "<div class='modal-content'>" +
                             "<div class='modal-header'>" +
+                                "<h5 class='modal-title'>Zgjidh Vendodhjen</h5>" +
                                 "<button type='button' class='close' data-dismiss='modal'>&times;</button>" +
-                                "<h4 class='modal-title'>Zgjidh Vendodhjen</h4>" +
                             "</div>" + 
                             "<div class='modal-body'>" +
                                 "<div class='col-lg-12'>" +
                                 "<div class='form-group row'>" +
-                                    "<div class='col-xs-2' style='padding-top:8px'>" +
+                                    "<div class='col-2' style='padding-top:8px'>" +
                                     "<div>" +
                                             "<label class='control-label'>" +
                                                 "<input id='" + this.domID + "_changeCoordinates' type='checkbox' rv-checked='model.mapCheckSetLatLng'><strong>Ndrysho</strong>" + 
                                             "</label>" +
                                         "</div>" +
                                     "</div>" +
-                                    "<div class='col-xs-4' style='padding:0px'>" +
-                                        "<div class='col-xs-3' style='padding-right:0px; padding-top:10px'>" +
-                                            "<label for='" + this.domID + "_mapSetLat'>Lat:</label>" + 
-                                        "</div>" +
-                                        "<div class='col-xs-9' style='padding:0px'>" +
-                                            "<input type='number' class='form-control' rv-value='model.modalLatitude' rv-placeholder='value.latitude' rv-disabled='model.mapSetLatDisabled'>" +
-                                        "</div>" +
+                                    "<div class='col-4' style='padding:0px'>" +
+                                        "<label for='" + this.domID + "_mapSetLat'>Lat: <input type='number' class='form-control' rv-value='model.modalLatitude' rv-placeholder='value.latitude' rv-disabled='model.mapSetLatDisabled'></label>" + 
                                     "</div>" +
-                                    "<div class='col-xs-4' style='padding:0px'>" +
-                                        "<div class='col-xs-3' style='padding-right:0px; padding-top:10px'>" +
-                                            "<label for='" + this.domID + "_mapSetLng' > Lng: </label>" +
-                                        "</div>" +
-                                        "<div class='col-xs-9' style='padding:0px'>" +
-                                            "<input type='number' class='form-control' rv-value='model.modalLongtitude' rv-placeholder='value.longtitude' rv-disabled='model.mapSetLongDisabled'>" +
-                                        "</div>" +
+                                    "<div class='col-4' style='padding:0px'>" +
+                                        "<label for='" + this.domID + "_mapSetLng' > Lng: <input type='number' class='form-control' rv-value='model.modalLongtitude' rv-placeholder='value.longtitude' rv-disabled='model.mapSetLongDisabled'></label>" +
                                     "</div>" +
-                                "<div class='col-xs-2 pull-right' style='padding-right:0px'>" +
+                                    "<div class='col-2' style='padding-right:0px'>" +
                                         "<button type='button' id='" + this.domID + "_acceptBtn' rv-class='model.setLatLongOkBtnClass'>Ok</button>" +
                                         "<button type='button' id='" + this.domID + "_dismissBtn' rv-class='model.setLatLongCancelBtnClass'>X</button>" +
                                     "</div>" +
                                 "</div>" +
-                            "</div>" +
+                            "</div><hr>" +
                             "<div id='" + this.domID + "_map' style='height: 400px;width: 100%;'></div>" +
                         "</div>" +
                         "<div class='modal-footer'>" +
