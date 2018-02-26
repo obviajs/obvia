@@ -45,13 +45,16 @@ var AutoComplete = KxGenerator.createComponent({
 
     afterAttach: function (e) {
         if (e.target.id == this.domID + '-wrapper') {
-            this.createModal();
+            if(this.displayTable)
+                this.createModal();
             this.renderSelect2(function () {
                 var _self = this;
-                this.modal.on('creationComplete', function () {
-                    //trigger autocomplete complete
-                    _self.trigger('creationComplete');
-                })
+                if (this.displayTable)
+                    this.modal.on('creationComplete', function () {
+                        //trigger autocomplete complete
+                        _self.trigger('creationComplete');
+                    })
+                else this.trigger('creationComplete');
             });
         }
     },
@@ -129,7 +132,7 @@ var AutoComplete = KxGenerator.createComponent({
                     return data.text;
             },
             separator: ',',
-            width: 'off',
+            width: '100%',
             initSelection: function (element, callback) {
                 !_self.multipleSelection ?
                     callback(_self.value[0]) :
@@ -169,10 +172,10 @@ var AutoComplete = KxGenerator.createComponent({
         return "<div id='" + this.domID + "-wrapper'>" +
                     "<div class='form-group col-lg-" + this.colspan + "' rowspan" + this.rowspan + " resizable' id='" + this.domID + "_container' >" +
                     "<label rv-style='versionStyle' rv-for='domID'>{label} <span rv-if='required'>*</span></label>" +
-                    "<div class='input-group'>" +
+                    "<div class='input-group' style='width:100%'>" +
                         "<span rv-if='model.blockProcessAttr' class='block-process'> * </span>" +
                         "<input type='hidden' name='" + this.domID + "_select[]' id='" + this.domID + "_select' />" +
-                        "<span class='input-group-btn'>" +
+                        "<span class='input-group-btn' rv-if='displayTable'>" +
                             "<button type='button' style='margin-left: 5px;'" +
                                 "class='glyphicon glyphicon-folder-open btn btn-default'" +
                                 "title='go' id='" + this.domID + "_openModal'>" +

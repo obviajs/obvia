@@ -104,6 +104,7 @@ var myForm = new Form({
                 blockProcessAttr: false,
                 required: false,
                 multipleSelection: false,
+                displayTable: false,
                 tableData: [["Ministria e Puneve te Jashtme"], ["Ministria e Drejtesise"], ["Ministria e Brendshme"]],
                 dataProvider: [{ "id": "1", "text": "Ministria e Puneve te Jashtme" }, { "id": "2", "text": "Ministria e Drejtesise" }, { "id": "3", "text": "Ministria e Brendshme" }],
                 value: [{ "id": "1", "text": "Ministria e Puneve te Jashtme" }]
@@ -260,7 +261,8 @@ var myForm = new Form({
                     textEditorValue: "",
                     dateValue: "",
                     dayMonthYearValue: "",
-                    amountValue: {}
+                    amountValue: {},
+                    radioGroupValue: ""
                 },
                 dataProvider: [
                     {
@@ -282,7 +284,8 @@ var myForm = new Form({
                         textEditorValue: "",
                         dateValue: "10/02/2013",
                         dayMonthYearValue: "10/02/2013",
-                        amountValue: { currency: "2", amount: "33433" }
+                        amountValue: { currency: "2", amount: "33433" },
+                        radioGroupValue: "2"
                     },
                     {
                         comboLabel: 'Zgjidh Shtetin',
@@ -303,7 +306,8 @@ var myForm = new Form({
                         textEditorValue: "Lorem Ipsum",
                         dateValue: "",
                         dayMonthYearValue: "",
-                        amountValue: {}
+                        amountValue: {},
+                        radioGroupValue: ""
                     }
                 ],
                 components: [
@@ -316,6 +320,7 @@ var myForm = new Form({
                             blockProcessAttr: false,
                             required: false,
                             multipleSelection: true,
+                            displayTable: true,
                             tableData: [["Ministria e Puneve te Jashtme"], ["Ministria e Drejtesise"], ["Ministria e Brendshme"]],
                             dataProvider: [{ "id": "1", "text": "Ministria e Puneve te Jashtme" }, { "id": "2", "text": "Ministria e Drejtesise" }, { "id": "3", "text": "Ministria e Brendshme" }],
                             value: '{autocompleteValue}'
@@ -437,6 +442,30 @@ var myForm = new Form({
                         }
                     },
                     {
+                        constructor: RadioGroup,
+                        props: {
+                            id: 'radiogroup',
+                            colspan: '6',
+                            label: 'Ministrite',
+                            blockProcessAttr: false,
+                            required: true,
+                            dataProvider: [
+                                { "id": "1", "text": "Ministria e Puneve te Jashtme" },
+                                { "id": "2", "text": "Ministria e Drejtesise" },
+                                { "id": "3", "text": "Ministria e Brendshme" },
+                                { "id": "4", "text": "Ministria e Mbrojtjes" }
+                            ],
+                            valueField: "id",
+                            labelField: "text",
+                            defaultClass: 'btn btn-xs btn-default',
+                            selectedClass: 'btn btn-xs btn-success',
+                            value: "{radioGroupValue}",
+                            onclick: function (e) {
+                                console.log("From Radio ClickAction");
+                            }
+                        }
+                    },
+                    {
                         constructor: MultiSwitch,
                         props: {
                             id: 'multiswitchR',
@@ -484,28 +513,33 @@ var myForm = new Form({
     ]
 });
 
+myForm.on('creationComplete', function () {
+    // console.log('creationComplete')
+    myForm.repeater.on('onBeforeRowAdd', function (e) {
+        e.preventDefault();
+        var repeater = this;
+        
+        bootbox.confirm("Do you want to add row?", function (result) {
+            if (result) {
+                repeater.addRow(repeater.defaultItem, repeater.currentIndex + 1);
+            }
+        })
 
-// // $(document).on('onBeforeRowAdd', function (e, repeater, args) {
-// //     e.preventDefault();
-    
-// //     bootbox.confirm("Do you want to add row?", function (result) {
-// //         if (result) {
-// //             repeater.addRow(args.currentItem, args.currentIndex);
-// //         }
-// //     })
-    
-// // });
+    });
 
 
 
-$(document).on('onBeforeRowDelete', function (e, repeater, args) {
-    e.preventDefault();
+    myForm.repeater.on('onBeforeRowDelete', function (e) {
+        e.preventDefault();
+        var repeater = this;
 
-    bootbox.confirm("Do you want to remove row?", function (result) {
-        if (result) {
-            repeater.removeRow(args.currentIndex);
-        }
-    })
+        bootbox.confirm("Do you want to remove row?", function (result) {
+            if (result) {
+                repeater.removeRow(repeater.currentIndex);
+            }
+        })
+    });
+
 });
 
 $('#root').append(myForm.render());

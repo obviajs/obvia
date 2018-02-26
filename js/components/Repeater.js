@@ -186,7 +186,6 @@ var Repeater = KxGenerator.createComponent({
                 });
 
                 el.on('change', function (e) {
-                    console.log(this.getValue())
                     var currentItem = _self.dataProvider[index - 1];
                     if (tempComponent.props.value[0] == '{' && tempComponent.props.value[tempComponent.props.value.length - 1] == '}') {
                         var bindedValue = tempComponent.props.value.slice(1, -1);
@@ -215,8 +214,8 @@ var Repeater = KxGenerator.createComponent({
         if (isPreventable) {
             //the before add event is preventable
             var beforeRowAddEvent = jQuery.Event("onBeforeRowAdd");
-            this.$el.trigger(beforeRowAddEvent, [this, new RepeaterEventArgs([], data, index)]);
-
+            this.trigger(beforeRowAddEvent);
+         
             if (!beforeRowAddEvent.isDefaultPrevented()) {
                 //the event is not canceled outside
                 return buildRow();
@@ -274,7 +273,7 @@ var Repeater = KxGenerator.createComponent({
         if (isPreventable) {
             //trigger before row delete event
             var beforeRowDeleteEvent = jQuery.Event("onBeforeRowDelete");
-            this.$el.trigger(beforeRowDeleteEvent, [_self, new RepeaterEventArgs(rowItems, model.currentItem, index)]);
+            this.$el.trigger(beforeRowDeleteEvent);
 
             if (!beforeRowDeleteEvent.isDefaultPrevented()) {
                 return removeRow();

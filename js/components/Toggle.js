@@ -29,6 +29,8 @@ var Toggle = KxGenerator.createComponent({
 
     afterAttach: function () {
         this.$input.bootstrapToggle(); 
+
+        this.trigger('creationComplete');
     },
 
     setValue: function (value) {

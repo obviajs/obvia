@@ -35,7 +35,7 @@ var RadioGroup = KxGenerator.createComponent({
                         id: 'radio',
                         value: "{" + this.valueField + "}",
                         label: "{" + this.labelField + "}",
-                        onclick: function (e) { this.clickHandler.bind(this) }
+                        onclick: this.clickHandler.bind(this) 
                     }
                 }
             ]
@@ -63,13 +63,13 @@ var RadioGroup = KxGenerator.createComponent({
 
         this.dataProvider.forEach(function (item, index) { 
             if (this.value == item[this.valueField]) {
-                this.repeater["radio"][index].setModelValue('checked', true)
+                this.repeater["radio"][index].setModelValue('checked', this.value)
             } else {
                 this.repeater["radio"][index].setModelValue('checked', false)
             }
         }.bind(this));
 
-        this.$el.trigger('change');
+        this.trigger('change');
 
         return this;
     },
@@ -79,15 +79,15 @@ var RadioGroup = KxGenerator.createComponent({
             this.onclick.apply(this, arguments);
 
         if (!e.isDefaultPrevented()) {
-            this.handleButtonClick.apply(this, arguments);
+            this.handleComponentClick.apply(this, arguments);
         }
     },
 
-    handleButtonClick: function (e, repeaterEventArgs) {
+    handleComponentClick: function (e, repeaterEventArgs) {
         var radio = repeaterEventArgs.currentRow["radio"];
         var index = repeaterEventArgs.currentIndex;
 
-        console.log(radio, index)
+        this.setValue(this.dataProvider[index][this.valueField]);
     },
 
     enable: function () {
