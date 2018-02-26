@@ -64,9 +64,10 @@ var Repeater = KxGenerator.createComponent({
     addRowHandler: function () {
         this.addRow(this.defaultItem, this.currentIndex + 1, true)
     },
-    bindings:{},
-    dataProviderChanged: function(arrFields)
-    {
+
+    bindings: {},
+    
+    dataProviderChanged: function(arrFields){
         //{"component":cmp, "property":prop, "dataProviderField":dataProviderField, "dataProviderIndex":index}
         var fieldsSpecified = (arrFields!=undefined) && (arrFields!=null) && (arrFields.length>0);
         var componentBindings = Object.keys(this.bindings);
@@ -179,8 +180,14 @@ var Repeater = KxGenerator.createComponent({
                         }
                         
                         
-                        if(index == _self.dataProvider.length && !addRowFlag)
+                        if (index == _self.dataProvider.length && !addRowFlag) {
                             _self.trigger('creationComplete');
+                        }
+
+                        if (addRowFlag) {
+                            _self.rowItems[index - 1][_self.components[0].props.id].scrollTo();
+                        }
+                            
                     
                     }
                 });
@@ -197,7 +204,6 @@ var Repeater = KxGenerator.createComponent({
 
                 //render component in row
                 renderedRow.append(el.render());
-                    
             });   
 
             //render row in dom
