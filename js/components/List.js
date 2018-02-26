@@ -34,6 +34,7 @@ var List = KxGenerator.createComponent({
             components: this.components
         }).on('creationComplete', function () {
             var v = this.value.slice();
+            //trick to pass property value updated check on the first setValue call below (initial value)
             this.value = [];
             this.setValue(v, false);
             this.trigger('creationComplete');
@@ -60,50 +61,60 @@ var List = KxGenerator.createComponent({
     },
 
     setValue: function (value, manualRender = true) {
-        //if(value==undefined || value==null);
-        
-        value.forEach(function (valueItem) {
-            this.setSingleleValue(valueItem)
-        }.bind(this));
-        this.trigger('change');
+        if(!this.value.equals(value))
+        {
+            if(value==undefined || value==null){
+                value = [];
+            }
+            if(value.length>0){
+                value.forEach(function (valueItem) {
+                    this.setSingleleValue(valueItem);
+                }.bind(this));
+            }else{
+                this.setSingleleValue(value);
+            }
+            this.trigger('change');
+        }
         return this;
     },
 
     setSingleleValue: function(v){
-        var arrDpIndex = indexOfObject(this.dataProvider, this.valueField,  v[this.valueField]); 
-        if(arrDpIndex!=-1)
-        {
-            var arrValueIndex = indexOfObject(this.value, this.valueField,  v[this.valueField]);         
-            if (this.multiselect) {
-                //allow multiple selects
-                //toggle class
-                if (arrValueIndex==-1) {
+        var arrDpIndex = (v==undefined||v==null||v[this.valueField]==undefined)?-1:indexOfObject(this.dataProvider, this.valueField,  v[this.valueField]); 
+        
+        var arrValueIndex = indexOfObject(this.value, this.valueField,  v[this.valueField]);         
+        if (this.multiselect) {
+            //allow multiple selects
+            //toggle class
+            if (arrValueIndex==-1) {
+                if(arrDpIndex!=-1)
+                {
                     //get + push dp row
                     this.dataProvider[arrDpIndex][this.classField] = this.selectedClass;
                     this.value.push(this.dataProvider[arrDpIndex]);
-                } else {
+                }
+            } else {
+                if(arrDpIndex!=-1)
+                {
                     this.value.splice(arrValueIndex, 1);
                     this.dataProvider[arrDpIndex][this.classField] = this.defaultClass;
                 }
-                    
-            } else {
-                this.dataProvider.forEach(function (item, i) {
-                    if((arrDpIndex == i && arrValueIndex!=-1) || arrDpIndex != i){
-                        for(var cmp in this.repeater.rowItems[i]) {
-                            this.dataProvider[i][this.classField] = this.defaultClass;
-                        }
-                    }
-                }.bind(this));
-
-                if (arrValueIndex==-1) {
-                    this.dataProvider[arrDpIndex][this.classField] = this.selectedClass;
-                    this.value = [this.dataProvider[arrDpIndex]]
-                }else{
-                    this.value = [];
-                }
             }
-            this.repeater.dataProviderChanged();
+                
+        } else {
+            this.dataProvider.forEach(function (item, i) {
+                if((arrDpIndex == i && arrValueIndex!=-1) || arrDpIndex != i){
+                        this.dataProvider[i][this.classField] = this.defaultClass;
+                }
+            }.bind(this));
+
+            if (arrValueIndex==-1 && arrDpIndex!=-1) {
+                this.dataProvider[arrDpIndex][this.classField] = this.selectedClass;
+                this.value = [this.dataProvider[arrDpIndex]];
+            }else{
+                this.value = [];
+            }
         }
+        this.repeater.dataProviderChanged([this.classField]);
     },
 
     changeHandler : function(e){
@@ -142,14 +153,14 @@ var List = KxGenerator.createComponent({
 
     template: function () {
         return "<div id='" + this.domID + "-wrapper'>" +
-                    "<div class='col-lg-" + this.colspan + "' id='" + this.domID + "-block' resizable' style='padding-top: 10px; padding-bottom: 10px; overflow:hidden'>" +
+        (!this.embedded?("<div class='col-lg-" + this.colspan + "' id='" + this.domID + "-block' resizable' style='padding-top: 10px; padding-bottom: 10px; overflow:hidden'>" +
                         "<label rv-style='versionStyle' rv-for='domID'>{label} <span rv-if='required'>*</span></label>" +
                         "<span rv-if='model.blockProcessAttr' class='block-process'> * </span>" +
-                        "<br>" +
+                        "<br>") : "") +
                         "<div id='" + this.domID + "-container' role='group' style='padding:0'>" +
                             
                         "</div>" +
-                    "</div>" +
+        (!this.embedded?"</div>":"") +
                 "</div>";
     },
 

@@ -31,7 +31,8 @@ var MultiSwitch = KxGenerator.createComponent({
             labelField: this.labelField,
             classField: this.classField,
             defaultClass: this.defaultClass,
-            selectedClass: this.selectedClass,          
+            selectedClass: this.selectedClass,  
+            embedded: true,        
             components: [
                 {
                     constructor: Button,
