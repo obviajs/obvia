@@ -85,7 +85,7 @@ var Form = KxGenerator.createComponent({
                     "<div class='col-lg-12'>" +
                         "<div class='col-lg-10'>" +
                             "<center>" +
-                                "<h4 style='color: #7f0000'>" +
+                                "<h4>" +
                                     "{formName}" +                                        
                                 "</h4>" +
                             "</center>" +
@@ -114,10 +114,10 @@ var Form = KxGenerator.createComponent({
     template: function () {
         return "<div id='" + this.domID + "-wrapper'>" +
                     "<form name='view_form' rv-id='formDOMId' method='POST' rv-action='formAction' class='view_form'>" +
-                        "<div class='col-lg-12' style='padding: 10px'>" +
+                        "<div class='col-md-12' style='padding: 10px'>" +
                             this.renderFormHeader(this.viewMode) + 
-                            "<div class='row'>" +
-                                "<div class='col-lg-12' rv-id='componentContainerID'>" +
+                            "<div>" +
+                                "<div class='row col-md-12' rv-id='componentContainerID'>" +
                                 "</div>" +
                             "</div>" +
                         "</div>" +

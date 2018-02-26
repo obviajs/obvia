@@ -80,17 +80,15 @@ var TextArea = KxGenerator.createComponent({
     },
 
     template: function () {
-        return "<div id='" + this.domID + "-wrapper'>" +
-                "<div class='form-group col-lg-" + this.colspan + "' rowspan" + this.rowspan + " resizable '>" +
-                    "<div id='" + this.domID + "-block'> " +
-                        "<label rv-style='versionStyle' rv-for='domID'>{label}<span rv-if='required'>*</span></label>" +
-                            "<span rv-if='model.blockProcessAttr' class='block-process'> * </span>" +
-                                "<textarea rv-type='type' rv-value='value' " +
-                                "name='" + this.domID + "' id='" + this.domID + "' class='form-control rowspan"+ this.rowspan +
-                                "' rv-placeholder='label' rv-enabled='model.enabled' autofocus></textarea>" +
-                                "<button type='button' rv-if='spellCheck' id='" + this.domID + "-spellCheck' class='btn btn-xs btn-default pull-right'>Spell Check</button>" +
-                    "</div>" +
-                "</div>"+
+        return "<div id='" + this.domID + "-wrapper' class='form-group col-lg-" + this.colspan + " rowspan" + this.rowspan + " resizable '>" +
+                "<div id='" + this.domID + "-block'> " +
+                    "<label rv-style='versionStyle' rv-for='domID'><b>{label}</b> <span rv-if='required'>*</span></label>" +
+                        "<span rv-if='model.blockProcessAttr' class='block-process'> * </span>" +
+                            "<textarea rv-type='type' rv-value='value' " +
+                            "name='" + this.domID + "' id='" + this.domID + "' class='form-control rowspan"+ this.rowspan +
+                            "' rv-placeholder='label' rv-enabled='model.enabled' autofocus></textarea>" +
+                            "<button type='button' rv-if='spellCheck' id='" + this.domID + "-spellCheck' class='btn btn-sm btn-primary float-right'><i class='fas fa-book'></i> Spell Check</button>" +
+                "</div>" +
             "</div>";
     },
 

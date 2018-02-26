@@ -342,16 +342,14 @@ var DateTimeCb = KxGenerator.createComponent({
     },
 
     template: function () {         
-        return  "<div id='" + this.domID + "-wrapper'>" +
-                    "<div class='form-group col-lg-" + this.colspan + "' rowspan" + this.rowspan + " resizable' id='" + this.domID + "-container'>" +
-                        "<div id='" + this.domID + "-block'>" + 
-                            "<label rv-style='versionStyle' rv-for='domID'>{model.label} <span rv-if='required'>*</span></label>" + 
-                            "<span rv-if='model.blockProcessAttr' class='block-process'> * </span>" + 
-                                "<div id='dateContainer-" + this.domID + "' style='width: 100% !important; float: left;'>" + 
-                                
-                                "</div>" +
-                        "</div>" +
-                    "</div>" + 
+        return "<div id='" + this.domID + "-wrapper' class='form-group col-lg-" + this.colspan + " rowspan" + this.rowspan + " resizable'>" +
+                    "<div id='" + this.domID + "-block'>" + 
+                        "<label rv-style='versionStyle' rv-for='domID'><b>{model.label}</b> <span rv-if='required'>*</span></label>" + 
+                        "<span rv-if='model.blockProcessAttr' class='block-process'> * </span>" + 
+                            "<div id='dateContainer-" + this.domID + "' style='width: 100% !important; float: left;'>" + 
+                            
+                            "</div>" +
+                    "</div>" +
                 "</div>";    
     },
  

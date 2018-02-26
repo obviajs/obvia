@@ -132,7 +132,7 @@ var AutoComplete = KxGenerator.createComponent({
                     return data.text;
             },
             separator: ',',
-            width: '100%',
+            width: (this.displayTable) ? '85%': '100%',
             initSelection: function (element, callback) {
                 !_self.multipleSelection ?
                     callback(_self.value[0]) :
@@ -169,21 +169,16 @@ var AutoComplete = KxGenerator.createComponent({
     },
 
     template: function () {
-        return "<div id='" + this.domID + "-wrapper'>" +
-                    "<div class='form-group col-lg-" + this.colspan + "' rowspan" + this.rowspan + " resizable' id='" + this.domID + "_container' >" +
-                    "<label rv-style='versionStyle' rv-for='domID'>{label} <span rv-if='required'>*</span></label>" +
-                    "<div class='input-group' style='width:100%'>" +
+        return "<div id='" + this.domID + "-wrapper' class='form-group col-lg-" + this.colspan + " rowspan" + this.rowspan + " resizable'>" +
+                    "<label rv-style='versionStyle' rv-for='domID'><b>{label}</b> <span rv-if='required'>*</span></label>" +
+                    "<div class='form-group'>" +
                         "<span rv-if='model.blockProcessAttr' class='block-process'> * </span>" +
                         "<input type='hidden' name='" + this.domID + "_select[]' id='" + this.domID + "_select' />" +
-                        "<span class='input-group-btn' rv-if='displayTable'>" +
-                            "<button type='button' style='margin-left: 5px;'" +
-                                "class='glyphicon glyphicon-folder-open btn btn-default'" +
-                                "title='go' id='" + this.domID + "_openModal'>" +
-                                "<b class='caret'></b>" +
-                            "</button>" +
-                        "</span>" +
+                        "<button rv-if='displayTable' type='button' class='btn btn-primary' id='" + this.domID + "_openModal'>" +
+                            "<i class='far fa-folder-open'></i> Open" +
+                        "</button>" +
                     "</div>" +
-                "</div>" +
+              
                 "<div id='" + this.domID + "-autoselect-modal'></div>" +
             "</div>";
     },

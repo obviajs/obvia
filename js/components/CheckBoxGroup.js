@@ -158,14 +158,12 @@ var CheckboxGroup = KxGenerator.createComponent({
     },
 
     template: function () {
-        return "<div id='" + this.domID + "-wrapper'>" +
-                    "<div class='col-lg-" + this.colspan + "' id='" + this.domID + "-block' resizable' style='padding-top: 10px; padding-bottom: 10px; overflow:hidden'>" +
-                        "<label rv-style='versionStyle' rv-for='domID'>{label} <span rv-if='required'>*</span></label>" +
-                        "<span rv-if='model.blockProcessAttr' class='block-process'> * </span>" +
-                        "<br>" +
-                        "<div id='" + this.domID + "-container' role='group' style='padding:0'>" +
-                            
-                        "</div>" +
+        return "<div id='" + this.domID + "-wrapper' class='col-lg-" + this.colspan + " resizable' style='padding-top: 10px; padding-bottom: 10px; overflow:hidden'>" +
+                    "<label rv-style='versionStyle' rv-for='domID'>{label} <span rv-if='required'>*</span></label>" +
+                    "<span rv-if='model.blockProcessAttr' class='block-process'> * </span>" +
+                    "<br>" +
+                    "<div id='" + this.domID + "-container' role='group' style='padding:0'>" +
+                        
                     "</div>" +
                 "</div>";
     },
