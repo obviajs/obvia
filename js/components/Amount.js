@@ -62,7 +62,7 @@ var Amount = KxGenerator.createComponent({
     renderAmountInput: function (value) {
         this.amountInput = new TextInput({
             id: 'amountInput-' + this.id,
-            colspan: '12',
+            colspan: '',
             mask: {
                 alias: "currency",
                 prefix: ''
@@ -117,15 +117,13 @@ var Amount = KxGenerator.createComponent({
     },
 
     template: function () {
-        return "<div id='" + this.domID + "-wrapper'>" +
-                    "<div class='form-group col-lg-" + this.colspan + "' rowspan" + this.rowspan + " resizable' id='" + this.domID + "_container' >" +
-                    "<label rv-style='versionStyle' rv-for='domID'>{label} <span rv-if='required'>*</span></label>" +
+        return "<div id='" + this.domID + "-wrapper' class='form-group col-lg-" + this.colspan + " rowspan" + this.rowspan + " resizable'>" +    
+                    "<label rv-style='versionStyle' rv-for='domID'><b>{label}</b> <span rv-if='required'>*</span></label>" +
                     "<span rv-if='model.blockProcessAttr' class='block-process'> * </span>" +
-                    "<div class='input-container'>" +
-                       
-                    "</div>" +
-                "</div>" +
-            "</div>";
+                        "<div class='input-container'>" +
+                    
+                        "</div>" +
+                "</div>";
     },
 
     render: function () {

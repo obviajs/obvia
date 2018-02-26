@@ -101,13 +101,11 @@ var RadioGroup = KxGenerator.createComponent({
     },
 
     template: function () {
-        return "<div id='" + this.domID + "-wrapper'>" +
-                    "<div class='form-group col-lg-" + this.colspan + " rowspan" + this.rowspan + " resizable' id='" + this.domID + "_container'>" +
-                        "<div id=id='" + this.domID + "-block'>" +
-                            "<label rv-style='versionStyle' rv-for='domID'>{label}<span rv-if='required'>*</span></label>" +
-                            "<div class='radiogroup panel panel-default' style='padding:10px;'>" +
-                    
-                            "</div>" +
+        return "<div id='" + this.domID + "-wrapper' class='form-group col-lg-" + this.colspan + " rowspan" + this.rowspan + " resizable'>" +
+                    "<div id=id='" + this.domID + "-block'>" +
+                        "<label rv-style='versionStyle' rv-for='domID'><b>{label}</b><span rv-if='required'>*</span></label>" +
+                        "<div class='radiogroup card' style='padding:10px;'>" +
+                
                         "</div>" +
                     "</div>" +
                 "</div>"; 

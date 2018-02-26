@@ -79,17 +79,15 @@ var TextInput = KxGenerator.createComponent({
     },
 //The autofocus attribute is a boolean attribute. When present, it specifies that an <input> element should automatically get focus when the page loads.
     template: function () {         
-        return  "<div id='" + this.domID + "-wrapper'>" +
-                    "<div class='form-group col-lg-" + this.colspan + "' rowspan" + this.rowspan + " resizable '>" +
-                        "<div id='" + this.domID + "-block'>" + 
-                            "<label rv-style='versionStyle' rv-for='domID'>{label} <span rv-if='required'>*</span></label>" + 
-                            "<span rv-if='model.blockProcessAttr' class='block-process'> * </span>" + 
-                                "<input rv-type='type'" + 
-                                    "id='" + this.domID + "' name='" + this.domID + "' rv-value='value'" +
-                                    "class='form-control rowspan"+ this.rowspan +"'" +
-                                    "rv-placeholder='label' rv-enabled='model.enabled' autofocus/>" +
-                        "</div>" +
-                    "</div>" + 
+        return "<div id='" + this.domID + "-wrapper' class='form-group col-lg-" + this.colspan + " rowspan" + this.rowspan + " resizable '>" +
+                    "<div id='" + this.domID + "-block'>" + 
+                        "<label rv-style='versionStyle' rv-for='domID'><b>{label}</b> <span rv-if='required'>*</span></label>" + 
+                        "<span rv-if='model.blockProcessAttr' class='block-process'> * </span>" + 
+                            "<input rv-type='type'" + 
+                                "id='" + this.domID + "' name='" + this.domID + "' rv-value='value'" +
+                                "class='form-control rowspan"+ this.rowspan +"'" +
+                                "rv-placeholder='label' rv-enabled='model.enabled' autofocus/>" +
+                    "</div>" +
                 "</div>";    
     },
  

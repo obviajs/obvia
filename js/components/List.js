@@ -36,8 +36,8 @@ var List = KxGenerator.createComponent({
             var v = this.value.slice();
             //trick to pass property value updated check on the first setValue call below (initial value)
             this.value = [];
-            this.setValue(v, false); 
-            this.trigger('creationComplete');  
+            this.setValue(v, false);
+            this.trigger('creationComplete');
         }.bind(this));
     },
 

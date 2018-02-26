@@ -122,13 +122,11 @@ var ComboBox = KxGenerator.createComponent({
     },
 
     template: function () {
-        return  "<div id='" + this.domID + "-wrapper'>" +
-                    "<div class='col-lg-"+ this.colspan +"' form-group rowspan"+ this.rowspan +" resizable' id='"+ this.domID +"_container'>" +
-                        "<div id='" + this.domID + "-block'>" +
-                        "<label rv-style='versionStyle' rv-for='fieldName'>{label} <span rv-if='required'>*</span></label>" +
-                        "<span rv-if='blockProcessAttr' class='block-process'> * </span>" +
-                        "<select class='form-control' name='" + this.domID + "[]' control-blocked='controlBlocked' style='min-width: 250px;' id='" + this.domID + "'></select>" +
-                    "</div>" +
+        return "<div id='" + this.domID + "-wrapper' class='col-lg-" + this.colspan + " form-group rowspan" + this.rowspan + " resizable'>" +
+                    "<div id='" + this.domID + "-block'>" +
+                    "<label rv-style='versionStyle' rv-for='fieldName'><b>{label}</b> <span rv-if='required'>*</span></label>" +
+                    "<span rv-if='blockProcessAttr' class='block-process'> * </span>" +
+                    "<select class='form-control' name='" + this.domID + "[]' control-blocked='controlBlocked' style='min-width: 250px;' id='" + this.domID + "'></select>" +
                 "</div>";
     },
 

@@ -8,6 +8,9 @@ var myForm = new Form({
             props: {
                 id: 'text',
                 colspan: '6',
+                // spacing: {
+                //     ml
+                // },
                 label: 'Text Label',
                 versionStyle: '',
                 blockProcessAttr: false,
@@ -15,7 +18,6 @@ var myForm = new Form({
                 mask: 'currency',
                 value: "1000"
             }
-           
         },
         {
             constructor: TextInput,
@@ -184,31 +186,31 @@ var myForm = new Form({
                 value: "1" //1,-1,0
             }    
         },
-        {
-            constructor: MultiSwitch,
-            props: {
-                id: 'multiswitch',
-                colspan: '6',
-                label: 'Ministrite',
-                blockProcessAttr: false,
-                required: true,
-                multiselect: false,
-                dataProvider: [
-                    { "id": "1", "text": "Ministria e Puneve te Jashtme" },
-                    { "id": "2", "text": "Ministria e Drejtesise" },
-                    { "id": "3", "text": "Ministria e Brendshme" },
-                    { "id": "4", "text": "Ministria e Mbrojtjes" }
-                ],
-                valueField: "id",
-                labelField: "text",
-                defaultClass: 'btn btn-xs btn-default',
-                selectedClass: 'btn btn-xs btn-success',
-                value: [],
-                onclick: function (e) {
-                    console.log("From MultiSwitch ClickAction");
-                }
-            }   
-        },
+        // {
+        //     constructor: MultiSwitch,
+        //     props: {
+        //         id: 'multiswitch',
+        //         colspan: '6',
+        //         label: 'Ministrite',
+        //         blockProcessAttr: false,
+        //         required: true,
+        //         multiselect: false,
+        //         dataProvider: [
+        //             { "id": "1", "text": "Ministria e Puneve te Jashtme" },
+        //             { "id": "2", "text": "Ministria e Drejtesise" },
+        //             { "id": "3", "text": "Ministria e Brendshme" },
+        //             { "id": "4", "text": "Ministria e Mbrojtjes" }
+        //         ],
+        //         valueField: "id",
+        //         labelField: "text",
+        //         defaultClass: 'btn btn-xs btn-default',
+        //         selectedClass: 'btn btn-xs btn-success',
+        //         value: [],
+        //         onclick: function (e) {
+        //             console.log("From MultiSwitch ClickAction");
+        //         }
+        //     }   
+        // },
         {
             constructor: RadioGroup,
             props: {
@@ -465,31 +467,31 @@ var myForm = new Form({
                             }
                         }
                     },
-                    {
-                        constructor: MultiSwitch,
-                        props: {
-                            id: 'multiswitchR',
-                            colspan: '6',
-                            label: 'Ministrite',
-                            blockProcessAttr: false,
-                            required: true,
-                            multiselect: true,
-                            dataProvider: [
-                                { "id": "1", "text": "Ministria e Puneve te Jashtme" },
-                                { "id": "2", "text": "Ministria e Drejtesise" },
-                                { "id": "3", "text": "Ministria e Brendshme" },
-                                { "id": "4", "text": "Ministria e Mbrojtjes" }
-                            ],
-                            valueField: "id",
-                            labelField: "text",
-                            defaultClass: 'btn btn-xs btn-default',
-                            selectedClass: 'btn btn-xs btn-success',
-                            value: '{multiValue}',
-                            onclick: function (e) {
-                                console.log("From MultiSwitch ClickAction");
-                            }
-                        }
-                    },
+                    // {
+                    //     constructor: MultiSwitch,
+                    //     props: {
+                    //         id: 'multiswitchR',
+                    //         colspan: '6',
+                    //         label: 'Ministrite',
+                    //         blockProcessAttr: false,
+                    //         required: true,
+                    //         multiselect: true,
+                    //         dataProvider: [
+                    //             { "id": "1", "text": "Ministria e Puneve te Jashtme" },
+                    //             { "id": "2", "text": "Ministria e Drejtesise" },
+                    //             { "id": "3", "text": "Ministria e Brendshme" },
+                    //             { "id": "4", "text": "Ministria e Mbrojtjes" }
+                    //         ],
+                    //         valueField: "id",
+                    //         labelField: "text",
+                    //         defaultClass: 'btn btn-xs btn-default',
+                    //         selectedClass: 'btn btn-xs btn-success',
+                    //         value: '{multiValue}',
+                    //         onclick: function (e) {
+                    //             console.log("From MultiSwitch ClickAction");
+                    //         }
+                    //     }
+                    // },
                     {
                         constructor: TrippleSwitch,
                         props: {
@@ -514,7 +516,6 @@ var myForm = new Form({
 });
 
 myForm.on('creationComplete', function () {
-    // console.log('creationComplete')
     myForm.repeater.on('onBeforeRowAdd', function (e) {
         e.preventDefault();
         var repeater = this;
@@ -526,8 +527,6 @@ myForm.on('creationComplete', function () {
         })
 
     });
-
-
 
     myForm.repeater.on('onBeforeRowDelete', function (e) {
         e.preventDefault();

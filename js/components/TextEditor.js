@@ -57,7 +57,7 @@ var TextEditor = KxGenerator.createComponent({
         var SpellCheckButton = function (context) {
             var ui = $.summernote.ui;
             var button = ui.button({
-                contents: '<i class=\'fa fa-search\' aria-hidden=\'true\'></i> Spell Check',
+                contents: '<i class="fas fa-book"></i> Spell Check',
                 tooltip: 'Spell Check',
                 click: this.spellCheckClickHandler.bind(this)
             });
@@ -117,17 +117,15 @@ var TextEditor = KxGenerator.createComponent({
     },
 
     template: function () {
-        return "<div id='" + this.domID + "-wrapper'>" +
-                "<div class='form-group col-lg-" + this.colspan + "' rowspan" + this.rowspan + " resizable '>" +
+        return "<div id='" + this.domID + "-wrapper' class='form-group col-lg-" + this.colspan + " rowspan" + this.rowspan + " resizable '>" +
                     "<div id='" + this.domID + "-block'> " +
-                        "<label rv-style='versionStyle' rv-for='domID'>{label}<span rv-if='required'>*</span></label>" +
+                        "<label rv-style='versionStyle' rv-for='domID'><b>{label}</b> <span rv-if='required'>*</span></label>" +
                             "<span rv-if='model.blockProcessAttr' class='block-process'> * </span>" +
                                 "<textarea rv-type='text' " +
                                 "name='" + this.domID + "' id='" + this.domID + "' class='summernote form-control rowspan"+ this.rowspan +
                                 "' rv-placeholder='label' autofocus></textarea>" +
                     "</div>" +
-                "</div>"+
-            "</div>";
+                "</div>";
     },
 
     render: function () {

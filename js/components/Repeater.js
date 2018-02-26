@@ -98,7 +98,7 @@ var Repeater = KxGenerator.createComponent({
         var _self = this;
         var model = this.getModel();
 
-        var renderedRow = $('<div ' + (_self.rendering.direction == 'vertical' ? "class='col-md-12'" : "") + '>')
+        var renderedRow = $('<div ' + (_self.rendering.direction == 'vertical' ? "class='row col-md-12'" : "") + '>')
         
         var ccComponents = [];
         var buildRow = function () {
@@ -202,7 +202,7 @@ var Repeater = KxGenerator.createComponent({
 
             //render row in dom
             _self.$container  
-                .append('<div id="' + _self.domID + '-repeated-block-' + index + '" ' + (_self.rendering.direction == 'vertical' ? "class='row'": "") + '></div>')
+                .append('<div id="' + _self.domID + '-repeated-block-' + index + '" ' + (_self.rendering.direction == 'vertical' ? "class=''": "") + '></div>')
                 .find("#" + _self.domID + "-repeated-block-" + index)
                 .append((_self.rendering.seperator ? '<hr id="' + _self.domID + '-repeated-block-hr-' + index + '">' : ''))  
                 .append(renderedRow);
@@ -324,10 +324,10 @@ var Repeater = KxGenerator.createComponent({
 
     template: function () {
         return "<div id='" + this.domID + "-wrapper'>" +
-                    "<div id='" + this.domID + "-container' class='col-md-12'></div>" +  
+                    "<div id='" + this.domID + "-container'></div>" +  
                     "<div id='actions_" + this.domID  + "' class='col-md-offset-10 col-lg-2' style='overflow:hidden;'>" +
-                        "<button id='btnAddRow_" + this.domID  + "' type='button' class='btn btn-default' rv-if='model.displayAddButton'>" +
-                            "<span class='glyphicon glyphicon-plus'></span>" +
+                        "<button id='btnAddRow_" + this.domID  + "' type='button' class='btn btn-primary' rv-if='model.displayAddButton'>" +
+                            "<i class='fas fa-plus'></i> Add" +
                         "</button>" +
                         "<button id='btnRemoveRow_" + this.domID  + "' style='margin-left: 5px' type='button' class='btn btn-danger' rv-if='model.displayRemoveButton'>" +
                             "<span class='glyphicon glyphicon-remove'></span>" + 
