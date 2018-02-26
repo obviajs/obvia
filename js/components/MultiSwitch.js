@@ -17,18 +17,21 @@ var MultiSwitch = KxGenerator.createComponent({
     beforeAttach: function () {
         this.$container = this.$el.find('#' + this.domID + '-container');
 
-        this.repeater = new Repeater({
-            id: 'multiswitchRepeater',
-            defaultItem: {
-                text: 'Button',
-                buttonClass: 'btn btn-xs btn-default'
-            },
-            rendering: {
-                direction: 'horizontal',
-                seperator: false,
-                actions: false
-            },
+        this.list = new List({
+            id: 'list',
+            colspan: '6',
+            label: 'Ministrite',
+            fieldName: 'list',
+            blockProcessAttr: this.blockProcessAttr,
+            required: true,
+            direction: 'horizontal',
+            multiselect: this.multiselect,
             dataProvider: this.dataProvider,
+            valueField: this.valueField,
+            labelField: this.labelField,
+            classField: this.classField,
+            defaultClass: this.defaultClass,
+            selectedClass: this.selectedClass,          
             components: [
                 {
                     constructor: Button,
@@ -36,15 +39,20 @@ var MultiSwitch = KxGenerator.createComponent({
                         id: 'button',
                         type: "button",
                         value: "{" + this.labelField + "}",
-                        class: "{buttonClass}",
+                        class: "{" + this.classField + "}",
                         style: "float: left; border-radius: 0px",
                         onclick: this.clickHandler.bind(this)
                     }
                 }
-            ]
+            ],
+            onclick : this.onclick,
+            onchange : this.onchange
         });
 
-        this.setValue(this.value, false);
+        this.list.on('creationComplete', function () {
+            this.list.setValue(this.value),
+            this.trigger('creationComplete');   
+        }.bind(this));
     },
 
     registerEvents: function () {
@@ -54,109 +62,45 @@ var MultiSwitch = KxGenerator.createComponent({
                     'afterAttach': this.afterAttach.bind(this)
                 }
             }
+            // ,
+            // {
+            //     registerTo: this.list, events: {
+            //         'change': this.changeHandler.bind(this)
+            //     }
+            // }
         ];
     },
 
     afterAttach: function (e) {
-        this.repeater.on('creationComplete', function () {
-            this.trigger('creationComplete');   
-        }.bind(this));
+    
     },
 
-    setValue: function (value, manualRender = true) {
+    setValue: function (value) {
         this.value = value;
-
-        //add correct rendering classes
-        this.dataProvider.forEach(function (item, index) {
-            item["buttonClass"] = this.defaultClass;
-
-            if (manualRender)
-                for (var cmp in this.repeater.rowItems[index]) {
-                    this.repeater.rowItems[index][cmp]["class"] = this.defaultClass;
-                }
-            
-            this.value.forEach(function (valueItem) {
-                if (valueItem[this.valueField] == item[this.valueField]) {
-                    item["buttonClass"] = this.selectedClass;
-
-                    var dpIndex;
-                    this.dataProvider.forEach(function (itemDp, indexDp) {
-                        if (itemDp[this.valueField] == valueItem[this.valueField]) {
-                            dpIndex = indexDp;
-                            return false;
-                        }
-                    }.bind(this));
-
-                    if (manualRender)
-                        for (var cmp in this.repeater.rowItems[dpIndex]) {
-                            this.repeater.rowItems[dpIndex][cmp]["class"] = this.selectedClass;
-                        }
-
-                    return false;
-                }
-            }.bind(this));
-
-        }.bind(this));
-
-        this.$el.trigger('change');
-
+        this.list.setValue(value);        
+        this.trigger('change');
         return this;
     },
-
+    changeHandler : function(e){
+        if (typeof this.onchange == 'function')
+            this.onchange.apply(this, arguments);
+    },
     clickHandler: function (e) {
         if (typeof this.onclick == 'function')
             this.onclick.apply(this, arguments);
         
         if(!e.isDefaultPrevented()){
-            this.handleButtonClick.apply(this, arguments);
+            this.handleComponentClick.apply(this, arguments);
         }
-    },
-
-    handleButtonClick: function (e, repeaterEventArgs) {
-        var button = repeaterEventArgs.currentRow["button"];
-        var index = repeaterEventArgs.currentIndex;
-        
-        //toggle class
-        button.class == this.defaultClass ? button.class = this.selectedClass : button.class = this.defaultClass;
-        
-        var arrValueIndex = indexOfObject(this.value, this.valueField,  repeaterEventArgs.currentItem[this.valueField]);         
-        if (this.multiselect) {
-            //allow multiple selects
-            //toggle class
-            if (arrValueIndex==-1) {
-                 //get + push dp row
-                this.value.push(this.dataProvider[index]);
-            } else {
-                this.value.splice(arrValueIndex, 1);
-            }
-                  
-        } else {
-            this.dataProvider.forEach(function (item, i) {
-                if((index == i && arrValueIndex!=-1) || index != i){
-                    for(var cmp in this.repeater.rowItems[i]) {
-                        this.repeater.rowItems[i][cmp].$btn.removeClass(this.selectedClass);
-                        this.repeater.rowItems[i][cmp].$btn.addClass(this.defaultClass);
-                    }
-                }
-            }.bind(this));
-
-            if (arrValueIndex==-1) {
-                this.value = [this.dataProvider[index]]
-            }else{
-                this.value = [];
-            }
-        }
-
-        this.trigger('change');
     },
 
     enable: function () {         
-        this.repeater.enable();
+        this.list.enable();
         return this; 
     },
 
     disable: function () {
-        this.repeater.disable();
+        this.list.disable();
         return this;  
     },
 
@@ -174,9 +118,7 @@ var MultiSwitch = KxGenerator.createComponent({
     },
 
     render: function () {
-        this.repeater.$el.children()[0].classList = '';
-        this.$container.append(this.repeater.render());
-
+        this.$container.append(this.list.render());
         return this.$el;
     }
 });

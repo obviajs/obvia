@@ -1,5 +1,5 @@
 /**
- * This is a ComboBox/Dropdown Element
+ * This is a CheckboxGroup component
  * 
  * Kreatx 2018
  */
@@ -10,98 +10,177 @@ var CheckboxGroup = KxGenerator.createComponent({
     //if you want variables to bind, you must declare them in the model object
     initModel: function () {
         return {
-            fieldName: this.fieldName,
-            label: this.label,
             blockProcessAttr: this.required ? false : this.blockProcessAttr,
-            versionStyle: this.versionStyle,
-            required: this.required,
-            optionsData: this.dataProvider,
-            labelField: this.labelField,
-            valueField: this.valueField,
-            checkedField: this.checkedField       
-         };
+        }
     },
 
-   
-
     beforeAttach: function () {
+        this.$container = this.$el.find('#' + this.domID + '-container');
 
+        this.repeater = new Repeater({
+            id: 'multiswitchRepeater',
+            rendering: {
+                direction: 'vertical',
+                seperator: false,
+                actions: false
+            },
+            dataProvider: this.dataProvider,
+            components: [
+                {
+                    constructor: CheckBox,
+                    props: {
+                        id: 'checkBox',
+                        label: "{" + this.labelField + "}",
+                        value: "{" + this.valueField + "}",
+                        checked: "{" + this.checkedField + "}",
+                        class: "{" + this.classField + "}",
+                        onclick: this.clickHandler.bind(this),
+                        enabled: "{" + this.enabledField + "}",
+                    }
+                }
+            ]
+        });
+
+        this.setValue(this.value, false);
     },
 
     registerEvents: function () {
-        var _self = this;
-       
-        var model = this.getModel();
-        //console.log("fkdk");
-        this.$el.on('change', function (e) {
-            _self.value = model.checked;
-        });
-    },
-
-    afterAttach: function () {
-      
-      
-    },
-
-    setValue: function (value) {
-        var model = this.getModel();
-
-      for(var i=0;i<model.optionsData.length;i++){
-            if(value.contains(model.optionsData[i][this.valueField]))
+        return [
             {
-               model.optionsData[i][this.checkedField]= true;
+                registerTo: this.$el, events: {
+                    'afterAttach': this.afterAttach.bind(this)
+                }
             }
-            else{
-                model.optionsData[i][this.checkedField] = false;
+        ];
+    },
+
+    afterAttach: function (e) {
+        this.repeater.on('creationComplete', function () {
+            this.trigger('creationComplete');   
+        }.bind(this));
+    },
+
+    setValue: function (value, manualRender = true) {
+        this.value = value;
+
+        //add correct rendering classes
+        this.dataProvider.forEach(function (item, index) {
+            item["buttonClass"] = this.defaultClass;
+
+            if (manualRender)
+                for (var cmp in this.repeater.rowItems[index]) {
+                    this.repeater.rowItems[index][cmp]["class"] = this.defaultClass;
+                }
+            
+            this.value.forEach(function (valueItem) {
+                if (valueItem[this.valueField] == item[this.valueField]) {
+                    item["buttonClass"] = this.selectedClass;
+
+                    var dpIndex;
+                    this.dataProvider.forEach(function (itemDp, indexDp) {
+                        if (itemDp[this.valueField] == valueItem[this.valueField]) {
+                            dpIndex = indexDp;
+                            return false;
+                        }
+                    }.bind(this));
+
+                    if (manualRender)
+                        for (var cmp in this.repeater.rowItems[dpIndex]) {
+                            this.repeater.rowItems[dpIndex][cmp]["class"] = this.selectedClass;
+                        }
+
+                    return false;
+                }
+            }.bind(this));
+
+        }.bind(this));
+
+        this.$el.trigger('change');
+
+        return this;
+    },
+
+    clickHandler: function (e) {
+        if (typeof this.onclick == 'function')
+            this.onclick.apply(this, arguments);
+        
+        if(!e.isDefaultPrevented()){
+            this.handleButtonClick.apply(this, arguments);
+        }
+    },
+
+    handleButtonClick: function (e, repeaterEventArgs) {
+        var button = repeaterEventArgs.currentRow["button"];
+        var index = repeaterEventArgs.currentIndex;
+        
+        //toggle class
+        button.class == this.defaultClass ? button.class = this.selectedClass : button.class = this.defaultClass;
+        
+        var arrValueIndex = indexOfObject(this.value, this.valueField,  repeaterEventArgs.currentItem[this.valueField]);         
+        if (this.multiselect) {
+            //allow multiple selects
+            //toggle class
+            if (arrValueIndex==-1) {
+                 //get + push dp row
+                this.value.push(this.dataProvider[index]);
+            } else {
+                this.value.splice(arrValueIndex, 1);
+            }
+                  
+        } else {
+            this.dataProvider.forEach(function (item, i) {
+                if((index == i && arrValueIndex!=-1) || index != i){
+                    for(var cmp in this.repeater.rowItems[i]) {
+                        this.repeater.rowItems[i][cmp].$btn.removeClass(this.selectedClass);
+                        this.repeater.rowItems[i][cmp].$btn.addClass(this.defaultClass);
+                    }
+                }
+            }.bind(this));
+
+            if (arrValueIndex==-1) {
+                this.value = [this.dataProvider[index]]
+            }else{
+                this.value = [];
             }
         }
-       
-        this.$el.trigger('change');
-        return value;
+
+        this.trigger('change');
     },
 
-    getValue: function () {
-        var model = this.getModel();
-        var results = [];
-        for(var i=0;i<model.optionsData.length;i++){
-            results.push(model.optionsData[i][this.checkedField]);
-
-    }
-     //console.log(results);
-     return results;
+    enable: function () {         
+        this.repeater.enable();
+        return this; 
     },
 
-    destruct: function () {
-        this.$el.remove();
+    disable: function () {
+        this.repeater.disable();
+        return this;  
     },
 
     template: function () {
-      var html =  
-              "<div class='form-group col-lg-"+ this.colspan +" "+ this.rowspan +" resizable' id='"+this.fieldName+"_container'>"+
-              "<div id='" + this.fieldName + "-block'>"+
-			  "<label rv-for='fieldName'>{label}<span rv-if='required'>*</span></label>"+
-              "<span rv-if='blockProcessAttr' class='block-process'> * </span>";
-            for(var i= 0;i<this.dataProvider.length;i++)
-            {
-                var cid = this.fieldName+"_"+i;
-                html+="<div class='checkbox-group'>"+
-                "<label><input type='checkbox' rv-checked='optionsData." + i + "." + this.checkedField + "' name='" + this.fieldName + "[]' id='"+cid+"'>{optionsData." + i + "." + this.labelField + "}</label>"+
-            "</div>";
-            }
-			html+="</div>"+
-            "</div>";
-
-       return html;      
-      
+        return "<div id='" + this.domID + "-wrapper'>" +
+                    "<div class='col-lg-" + this.colspan + "' id='" + this.domID + "-block' resizable' style='padding-top: 10px; padding-bottom: 10px; overflow:hidden'>" +
+                        "<label rv-style='versionStyle' rv-for='domID'>{label} <span rv-if='required'>*</span></label>" +
+                        "<span rv-if='model.blockProcessAttr' class='block-process'> * </span>" +
+                        "<br>" +
+                        "<div id='" + this.domID + "-container' role='group' style='padding:0'>" +
+                            
+                        "</div>" +
+                    "</div>" +
+                "</div>";
     },
 
     render: function () {
+        this.repeater.$el.children()[0].classList = '';
+        this.$container.append(this.repeater.render());
+
         return this.$el;
     }
 });
 
 //component prototype
 CheckboxGroup.type = 'checkboxgroup';
+
 //register dom element for this component
 KxGenerator.registerDOMElement(CheckboxGroup, 'kx-checkboxgroup');
 

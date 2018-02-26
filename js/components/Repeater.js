@@ -12,8 +12,15 @@ var Repeater = KxGenerator.createComponent({
     currentItem: {},
 
     rowItems: {},
-
+    dataProviderKeys:[],
     initModel: function () {
+        if(this.defaultItem!=undefined && this.defaultItem!=null)
+        {
+            this.dataProviderKeys = Object.keys(this.defaultItem);
+        }else if(this.dataProvider.length>0)
+        {
+            this.dataProviderKeys = Object.keys(this.dataProvider[i]);
+        }
         return {
             displayAddButton: this.rendering.actions,
             displayRemoveButton: this.rendering.actions
@@ -57,7 +64,35 @@ var Repeater = KxGenerator.createComponent({
     addRowHandler: function () {
         this.addRow(this.defaultItem, this.currentIndex + 1, true)
     },
-
+    bindings:{},
+    dataProviderChanged: function(arrFields)
+    {
+        //{"component":cmp, "property":prop, "dataProviderField":dataProviderField, "dataProviderIndex":index}
+        var fieldsSpecified = (arrFields!=undefined) && (arrFields!=null) && (arrFields.length>0);
+        var componentBindings = Object.keys(this.bindings);
+        
+        if(fieldsSpecified)
+        { 
+            componentBindings = intersect(componentBindings, arrFields);
+            if(arrFields.length!=componentBindings.length)
+            {
+                console.log("You have specified a field for which there is no binding - possible misstype?")
+            }
+        }
+        
+        for(var c=0;c<componentBindings.length;c++)
+        {
+            var dataProviderField = componentBindings[c];
+            for(var cmp in this.bindings[dataProviderField])
+            {
+                for(var i=0;i<this.dataProvider.length;i++)
+                {
+                    var property = this.bindings[dataProviderField][cmp]["property"];
+                    this[cmp][i][property] = this.dataProvider[i][dataProviderField];
+                }
+            }
+        }
+    },
     //renders a new row, adds components in stack
     addRow: function (data, index, isPreventable = false) {
         var _self = this;
@@ -85,7 +120,17 @@ var Repeater = KxGenerator.createComponent({
                     if (typeof prop == 'string') {
                         //check for binding
                         if (p[prop][0] == '{' && p[prop][p[prop].length - 1] == '}') {
-                            cmp[index - 1][prop] = data[p[prop].slice(1, -1)];
+                            var dataProviderField = p[prop].slice(1, -1);
+                            cmp[index - 1][prop] = data[dataProviderField];
+                            if(_self.bindings[dataProviderField]==undefined)
+                            {
+                                _self.bindings[dataProviderField] = {};
+                                if(_self.bindings[dataProviderField][p.id]==undefined)
+                                {
+                                    _self.bindings[dataProviderField][p.id] = {"component":cmp, "property":prop, "dataProviderField":dataProviderField, "dataProviderIndex":index};
+                                }
+                            }
+                            
                         } else {
                             //no binding
                             cmp[index - 1][prop] = p[prop];
@@ -150,10 +195,6 @@ var Repeater = KxGenerator.createComponent({
 
                     _self.$el.trigger('onRowEdit', [_self, new RepeaterEventArgs(rowItems, data, index)]);
                 });
-
-                // el.on('click', function (e, sender) {
-                //     console.log('click event outside (in repeater) with value: ', sender.getValue());
-                // });
 
                 //render component in row
                 renderedRow.append(el.render());

@@ -8,7 +8,9 @@ var myCheckboxGroup = new CheckboxGroup({
     dataProvider: [{ "id": "1", "text": "Ministria e Puneve te Jashtme", "checked": true}, { "id": "2", "text": "Ministria e Drejtesise", "checked": false}, { "id": "3", "text": "Ministria e Brendshme", "checked": true }],
     labelField: 'text',
     valueField: 'id',
-    checkedField: 'checked'
+    enabledField: 'id',
+    checkedField: 'checked',
+    classField : 'classFieldInDp'
 });
 
 $('#root').append(myCheckboxGroup.render());
