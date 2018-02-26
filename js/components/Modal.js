@@ -41,12 +41,14 @@ var Modal = KxGenerator.createComponent({
 
     template: function () {
         return '<div id="' + this.domID + '-wrapper">' +
-            '<div class="modal" id="' + this.domID + '" data-backdrop="static">' +
-                '<div class="modal-dialog '+ this.size +'">' +
+            '<div class="modal" id="' + this.domID + '" tabindex="-1" role="dialog">' +
+                '<div class="modal-dialog '+ this.size +'" role="document">' +
                     '<div class="modal-content">' +
                         '<div class="modal-header">' +
-                            '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>' +
                             '<h5 class="modal-title" id="' + this.domID + '-modal-title">{title}</h5>' +
+                            '<button type="button" class="close" data-dismiss="modal" aria-label="Close">' +
+                                '<span aria-hidden="true">&times;</span>' +    
+                            '</button>' +
                         '</div>' +
                         '<div class="modal-body" id="' + this.domID + '-modal-body">' +
 
