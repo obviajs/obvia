@@ -9,6 +9,7 @@ var myForm = new Form({
                 id: 'text',
                 colspan: '6',
                 label: 'Text Label',
+                spacing: { mb: '5'},
                 versionStyle: '',
                 blockProcessAttr: false,
                 required: true,
@@ -22,6 +23,7 @@ var myForm = new Form({
                 id: 'number',
                 colspan: '6',
                 label: 'Number Label',
+                spacing: { mb: '5' },
                 versionStyle: '',
                 blockProcessAttr: false,
                 required: true,
@@ -38,6 +40,7 @@ var myForm = new Form({
                 id: 'textarea',
                 colspan: '6',
                 label: 'Textarea Label',
+                spacing: { mb: '5' },
                 versionStyle: '',
                 blockProcessAttr: false,
                 required: true,
@@ -53,6 +56,7 @@ var myForm = new Form({
                 id: 'texteditor',
                 colspan: '6',
                 label: 'TextEditor',
+                spacing: { mb: '5' },
                 versionStyle: '',
                 blockProcessAttr: false,
                 required: false,
@@ -68,6 +72,7 @@ var myForm = new Form({
                 id: 'datetime',
                 colspan: '6',
                 label: 'Date',
+                spacing: { mb: '5' },
                 versionStyle: '',
                 blockProcessAttr: false,
                 required: true,
@@ -83,6 +88,7 @@ var myForm = new Form({
                 id: 'dayMonthYear',
                 colspan: '6',
                 label: 'Date Mode 2',
+                spacing: { mb: '5' },
                 versionStyle: '',
                 blockProcessAttr: false,
                 required: false,
@@ -100,6 +106,7 @@ var myForm = new Form({
                 id: 'autocomplete',
                 colspan: '6',
                 label: 'Ministrite',
+                spacing: { mb: '5' },
                 blockProcessAttr: false,
                 required: false,
                 multipleSelection: false,
@@ -116,6 +123,7 @@ var myForm = new Form({
                 colspan: '6',
                 label: 'Pagesa',
                 blockProcessAttr: false,
+                spacing: { mb: '5' },
                 required: true,
                 currencyList: [{ "id": "1", "text": "EUR" }, { "id": "2", "text": "ALL" }, { "id": "3", "text": "GBP" }],
                 value: {
@@ -130,6 +138,7 @@ var myForm = new Form({
                 id: 'combo',
                 colspan: '6',
                 label: 'Zgjidh Shtetin',
+                spacing: { mb: '5' },
                 dataProvider: [{ "value": "1", "text": "Shqiperi" }, { "value": "2", "text": "Greqi" }, { "value": "3", "text": "SHBA" }],
                 versionStyle: "",
                 blockProcessAttr: false,
@@ -143,6 +152,7 @@ var myForm = new Form({
                 id: 'map',
                 colspan: '6',
                 label: 'Vendodhja Gjeografike',
+                spacing: { mb: '5' },
                 versionStyle: "",
                 blockProcessAttr: false,
                 required: false,
@@ -159,6 +169,7 @@ var myForm = new Form({
                 id: 'checkbox',
                 colspan: '6',
                 label: 'Checkbox',
+                spacing: { mb: '5' },
                 blockProcessAttr: false,
                 required: false,
                 value: true,
@@ -175,6 +186,7 @@ var myForm = new Form({
                 versionStyle: "",
                 blockProcessAttr: false,
                 required: false,
+                spacing: { mb: '5' },
                 dataProvider: {
                     left: "Yes", //1
                     middle: "Somewhat",//-1
@@ -190,6 +202,7 @@ var myForm = new Form({
                 colspan: '6',
                 label: 'Ministrite',
                 fieldName: 'multiswitchInputR',
+                spacing: { mb: '5' },
                 blockProcessAttr: false,
                 required: true,
                 multiselect: false,
@@ -217,6 +230,7 @@ var myForm = new Form({
                 colspan: '6',
                 label: 'Ministrite',
                 blockProcessAttr: false,
+                spacing: { mb: '5' },
                 required: true,
                 dataProvider: [
                     { "id": "1", "text": "Ministria e Puneve te Jashtme" },
@@ -317,6 +331,7 @@ var myForm = new Form({
                         props: {
                             id: 'autocompleteR',
                             colspan: '6',
+                            spacing: { mb: '5' },
                             label: '{autocompleteLabel}',
                             blockProcessAttr: false,
                             required: false,
@@ -332,6 +347,7 @@ var myForm = new Form({
                         props: {
                             id: 'comboR',
                             colspan: '6',
+                            spacing: { mb: '5' },
                             label: '{comboLabel}',
                             blockProcessAttr: false,
                             required: true,
@@ -344,6 +360,7 @@ var myForm = new Form({
                         props: {
                             id: 'textR',
                             colspan: '6',
+                            spacing: { mb: '5' },
                             label: '{textLabel}',
                             blockProcessAttr: false,
                             required: true,
@@ -355,6 +372,7 @@ var myForm = new Form({
                         props: {
                             id: 'amount',
                             colspan: '6',
+                            spacing: { mb: '5' },
                             label: 'Pagesa',
                             blockProcessAttr: false,
                             required: true,
@@ -367,6 +385,7 @@ var myForm = new Form({
                         props: {
                             id: 'texteditorR',
                             colspan: '6',
+                            spacing: { mb: '5' },
                             label: 'TextEditor',
                             versionStyle: '',
                             blockProcessAttr: false,
@@ -379,6 +398,7 @@ var myForm = new Form({
                         props: {
                             id: 'textareaR',
                             colspan: '6',
+                            spacing: { mb: '5' },
                             label: 'Textarea Label',
                             versionStyle: '',
                             blockProcessAttr: false,
@@ -393,6 +413,7 @@ var myForm = new Form({
                             colspan: '6',
                             label: 'Date',
                             versionStyle: '',
+                            spacing: { mb: '5' },
                             blockProcessAttr: false,
                             required: true,
                             inputFormat: 'DD/MM/YYYY',
@@ -407,6 +428,7 @@ var myForm = new Form({
                             id: 'dayMonthYear',
                             colspan: '6',
                             label: 'Date Mode 2',
+                            spacing: { mb: '5' },
                             versionStyle: '',
                             blockProcessAttr: false,
                             required: false,
@@ -422,6 +444,7 @@ var myForm = new Form({
                             id: 'checkboxR',
                             colspan: '6',
                             label: 'Aktiv',
+                            spacing: { mb: '5' },
                             blockProcessAttr: false,
                             required: false,
                             value: '{checkboxValue}',
@@ -434,6 +457,7 @@ var myForm = new Form({
                         props: {
                             id: 'mapR',
                             colspan: '6',
+                            spacing: { mb: '5' },
                             label: 'Vendodhja Gjeografike',
                             fieldName: 'mapFieldR',
                             versionStyle: "",
@@ -447,6 +471,7 @@ var myForm = new Form({
                         props: {
                             id: 'radiogroup',
                             colspan: '6',
+                            spacing: { mb: '5' },
                             label: 'Ministrite',
                             blockProcessAttr: false,
                             required: true,
@@ -466,36 +491,40 @@ var myForm = new Form({
                             }
                         }
                     },
-                    // {
-                    //     constructor: MultiSwitch,
-                    //     props: {
-                    //         id: 'multiswitchR',
-                    //         colspan: '6',
-                    //         label: 'Ministrite',
-                    //         blockProcessAttr: false,
-                    //         required: true,
-                    //         multiselect: true,
-                    //         dataProvider: [
-                    //             { "id": "1", "text": "Ministria e Puneve te Jashtme" },
-                    //             { "id": "2", "text": "Ministria e Drejtesise" },
-                    //             { "id": "3", "text": "Ministria e Brendshme" },
-                    //             { "id": "4", "text": "Ministria e Mbrojtjes" }
-                    //         ],
-                    //         valueField: "id",
-                    //         labelField: "text",
-                    //         defaultClass: 'btn btn-xs btn-default',
-                    //         selectedClass: 'btn btn-xs btn-success',
-                    //         value: '{multiValue}',
-                    //         onclick: function (e) {
-                    //             console.log("From MultiSwitch ClickAction");
-                    //         }
-                    //     }
-                    // },
+                    {
+                        constructor: MultiSwitch,
+                        props: {
+                            id: 'multiswitch',
+                            spacing: { mb: '5' },
+                            colspan: '6',
+                            label: 'Ministrite',
+                            fieldName: 'multiswitchInputR',
+                            blockProcessAttr: false,
+                            required: true,
+                            multiselect: true,
+                            dataProvider: [
+                                { "id": "1", "text": "Ministria e Puneve te Jashtme", "buttonClass": 'btn btn-sm btn-default' },
+                                { "id": "2", "text": "Ministria e Drejtesise", "buttonClass": 'btn btn-sm btn-default' },
+                                { "id": "3", "text": "Ministria e Brendshme", "buttonClass": 'btn btn-sm btn-success' },
+                            ],
+                            valueField: "id",
+                            labelField: "text",
+                            classField: "buttonClass",
+                            defaultClass: 'btn btn-sm btn-default',
+                            selectedClass: 'btn btn-sm btn-success',
+                            value: '{multiValue}',
+                            onclick: function (e) {
+                                console.log("From MultiSwitch ClickAction");
+                                //e.preventDefault();
+                            }
+                        }
+                    },
                     {
                         constructor: TrippleSwitch,
                         props: {
                             id: 'trippleswitchR',
                             colspan: '6',
+                            spacing: { mb: '5' },
                             label: 'This is a survey. Are you happy?',
                             versionStyle: "",
                             blockProcessAttr: false,
