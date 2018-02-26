@@ -183,31 +183,33 @@ var myForm = new Form({
                 value: "1" //1,-1,0
             }    
         },
-        // {
-        //     constructor: MultiSwitch,
-        //     props: {
-        //         id: 'multiswitch',
-        //         colspan: '6',
-        //         label: 'Ministrite',
-        //         blockProcessAttr: false,
-        //         required: true,
-        //         multiselect: false,
-        //         dataProvider: [
-        //             { "id": "1", "text": "Ministria e Puneve te Jashtme" },
-        //             { "id": "2", "text": "Ministria e Drejtesise" },
-        //             { "id": "3", "text": "Ministria e Brendshme" },
-        //             { "id": "4", "text": "Ministria e Mbrojtjes" }
-        //         ],
-        //         valueField: "id",
-        //         labelField: "text",
-        //         defaultClass: 'btn btn-xs btn-default',
-        //         selectedClass: 'btn btn-xs btn-success',
-        //         value: [],
-        //         onclick: function (e) {
-        //             console.log("From MultiSwitch ClickAction");
-        //         }
-        //     }   
-        // },
+        {
+            constructor: MultiSwitch,
+            props: {
+                id: 'multiswitch',
+                colspan: '6',
+                label: 'Ministrite',
+                fieldName: 'multiswitchInputR',
+                blockProcessAttr: false,
+                required: true,
+                multiselect: false,
+                dataProvider: [
+                    { "id": "1", "text": "Ministria e Puneve te Jashtme", "buttonClass": 'btn btn-sm btn-default' },
+                    { "id": "2", "text": "Ministria e Drejtesise", "buttonClass": 'btn btn-sm btn-default' },
+                    { "id": "3", "text": "Ministria e Brendshme", "buttonClass": 'btn btn-sm btn-success' },
+                ],
+                valueField: "id",
+                labelField: "text",
+                classField: "buttonClass",
+                defaultClass: 'btn btn-sm btn-default',
+                selectedClass: 'btn btn-sm btn-success',
+                value: [{ "id": "3", "text": "Ministria e Brendshme", "buttonClass": 'btn btn-xs btn-success' }],
+                onclick: function (e) {
+                    console.log("From MultiSwitch ClickAction");
+                    //e.preventDefault();
+                }
+            }   
+        },
         {
             constructor: RadioGroup,
             props: {
