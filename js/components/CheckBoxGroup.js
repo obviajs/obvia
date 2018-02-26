@@ -16,15 +16,24 @@ var CheckboxGroup = KxGenerator.createComponent({
 
     beforeAttach: function () {
         this.$container = this.$el.find('#' + this.domID + '-container');
-
-        this.repeater = new Repeater({
-            id: 'multiswitchRepeater',
-            rendering: {
-                direction: 'vertical',
-                seperator: false,
-                actions: false
-            },
+        this.multiselect = (this.multiselect!=undefined && this.multiselect!=null?this.multiselect:true);
+        this.list = new List({
+            id: 'list',
+            colspan: '6',
+            label: 'Ministrite',
+            fieldName: 'list',
+            blockProcessAttr: this.blockProcessAttr,
+            required: this.required,
+            direction: 'vertical',
+            multiselect: this.multiselect,
             dataProvider: this.dataProvider,
+            valueField: this.valueField,
+            labelField: this.labelField,
+            classField: this.classField,
+            defaultClass: this.defaultClass,
+            selectedClass: this.selectedClass,  
+            value: this.value,
+            embedded: true,        
             components: [
                 {
                     constructor: CheckBox,
@@ -36,12 +45,15 @@ var CheckboxGroup = KxGenerator.createComponent({
                         class: "{" + this.classField + "}",
                         onclick: this.clickHandler.bind(this),
                         enabled: "{" + this.enabledField + "}",
+                        embedded: true
                     }
                 }
-            ]
-        });
-
-        this.setValue(this.value, false);
+            ],
+            onclick : this.onclick,
+            onchange : this.onchange
+        }).on('creationComplete', function () {
+            this.trigger('creationComplete');   
+        }.bind(this));
     },
 
     registerEvents: function () {
@@ -55,96 +67,22 @@ var CheckboxGroup = KxGenerator.createComponent({
     },
 
     afterAttach: function (e) {
-        this.repeater.on('creationComplete', function () {
-            this.trigger('creationComplete');   
-        }.bind(this));
+
     },
 
-    setValue: function (value, manualRender = true) {
+    setValue: function (value) {
         this.value = value;
-
-        //add correct rendering classes
-        this.dataProvider.forEach(function (item, index) {
-            item["buttonClass"] = this.defaultClass;
-
-            if (manualRender)
-                for (var cmp in this.repeater.rowItems[index]) {
-                    this.repeater.rowItems[index][cmp]["class"] = this.defaultClass;
-                }
-            
-            this.value.forEach(function (valueItem) {
-                if (valueItem[this.valueField] == item[this.valueField]) {
-                    item["buttonClass"] = this.selectedClass;
-
-                    var dpIndex;
-                    this.dataProvider.forEach(function (itemDp, indexDp) {
-                        if (itemDp[this.valueField] == valueItem[this.valueField]) {
-                            dpIndex = indexDp;
-                            return false;
-                        }
-                    }.bind(this));
-
-                    if (manualRender)
-                        for (var cmp in this.repeater.rowItems[dpIndex]) {
-                            this.repeater.rowItems[dpIndex][cmp]["class"] = this.selectedClass;
-                        }
-
-                    return false;
-                }
-            }.bind(this));
-
-        }.bind(this));
-
-        this.$el.trigger('change');
-
+        this.list.setValue(value);        
+        this.trigger('change');
         return this;
     },
-
+    changeHandler : function(e){
+        if (typeof this.onchange == 'function')
+            this.onchange.apply(this, arguments);
+    },
     clickHandler: function (e) {
         if (typeof this.onclick == 'function')
             this.onclick.apply(this, arguments);
-        
-        if(!e.isDefaultPrevented()){
-            this.handleButtonClick.apply(this, arguments);
-        }
-    },
-
-    handleButtonClick: function (e, repeaterEventArgs) {
-        var button = repeaterEventArgs.currentRow["button"];
-        var index = repeaterEventArgs.currentIndex;
-        
-        //toggle class
-        button.class == this.defaultClass ? button.class = this.selectedClass : button.class = this.defaultClass;
-        
-        var arrValueIndex = indexOfObject(this.value, this.valueField,  repeaterEventArgs.currentItem[this.valueField]);         
-        if (this.multiselect) {
-            //allow multiple selects
-            //toggle class
-            if (arrValueIndex==-1) {
-                 //get + push dp row
-                this.value.push(this.dataProvider[index]);
-            } else {
-                this.value.splice(arrValueIndex, 1);
-            }
-                  
-        } else {
-            this.dataProvider.forEach(function (item, i) {
-                if((index == i && arrValueIndex!=-1) || index != i){
-                    for(var cmp in this.repeater.rowItems[i]) {
-                        this.repeater.rowItems[i][cmp].$btn.removeClass(this.selectedClass);
-                        this.repeater.rowItems[i][cmp].$btn.addClass(this.defaultClass);
-                    }
-                }
-            }.bind(this));
-
-            if (arrValueIndex==-1) {
-                this.value = [this.dataProvider[index]]
-            }else{
-                this.value = [];
-            }
-        }
-
-        this.trigger('change');
     },
 
     enable: function () {         
@@ -159,19 +97,17 @@ var CheckboxGroup = KxGenerator.createComponent({
 
     template: function () {
         return "<div id='" + this.domID + "-wrapper' class='col-lg-" + this.colspan + " resizable' style='padding-top: 10px; padding-bottom: 10px; overflow:hidden'>" +
-                    "<label rv-style='versionStyle' rv-for='domID'>{label} <span rv-if='required'>*</span></label>" +
+        (!this.embedded?("<label rv-style='versionStyle' rv-for='domID'>{label} <span rv-if='required'>*</span></label>" +
                     "<span rv-if='model.blockProcessAttr' class='block-process'> * </span>" +
-                    "<br>" +
+                    "<br>") : "") + 
                     "<div id='" + this.domID + "-container' role='group' style='padding:0'>" +
                         
-                    "</div>" +
+        (!this.embedded?"</div>":"") +
                 "</div>";
     },
 
     render: function () {
-        this.repeater.$el.children()[0].classList = '';
-        this.$container.append(this.repeater.render());
-
+        this.$container.append(this.list.render());
         return this.$el;
     }
 });

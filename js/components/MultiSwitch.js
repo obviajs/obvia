@@ -32,8 +32,8 @@ var MultiSwitch = KxGenerator.createComponent({
             classField: this.classField,
             defaultClass: this.defaultClass,
             selectedClass: this.selectedClass,  
-            embedded: true, 
             value: this.value,
+            embedded: true,        
             components: [
                 {
                     constructor: Button,
@@ -43,16 +43,14 @@ var MultiSwitch = KxGenerator.createComponent({
                         value: "{" + this.labelField + "}",
                         class: "{" + this.classField + "}",
                         style: "float: left; border-radius: 0px",
-                        onclick: this.clickHandler.bind(this)
+                        onclick: this.clickHandler.bind(this),
+                        embedded: true  
                     }
                 }
             ],
             onclick : this.onclick,
             onchange : this.onchange
-        });
-
-        this.list.on('creationComplete', function () {
-            this.list.setValue(this.value),
+        }).on('creationComplete', function () {
             this.trigger('creationComplete');   
         }.bind(this));
     },
@@ -90,10 +88,6 @@ var MultiSwitch = KxGenerator.createComponent({
     clickHandler: function (e) {
         if (typeof this.onclick == 'function')
             this.onclick.apply(this, arguments);
-        
-        if(!e.isDefaultPrevented()){
-            this.handleComponentClick.apply(this, arguments);
-        }
     },
 
     enable: function () {         
@@ -107,13 +101,15 @@ var MultiSwitch = KxGenerator.createComponent({
     },
 
     template: function () {
-        return "<div id='" + this.domID + "-wrapper' class='col-lg-" + this.colspan + " resizable' style='padding-top: 10px; padding-bottom: 10px; overflow:hidden'>" + 
-                    "<label rv-style='versionStyle' rv-for='domID'><b>{label}</b> <span rv-if='required'>*</span></label>" +
-                    "<span rv-if='model.blockProcessAttr' class='block-process'> * </span>" +
-                    "<br>" +
-                    "<div id='" + this.domID + "-container' role='group' style='padding:0'>" +
-                        
-                    "</div>" +  
+        return "<div id='" + this.domID + "-wrapper'>" +
+        (!this.embedded?("<div class='col-lg-" + this.colspan + "' id='" + this.domID + "-block' resizable' style='padding-top: 10px; padding-bottom: 10px; overflow:hidden'>" +
+                        "<label rv-style='versionStyle' rv-for='domID'>{label} <span rv-if='required'>*</span></label>" +
+                        "<span rv-if='model.blockProcessAttr' class='block-process'> * </span>" +
+                        "<br>") : "") + 
+                        "<div id='" + this.domID + "-container' role='group' style='padding:0'>" +
+                            
+                        "</div>" +
+        (!this.embedded?"</div>":"") +
                 "</div>";
     },
 

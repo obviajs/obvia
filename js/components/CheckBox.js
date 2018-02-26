@@ -14,6 +14,9 @@ var CheckBox = KxGenerator.createComponent({
             
         }
     }, 
+    beforeAttach: function () {
+        this.enabled = (this.enabled!=undefined && this.enabled!=null?this.enabled:true);
+    },
     registerEvents: function () {
         return [
             {
@@ -60,7 +63,7 @@ var CheckBox = KxGenerator.createComponent({
     },
     template: function () {      
         return  "<div id='" + this.domID + "-wrapper' class='checkbox'>" +
-                    "<span rv-if='blockProcessAttr' class='block-process'> * </span>" + 
+        (!this.embedded?("<span rv-if='blockProcessAttr' class='block-process'> * </span>") : "") + 
                     "<label><input id='" + this.domID + "' name='" + this.domID + "' rv-value='value' " +                    
                     "rv-enabled='enabled' rv-checked='checked' type='checkbox' rv-value='value'>{label}</label>" +
                 "</div>"; 
