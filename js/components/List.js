@@ -16,8 +16,13 @@ var List = KxGenerator.createComponent({
 
     beforeAttach: function () {
         this.$container = this.$el.find('#' + this.domID + '-container');
-        
         this.components[0].props.onclick = this.clickHandler.bind(this);
+        this.direction = this.direction==undefined||this.direction==null?'horizontal':this.direction;
+       
+        this.states = this.states==undefined || this.states==null?
+        [
+            {dataProviderField:this.classField, states:{on:this.selectedClass, off:this.defaultClass}}
+        ]:this.states;
         
         this.repeater = new Repeater({
             id: 'listRepeater',
@@ -60,61 +65,42 @@ var List = KxGenerator.createComponent({
        
     },
 
-    setValue: function (value, manualRender = true) {
+    setValue: function (value, manualRender=true) {
         if(!this.value.equals(value))
         {
+            var arrDpFieldsChanged = [];
             if(value==undefined || value==null){
                 value = [];
             }
-            if(value.length>0){
-                value.forEach(function (valueItem) {
-                    this.setSingleleValue(valueItem);
-                }.bind(this));
-            }else{
-                this.setSingleleValue(value);
-            }
-            this.trigger('change');
-        }
-        return this;
-    },
-
-    setSingleleValue: function(v){
-        var arrDpIndex = (v==undefined||v==null||v[this.valueField]==undefined)?-1:indexOfObject(this.dataProvider, this.valueField,  v[this.valueField]); 
-        
-        var arrValueIndex = indexOfObject(this.value, this.valueField,  v[this.valueField]);         
-        if (this.multiselect) {
-            //allow multiple selects
-            //toggle class
-            if (arrValueIndex==-1) {
-                if(arrDpIndex!=-1)
-                {
-                    //get + push dp row
-                    this.dataProvider[arrDpIndex][this.classField] = this.selectedClass;
-                    this.value.push(this.dataProvider[arrDpIndex]);
-                }
-            } else {
-                if(arrDpIndex!=-1)
-                {
-                    this.value.splice(arrValueIndex, 1);
-                    this.dataProvider[arrDpIndex][this.classField] = this.defaultClass;
-                }
-            }
-                
-        } else {
-            this.dataProvider.forEach(function (item, i) {
-                if((arrDpIndex == i && arrValueIndex!=-1) || arrDpIndex != i){
-                        this.dataProvider[i][this.classField] = this.defaultClass;
+            this.value = intersectOnKeyMatch(this.dataProvider, value, this.valueField) //value;
+            var unselect = this.dataProvider.difference(this.value);
+            
+            unselect.forEach(function (v) {
+                var arrDpIndex = (v==undefined||v==null||v[this.valueField]==undefined)?-1:indexOfObject(this.dataProvider, this.valueField,  v[this.valueField]);
+                if(arrDpIndex!=-1){
+                    this.states.forEach(function (state) { 
+                        this.dataProvider[arrDpIndex][state.dataProviderField] = state.states.off;
+                        arrDpFieldsChanged.pushUnique(state.dataProviderField);
+                    }.bind(this));
                 }
             }.bind(this));
 
-            if (arrValueIndex==-1 && arrDpIndex!=-1) {
-                this.dataProvider[arrDpIndex][this.classField] = this.selectedClass;
-                this.value = [this.dataProvider[arrDpIndex]];
-            }else{
-                this.value = [];
-            }
+            this.value.forEach(function (v, i) {
+                var arrDpIndex = (v==undefined||v==null||v[this.valueField]==undefined)?-1:indexOfObject(this.dataProvider, this.valueField,  v[this.valueField]);
+                if(arrDpIndex!=-1){
+                    this.states.forEach(function (state) { 
+                        this.dataProvider[arrDpIndex][state.dataProviderField] = state.states.on;
+                        arrDpFieldsChanged.pushUnique(state.dataProviderField);
+                    }.bind(this));
+                }else{
+                    this.value.splice(i, 1);
+                }
+            }.bind(this));
+
+            this.trigger('change');
+            this.repeater.dataProviderChanged(arrDpFieldsChanged);
         }
-        this.repeater.dataProviderChanged([this.classField]);
+        return this;
     },
 
     changeHandler : function(e){
@@ -136,9 +122,22 @@ var List = KxGenerator.createComponent({
         var clickedComponent = repeaterEventArgs.currentRow[componentID];
         var index = repeaterEventArgs.currentIndex;
         
-        this.setSingleleValue(repeaterEventArgs.currentItem);
-        
-        this.trigger('change');
+        var v = repeaterEventArgs.currentItem;
+        var arrDpIndex = -1; 
+        var arrValueIndex = indexOfObject(this.value, this.valueField,  v[this.valueField]);  
+        var _value = this.value.slice();       
+        if (arrValueIndex==-1){
+            if (this.multiselect){   
+                _value.push(v);
+            }else
+                _value = [v];     
+        }else{
+            if (this.multiselect){   
+                _value.splice(arrValueIndex, 1);
+            }else
+                _value = []; 
+        }    
+        this.setValue(_value);
     },
 
     enable: function () {         

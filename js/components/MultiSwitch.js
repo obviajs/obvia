@@ -16,7 +16,8 @@ var MultiSwitch = KxGenerator.createComponent({
 
     beforeAttach: function () {
         this.$container = this.$el.find('#' + this.domID + '-container');
-
+        this.direction = this.direction==undefined||this.direction==null?'horizontal':this.direction;
+        
         this.list = new List({
             id: 'list',
             colspan: '6',
@@ -24,7 +25,7 @@ var MultiSwitch = KxGenerator.createComponent({
             fieldName: 'list',
             blockProcessAttr: this.blockProcessAttr,
             required: true,
-            direction: 'horizontal',
+            direction: this.direction,
             multiselect: this.multiselect,
             dataProvider: this.dataProvider,
             valueField: this.valueField,
@@ -52,6 +53,8 @@ var MultiSwitch = KxGenerator.createComponent({
             onchange : this.onchange
         }).on('creationComplete', function () {
             this.trigger('creationComplete');   
+        }.bind(this)).on('change', function(){
+            this.value = this.list.value;
         }.bind(this));
     },
 
@@ -74,7 +77,6 @@ var MultiSwitch = KxGenerator.createComponent({
     afterAttach: function (e) {
     
     },
-
     setValue: function (value) {
         this.value = value;
         this.list.setValue(value);        
