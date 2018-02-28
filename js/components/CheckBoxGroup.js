@@ -15,6 +15,12 @@ var CheckboxGroup = KxGenerator.createComponent({
     },
 
     beforeAttach: function () {
+        this.checkedField = "checked_"+this.id;
+        this.states = [
+            {dataProviderField:this.classField, states:{on:this.selectedClass, off:this.defaultClass}},
+            {dataProviderField:this.checkedField, states:{on:true, off:false}}
+        ];
+        this.direction = this.direction==undefined||this.direction==null?'vertical':this.direction;
         this.$container = this.$el.find('#' + this.domID + '-container');
         this.multiselect = (this.multiselect!=undefined && this.multiselect!=null?this.multiselect:true);
         this.list = new List({
@@ -22,9 +28,10 @@ var CheckboxGroup = KxGenerator.createComponent({
             colspan: '6',
             label: 'Ministrite',
             fieldName: 'list',
+            states: this.states,
             blockProcessAttr: this.blockProcessAttr,
             required: this.required,
-            direction: 'vertical',
+            direction: this.direction,
             multiselect: this.multiselect,
             dataProvider: this.dataProvider,
             valueField: this.valueField,
@@ -53,6 +60,8 @@ var CheckboxGroup = KxGenerator.createComponent({
             onchange : this.onchange
         }).on('creationComplete', function () {
             this.trigger('creationComplete');   
+        }.bind(this)).on('change', function(){
+            this.value = this.list.value;
         }.bind(this));
     },
 
@@ -102,7 +111,7 @@ var CheckboxGroup = KxGenerator.createComponent({
                     "<br>") : "") + 
                     "<div id='" + this.domID + "-container' role='group' style='padding:0'>" +
                         
-        (!this.embedded?"</div>":"") +
+                    "</div>"+
                 "</div>";
     },
 

@@ -31,7 +31,7 @@ var ms2 = new MultiSwitch({
     fieldName: 'multiswitchInputR2',
     blockProcessAttr: false,
     required: true,
-    multiselect: false,
+    multiselect: true,
     dataProvider: [
         { "id": "1", "text": "Ministria e Puneve te Jashtme 2", "buttonClass": 'btn btn-sm btn-default'},
         { "id": "2", "text": "Ministria e Drejtesise 2", "buttonClass": 'btn btn-sm btn-default'},
