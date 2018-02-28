@@ -27,7 +27,7 @@ var TextInput = KxGenerator.createComponent({
                 }
             },
             {
-                registerTo: this.$input, events: { 
+                registerTo: this.$input, events: {
                     'change': this.changeHandler.bind(this),
                 }
             }
@@ -51,7 +51,7 @@ var TextInput = KxGenerator.createComponent({
     afterAttach: function (e) {
         //init input mask
         if (this.hasOwnProperty('mask')) {
-                this.$input.inputmask(this.mask);
+            this.$input.inputmask(this.mask);
         }
 
         if (typeof this.onafterAttach == 'function')
@@ -73,24 +73,23 @@ var TextInput = KxGenerator.createComponent({
                 ];
                 return false;
             } else
-                return true;    
+                return true;
         } else
-            return true;    
+            return true;
     },
-//The autofocus attribute is a boolean attribute. When present, it specifies that an <input> element should automatically get focus when the page loads.
-    template: function () {         
+    template: function () {
         return "<div id='" + this.domID + "-wrapper' class='form-group col-lg-" + this.colspan + " rowspan" + this.rowspan + " resizable '>" +
-                    "<div id='" + this.domID + "-block'>" + 
-                        "<label rv-style='versionStyle' rv-for='domID'><b>{label}</b> <span rv-if='required'>*</span></label>" + 
-                        "<span rv-if='model.blockProcessAttr' class='block-process'> * </span>" + 
-                            "<input rv-type='type'" + 
-                                "id='" + this.domID + "' name='" + this.domID + "' rv-value='value'" +
-                                "class='form-control rowspan"+ this.rowspan +"'" +
-                                "rv-placeholder='label' rv-enabled='model.enabled' autofocus/>" +
-                    "</div>" +
-                "</div>";    
+            "<div id='" + this.domID + "-block'>" +
+            "<label rv-style='versionStyle' rv-for='domID'><b>{label}</b> <span rv-if='required'>*</span></label>" +
+            "<span rv-if='model.blockProcessAttr' class='block-process'> * </span>" +
+            "<input rv-type='type'" +
+            "id='" + this.domID + "' name='" + this.domID + "' rv-value='value'" +
+            "class='form-control rowspan" + this.rowspan + "'" +
+            "rv-placeholder='label' rv-enabled='model.enabled' autofocus/>" +
+            "</div>" +
+            "</div>";
     },
- 
+
     render: function () {
         return this.$el;
     }
@@ -101,3 +100,7 @@ TextInput.type = 'text';
 
 //register dom element for this component
 KxGenerator.registerDOMElement(TextInput, 'kx-text');
+
+
+
+
