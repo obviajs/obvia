@@ -6,18 +6,20 @@
 
 //component definition
 var RadioButton = KxGenerator.createComponent({
+    enabled: true,
+    blockProcessAttr: this.required ? false : this.blockProcessAttr,
+    _checked: false,
+    _value: null,
     //inner component data
     initModel: function () {
         return {
-            enabled: true,
-            checked: false,
         }
     },
     
     beforeAttach: function () {
         this.$input = this.$el.find("input");
+        this.enabled = (this.enabled!=undefined && this.enabled!=null?this.enabled:true);
     },
-
     registerEvents: function () {
         return [
             {
@@ -27,6 +29,7 @@ var RadioButton = KxGenerator.createComponent({
             },
             {
                 registerTo: this.$input, events: { 
+                    'change': this.changeHandler.bind(this),
                     'click': this.clickHandler.bind(this)
                 }
             }
@@ -38,28 +41,45 @@ var RadioButton = KxGenerator.createComponent({
     },
 
     enable: function () {
-        var model = this.getModel();
-        model.enabled = true;
-
+        this.enabled = true;
         return this;
     },
 
     disable: function () {
-        var model = this.getModel();
-        model.enabled = false;
-
+        this.enabled = false;
         return this;
     },
+    set value(v){
+        if(this._value!=v)
+        {
+            this._value = v;
+        }else{
+            this.checked = true;
+        }
 
+    },
+    get value(){
+        return this._value;
+    },
+    set checked(v){
+        if(v)
+        {
+            this._checked = this.value;
+        }else
+        this._checked = false;
+    },
     clickHandler: function () {
         if (typeof this.onclick == 'function')
             this.onclick.apply(this, arguments);
     },
-
+    changeHandler: function () {
+        if (typeof this.onchange == 'function')
+            this.onchange.apply(this, arguments);
+    },
     template: function () {         
         return "<div id='" + this.domID + "-wrapper'>" +
                     "<label>" +    
-                        "<input type='radio' rv-value='value' rv-enabled='model.enabled' rv-checked='model.checked'> {label}" +
+                        "<input id='" + this.domID + "' name='" + this.domID + "' type='radio' rv-value='_value' rv-enabled='enabled' rv-checked='_checked'> {label}" +
                     "</label>"+
                 "</div>";    
     },

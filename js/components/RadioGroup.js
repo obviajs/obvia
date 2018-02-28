@@ -1,5 +1,6 @@
+////
 /**
- * This is a ComboBox/Dropdown Element
+ * This is a RadioGroup component
  * 
  * Kreatx 2018
  */
@@ -11,35 +12,57 @@ var RadioGroup = KxGenerator.createComponent({
     initModel: function () {
         return {
             blockProcessAttr: this.required ? false : this.blockProcessAttr,
-        };
+        }
     },
 
     beforeAttach: function () {
-        this.$radioGroup = this.$el.find('.radiogroup');
-
-        this.repeater = new Repeater({
-            id: 'radioRepeater',
-            defaultItem: {
-                text: 'Radio',
-            },
-            rendering: {
-                direction: 'vertical',
-                seperator: false,
-                actions: false
-            },
+        this.checkedField = "checked_"+this.id;
+        this.states = [
+            {dataProviderField:this.classField, states:{on:this.selectedClass, off:this.defaultClass}},
+            {dataProviderField:this.checkedField, states:{on:true, off:false}}
+        ];
+        this.direction = this.direction==undefined||this.direction==null?'vertical':this.direction;
+        this.$container = this.$el.find('#' + this.domID + '-container');
+        this.list = new List({
+            id: 'list',
+            colspan: '6',
+            label: 'Ministrite',
+            fieldName: 'list',
+            states: this.states,
+            blockProcessAttr: this.blockProcessAttr,
+            required: this.required,
+            direction: this.direction,
+            multiselect: false,
             dataProvider: this.dataProvider,
+            valueField: this.valueField,
+            labelField: this.labelField,
+            classField: this.classField,
+            defaultClass: this.defaultClass,
+            selectedClass: this.selectedClass,  
+            value: this.value,
+            embedded: true,        
             components: [
                 {
                     constructor: RadioButton,
                     props: {
-                        id: 'radio',
-                        value: "{" + this.valueField + "}",
+                        id: 'radioButton',
                         label: "{" + this.labelField + "}",
-                        onclick: this.clickHandler.bind(this) 
+                        value: "{" + this.valueField + "}",
+                        checked: "{" + this.checkedField + "}",
+                        class: "{" + this.classField + "}",
+                        onclick: this.clickHandler.bind(this),
+                        enabled: "{" + this.enabledField + "}",
+                        embedded: true
                     }
                 }
-            ]
-        });
+            ],
+            onclick : this.onclick,
+            onchange : this.onchange
+        }).on('creationComplete', function () {
+            this.trigger('creationComplete');   
+        }.bind(this)).on('change', function(){
+            this.value = this.list.value;
+        }.bind(this));
     },
 
     registerEvents: function () {
@@ -49,72 +72,51 @@ var RadioGroup = KxGenerator.createComponent({
                     'afterAttach': this.afterAttach.bind(this)
                 }
             }
-        ]
-    }, 
+        ];
+    },
 
     afterAttach: function (e) {
-        this.repeater.on('creationComplete', function () {
-            this.trigger('creationComplete');
-        }.bind(this));
+
     },
 
     setValue: function (value) {
         this.value = value;
-
-        this.dataProvider.forEach(function (item, index) { 
-            if (this.value == item[this.valueField]) {
-                this.repeater["radio"][index].setModelValue('checked', this.value)
-            } else {
-                this.repeater["radio"][index].setModelValue('checked', false)
-            }
-        }.bind(this));
-
+        this.list.setValue(value);        
         this.trigger('change');
-
         return this;
     },
-
+    changeHandler : function(e){
+        if (typeof this.onchange == 'function')
+            this.onchange.apply(this, arguments);
+    },
     clickHandler: function (e) {
         if (typeof this.onclick == 'function')
             this.onclick.apply(this, arguments);
-
-        if (!e.isDefaultPrevented()) {
-            this.handleComponentClick.apply(this, arguments);
-        }
     },
 
-    handleComponentClick: function (e, repeaterEventArgs) {
-        var radio = repeaterEventArgs.currentRow["radio"];
-        var index = repeaterEventArgs.currentIndex;
-
-        this.setValue(this.dataProvider[index][this.valueField]);
-    },
-
-    enable: function () {
+    enable: function () {         
         this.repeater.enable();
-        return this;
+        return this; 
     },
 
     disable: function () {
         this.repeater.disable();
-        return this;
+        return this;  
     },
 
     template: function () {
         return "<div id='" + this.domID + "-wrapper' class='form-group col-lg-" + this.colspan + " rowspan" + this.rowspan + " resizable'>" +
-                    "<div id=id='" + this.domID + "-block'>" +
-                        "<label rv-style='versionStyle' rv-for='domID'><b>{label}</b><span rv-if='required'>*</span></label>" +
-                        "<div class='radiogroup card' style='padding:10px;'>" +
-                
-                        "</div>" +
+        (!this.embedded?("<div id=id='" + this.domID + "-block'>" +
+                    "<label rv-style='versionStyle' rv-for='domID'><b>{label}</b><span rv-if='required'>*</span></label>") : "") + 
+                    "<div id='" + this.domID + "-container' class='radiogroup card' style='padding:10px;'>" +
+            
                     "</div>" +
-                "</div>"; 
+        (!this.embedded?"</div>":"") +
+                "</div>";         
     },
 
     render: function () {
-        this.repeater.$el.children()[0].classList = '';
-        this.$radioGroup.append(this.repeater.render());
-
+        this.$container.append(this.list.render());
         return this.$el;
     }
 });
@@ -123,4 +125,6 @@ var RadioGroup = KxGenerator.createComponent({
 RadioGroup.type = 'radiogroup';
 //register dom element for this component
 KxGenerator.registerDOMElement(RadioGroup, 'kx-radiogroup');
+
+
 

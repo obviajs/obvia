@@ -71,6 +71,16 @@ var List = KxGenerator.createComponent({
             var arrDpFieldsChanged = [];
             if(value==undefined || value==null){
                 value = [];
+            }else if (typeof value === "string"){
+                v = {};
+                v[this.valueField] = value;
+                value = [v];
+            }else if(typeof(value)==="object" && !(value instanceof Array)){
+               value = [value];
+            }else{
+                v = {};
+                v[this.valueField] = value;
+                value = [v];
             }
             this.value = intersectOnKeyMatch(this.dataProvider, value, this.valueField) //value;
             var unselect = this.dataProvider.difference(this.value);

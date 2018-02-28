@@ -15,6 +15,7 @@ var CheckBox = KxGenerator.createComponent({
         }
     }, 
     beforeAttach: function () {
+        this.$input = this.$el.find("input");
         this.enabled = (this.enabled!=undefined && this.enabled!=null?this.enabled:true);
     },
     registerEvents: function () {
@@ -25,7 +26,7 @@ var CheckBox = KxGenerator.createComponent({
                 }
             },
             {
-                registerTo: this.$chkb, events: { 
+                registerTo: this.$input, events: { 
                     'change': this.changeHandler.bind(this),
                     'click': this.clickHandler.bind(this)
                 }
@@ -47,12 +48,12 @@ var CheckBox = KxGenerator.createComponent({
             this.onclick.apply(this, arguments);       
     },
     enable: function () {
-        enabled = true;
+        this.enabled = true;
         return this;
     },
 
     disable: function () {
-        enabled = false;
+        this.enabled = false;
         return this;
     },
     setValue: function (value) {
@@ -70,7 +71,6 @@ var CheckBox = KxGenerator.createComponent({
     },
     
     render: function () {
-        this.$chkb = this.$el.find("input");
         return this.$el;
     }
     
