@@ -184,6 +184,7 @@ var Repeater = KxGenerator.createComponent({
                             _self.trigger('creationComplete');
                         }
 
+                        //animate
                         if (addRowFlag) {
                             _self.rowItems[index - 1][_self.components[0].props.id].scrollTo();
                         }
@@ -271,6 +272,9 @@ var Repeater = KxGenerator.createComponent({
 
             _self.$el.trigger('onRowDelete', [_self, new RepeaterEventArgs([], _self.currentItem, index, rowItems)]);
             delete _self.rowItems[index - 1];
+
+            //animate
+            _self.rowItems[index - 2][_self.components[0].props.id].scrollTo();
 
             return removedItem;
         }

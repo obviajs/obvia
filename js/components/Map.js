@@ -234,12 +234,21 @@ var GoogleMap = KxGenerator.createComponent({
 
     template: function () {
         return "<div id='" + this.domID + "-wrapper' class='form-group form-inline col-lg-" + this.colspan + " rowspan" + (this.rowspan ? this.rowspan : '') + " resizable'>" +
-                    "<label><b>{label}</b></label><br>" +
-                        "<div class='form-group'>" + 
-                            "<label style='margin-right:5px'>Latitude: <input type='text' class='form-control' rv-value='value.latitude' rv-placeholder='value.latitude' disabled></label>" + 
-                            "<label style='margin-right:5px; margin-left:5px'>Longtitude: <input type='text' class='form-control' rv-value='value.longtitude' rv-placeholder='value.longtitude' disabled> </label>" + 
-                            "<button id='" + this.domID + "_openMapBtn' type='button' class='form-control btn btn-primary' rv-disabled='model.disabled'><i class='fas fa-map-marker'></i> Harta</button>" +
-                        "</div>" + 
+                    "<label><b>{label}</b></label>" +
+                    "<div class='row col-md-12'>" + 
+                        "<div class='col-md-4 px-1'>" + 
+                            "<label>Latitude: </label>" + 
+                            "<input type='text' class='col-md-12 form-control' rv-value='value.latitude' rv-placeholder='value.latitude' disabled>" +
+                        "</div>"+
+                        "<div class='col-md-4 px-1'>" + 
+                           "<label>Longtitude: </label>" +
+                            "<input type='text' class='col-md-12 form-control' rv-value='value.longtitude' rv-placeholder='value.longtitude' disabled>" + 
+                        "</div>"+ 
+                        "<div class='col-md-4'>" +
+                            "<div><br></div>" +
+                            "<button id='" + this.domID + "_openMapBtn' type='button' class='btn btn-primary' rv-disabled='model.disabled'><i class='fas fa-map-marker'></i> Harta</button>" +                 
+                        "</div>" +  
+                    "</div>" + 
                 "<div id='" + this.domID + "_map-modal' class='modal' role='dialog'>" + 
                     "<div class='modal-dialog modal-lg'>" +
                         "<div class='modal-content'>" +
