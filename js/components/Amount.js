@@ -17,7 +17,7 @@ var Amount = KxGenerator.createComponent({
             blockProcessAttr: this.required ? false : this.blockProcessAttr,
         }
     },
-
+    
     beforeAttach: function () {
         this.$inputContainer = this.$el.find('.input-container');
     },
@@ -54,7 +54,7 @@ var Amount = KxGenerator.createComponent({
             
             this.amountInput.$input.css({ 'width': '80%', 'float': 'left' });
             this.currencySelect.$el.css({ 'width': '20%', 'float': 'left'});
-       
+    
             this.trigger('creationComplete');
         }
     },
@@ -136,3 +136,4 @@ Amount.type = 'amount';
 
 //register dom element for this component
 KxGenerator.registerDOMElement(Amount, 'kx-amount');
+
