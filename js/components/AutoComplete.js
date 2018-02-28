@@ -174,8 +174,8 @@ var AutoComplete = KxGenerator.createComponent({
                     "<div class='form-group'>" +
                         "<span rv-if='model.blockProcessAttr' class='block-process'> * </span>" +
                         "<input type='hidden' name='" + this.domID + "_select[]' id='" + this.domID + "_select' />" +
-                        "<button rv-if='displayTable' type='button' class='btn btn-primary' id='" + this.domID + "_openModal'>" +
-                            "<i class='far fa-folder-open'></i> Open" +
+                        "<button rv-if='displayTable' type='button' class='btn btn-lg btn-primary' id='" + this.domID + "_openModal'>" +
+                            "<i class='far fa-folder-open'></i> " +
                         "</button>" +
                     "</div>" +
               

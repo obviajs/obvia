@@ -52,8 +52,8 @@ var Amount = KxGenerator.createComponent({
                 .parent()
                 .append(this.renderCurrencySelect(this.currencyList, this.value.currency));
             
-            this.amountInput.$input.css({ 'width': '85%', 'float': 'left' });
-            this.currencySelect.$el.css({ 'width': '15%', 'float': 'left'});
+            this.amountInput.$input.css({ 'width': '80%', 'float': 'left' });
+            this.currencySelect.$el.css({ 'width': '20%', 'float': 'left'});
        
             this.trigger('creationComplete');
         }
