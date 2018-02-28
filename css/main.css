@@ -1,3 +1,7 @@
+body {
+    font-size: 14px
+}
+
 .select2-container {
     border: none;
     padding: 0
