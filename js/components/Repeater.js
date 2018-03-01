@@ -187,8 +187,7 @@ var Repeater = KxGenerator.createComponent({
                         //animate
                         if (addRowFlag) {
                             _self.rowItems[index - 1][_self.components[0].props.id].scrollTo();
-                        }
-                            
+                        }         
                     
                     }
                 });

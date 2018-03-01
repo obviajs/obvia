@@ -2,7 +2,6 @@ body {
     font-size: 14px
 }
 
-.select2-container {
-    border: none;
-    padding: 0
+.select2-selection__rendered{
+    line-height: 22px !important;
 }

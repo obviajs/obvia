@@ -61,15 +61,14 @@ var AutoComplete = KxGenerator.createComponent({
 
     handleChange: function (e) {
         this.value = [];
-
-        var _self = this;
-        if (this.select2Instance.select2('val').length > 0)
-            this.select2Instance.select2('val').forEach(function (item) {
-                var option = _self.dataProvider.filter(function (option) {
-                    return option.id == item;
+        if (this.select2Instance.select2('data').length > 0)
+            this.select2Instance.select2('data').forEach(function (item) {
+                var option = this.dataProvider.filter(function (option) {
+                    return option.id == item.id;
                 });
-                _self.value.push(option[0]);
-            });
+                this.value.push(option[0]);
+            }.bind(this));
+
     },
 
     createModal: function () {
@@ -120,35 +119,28 @@ var AutoComplete = KxGenerator.createComponent({
 
         this.select2Instance = this.$input.select2({
             multiple: this.multipleSelection,
-            minimumInputLength: 2,
             placeholder: 'Search',
             allowClear: true,
             data: this.dataProvider,
-            formatResult: function (data) {
-                return '<div class=\"select2-user-result\">' + data.text + '</div>';
-            },
             formatSelection: function (data) {
                 if (data != undefined)
                     return data.text;
             },
             separator: ',',
-            width: (this.displayTable) ? '85%': '100%',
-            initSelection: function (element, callback) {
-                !_self.multipleSelection ?
-                    callback(_self.value[0]) :
-                    callback(_self.value);
-            }
-        }).select2('val', []);
+            width: (this.displayTable) ? '90%' : '100%',
+        });
 
-        this.$input.addClass('form-control');
+        this.$input.val(this.value.map(function (item) { return item.id })).trigger('change');
+
         done.call(this);
     },
 
     setValue: function (value) {
-        this.value = value;
-
-        this.select2Instance.select2('val', value);
-        this.trigger('change');
+        this.$input
+            .val(value.map(function (item) { return item.id }))
+            .trigger('change');
+        
+        this.select2Instance.addClass('py-1')
 
         return this;
     },
@@ -173,8 +165,8 @@ var AutoComplete = KxGenerator.createComponent({
                     "<label rv-style='versionStyle' rv-for='domID'><b>{label}</b> <span rv-if='required'>*</span></label>" +
                     "<div class='form-group'>" +
                         "<span rv-if='model.blockProcessAttr' class='block-process'> * </span>" +
-                        "<input type='hidden' name='" + this.domID + "_select[]' id='" + this.domID + "_select' />" +
-                        "<button rv-if='displayTable' type='button' class='btn btn-lg btn-primary' id='" + this.domID + "_openModal'>" +
+                        "<select type='hidden' name='" + this.domID + "_select[]' id='" + this.domID + "_select'></select>" +
+                        "<button rv-if='displayTable' type='button' class='btn btn-primary' id='" + this.domID + "_openModal'>" +
                             "<i class='far fa-folder-open'></i> " +
                         "</button>" +
                     "</div>" +

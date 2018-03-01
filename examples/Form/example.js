@@ -14,7 +14,6 @@ rjs.define("./js/components/TextArea.js", "TextArea");
 rjs.define("./js/components/TextEditor.js", "TextEditor");
 rjs.define("lib/flower_dependencies/summernote/summernote.css", "SummerNoteCSS");
 rjs.define("lib/flower_dependencies/summernote/summernote.min.js", "SummerNoteScript");
-
 //Select
 rjs.define("./js/components/Select.js", "Select");
 //DateTime
@@ -22,7 +21,13 @@ rjs.define("./js/components/DateTime.js", "DateTime");
 rjs.define("https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/js/bootstrap-datepicker.min.js", "DatePickerScript");
 rjs.define("https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/css/bootstrap-datepicker.min.css", "DatePickerCSS");
 //DateTimeCb
-rjs.define("./js/components/DateTime.js", "DateTimeCb");
+rjs.define("./js/components/DateTimeCb.js", "DateTimeCb");
+//Modal
+rjs.define("./js/components/Modal.js", "Modal");
+//AutoComplete
+rjs.define("https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css", "Select2CSS");
+rjs.define("https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js", "Select2Script");
+rjs.define("./js/components/AutoComplete.js", "AutoComplete");
 
 rjs.require([
     "DOMContentLoaded",
@@ -36,7 +41,12 @@ rjs.require([
     "TextEditor",
     "DateTime",
     "DatePickerScript",
-    "DatePickerCSS"
+    "DatePickerCSS",
+    "DateTimeCb",
+    "Select2CSS",
+    "Select2Script",
+    "Modal",
+    "AutoComplete"
 ], function () {
     var myForm = new Form({
         id: 'form',
@@ -122,40 +132,40 @@ rjs.require([
                     value: '10/02/2018'
                 }
             },
-            // {
-            //     constructor: DateTimeCb,
-            //     props: {
-            //         id: 'dayMonthYear',
-            //         colspan: '6',
-            //         label: 'Date Mode 2',
-            //         spacing: { mb: '5' },
-            //         versionStyle: '',
-            //         blockProcessAttr: false,
-            //         required: false,
-            //         startYear: '2005',
-            //         endYear: '2020',
-            //         mode: "datetime",
-            //         inputFormat: 'MM/DD/YYYY H:m',
-            //         outputFormat: 'DD-MM-YYYY H:m',
-            //         value: '02/10/2006 03:34'
-            //     }
-            // },
-            // {
-            //     constructor: AutoComplete,
-            //     props: {
-            //         id: 'autocomplete',
-            //         colspan: '6',
-            //         label: 'Ministrite',
-            //         spacing: { mb: '5' },
-            //         blockProcessAttr: false,
-            //         required: false,
-            //         multipleSelection: false,
-            //         displayTable: false,
-            //         tableData: [["Ministria e Puneve te Jashtme"], ["Ministria e Drejtesise"], ["Ministria e Brendshme"]],
-            //         dataProvider: [{ "id": "1", "text": "Ministria e Puneve te Jashtme" }, { "id": "2", "text": "Ministria e Drejtesise" }, { "id": "3", "text": "Ministria e Brendshme" }],
-            //         value: [{ "id": "1", "text": "Ministria e Puneve te Jashtme" }]
-            //     }
-            // },
+            {
+                constructor: DateTimeCb,
+                props: {
+                    id: 'dayMonthYear',
+                    colspan: '6',
+                    label: 'Date Mode 2',
+                    spacing: { mb: '5' },
+                    versionStyle: '',
+                    blockProcessAttr: false,
+                    required: false,
+                    startYear: '2005',
+                    endYear: '2020',
+                    mode: "datetime",
+                    inputFormat: 'MM/DD/YYYY H:m',
+                    outputFormat: 'DD-MM-YYYY H:m',
+                    value: '02/10/2006 03:34'
+                }
+            },
+            {
+                constructor: AutoComplete,
+                props: {
+                    id: 'autocomplete',
+                    colspan: '6',
+                    label: 'Ministrite',
+                    spacing: { mb: '5' },
+                    blockProcessAttr: false,
+                    required: false,
+                    multipleSelection: false,
+                    displayTable: false,
+                    tableData: [["Ministria e Puneve te Jashtme"], ["Ministria e Drejtesise"], ["Ministria e Brendshme"]],
+                    dataProvider: [{ "id": "1", "text": "Ministria e Puneve te Jashtme" }, { "id": "2", "text": "Ministria e Drejtesise" }, { "id": "3", "text": "Ministria e Brendshme" }],
+                    value: [{ "id": "2", "text": "Ministria e Drejtesise" }]
+                }
+            },
             // {
             //     constructor: Amount,
             //     props: {
@@ -347,7 +357,7 @@ rjs.require([
                             comboValue: "1",
                             checkboxValue: true,
                             autocompleteLabel: 'Ministrite',
-                            autocompleteValue: [{ "id": "3", "text": "Ministria e Brendshme" }],
+                            autocompleteValue: [{ "id": "2", "text": "Ministria e Drejtesise" }, { "id": "3", "text": "Ministria e Brendshme" }],
                             textLabel: 'Emri',
                             textValue: 'Lejdi Koci',
                             trippleValue: "1",
@@ -366,22 +376,22 @@ rjs.require([
                         }
                     ],
                     components: [
-                        // {
-                        //     constructor: AutoComplete,
-                        //     props: {
-                        //         id: 'autocompleteR',
-                        //         colspan: '6',
-                        //         spacing: { mb: '5' },
-                        //         label: '{autocompleteLabel}',
-                        //         blockProcessAttr: false,
-                        //         required: false,
-                        //         multipleSelection: true,
-                        //         displayTable: true,
-                        //         tableData: [["Ministria e Puneve te Jashtme"], ["Ministria e Drejtesise"], ["Ministria e Brendshme"]],
-                        //         dataProvider: [{ "id": "1", "text": "Ministria e Puneve te Jashtme" }, { "id": "2", "text": "Ministria e Drejtesise" }, { "id": "3", "text": "Ministria e Brendshme" }],
-                        //         value: '{autocompleteValue}'
-                        //     }
-                        // },
+                        {
+                            constructor: AutoComplete,
+                            props: {
+                                id: 'autocompleteR',
+                                colspan: '6',
+                                spacing: { mb: '5' },
+                                label: '{autocompleteLabel}',
+                                blockProcessAttr: false,
+                                required: false,
+                                multipleSelection: true,
+                                displayTable: true,
+                                tableData: [["Ministria e Puneve te Jashtme"], ["Ministria e Drejtesise"], ["Ministria e Brendshme"]],
+                                dataProvider: [{ "id": "1", "text": "Ministria e Puneve te Jashtme" }, { "id": "2", "text": "Ministria e Drejtesise" }, { "id": "3", "text": "Ministria e Brendshme" }],
+                                value: '{autocompleteValue}'
+                            }
+                        },
                         // {
                         //     constructor: ComboBox,
                         //     props: {
@@ -462,22 +472,22 @@ rjs.require([
                                 value: '{dateValue}'
                             }
                         },
-                        // {
-                        //     constructor: DateTimeCb,
-                        //     props: {
-                        //         id: 'dayMonthYear',
-                        //         colspan: '6',
-                        //         label: 'Date Mode 2',
-                        //         spacing: { mb: '5' },
-                        //         versionStyle: '',
-                        //         blockProcessAttr: false,
-                        //         required: false,
-                        //         mode: "date",
-                        //         inputFormat: 'DD/MM/YYYY',
-                        //         outputFormat: 'DD-MM-YYYY',
-                        //         value: '{dayMonthYearValue}'
-                        //     }
-                        // },
+                        {
+                            constructor: DateTimeCb,
+                            props: {
+                                id: 'dayMonthYear',
+                                colspan: '6',
+                                label: 'Date Mode 2',
+                                spacing: { mb: '5' },
+                                versionStyle: '',
+                                blockProcessAttr: false,
+                                required: false,
+                                mode: "date",
+                                inputFormat: 'DD/MM/YYYY',
+                                outputFormat: 'DD-MM-YYYY',
+                                value: '{dayMonthYearValue}'
+                            }
+                        },
                         // {
                         //     constructor: Toggle,
                         //     props: {
@@ -583,31 +593,31 @@ rjs.require([
         ]
     });
 
-    myForm.on('creationComplete', function () {
-        myForm.repeater.on('onBeforeRowAdd', function (e) {
-            e.preventDefault();
-            var repeater = this;
+    // myForm.on('creationComplete', function () {
+    //     myForm.repeater.on('onBeforeRowAdd', function (e) {
+    //         e.preventDefault();
+    //         var repeater = this;
 
-            bootbox.confirm("Do you want to add row?", function (result) {
-                if (result) {
-                    repeater.addRow(repeater.defaultItem, repeater.currentIndex + 1);
-                }
-            })
+    //         bootbox.confirm("Do you want to add row?", function (result) {
+    //             if (result) {
+    //                 repeater.addRow(repeater.defaultItem, repeater.currentIndex + 1);
+    //             }
+    //         })
 
-        });
+    //     });
 
-        myForm.repeater.on('onBeforeRowDelete', function (e) {
-            e.preventDefault();
-            var repeater = this;
+    //     myForm.repeater.on('onBeforeRowDelete', function (e) {
+    //         e.preventDefault();
+    //         var repeater = this;
 
-            bootbox.confirm("Do you want to remove row?", function (result) {
-                if (result) {
-                    repeater.removeRow(repeater.currentIndex);
-                }
-            })
-        });
+    //         bootbox.confirm("Do you want to remove row?", function (result) {
+    //             if (result) {
+    //                 repeater.removeRow(repeater.currentIndex);
+    //             }
+    //         })
+    //     });
 
-    });
+    // });
 
     $('#root').append(myForm.render());
 
