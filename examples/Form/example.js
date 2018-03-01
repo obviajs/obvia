@@ -258,10 +258,10 @@ var myForm = new Form({
                 blockProcessAttr: false,
                 required: true,
                 dataProvider: [
-                    { "id": "1", "text": "Ministria e Puneve te Jashtme 1", "buttonClass": 'btn btn-xs btn-default', "enabled": true },
-                    { "id": "2", "text": "Ministria e Drejtesise 1", "buttonClass": 'btn btn-xs btn-default', "enabled": true },
-                    { "id": "3", "text": "Ministria e Brendshme 1", "buttonClass": 'btn btn-xs btn-success', "enabled": true },
-                    { "id": "4", "text": "Ministria e Mbrojtjes 1", "buttonClass": 'btn btn-xs btn-default', "enabled": true }
+                    { "id": "1", "text": "Ministria e Puneve te Jashtme", "buttonClass": 'btn btn-xs btn-default', "enabled": true },
+                    { "id": "2", "text": "Ministria e Drejtesise", "buttonClass": 'btn btn-xs btn-default', "enabled": true },
+                    { "id": "3", "text": "Ministria e Brendshme", "buttonClass": 'btn btn-xs btn-success', "enabled": true },
+                    { "id": "4", "text": "Ministria e Mbrojtjes", "buttonClass": 'btn btn-xs btn-default', "enabled": false }
                 ],
                 valueField: "id",
                 labelField: "text",
@@ -304,7 +304,7 @@ var myForm = new Form({
                     dayMonthYearValue: "",
                     amountValue: {},
                     radioGroupValue: "",
-                    checkboxGroupValue: []
+                    checkboxGroupValue: ""
 
                 },
                 dataProvider: [
@@ -353,7 +353,10 @@ var myForm = new Form({
                         dayMonthYearValue: "",
                         amountValue: {},
                         radioGroupValue: "",
-                        checkboxGroupValue: [{ "id": "3", "text": "Ministria e Brendshme", "buttonClass": 'btn btn-xs btn-success', "enabled": true }]
+                        checkboxGroupValue: [
+                            { "id": "3", "text": "Ministria e Brendshme", "buttonClass": 'btn btn-xs btn-success', "enabled": true },
+                            { "id": "4", "text": "Ministria e Mbrojtjes", "buttonClass": 'btn btn-xs btn-success', "enabled": false }
+                        ]
                     }
                 ],
                 components: [
@@ -532,10 +535,10 @@ var myForm = new Form({
                             blockProcessAttr: false,
                             required: true,
                             dataProvider: [
-                                { "id": "1", "text": "Ministria e Puneve te Jashtme 1", "buttonClass": 'btn btn-xs btn-default', "enabled": true },
-                                { "id": "2", "text": "Ministria e Drejtesise 1", "buttonClass": 'btn btn-xs btn-default', "enabled": true },
-                                { "id": "3", "text": "Ministria e Brendshme 1", "buttonClass": 'btn btn-xs btn-success', "enabled": true },
-                                { "id": "4", "text": "Ministria e Mbrojtjes 1", "buttonClass": 'btn btn-xs btn-default', "enabled": true }
+                                { "id": "1", "text": "Ministria e Puneve te Jashtme", "buttonClass": 'btn btn-xs btn-default', "enabled": true },
+                                { "id": "2", "text": "Ministria e Drejtesise", "buttonClass": 'btn btn-xs btn-default', "enabled": true },
+                                { "id": "3", "text": "Ministria e Brendshme", "buttonClass": 'btn btn-xs btn-success', "enabled": true },
+                                { "id": "4", "text": "Ministria e Mbrojtjes", "buttonClass": 'btn btn-xs btn-default', "enabled": false }
                             ],
                             valueField: "id",
                             labelField: "text",

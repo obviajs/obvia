@@ -95,12 +95,12 @@ var RadioGroup = KxGenerator.createComponent({
     },
 
     enable: function () {         
-        this.repeater.enable();
+        this.list.enable();
         return this; 
     },
 
     disable: function () {
-        this.repeater.disable();
+        this.list.disable();
         return this;  
     },
 

@@ -87,7 +87,7 @@ var TextArea = KxGenerator.createComponent({
                             "<textarea rv-type='type' rv-value='value' " +
                             "name='" + this.domID + "' id='" + this.domID + "' class='form-control rowspan"+ this.rowspan +
                             "' rv-placeholder='label' rv-enabled='model.enabled' autofocus></textarea>" +
-                            "<button type='button' rv-if='spellCheck' id='" + this.domID + "-spellCheck' class='btn btn-sm btn-primary float-right'><i class='fas fa-book'></i> Spell Check</button>" +
+            "<button type='button' rv-if='spellCheck' id='" + this.domID + "-spellCheck' class='btn btn-sm btn-primary float-right'  rv-enabled='model.enabled'><i class='fas fa-book'></i> Spell Check</button>" +
                 "</div>" +
             "</div>";
     },
