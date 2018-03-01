@@ -77,7 +77,7 @@ var List = KxGenerator.createComponent({
                 value = [v];
             }else if(typeof(value)==="object" && !(value instanceof Array)){
                value = [value];
-            }else{
+            }else if(!(typeof(value)==="object" && (value instanceof Array))){
                 v = {};
                 v[this.valueField] = value;
                 value = [v];
