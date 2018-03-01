@@ -139,8 +139,6 @@ var AutoComplete = KxGenerator.createComponent({
         this.$input
             .val(value.map(function (item) { return item.id }))
             .trigger('change');
-        
-        this.select2Instance.addClass('py-1')
 
         return this;
     },
