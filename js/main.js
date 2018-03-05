@@ -60,6 +60,7 @@ rjs.define("lib/flower_dependencies/scripts/jquery.slimscroll.js", "SlimScroll")
 rjs.define("lib/flower_dependencies/styles/kx-upload.css", "KxUploadCSS");
 rjs.define("lib/flower_dependencies/scripts/resumable.js", "Resumable");
 rjs.define("./js/components/Upload.js", "Upload");
+rjs.define("./js/components/FormUpload.js", "FormUpload");
 
 rjs.require([
     "DOMContentLoaded",
@@ -97,14 +98,15 @@ rjs.require([
     "Resumable",
     "KxUploadCSS",
     "Upload",
-    "SlimScroll"
+    "SlimScroll",
+    "FormUpload"
 ], function () {
 
     // rjs.define("./examples/CheckBox/example.js", "CheckBoxExample");
     // rjs.define("./examples/RadioButton/example.js", "RadioButtonExample");
     // rjs.define("./examples/CheckBoxGroup/example.js", "CheckBoxGroupExample");
     // rjs.define("./examples/RadioGroup/example.js", "RadioGroupExample");
-    rjs.define("./examples/Upload/example.js", "UploadExample");
-    // rjs.define("./examples/Form/example.js", "FormExample");
+    // rjs.define("./examples/Upload/example.js", "UploadExample");
+    rjs.define("./examples/Form/example.js", "FormExample");
 
 }, flowerCM);
