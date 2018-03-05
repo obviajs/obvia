@@ -12,7 +12,12 @@ var Upload = KxGenerator.createComponent({
             dropString: "Drag & Drop",
             orString: "or",
             browseString: "Browse",
-            shownActions: false
+            shownActions: false,
+            enabled: true,
+            uploadOnProgress: false,
+            uploadBtnClass: "btn btn-sm btn-primary",
+            progressBarCSS: "width: 0%"
+            // chunkSize: 1 * 1024 * 1024 //1 MB
         }
     },
 
@@ -21,10 +26,11 @@ var Upload = KxGenerator.createComponent({
         this.dropTarget = this.$el.find("#drop-" + this.domID);
         this.fileList = this.$el.find("#files-" + this.domID);
         this.actionsBar = this.$el.find("#actions-" + this.domID);
+        this.uploadBtn = null;
         this.resumable = this.init();
     },
 
-    registerEvents: function () {
+    registerEvents: function () { 
         return [
             {
                 registerTo: this.$el, events: {
@@ -33,9 +39,12 @@ var Upload = KxGenerator.createComponent({
             },
             {
                 registerTo: this.resumable, events: {
-                    'fileAdded': this.fileAddedHandler.bind(this)
+                    'fileAdded': this.fileAddedHandler.bind(this),
+                    'progress': this.uploadProgress.bind(this),
+                    'complete': this.uploadComplete.bind(this),
+                    'error': this.errorHandler.bind(this)
                 }
-            },
+            }
         ]
     },
 
@@ -48,7 +57,7 @@ var Upload = KxGenerator.createComponent({
     init: function () {
         var resumable = new Resumable({
             target: this.target,
-            query: { upload_token: 'my_token' }
+            query: { upload_token: 'kx' },
         });
 
         resumable.assignBrowse(this.browseBtn);
@@ -58,7 +67,24 @@ var Upload = KxGenerator.createComponent({
         return resumable;
     },
 
+    errorHandler: function (file, message) {
+        bootbox.alert(message);
+    },
+
     fileAddedHandler: function (file, event) {
+        console.log(file)
+        //allowed type control
+        if (this.allowedExtensions && this.allowedExtensions.indexOf(fileExtension(file.file.name)) == -1) {
+            this.resumable.removeFile(file); 
+            return;
+        }
+
+        //multiple control
+        if (!this.multiple && this.resumable.files.length > 1) {
+            this.resumable.removeFile(file); 
+            return;
+        }
+
         this.appendToFileList(file);
         if (this.resumable.files.length < 1)
             this.hideActions();     
@@ -70,14 +96,72 @@ var Upload = KxGenerator.createComponent({
                 size: '5px',
                 color: '#CCCCCC',
                 railColor: '#CCCCCC',
-                railVisible: true
+                railVisible: true,
+                start: 'bottom',
             });
+
+            this.fileList.slimScroll({ scrollTo: this.fileList[0].scrollHeight })
         }
+    },
+
+    uploadHandler: function (e) {
+        this.resumable.upload();
+
+        var model = this.getModel();
+        model.uploadOnProgress = true;
+        model.uploadBtnClass = "btn btn-sm btn-warning";
+        this.uploadBtn.html("<i class='fas fa-pause'></i> Pause");
+
+        this.uploadBtn.off('click');
+        this.uploadBtn.on('click', this.pauseHandler.bind(this));
+
+        this.fileList.find('.remove-btn').prop('disabled', true);
+    },
+   
+    uploadProgress: function () {
+        var model = this.getModel();
+        model.progressBarCSS = "width: " + 100 * this.resumable.progress() + "%";
+    },
+
+    uploadComplete: function () {
+        this.resetUpload();
+        bootbox.alert("Upload Success");
+    },
+
+    pauseHandler: function () {
+        var model = this.getModel();
+        model.uploadBtnClass = "btn btn-sm btn-success";
+
+        this.resumable.pause();
+        this.uploadBtn.off('click');
+        this.uploadBtn.on('click', this.uploadHandler.bind(this));
+        this.uploadBtn.html("<i class='fas fa-play'></i> Resume");
+    },
+
+    resetUpload: function () {
+        var model = this.getModel();
+        model.uploadBtnClass = "btn btn-sm btn-primary";
+        model.uploadOnProgress = false;
+        model.progressBarCSS = "width: 0%";
+        model.shownActions = false;
+
+        this.uploadBtn.html("<i class='fas fa-cloud-upload-alt'></i> Upload");
+        this.resumable.files = [];
+        this.fileList.slimScroll({
+            destroy: true
+        });
+        this.fileList[0].style = ''
+        this.fileList.html("");  
+        this.browseBtn.prop('disabled', false);
     },
 
     showActions: function () {
         var model = this.getModel();
         model.shownActions = true;
+
+        this.uploadBtn = this.$el.find("#upload-" + this.domID);
+        this.uploadBtn.off('click');
+        this.uploadBtn.on('click', this.uploadHandler.bind(this));
     },
 
     hideActions: function () {
@@ -95,8 +179,7 @@ var Upload = KxGenerator.createComponent({
     },
 
     appendToFileList: function (rf) {
-        console.log(rf.file)
-        var template =  '<div class="row col-md-12 mt-3">' +
+        var template =  '<div id="template-' + rf.file.uniqueIdentifier + '-' + this.domID +'" class="row col-md-12 mt-3">' +
                             '<div class="img-container float-left">' +
                                 '<img class="rounded" width="40" height="40" />' +
                             '</div>' +
@@ -128,7 +211,7 @@ var Upload = KxGenerator.createComponent({
                 if (context.resumable.files.length < 4){
                     context.fileList.slimScroll({
                         destroy: true
-                    })
+                    });
                     context.fileList[0].style= ''
                 }
             }
@@ -144,19 +227,21 @@ var Upload = KxGenerator.createComponent({
     },
 
     enable: function () {
-       
+        var model = this.getModel();
+        model.enabled = true;
         return this;
     },
 
     disable: function () {
-
+        var model = this.getModel();
+        model.enabled = false;
         return this;
     },
 
     template: function () {
         return  "<div id='" + this.domID + "-wrapper' class='col-lg-" + this.colspan + "'>" +
                     "<div class='col-md-12 kx-upload'>" +
-                        "<div class='col-md-12 kx-drop-area' id='drop-" + this.domID + "'>" +
+                        "<div class='col-md-12 kx-drop-area' id='drop-" + this.domID + "' rv-if='allowDrop'>" +
                             "<div class='row'>" +
                                 "<div class='mt-5' style='margin:auto'>{model.dropString}</div>"+
                             "</div>" +
@@ -169,10 +254,22 @@ var Upload = KxGenerator.createComponent({
                                 "</div>"+
                             "</div>" +
                         "</div>" +
+                        "<div class='col-md-12' rv-unless='allowDrop'>" +
+                            "<span class='btn btn-secondary' id='browse-" + this.domID + "'>{model.browseString}</span>" +
+                        "</div>" +
                         "<div class='col-md-12' id='files-" + this.domID + "'>" +
                         "</div>" +
-                        "<div class='col-md-12 row mt-3' rv-if='model.shownActions' id='actions-" + this.domID + "'>" +
-                            "<button type='button' class='btn btn-sm btn-primary'><i class='fas fa-cloud-upload-alt'></i> Upload</button>" +
+                        "<div class='col-md-12 mt-3' rv-if='model.shownActions' id='actions-" + this.domID + "'>" +
+                            "<div class='row'>" +
+                                "<div class='col-md-12 mb-2'>" +
+                                    "<div rv-if='model.uploadOnProgress' class='progress'>" +
+                                        "<div class='progress-bar progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='0' aria-valuemin='0' aria-valuemax='100' rv-style='model.progressBarCSS'></div>" +
+                                    "</div>" +
+                                "</div>" +  
+                            "</div>" +      
+                            "<p>"+
+                                "<button id='upload-" + this.domID + "' type='button' rv-enabled='model.enabled' rv-class='model.uploadBtnClass' style='color: white;'><i class='fas fa-cloud-upload-alt'></i> Upload</button>" +
+                            "</p>"+
                         "</div>" +
                     "</div>" +
                 "</div>";
