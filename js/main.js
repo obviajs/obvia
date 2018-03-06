@@ -6,6 +6,8 @@ rjs.define("./lib/flower_dependencies/scripts/jquery.inputmask.bundle.min.js", "
 rjs.define("./js/components/Form.js", "Form");
 //Button
 rjs.define("./js/components/Button.js", "Button");
+//Label
+rjs.define("./js/components/Label.js", "Label");
 //Repeater
 rjs.define("./js/components/Repeater.js", "Repeater");
 //List
@@ -68,6 +70,7 @@ rjs.require([
     "Repeater",
     "List",
     "Amount",
+    "Label",
     "TextInput", 
     "InputMaskBundle",
     "TextArea",

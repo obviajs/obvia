@@ -19,7 +19,7 @@ var Repeater = KxGenerator.createComponent({
             this.dataProviderKeys = Object.keys(this.defaultItem);
         }else if(this.dataProvider.length>0)
         {
-            this.dataProviderKeys = Object.keys(this.dataProvider[i]);
+            this.dataProviderKeys = Object.keys(this.dataProvider[0]);
         }
         return {
             displayAddButton: this.rendering.actions,
@@ -95,10 +95,10 @@ var Repeater = KxGenerator.createComponent({
         }
     },
     //renders a new row, adds components in stack
-    addRow: function (data, index, isPreventable = false) {
+    addRow: function (data, index, isPreventable = false, focusOnRowAdd = true) {
         var _self = this;
         var model = this.getModel();
-
+        
         var renderedRow = $('<div ' + (_self.rendering.direction == 'vertical' ? "class='row col-md-12'" : "") + '>')
         
         var ccComponents = [];
@@ -163,7 +163,7 @@ var Repeater = KxGenerator.createComponent({
                         //duhet te shtojme nje flag qe ne rast se metoda addRow eshte thirrur nga addRowHangler te mos e exec kodin meposhte
                         
                         //manage dp
-                        _self.currentItem = _self.defaultItem;
+                        _self.currentItem = data;
 
                         _self.currentIndex <= index ? _self.currentIndex = index : _self.currentIndex = _self.currentIndex;
                         if (_self.currentIndex > 1 && _self.rendering.actions) {
@@ -183,7 +183,7 @@ var Repeater = KxGenerator.createComponent({
                         }
 
                         //animate
-                        if (addRowFlag) {
+                        if (addRowFlag && focusOnRowAdd) {
                             _self.rowItems[index - 1][_self.components[0].props.id].scrollTo();
                         }         
                     
@@ -241,12 +241,11 @@ var Repeater = KxGenerator.createComponent({
         this.removeRow(this.currentIndex, true);
     },
 
-    removeRow: function (index, isPreventable = false) {
+    removeRow: function (index, isPreventable = false, focusOnRowDelete = true) {
         var _self = this;
         var rowItems = {};
         var model = this.getModel();
         
-
         var removeRow = function () {
             _self.$container.find('#' + _self.domID + '-repeated-block-' + index).remove();
             _self.$container.find('#' + _self.domID + '-repeated-block-hr-' + index).remove();
@@ -271,7 +270,8 @@ var Repeater = KxGenerator.createComponent({
             delete _self.rowItems[index - 1];
 
             //animate
-            _self.rowItems[index - 2][_self.components[0].props.id].scrollTo();
+            if (focusOnRowDelete)
+                _self.rowItems[index - 2][_self.components[0].props.id].scrollTo();
 
             return removedItem;
         }

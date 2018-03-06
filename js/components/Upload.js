@@ -124,8 +124,10 @@ var Upload = KxGenerator.createComponent({
     },
 
     uploadComplete: function () {
+        if (typeof this.onupload == 'function')
+            this.onupload(this.resumable.files);    
         this.resetUpload();
-        bootbox.alert("Upload Success");
+        // bootbox.alert("Upload Success");
     },
 
     pauseHandler: function () {

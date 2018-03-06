@@ -19,6 +19,8 @@ var FormUpload = KxGenerator.createComponent({
         this.$modalContainer = this.$el.find('#' + this.domID + '-upload-modal');
         this.modal = null;
         this.$upload = this.createUpload();
+        this.$listContainer = this.$el.find('.list-container');
+        this.$list = this.createList();
     },
 
     registerEvents: function () {
@@ -30,7 +32,7 @@ var FormUpload = KxGenerator.createComponent({
             },
             {
                 registerTo: this.$uploadBtn, events: {
-                    'click': this.uploadHandler.bind(this)
+                    'click': this.handleUploadClick.bind(this)
                 }
             },
         ]
@@ -39,11 +41,64 @@ var FormUpload = KxGenerator.createComponent({
     afterAttach: function (e) {
         if (e.target.id == this.domID + '-wrapper') {
             this.createModal();
+            this.$listContainer.html(this.$list);
         }
     },
 
-    uploadHandler: function (e) {
+    handleUploadClick: function (e) {
         this.modal.show();
+    },
+
+    createList: function () {
+        this.direction = this.direction == undefined || this.direction == null ? 'vertical' : this.direction;
+        
+        this.list = new List({
+            id: 'list',
+            colspan: '6',
+            direction: this.direction,
+            seperator: true,
+            defaultItem: this.defaultItem,
+            dataProvider: this.dataProvider,
+            embedded: true,
+            value: this.value,
+            components: [
+                {
+                    constructor: Label,
+                    props: {
+                        id: 'no',
+                        class: 'col-md-1',
+                        label: "{" + this.noLabelValue + "}"
+                    }
+                },
+                {
+                    constructor: Label,
+                    props: {
+                        id: 'name',
+                        class: 'col-md-9',
+                        label: "{" + this.nameLabelValue + "}"
+                    }
+                },
+                {
+                    constructor: Button,
+                    props: {
+                        id: 'button',
+                        type: "button",
+                        value: "Delete",
+                        class: "btn btn-sm btn-danger",
+                        onclick: this.deleteFromListHandler.bind(this),
+                        embedded: true  
+                    }
+                }
+            ],
+            // onclick: this.onclick,
+            // onchange: this.onchange
+        }).on('creationComplete', function (e) {
+            e.stopPropagation();
+        }.bind(this)).on('change', function () {
+            this.value = this.list.value;
+        }.bind(this));
+        
+        return this.list.render();
     },
 
     createModal: function () {
@@ -71,9 +126,10 @@ var FormUpload = KxGenerator.createComponent({
         this.upload = new Upload({
             id: 'upload' + this.id,
             colspan: '12',
-            multiple: false,
+            multiple: true,
             allowDrop: true,
-            target: this.action
+            target: this.action,
+            onupload: this.uploadHandler.bind(this)
         });
 
         var _self = this;
@@ -83,6 +139,25 @@ var FormUpload = KxGenerator.createComponent({
         });
 
         return this.upload.render();
+    },
+
+    deleteFromListHandler: function (e, repeaterArgs) {
+        console.log(repeaterArgs);
+        this.list.repeater.removeRow(repeaterArgs.currentIndex + 1, false, false);
+    },
+
+    uploadHandler: function (files) {
+        this.modal.hide();
+        files.forEach(function (rf, index) {
+            var item = {
+                "id": rf.file.uniqueIdentifier,
+                "no": parseInt(this.dataProvider[this.list.repeater.currentIndex - 1][this.noLabelValue]) + 1,
+                "file": rf.file.name,
+                "deleteAction": this.defaultItem[this.deleteAction] + "?id=" + rf.file.uniqueIdentifier
+            };
+
+            this.list.repeater.addRow(item, this.list.repeater.currentIndex + 1, false, false);
+        }.bind(this));
     },
 
     enable: function () {
@@ -102,9 +177,9 @@ var FormUpload = KxGenerator.createComponent({
                     "<label rv-style='versionStyle' rv-for='domID'><b>{label}</b> <span rv-if='required'>*</span></label>" +
                     "<span rv-if='model.blockProcessAttr' class='block-process'> * </span>" +
                     "<div class='input-container'>" +
-                        "<p>" +
+                        "<div>" +
                             "<button id='upload-" + this.domID + "' type='button' class='btn btn-primary' rv-enabled='model.enabled' style='color: white;'><i class='fas fa-cloud-upload-alt'></i> Upload</button>" +
-                        "</p><hr>" +
+                        "</div>" +
                         "<div class='row'>" +
                             "<div class='col-md-12 list-container'></div>" +
                         "</div>" +
@@ -119,7 +194,7 @@ var FormUpload = KxGenerator.createComponent({
 });
 
 //component prototype
-FormUpload.type = 'form-upload';
+FormUpload.type = 'form_upload';
 
 //register dom element for this component
 KxGenerator.registerDOMElement(FormUpload, 'kx-formupload');

@@ -26,13 +26,10 @@ var List = KxGenerator.createComponent({
         
         this.repeater = new Repeater({
             id: 'listRepeater',
-            defaultItem: {
-                text: 'Button',
-                buttonClass: 'btn btn-xs btn-default'
-            },
+            defaultItem: this.defaultItem,
             rendering: {
                 direction: this.direction,
-                seperator: false,
+                seperator: this.seperator || false,
                 actions: false
             },
             dataProvider: this.dataProvider,

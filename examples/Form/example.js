@@ -285,7 +285,16 @@ var myForm = new Form({
                 required: true,
                 dataProvider: [],
                 action: 'http://phptest/upload.php',
-                value: "",
+                dataProvider: [
+                    { "id": "1", "no": "1", "file": "test.txt", "deleteAction": "http://phptest/delete.php?id=1" },
+                    { "id": "2", "no": "2", "file": "paga.xlsx", "deleteAction": "http://phptest/delete.php?id=1" }
+                ],
+                defaultItem: { "id": "1", "no": "1", "file": "test.txt", "deleteAction": "http://phptest/delete.php" },
+                noLabelValue: "no",
+                nameLabelValue: "file",
+                deleteAction: "deleteAction",
+                valueField: "id",
+                value: ""
             }
         },
         {
@@ -318,7 +327,8 @@ var myForm = new Form({
                     dayMonthYearValue: "",
                     amountValue: {},
                     radioGroupValue: "",
-                    checkboxGroupValue: ""
+                    checkboxGroupValue: "",
+                    formUploadProvider: []
 
                 },
                 dataProvider: [
@@ -343,7 +353,12 @@ var myForm = new Form({
                         dayMonthYearValue: "10/02/2013",
                         amountValue: { currency: "2", amount: "33433" },
                         radioGroupValue: "2",
-                        checkboxGroupValue: []
+                        checkboxGroupValue: [],
+                        formUploadProvider: [
+                            { "id": "1", "no": "1", "file": "test.txt", "deleteAction": "http://phptest/delete.php?id=1" },
+                            { "id": "2", "no": "2", "file": "image.jpg", "deleteAction": "http://phptest/delete.php?id=2" },
+                            { "id": "3", "no": "3", "file": "doc.pdf", "deleteAction": "http://phptest/delete.php?id=3" },
+                        ]
 
                     },
                     {
@@ -370,6 +385,9 @@ var myForm = new Form({
                         checkboxGroupValue: [
                             { "id": "3", "text": "Ministria e Brendshme", "buttonClass": 'btn btn-xs btn-success', "enabled": true },
                             { "id": "4", "text": "Ministria e Mbrojtjes", "buttonClass": 'btn btn-xs btn-success', "enabled": false }
+                        ],
+                        formUploadProvider: [
+                            { "id": "1", "no": "1", "file": "other.txt", "deleteAction": "http://phptest/delete.php?id=1" }
                         ]
                     }
                 ],
@@ -622,7 +640,13 @@ var myForm = new Form({
                             required: true,
                             dataProvider: [],
                             action: 'http://phptest/upload.php',
-                            value: "",
+                            dataProvider: "{formUploadProvider}",
+                            defaultItem: { "id": "1", "no": "1", "file": "test.txt", "deleteAction": "http://phptest/delete.php" },
+                            noLabelValue: "no",
+                            nameLabelValue: "file",
+                            valueField: "id",
+                            deleteAction: "deleteAction",
+                            value: ""
                         }
                     },
                 ]
