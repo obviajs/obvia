@@ -37,7 +37,8 @@ var List = KxGenerator.createComponent({
             },
             dataProvider: this.dataProvider,
             components: this.components
-        }).on('creationComplete', function () {
+        }).on('creationComplete', function (e) {
+            e.stopPropagation();
             var v = this.value.slice();
             //trick to pass property value updated check on the first setValue call below (initial value)
             this.value = [];

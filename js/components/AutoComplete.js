@@ -47,15 +47,7 @@ var AutoComplete = KxGenerator.createComponent({
         if (e.target.id == this.domID + '-wrapper') {
             if(this.displayTable)
                 this.createModal();
-            this.renderSelect2(function () {
-                var _self = this;
-                if (this.displayTable)
-                    this.modal.on('creationComplete', function () {
-                        //trigger autocomplete complete
-                        _self.trigger('creationComplete');
-                    })
-                else this.trigger('creationComplete');
-            });
+            this.renderSelect2();
         }
     },
 
@@ -97,6 +89,13 @@ var AutoComplete = KxGenerator.createComponent({
         this.modal.parentType = 'autocomplete';
         
         this.$modal = this.modal.$el;
+        var _self = this;
+        this.modal.on('creationComplete', function (e) {
+            //trigger autocomplete complete
+            e.stopPropagation();
+            _self.trigger('creationComplete');
+        })
+    
         this.$modalContainer.html(this.$modal);
         this.$modal.on('shown.bs.modal', this.renderTable.bind(this))
     },
@@ -114,7 +113,7 @@ var AutoComplete = KxGenerator.createComponent({
                 });
     },
 
-    renderSelect2: function (done) {
+    renderSelect2: function () {
         var _self = this;
 
         this.select2Instance = this.$input.select2({
@@ -132,7 +131,9 @@ var AutoComplete = KxGenerator.createComponent({
 
         this.$input.val(this.value.map(function (item) { return item.id })).trigger('change');
 
-        done.call(this);
+        if (!this.displayTable) {
+            this.trigger('creationComplete');
+        }
     },
 
     setValue: function (value) {

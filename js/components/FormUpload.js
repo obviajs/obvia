@@ -18,6 +18,7 @@ var FormUpload = KxGenerator.createComponent({
         this.$uploadBtn = this.$el.find("#upload-" + this.domID);
         this.$modalContainer = this.$el.find('#' + this.domID + '-upload-modal');
         this.modal = null;
+        this.$upload = this.createUpload();
     },
 
     registerEvents: function () {
@@ -38,7 +39,6 @@ var FormUpload = KxGenerator.createComponent({
     afterAttach: function (e) {
         if (e.target.id == this.domID + '-wrapper') {
             this.createModal();
-            this.trigger('creationComplete');
         }
     },
 
@@ -48,7 +48,7 @@ var FormUpload = KxGenerator.createComponent({
 
     createModal: function () {
         this.modal = new Modal({
-            id: 'upload-modal-' + this.domID,
+            id: 'upload-modal-' + this.id,
             size: 'modal-lg',
             title: 'Upload Document',
             body: ''
@@ -58,10 +58,10 @@ var FormUpload = KxGenerator.createComponent({
         modal.parent = this;
         modal.parentType = 'autocomplete';
 
-        var up = this.createUpload();
+        var _self = this;
         modal.on('creationComplete', function (e) {
             e.stopPropagation();
-            modal.$body.html(up);
+            modal.$body.html(_self.$upload);
         });
 
         this.$modalContainer.html(modal.render());
@@ -69,15 +69,17 @@ var FormUpload = KxGenerator.createComponent({
 
     createUpload: function () {
         this.upload = new Upload({
-            id: 'upload' + this.domID,
+            id: 'upload' + this.id,
             colspan: '12',
             multiple: false,
             allowDrop: true,
             target: this.action
         });
 
+        var _self = this;
         this.upload.on('creationComplete', function (e) {
             e.stopPropagation();
+            _self.trigger('creationComplete');
         });
 
         return this.upload.render();

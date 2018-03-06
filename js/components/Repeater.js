@@ -151,23 +151,21 @@ var Repeater = KxGenerator.createComponent({
                 _self.rowItems[index - 1] = rowItems;
 
                 //handle component change event and delegate it to repeater
-                el.on('creationComplete', function(e){  
+                el.on('creationComplete', function (e) { 
                     e.stopImmediatePropagation();
                     e.stopPropagation();
-                    
+                    console.log('creationComplete for ', el.id, ' repeater.index ', index)
                     ccComponents.push(el.id);
-                    var ax = -1;
-                    while ((ax = ccComponents.indexOf(this.id)) !== -1) 
-                        ccComponents.splice(ax, 1);
                     
-                    if(ccComponents.length==0 && vcolIndex==(_self.components.length-1)){
+                    if (ccComponents.length == _self.components.length) {
                         //trigger row add event
                         _self.$el.trigger('onRowAdd', [_self, new RepeaterEventArgs(_self.rowItems, data, index)]);
                         //duhet te shtojme nje flag qe ne rast se metoda addRow eshte thirrur nga addRowHangler te mos e exec kodin meposhte
                         
                         //manage dp
                         _self.currentItem = _self.defaultItem;
-                        _self.currentIndex = index;
+
+                        _self.currentIndex <= index ? _self.currentIndex = index : _self.currentIndex = _self.currentIndex;
                         if (_self.currentIndex > 1 && _self.rendering.actions) {
                             model.displayRemoveButton = true;
                         }
@@ -179,8 +177,8 @@ var Repeater = KxGenerator.createComponent({
                             addRowFlag = true;
                         }
                         
-                        
-                        if (index == _self.dataProvider.length && !addRowFlag) {
+                        if (_self.currentIndex == _self.dataProvider.length && !addRowFlag) {
+                            console.log('creationComplete for repeater')
                             _self.trigger('creationComplete');
                         }
 

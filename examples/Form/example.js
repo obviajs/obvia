@@ -611,20 +611,20 @@ var myForm = new Form({
                             value: "{trippleValue}" //1,-1,0
                         }
                     },
-                    // {
-                    //     constructor: FormUpload,
-                    //     props: {
-                    //         id: 'formupload',
-                    //         colspan: '6',
-                    //         spacing: { mb: '5' },
-                    //         label: 'Dokumentat e Ministrise se Kultures',
-                    //         blockProcessAttr: false,
-                    //         required: true,
-                    //         dataProvider: [],
-                    //         action: 'http://phptest/upload.php',
-                    //         value: "",
-                    //     }
-                    // },
+                    {
+                        constructor: FormUpload,
+                        props: {
+                            id: 'formupload',
+                            colspan: '6',
+                            spacing: { mb: '5' },
+                            label: 'Dokumentat e Ministrise se Kultures',
+                            blockProcessAttr: false,
+                            required: true,
+                            dataProvider: [],
+                            action: 'http://phptest/upload.php',
+                            value: "",
+                        }
+                    },
                 ]
             }
         }
