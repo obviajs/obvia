@@ -148,6 +148,18 @@ var List = KxGenerator.createComponent({
         this.setValue(_value);
     },
 
+    addRow: function (item, index, isPreventable = false, focusOnRowAdd = false) {
+        if (index == undefined)
+            index = this.repeater.currentIndex + 1;    
+        this.repeater.addRow(item, index, isPreventable, focusOnRowAdd);
+    },
+
+    removeRow: function (index, isPreventable = false, focusOnRowDelete = false) {
+        if (index == undefined)
+            index = this.repeater.currentIndex + 1;     
+        this.repeater.removeRow(index, isPreventable, focusOnRowDelete);  
+    },
+
     enable: function () {         
         this.repeater.enable();
         return this; 
@@ -172,7 +184,6 @@ var List = KxGenerator.createComponent({
     },
 
     render: function () {
-        //this.repeater.$el.children()[0].classList = '';
         this.$container.append(this.repeater.render());
         return this.$el;
     }

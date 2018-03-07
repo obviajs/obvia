@@ -143,21 +143,29 @@ var FormUpload = KxGenerator.createComponent({
 
     deleteFromListHandler: function (e, repeaterArgs) {
         console.log(repeaterArgs);
-        this.list.repeater.removeRow(repeaterArgs.currentIndex + 1, false, false);
+        this.list.removeRow(repeaterArgs.currentIndex + 1);
     },
 
     uploadHandler: function (files) {
         this.modal.hide();
+        var repIndex = 0;
+        var no = 0;
+        if (this.list.dataProvider.length > 0) {
+            repIndex = this.list.dataProvider.length;
+            no = parseInt(this.list.dataProvider[repIndex - 1][this.noLabelValue]);
+        }
+        
         files.forEach(function (rf, index) {
             var item = {
                 "id": rf.file.uniqueIdentifier,
-                "no": parseInt(this.dataProvider[this.list.repeater.currentIndex - 1][this.noLabelValue]) + 1,
+                "no": no + index + 1,
                 "file": rf.file.name,
                 "deleteAction": this.defaultItem[this.deleteAction] + "?id=" + rf.file.uniqueIdentifier
             };
-
-            this.list.repeater.addRow(item, this.list.repeater.currentIndex + 1, false, false);
+            
+            this.list.addRow(item, repIndex + index + 1);
         }.bind(this));
+        
     },
 
     enable: function () {

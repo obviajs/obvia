@@ -160,6 +160,7 @@ var Repeater = KxGenerator.createComponent({
                     if (ccComponents.length == _self.components.length) {
                         //trigger row add event
                         _self.$el.trigger('onRowAdd', [_self, new RepeaterEventArgs(_self.rowItems, data, index)]);
+                        console.log('onRowAdd for repeater at index ', index)
                         //duhet te shtojme nje flag qe ne rast se metoda addRow eshte thirrur nga addRowHangler te mos e exec kodin meposhte
                         
                         //manage dp
@@ -330,7 +331,7 @@ var Repeater = KxGenerator.createComponent({
     },
 
     template: function () {
-        return "<div id='" + this.domID + "-wrapper'>" +
+        return "<div id='" + this.domID + "-wrapper' class='col-md-12'>" +
                     "<div id='" + this.domID + "-container'></div>" +  
                     "<div id='actions_" + this.domID  + "' class='col-md-offset-10 col-md-2 float-right' style='overflow:hidden;'>" +
                         "<button id='btnAddRow_" + this.domID  + "' type='button' class='mx-1 float-right btn btn-sm btn-secondary' rv-if='model.displayAddButton'>" +

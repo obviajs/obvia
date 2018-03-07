@@ -64,6 +64,11 @@ rjs.define("lib/flower_dependencies/scripts/resumable.js", "Resumable");
 rjs.define("./js/components/Upload.js", "Upload");
 rjs.define("./js/components/FormUpload.js", "FormUpload");
 
+//Loader
+var loader = new Loader({ id: 'loader' });
+$('#root').append(loader.render());
+loader.show();
+
 rjs.require([
     "DOMContentLoaded",
     "Form",

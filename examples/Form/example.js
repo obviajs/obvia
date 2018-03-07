@@ -655,17 +655,189 @@ var myForm = new Form({
     ]
 });
 
+var myForm2 = new Form({
+    id: 'form',
+    formName: 'My Form 2',
+    viewMode: 'steps',
+    components: [
+        {
+            constructor: TextInput,
+            props: {
+                id: 'text',
+                colspan: '6',
+                label: 'Text Label',
+                spacing: { mb: '5' },
+                versionStyle: '',
+                blockProcessAttr: false,
+                required: true,
+                mask: 'currency',
+                value: "1000"
+            }
+        },
+        {
+            constructor: TextInput,
+            props: {
+                id: 'number',
+                colspan: '6',
+                label: 'Number Label',
+                spacing: { mb: '5' },
+                versionStyle: '',
+                blockProcessAttr: false,
+                required: true,
+                mask: {
+                    alias: "currency",
+                    prefix: ''
+                },
+                value: ""
+            }
+        },
+        {
+            constructor: Repeater,
+            props: {
+                id: 'repeater',
+                rendering: {
+                    direction: 'vertical',
+                    seperator: true,
+                    actions: true
+                },
+                defaultItem: {
+                    comboLabel: 'Zgjidh Shtetin',
+                    comboValue: "",
+                    checkboxValue: false,
+                    autocompleteLabel: 'Ministrite',
+                    autocompleteValue: [],
+                    textLabel: 'Emri',
+                    textValue: '',
+                    trippleValue: "-1",
+                    multiValue: [],
+                    mapValue: {
+                        latitude: 41.1533,
+                        longtitude: 20.1683,
+                        zoomLevel: 7
+                    },
+                    textAreaValue: "",
+                    textEditorValue: "",
+                    dateValue: "",
+                    dayMonthYearValue: "",
+                    amountValue: {},
+                    radioGroupValue: "",
+                    checkboxGroupValue: "",
+                    formUploadProvider: []
+
+                },
+                dataProvider: [
+                    {
+                        comboLabel: 'Zgjidh Shtetin',
+                        comboValue: "",
+                        checkboxValue: true,
+                        autocompleteLabel: 'Ministrite',
+                        autocompleteValue: [{ "id": "2", "text": "Ministria e Drejtesise" }],
+                        textLabel: 'Emri',
+                        textValue: 'Mateo Jovani',
+                        trippleValue: "-1",
+                        multiValue: [{ "id": "3", "text": "Ministria e Brendshme" }],
+                        mapValue: {
+                            latitude: 51.1533,
+                            longtitude: 30.1683,
+                            zoomLevel: 7
+                        },
+                        textAreaValue: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+                        textEditorValue: "",
+                        dateValue: "10/02/2013",
+                        dayMonthYearValue: "10/02/2013",
+                        amountValue: { currency: "2", amount: "33433" },
+                        radioGroupValue: "2",
+                        checkboxGroupValue: [],
+                        formUploadProvider: [
+                            { "id": "1", "no": "1", "file": "test.txt", "deleteAction": "http://phptest/delete.php?id=1" },
+                            { "id": "2", "no": "2", "file": "image.jpg", "deleteAction": "http://phptest/delete.php?id=2" },
+                            { "id": "3", "no": "3", "file": "doc.pdf", "deleteAction": "http://phptest/delete.php?id=3" },
+                        ]
+
+                    },
+                    {
+                        comboLabel: 'Zgjidh Shtetin',
+                        comboValue: "1",
+                        checkboxValue: true,
+                        autocompleteLabel: 'Ministrite',
+                        autocompleteValue: [{ "id": "3", "text": "Ministria e Brendshme" }],
+                        textLabel: 'Emri',
+                        textValue: 'Lejdi Koci',
+                        trippleValue: "1",
+                        multiValue: [{ "id": "3", "text": "Ministria e Brendshme" }, { "id": "2", "text": "Ministria e Drejtesise" }],
+                        mapValue: {
+                            latitude: 41.1533,
+                            longtitude: 20.1683,
+                            zoomLevel: 7
+                        },
+                        textAreaValue: "Lorem Ipsum",
+                        textEditorValue: "Lorem Ipsum",
+                        dateValue: "",
+                        dayMonthYearValue: "",
+                        amountValue: {},
+                        radioGroupValue: "",
+                        checkboxGroupValue: [
+                            { "id": "3", "text": "Ministria e Brendshme", "buttonClass": 'btn btn-xs btn-success', "enabled": true },
+                            { "id": "4", "text": "Ministria e Mbrojtjes", "buttonClass": 'btn btn-xs btn-success', "enabled": false }
+                        ],
+                        formUploadProvider: [
+                            { "id": "1", "no": "1", "file": "other.txt", "deleteAction": "http://phptest/delete.php?id=1" }
+                        ]
+                    }
+                ],
+                components: [
+                    {
+                        constructor: AutoComplete,
+                        props: {
+                            id: 'autocompleteR',
+                            colspan: '6',
+                            spacing: { mb: '5' },
+                            label: '{autocompleteLabel}',
+                            blockProcessAttr: false,
+                            required: false,
+                            multipleSelection: true,
+                            displayTable: true,
+                            tableData: [["Ministria e Puneve te Jashtme"], ["Ministria e Drejtesise"], ["Ministria e Brendshme"]],
+                            dataProvider: [{ "id": "1", "text": "Ministria e Puneve te Jashtme" }, { "id": "2", "text": "Ministria e Drejtesise" }, { "id": "3", "text": "Ministria e Brendshme" }],
+                            value: '{autocompleteValue}'
+                        }
+                    },
+                    {
+                        constructor: ComboBox,
+                        props: {
+                            id: 'comboR',
+                            colspan: '6',
+                            spacing: { mb: '5' },
+                            label: '{comboLabel}',
+                            blockProcessAttr: false,
+                            required: true,
+                            dataProvider: [{ "value": "1", "text": "Shqiperi" }, { "value": "2", "text": "Greqi" }, { "value": "3", "text": "SHBA" }],
+                            value: '{comboValue}'
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+});
+
 myForm.on('creationComplete', function () {
+    loader.hide();
+    
     myForm.repeater.on('onBeforeRowAdd', function (e) {
         e.preventDefault();
         var repeater = this;
 
         bootbox.confirm("Do you want to add row?", function (result) {
             if (result) {
-                repeater.addRow(repeater.defaultItem, repeater.currentIndex + 1);
+                loader.show();
+                setTimeout(function () { repeater.addRow(repeater.defaultItem, repeater.currentIndex + 1); }, 200)
             }
-        })
+        });
 
+        repeater.on('onRowAdd', function (e) {
+            loader.hide();
+        });
     });
 
     myForm.repeater.on('onBeforeRowDelete', function (e) {
@@ -676,12 +848,17 @@ myForm.on('creationComplete', function () {
             if (result) {
                 repeater.removeRow(repeater.currentIndex);
             }
-        })
+        });
+
+        repeater.on('onRowAdd', function (e) {
+
+        });
     });
 
 });
 
 $('#root').append(myForm.render());
+$('#root').append(myForm2.render());
 
 this["myForm"] = myForm;
 
