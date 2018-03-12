@@ -9,8 +9,8 @@ var Label = KxGenerator.createComponent({
     //component data
     initModel: function () {
         return {
-            class: "form-group col-lg-12 resizable",
-            style: 'margin-top: 15px; background-color: #CAC8C8; font-size: 16px;'
+            class: this.class,
+            style: this.style
         }
     },
 
@@ -29,6 +29,14 @@ var Label = KxGenerator.createComponent({
     },
 
     afterAttach: function (e) {
+        if (this.hyperlink) {
+            var target = '';
+            if (this.hasOwnProperty('target'))
+                target = this.target;
+            
+            this.$label.html("<a href='" + this.hyperlink + "' target='" + target + "'>" + this.label + "</a>");
+        }
+        
         this.trigger('creationComplete');
     },
 

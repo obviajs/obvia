@@ -77,6 +77,7 @@ var TextInput = KxGenerator.createComponent({
         } else
             return true;
     },
+    
     template: function () {
         return "<div id='" + this.domID + "-wrapper' class='form-group col-lg-" + this.colspan + " rowspan" + this.rowspan + " resizable '>" +
             "<div id='" + this.domID + "-block'>" +

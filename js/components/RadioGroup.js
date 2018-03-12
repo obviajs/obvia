@@ -58,7 +58,8 @@ var RadioGroup = KxGenerator.createComponent({
             ],
             onclick : this.onclick,
             onchange : this.onchange
-        }).on('creationComplete', function () {
+        }).on('creationComplete', function (e) {
+            e.stopPropagation();
             this.trigger('creationComplete');   
         }.bind(this)).on('change', function(){
             this.value = this.list.value;
@@ -95,12 +96,12 @@ var RadioGroup = KxGenerator.createComponent({
     },
 
     enable: function () {         
-        this.repeater.enable();
+        this.list.enable();
         return this; 
     },
 
     disable: function () {
-        this.repeater.disable();
+        this.list.disable();
         return this;  
     },
 

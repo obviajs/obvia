@@ -5,7 +5,7 @@
  */
 
 //component definition
-var CheckboxGroup = KxGenerator.createComponent({
+var CheckBoxGroup = KxGenerator.createComponent({
     //model binds to the template
     //if you want variables to bind, you must declare them in the model object
     initModel: function () {
@@ -58,7 +58,8 @@ var CheckboxGroup = KxGenerator.createComponent({
             ],
             onclick : this.onclick,
             onchange : this.onchange
-        }).on('creationComplete', function () {
+        }).on('creationComplete', function (e) {
+            e.stopPropagation();
             this.trigger('creationComplete');   
         }.bind(this)).on('change', function(){
             this.value = this.list.value;
@@ -95,21 +96,21 @@ var CheckboxGroup = KxGenerator.createComponent({
     },
 
     enable: function () {         
-        this.repeater.enable();
+        this.list.enable();
         return this; 
     },
 
     disable: function () {
-        this.repeater.disable();
+        this.list.disable();
         return this;  
     },
 
     template: function () {
         return "<div id='" + this.domID + "-wrapper' class='col-lg-" + this.colspan + " resizable' style='padding-top: 10px; padding-bottom: 10px; overflow:hidden'>" +
-        (!this.embedded?("<label rv-style='versionStyle' rv-for='domID'>{label} <span rv-if='required'>*</span></label>" +
+            (!this.embedded ? ("<label rv-style='versionStyle' rv-for='domID'><b>{label}</b> <span rv-if='required'>*</span></label>" +
                     "<span rv-if='model.blockProcessAttr' class='block-process'> * </span>" +
                     "<br>") : "") + 
-                    "<div id='" + this.domID + "-container' role='group' style='padding:0'>" +
+                    "<div id='" + this.domID + "-container' class='card' role='group' style='padding:10px'>" +
                         
                     "</div>"+
                 "</div>";
@@ -122,8 +123,8 @@ var CheckboxGroup = KxGenerator.createComponent({
 });
 
 //component prototype
-CheckboxGroup.type = 'checkboxgroup';
+CheckBoxGroup.type = 'checkboxgroup';
 
 //register dom element for this component
-KxGenerator.registerDOMElement(CheckboxGroup, 'kx-checkboxgroup');
+KxGenerator.registerDOMElement(CheckBoxGroup, 'kx-checkboxgroup');
 

@@ -1,16 +1,24 @@
-var myUpload = new Upload({
+$('#root').append("<div id='container' class='row'></div>");
+
+var firstUpload = new Upload({
     id: 'upload',
-    colspan: '6',
-    label: 'Uplad Test',
-    fieldName: 'upload_test',
-    dataProvider: "",
-    versionStyle: "",
-    extension: ['pdf','png','jpg'],
-    blockProcessAttr: false,
-    required: false,
-    multiple:true,
-    process_id: 10,
-    case_id:  27437
+    colspan: '4',
+    spacing: { mb: '5' },
+    multiple: true,
+    allowDrop: true,
+    target: 'http://phptest/upload.php'
 });
 
-$('#root').append(myUpload.render());
+$('#container').append(firstUpload.render());
+
+var secondUpload = new Upload({
+    id: 'upload',
+    colspan: '8',
+    spacing: { mb: '5' },
+    allowedExtensions: ['pdf', 'png', 'jpg'],
+    multiple: false,
+    allowDrop: false,
+    target: 'http://phptest/upload.php'
+});
+
+$('#container').append(secondUpload.render());

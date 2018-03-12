@@ -87,9 +87,7 @@ var GoogleMap = KxGenerator.createComponent({
     },
 
     afterAttach: function (e) {
-        var _self = this;
-        setTimeout(function () { _self.initMap(); }, 200)
-
+        this.initMap();
         this.trigger('creationComplete');
     },
 

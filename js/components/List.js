@@ -26,18 +26,16 @@ var List = KxGenerator.createComponent({
         
         this.repeater = new Repeater({
             id: 'listRepeater',
-            defaultItem: {
-                text: 'Button',
-                buttonClass: 'btn btn-xs btn-default'
-            },
+            defaultItem: this.defaultItem,
             rendering: {
                 direction: this.direction,
-                seperator: false,
+                seperator: this.seperator || false,
                 actions: false
             },
             dataProvider: this.dataProvider,
             components: this.components
-        }).on('creationComplete', function () {
+        }).on('creationComplete', function (e) {
+            e.stopPropagation();
             var v = this.value.slice();
             //trick to pass property value updated check on the first setValue call below (initial value)
             this.value = [];
@@ -150,6 +148,18 @@ var List = KxGenerator.createComponent({
         this.setValue(_value);
     },
 
+    addRow: function (item, index, isPreventable = false, focusOnRowAdd = false) {
+        if (index == undefined)
+            index = this.repeater.currentIndex + 1;    
+        this.repeater.addRow(item, index, isPreventable, focusOnRowAdd);
+    },
+
+    removeRow: function (index, isPreventable = false, focusOnRowDelete = false) {
+        if (index == undefined)
+            index = this.repeater.currentIndex + 1;     
+        this.repeater.removeRow(index, isPreventable, focusOnRowDelete);  
+    },
+
     enable: function () {         
         this.repeater.enable();
         return this; 
@@ -174,7 +184,6 @@ var List = KxGenerator.createComponent({
     },
 
     render: function () {
-        //this.repeater.$el.children()[0].classList = '';
         this.$container.append(this.repeater.render());
         return this.$el;
     }

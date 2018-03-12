@@ -15,9 +15,6 @@ var Form = KxGenerator.createComponent({
 
     beforeAttach: function () {
         this.ccComponents = [];
-        for (var i = 0; i < this.components.length; i++)
-            this.ccComponents.push(this.components[i].props.id);
-
         this.$container = this.$el.find('#' + this.componentContainerID);
     },
 
@@ -28,11 +25,9 @@ var Form = KxGenerator.createComponent({
             e.stopImmediatePropagation();
             e.stopPropagation();
 
-            var ax = -1;
-            while ((ax = this.ccComponents.indexOf(component.props.id)) !== -1)
-                this.ccComponents.splice(ax, 1);
-
-            if (this.ccComponents.length == 0) {
+            this.ccComponents.push(component.props.id);
+          
+            if (this.ccComponents.length == this.components.length) {
                 this.trigger('creationComplete');
             }
 

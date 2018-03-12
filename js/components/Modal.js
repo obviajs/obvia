@@ -35,10 +35,6 @@ var Modal = KxGenerator.createComponent({
         this.$modal.modal('hide');
     },
 
-    body: function (html) {
-        this.$body.html(html);
-    },
-
     template: function () {
         return '<div id="' + this.domID + '-wrapper">' +
             '<div class="modal" id="' + this.domID + '" tabindex="-1" role="dialog">' +
