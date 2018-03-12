@@ -29,6 +29,14 @@ var Label = KxGenerator.createComponent({
     },
 
     afterAttach: function (e) {
+        if (this.hyperlink) {
+            var target = '';
+            if (this.hasOwnProperty('target'))
+                target = this.target;
+            
+            this.$label.html("<a href='" + this.hyperlink + "' target='" + target + "'>" + this.label + "</a>");
+        }
+        
         this.trigger('creationComplete');
     },
 

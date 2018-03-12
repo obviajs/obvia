@@ -286,13 +286,14 @@ var myForm = new Form({
                 dataProvider: [],
                 action: 'http://phptest/upload.php',
                 dataProvider: [
-                    { "id": "1", "no": "1", "file": "test.txt", "deleteAction": "http://phptest/delete.php?id=1" },
-                    { "id": "2", "no": "2", "file": "paga.xlsx", "deleteAction": "http://phptest/delete.php?id=1" }
+                    { "id": "1", "no": "1", "file": "test.txt", "deleteAction": "http://phptest/delete.php?id=1", "downloadLink": "http://phptest/download.php?id=1" },
+                    { "id": "2", "no": "2", "file": "paga.xlsx", "deleteAction": "http://phptest/delete.php?id=1", "downloadLink": "http://phptest/download.php?id=2" }
                 ],
-                defaultItem: { "id": "1", "no": "1", "file": "test.txt", "deleteAction": "http://phptest/delete.php" },
+                defaultItem: { "id": "1", "no": "1", "file": "test.txt", "deleteAction": "http://phptest/delete.php", "downloadLink": "http://phptest/download.php" },
                 noLabelValue: "no",
                 nameLabelValue: "file",
                 deleteAction: "deleteAction",
+                downloadLink: "downloadLink",
                 valueField: "id",
                 value: ""
             }
@@ -355,9 +356,9 @@ var myForm = new Form({
                         radioGroupValue: "2",
                         checkboxGroupValue: [],
                         formUploadProvider: [
-                            { "id": "1", "no": "1", "file": "test.txt", "deleteAction": "http://phptest/delete.php?id=1" },
-                            { "id": "2", "no": "2", "file": "image.jpg", "deleteAction": "http://phptest/delete.php?id=2" },
-                            { "id": "3", "no": "3", "file": "doc.pdf", "deleteAction": "http://phptest/delete.php?id=3" },
+                            { "id": "1", "no": "1", "file": "test.txt", "deleteAction": "http://phptest/delete.php?id=1", "downloadLink": "http://phptest/download.php?id=1" },
+                            { "id": "2", "no": "2", "file": "image.jpg", "deleteAction": "http://phptest/delete.php?id=2", "downloadLink": "http://phptest/download.php?id=2" },
+                            { "id": "3", "no": "3", "file": "doc.pdf", "deleteAction": "http://phptest/delete.php?id=3", "downloadLink": "http://phptest/download.php?id=3" },
                         ]
 
                     },
@@ -387,7 +388,7 @@ var myForm = new Form({
                             { "id": "4", "text": "Ministria e Mbrojtjes", "buttonClass": 'btn btn-xs btn-success', "enabled": false }
                         ],
                         formUploadProvider: [
-                            { "id": "1", "no": "1", "file": "other.txt", "deleteAction": "http://phptest/delete.php?id=1" }
+                            { "id": "1", "no": "1", "file": "other.txt", "deleteAction": "http://phptest/delete.php?id=1", "downloadLink": "http://phptest/download.php?id=1" }
                         ]
                     }
                 ],
@@ -641,11 +642,12 @@ var myForm = new Form({
                             dataProvider: [],
                             action: 'http://phptest/upload.php',
                             dataProvider: "{formUploadProvider}",
-                            defaultItem: { "id": "1", "no": "1", "file": "test.txt", "deleteAction": "http://phptest/delete.php" },
+                            defaultItem: { "id": "1", "no": "1", "file": "test.txt", "deleteAction": "http://phptest/delete.php", "downloadLink": "http://phptest/download.php" },
                             noLabelValue: "no",
                             nameLabelValue: "file",
                             valueField: "id",
                             deleteAction: "deleteAction",
+                            downloadLink: "downloadLink",
                             value: ""
                         }
                     },

@@ -75,7 +75,9 @@ var FormUpload = KxGenerator.createComponent({
                     props: {
                         id: 'name',
                         class: 'col-md-9',
-                        label: "{" + this.nameLabelValue + "}"
+                        label: "{" + this.nameLabelValue + "}",
+                        hyperlink: "{" + this.downloadLink + "}",
+                        target: "_blank"
                     }
                 },
                 {
@@ -160,7 +162,8 @@ var FormUpload = KxGenerator.createComponent({
                 "id": rf.file.uniqueIdentifier,
                 "no": no + index + 1,
                 "file": rf.file.name,
-                "deleteAction": this.defaultItem[this.deleteAction] + "?id=" + rf.file.uniqueIdentifier
+                "deleteAction": this.defaultItem[this.deleteAction] + "?id=" + rf.file.uniqueIdentifier,
+                "downloadLink": this.defaultItem[this.downloadLink] + "?id=" + rf.file.uniqueIdentifier
             };
             
             this.list.addRow(item, repIndex + index + 1);

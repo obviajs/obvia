@@ -28,7 +28,6 @@ var Form = KxGenerator.createComponent({
             this.ccComponents.push(component.props.id);
           
             if (this.ccComponents.length == this.components.length) {
-                console.log('creationComplete for ', this.id);
                 this.trigger('creationComplete');
             }
 
