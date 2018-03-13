@@ -128,7 +128,8 @@ var FormUpload = KxGenerator.createComponent({
         this.upload = new Upload({
             id: 'upload' + this.id,
             colspan: '12',
-            multiple: true,
+            multiple: this.multiple || true,
+            allowedExtensions: this.allowedExtensions || undefined,
             allowDrop: true,
             target: this.action,
             onupload: this.uploadHandler.bind(this)

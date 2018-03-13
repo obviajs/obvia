@@ -81,8 +81,8 @@ var Amount = KxGenerator.createComponent({
         this.currencySelect = new Select({
             id: 'currencySelect-' + this.id,
             dataProvider: currencyList,
-            textField: "text",
-            valueField: "id",
+            textField: this.labelField || "text",
+            valueField: this.valueField || "id",
             value: selected,
         });
 

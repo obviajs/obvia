@@ -129,6 +129,8 @@ var AutoComplete = KxGenerator.createComponent({
             width: (this.displayTable) ? '90%' : '100%',
         });
 
+        if (this.value == "" || this.value == undefined)
+            this.value = [];    
         this.$input.val(this.value.map(function (item) { return item.id })).trigger('change');
 
         if (!this.displayTable) {
