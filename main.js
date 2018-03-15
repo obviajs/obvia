@@ -32,14 +32,14 @@ rjs.define("lib/dependencies/summernote/summernote.min.js", "SummerNoteScript");
 rjs.define("./components/Select.js", "Select");
 //DateTime
 rjs.define("./components/DateTime.js", "DateTime");
-rjs.define("https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/bootstrap-datepicker.min.js", "DatePickerScript");
+rjs.define("https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/js/bootstrap-datepicker.min.js", "DatePickerScript");
 rjs.define("https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/css/bootstrap-datepicker.min.css", "DatePickerCSS");
 //DateTimeCb
 rjs.define("./components/DateTimeCb.js", "DateTimeCb");
 //Modal
 rjs.define("./components/Modal.js", "Modal");
 //AutoComplete
-rjs.define("https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/select2.min.js", "Select2Script");
+rjs.define("https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js", "Select2Script");
 rjs.define("https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css", "Select2CSS");
 rjs.define("./components/AutoComplete.js", "AutoComplete");
 //ComboBox
