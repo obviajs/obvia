@@ -1,7 +1,7 @@
 var flowerCM = window.flowerCM || {};
 //TextInput
 rjs.define("./js/components/Text.js", "TextInput");
-rjs.define("./lib/flower_dependencies/scripts/jquery.inputmask.bundle.min.js", "InputMaskBundle");
+rjs.define("./lib/dependencies/scripts/jquery.inputmask.bundle.min.js", "InputMaskBundle");
 //Form
 rjs.define("./js/components/Form.js", "Form");
 //Button
@@ -26,8 +26,8 @@ rjs.define("./js/components/Amount.js", "Amount");
 rjs.define("./js/components/TextArea.js", "TextArea");
 //TextEditor
 rjs.define("./js/components/TextEditor.js", "TextEditor");
-rjs.define("lib/flower_dependencies/summernote/summernote.css", "SummerNoteCSS");
-rjs.define("lib/flower_dependencies/summernote/summernote.min.js", "SummerNoteScript");
+rjs.define("lib/dependencies/summernote/summernote.css", "SummerNoteCSS");
+rjs.define("lib/dependencies/summernote/summernote.min.js", "SummerNoteScript");
 //Select
 rjs.define("./js/components/Select.js", "Select");
 //DateTime
@@ -43,24 +43,24 @@ rjs.define("https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2
 rjs.define("https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css", "Select2CSS");
 rjs.define("./js/components/AutoComplete.js", "AutoComplete");
 //ComboBox
-rjs.define("lib/flower_dependencies/styles/bootstrap.multiselect.css", "ComboCSS");
-rjs.define("lib/flower_dependencies/scripts/bootstrap.multiselect.js", "ComboScript");
+rjs.define("lib/dependencies/styles/bootstrap.multiselect.css", "ComboCSS");
+rjs.define("lib/dependencies/scripts/bootstrap.multiselect.js", "ComboScript");
 rjs.define("./js/components/ComboBox.js", "ComboBox");
 //Map
 rjs.define("https://maps.googleapis.com/maps/api/js?key=AIzaSyD04Q93F3BcHhGl483rfMC_MD1Y8y7K0lo", "GoogleMapScript");
 rjs.define("./js/components/Map.js", "GoogleMap");
 //Toggle
-rjs.define("lib/flower_dependencies/styles/bootstrap-toggle.min.css", "ToggleCSS");
-rjs.define("lib/flower_dependencies/scripts/bootstrap-toggle.js", "ToggleScript");
+rjs.define("lib/dependencies/styles/bootstrap-toggle.min.css", "ToggleCSS");
+rjs.define("lib/dependencies/scripts/bootstrap-toggle.js", "ToggleScript");
 rjs.define("./js/components/Toggle.js", "Toggle");
 //TrippleSwitch
 rjs.define("./js/components/TrippleSwitch.js", "TrippleSwitch");
 //MultiSwitch
 rjs.define("./js/components/MultiSwitch.js", "MultiSwitch");
 //Upload
-rjs.define("lib/flower_dependencies/scripts/jquery.slimscroll.js", "SlimScroll");
-rjs.define("lib/flower_dependencies/styles/kx-upload.css", "KxUploadCSS");
-rjs.define("lib/flower_dependencies/scripts/resumable.js", "Resumable");
+rjs.define("lib/dependencies/scripts/jquery.slimscroll.js", "SlimScroll");
+rjs.define("lib/dependencies/styles/kx-upload.css", "KxUploadCSS");
+rjs.define("lib/dependencies/scripts/resumable.js", "Resumable");
 rjs.define("./js/components/Upload.js", "Upload");
 rjs.define("./js/components/FormUpload.js", "FormUpload");
 
