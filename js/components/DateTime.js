@@ -45,9 +45,9 @@ var DateTime = KxGenerator.createComponent({
     afterAttach: function (e) {
         //init datepicker
         var _self = this;
-        if (this.value != "")
+        if (this.value != "" && this.value != null)
             this.value = moment(this.$input.val()).format(this.inputFormat)
-    
+        
         this.$input.datepicker({
             format: {
                 toDisplay: function (date, format, language) {
@@ -66,7 +66,7 @@ var DateTime = KxGenerator.createComponent({
     },
 
     getValue: function () {
-        var date = moment(this.$input.val()).format(this.outputFormat);
+        var date = moment(this.$input.val(), this.inputFormat).format(this.outputFormat);
         return  (date == "Invalid date" || date == "") ? "" : date
     },
 
