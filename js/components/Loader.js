@@ -42,7 +42,7 @@ var Loader = KxGenerator.createComponent({
                             "height: 100%;" +
                             "z-index: 999999;" +
                             "opacity: 0.9;" +
-                            "background: url('lib/flower_dependencies/images/loader.gif')center no-repeat #fff;" +
+                            "background: url('lib/dependencies/images/loader.gif')center no-repeat #fff;" +
                         "}" +
                     "</style>"+
                     "<div class='se-pre-con'></div>" +                    
