@@ -107,7 +107,7 @@ var Form = KxGenerator.createComponent({
     },
 
     template: function () {
-        return "<div id='" + this.domID + "-wrapper'>" +
+        return "<div id='" + this.domID + "-wrapper' class='col-md-12'>" +
                     "<form name='view_form' rv-id='formDOMId' method='POST' rv-action='formAction' class='view_form'>" +
                         "<div class='col-md-12' style='padding: 10px'>" +
                             this.renderFormHeader(this.viewMode) + 

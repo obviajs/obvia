@@ -3,6 +3,7 @@ var flowerCM = window.flowerCM || {};
 rjs.define("./components/Text.js", "TextInput");
 rjs.define("./lib/dependencies/scripts/jquery.inputmask.bundle.min.js", "InputMaskBundle");
 //Form
+rjs.define("lib/dependencies/scripts/bootstrap-bootbox.js", "BootBox");
 rjs.define("./components/Form.js", "Form");
 //Button
 rjs.define("./components/Button.js", "Button");
@@ -23,6 +24,7 @@ rjs.define("./components/RadioGroup.js", "RadioGroup");
 //Amount
 rjs.define("./components/Amount.js", "Amount");
 //TextArea
+rjs.define("lib/dependencies/scripts/plugins/SpellCheck/include.js", "SpellCheckJS");
 rjs.define("./components/TextArea.js", "TextArea");
 //TextEditor
 rjs.define("./components/TextEditor.js", "TextEditor");
@@ -32,6 +34,7 @@ rjs.define("lib/dependencies/summernote/summernote.min.js", "SummerNoteScript");
 rjs.define("./components/Select.js", "Select");
 //DateTime
 rjs.define("./components/DateTime.js", "DateTime");
+rjs.define("lib/dependencies/scripts/moment.js", "MomentJS");
 rjs.define("https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/js/bootstrap-datepicker.min.js", "DatePickerScript");
 rjs.define("https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/css/bootstrap-datepicker.min.css", "DatePickerCSS");
 //DateTimeCb
@@ -72,6 +75,7 @@ loader.show();
 rjs.require([
     "DOMContentLoaded",
     "Form",
+    "BootBox",
     "Repeater",
     "List",
     "Amount",
@@ -79,9 +83,11 @@ rjs.require([
     "TextInput", 
     "InputMaskBundle",
     "TextArea",
+    "SpellCheckJS",
     "Select",
     "TextEditor",
     "DateTime",
+    "MomentJS",
     "DatePickerScript",
     "DatePickerCSS",
     "CheckBox",
