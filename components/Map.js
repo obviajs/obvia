@@ -40,6 +40,8 @@ var GoogleMap = KxGenerator.createComponent({
         this.$dismissBtn = this.$el.find('#' + this.domID + '_dismissBtn');
         this.$mapAcceptPositionBtn = this.$el.find('#' + this.domID + '_mapAcceptPosition');
 
+        this.value.latitude = parseFloat(this.value.latitude);
+        this.value.longtitude = parseFloat(this.value.longtitude);
     },
 
     registerEvents: function () {

@@ -14,7 +14,7 @@ var ComboBox = KxGenerator.createComponent({
     },
 
     getData: function (provider) {
-        if (typeof url == "string") {
+        if (typeof provider == "string") {
             //ajax call
             return $.get(provider);
         } else {

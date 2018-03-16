@@ -20,7 +20,22 @@ var FormUpload = KxGenerator.createComponent({
         this.modal = null;
         this.$upload = this.createUpload();
         this.$listContainer = this.$el.find('.list-container');
-        this.$list = this.createList();
+        if (typeof this.dataProvider == "string") {
+            //remote cursor array 
+            var rca = new RemoteCursorArray();
+            rca.getData_Action = this.dataProvider;
+            rca.recordsPerPage = 100;
+            rca.on(RemoteCursorEventType.REQUEST_SUCCESS, function (e) {
+                this.dataProvider = rca.source;
+                this.$list = this.createList();
+            }.bind(this));
+
+            rca.init();
+        } else {
+            this.$list = this.createList();
+        }
+
+        
     },
 
     registerEvents: function () {
@@ -51,7 +66,7 @@ var FormUpload = KxGenerator.createComponent({
 
     createList: function () {
         this.direction = this.direction == undefined || this.direction == null ? 'vertical' : this.direction;
-        
+
         this.list = new List({
             id: 'list',
             colspan: '6',
@@ -128,7 +143,8 @@ var FormUpload = KxGenerator.createComponent({
         this.upload = new Upload({
             id: 'upload' + this.id,
             colspan: '12',
-            multiple: true,
+            multiple: this.multiple || true,
+            allowedExtensions: this.allowedExtensions || undefined,
             allowDrop: true,
             target: this.action,
             onupload: this.uploadHandler.bind(this)

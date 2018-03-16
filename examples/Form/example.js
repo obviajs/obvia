@@ -126,6 +126,8 @@ var myForm = new Form({
                 spacing: { mb: '5' },
                 required: true,
                 currencyList: [{ "id": "1", "text": "EUR" }, { "id": "2", "text": "ALL" }, { "id": "3", "text": "GBP" }],
+                valueField: "id",
+                labelField: "text",
                 value: {
                     amount: "132323",
                     currency: "2"
@@ -283,7 +285,6 @@ var myForm = new Form({
                 label: 'Dokumentat e Ministrise se Kultures',
                 blockProcessAttr: false,
                 required: true,
-                dataProvider: [],
                 action: 'http://phptest/upload.php',
                 dataProvider: [
                     { "id": "1", "no": "1", "file": "test.txt", "deleteAction": "http://phptest/delete.php?id=1", "downloadLink": "http://phptest/download.php?id=1" },
@@ -444,6 +445,8 @@ var myForm = new Form({
                             blockProcessAttr: false,
                             required: true,
                             currencyList: [{ "id": "1", "text": "EUR" }, { "id": "2", "text": "ALL" }, { "id": "3", "text": "GBP" }],
+                            valueField: "id",
+                            labelField: "text",
                             value: '{amountValue}'
                         }
                     },
@@ -639,7 +642,6 @@ var myForm = new Form({
                             label: 'Dokumentat e Ministrise se Kultures',
                             blockProcessAttr: false,
                             required: true,
-                            dataProvider: [],
                             action: 'http://phptest/upload.php',
                             dataProvider: "{formUploadProvider}",
                             defaultItem: { "id": "1", "no": "1", "file": "test.txt", "deleteAction": "http://phptest/delete.php", "downloadLink": "http://phptest/download.php" },
