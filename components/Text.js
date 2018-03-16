@@ -51,7 +51,13 @@ var TextInput = KxGenerator.createComponent({
     afterAttach: function (e) {
         //init input mask
         if (this.hasOwnProperty('mask')) {
-            var mask = JSON.parse(this.mask)
+            var mask;
+            try {
+                mask = JSON.parse(this.mask);
+            } catch (error) {
+                mask = this.mask;
+            }
+            
             this.$input.inputmask(mask);
         }
 

@@ -130,6 +130,9 @@ var Repeater = KxGenerator.createComponent({
                 }
 
                 //construct the component
+                if (typeof tempComponent.constructor == "string") {
+                    tempComponent.constructor = eval(tempComponent.constructor);
+                }
                 var el = new tempComponent.constructor(cmp[index - 1]);
                 el.parent = _self;
                 el.parentType = 'repeater';

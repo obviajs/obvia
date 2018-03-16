@@ -19,6 +19,9 @@ var Form = KxGenerator.createComponent({
     },
 
     addComponent: function (component, container, cIndex) {
+        if (typeof component.constructor == "string") {
+            component.constructor = eval(component.constructor);
+        }
         var cmp = new component.constructor(component.props);
      
         cmp.on('creationComplete', function (e) {
@@ -78,7 +81,7 @@ var Form = KxGenerator.createComponent({
             viewMode == 'steps' ? 
                 "<div class='row'>" +
                     "<div class='col-lg-12'>" +
-                        "<div class='col-lg-10'>" +
+                        "<div class='col-lg-12'>" +
                             "<center>" +
                                 "<h4>" +
                                     "{formName}" +                                        
@@ -92,7 +95,7 @@ var Form = KxGenerator.createComponent({
                 
                 "<div class='row'>" +
                     "<div class='col-lg-12' style='background-color: #ccc; font-size: 16px; text-align:center;'>" +
-                        "<div class='col-lg-10'>" +
+                        "<div class='col-lg-12'>" +
                             "<center>" +
                                 "<label style='margin-top:5px;'>" +
                                     "{formName}" +
