@@ -38,12 +38,31 @@
     <br>
 </div>
 </body>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+		crossorigin="anonymous"></script>
 <script type="text/javascript" src="lib/LAN/ip_discovery.js"></script>
-<script type="text/javascript" src="lib/LAN/host_scan.js"></script>
+<script type="text/javascript" src="lib/StringUtils.js"></script>
 <script type="text/javascript" src="lib/P3Com/Host.js"></script>
 <script type="text/javascript" src="lib/P3Com/P3Com.js"></script>
+<script type="text/javascript" src="lib/P3Com/P3ComEventType.js"></script>
+<script type="text/javascript" src="lib/P3Com/P3ComManager.js"></script>
 <script>
+    var p3man = new P3ComManager();
+    p3man.on(P3ComEventType.DISCOVERY_STARTED, function(event){
+        console.log("Scan Started");
+    });
+    p3man.on(P3ComEventType.DISCOVERY_FINISHED, function(event){
+        console.log("Scan Finished, hosts discovered:");
+        console.log(event.discoveredHosts);
+        console.log(event.dateStarted," ", event.dateFinished);
+    });
+    p3man.on(P3ComEventType.HOST_DISCOVERED, function(event){
+        console.log("Hosts discovered...");
+        console.log(event.discoveredHosts);
+        console.log(event.dateStarted);
+    });
     
+    p3man.scan();
      
 </script>
 </html>

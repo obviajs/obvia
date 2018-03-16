@@ -21,18 +21,18 @@
 	
 
 	<script src="lib/ArrayUtils.js"></script>
+	<script src="lib/ObjectUtils.js"></script>
 	<script src="lib/base64.js"></script>
 	
 	<script src="lib/my.js"></script>
 	
-    <script src="lib/rca/EventDispatcher.js"></script>
     <script src="lib/rca/RemoteCursorEvent.js"></script>
 	<script src="lib/rca/RemoteCursorArray.js"></script>
 	
     <!--script src="lib/RemoteCursor.js"></script-->
     <script src="lib/rca/SortField.js"></script>
     <script type="text/javascript">
-		var rca = new RemoteCursorArray();
+		var rca = new RemoteCursorArray({post:{"testKey":"testValue"}});
 		rca.getData_Action = "http://139.162.158.49/rca/index.php";
 		//generated via querybuilder http://querybuilder.js.org/demo.html
 		rca.filterData =  
