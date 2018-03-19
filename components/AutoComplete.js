@@ -69,7 +69,7 @@ var AutoComplete = KxGenerator.createComponent({
             size: 'modal-lg',
             title: 'Vlerat e Autocomplete',
             body: '<div class="row">' +
-                '<div class="col-md-12">' +
+                '<div class="col-sm-12">' +
                 '<div class="table-responsive" style="margin-left:10px;">' +
                 '<table id="combo_category_table_' + this.domID + '" class="table table-striped table-bordered table-hover display" style="width: 100%">' +
                 '<thead>' +
@@ -162,7 +162,7 @@ var AutoComplete = KxGenerator.createComponent({
     },
 
     template: function () {
-        return "<div id='" + this.domID + "-wrapper' class='form-group col-lg-" + this.colspan + " rowspan" + this.rowspan + " resizable'>" +
+        return "<div id='" + this.domID + "-wrapper' class='form-group col-sm-" + this.colspan + " rowspan" + this.rowspan + " resizable'>" +
                     "<label rv-style='versionStyle' rv-for='domID'><b>{label}</b> <span rv-if='required'>*</span></label>" +
                     "<div class='form-group'>" +
                         "<span rv-if='model.blockProcessAttr' class='block-process'> * </span>" +

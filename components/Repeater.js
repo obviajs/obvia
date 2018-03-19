@@ -16,12 +16,29 @@ var Repeater = KxGenerator.createComponent({
             this.dataProviderKeys = Object.keys(this.defaultItem);
         }else if(this.dataProvider.length>0){
             this.dataProviderKeys = Object.keys(this.dataProvider[0]);
+            this.defaultItem = this.buildDefaultItem(this.dataProvider);
         }
 
         return {
             displayAddButton: this.rendering.actions,
             displayRemoveButton: this.rendering.actions
         }
+    },
+
+    buildDefaultItem: function (dp) {
+        var dI = {};
+        for (var key in dp[0]) {
+            if (typeof dp[0][key] == "object")
+                dI[key] = null;
+            else if (typeof dp[0][key] == "array")
+                dI[key] = [];   
+            else if (typeof dp[0][key] == "boolean")
+                dI[key] = false;   
+            else
+                dI[key] = "";
+        }
+
+        return dI;
     },
 
     registerEvents: function () {
@@ -86,12 +103,25 @@ var Repeater = KxGenerator.createComponent({
             }
         }
     },
+
+    getValue: function () {
+        var value = {};
+        this.components.forEach(function (components) {
+            value[components.props.id] = [];
+            this[components.props.id].forEach(function (component, index) {
+                value[components.props.id].push(this[components.props.id][index].getValue());
+            }.bind(this));
+        }.bind(this));
+
+        return value;
+    },
+
     //renders a new row, adds components in stack
     addRow: function (data, index, isPreventable = false, focusOnRowAdd = true) {
         var _self = this;
         var model = this.getModel();
         
-        var renderedRow = $('<div ' + (_self.rendering.direction == 'vertical' ? "class='row col-md-12'" : "") + '>')
+        var renderedRow = $('<div ' + (_self.rendering.direction == 'vertical' ? "class='row'" : "") + '>')
         
         var ccComponents = [];
         var buildRow = function () {
@@ -161,6 +191,9 @@ var Repeater = KxGenerator.createComponent({
                         if (_self.currentIndex > 1 && _self.rendering.actions) {
                             model.displayRemoveButton = true;
                         }
+                        if (_self.currentIndex == 1) {
+                            model.displayRemoveButton = false;
+                        }
 
                         //skip dp if it already exist
                         var addRowFlag = false;
@@ -200,7 +233,7 @@ var Repeater = KxGenerator.createComponent({
                 .append(
                     $('<div>')
                         .addClass("repeated-block")
-                        .append((_self.rendering.seperator ? '<hr id="repeated-block-hr">' : ''))
+                        .append((_self.rendering.seperator && (index > 1) ? '<hr id="repeated-block-hr">' : ''))
                         .append(renderedRow)
                 );                   
             
@@ -333,10 +366,10 @@ var Repeater = KxGenerator.createComponent({
     },
 
     template: function () {
-        return "<div id='" + this.domID + "-wrapper' class='col-md-12'>" +
+        return "<div id='" + this.domID + "-wrapper' class='col-sm-12'>" +
                     "<div id='" + this.domID + "-container'></div>" +  
-                    "<div id='actions_" + this.domID  + "' class='col-md-offset-10 col-md-2 float-right' style='overflow:hidden;'>" +
-                        "<button id='btnAddRow_" + this.domID  + "' type='button' class='mx-1 float-right btn btn-sm btn-secondary' rv-if='model.displayAddButton'>" +
+                    "<div id='actions_" + this.domID  + "' class='col-sm-offset-10 col-sm-2 px-0 float-right' style='overflow:hidden;'>" +
+                        "<button id='btnAddRow_" + this.domID  + "' type='button' class='float-right btn btn-sm btn-secondary' rv-if='model.displayAddButton'>" +
                             "<i class='fas fa-plus'></i> Add" +
                         "</button>" +
                         "<button id='btnRemoveRow_" + this.domID  + "' type='button' class='mx-1 float-right btn btn-sm btn-danger' rv-if='model.displayRemoveButton'>" +

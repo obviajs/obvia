@@ -7,7 +7,7 @@
 //component definition
 var Form = KxGenerator.createComponent({
 
-    formDOMId: 'view_form_26',
+    forsmOMId: 'view_form_26',
 
     formAction: (this.viewMode == "steps") ? "?forms/modify_form_submit" : "#",
 
@@ -68,6 +68,19 @@ var Form = KxGenerator.createComponent({
         return this;
     },
 
+    serialize: function (encode = false) {
+        var value = {};
+        this.components.forEach(function (component) {
+            value[component.props.id] = this[component.props.id].getValue();
+        }.bind(this));
+
+        if (encode) {
+            return btoa(JSON.stringify(value));   
+        }
+
+        return JSON.stringify(value);
+    },
+
     disable: function () {
         this.components.forEach(function (component) {
             this[component.props.id].disable();
@@ -80,29 +93,29 @@ var Form = KxGenerator.createComponent({
         return (
             viewMode == 'steps' ? 
                 "<div class='row'>" +
-                    "<div class='col-lg-12'>" +
-                        "<div class='col-lg-12'>" +
+                    "<div class='col-sm-12'>" +
+                        "<div class='col-sm-12'>" +
                             "<center>" +
                                 "<h4>" +
                                     "{formName}" +                                        
                                 "</h4>" +
                             "</center>" +
                         "</div>" +
-                        "<div class='col-lg-2 btn-group' style='margin-bottom: -15px;'>" +
+                        "<div class='col-sm-2 btn-group' style='margin-bottom: -15px;'>" +
                         "</div>" +
                     "</div>" +          
                 "</div><hr>" :
                 
                 "<div class='row'>" +
-                    "<div class='col-lg-12' style='background-color: #ccc; font-size: 16px; text-align:center;'>" +
-                        "<div class='col-lg-12'>" +
+                    "<div class='col-sm-12' style='background-color: #ccc; font-size: 16px; text-align:center;'>" +
+                        "<div class='col-sm-12'>" +
                             "<center>" +
                                 "<label style='margin-top:5px;'>" +
                                     "{formName}" +
                                 "</label>" +
                             "</center>" +
                         "</div>" +
-                        "<div class='col-lg-2 btn-group' style='margin-bottom: -15px;'>" +
+                        "<div class='col-sm-2 btn-group' style='margin-bottom: -15px;'>" +
                         "</div>" +
                     "</div>" +
                 "</div>"
@@ -110,12 +123,12 @@ var Form = KxGenerator.createComponent({
     },
 
     template: function () {
-        return "<div id='" + this.domID + "-wrapper' class='col-md-12'>" +
-                    "<form name='view_form' rv-id='formDOMId' method='POST' rv-action='formAction' class='view_form'>" +
-                        "<div class='col-md-12' style='padding: 10px'>" +
+        return "<div id='" + this.domID + "-wrapper' class='col-sm-12'>" +
+                    "<form name='view_form' rv-id='forsmOMId' method='POST' rv-action='formAction' class='view_form'>" +
+                        "<div class='col-sm-12' style='padding: 10px'>" +
                             this.renderFormHeader(this.viewMode) + 
                             "<div>" +
-                                "<div class='row col-md-12' rv-id='componentContainerID'>" +
+                                "<div class='row' rv-id='componentContainerID'>" +
                                 "</div>" +
                             "</div>" +
                         "</div>" +

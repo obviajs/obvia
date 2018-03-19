@@ -45,8 +45,10 @@ var DateTime = KxGenerator.createComponent({
     afterAttach: function (e) {
         //init datepicker
         var _self = this;
-        if (this.value != "" && this.value != null)
+        if (this.value != "" && this.value != null && this.value != "0000-00-00 00:00:00")
             this.value = moment(this.$input.val()).format(this.inputFormat)
+        else
+            this.value = ""
         
         this.$input.datepicker({
             format: {
@@ -59,7 +61,8 @@ var DateTime = KxGenerator.createComponent({
             },
             autoclose: true,
             todayBtn: true,
-            todayHighlight: true
+            todayHighlight: true,
+            forceParse: false
         });
 
         this.trigger('creationComplete');
@@ -91,7 +94,7 @@ var DateTime = KxGenerator.createComponent({
     },
 
     template: function () {         
-        return "<div id='" + this.domID + "-wrapper' class='form-group col-lg-" + this.colspan + " resizable'>" +
+        return "<div id='" + this.domID + "-wrapper' class='form-group col-sm-" + this.colspan + " resizable'>" +
                     "<div id='" + this.domID + "-block'>" + 
                         "<label rv-style='versionStyle' rv-for='id'><b>{label}</b> <span rv-if='required'>*</span></label>" + 
                         "<span rv-if='model.blockProcessAttr' class='block-process'> * </span>" + 

@@ -181,7 +181,7 @@ var Upload = KxGenerator.createComponent({
     },
 
     appendToFileList: function (rf) {
-        var template =  '<div id="template-' + rf.file.uniqueIdentifier + '-' + this.domID +'" class="row col-md-12 mt-3">' +
+        var template =  '<div id="template-' + rf.file.uniqueIdentifier + '-' + this.domID +'" class="row col-sm-12 mt-3">' +
                             '<div class="img-container float-left">' +
                                 '<img class="rounded" width="40" height="40" />' +
                             '</div>' +
@@ -241,9 +241,9 @@ var Upload = KxGenerator.createComponent({
     },
 
     template: function () {
-        return  "<div id='" + this.domID + "-wrapper' class='col-lg-" + this.colspan + "'>" +
-                    "<div class='col-md-12 kx-upload'>" +
-                        "<div class='col-md-12 kx-drop-area' id='drop-" + this.domID + "' rv-if='allowDrop'>" +
+        return  "<div id='" + this.domID + "-wrapper' class='col-sm-" + this.colspan + "'>" +
+                    "<div class='col-sm-12 kx-upload'>" +
+                        "<div class='col-sm-12 kx-drop-area' id='drop-" + this.domID + "' rv-if='allowDrop'>" +
                             "<div class='row'>" +
                                 "<div class='mt-5' style='margin:auto'>{model.dropString}</div>"+
                             "</div>" +
@@ -256,14 +256,14 @@ var Upload = KxGenerator.createComponent({
                                 "</div>"+
                             "</div>" +
                         "</div>" +
-                        "<div class='col-md-12' rv-unless='allowDrop'>" +
+                        "<div class='col-sm-12' rv-unless='allowDrop'>" +
                             "<span class='btn btn-secondary' id='browse-" + this.domID + "'>{model.browseString}</span>" +
                         "</div>" +
-                        "<div class='col-md-12' id='files-" + this.domID + "'>" +
+                        "<div class='col-sm-12' id='files-" + this.domID + "'>" +
                         "</div>" +
-                        "<div class='col-md-12 mt-3' rv-if='model.shownActions' id='actions-" + this.domID + "'>" +
+                        "<div class='col-sm-12 mt-3' rv-if='model.shownActions' id='actions-" + this.domID + "'>" +
                             "<div class='row'>" +
-                                "<div class='col-md-12 mb-2'>" +
+                                "<div class='col-sm-12 mb-2'>" +
                                     "<div rv-if='model.uploadOnProgress' class='progress'>" +
                                         "<div class='progress-bar progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='0' aria-valuemin='0' aria-valuemax='100' rv-style='model.progressBarCSS'></div>" +
                                     "</div>" +

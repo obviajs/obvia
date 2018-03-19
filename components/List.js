@@ -36,6 +36,8 @@ var List = KxGenerator.createComponent({
             components: this.components
         }).on('creationComplete', function (e) {
             e.stopPropagation();
+            if (this.value == undefined || this.value == "")    
+                this.value = [];    
             var v = this.value.slice();
             //trick to pass property value updated check on the first setValue call below (initial value)
             this.value = [];
@@ -172,7 +174,7 @@ var List = KxGenerator.createComponent({
 
     template: function () {
         return "<div id='" + this.domID + "-wrapper'>" +
-        (!this.embedded?("<div class='col-lg-" + this.colspan + "' id='" + this.domID + "-block' resizable' style='padding-top: 10px; padding-bottom: 10px; overflow:hidden'>" +
+        (!this.embedded?("<div class='col-sm-" + this.colspan + "' id='" + this.domID + "-block' resizable' style='padding-top: 10px; padding-bottom: 10px; overflow:hidden'>" +
                         "<label rv-style='versionStyle' rv-for='domID'>{label} <span rv-if='required'>*</span></label>" +
                         "<span rv-if='model.blockProcessAttr' class='block-process'> * </span>" +
                         "<br>") : "") +

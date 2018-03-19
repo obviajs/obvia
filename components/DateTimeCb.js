@@ -215,13 +215,13 @@ var DateTimeCb = KxGenerator.createComponent({
     },
 
     renderDate: function (day, month, year) {
-        var width = "18%";
+        var width = "15%";
         if (this.mode == "date" || this.mode == "time")
-            width = "30%";    
+            width = "32%";    
 
-        this.$dateContainer.append("<div id='dayContainer-" + this.domID + "' style='width: " + width + " !important; float: left; padding-right: 5px;'></div>");
-        this.$dateContainer.append("<div id='monthContainer-" + this.domID + "' style='width: " + width + " !important; float: left; padding-right: 5px;'></div>");
-        this.$dateContainer.append("<div id='yearContainer-" + this.domID + "' style='width: " + width + " !important; float: left; padding-right: 5px; margin-right: 15px;'></div>");
+        this.$dateContainer.append("<div id='dayContainer-" + this.domID + "' style='width: " + width + " !important; float: left; margin-right: 2%;'></div>");
+        this.$dateContainer.append("<div id='monthContainer-" + this.domID + "' style='width: " + width + " !important; float: left; margin-right: 2%;'></div>");
+        this.$dateContainer.append("<div id='yearContainer-" + this.domID + "' style='width: " + width + " !important; float: left; " + (this.mode == 'datetime' ? 'margin-right: 2%;' : '') + "'></div>");
     
         this.$dateContainer.find('#dayContainer-' + this.domID).append(this.renderDaySelect(day));
         this.$dateContainer.find('#monthContainer-' + this.domID).append(this.renderMonthSelect(month));
@@ -232,13 +232,13 @@ var DateTimeCb = KxGenerator.createComponent({
     },
 
     renderTime: function (hour, min, sec) {
-        var width = "14%";
+        var width = "15%";
         if (this.mode == "time")
-            width = "30%";  
+            width = "32%";  
         
-        this.$dateContainer.append("<div id='hourContainer-" + this.domID + "' style='width: " + width + " !important; float: left; padding-right: 5px;'></div>");
-        this.$dateContainer.append("<div id='minContainer-" + this.domID + "' style='width: " + width + " !important; float: left; padding-right: 5px;'></div>");
-        this.$dateContainer.append("<div id='secContainer-" + this.domID + "' style='width: " + width + " !important; float: left; padding-right: 5px;'></div>");
+        this.$dateContainer.append("<div id='hourContainer-" + this.domID + "' style='width: " + width + " !important; float: left; margin-right: 2%;'></div>");
+        this.$dateContainer.append("<div id='minContainer-" + this.domID + "' style='width: " + width + " !important; float: left; margin-right: 2%;'></div>");
+        this.$dateContainer.append("<div id='secContainer-" + this.domID + "' style='width: " + width + " !important; float: left;'></div>");
 
         this.$dateContainer.find('#hourContainer-' + this.domID).append(this.renderHourSelect(hour));
         this.$dateContainer.find('#minContainer-' + this.domID).append(this.renderMinSelect(min));
@@ -342,7 +342,7 @@ var DateTimeCb = KxGenerator.createComponent({
     },
 
     template: function () {         
-        return "<div id='" + this.domID + "-wrapper' class='form-group col-lg-" + this.colspan + " rowspan" + this.rowspan + " resizable'>" +
+        return "<div id='" + this.domID + "-wrapper' class='form-group col-sm-" + this.colspan + " rowspan" + this.rowspan + " resizable'>" +
                     "<div id='" + this.domID + "-block'>" + 
                         "<label rv-style='versionStyle' rv-for='domID'><b>{model.label}</b> <span rv-if='required'>*</span></label>" + 
                         "<span rv-if='model.blockProcessAttr' class='block-process'> * </span>" + 

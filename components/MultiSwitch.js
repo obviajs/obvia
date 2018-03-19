@@ -98,7 +98,7 @@ var MultiSwitch = KxGenerator.createComponent({
     },
 
     template: function () {
-        return "<div id='" + this.domID + "-wrapper' class='col-lg-" + this.colspan + " resizable' style='padding-top: 10px; padding-bottom: 10px; overflow:hidden'>" +
+        return "<div id='" + this.domID + "-wrapper' class='col-sm-" + this.colspan + " resizable' style='padding-top: 10px; padding-bottom: 10px; overflow:hidden'>" +
         (!this.embedded?("<div>" +
                         "<label rv-style='versionStyle' rv-for='domID'><b>{label}</b> <span rv-if='required'>*</span></label>" +
                         "<span rv-if='model.blockProcessAttr' class='block-process'> * </span>" +
