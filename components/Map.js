@@ -250,7 +250,7 @@ var GoogleMap = KxGenerator.createComponent({
                             "<button id='" + this.domID + "_openMapBtn' type='button' class='btn btn-primary' style='width: 100%' rv-disabled='model.disabled'><i class='fas fa-map-marker'></i> Harta</button>" +                 
                         "</div>" +  
                     "</div>" + 
-                "<div id='" + this.domID + "_map-modal' class='modal' role='dialog'>" + 
+                "<div id='" + this.domID + "_map-modal' class='modal fade modal-fullscreen' role='dialog'>" + 
                     "<div class='modal-dialog modal-lg'>" +
                         "<div class='modal-content'>" +
                             "<div class='modal-header'>" +

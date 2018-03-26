@@ -70,6 +70,7 @@ var TextInput = KxGenerator.createComponent({
     changeHandler: function () {
         if (typeof this.onchange == 'function')
             this.onchange.apply(this, arguments);
+        this.validate();
     },
 
     validate: function () {
@@ -78,9 +79,15 @@ var TextInput = KxGenerator.createComponent({
                 this.errorList = [
                     KxGenerator.getErrorList().call(this)['empty']
                 ];
+
+                this.$input.addClass('invalid');
+
                 return false;
-            } else
+            } else {
+                this.errorList = [];
+                this.$input.removeClass('invalid');
                 return true;
+            }     
         } else
             return true;
     },

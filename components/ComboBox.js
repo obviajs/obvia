@@ -97,6 +97,27 @@ var ComboBox = KxGenerator.createComponent({
             this.$popup.fadeIn();
             this.$input.multiselect('deselect', '#' + this.domID + ' _new');
         }
+
+        this.validate();
+    },
+
+    validate: function () {
+        if (this.required) {
+            if (this.value == "0" || this.value == undefined) {
+                this.errorList = [
+                    KxGenerator.getErrorList().call(this)['empty']
+                ];
+
+                this.$el.find('.multiselect').addClass('invalid');
+
+                return false;
+            } else {
+                this.errorList = [];
+                this.$el.find('.multiselect').removeClass('invalid');
+                return true;
+            }
+        } else
+            return true;
     },
 
     setValue: function (value) {

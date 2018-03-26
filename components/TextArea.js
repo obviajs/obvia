@@ -28,6 +28,12 @@ var TextArea = KxGenerator.createComponent({
                 registerTo: this.$el, events: {
                     'afterAttach': this.afterAttach.bind(this),
                 }
+            },
+
+            {
+                registerTo: this.$input, events: {
+                    'change': this.changeHandler.bind(this),
+                }
             }
         ];
 
@@ -44,8 +50,12 @@ var TextArea = KxGenerator.createComponent({
         return events;
     },
 
+    changeHandler: function (e) {
+        this.validate();
+    },
+
     spellCHeckClickHandler: function (e) {
-        this.$spellCheckBtn.spellCheckInDialog({ defaultDictionary: this.spellCheck.defaultDictionary });
+        this.$input.spellCheckInDialog({ defaultDictionary: this.spellCheck.defaultDictionary });
     },
 
     afterAttach: function (e) {
@@ -72,11 +82,17 @@ var TextArea = KxGenerator.createComponent({
                 this.errorList = [
                     KxGenerator.getErrorList().call(this)['empty']
                 ];
+
+                this.$input.addClass('invalid');
+
                 return false;
-            } else
-                return true;    
+            } else {
+                this.errorList = [];
+                this.$input.removeClass('invalid');
+                return true;
+            }
         } else
-            return true;    
+            return true;
     },
 
     template: function () {

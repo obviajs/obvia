@@ -8,7 +8,8 @@
 var Amount = KxGenerator.createComponent({
     value: {
         amount: "",
-        currency: "1"
+        currency: "1",
+        moneyamount_id: "-666"
     },
 
     //component data
@@ -40,6 +41,8 @@ var Amount = KxGenerator.createComponent({
     handleChange: function (e) {
         this.value.amount = this.amountInput.getValue();
         this.value.currency = this.currencySelect.getValue();
+
+        this.validate();
     },
 
     afterAttach: function (e) {
@@ -64,7 +67,7 @@ var Amount = KxGenerator.createComponent({
             id: 'amountInput-' + this.id,
             colspan: '',
             mask: {
-                alias: "currency",
+                alias: "decimal",
                 prefix: ''
             },
             value: value
@@ -94,7 +97,8 @@ var Amount = KxGenerator.createComponent({
     },
 
     setValue: function (value) {
-        this.value = value;
+        this.value.amount = value.amount;
+        this.value.currency = value.currency;
 
         this.amountInput.setValue(value.amount);
         this.currencySelect.setValue(value.currency);
@@ -114,6 +118,35 @@ var Amount = KxGenerator.createComponent({
         this.currencySelect.disable();
         
         return this;
+    },
+
+    validate: function () {
+        if (this.required && this.amountInput.validate()) {
+            if (this.amountInput.getValue() == "0.00" || this.amountInput.getValue() == "0") {
+                this.errorList = [
+                    KxGenerator.getErrorList().call(this)['zero']
+                ];
+                this.amountInput.$input.addClass('invalid');
+                return false;
+            } else {
+                this.errorList = [];
+                this.amountInput.$input.removeClass('invalid');
+                return true;
+            }
+        } else {
+            if (this.required) {
+                this.errorList = [
+                    KxGenerator.getErrorList().call(this)['zero']
+                ];
+                this.amountInput.$input.addClass('invalid');
+                return false;
+            } else {
+                this.errorList = [];
+                this.amountInput.$input.removeClass('invalid');
+                return true;
+            }
+            
+        }
     },
 
     template: function () {

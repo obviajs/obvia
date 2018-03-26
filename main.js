@@ -24,6 +24,7 @@ rjs.define("./components/RadioGroup.js", "RadioGroup");
 //Amount
 rjs.define("./components/Amount.js", "Amount");
 //TextArea
+livespell___installPath = window.location.origin + "/resources/inner_resources/scripts/plugins/SpellCheck/";
 rjs.define("lib/dependencies/scripts/plugins/SpellCheck/include.js", "SpellCheckJS");
 rjs.define("./components/TextArea.js", "TextArea");
 //TextEditor
@@ -115,7 +116,6 @@ rjs.require([
     "SlimScroll",
     "FormUpload"
 ], function () {
-
     // rjs.define("./examples/CheckBox/example.js", "CheckBoxExample");
     // rjs.define("./examples/RadioButton/example.js", "RadioButtonExample");
     // rjs.define("./examples/CheckBoxGroup/example.js", "CheckBoxGroupExample");

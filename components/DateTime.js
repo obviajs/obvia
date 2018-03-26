@@ -20,8 +20,17 @@ var DateTime = KxGenerator.createComponent({
                 registerTo: this.$el, events: {
                     'afterAttach': this.afterAttach.bind(this),
                 }
+            },
+            {
+                registerTo: this.$input, events: {
+                    'change': this.changeHandler.bind(this),
+                },
             }
         ]
+    },
+
+    changeHandler: function (e) {
+        this.validate();
     },
 
     enable: function () {
@@ -62,7 +71,7 @@ var DateTime = KxGenerator.createComponent({
             autoclose: true,
             todayBtn: true,
             todayHighlight: true,
-            forceParse: false
+            forceParse: true
         });
 
         this.trigger('creationComplete');
@@ -86,9 +95,14 @@ var DateTime = KxGenerator.createComponent({
                 this.errorList = [
                     KxGenerator.getErrorList().call(this)['empty']
                 ];
+
+                this.$input.addClass('invalid');
                 return false;
-            } else
-                return true;    
+            } else {
+                this.errorList = [];
+                this.$input.removeClass('invalid');
+                return true;  
+            }
         } else
             return true;    
     },

@@ -61,6 +61,7 @@ var AutoComplete = KxGenerator.createComponent({
                 this.value.push(option[0]);
             }.bind(this));
 
+        this.validate();
     },
 
     createModal: function () {
@@ -135,6 +136,21 @@ var AutoComplete = KxGenerator.createComponent({
 
         if (!this.displayTable) {
             this.trigger('creationComplete');
+        }
+    },
+
+    validate: function () {
+        if (this.required && this.value.length == 0) {
+            this.errorList = [
+                KxGenerator.getErrorList().call(this)['empty']
+            ];
+
+            this.$el.find('.select2-selection__rendered').addClass('invalid');
+            return false;
+        } else {
+            this.errorList = [];
+            this.$el.find('.select2-selection__rendered').removeClass('invalid');
+            return true;
         }
     },
 

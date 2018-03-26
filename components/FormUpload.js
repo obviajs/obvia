@@ -20,17 +20,15 @@ var FormUpload = KxGenerator.createComponent({
         this.modal = null;
         this.$upload = this.createUpload();
         this.$listContainer = this.$el.find('.list-container');
-        if (typeof this.dataProvider == "string") {
+        if (typeof this.dataProvider == "string") {            
             //remote cursor array 
-            var rca = new RemoteCursorArray();
-            rca.getData_Action = this.dataProvider;
-            rca.recordsPerPage = 100;
-            rca.on(RemoteCursorEventType.REQUEST_SUCCESS, function (e) {
-                this.dataProvider = rca.source;
+            this.rca = new RemoteCursorArray();
+            this.rca.getData_Action = this.dataProvider;
+            this.rca.recordsPerPage = 100;
+            this.rca.on(RemoteCursorEventType.REQUEST_SUCCESS, function (e) {
+                this.dataProvider = this.rca.source;
                 this.$list = this.createList();
             }.bind(this));
-
-            rca.init();
         } else {
             this.$list = this.createList();
         }
@@ -154,6 +152,18 @@ var FormUpload = KxGenerator.createComponent({
         this.upload.on('creationComplete', function (e) {
             e.stopPropagation();
             _self.trigger('creationComplete');
+
+            var formID;
+            if (_self.parentType == 'repeater')
+                formID = _self.parent.parentForm.id;
+            else
+                formID = _self.parentForm.id;    
+           
+            _self.rca.post = {
+                'form_id': Case[formID].id,
+                'form_submit_id': Case[formID].form_submit_id
+            }
+            _self.rca.init();
         });
 
         return this.upload.render();
@@ -162,6 +172,7 @@ var FormUpload = KxGenerator.createComponent({
     deleteFromListHandler: function (e, repeaterArgs) {
         console.log(repeaterArgs);
         this.list.removeRow(repeaterArgs.currentIndex + 1);
+        this.validate();
     },
 
     uploadHandler: function (files) {
@@ -185,6 +196,7 @@ var FormUpload = KxGenerator.createComponent({
             this.list.addRow(item, repIndex + index + 1);
         }.bind(this));
         
+        this.validate();
     },
 
     enable: function () {
@@ -197,6 +209,25 @@ var FormUpload = KxGenerator.createComponent({
         var model = this.getModel();
         model.enabled = true;
         return this;
+    },
+
+    validate: function () {
+        if (this.required) {
+            if (this.dataProvider.length == 0) {
+                this.errorList = [
+                    KxGenerator.getErrorList().call(this)['empty']
+                ];
+
+                this.$uploadBtn.addClass('invalid');
+
+                return false;
+            } else {
+                this.errorList = [];
+                this.$uploadBtn.removeClass('invalid');
+                return true;
+            }
+        } else
+            return true;
     },
 
     template: function () {

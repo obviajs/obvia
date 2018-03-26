@@ -35,6 +35,7 @@ var TextEditor = KxGenerator.createComponent({
 
     handleChange: function (e) {
         this.value = this.$input.summernote('code');
+        this.validate();
     },
 
     setValue(value) {
@@ -109,11 +110,15 @@ var TextEditor = KxGenerator.createComponent({
                 this.errorList = [
                     KxGenerator.getErrorList().call(this)['empty']
                 ];
+                this.$el.find('.note-editor').addClass('invalid');
                 return false;
-            } else
-                return true;    
+            } else {
+                this.errorList = [];
+                this.$el.find('.note-editor').removeClass('invalid');
+                return true;
+            }
         } else
-            return true;    
+            return true;
     },
 
     template: function () {
