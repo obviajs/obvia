@@ -20,17 +20,15 @@ var FormUpload = KxGenerator.createComponent({
         this.modal = null;
         this.$upload = this.createUpload();
         this.$listContainer = this.$el.find('.list-container');
-        if (typeof this.dataProvider == "string") {
+        if (typeof this.dataProvider == "string") {            
             //remote cursor array 
-            var rca = new RemoteCursorArray();
-            rca.getData_Action = this.dataProvider;
-            rca.recordsPerPage = 100;
-            rca.on(RemoteCursorEventType.REQUEST_SUCCESS, function (e) {
-                this.dataProvider = rca.source;
+            this.rca = new RemoteCursorArray();
+            this.rca.getData_Action = this.dataProvider;
+            this.rca.recordsPerPage = 100;
+            this.rca.on(RemoteCursorEventType.REQUEST_SUCCESS, function (e) {
+                this.dataProvider = this.rca.source;
                 this.$list = this.createList();
             }.bind(this));
-
-            rca.init();
         } else {
             this.$list = this.createList();
         }
@@ -81,7 +79,7 @@ var FormUpload = KxGenerator.createComponent({
                     constructor: Label,
                     props: {
                         id: 'no',
-                        class: 'col-md-1',
+                        class: 'col-sm-1',
                         label: "{" + this.noLabelValue + "}"
                     }
                 },
@@ -89,7 +87,7 @@ var FormUpload = KxGenerator.createComponent({
                     constructor: Label,
                     props: {
                         id: 'name',
-                        class: 'col-md-9',
+                        class: 'col-sm-9',
                         label: "{" + this.nameLabelValue + "}",
                         hyperlink: "{" + this.downloadLink + "}",
                         target: "_blank"
@@ -154,6 +152,18 @@ var FormUpload = KxGenerator.createComponent({
         this.upload.on('creationComplete', function (e) {
             e.stopPropagation();
             _self.trigger('creationComplete');
+
+            var formID;
+            if (_self.parentType == 'repeater')
+                formID = _self.parent.parentForm.id;
+            else
+                formID = _self.parentForm.id;    
+           
+            _self.rca.post = {
+                'form_id': Case[formID].id,
+                'form_submit_id': Case[formID].form_submit_id
+            }
+            _self.rca.init();
         });
 
         return this.upload.render();
@@ -162,6 +172,7 @@ var FormUpload = KxGenerator.createComponent({
     deleteFromListHandler: function (e, repeaterArgs) {
         console.log(repeaterArgs);
         this.list.removeRow(repeaterArgs.currentIndex + 1);
+        this.validate();
     },
 
     uploadHandler: function (files) {
@@ -185,6 +196,7 @@ var FormUpload = KxGenerator.createComponent({
             this.list.addRow(item, repIndex + index + 1);
         }.bind(this));
         
+        this.validate();
     },
 
     enable: function () {
@@ -199,8 +211,27 @@ var FormUpload = KxGenerator.createComponent({
         return this;
     },
 
+    validate: function () {
+        if (this.required) {
+            if (this.dataProvider.length == 0) {
+                this.errorList = [
+                    KxGenerator.getErrorList().call(this)['empty']
+                ];
+
+                this.$uploadBtn.addClass('invalid');
+
+                return false;
+            } else {
+                this.errorList = [];
+                this.$uploadBtn.removeClass('invalid');
+                return true;
+            }
+        } else
+            return true;
+    },
+
     template: function () {
-        return "<div id='" + this.domID + "-wrapper' class='form-group col-lg-" + this.colspan + " rowspan" + this.rowspan + " resizable'>" +    
+        return "<div id='" + this.domID + "-wrapper' class='form-group col-sm-" + this.colspan + " rowspan" + this.rowspan + " resizable'>" +    
                     "<label rv-style='versionStyle' rv-for='domID'><b>{label}</b> <span rv-if='required'>*</span></label>" +
                     "<span rv-if='model.blockProcessAttr' class='block-process'> * </span>" +
                     "<div class='input-container'>" +
@@ -208,7 +239,7 @@ var FormUpload = KxGenerator.createComponent({
                             "<button id='upload-" + this.domID + "' type='button' class='btn btn-primary' rv-enabled='model.enabled' style='color: white;'><i class='fas fa-cloud-upload-alt'></i> Upload</button>" +
                         "</div>" +
                         "<div class='row'>" +
-                            "<div class='col-md-12 list-container'></div>" +
+                            "<div class='col-sm-12 list-container'></div>" +
                         "</div>" +
                     "</div>" +  
                      "<div id='" + this.domID + "-upload-modal'></div>" +

@@ -137,7 +137,7 @@ var TrippleSwitch = KxGenerator.createComponent({
     },
 
     template: function () {
-        return "<div id='" + this.domID + "-wrapper' class='col-lg-" + this.colspan + "'>" +
+        return "<div id='" + this.domID + "-wrapper' class='col-sm-" + this.colspan + "'>" +
                     "<label rv-style='versionStyle' rv-for='fieldName'><b>{label}</b> <span rv-if='required'>*</span></label>" +
                     "<span rv-if='blockProcessAttr' class='block-process'> * </span>" +
                     "<br>" +

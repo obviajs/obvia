@@ -35,6 +35,7 @@ var TextEditor = KxGenerator.createComponent({
 
     handleChange: function (e) {
         this.value = this.$input.summernote('code');
+        this.validate();
     },
 
     setValue(value) {
@@ -109,15 +110,19 @@ var TextEditor = KxGenerator.createComponent({
                 this.errorList = [
                     KxGenerator.getErrorList().call(this)['empty']
                 ];
+                this.$el.find('.note-editor').addClass('invalid');
                 return false;
-            } else
-                return true;    
+            } else {
+                this.errorList = [];
+                this.$el.find('.note-editor').removeClass('invalid');
+                return true;
+            }
         } else
-            return true;    
+            return true;
     },
 
     template: function () {
-        return "<div id='" + this.domID + "-wrapper' class='form-group col-lg-" + this.colspan + " rowspan" + this.rowspan + " resizable '>" +
+        return "<div id='" + this.domID + "-wrapper' class='form-group col-sm-" + this.colspan + " rowspan" + this.rowspan + " resizable '>" +
                     "<div id='" + this.domID + "-block'> " +
                         "<label rv-style='versionStyle' rv-for='domID'><b>{label}</b> <span rv-if='required'>*</span></label>" +
                             "<span rv-if='model.blockProcessAttr' class='block-process'> * </span>" +

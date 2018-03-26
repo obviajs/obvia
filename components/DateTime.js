@@ -20,8 +20,17 @@ var DateTime = KxGenerator.createComponent({
                 registerTo: this.$el, events: {
                     'afterAttach': this.afterAttach.bind(this),
                 }
+            },
+            {
+                registerTo: this.$input, events: {
+                    'change': this.changeHandler.bind(this),
+                },
             }
         ]
+    },
+
+    changeHandler: function (e) {
+        this.validate();
     },
 
     enable: function () {
@@ -45,8 +54,10 @@ var DateTime = KxGenerator.createComponent({
     afterAttach: function (e) {
         //init datepicker
         var _self = this;
-        if (this.value != "" && this.value != null)
+        if (this.value != "" && this.value != null && this.value != "0000-00-00 00:00:00")
             this.value = moment(this.$input.val()).format(this.inputFormat)
+        else
+            this.value = ""
         
         this.$input.datepicker({
             format: {
@@ -59,7 +70,8 @@ var DateTime = KxGenerator.createComponent({
             },
             autoclose: true,
             todayBtn: true,
-            todayHighlight: true
+            todayHighlight: true,
+            forceParse: true
         });
 
         this.trigger('creationComplete');
@@ -83,15 +95,20 @@ var DateTime = KxGenerator.createComponent({
                 this.errorList = [
                     KxGenerator.getErrorList().call(this)['empty']
                 ];
+
+                this.$input.addClass('invalid');
                 return false;
-            } else
-                return true;    
+            } else {
+                this.errorList = [];
+                this.$input.removeClass('invalid');
+                return true;  
+            }
         } else
             return true;    
     },
 
     template: function () {         
-        return "<div id='" + this.domID + "-wrapper' class='form-group col-lg-" + this.colspan + " resizable'>" +
+        return "<div id='" + this.domID + "-wrapper' class='form-group col-sm-" + this.colspan + " resizable'>" +
                     "<div id='" + this.domID + "-block'>" + 
                         "<label rv-style='versionStyle' rv-for='id'><b>{label}</b> <span rv-if='required'>*</span></label>" + 
                         "<span rv-if='model.blockProcessAttr' class='block-process'> * </span>" + 

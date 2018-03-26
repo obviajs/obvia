@@ -28,6 +28,12 @@ var TextArea = KxGenerator.createComponent({
                 registerTo: this.$el, events: {
                     'afterAttach': this.afterAttach.bind(this),
                 }
+            },
+
+            {
+                registerTo: this.$input, events: {
+                    'change': this.changeHandler.bind(this),
+                }
             }
         ];
 
@@ -44,12 +50,16 @@ var TextArea = KxGenerator.createComponent({
         return events;
     },
 
+    changeHandler: function (e) {
+        this.validate();
+    },
+
     spellCHeckClickHandler: function (e) {
-        this.$spellCheckBtn.spellCheckInDialog({ defaultDictionary: this.spellCheck.defaultDictionary });
+        this.$input.spellCheckInDialog({ defaultDictionary: this.spellCheck.defaultDictionary });
     },
 
     afterAttach: function (e) {
-        this.trigger('creationComplete')
+        this.trigger('creationComplete');
     },
 
     enable: function () {
@@ -72,15 +82,21 @@ var TextArea = KxGenerator.createComponent({
                 this.errorList = [
                     KxGenerator.getErrorList().call(this)['empty']
                 ];
+
+                this.$input.addClass('invalid');
+
                 return false;
-            } else
-                return true;    
+            } else {
+                this.errorList = [];
+                this.$input.removeClass('invalid');
+                return true;
+            }
         } else
-            return true;    
+            return true;
     },
 
     template: function () {
-        return "<div id='" + this.domID + "-wrapper' class='form-group col-lg-" + this.colspan + " rowspan" + this.rowspan + " resizable '>" +
+        return "<div id='" + this.domID + "-wrapper' class='form-group col-sm-" + this.colspan + " rowspan" + this.rowspan + " resizable '>" +
                 "<div id='" + this.domID + "-block'> " +
                     "<label rv-style='versionStyle' rv-for='domID'><b>{label}</b> <span rv-if='required'>*</span></label>" +
                         "<span rv-if='model.blockProcessAttr' class='block-process'> * </span>" +

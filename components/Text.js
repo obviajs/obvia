@@ -70,6 +70,7 @@ var TextInput = KxGenerator.createComponent({
     changeHandler: function () {
         if (typeof this.onchange == 'function')
             this.onchange.apply(this, arguments);
+        this.validate();
     },
 
     validate: function () {
@@ -78,15 +79,21 @@ var TextInput = KxGenerator.createComponent({
                 this.errorList = [
                     KxGenerator.getErrorList().call(this)['empty']
                 ];
+
+                this.$input.addClass('invalid');
+
                 return false;
-            } else
+            } else {
+                this.errorList = [];
+                this.$input.removeClass('invalid');
                 return true;
+            }     
         } else
             return true;
     },
     
     template: function () {
-        return "<div id='" + this.domID + "-wrapper' class='form-group col-lg-" + this.colspan + " rowspan" + this.rowspan + " resizable '>" +
+        return "<div id='" + this.domID + "-wrapper' class='form-group col-sm-" + this.colspan + " rowspan" + this.rowspan + " resizable '>" +
             "<div id='" + this.domID + "-block'>" +
             "<label rv-style='versionStyle' rv-for='domID'><b>{label}</b> <span rv-if='required'>*</span></label>" +
             "<span rv-if='model.blockProcessAttr' class='block-process'> * </span>" +

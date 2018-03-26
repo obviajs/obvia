@@ -97,6 +97,27 @@ var ComboBox = KxGenerator.createComponent({
             this.$popup.fadeIn();
             this.$input.multiselect('deselect', '#' + this.domID + ' _new');
         }
+
+        this.validate();
+    },
+
+    validate: function () {
+        if (this.required) {
+            if (this.value == "0" || this.value == undefined) {
+                this.errorList = [
+                    KxGenerator.getErrorList().call(this)['empty']
+                ];
+
+                this.$el.find('.multiselect').addClass('invalid');
+
+                return false;
+            } else {
+                this.errorList = [];
+                this.$el.find('.multiselect').removeClass('invalid');
+                return true;
+            }
+        } else
+            return true;
     },
 
     setValue: function (value) {
@@ -122,7 +143,7 @@ var ComboBox = KxGenerator.createComponent({
     },
 
     template: function () {
-        return "<div id='" + this.domID + "-wrapper' class='col-lg-" + this.colspan + " form-group rowspan" + this.rowspan + " resizable'>" +
+        return "<div id='" + this.domID + "-wrapper' class='col-sm-" + this.colspan + " form-group rowspan" + this.rowspan + " resizable'>" +
                     "<div id='" + this.domID + "-block'>" +
                     "<label rv-style='versionStyle' rv-for='fieldName'><b>{label}</b> <span rv-if='required'>*</span></label>" +
                     "<span rv-if='blockProcessAttr' class='block-process'> * </span>" +
