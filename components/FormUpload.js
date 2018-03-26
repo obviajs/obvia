@@ -26,6 +26,7 @@ var FormUpload = KxGenerator.createComponent({
             this.rca.on(RemoteCursorEventType.REQUEST_SUCCESS, function (e) {
                 this.dataProvider = this.rca.source;
                 this.$list = this.createList();
+                this.$listContainer.html(this.$list);
             }.bind(this));
         } else {
             this.$list = this.createList();
@@ -62,7 +63,7 @@ var FormUpload = KxGenerator.createComponent({
 
     createList: function () {
         this.direction = this.direction == undefined || this.direction == null ? 'vertical' : this.direction;
-
+     
         this.list = new List({
             id: 'list',
             colspan: '6',
@@ -77,7 +78,7 @@ var FormUpload = KxGenerator.createComponent({
                     constructor: Label,
                     props: {
                         id: 'no',
-                        class: 'col-sm-1',
+                        class: 'pl-2',
                         label: "{" + this.noLabelValue + "}"
                     }
                 },
@@ -85,7 +86,7 @@ var FormUpload = KxGenerator.createComponent({
                     constructor: Label,
                     props: {
                         id: 'name',
-                        class: 'col-sm-9',
+                        class: 'mx-auto',
                         label: "{" + this.nameLabelValue + "}",
                         hyperlink: "{" + this.downloadLink + "}",
                         target: "_blank"
@@ -96,7 +97,7 @@ var FormUpload = KxGenerator.createComponent({
                     props: {
                         id: 'button',
                         type: "button",
-                        value: "Delete",
+                        value: "<i class='far fa-trash-alt'></i>",
                         class: "btn btn-sm btn-danger",
                         onclick: this.deleteFromListHandler.bind(this),
                         embedded: true  
@@ -162,7 +163,7 @@ var FormUpload = KxGenerator.createComponent({
                 'form_submit_id': Case[formID].id_form_submit
             }
             _self.rca.getData_Action = _self.dataProvider;
-            _self.rca.recordsPerPage = 1;
+            _self.rca.recordsPerPage = 100;
             _self.rca.init();
         });
 
@@ -239,7 +240,7 @@ var FormUpload = KxGenerator.createComponent({
                             "<button id='upload-" + this.domID + "' type='button' class='btn btn-primary' rv-enabled='model.enabled' style='color: white;'><i class='fas fa-cloud-upload-alt'></i> Upload</button>" +
                         "</div>" +
                         "<div class='row'>" +
-                            "<div class='col-sm-12 list-container'></div>" +
+                            "<div class='col-sm-12 list-container mt-4'></div>" +
                         "</div>" +
                     "</div>" +  
                      "<div id='" + this.domID + "-upload-modal'></div>" +
