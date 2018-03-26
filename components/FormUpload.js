@@ -23,8 +23,6 @@ var FormUpload = KxGenerator.createComponent({
         if (typeof this.dataProvider == "string") {            
             //remote cursor array 
             this.rca = new RemoteCursorArray();
-            this.rca.getData_Action = this.dataProvider;
-            this.rca.recordsPerPage = 100;
             this.rca.on(RemoteCursorEventType.REQUEST_SUCCESS, function (e) {
                 this.dataProvider = this.rca.source;
                 this.$list = this.createList();
@@ -161,8 +159,10 @@ var FormUpload = KxGenerator.createComponent({
            
             _self.rca.post = {
                 'form_id': Case[formID].id,
-                'form_submit_id': Case[formID].form_submit_id
+                'form_submit_id': Case[formID].id_form_submit
             }
+            _self.rca.getData_Action = _self.dataProvider;
+            _self.rca.recordsPerPage = 1;
             _self.rca.init();
         });
 
