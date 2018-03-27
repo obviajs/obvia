@@ -1,3 +1,10 @@
+var Case = {
+    form: {
+        id: 1,
+        id_form_submit: 1
+    }
+}
+
 var myForm = new Form({
     id: 'form',
     formName: 'My Form',

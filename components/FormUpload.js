@@ -63,7 +63,9 @@ var FormUpload = KxGenerator.createComponent({
 
     createList: function () {
         this.direction = this.direction == undefined || this.direction == null ? 'vertical' : this.direction;
-     
+        if (this.value == undefined || this.value == null || this.value == "")
+            this.value = this.dataProvider;
+        
         this.list = new List({
             id: 'list',
             colspan: '6',
@@ -151,20 +153,31 @@ var FormUpload = KxGenerator.createComponent({
         this.upload.on('creationComplete', function (e) {
             e.stopPropagation();
             _self.trigger('creationComplete');
+            
+            if (typeof _self.dataProvider == "string") {
+                if (_self.parentType == 'repeater') {
+                    var formID = _self.parent.parentForm.id;
+                    _self.rca.post = {
+                        'form_id': Case[formID].id,
+                        'repeater': true,
+                        'form_submit_id': _self.parent.dataProvider[_self.repeaterIndex]['form_submit_id']
+                    }
+        
+                }
+                else {
+                    var formID = _self.parentForm.id;
 
-            var formID;
-            if (_self.parentType == 'repeater')
-                formID = _self.parent.parentForm.id;
-            else
-                formID = _self.parentForm.id;    
-           
-            _self.rca.post = {
-                'form_id': Case[formID].id,
-                'form_submit_id': Case[formID].id_form_submit
+                    _self.rca.post = {
+                        'form_id': Case[formID].id,
+                        'form_submit_id': Case[formID].id_form_submit
+                    }
+
+                }
+                        
+                _self.rca.getData_Action = _self.dataProvider;
+                _self.rca.recordsPerPage = 100;
+                _self.rca.init();
             }
-            _self.rca.getData_Action = _self.dataProvider;
-            _self.rca.recordsPerPage = 100;
-            _self.rca.init();
         });
 
         return this.upload.render();
@@ -210,6 +223,12 @@ var FormUpload = KxGenerator.createComponent({
         var model = this.getModel();
         model.enabled = true;
         return this;
+    },
+
+    getValue: function () {
+        return this.dataProvider.map(function (item) {
+            return item.id
+        });
     },
 
     validate: function () {
