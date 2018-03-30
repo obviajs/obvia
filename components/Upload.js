@@ -40,6 +40,7 @@ var Upload = KxGenerator.createComponent({
             {
                 registerTo: this.resumable, events: {
                     'fileAdded': this.fileAddedHandler.bind(this),
+                    'fileSuccess': this.fileSuccess.bind(this),
                     'progress': this.uploadProgress.bind(this),
                     'complete': this.uploadComplete.bind(this),
                     'error': this.errorHandler.bind(this)
@@ -57,7 +58,7 @@ var Upload = KxGenerator.createComponent({
     init: function () {
         var resumable = new Resumable({
             target: this.target,
-            query: { upload_token: 'kx' },
+            query: this.query || {}
         });
 
         resumable.assignBrowse(this.browseBtn);
@@ -128,6 +129,11 @@ var Upload = KxGenerator.createComponent({
             this.onupload(this.resumable.files);    
         this.resetUpload();
         // bootbox.alert("Upload Success");
+    },
+
+    fileSuccess: function (file, message) {
+        if (typeof this.onFileSuccess == 'function')
+            this.onFileSuccess(file, message);    
     },
 
     pauseHandler: function () {
