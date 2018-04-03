@@ -73,10 +73,10 @@ var Upload = KxGenerator.createComponent({
     },
 
     fileAddedHandler: function (file, event) {
-        console.log(file)
         //allowed type control
         if (this.allowedExtensions && this.allowedExtensions.indexOf(fileExtension(file.file.name)) == -1) {
-            this.resumable.removeFile(file); 
+            this.resumable.removeFile(file);
+            bootbox.alert("File Type not allowed");
             return;
         }
 
@@ -128,7 +128,6 @@ var Upload = KxGenerator.createComponent({
         if (typeof this.onupload == 'function')
             this.onupload(this.resumable.files);    
         this.resetUpload();
-        // bootbox.alert("Upload Success");
     },
 
     fileSuccess: function (file, message) {
