@@ -168,12 +168,12 @@ var AutoComplete = KxGenerator.createComponent({
     },
 
     enable: function () {
-        this.select2Instance.enable(true);
+        this.$input.prop("disabled", false);
         return this;
     },
 
     disable: function () {
-        this.select2Instance.enable(false);
+        this.$input.prop("disabled", true);
         return this;
     },
 

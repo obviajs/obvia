@@ -191,6 +191,7 @@ var FormUpload = KxGenerator.createComponent({
     deleteFromListHandler: function (e, repeaterArgs) {
         this.list.removeRow(repeaterArgs.currentIndex + 1);
         this.validate();
+        this.trigger('change');
     },
 
     fileUploaded: function (file, message) {
@@ -215,6 +216,8 @@ var FormUpload = KxGenerator.createComponent({
             no = parseInt(this.list.dataProvider[repIndex - 1][this.noLabelValue]);
         }
         
+        this.trigger('change');
+
         files.forEach(function (rf, index) {
             var item = {
                 "id": rf.opts.id,
@@ -238,7 +241,7 @@ var FormUpload = KxGenerator.createComponent({
 
     disable: function () {
         var model = this.getModel();
-        model.enabled = true;
+        model.enabled = false;
         return this;
     },
 
