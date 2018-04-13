@@ -36,14 +36,14 @@ var DateTime = KxGenerator.createComponent({
     enable: function () {
         var model = this.getModel();
         model.enabled = true;
-
+        this.enabled = true;
         return this;
     },
 
     disable: function () {
         var model = this.getModel();
         model.enabled = false;
-
+        this.enabled = false;
         return this;
     },
 

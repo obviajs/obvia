@@ -63,6 +63,7 @@ var Form = KxGenerator.createComponent({
     },
 
     enable: function () {
+        this.enabled = true;
         this.components.forEach(function (component) {
             this[component.props.id].enable();
         }.bind(this));
@@ -84,6 +85,7 @@ var Form = KxGenerator.createComponent({
     },
 
     disable: function () {
+        this.enabled = false;
         this.components.forEach(function (component) {
             this[component.props.id].disable();
         }.bind(this));

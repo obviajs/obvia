@@ -39,6 +39,7 @@ var DateTimeCb = KxGenerator.createComponent({
     },
 
     enable: function () {
+        this.enabled = true;
         if (this.mode == "date") {
             this.daySelect.enable();
             this.monthSelect.enable();
@@ -61,6 +62,7 @@ var DateTimeCb = KxGenerator.createComponent({
     },
 
     disable: function () {
+        this.enabled = false;
         if (this.mode == "date") {
             this.daySelect.disable();
             this.monthSelect.disable();

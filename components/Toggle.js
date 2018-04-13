@@ -51,11 +51,13 @@ var Toggle = KxGenerator.createComponent({
 
     enable: function () {
         this.$input.bootstrapToggle('enable');
+        this.enabled = true;
         return this;    
     },
 
     disable: function () {
         this.$input.bootstrapToggle('disable');
+        this.enabled = false;
         return this;
     },
 

@@ -132,13 +132,13 @@ var ComboBox = KxGenerator.createComponent({
 
     enable: function () {
         this.$input.multiselect('enable');
-
+        this.enabled = true;
         return this;
     },
 
     disable: function () {
         this.$input.multiselect('disable');
-
+        this.enabled = false;
         return this;
     },
 

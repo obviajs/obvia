@@ -112,14 +112,14 @@ var Amount = KxGenerator.createComponent({
     enable: function () {
         this.amountInput.enable();
         this.currencySelect.enable();
-
+        this.enabled = true;
         return this;
     },
 
     disable: function () {
         this.amountInput.disable();
         this.currencySelect.disable();
-        
+        this.enabled = false;
         return this;
     },
 

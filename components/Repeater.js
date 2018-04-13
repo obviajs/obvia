@@ -337,6 +337,7 @@ var Repeater = KxGenerator.createComponent({
     enable: function () {
         var _self = this;
         var model = this.getModel();
+        this.enabled = true;
         
         if (this.rendering.actions) {
             model.displayAddButton = true;
@@ -355,6 +356,7 @@ var Repeater = KxGenerator.createComponent({
     disable: function () {
         var _self = this;
         var model = this.getModel();
+        this.enabled = false;
 
         if (this.rendering.actions) {
             model.displayAddButton = false;

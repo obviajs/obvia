@@ -174,11 +174,13 @@ var List = KxGenerator.createComponent({
 
     enable: function () {         
         this.repeater.enable();
+        this.enabled = true;
         return this; 
     },
 
     disable: function () {
         this.repeater.disable();
+        this.enabled = false;
         return this;  
     },
 

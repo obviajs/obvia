@@ -222,14 +222,14 @@ var GoogleMap = KxGenerator.createComponent({
     enable: function () {
         var model = this.getModel();
         model.disabled = false;
-
+        this.enabled = true;
         return this;    
     },
 
     disable: function () {
         var model = this.getModel();
         model.disabled = true;
-
+        this.enabled = false;
         return this;
     },
 

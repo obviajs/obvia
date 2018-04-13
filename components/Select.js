@@ -76,6 +76,7 @@ var Select = KxGenerator.createComponent({
     enable: function () {
         var model = this.getModel();
         model.enabled = true;
+        this.enabled = true;
 
         return this;
     },
@@ -83,6 +84,7 @@ var Select = KxGenerator.createComponent({
     disable: function () {
         var model = this.getModel();
         model.enabled = false;
+        this.enabled = false;
 
         return this;
     },
