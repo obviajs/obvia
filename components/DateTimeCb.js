@@ -246,9 +246,13 @@ var DateTimeCb = KxGenerator.createComponent({
 
     },
 
+    attached: false,
+
     afterAttach: function (e) {
         // console.log(e);
-        if (e.target.id == this.domID + '-wrapper') {
+        if (e.target.id == this.domID + '-wrapper' && !this.attached) {
+            this.attached = true;
+
             var day, month, year, hour, min;
             if (this.value != "" && this.value != undefined) {
                 var date = moment(this.value).format(this.inputFormat);

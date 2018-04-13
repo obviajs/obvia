@@ -45,8 +45,11 @@ var Amount = KxGenerator.createComponent({
         this.validate();
     },
 
+    attached: false,
+
     afterAttach: function (e) {
-        if (e.target.id == this.domID + '-wrapper') {
+        if (e.target.id == this.domID + '-wrapper' && !this.attached) {
+            this.attached = true;
             this.$inputContainer
                 .append(this.renderAmountInput(this.value.amount))
             
@@ -58,7 +61,7 @@ var Amount = KxGenerator.createComponent({
             this.amountInput.$input.css({ 'width': '80%', 'float': 'left' });
             this.currencySelect.$el.css({ 'width': '20%', 'float': 'left'});
     
-            this.trigger('creationComplete');
+            this.trigger('creationComplete');  
         }
     },
 

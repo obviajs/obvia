@@ -17,6 +17,7 @@ var List = KxGenerator.createComponent({
     beforeAttach: function () {
         this.$container = this.$el.find('#' + this.domID + '-container');
         this.components[0].props.onclick = this.clickHandler.bind(this);
+        this.components[0].props.ondblclick = this.doubleClickHandler.bind(this);
         this.direction = this.direction==undefined||this.direction==null?'horizontal':this.direction;
        
         this.states = this.states==undefined || this.states==null?
@@ -123,6 +124,15 @@ var List = KxGenerator.createComponent({
             this.onclick.apply(this, arguments);
         
         if(!e.isDefaultPrevented()){
+            this.handleComponentClick.apply(this, arguments);
+        }
+    },
+
+    doubleClickHandler: function (e) {
+        if (typeof this.ondblclick == 'function')
+            this.ondblclick.apply(this, arguments);
+
+        if (!e.isDefaultPrevented()) {
             this.handleComponentClick.apply(this, arguments);
         }
     },

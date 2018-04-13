@@ -121,7 +121,7 @@ var Repeater = KxGenerator.createComponent({
         var _self = this;
         var model = this.getModel();
         
-        var renderedRow = $('<div ' + (_self.rendering.direction == 'vertical' ? "class='row'" : "") + '>')
+        var renderedRow = $('<div>');
         
         var ccComponents = [];
         var buildRow = function () {
@@ -214,6 +214,10 @@ var Repeater = KxGenerator.createComponent({
                     }
                 });
 
+                if (_self.rendering.direction == 'horizontal') {
+                    el.$el.addClass('float-left');
+                }
+
                 el.on('change', function (e) {
                     var currentItem = _self.dataProvider[index - 1];
                     if (tempComponent.props.value[0] == '{' && tempComponent.props.value[tempComponent.props.value.length - 1] == '}') {
@@ -233,6 +237,7 @@ var Repeater = KxGenerator.createComponent({
                 .append(
                     $('<div>')
                         .addClass("repeated-block")
+                        .css((_self.rendering.direction == 'horizontal' ? {display: 'inline-block'} : {}))
                         .append((_self.rendering.seperator && (index > 1) ? '<hr id="repeated-block-hr">' : ''))
                         .append(renderedRow)
                 );                   
