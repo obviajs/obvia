@@ -67,7 +67,8 @@ rjs.define("lib/dependencies/styles/kx-upload.css", "KxUploadCSS");
 rjs.define("lib/dependencies/scripts/resumable.js", "Resumable");
 rjs.define("./components/Upload.js", "Upload");
 rjs.define("./components/FormUpload.js", "FormUpload");
-
+//Spacer
+rjs.define("./components/Spacer.js", "Spacer");
 //Loader
 var loader = new Loader({ id: 'loader' });
 $('#root').append(loader.render());
@@ -114,7 +115,8 @@ rjs.require([
     "KxUploadCSS",
     "Upload",
     "SlimScroll",
-    "FormUpload"
+    "FormUpload",
+    "Spacer"
 ], function () {
     // rjs.define("./examples/CheckBox/example.js", "CheckBoxExample");
     // rjs.define("./examples/RadioButton/example.js", "RadioButtonExample");

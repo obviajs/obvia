@@ -115,7 +115,7 @@ var DateTime = KxGenerator.createComponent({
                             "<input type='text'" + 
                                 "id='" + this.domID + "' name='" + this.domID + "' rv-value='value'" +
                                 "class='form-control rowspan"+ this.rowspan +"'" +
-                                "rv-placeholder='label' rv-enabled='model.enabled' autofocus/>" +
+                                "rv-placeholder='label' rv-enabled='model.enabled'/>" +
                     "</div>" +
                 "</div>";    
     },

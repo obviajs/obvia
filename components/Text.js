@@ -94,6 +94,19 @@ var TextInput = KxGenerator.createComponent({
             return true;
     },
     
+    setValue: function (value) {
+        if (this.value != value) {
+            if (typeof value == "object") {
+                value = JSON.stringify(value);
+            }
+            this.value = value;
+        }
+
+        this.trigger('change');
+
+        return this;
+    },
+
     template: function () {
         return "<div id='" + this.domID + "-wrapper' class='form-group col-sm-" + this.colspan + " rowspan" + this.rowspan + " resizable '>" +
             "<div id='" + this.domID + "-block'>" +

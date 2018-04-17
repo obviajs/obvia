@@ -108,6 +108,17 @@ var myForm = new Form({
             }
         },
         {
+            constructor: Spacer,
+            props: {
+                id: 'spacer',
+                colspan: '6',
+                label: 'Spacer',
+                spacing: { mb: '5' },
+                required: false,
+                value: {}
+            }
+        },
+        {
             constructor: AutoComplete,
             props: {
                 id: 'autocomplete',

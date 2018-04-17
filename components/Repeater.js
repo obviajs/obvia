@@ -81,7 +81,9 @@ var Repeater = KxGenerator.createComponent({
 
     bindings: {},
     
-    dataProviderChanged: function(arrFields){
+    dataProviderChanged: function (arrFields) {
+        if (arrFields.length == 0)
+            return;    
         //{"component":cmp, "property":prop, "dataProviderField":dataProviderField, "dataProviderIndex":index}
         var fieldsSpecified = (arrFields!=undefined) && (arrFields!=null) && (arrFields.length>0);
         var componentBindings = Object.keys(this.bindings);
@@ -144,7 +146,15 @@ var Repeater = KxGenerator.createComponent({
                         //check for binding
                         if (p[prop][0] == '{' && p[prop][p[prop].length - 1] == '}') {
                             var dataProviderField = p[prop].slice(1, -1);
-                            cmp[index - 1][prop] = data[dataProviderField];
+                            var path = dataProviderField.split(".");
+                            if (path.length > 1) {
+                                var dataProviderValue = data;
+                                path.forEach(function (key) {
+                                    dataProviderValue = dataProviderValue[key];
+                                });
+                                cmp[index - 1][prop] = dataProviderValue;
+                            }else
+                                cmp[index - 1][prop] = data[dataProviderField];
                             if(_self.bindings[dataProviderField]==undefined){
                                 _self.bindings[dataProviderField] = {};
                                 if(_self.bindings[dataProviderField][p.id]==undefined){
@@ -222,6 +232,13 @@ var Repeater = KxGenerator.createComponent({
                     var currentItem = _self.dataProvider[index - 1];
                     if (tempComponent.props.value[0] == '{' && tempComponent.props.value[tempComponent.props.value.length - 1] == '}') {
                         var bindedValue = tempComponent.props.value.slice(1, -1);
+                        var path = bindedValue.split(".");
+                        if (path.length > 1) {
+                            var bindedValue = data;
+                            path.forEach(function (key) {
+                                bindedValue = bindedValue[key];
+                            });
+                        }
                         data[bindedValue] = this.getValue();
                     }
 
