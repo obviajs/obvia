@@ -46,10 +46,12 @@ var Amount = KxGenerator.createComponent({
     },
 
     attached: false,
-
+    cComponents: [],
+    
     afterAttach: function (e) {
         if (e.target.id == this.domID + '-wrapper' && !this.attached) {
             this.attached = true;
+
             this.$inputContainer
                 .append(this.renderAmountInput(this.value.amount))
             
@@ -59,9 +61,7 @@ var Amount = KxGenerator.createComponent({
                 .append(this.renderCurrencySelect(this.currencyList, this.value.currency));
             
             this.amountInput.$input.css({ 'width': '80%', 'float': 'left' });
-            this.currencySelect.$el.css({ 'width': '20%', 'float': 'left'});
-    
-            this.trigger('creationComplete');  
+            this.currencySelect.$el.css({ 'width': '20%', 'float': 'left' });
         }
     },
 
@@ -76,8 +76,19 @@ var Amount = KxGenerator.createComponent({
             value: value
         });
 
+        var _self = this;
         this.amountInput.on('creationComplete', function (e) {
             e.stopPropagation(); 
+            _self.cComponents.push(this);
+
+            if (_self.cComponents.length > 1) {
+                if (this.enabled)
+                    this.enable();
+                else this.disable();
+
+                _self.trigger('creationComplete');  
+            }
+                
         });
 
         return this.amountInput.render();
@@ -92,8 +103,18 @@ var Amount = KxGenerator.createComponent({
             value: selected,
         });
 
+        var _self = this;
         this.currencySelect.on('creationComplete', function (e) {
             e.stopPropagation();
+            _self.cComponents.push(this);
+      
+            if (_self.cComponents.length > 1) {
+                if (this.enabled)
+                    this.enable();
+                else this.disable();
+
+                _self.trigger('creationComplete');  
+            }
         });
 
         return this.currencySelect.render();

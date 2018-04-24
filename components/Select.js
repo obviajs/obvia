@@ -43,7 +43,8 @@ var Select = KxGenerator.createComponent({
     },
 
     template: function () {         
-        return  "<div id='" + this.domID + "-wrapper'>" +             
+        return  "<div id='" + this.domID + "-wrapper'>" + 
+                    "<label rv-if='label'><b>{label}</b></label>" +             
                     "<select rv-enabled='model.enabled' rv-class='model.class' id='" + this.domID + "'>" +
                     "</select>" +
                 "</div>";    

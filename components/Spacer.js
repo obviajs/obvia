@@ -50,7 +50,7 @@ var Spacer = KxGenerator.createComponent({
 
     renderMbSelect: function (selected) {
         this.mbSelect = new Select({
-            label: "Margin Bottom",
+            // label: "Margin Bottom",
             id: 'mbSelect-' + this.id,
             dataProvider: [{ text: "mb-0", id: "0" }, { text: "mb-1", id: "1" }, { text: "mb-2", id: "2" }, { text: "mb-3", id: "3" }, { text: "mb-4", id: "4" }, { text: "mb-5", id: "5" }],
             textField: this.labelField || "text",
@@ -68,7 +68,7 @@ var Spacer = KxGenerator.createComponent({
 
     renderMtSelect: function (selected) {
         this.mtSelect = new Select({
-            label: "Margin Top",
+            // label: "Margin Top",
             id: 'mtSelect-' + this.id,
             dataProvider: [{ text: "mt-0", id: "0" }, { text: "mt-1", id: "1" }, { text: "mt-2", id: "2" }, { text: "mt-3", id: "3" }, { text: "mt-4", id: "4" }, { text: "mt-5", id: "5" }],
             textField: this.labelField || "text",
@@ -87,7 +87,7 @@ var Spacer = KxGenerator.createComponent({
     renderOffsetSelect: function (selected) {
         this.offsetSelect = new Select({
             id: 'offsetSelect-' + this.id,
-            label: "Offset",
+            // label: "Offset",
             dataProvider: [
                 { text: "offset-sm-0", id: "0" },
                 { text: "offset-sm-1", id: "1" },
@@ -100,8 +100,7 @@ var Spacer = KxGenerator.createComponent({
                 { text: "offset-sm-8", id: "8" },
                 { text: "offset-sm-9", id: "9" },
                 { text: "offset-sm-10", id: "10" },
-                { text: "offset-sm-11", id: "11" },
-                { text: "offset-sm-12", id: "12" }
+                { text: "offset-sm-11", id: "11" }
             ],
             textField: this.labelField || "text",
             valueField: this.valueField || "id",
