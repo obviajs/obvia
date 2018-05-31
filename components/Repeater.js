@@ -123,7 +123,7 @@ var Repeater = KxGenerator.createComponent({
         var _self = this;
         var model = this.getModel();
         
-        var renderedRow = $('<div>');
+        var renderedRow = $('<div>').addClass('row col-sm-12');
         
         var ccComponents = [];
         var buildRow = function () {
@@ -144,7 +144,7 @@ var Repeater = KxGenerator.createComponent({
                 for (var prop in p) {
                     if (typeof prop == 'string') {
                         //check for binding
-                        if (p[prop][0] == '{' && p[prop][p[prop].length - 1] == '}') {
+                        if (p[prop] && p[prop][0] == '{' && p[prop][p[prop].length - 1] == '}') {
                             var dataProviderField = p[prop].slice(1, -1);
                             var path = dataProviderField.split(".");
                             if (path.length > 1) {
@@ -390,7 +390,8 @@ var Repeater = KxGenerator.createComponent({
     },
 
     template: function () {
-        return "<div id='" + this.domID + "-wrapper' class='col-sm-12'>" +
+        return "<div id='" + this.domID + "-wrapper' class='col-sm-" + this.colspan + " form-group rowspan" + this.rowspan + " resizable'>" +
+                    "<label><b>{label}</b></label>" +    
                     "<div id='" + this.domID + "-container'></div>" +  
                     "<div id='actions_" + this.domID  + "' class='col-sm-offset-10 col-sm-2 px-0 float-right' style='overflow:hidden;'>" +
                         "<button id='btnAddRow_" + this.domID  + "' type='button' class='float-right btn btn-sm btn-secondary' rv-if='model.displayAddButton'>" +

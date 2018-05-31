@@ -41,7 +41,10 @@ var Form = KxGenerator.createComponent({
         container.append(cmp.render());
         
         //expose component model
-        this[cmp.id] = cmp;
+        if (!this.idField)
+            this[cmp.id] = cmp;
+        else
+            this[ cmp[this.idField] ] = cmp;
 
         cmp.parent = this;
         cmp.parentType = 'form';

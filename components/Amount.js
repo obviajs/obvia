@@ -46,9 +46,9 @@ var Amount = KxGenerator.createComponent({
     },
 
     attached: false,
-    cComponents: [],
     
     afterAttach: function (e) {
+        this.cComponents = [];
         if (e.target.id == this.domID + '-wrapper' && !this.attached) {
             this.attached = true;
 

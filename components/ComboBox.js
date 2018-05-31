@@ -80,7 +80,7 @@ var ComboBox = KxGenerator.createComponent({
                         divider: "<div class=\"divider\" data-role=\"divider\"></div>"
                     }
                 });
-                if (_self.value.length > 0) {
+                if (_self.value && _self.value.length > 0) {
                     $(element).multiselect('select', _self.value);
                 }
             });
