@@ -30,7 +30,7 @@ var HierarchicalTree = KxGenerator.createComponent({
 
     afterAttach: function (e) {
         $("#tree-"+this.domID).fancytree({
-            source: this.dataProvider
+            source: this.dataProvider,
             
         });
         //this.trigger('creationComplete');
