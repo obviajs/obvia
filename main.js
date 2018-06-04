@@ -21,11 +21,13 @@ rjs.define("./components/CheckBoxGroup.js", "CheckBoxGroup");
 rjs.define("./components/RadioButton.js", "RadioButton");
 //RadioGroup
 rjs.define("./components/RadioGroup.js", "RadioGroup");
+//HierarchicalTree
+rjs.define("./components/HierarchicalTree.js", "HierarchicalTree");
 //Amount
 rjs.define("./components/Amount.js", "Amount");
 //TextArea
 livespell___installPath = window.location.origin + "/resources/inner_resources/scripts/plugins/SpellCheck/";
-rjs.define("lib/dependencies/scripts/plugins/SpellCheck/include.js", "SpellCheckJS");
+//rjs.define("lib/dependencies/scripts/plugins/SpellCheck/include.js", "SpellCheckJS");
 rjs.define("./components/TextArea.js", "TextArea");
 //TextEditor
 rjs.define("./components/TextEditor.js", "TextEditor");
@@ -69,14 +71,20 @@ rjs.define("./components/Upload.js", "Upload");
 rjs.define("./components/FormUpload.js", "FormUpload");
 //Spacer
 rjs.define("./components/Spacer.js", "Spacer");
+//HierarchicalTree
+rjs.define("https://cdnjs.cloudflare.com/ajax/libs/jquery.fancytree/2.28.1/jquery.fancytree-all-deps.js", "FancyTreeScript");
+rjs.define("lib/dependencies/efilemanager/skin-lion/ui.fancytree.css", "FancyTreeCSS");
+
+
 //Loader
-var loader = new Loader({ id: 'loader' });
-$('#root').append(loader.render());
-loader.show();
+// var loader = new Loader({ id: 'loader' });
+// $('#root').append(loader.render());
+// loader.show();
 
 rjs.require([
     "DOMContentLoaded",
     "Form",
+    "HierarchicalTree",
     "BootBox",
     "Repeater",
     "List",
@@ -85,7 +93,7 @@ rjs.require([
     "TextInput", 
     "InputMaskBundle",
     "TextArea",
-    "SpellCheckJS",
+    // "SpellCheckJS",
     "Select",
     "TextEditor",
     "DateTime",
@@ -115,15 +123,18 @@ rjs.require([
     "KxUploadCSS",
     "Upload",
     "SlimScroll",
+    "FancyTreeScript",
+    "FancyTreeCSS",
     "FormUpload",
     "Spacer"
 ], function () {
     // rjs.define("./examples/CheckBox/example.js", "CheckBoxExample");
-    // rjs.define("./examples/RadioButton/example.js", "RadioButtonExample");
+    // rjs.define("./examples/RadioButton/example.js", "RadioButtonExample");+
     // rjs.define("./examples/CheckBoxGroup/example.js", "CheckBoxGroupExample");
     // rjs.define("./examples/RadioGroup/example.js", "RadioGroupExample");
     // rjs.define("./examples/Upload/example.js", "UploadExample");
-    rjs.define("./examples/Form/example.js", "FormExample");
+    rjs.define("./examples/HierarchicalTree/example.js", "HierarchicalTreeExample");
+    //rjs.define("./examples/Form/example.js", "FormExample");
     // rjs.define("./examples/Form/ajaxExample.js", "FormExample");
 
 }, flowerCM);
