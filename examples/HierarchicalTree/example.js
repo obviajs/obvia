@@ -1,4 +1,3 @@
-
 var myHierarchicalTree= new HierarchicalTree({
     id: 'tree',
     type: "button",
@@ -13,7 +12,13 @@ var myHierarchicalTree= new HierarchicalTree({
           {title: "Node 2.2", key: "4"}
         ]}
       ],
+      
     onclick : function(e){console.log("From ClickAction");}
 });
 
+myHierarchicalTree.on('creationComplete', function () {
+  myHierarchicalTree.on('click',function (){
+   // alert("test");
+  });
+});
 $('#root').append(myHierarchicalTree.render());

@@ -15,6 +15,7 @@ var HierarchicalTree = KxGenerator.createComponent({
     
     beforeAttach: function () {
         this.$tree = this.$el.find("#tree-"+this.domID);
+        this.$treeInstance = null;
     },
 
     registerEvents: function () {
@@ -22,20 +23,60 @@ var HierarchicalTree = KxGenerator.createComponent({
             {
                 registerTo: this.$el, events: { 
                     'afterAttach': this.afterAttach.bind(this)
-                }
+                },
+                
             },
+            {
+                registerTo: this.$treeInstance, events: { 
+                    'click': this.clickHandler.bind(this),
+                    'dblclick': this.doubleClickHandler.bind(this)
+                }
+            }
             
         ]
     },
 
     afterAttach: function (e) {
-        $("#tree-"+this.domID).fancytree({
-            source: this.dataProvider,
-            
-        });
-        //this.trigger('creationComplete');
-    },
+        var cmp = this;
+        var config = {};
+        var currentNode = {
+            id_node: 0
+        };
+       
+        if(this.lazy){
+          config = {
+                source: {
+                    url: this.dataProvider,
+                    dataType: "json",
+                    method: "POST",
+                    data: currentNode
+                },
+                init: function (event, data, flag) {
 
+                },
+                lazyLoad: function (event, data) {
+                    data.result = {
+                        url: this.dataProvider,
+                        method: "POST",
+                        data: currentNode,
+                    };
+                },
+                click: function (event, data) {
+                    currentNode = {
+                        id_node: data.node.key,
+                    }
+                }
+            }
+        }else{
+            config = {
+                source: this.dataProvider
+            }
+        }
+        this.$treeInstance = this.$tree.fancytree(config);
+
+        this.trigger('creationComplete');
+},
+ 
     enable: function () {
         var model = this.getModel();
         model.enabled = true;
@@ -51,7 +92,7 @@ var HierarchicalTree = KxGenerator.createComponent({
     },
 
     clickHandler: function () {
-        if (typeof this.onclick == 'function')
+        if(typeof this.onclick == 'function')
             this.onclick.apply(this, arguments);
     },
 
