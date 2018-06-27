@@ -214,11 +214,9 @@ var myForm = new Form({
                 blockProcessAttr: false,
                 required: false,
                 spacing: { mb: '5' },
-                dataProvider: {
-                    left: "Yes", //1
-                    middle: "Somewhat",//-1
-                    right: "No" //0
-                },
+                left: "Yes", //1
+                middle: "Somewhat",//-1
+                right: "No", //0
                 value: "1" //1,-1,0
             }
         },
@@ -654,11 +652,9 @@ var myForm = new Form({
                             versionStyle: "",
                             blockProcessAttr: false,
                             required: false,
-                            dataProvider: {
-                                left: "Yes", //1
-                                middle: "Somewhat",//-1
-                                right: "No" //0
-                            },
+                            left: "Yes", //1
+                            middle: "Somewhat",//-1
+                            right: "No", //0
                             value: "{trippleValue}" //1,-1,0
                         }
                     },

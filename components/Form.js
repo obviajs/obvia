@@ -65,6 +65,18 @@ var Form = KxGenerator.createComponent({
         return valid;
     },
 
+    clear: function () {
+        this.components.forEach(function (component) {
+            try {
+                if (typeof this[component.props.id].getValue() == "string")
+                    this[component.props.id].setValue("");
+                else this[component.props.id].setValue([]);
+            } catch (error) {
+                
+            }   
+        }.bind(this));
+    },
+
     enable: function () {
         this.enabled = true;
         this.components.forEach(function (component) {

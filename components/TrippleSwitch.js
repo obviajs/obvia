@@ -144,9 +144,9 @@ var TrippleSwitch = KxGenerator.createComponent({
                     "<span rv-if='blockProcessAttr' class='block-process'> * </span>" +
                     "<br>" +
                     "<div class='btn btn-group' role='group' style='padding:0'>" +
-                        "<button type='button' rv-enabled='model.enabled' id='btnLeft-" + this.domID + "' rv-class='model.btnLeft'>{dataProvider.left}</button> " +
-                        "<button type='button' rv-enabled='model.enabled' id='btnMiddle-" + this.domID + "' rv-class='model.btnMiddle'>{dataProvider.middle}</button>" +
-                        "<button type='button' rv-enabled='model.enabled' id='btnRight-" + this.domID + "' rv-class='model.btnRight'>{dataProvider.right}</button>" +
+                        "<button type='button' rv-enabled='model.enabled' id='btnLeft-" + this.domID + "' rv-class='model.btnLeft'>{left}</button> " +
+                        "<button type='button' rv-enabled='model.enabled' id='btnMiddle-" + this.domID + "' rv-class='model.btnMiddle'>{middle}</button>" +
+                        "<button type='button' rv-enabled='model.enabled' id='btnRight-" + this.domID + "' rv-class='model.btnRight'>{right}</button>" +
                     "</div>" +
                 "</div>";
     },

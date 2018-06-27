@@ -123,6 +123,12 @@ var ComboBox = KxGenerator.createComponent({
             return true;
     },
 
+    updateProvider: function (data) {
+        var element = "#" + this.domID;
+        this.setData(data, element);
+        $(element).multiselect('rebuild');
+    },
+
     setValue: function (value) {
         if (this.value != value) {
             this.value = value;
