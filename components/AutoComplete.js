@@ -122,11 +122,12 @@ var AutoComplete = KxGenerator.createComponent({
             multiple: this.multipleSelection,
             placeholder: 'Search',
             allowClear: true,
-            data: this.dataProvider,
-            formatSelection: function (data) {
-                if (data != undefined)
-                    return data[_self.labelField];
-            },
+            data: this.dataProvider.map(function (item) {
+                return {
+                    id: item[_self.valueField],
+                    text: item[_self.labelField]
+                }
+            }),
             separator: ',',
             width: (this.displayTable) ? '90%' : '100%',
         });

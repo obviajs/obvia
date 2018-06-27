@@ -128,12 +128,13 @@ rjs.require([
     "FormUpload",
     "Spacer"
 ], function () {
+    rjs.define("./examples/AutoComplete/example.js", "AutoComplete");
     // rjs.define("./examples/CheckBox/example.js", "CheckBoxExample");
     // rjs.define("./examples/RadioButton/example.js", "RadioButtonExample");+
     // rjs.define("./examples/CheckBoxGroup/example.js", "CheckBoxGroupExample");
     // rjs.define("./examples/RadioGroup/example.js", "RadioGroupExample");
     // rjs.define("./examples/Upload/example.js", "UploadExample");
-    rjs.define("./examples/HierarchicalTree/example.js", "HierarchicalTreeExample");
+    // rjs.define("./examples/HierarchicalTree/example.js", "HierarchicalTreeExample");
     //rjs.define("./examples/Form/example.js", "FormExample");
     // rjs.define("./examples/Form/ajaxExample.js", "FormExample");
 
