@@ -123,10 +123,10 @@ var AutoComplete = KxGenerator.createComponent({
             placeholder: 'Search',
             allowClear: true,
             data: this.dataProvider.map(function (item) {
-                return {
+                return extend({
                     id: item[_self.valueField],
                     text: item[_self.labelField]
-                }
+                }, item);
             }),
             separator: ',',
             width: (this.displayTable) ? '90%' : '100%',
