@@ -18,7 +18,15 @@ var Repeater = KxGenerator.createComponent({
             this.dataProviderKeys = Object.keys(this.dataProvider[0]);
             this.defaultItem = this.buildDefaultItem(this.dataProvider);
         }
-
+		
+		var _defaultRendering = 
+		{
+			direction: 'vertical',
+			seperator: true,
+			actions: true
+		};
+		
+		extend(_defaultRendering, this.rendering);
         return {
             displayAddButton: this.rendering.actions,
             displayRemoveButton: this.rendering.actions

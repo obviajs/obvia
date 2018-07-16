@@ -1,5 +1,10 @@
 var myRepeater = new Repeater({
     id: 'repeater',
+	rendering: {
+				direction: 'vertical',
+				seperator: true,
+				actions: true
+			},
     defaultItem: {
         comboLabel: 'Zgjidh Shtetin',
         comboValue: "",
@@ -13,8 +18,8 @@ var myRepeater = new Repeater({
             zoomLevel: 7
         }
     },
-    dataProvider: {
-        items: [
+    dataProvider:  
+		[
             {
                 comboLabel: 'Zgjidh Shtetin',
                 comboValue: "",
@@ -45,8 +50,7 @@ var myRepeater = new Repeater({
                 },
                 checkboxValue:false
             }
-        ]
-    },
+        ],
     components: [
         {
             constructor: AutoComplete,
@@ -89,7 +93,7 @@ var myRepeater = new Repeater({
             }
         },
         {
-            constructor: Checkbox,
+            constructor: CheckBox,
             props: {
                 id: 'checkbox',
                 colspan: '6',
