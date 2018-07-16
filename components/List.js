@@ -96,7 +96,7 @@ var List = KxGenerator.createComponent({
                 }
             }.bind(this));
 
-            this.value.forEach(function (v, i) {
+            this.value.slice(0).forEach(function (v, i) {
                 var arrDpIndex = (v==undefined||v==null||v[this.valueField]==undefined)?-1:indexOfObject(this.dataProvider, this.valueField,  v[this.valueField]);
                 if(arrDpIndex!=-1){
                     this.states.forEach(function (state) { 

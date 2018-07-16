@@ -37,6 +37,8 @@ var RadioButton = KxGenerator.createComponent({
     },
 
     afterAttach: function (e) {
+		//this.$input.prop('checked', this.checked);
+		//this.$input.val(this.value);
         this.trigger('creationComplete');
     },
 
@@ -56,7 +58,8 @@ var RadioButton = KxGenerator.createComponent({
         }else{
             this.checked = true;
         }
-
+		if(this.$input!=undefined)
+			this.$input.val(v);
     },
     get value(){
         return this._value;
@@ -64,9 +67,14 @@ var RadioButton = KxGenerator.createComponent({
     set checked(v){
         if(v)
         {
-            this._checked = this.value;
+            this._checked = true;
         }else
-        this._checked = false;
+			this._checked = false;
+		if(this.$input!=undefined)
+			this.$input.prop('checked', v)
+    },
+	get checked(){
+        return this._checked;
     },
     clickHandler: function () {
         if (typeof this.onclick == 'function')
@@ -79,7 +87,7 @@ var RadioButton = KxGenerator.createComponent({
     template: function () {         
         return "<div id='" + this.domID + "-wrapper'>" +
                     "<label>" +    
-                        "<input id='" + this.domID + "' name='" + this.domID + "' type='radio' rv-value='_value' rv-enabled='enabled' rv-checked='_checked'> {label}" +
+                        "<input id='" + this.domID + "' name='" + this.domID + "' type='radio' value='"+this.value+"' + rv-enabled='enabled' "+(this.checked?"checked='checked'":'')+"> {label}" +
                     "</label>"+
                 "</div>";    
     },
