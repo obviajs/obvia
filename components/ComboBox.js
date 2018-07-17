@@ -5,7 +5,8 @@
  */
 
 //component definition
-var ComboBox = KxGenerator.createComponent({
+
+var ComboBoxInit = {
     //component data
     initModel: function () {
         return {
@@ -171,8 +172,9 @@ var ComboBox = KxGenerator.createComponent({
     render: function () {
         return this.$el;
     }
-});
-
+};
+ComboBoxInit = copyAccessors(Selectable, ComboBoxInit);
+var ComboBox = KxGenerator.createComponent(ComboBoxInit);
 //component prototype
 ComboBox.type = 'combobox';
 

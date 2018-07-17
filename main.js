@@ -1,4 +1,6 @@
 var flowerCM = window.flowerCM || {};
+//base Components
+rjs.define("./components/base/Selectable.js", "Selectable");
 //TextInput
 rjs.define("./components/Text.js", "TextInput");
 rjs.define("./lib/dependencies/scripts/jquery.inputmask.bundle.min.js", "InputMaskBundle");
@@ -137,6 +139,7 @@ rjs.require([
     // rjs.define("./examples/HierarchicalTree/example.js", "HierarchicalTreeExample");
     // rjs.define("./examples/Form/example.js", "FormExample");
     // rjs.define("./examples/Form/ajaxExample.js", "FormExample");
-	rjs.define("./examples/Repeater/example.js", "RepeaterExample");
+	//rjs.define("./examples/Repeater/example.js", "RepeaterExample");
+	rjs.define("./examples/ComboBox/example.js", "ComboBoxExample");
 
 }, flowerCM);
