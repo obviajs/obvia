@@ -1,3 +1,10 @@
+var Case = {
+    form: {
+        id: 1,
+        id_form_submit: 1
+    }
+}
+
 var myForm = new Form({
     id: 'form',
     formName: 'My Form',
@@ -101,6 +108,17 @@ var myForm = new Form({
             }
         },
         {
+            constructor: Spacer,
+            props: {
+                id: 'spacer',
+                colspan: '6',
+                label: 'Spacer',
+                spacing: { mb: '5' },
+                required: false,
+                value: {}
+            }
+        },
+        {
             constructor: AutoComplete,
             props: {
                 id: 'autocomplete',
@@ -111,6 +129,8 @@ var myForm = new Form({
                 required: false,
                 multipleSelection: false,
                 displayTable: false,
+                valueField: "id",
+                labelField: "text",
                 tableData: [["Ministria e Puneve te Jashtme"], ["Ministria e Drejtesise"], ["Ministria e Brendshme"]],
                 dataProvider: [{ "id": "1", "text": "Ministria e Puneve te Jashtme" }, { "id": "2", "text": "Ministria e Drejtesise" }, { "id": "3", "text": "Ministria e Brendshme" }],
                 value: [{ "id": "1", "text": "Ministria e Puneve te Jashtme" }]
@@ -142,9 +162,14 @@ var myForm = new Form({
                 label: 'Zgjidh Shtetin',
                 spacing: { mb: '5' },
                 dataProvider: [{ "value": "1", "text": "Shqiperi" }, { "value": "2", "text": "Greqi" }, { "value": "3", "text": "SHBA" }],
+                valueField: "value",
+                textField: "text",
                 versionStyle: "",
                 blockProcessAttr: false,
                 required: false,
+                // addItem: true,
+                // beforeItemAddCallback: function () { },
+                // afterItemAddCallback: function () { },
                 value: "2"
             }
         },
@@ -189,11 +214,9 @@ var myForm = new Form({
                 blockProcessAttr: false,
                 required: false,
                 spacing: { mb: '5' },
-                dataProvider: {
-                    left: "Yes", //1
-                    middle: "Somewhat",//-1
-                    right: "No" //0
-                },
+                left: "Yes", //1
+                middle: "Somewhat",//-1
+                right: "No", //0
                 value: "1" //1,-1,0
             }
         },
@@ -405,6 +428,8 @@ var myForm = new Form({
                             required: false,
                             multipleSelection: true,
                             displayTable: true,
+                            valueField: "id",
+                            labelField: "text",
                             tableData: [["Ministria e Puneve te Jashtme"], ["Ministria e Drejtesise"], ["Ministria e Brendshme"]],
                             dataProvider: [{ "id": "1", "text": "Ministria e Puneve te Jashtme" }, { "id": "2", "text": "Ministria e Drejtesise" }, { "id": "3", "text": "Ministria e Brendshme" }],
                             value: '{autocompleteValue}'
@@ -420,6 +445,8 @@ var myForm = new Form({
                             blockProcessAttr: false,
                             required: true,
                             dataProvider: [{ "value": "1", "text": "Shqiperi" }, { "value": "2", "text": "Greqi" }, { "value": "3", "text": "SHBA" }],
+                            valueField: "value",
+                            textField: "text",
                             value: '{comboValue}'
                         }
                     },
@@ -625,11 +652,9 @@ var myForm = new Form({
                             versionStyle: "",
                             blockProcessAttr: false,
                             required: false,
-                            dataProvider: {
-                                left: "Yes", //1
-                                middle: "Somewhat",//-1
-                                right: "No" //0
-                            },
+                            left: "Yes", //1
+                            middle: "Somewhat",//-1
+                            right: "No", //0
                             value: "{trippleValue}" //1,-1,0
                         }
                     },
@@ -801,6 +826,8 @@ var myForm2 = new Form({
                             required: false,
                             multipleSelection: true,
                             displayTable: true,
+                            valueField: "id",
+                            labelField: "text",
                             tableData: [["Ministria e Puneve te Jashtme"], ["Ministria e Drejtesise"], ["Ministria e Brendshme"]],
                             dataProvider: [{ "id": "1", "text": "Ministria e Puneve te Jashtme" }, { "id": "2", "text": "Ministria e Drejtesise" }, { "id": "3", "text": "Ministria e Brendshme" }],
                             value: '{autocompleteValue}'
@@ -816,7 +843,9 @@ var myForm2 = new Form({
                             blockProcessAttr: false,
                             required: true,
                             dataProvider: [{ "value": "1", "text": "Shqiperi" }, { "value": "2", "text": "Greqi" }, { "value": "3", "text": "SHBA" }],
-                            value: '{comboValue}'
+                            value: '{comboValue}',
+                            valueField: "value",
+                            textField: "text",
                         }
                     }
                 ]

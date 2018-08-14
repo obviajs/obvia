@@ -17,6 +17,7 @@ var List = KxGenerator.createComponent({
     beforeAttach: function () {
         this.$container = this.$el.find('#' + this.domID + '-container');
         this.components[0].props.onclick = this.clickHandler.bind(this);
+        this.components[0].props.ondblclick = this.doubleClickHandler.bind(this);
         this.direction = this.direction==undefined||this.direction==null?'horizontal':this.direction;
        
         this.states = this.states==undefined || this.states==null?
@@ -95,7 +96,7 @@ var List = KxGenerator.createComponent({
                 }
             }.bind(this));
 
-            this.value.forEach(function (v, i) {
+            this.value.slice(0).forEach(function (v, i) {
                 var arrDpIndex = (v==undefined||v==null||v[this.valueField]==undefined)?-1:indexOfObject(this.dataProvider, this.valueField,  v[this.valueField]);
                 if(arrDpIndex!=-1){
                     this.states.forEach(function (state) { 
@@ -123,6 +124,15 @@ var List = KxGenerator.createComponent({
             this.onclick.apply(this, arguments);
         
         if(!e.isDefaultPrevented()){
+            this.handleComponentClick.apply(this, arguments);
+        }
+    },
+
+    doubleClickHandler: function (e) {
+        if (typeof this.ondblclick == 'function')
+            this.ondblclick.apply(this, arguments);
+
+        if (!e.isDefaultPrevented()) {
             this.handleComponentClick.apply(this, arguments);
         }
     },
@@ -164,11 +174,13 @@ var List = KxGenerator.createComponent({
 
     enable: function () {         
         this.repeater.enable();
+        this.enabled = true;
         return this; 
     },
 
     disable: function () {
         this.repeater.disable();
+        this.enabled = false;
         return this;  
     },
 

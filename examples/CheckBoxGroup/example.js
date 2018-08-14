@@ -1,4 +1,4 @@
-var myCheckboxGroup = new CheckboxGroup({
+var myCheckboxGroup = new CheckBoxGroup({
     id: 'checkBoxGroupLonely1',
     colspan: '6',
     label: 'Ministrite',

@@ -41,7 +41,10 @@ var Form = KxGenerator.createComponent({
         container.append(cmp.render());
         
         //expose component model
-        this[cmp.id] = cmp;
+        if (!this.idField)
+            this[cmp.id] = cmp;
+        else
+            this[ cmp[this.idField] ] = cmp;
 
         cmp.parent = this;
         cmp.parentType = 'form';
@@ -62,7 +65,20 @@ var Form = KxGenerator.createComponent({
         return valid;
     },
 
+    clear: function () {
+        this.components.forEach(function (component) {
+            try {
+                if (typeof this[component.props.id].getValue() == "string")
+                    this[component.props.id].setValue("");
+                else this[component.props.id].setValue([]);
+            } catch (error) {
+                
+            }   
+        }.bind(this));
+    },
+
     enable: function () {
+        this.enabled = true;
         this.components.forEach(function (component) {
             this[component.props.id].enable();
         }.bind(this));
@@ -84,6 +100,7 @@ var Form = KxGenerator.createComponent({
     },
 
     disable: function () {
+        this.enabled = false;
         this.components.forEach(function (component) {
             this[component.props.id].disable();
         }.bind(this));

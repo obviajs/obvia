@@ -39,6 +39,7 @@ var DateTimeCb = KxGenerator.createComponent({
     },
 
     enable: function () {
+        this.enabled = true;
         if (this.mode == "date") {
             this.daySelect.enable();
             this.monthSelect.enable();
@@ -61,6 +62,7 @@ var DateTimeCb = KxGenerator.createComponent({
     },
 
     disable: function () {
+        this.enabled = false;
         if (this.mode == "date") {
             this.daySelect.disable();
             this.monthSelect.disable();
@@ -246,9 +248,13 @@ var DateTimeCb = KxGenerator.createComponent({
 
     },
 
+    attached: false,
+
     afterAttach: function (e) {
         // console.log(e);
-        if (e.target.id == this.domID + '-wrapper') {
+        if (e.target.id == this.domID + '-wrapper' && !this.attached) {
+            this.attached = true;
+
             var day, month, year, hour, min;
             if (this.value != "" && this.value != undefined) {
                 var date = moment(this.value).format(this.inputFormat);

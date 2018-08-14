@@ -36,14 +36,14 @@ var DateTime = KxGenerator.createComponent({
     enable: function () {
         var model = this.getModel();
         model.enabled = true;
-
+        this.enabled = true;
         return this;
     },
 
     disable: function () {
         var model = this.getModel();
         model.enabled = false;
-
+        this.enabled = false;
         return this;
     },
 
@@ -115,7 +115,7 @@ var DateTime = KxGenerator.createComponent({
                             "<input type='text'" + 
                                 "id='" + this.domID + "' name='" + this.domID + "' rv-value='value'" +
                                 "class='form-control rowspan"+ this.rowspan +"'" +
-                                "rv-placeholder='label' rv-enabled='model.enabled' autofocus/>" +
+                                "rv-placeholder='label' rv-enabled='model.enabled'/>" +
                     "</div>" +
                 "</div>";    
     },

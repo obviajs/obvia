@@ -10,7 +10,6 @@ var TextInput = KxGenerator.createComponent({
     //inner component data
     initModel: function () {
         return {
-            enabled: true,
             blockProcessAttr: this.required ? false : this.blockProcessAttr
         }
     },
@@ -35,36 +34,37 @@ var TextInput = KxGenerator.createComponent({
     },
 
     enable: function () {
-        var model = this.getModel();
-        model.enabled = true;
-
+        this.enabled = true;
         return this;
     },
 
     disable: function () {
-        var model = this.getModel();
-        model.enabled = false;
-
+        this.enabled = false;
         return this;
     },
 
+    attached: false,
+
     afterAttach: function (e) {
-        //init input mask
-        if (this.hasOwnProperty('mask')) {
-            var mask;
-            try {
-                mask = JSON.parse(this.mask);
-            } catch (error) {
-                mask = this.mask;
+        if (e.target.id == this.domID + '-wrapper' && !this.attached) {
+            //init input mask
+            if (this.hasOwnProperty('mask')) {
+                var mask;
+                try {
+                    mask = JSON.parse(this.mask);
+                } catch (error) {
+                    mask = this.mask;
+                }
+                
+                this.$input.inputmask(mask);
             }
-            
-            this.$input.inputmask(mask);
+
+            if (typeof this.onafterAttach == 'function')
+                this.onafterAttach.apply(this, arguments);;
+
+            this.attached = true;
+            this.trigger('creationComplete');
         }
-
-        if (typeof this.onafterAttach == 'function')
-            this.onafterAttach.apply(this, arguments);;
-
-        this.trigger('creationComplete');
     },
 
     changeHandler: function () {
@@ -92,6 +92,19 @@ var TextInput = KxGenerator.createComponent({
             return true;
     },
     
+    setValue: function (value) {
+        if (this.value != value) {
+            if (typeof value == "object") {
+                value = JSON.stringify(value);
+            }
+            this.value = value;
+        }
+
+        this.trigger('change');
+
+        return this;
+    },
+
     template: function () {
         return "<div id='" + this.domID + "-wrapper' class='form-group col-sm-" + this.colspan + " rowspan" + this.rowspan + " resizable '>" +
             "<div id='" + this.domID + "-block'>" +
@@ -100,7 +113,7 @@ var TextInput = KxGenerator.createComponent({
             "<input rv-type='type'" +
             "id='" + this.domID + "' name='" + this.domID + "' rv-value='value'" +
             "class='form-control rowspan" + this.rowspan + "'" +
-            "rv-placeholder='label' rv-enabled='model.enabled' autofocus/>" +
+            "rv-placeholder='label' rv-enabled='enabled' autofocus/>" +
             "</div>" +
             "</div>";
     },

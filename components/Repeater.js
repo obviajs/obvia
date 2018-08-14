@@ -18,7 +18,15 @@ var Repeater = KxGenerator.createComponent({
             this.dataProviderKeys = Object.keys(this.dataProvider[0]);
             this.defaultItem = this.buildDefaultItem(this.dataProvider);
         }
-
+		
+		var _defaultRendering = 
+		{
+			direction: 'vertical',
+			seperator: true,
+			actions: true
+		};
+		
+		extend(_defaultRendering, this.rendering);
         return {
             displayAddButton: this.rendering.actions,
             displayRemoveButton: this.rendering.actions
@@ -81,7 +89,9 @@ var Repeater = KxGenerator.createComponent({
 
     bindings: {},
     
-    dataProviderChanged: function(arrFields){
+    dataProviderChanged: function (arrFields) {
+        if (arrFields.length == 0)
+            return;    
         //{"component":cmp, "property":prop, "dataProviderField":dataProviderField, "dataProviderIndex":index}
         var fieldsSpecified = (arrFields!=undefined) && (arrFields!=null) && (arrFields.length>0);
         var componentBindings = Object.keys(this.bindings);
@@ -121,7 +131,7 @@ var Repeater = KxGenerator.createComponent({
         var _self = this;
         var model = this.getModel();
         
-        var renderedRow = $('<div ' + (_self.rendering.direction == 'vertical' ? "class='row'" : "") + '>')
+        var renderedRow = $('<div>').addClass('row col-sm-12');
         
         var ccComponents = [];
         var buildRow = function () {
@@ -142,9 +152,17 @@ var Repeater = KxGenerator.createComponent({
                 for (var prop in p) {
                     if (typeof prop == 'string') {
                         //check for binding
-                        if (p[prop][0] == '{' && p[prop][p[prop].length - 1] == '}') {
+                        if (p[prop] && p[prop][0] == '{' && p[prop][p[prop].length - 1] == '}') {
                             var dataProviderField = p[prop].slice(1, -1);
-                            cmp[index - 1][prop] = data[dataProviderField];
+                            var path = dataProviderField.split(".");
+                            if (path.length > 1) {
+                                var dataProviderValue = data;
+                                path.forEach(function (key) {
+                                    dataProviderValue = dataProviderValue[key];
+                                });
+                                cmp[index - 1][prop] = dataProviderValue;
+                            }else
+                                cmp[index - 1][prop] = data[dataProviderField];
                             if(_self.bindings[dataProviderField]==undefined){
                                 _self.bindings[dataProviderField] = {};
                                 if(_self.bindings[dataProviderField][p.id]==undefined){
@@ -214,10 +232,21 @@ var Repeater = KxGenerator.createComponent({
                     }
                 });
 
+                if (_self.rendering.direction == 'horizontal') {
+                    el.$el.addClass('float-left');
+                }
+
                 el.on('change', function (e) {
                     var currentItem = _self.dataProvider[index - 1];
                     if (tempComponent.props.value[0] == '{' && tempComponent.props.value[tempComponent.props.value.length - 1] == '}') {
                         var bindedValue = tempComponent.props.value.slice(1, -1);
+                        var path = bindedValue.split(".");
+                        if (path.length > 1) {
+                            var bindedValue = data;
+                            path.forEach(function (key) {
+                                bindedValue = bindedValue[key];
+                            });
+                        }
                         data[bindedValue] = this.getValue();
                     }
 
@@ -233,6 +262,7 @@ var Repeater = KxGenerator.createComponent({
                 .append(
                     $('<div>')
                         .addClass("repeated-block")
+                        .css((_self.rendering.direction == 'horizontal' ? {display: 'inline-block'} : {}))
                         .append((_self.rendering.seperator && (index > 1) ? '<hr id="repeated-block-hr">' : ''))
                         .append(renderedRow)
                 );                   
@@ -332,6 +362,7 @@ var Repeater = KxGenerator.createComponent({
     enable: function () {
         var _self = this;
         var model = this.getModel();
+        this.enabled = true;
         
         if (this.rendering.actions) {
             model.displayAddButton = true;
@@ -350,6 +381,7 @@ var Repeater = KxGenerator.createComponent({
     disable: function () {
         var _self = this;
         var model = this.getModel();
+        this.enabled = false;
 
         if (this.rendering.actions) {
             model.displayAddButton = false;
@@ -366,7 +398,8 @@ var Repeater = KxGenerator.createComponent({
     },
 
     template: function () {
-        return "<div id='" + this.domID + "-wrapper' class='col-sm-12'>" +
+        return "<div id='" + this.domID + "-wrapper' class='col-sm-" + this.colspan + " form-group rowspan" + this.rowspan + " resizable'>" +
+                    "<label><b>{label}</b></label>" +    
                     "<div id='" + this.domID + "-container'></div>" +  
                     "<div id='actions_" + this.domID  + "' class='col-sm-offset-10 col-sm-2 px-0 float-right' style='overflow:hidden;'>" +
                         "<button id='btnAddRow_" + this.domID  + "' type='button' class='float-right btn btn-sm btn-secondary' rv-if='model.displayAddButton'>" +

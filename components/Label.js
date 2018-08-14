@@ -9,7 +9,7 @@ var Label = KxGenerator.createComponent({
     //component data
     initModel: function () {
         return {
-            class: this.class,
+            class: this.class || "mb-1 form-group col-sm-" + this.colspan + " rowspan" + this.rowspan + " resizable",
             style: this.style
         }
     },
@@ -50,7 +50,7 @@ var Label = KxGenerator.createComponent({
 
     template: function () {         
         return  "<div id='" + this.domID + "-wrapper' rv-class='model.class' rv-style='model.style'>"+
-                    "<label>{label}</label>"+
+                    "<label><b>{label}</b></label>"+
                 "</div>";    
     },
 

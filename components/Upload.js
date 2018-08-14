@@ -40,6 +40,7 @@ var Upload = KxGenerator.createComponent({
             {
                 registerTo: this.resumable, events: {
                     'fileAdded': this.fileAddedHandler.bind(this),
+                    'fileSuccess': this.fileSuccess.bind(this),
                     'progress': this.uploadProgress.bind(this),
                     'complete': this.uploadComplete.bind(this),
                     'error': this.errorHandler.bind(this)
@@ -57,7 +58,7 @@ var Upload = KxGenerator.createComponent({
     init: function () {
         var resumable = new Resumable({
             target: this.target,
-            query: { upload_token: 'kx' },
+            query: this.query || {}
         });
 
         resumable.assignBrowse(this.browseBtn);
@@ -72,10 +73,10 @@ var Upload = KxGenerator.createComponent({
     },
 
     fileAddedHandler: function (file, event) {
-        console.log(file)
         //allowed type control
         if (this.allowedExtensions && this.allowedExtensions.indexOf(fileExtension(file.file.name)) == -1) {
-            this.resumable.removeFile(file); 
+            this.resumable.removeFile(file);
+            bootbox.alert("File Type not allowed");
             return;
         }
 
@@ -127,7 +128,11 @@ var Upload = KxGenerator.createComponent({
         if (typeof this.onupload == 'function')
             this.onupload(this.resumable.files);    
         this.resetUpload();
-        // bootbox.alert("Upload Success");
+    },
+
+    fileSuccess: function (file, message) {
+        if (typeof this.onFileSuccess == 'function')
+            this.onFileSuccess(file, message);    
     },
 
     pauseHandler: function () {
@@ -231,12 +236,14 @@ var Upload = KxGenerator.createComponent({
     enable: function () {
         var model = this.getModel();
         model.enabled = true;
+        this.enabled = true;
         return this;
     },
 
     disable: function () {
         var model = this.getModel();
         model.enabled = false;
+        this.enabled = false;
         return this;
     },
 

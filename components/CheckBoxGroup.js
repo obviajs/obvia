@@ -97,11 +97,13 @@ var CheckBoxGroup = KxGenerator.createComponent({
 
     enable: function () {         
         this.list.enable();
+        this.enabled = true;
         return this; 
     },
 
     disable: function () {
         this.list.disable();
+        this.enabled = false;
         return this;  
     },
 

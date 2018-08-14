@@ -52,11 +52,12 @@ var AutoComplete = KxGenerator.createComponent({
     },
 
     handleChange: function (e) {
+        var _self = this;
         this.value = [];
         if (this.select2Instance.select2('data').length > 0)
             this.select2Instance.select2('data').forEach(function (item) {
                 var option = this.dataProvider.filter(function (option) {
-                    return option.id == item.id;
+                    return option[_self.valueField] == item[_self.valueField];
                 });
                 this.value.push(option[0]);
             }.bind(this));
@@ -121,18 +122,19 @@ var AutoComplete = KxGenerator.createComponent({
             multiple: this.multipleSelection,
             placeholder: 'Search',
             allowClear: true,
-            data: this.dataProvider,
-            formatSelection: function (data) {
-                if (data != undefined)
-                    return data.text;
-            },
+            data: this.dataProvider.map(function (item) {
+                return extend({
+                    id: item[_self.valueField],
+                    text: item[_self.labelField]
+                }, item);
+            }),
             separator: ',',
             width: (this.displayTable) ? '90%' : '100%',
         });
 
         if (this.value == "" || this.value == undefined)
             this.value = [];    
-        this.$input.val(this.value.map(function (item) { return item.id })).trigger('change');
+        this.$input.val(this.value.map(function (item) { return item[_self.valueField] })).trigger('change');
 
         if (!this.displayTable) {
             this.trigger('creationComplete');
@@ -155,8 +157,9 @@ var AutoComplete = KxGenerator.createComponent({
     },
 
     setValue: function (value) {
+        var _self = this;
         this.$input
-            .val(value.map(function (item) { return item.id }))
+            .val(value.map(function (item) { return item[_self.valueField] }))
             .trigger('change');
 
         return this;
@@ -168,12 +171,14 @@ var AutoComplete = KxGenerator.createComponent({
     },
 
     enable: function () {
-        this.select2Instance.enable(true);
+        this.$input.prop("disabled", false);
+        this.enabled = true;
         return this;
     },
 
     disable: function () {
-        this.select2Instance.enable(false);
+        this.$input.prop("disabled", true);
+        this.enabled = false;
         return this;
     },
 

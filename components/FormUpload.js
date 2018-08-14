@@ -63,7 +63,9 @@ var FormUpload = KxGenerator.createComponent({
 
     createList: function () {
         this.direction = this.direction == undefined || this.direction == null ? 'vertical' : this.direction;
-     
+        if (this.value == undefined || this.value == null || this.value == "")
+            this.value = this.dataProvider;
+        
         this.list = new List({
             id: 'list',
             colspan: '6',
@@ -144,40 +146,69 @@ var FormUpload = KxGenerator.createComponent({
             allowedExtensions: this.allowedExtensions || undefined,
             allowDrop: true,
             target: this.action,
-            onupload: this.uploadHandler.bind(this)
+            onupload: this.uploadComplete.bind(this),
+            onFileSuccess: this.fileUploaded.bind(this)
         });
 
         var _self = this;
         this.upload.on('creationComplete', function (e) {
             e.stopPropagation();
             _self.trigger('creationComplete');
+            
+            if (typeof _self.dataProvider == "string") {
+                if (_self.parentType == 'repeater') {
+                    var formID = _self.parent.parentForm.id;
+                    _self.rca.post = {
+                        'form_id': Case[formID].id,
+                        'repeater': true,
+                        'form_submit_id': _self.parent.dataProvider[_self.repeaterIndex]['form_submit_id'],
+                        'root_form_submit_id': _self.parent.dataProvider[0]['form_submit_id']
+                    }
+        
+                }
+                else {
+                    var formID = _self.parentForm.id;
 
-            var formID;
-            if (_self.parentType == 'repeater')
-                formID = _self.parent.parentForm.id;
-            else
-                formID = _self.parentForm.id;    
-           
-            _self.rca.post = {
-                'form_id': Case[formID].id,
-                'form_submit_id': Case[formID].id_form_submit
+                    _self.rca.post = {
+                        'form_id': Case[formID].id,
+                        'form_submit_id': Case[formID].id_form_submit,
+                        'root_form_submit_id': Case[formID].id_form_submit
+                    }
+
+                }
+                        
+                _self.rca.getData_Action = _self.dataProvider;
+                _self.rca.recordsPerPage = 100;
+                _self.rca.init();
+
+                this.resumable.opts.query = _self.rca.post;
             }
-            _self.rca.getData_Action = _self.dataProvider;
-            _self.rca.recordsPerPage = 100;
-            _self.rca.init();
         });
 
         return this.upload.render();
     },
 
     deleteFromListHandler: function (e, repeaterArgs) {
-        console.log(repeaterArgs);
         this.list.removeRow(repeaterArgs.currentIndex + 1);
         this.validate();
+        this.trigger('change');
     },
 
-    uploadHandler: function (files) {
+    fileUploaded: function (file, message) {
+        var message = JSON.parse(message);
+        if (message.error == 1) {
+            this.upload.resumable.removeFile(file);
+        } else 
+            file.opts.id = message.data.id;
+    },
+
+    uploadComplete: function (files) {
         this.modal.hide();
+        if (files.length <= 0) {
+            bootbox.alert("File Upload Failed");
+            return;    
+        }
+
         var repIndex = 0;
         var no = 0;
         if (this.list.dataProvider.length > 0) {
@@ -185,13 +216,15 @@ var FormUpload = KxGenerator.createComponent({
             no = parseInt(this.list.dataProvider[repIndex - 1][this.noLabelValue]);
         }
         
+        this.trigger('change');
+
         files.forEach(function (rf, index) {
             var item = {
-                "id": rf.file.uniqueIdentifier,
+                "id": rf.opts.id,
                 "no": no + index + 1,
                 "file": rf.file.name,
-                "deleteAction": this.defaultItem[this.deleteAction] + "?id=" + rf.file.uniqueIdentifier,
-                "downloadLink": this.defaultItem[this.downloadLink] + "?id=" + rf.file.uniqueIdentifier
+                "deleteAction": this.defaultItem[this.deleteAction]  + rf.opts.id,
+                "downloadLink": this.defaultItem[this.downloadLink]  + rf.opts.id
             };
             
             this.list.addRow(item, repIndex + index + 1);
@@ -203,13 +236,21 @@ var FormUpload = KxGenerator.createComponent({
     enable: function () {
         var model = this.getModel();
         model.enabled = true;
+        this.enabled = true;
         return this;
     },
 
     disable: function () {
         var model = this.getModel();
-        model.enabled = true;
+        model.enabled = false;
+        this.enabled = false;
         return this;
+    },
+
+    getValue: function () {
+        return this.dataProvider.map(function (item) {
+            return item.id
+        });
     },
 
     validate: function () {

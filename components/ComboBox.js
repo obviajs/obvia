@@ -5,7 +5,8 @@
  */
 
 //component definition
-var ComboBox = KxGenerator.createComponent({
+
+var ComboBoxInit = {
     //component data
     initModel: function () {
         return {
@@ -37,7 +38,7 @@ var ComboBox = KxGenerator.createComponent({
 
         for (var i = 0; i < data.length; i++)
             $(element).append(
-                $("<option></option>").val(data[i].value).text(data[i].text).attr("title", data[i].text)
+                $("<option></option>").val(data[i][this.valueField]).text(data[i][this.textField]).attr("title", data[i][this.textField])
             );
     },
 
@@ -64,26 +65,29 @@ var ComboBox = KxGenerator.createComponent({
     afterAttach: function (e) {
         var _self = this;
         
-        var element = "#" + this.domID;
-        KxRequest.promise(this.getData(this.dataProvider)).done(function (result) {
-            if (typeof result == "string")
-                result = JSON.parse(result);
-            
-            _self.setData(result, element);
+        if (e.target.id == this.domID + '-wrapper' && !this.attached) {
+            var element = "#" + this.domID;
+            KxRequest.promise(this.getData(this.dataProvider)).done(function (result) {
+                if (typeof result == "string")
+                    result = JSON.parse(result);
+                
+                _self.setData(result, element);
 
-            $(element).multiselect({
-                enableFiltering: true,
-                maxHeight: 250,
-                minWidth: 350,
-                templates: {
-                    divider: "<div class=\"divider\" data-role=\"divider\"></div>"
+                $(element).multiselect({
+                    enableFiltering: true,
+                    maxHeight: 250,
+                    minWidth: 350,
+                    templates: {
+                        divider: "<div class=\"divider\" data-role=\"divider\"></div>"
+                    }
+                });
+                if (_self.value && _self.value.length > 0) {
+                    $(element).multiselect('select', _self.value);
                 }
             });
-            if (_self.value.length > 0) {
-                $(element).multiselect('select', _self.value);
-            }
-        });
-
+        }
+        
+        this.attached = true;
         this.trigger('creationComplete');
     },
 
@@ -120,25 +124,39 @@ var ComboBox = KxGenerator.createComponent({
             return true;
     },
 
+    updateProvider: function (data) {
+        var element = "#" + this.domID;
+        this.setData(data, element);
+        $(element).multiselect('rebuild');
+    },
+
     setValue: function (value) {
         if (this.value != value) {
             this.value = value;
-            this.$input.multiselect('select', value);
+            if (value == "")
+                this.$input.multiselect('deselcetAll'); 
+            else this.$input.multiselect('select', value);
             this.trigger('change');
         }
         
         return this;
     },
 
+    pushItem: function (item) {
+        this.$input.append("<option value='" + item.id + "'>" + item.value + "</option>");
+        this.$input.multiselect('rebuild');
+        return this;
+    },
+
     enable: function () {
         this.$input.multiselect('enable');
-
+        this.enabled = true;
         return this;
     },
 
     disable: function () {
         this.$input.multiselect('disable');
-
+        this.enabled = false;
         return this;
     },
 
@@ -154,8 +172,9 @@ var ComboBox = KxGenerator.createComponent({
     render: function () {
         return this.$el;
     }
-});
-
+};
+ComboBoxInit = copyAccessors(Selectable, ComboBoxInit);
+var ComboBox = KxGenerator.createComponent(ComboBoxInit);
 //component prototype
 ComboBox.type = 'combobox';
 

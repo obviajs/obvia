@@ -1,4 +1,6 @@
 var flowerCM = window.flowerCM || {};
+//base Components
+rjs.define("./components/base/Selectable.js", "Selectable");
 //TextInput
 rjs.define("./components/Text.js", "TextInput");
 rjs.define("./lib/dependencies/scripts/jquery.inputmask.bundle.min.js", "InputMaskBundle");
@@ -21,11 +23,13 @@ rjs.define("./components/CheckBoxGroup.js", "CheckBoxGroup");
 rjs.define("./components/RadioButton.js", "RadioButton");
 //RadioGroup
 rjs.define("./components/RadioGroup.js", "RadioGroup");
+//HierarchicalTree
+rjs.define("./components/HierarchicalTree.js", "HierarchicalTree");
 //Amount
 rjs.define("./components/Amount.js", "Amount");
 //TextArea
 livespell___installPath = window.location.origin + "/resources/inner_resources/scripts/plugins/SpellCheck/";
-rjs.define("lib/dependencies/scripts/plugins/SpellCheck/include.js", "SpellCheckJS");
+//rjs.define("lib/dependencies/scripts/plugins/SpellCheck/include.js", "SpellCheckJS");
 rjs.define("./components/TextArea.js", "TextArea");
 //TextEditor
 rjs.define("./components/TextEditor.js", "TextEditor");
@@ -71,15 +75,22 @@ rjs.define("./components/FormUpload.js", "FormUpload");
 rjs.define("./components//DataGrid/DataGridColumn.js", "DataGridColumn");
 rjs.define("./components//DataGrid/DataGridCellRenderer.js", "DataGridCellRenderer");
 rjs.define("./components//DataGrid/DataGrid.js", "DataGrid");
+//Spacer
+rjs.define("./components/Spacer.js", "Spacer");
+//HierarchicalTree
+rjs.define("https://cdnjs.cloudflare.com/ajax/libs/jquery.fancytree/2.28.1/jquery.fancytree-all-deps.js", "FancyTreeScript");
+rjs.define("lib/dependencies/efilemanager/skin-lion/ui.fancytree.css", "FancyTreeCSS");
+
 
 //Loader
-var loader = new Loader({ id: 'loader' });
-$('#root').append(loader.render());
-loader.show();
+// var loader = new Loader({ id: 'loader' });
+// $('#root').append(loader.render());
+// loader.show();
 
 rjs.require([
     "DOMContentLoaded",
     "Form",
+    "HierarchicalTree",
     "BootBox",
     "Repeater",
     "List",
@@ -88,7 +99,7 @@ rjs.require([
     "TextInput", 
     "InputMaskBundle",
     "TextArea",
-    "SpellCheckJS",
+    // "SpellCheckJS",
     "Select",
     "TextEditor",
     "DateTime",
@@ -121,15 +132,25 @@ rjs.require([
     "FormUpload",
     "DataGridCellRenderer",
     "DataGridColumn",
-    "DataGrid"
+    "DataGrid",
+    "FancyTreeScript",
+    "FancyTreeCSS",
+    "FormUpload",
+    "Spacer"
 ], function () {
+    //rjs.define("./examples/AutoComplete/example.js", "AutoComplete");
     // rjs.define("./examples/CheckBox/example.js", "CheckBoxExample");
-    // rjs.define("./examples/RadioButton/example.js", "RadioButtonExample");
+    // rjs.define("./examples/RadioButton/example.js", "RadioButtonExample");+
     // rjs.define("./examples/CheckBoxGroup/example.js", "CheckBoxGroupExample");
     // rjs.define("./examples/RadioGroup/example.js", "RadioGroupExample");
     // rjs.define("./examples/Upload/example.js", "UploadExample");
     // rjs.define("./examples/Form/example.js", "FormExample");
     // rjs.define("./examples/Form/ajaxExample.js", "FormExample");
     rjs.define("./examples/DataGrid/example.js", "DataGridExample");
+    // rjs.define("./examples/HierarchicalTree/example.js", "HierarchicalTreeExample");
+    // rjs.define("./examples/Form/example.js", "FormExample");
+    // rjs.define("./examples/Form/ajaxExample.js", "FormExample");
+	//rjs.define("./examples/Repeater/example.js", "RepeaterExample");
+	//rjs.define("./examples/ComboBox/example.js", "ComboBoxExample");
 
 }, flowerCM);

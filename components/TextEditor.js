@@ -96,11 +96,13 @@ var TextEditor = KxGenerator.createComponent({
 
     enable: function () {
         this.$input.summernote('enable');
+        this.enabled = true;
         return this;
     },
 
     disable: function () {
         this.$input.summernote('disable');
+        this.enabled = false;
         return this;
     },
 
