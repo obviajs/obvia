@@ -67,6 +67,10 @@ rjs.define("lib/dependencies/styles/kx-upload.css", "KxUploadCSS");
 rjs.define("lib/dependencies/scripts/resumable.js", "Resumable");
 rjs.define("./components/Upload.js", "Upload");
 rjs.define("./components/FormUpload.js", "FormUpload");
+//DataGrid
+rjs.define("./components//DataGrid/DataGridColumn.js", "DataGridColumn");
+rjs.define("./components//DataGrid/DataGridCellRenderer.js", "DataGridCellRenderer");
+rjs.define("./components//DataGrid/DataGrid.js", "DataGrid");
 
 //Loader
 var loader = new Loader({ id: 'loader' });
@@ -114,14 +118,18 @@ rjs.require([
     "KxUploadCSS",
     "Upload",
     "SlimScroll",
-    "FormUpload"
+    "FormUpload",
+    "DataGridCellRenderer",
+    "DataGridColumn",
+    "DataGrid"
 ], function () {
     // rjs.define("./examples/CheckBox/example.js", "CheckBoxExample");
     // rjs.define("./examples/RadioButton/example.js", "RadioButtonExample");
     // rjs.define("./examples/CheckBoxGroup/example.js", "CheckBoxGroupExample");
     // rjs.define("./examples/RadioGroup/example.js", "RadioGroupExample");
     // rjs.define("./examples/Upload/example.js", "UploadExample");
-    rjs.define("./examples/Form/example.js", "FormExample");
+    // rjs.define("./examples/Form/example.js", "FormExample");
     // rjs.define("./examples/Form/ajaxExample.js", "FormExample");
+    rjs.define("./examples/DataGrid/example.js", "DataGridExample");
 
 }, flowerCM);
