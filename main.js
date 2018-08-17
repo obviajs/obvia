@@ -72,8 +72,9 @@ rjs.define("lib/dependencies/scripts/resumable.js", "Resumable");
 rjs.define("./components/Upload.js", "Upload");
 rjs.define("./components/FormUpload.js", "FormUpload");
 //DataGrid
-rjs.define("./components//DataGrid/DataGridColumn.js", "DataGridColumn");
+
 rjs.define("./components//DataGrid/DataGridCellRenderer.js", "DataGridCellRenderer");
+rjs.define("./components//DataGrid/DataGridColumn.js", "DataGridColumn");
 rjs.define("./components//DataGrid/DataGrid.js", "DataGrid");
 //Spacer
 rjs.define("./components/Spacer.js", "Spacer");
@@ -146,11 +147,13 @@ rjs.require([
     // rjs.define("./examples/Upload/example.js", "UploadExample");
     // rjs.define("./examples/Form/example.js", "FormExample");
     // rjs.define("./examples/Form/ajaxExample.js", "FormExample");
-    rjs.define("./examples/DataGrid/example.js", "DataGridExample");
+    
     // rjs.define("./examples/HierarchicalTree/example.js", "HierarchicalTreeExample");
     // rjs.define("./examples/Form/example.js", "FormExample");
     // rjs.define("./examples/Form/ajaxExample.js", "FormExample");
 	//rjs.define("./examples/Repeater/example.js", "RepeaterExample");
-	//rjs.define("./examples/ComboBox/example.js", "ComboBoxExample");
+    //rjs.define("./examples/ComboBox/example.js", "ComboBoxExample");
+    rjs.define("./examples/List/example.js", "ListExample");
+    //rjs.define("./examples/DataGrid/example.js", "DataGridExample");
 
 }, flowerCM);
