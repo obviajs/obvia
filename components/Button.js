@@ -25,7 +25,8 @@ var Button = KxGenerator.createComponent({
                 }
             },
             {
-                registerTo: this.$btn, events: { 
+                registerTo: this.$btn, events: {
+                    'mousedown' : this.mouseDownHandler.bind(this),
                     'click': this.clickHandler.bind(this),
                     'dblclick': this.doubleClickHandler.bind(this)
                 }
@@ -50,7 +51,10 @@ var Button = KxGenerator.createComponent({
         this.enabled = false;
         return this;
     },
-
+    mouseDownHandler: function () {
+        if (typeof this.onmousedown == 'function')
+            this.onmousedown.apply(this, arguments);
+    },
     clickHandler: function () {
         if (typeof this.onclick == 'function')
             this.onclick.apply(this, arguments);

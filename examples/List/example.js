@@ -30,6 +30,7 @@ var list = new List({
             }
         }
     ],
+    onmousedown : onmousedownTest,
     onclick : clickTest,
     onchange : changeTest
 });
@@ -72,6 +73,10 @@ var list2 = new List({
 $('#root').append(list.render());
 $('#root').append(list2.render());
 
+function onmousedownTest()
+{
+    console.log("mouseDownTest ",arguments);
+}
 function clickTest()
 {
     console.log("clickTest ",arguments);
