@@ -16,6 +16,7 @@ var List = KxGenerator.createComponent({
 
     beforeAttach: function () {
         this.$container = this.$el.find('#' + this.domID + '-container');
+        //TODO: we are overriding those handlers, we should exec them(if they are set) after our internal handlers
         this.components[0].props.onclick = this.clickHandler.bind(this);
         this.components[0].props.ondblclick = this.doubleClickHandler.bind(this);
         this.components[0].props.onmousedown = this.mouseDownHandler.bind(this);

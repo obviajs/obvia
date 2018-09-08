@@ -15,7 +15,7 @@ var TextInput = KxGenerator.createComponent({
     },
 
     beforeAttach: function () {
-        this.$input = this.$el.find("#" + this.domID);
+        this.$input = this.$el.attr('id') == this.domID?this.$el:this.$el.find("#" + this.domID);
     },
 
     registerEvents: function () {
@@ -46,7 +46,7 @@ var TextInput = KxGenerator.createComponent({
     attached: false,
 
     afterAttach: function (e) {
-        if (e.target.id == this.domID + '-wrapper' && !this.attached) {
+        if (e.target.id == this.$el.attr('id') && !this.attached) {
             //init input mask
             if (this.hasOwnProperty('mask')) {
                 var mask;
@@ -104,18 +104,23 @@ var TextInput = KxGenerator.createComponent({
 
         return this;
     },
-
+    focus:function(){
+        if(this.$input != null)
+        {
+            this.$input.focus();
+        }
+    },
     template: function () {
-        return "<div id='" + this.domID + "-wrapper' class='form-group col-sm-" + this.colspan + " rowspan" + this.rowspan + " resizable '>" +
-            "<div id='" + this.domID + "-block'>" +
-            "<label rv-style='versionStyle' rv-for='domID'><b>{label}</b> <span rv-if='required'>*</span></label>" +
-            "<span rv-if='model.blockProcessAttr' class='block-process'> * </span>" +
-            "<input rv-type='type'" +
-            "id='" + this.domID + "' name='" + this.domID + "' rv-value='value'" +
-            "class='form-control rowspan" + this.rowspan + "'" +
+        var html = 
+            (!this.embedded?("<div id='" + this.domID + "-wrapper' class='form-group col-sm-" + this.colspan + " rowspan" + this.rowspan + " resizable '>") : "") +
+            (!this.embedded?("<label rv-style='versionStyle' rv-for='domID'><b>{label}</b> <span rv-if='required'>*</span></label>") : "") + 
+            (!this.embedded?("<span rv-if='blockProcessAttr' class='block-process'> * </span>") : "") + 
+            "<input rv-type='type' " +
+            "id='" + this.domID + "' name='" + this.domID + "' rv-value='value' " +
+            "class='form-control rowspan" + this.rowspan + "' " +
             "rv-placeholder='label' rv-enabled='enabled' autofocus/>" +
-            "</div>" +
-            "</div>";
+            (!this.embedded?("</div>") : "");
+        return html;
     },
 
     render: function () {

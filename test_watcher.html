@@ -33,8 +33,10 @@
         var w = null;
         var obj = {brand:{a:{name:"aston martin", year:2018}}};
         var t1 = {a:10};
-        var t2 = {b:20};
+        var currentItem = {t2 :{b:20}};
+        //var t3 = {c:{d:17}};
         var t3 = {c:{d:17}};
+
         $(document).ready(function()
 		{ 
             
@@ -52,11 +54,11 @@
             });
 
             alert("before binding "+t3.c.d);
-            BindingUtils.getValue(this, "t1.a+t2.b", t3, ["c","d"])
+            BindingUtils.getValue(this, "t1.a+t2.b", t3, ["c","d"], "currentItem");
             alert("after binding "+t3.c.d);
             t1.a = 11;
             alert("after t1.a update "+t3.c.d);
-            t2.b = 22;
+            currentItem.t2.b = 22;
             alert("after t2.b update "+t3.c.d);
 
             

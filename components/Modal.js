@@ -8,6 +8,8 @@
 var Modal = KxGenerator.createComponent({
     beforeAttach: function () {
         this.$body = this.$el.find('#' + this.domID + '-modal-body');
+        this.$footer = this.$el.find('#' + this.domID + '-modal-footer');
+        this.$header = this.$el.find('#' + this.domID + '-modal-header');
         this.$modal = this.$el.find('#' + this.domID);
     },
 

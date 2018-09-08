@@ -134,7 +134,7 @@ var ComboBoxInit = {
         if (this.value != value) {
             this.value = value;
             if (value == "")
-                this.$input.multiselect('deselcetAll'); 
+                this.$input.multiselect('deselectAll'); 
             else this.$input.multiselect('select', value);
             this.trigger('change');
         }

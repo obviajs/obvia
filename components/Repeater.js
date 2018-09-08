@@ -8,7 +8,7 @@
 var Repeater = KxGenerator.createComponent({
     currentIndex: 1,
     currentItem: {},
-    rowItems: {},
+    rowItems: [],
     dataProviderKeys: [],
 
     initModel: function () {
@@ -62,9 +62,95 @@ var Repeater = KxGenerator.createComponent({
                     'click': this.addRowHandler.bind(this)
                 }
             }
-        ]:[])));
+        ]:[
+            {
+                registerTo: this.$container, events: {
+                    'keydown': this.containerKeyDown.bind(this)
+                }
+            }
+        ])));
     },
-
+    containerKeyDown: function(e){
+        if (typeof this.keydown == 'function')
+            this.keydown.apply(this, arguments);
+    
+            if(!e.isDefaultPrevented()){
+                
+                switch (e.keyCode) {
+                    case 13: // ENTER - apply value
+                        console.log("Repeater ENTER");
+                        break;
+                    case 27: // ESC - get back to old value
+                        console.log("Repeater ESCAPE");
+                        break;
+                    case 9: // TAB - apply and move to next column on the same row 
+                        console.log("Repeater TAB");
+                        break;
+                    case 40: //  
+                        console.log("Repeater DOWN Arrow");
+                        this.focusComponent(++this.focusedRow, this.focusedComponent);
+                        e.preventDefault();
+               
+                        break;
+                    case 39: // 
+                        console.log("Repeater Right Arrow");
+                        this.focusComponent(this.focusedRow, ++this.focusedComponent);
+                        e.preventDefault();
+               
+                        break;
+                    case 38: // 
+                        console.log("Repeater Up Arrow");
+                        this.focusComponent(--this.focusedRow, this.focusedComponent);
+                        e.preventDefault();
+               
+                        break;
+                    case 37: // 
+                        console.log("Repeater Left Arrow");
+                        this.focusComponent(this.focusedRow, --this.focusedComponent);
+                        e.preventDefault();
+               
+                        break;
+                }
+            }
+    }, 
+    focusedRow:0,
+    focusedComponent:0,
+    focusComponent: function(rowIndex, cIndex){
+       
+        if(rowIndex>this.dataProvider.length-1)
+        {
+            rowIndex = 0;
+        }else if(rowIndex<0)
+        {
+            rowIndex = this.dataProvider.length-1;
+        }
+        if(!isNaN(cIndex))
+        {
+            if(cIndex > Object.keys(this.rowItems[rowIndex]).length-1)
+            {
+                cIndex = 0;
+                ++rowIndex;
+            }else if(cIndex < 0)
+            {
+                cIndex = Object.keys(this.rowItems[rowIndex]).length-1;
+                --rowIndex;
+            }
+            if(rowIndex>this.dataProvider.length-1)
+            {
+                rowIndex = 0;
+            }else if(rowIndex<0)
+            {
+                rowIndex = this.dataProvider.length-1;
+            }
+            cIndex = Object.keys(this.rowItems[rowIndex])[cIndex];
+        }
+        
+        if(typeof this.rowItems[rowIndex][cIndex].$el['focus'] === "function") { 
+       
+            this.rowItems[rowIndex][cIndex].$el.focus();
+        }
+    },
+   
     validate: function () {
         var _self = this;
         var valid = true;
@@ -129,10 +215,10 @@ var Repeater = KxGenerator.createComponent({
     //renders a new row, adds components in stack
     addRow: function (data, index, isPreventable = false, focusOnRowAdd = true) {
         var _self = this;
+        index = index || this.rows.length+1;
         var model = this.getModel();
-        
-        var renderedRow = $('<div>').addClass('row col-sm-12');
-        
+        //row col-sm-12
+        var renderedRow = $('<div>').addClass('');
         var ccComponents = [];
         var buildRow = function () {
             var rowItems = {};
@@ -191,6 +277,7 @@ var Repeater = KxGenerator.createComponent({
                 rowItems[cmpId] = el;
                 _self.rowItems[index - 1] = rowItems;
 
+
                 //handle component change event and delegate it to repeater
                 el.on('creationComplete', function (e) { 
                     e.stopImmediatePropagation();
@@ -222,6 +309,7 @@ var Repeater = KxGenerator.createComponent({
                         
                         if (_self.currentIndex == _self.dataProvider.length && !addRowFlag) {
                             _self.trigger('creationComplete');
+                            _self.focusComponent(0, 0);
                         }
 
                         //animate
@@ -233,9 +321,13 @@ var Repeater = KxGenerator.createComponent({
                 });
 
                 if (_self.rendering.direction == 'horizontal') {
-                    el.$el.addClass('float-left');
+                   // el.$el.addClass('float-left');
                 }
-
+                el.on('focus', function (e, repeaterEventArgs) {
+                    _self.focusedRow = repeaterEventArgs.currentIndex;
+                    _self.focusedComponent = Object.keys(repeaterEventArgs.currentRow).indexOf(this.id);
+                    console.log("focused repeated component", _self.focusedRow , _self.focusedComponent);
+                });
                 el.on('change', function (e) {
                     var currentItem = _self.dataProvider[index - 1];
                     if (tempComponent.props.value[0] == '{' && tempComponent.props.value[tempComponent.props.value.length - 1] == '}') {
@@ -258,15 +350,30 @@ var Repeater = KxGenerator.createComponent({
             });   
 
             //render row in dom
-            _self.$container
+           /*_self.$container
                 .append(
                     $('<div>')
                         .addClass("repeated-block")
                         .css((_self.rendering.direction == 'horizontal' ? {display: 'inline-block'} : {}))
                         .append((_self.rendering.seperator && (index > 1) ? '<hr id="repeated-block-hr">' : ''))
                         .append(renderedRow)
-                );                   
-            
+                );   
+               */
+            renderedRow
+              .addClass("repeated-block")
+              .css((_self.rendering.direction == 'horizontal' ? {display: 'inline-block'} : {}))
+              .append((_self.rendering.seperator && (index > 1) && (index < _self.dataProvider.length-1) ? '<hr id="repeated-block-hr">' : ''));            
+           
+            if(_self.mode =="append")
+            {
+                if(_self.rows.length>0)
+                {
+                    _self.rows[_self.rows.length-1].after(renderedRow);
+                }
+                else
+                    _self.$container.prepend(renderedRow);
+            }
+            _self["rows"].push(renderedRow); 
             return rowItems;
         }
 
@@ -296,7 +403,15 @@ var Repeater = KxGenerator.createComponent({
     removeRowHandler: function () {
         this.removeRow(this.currentIndex, true);
     },
-
+    rows:[],
+    mode:"append", //TODO: prepend will add rows to the beginning, but if we are about to iterate the rows or use rowIndex we need to take this into consideration (using reverse of array is the easiest solution)
+    removeAllRows: function(){
+        for(var i=this.rows.length;i>0;i--)
+        {
+            this.removeRow(i, false, false);
+        }
+        this.rows = [];
+    },
     removeRow: function (index, isPreventable = false, focusOnRowDelete = true) {
         var rowItems = {};
         var model = this.getModel();
@@ -322,7 +437,7 @@ var Repeater = KxGenerator.createComponent({
 
                 rowItems[component.props.id] = [this[component.props.id][index - 1]];
                 this[component.props.id].splice(index - 1, 1);
-
+                this.rows.splice(index - 1, 1);
             }.bind(this));
 
             //manage dp
@@ -333,7 +448,7 @@ var Repeater = KxGenerator.createComponent({
             }
 
             this.$el.trigger('onRowDelete', [this, new RepeaterEventArgs([], this.currentItem, index, rowItems)]);
-            delete this.rowItems[index - 1];
+            this.rowItems.splice(index - 1, 1);
 
             //animate
             if (focusOnRowDelete)
@@ -398,37 +513,46 @@ var Repeater = KxGenerator.createComponent({
     },
 
     template: function () {
-        return "<div id='" + this.domID + "-wrapper' class='col-sm-" + this.colspan + " form-group rowspan" + this.rowspan + " resizable'>" +
-                    "<label><b>{label}</b></label>" +    
+        return "<div id='" + this.domID + "-wrapper' class='"+(this.colspan!=undefined?"col-sm-" + this.colspan:"")+ " form-group rowspan" + this.rowspan + " resizable'>" +
+    (!this.embedded?("<label><b>{label}</b></label>"):"") +    
                     "<div id='" + this.domID + "-container'></div>" +  
-                    "<div id='actions_" + this.domID  + "' class='col-sm-offset-10 col-sm-2 px-0 float-right' style='overflow:hidden;'>" +
+    (this.rendering.actions?("<div id='actions_" + this.domID  + "' class='col-sm-offset-10 col-sm-2 px-0 float-right' style='overflow:hidden;'>" +
                         "<button id='btnAddRow_" + this.domID  + "' type='button' class='float-right btn btn-sm btn-secondary' rv-if='model.displayAddButton'>" +
                             "<i class='fas fa-plus'></i> Add" +
                         "</button>" +
                         "<button id='btnRemoveRow_" + this.domID  + "' type='button' class='mx-1 float-right btn btn-sm btn-danger' rv-if='model.displayRemoveButton'>" +
                             "<i class='fas fa-minus'></i> Remove" + 
                         "</button>" +
-                    "</div>";
+                    "</div>"):"");
                 "</div>";
     },
-
+    userCanManageItems:true,
     render: function () {
         var _self = this;
         var model = this.getModel();
-        
+
+        var parent = this.$el.parent();
+       // if(parent.length>0)
+       //     this.$el.remove();
         this.$el.trigger('onBeginDraw');
 
-        this.$container = this.$el.find('#' + this.domID + '-container'); 
-        this.$btnAddRow = this.$el.find('#btnAddRow_' + this.domID);
-        this.$btnRemoveRow = this.$el.find('#btnRemoveRow_' + this.domID);
-     
+        this.$container = this.$container || this.$el.find('#' + this.domID + '-container'); 
+        this.$btnAddRow = this.$btnAddRow || this.$el.find('#btnAddRow_' + this.domID);
+        this.$btnRemoveRow = this.$btnRemoveRow || this.$el.find('#btnRemoveRow_' + this.domID);
+        
+        this.$container.empty();
+        this.rows = [];
+        this.focusedRow = 0,
+        this.focusedComponent = 0;
+
         // this.rowItems = {}; we need this if we create Repeater instances via Object.assign
         this.dataProvider.forEach(function (data, index) {  
             _self.addRow(data, index + 1);
         });
        
         this.$el.trigger('onEndDraw');
-
+     //   if(parent.length>0)
+     //       parent.append(this.$el);
         return this.$el;
     }
 });

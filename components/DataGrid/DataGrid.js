@@ -103,7 +103,15 @@ var DataGrid = KxGenerator.createComponent({
 
         return this.$el;
     },
-    columnSort:function(columnIndex){
+    headerClickHandler: function (e, hIndex, column) {
+        if (typeof this.onheaderclick == 'function')
+            this.onheaderclick.apply(this, arguments);
+        alert("headerClickHandler");
+            if(!e.isDefaultPrevented() && column.sortable){
+                this.columnSort.call(this, hIndex, column);
+            }    
+    },
+    columnSort:function(columnIndex, column){
         /*
         addClass() - Adds one or more classes to the selected elements
         removeClass() - Removes one or more classes from the selected elements
@@ -111,6 +119,7 @@ var DataGrid = KxGenerator.createComponent({
         */
         alert("stub for columnSort :"+columnIndex);
     },
+
     createHeader: function () {
         var headerHtml = "<tr>";
         var hi = 0;
@@ -120,16 +129,17 @@ var DataGrid = KxGenerator.createComponent({
         headerHtml += "</tr>";
         var $header = $(headerHtml);
         var _self = this;
+        var sortDirFADic = {"asc":"down", "desc":"up"};
         for (var columnIndex=0;columnIndex<this.columns.length;columnIndex++) {
-            var column = this.columns[columnIndex];
+            var column = this.columns[columnIndex] = new DataGridColumn(this.columns[columnIndex]);
             
-            $th = $("<th id='head_"+hi+"'>"+(column.sortable ? "<a href='#'>":"")+column.headerText+(column.sortable ? "<span class='fa fa-caret-down'></span></a>":"")+"</th>");    
-            $th.find("a").bind('click', 
-            (function(hIndex){
-                return (function() { // a closure is created
-                    _self.columnSort.call(_self, hIndex);
+            $th = $("<th id='head_"+hi+"'>"+column.headerText+(column.sortable ? "<span class='fa fa-caret-"+(sortDirFADic[column.sortDirection.toLowerCase()])+"'></span></a>":"")+"</th>");    
+            $th.bind('click', 
+            (function(hIndex, column){
+                return (function(e) { // a closure is created
+                    _self.headerClickHandler.call(_self, e, hIndex, column);
                     });	
-            })(hi));
+            })(hi, column));
 
            
 
@@ -147,16 +157,109 @@ var DataGrid = KxGenerator.createComponent({
         }
         return dI;
     },
-    defaultItemRenderer:{
-        constructor: DataGridCellRenderer,
-        props: {
-            id: 'cell_',
-            label: '',
-            hyperlink: false,
-            target:null
+    cellEdit: function(rowIndex, columnIndex, column, data){
+
+        if(this.editPosition!=null && (this.editPosition.rowIndex != rowIndex || this.editPosition.columnIndex != columnIndex)){
+            this.cellItemRenderers[this.editPosition.rowIndex][this.editPosition.columnIndex].show();
+        }
+
+        this.editPosition = {"rowIndex":rowIndex, "columnIndex":columnIndex}; 
+
+        this.cellItemRenderers[rowIndex][columnIndex].hide();
+        var itemEditorInfo = this.cellItemEditors[columnIndex];
+        var itemEditor;
+        if(itemEditorInfo == undefined)
+        {
+            if (typeof column.itemEditor.constructor == "string") {
+                column.itemEditor.constructor = eval(column.itemEditor.constructor);
+            }
+            column.itemEditor.props.embedded = true;
+            column.itemEditor.props.label = column.headerText; 
+            itemEditor = new column.itemEditor.constructor(column.itemEditor.props);
+            itemEditor.parent = this;
+            itemEditor.parentType = 'repeater';
+            itemEditor.parentForm = this.parentForm;
+            itemEditor.$el.css("margin","0px");
+            itemEditor.$el.addClass("form-control-sm");
+            
+            this.cellItemEditors[columnIndex] = {"itemEditor":itemEditor, "rowIndex":rowIndex}; 
+        }else
+        {
+            itemEditor = itemEditorInfo.itemEditor;
+            //itemEditor is in another position
+            if(itemEditorInfo.rowIndex != rowIndex)
+            {
+                itemEditorInfo.rowIndex = rowIndex;
+                //itemEditor.$el.remove();
+                itemEditor.$el.detach();
+            }
+            
+        }
+        var _self = this;
+        itemEditor.on('blur', (function(rowIndex, columnIndex, column, data){
+            return (function(e) { // a closure is created
+                _self.cellEditFinished(rowIndex, columnIndex, column, data);
+                });	
+        })(rowIndex, columnIndex, column, data));
+
+
+        itemEditor.on('keydown', (function(rowIndex, columnIndex, column, data){
+            return (function(e) { // a closure is created
+                e.preventDefault();
+                switch (e.keyCode) {
+                    case 13: // ENTER - apply value
+                        _self.cellEditFinished(rowIndex, columnIndex, column, data, true);
+                        break;
+                    case 27: // ESC - get back to old value
+                        _self.cellEditFinished(rowIndex, columnIndex, column, data, false);
+                        break;
+                    case 9: // TAB - apply and move to next column on the same row 
+                        _self.cellEditFinished(rowIndex, columnIndex, column, data, true);
+                        _self.cellEdit(rowIndex, columnIndex+1, _self.columns[columnIndex+1] , data);
+                        break;
+                }
+
+
+                });	
+        })(rowIndex, columnIndex, column, data));
+
+        this.cells[rowIndex][columnIndex].css("width", this.cells[rowIndex][columnIndex].innerWidth()+"px")
+        itemEditor.repeaterIndex = rowIndex;
+        //TODO: te evitojme v
+        if (column.itemEditor.props["value"]!=null && column.itemEditor.props["value"][0] == '{' && column.itemEditor.props["value"][column.itemEditor.props["value"].length - 1] == '}') 
+        {
+            var dataProviderField = column.itemEditor.props["value"].slice(1, -1);
+            itemEditor.setValue(data[dataProviderField]);
+        }else
+            itemEditor.setValue(column.itemEditor.props["value"] || data[column.dataField]);
+        
+
+        itemEditor.on('creationComplete', function(){
+
+            if (typeof itemEditor['focus'] === "function") { 
+                // safe to use the function
+                itemEditor.focus();
+            }
+        });    
+        this.cells[rowIndex][columnIndex].append(itemEditor.render());
+        itemEditor.show();
+      
+        
+    },
+    cellEditFinished: function(rowIndex, columnIndex, column, data, applyEdit){
+        var itemEditorInfo = this.cellItemEditors[columnIndex];
+        var itemEditor = itemEditorInfo.itemEditor;
+        itemEditor.hide();
+        this.cellItemRenderers[rowIndex][columnIndex].show();
+        this.cells[rowIndex][columnIndex].css("width","");
+        if(applyEdit){
+            this.dataProvider[column.dataField] = itemEditor.getValue();
         }
     },
-    cellItemRenders:[],
+    cellItemRenderers:[[]],
+    cellItemEditors:[],
+    cells:[[]],// matrix
+    editPosition:null,
      //renders a new row, adds components in stack
     addRow: function (data, index, isPreventable = false, focusOnRowAdd = true) {
         var _self = this;
@@ -182,31 +285,24 @@ var DataGrid = KxGenerator.createComponent({
 
                 
                 //build components properties, check bindings
-                if (_self["cellItemRenders"][columnIndex] == undefined)
-                _self["cellItemRenders"][columnIndex] = [];
+                if (_self.cellItemRenderers[index-1] == undefined)
+                    _self.cellItemRenderers[index-1] = [];
 
                 var dataProviderField = column.dataField;
-
-                if(column.itemRenderer == null)
-                {
-                    component = _self.defaultItemRenderer;        
-                    //renderedRow.append('<td id=cell_'+index+'_'+columnIndex+'>'++'</td>');
-                    component.props["label"] = "{"+dataProviderField+"}";
-                }
-
+                component.props["label"] = "{"+dataProviderField+"}";
                 //clone objects
                 var tempComponent = extend(true, true, component);
                 tempComponent.props.id = column.dataField;
 
 
-                var cmp = _self["cellItemRenders"][columnIndex];
-                if (cmp[index - 1] == undefined)
-                    cmp[index - 1] = {};
+                var cmp = _self["cellItemRenderers"][index-1];
+                if (cmp[columnIndex] == undefined)
+                    cmp[columnIndex] = {};
 
                
 
                 /*
-                cmp[index - 1]["label"] = data[dataProviderField];
+                cmp[columnIndex]["label"] = data[dataProviderField];
                 if(_self.bindings[dataProviderField]==undefined){
                     _self.bindings[dataProviderField] = {};
                     if(_self.bindings[dataProviderField][columnIndex]==undefined){
@@ -224,7 +320,8 @@ var DataGrid = KxGenerator.createComponent({
                         //check for binding
                         if (tempComponent.props[prop]!=null && tempComponent.props[prop][0] == '{' && tempComponent.props[prop][tempComponent.props[prop].length - 1] == '}') {
                             var dataProviderField = tempComponent.props[prop].slice(1, -1);
-                            cmp[index - 1][prop] = data[dataProviderField];
+                            console.log(prop," dp field:", dataProviderField, " dp field value:",data[dataProviderField])
+                            cmp[columnIndex][prop] = data[dataProviderField];
                             if(_self.bindings[dataProviderField]==undefined){
                                 _self.bindings[dataProviderField] = {};
                                 if(_self.bindings[dataProviderField][tempComponent.props.id]==undefined){
@@ -234,7 +331,7 @@ var DataGrid = KxGenerator.createComponent({
                             
                         } else {
                             //no binding
-                            cmp[index - 1][prop] = tempComponent.props[prop];
+                            cmp[columnIndex][prop] = tempComponent.props[prop];
                         }
                     }
                 }    
@@ -244,22 +341,32 @@ var DataGrid = KxGenerator.createComponent({
                 if (typeof tempComponent.constructor == "string") {
                     tempComponent.constructor = eval(tempComponent.constructor);
                 }
-                var el = new tempComponent.constructor(cmp[index - 1]);
+                var el = new tempComponent.constructor(cmp[columnIndex]);
                 el.parent = _self;
                 el.parentType = 'repeater';
                 el.parentForm = _self.parentForm;
                 el.repeaterIndex = index - 1;
 
-                _self["cellItemRenders"][columnIndex].push(el); 
+                _self.cellItemRenderers[index-1][columnIndex] = el; 
                 rowItems[column.dataField] = el;
                 _self.rowItems[index - 1] = rowItems;
+                
+                //
+                if(column.editable){
+                    el.on('dblclick', (function(rowIndex, columnIndex, column, data){
+                        return (function(e) { // a closure is created
+                            //alert(JSON.stringify(column)+" "+JSON.stringify(data)+" "+(index-1));
+                            _self.cellEdit(rowIndex, columnIndex, column, data);
+                        });	
+                    })(index - 1, columnIndex, column, data));
+                }
 
                 //handle component change event and delegate it to repeater
                 el.on('creationComplete', function (e) { 
                     e.stopImmediatePropagation();
                     e.stopPropagation();
                     ccComponents.push(el.id);
-                    
+                    console.log("creation Complete", this.id);
                     if (ccComponents.length == _self.columns.length) {
                         //trigger row add event
                         _self.$el.trigger('onRowAdd', [_self, new RepeaterEventArgs(_self.rowItems, data, index)]);
@@ -299,9 +406,12 @@ var DataGrid = KxGenerator.createComponent({
 
                     _self.$el.trigger('onRowEdit', [_self, new RepeaterEventArgs(rowItems, data, index)]);
                 });
-
+                var cell = $("<td id='cell_"+(index-1)+"_"+columnIndex+"'></td>");
+                if(_self.cells[index-1]== undefined)
+                    _self.cells[index-1] = [];
+                _self.cells[index-1][columnIndex] = cell;
                 //render component in row
-                renderedRow.append($("<td></td>").append(el.render()));
+                renderedRow.append(cell.append(el.render()));
             }   
 
             //render row in dom

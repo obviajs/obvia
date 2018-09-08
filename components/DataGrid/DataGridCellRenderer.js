@@ -22,14 +22,19 @@ var DataGridCellRenderer = KxGenerator.createComponent({
             {
                 registerTo: this.$el, events: {
                     'afterAttach': this.afterAttach.bind(this),
-                    'click': this.clickHandler.bind(this)
+                    'click': this.clickHandler.bind(this),
+                    'dblclick': this.doubleClickHandler.bind(this)
                 }
             }
         ]
     },
-     clickHandler: function () {
+    clickHandler: function () {
         if (typeof this.onclick == 'function')
             this.onclick.apply(this, arguments);
+    },
+    doubleClickHandler: function () {
+        if (typeof this.ondblclick == 'function')
+            this.ondblclick.apply(this, arguments);
     },
     afterAttach: function (e) {
         if (this.hyperlink) {

@@ -26,7 +26,7 @@ var myRepeater = new Repeater({
                 autocompleteLabel: 'Ministrite',
                 autocompleteValue: [{ "id": "2", "text": "Ministria e Drejtesise" }],
                 textLabel: 'Emri',
-                textValue: 'Mateo Jovani',
+                textValue: 'Jacky Qwerty',
                 radioValue: "1",
                 mapValue: {
                     latitude: 51.1533,

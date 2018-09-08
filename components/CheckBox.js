@@ -6,7 +6,7 @@
 
 //component definition
 var CheckBox = KxGenerator.createComponent({
-    enabled: true,
+    _enabled: true,
     blockProcessAttr: this.required ? false : this.blockProcessAttr,
 	_checked: false,
     _value: null,
@@ -79,25 +79,30 @@ var CheckBox = KxGenerator.createComponent({
             this._checked = true;
         }else
 			this._checked = false;
-		if(this.$input!=undefined)
-			this.$input.prop('checked', v)
+		if(this.$input!=undefined){
+            this.$input.prop('checked', v);
+        }
+    },
+    get enabled(){
+        return this._enabled;
+    },
+    set enabled(v){
+        if(this._enabled!=v)
+        {
+            this._enabled = v;
+            if(this.$input!=undefined)
+                this.$input.prop('disabled', !v)
+        }
     },
 	get checked(){
         return this._checked;
     },
-   
     template: function () {      
         return  "<div id='" + this.domID + "-wrapper' class='checkbox'>" +
         (!this.embedded?("<span rv-if='blockProcessAttr' class='block-process'> * </span>") : "") + 
-                    "<label><input id='" + this.domID + "' name='" + this.domID + "' rv-value='value' " +                    
-                    "rv-enabled='enabled' rv-checked='checked' type='checkbox' rv-value='value'>{label}</label>" +
-                "</div>"; 
-    },
-    template: function () {      
-        return  "<div id='" + this.domID + "-wrapper' class='checkbox'>" +
-        (!this.embedded?("<span rv-if='blockProcessAttr' class='block-process'> * </span>") : "") + 
-                    "<label><input id='" + this.domID + "' name='" + this.domID + "'  value='"+this.value+"'" +                    
-                    "rv-enabled='enabled' "+(this.checked?"checked='checked'":'')+" type='checkbox'>{label}</label>" +
+                    "<label><input id='" + this.domID + "' name='" + this.domID + "'  value='"+this.value+"' " +                    
+                    (this.enabled?'':"disabled='disabled'")+ 
+                    (this.checked?"checked='checked'":'')+" type='checkbox'/>{label}</label>" +
                 "</div>"; 
     },
     render: function () {

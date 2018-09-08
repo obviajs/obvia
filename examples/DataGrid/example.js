@@ -15,12 +15,14 @@ var myDataGrid = new DataGrid({
     rowStyleFunction:rowStyleFunction_ex,
     dataProvider: [
             {
+                id:7,
                 ministry: 'Ministria e Drejtesise',
                 ministry_ac: [{ "id": "2", "text": "Ministria e Drejtesise" }],
                 textLabel: 'jim beam',
                 checkboxValue:true
             },
             { 
+                id:5,
                 ministry: 'Ministria e Brendshme',
                 ministry_ac: [{ "id": "3", "text": "Ministria e Brendshme" }],
                 textLabel: 'black jack',
@@ -36,7 +38,7 @@ var myDataGrid = new DataGrid({
             cellStyleFunction:cellStyleFunction_ex,
             cellValueFunction:cellValueFunction_ex,
             itemRenderer:null,
-           
+            editable:true,
 
             itemEditor:{
                 constructor: AutoComplete,
@@ -48,6 +50,8 @@ var myDataGrid = new DataGrid({
                     blockProcessAttr: false,
                     required: false,
                     multipleSelection: true,
+                    valueField: "id",
+                    labelField: "text",
                     dataProvider: [{ "id": "1", "text": "Ministria e Puneve te Jashtme" }, { "id": "2", "text": "Ministria e Drejtesise" }, { "id": "3", "text": "Ministria e Brendshme" }],
                     value: '{ministry_ac}'
                 }
@@ -61,7 +65,7 @@ var myDataGrid = new DataGrid({
             cellStyleFunction:cellStyleFunction_ex,
             cellValueFunction:cellValueFunction_ex,
             itemRenderer:null,
-           
+            editable:true,
 
             itemEditor:{
                 constructor: TextInput,
@@ -92,7 +96,8 @@ var myDataGrid = new DataGrid({
                     fieldName: 'checkbox',
                     blockProcessAttr: false,
                     required: true,
-                    value: '{checkboxValue}',
+                    value: '{id}',
+                    checked: '{checkboxValue}',
                     unCheckedLabel:"Jo",
                     checkedLabel:"Po"
                 }
@@ -109,6 +114,7 @@ var myDataGrid = new DataGrid({
                     blockProcessAttr: false,
                     required: true,
                     value: '{checkboxValue}',
+                    checked: '{checkboxValue}',
                     unCheckedLabel:"Jo",
                     checkedLabel:"Po"
                 }

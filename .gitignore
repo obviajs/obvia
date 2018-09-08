@@ -9,3 +9,8 @@ examples/.DS_Store
 .idea/modules.xml
 .idea/vcs.xml
 .idea/workspace.xml
+Archive.jpg
+components.zip
+.vscode/launch.json
+.vscode/taskmarks.json
+components/AutoComplete.OLD.1.js
