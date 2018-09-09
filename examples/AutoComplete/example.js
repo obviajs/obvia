@@ -23,7 +23,8 @@ var myAutoComplete = new AutoCompleteEx({
     remote:{
         getData_Action: "http://139.162.158.49/rca/index.php",
         recordsPerPage: 5
-    }
+    },
+    matchType:StringMatchType.STARTS_WITH
 });
 myAutoComplete.on('creationComplete', function () {
     loader.hide();

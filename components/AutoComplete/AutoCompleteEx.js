@@ -75,6 +75,7 @@ var AutoCompleteEx = KxGenerator.createComponent({
                     _self.trigger('creationComplete');  
                 }
                 _self.tokenInput.$el.on('keydown', _self.tokenInputKeyDown.bind(_self));
+                _self.tokenInput.$el.on('keyup', _self.tokenInputKeyUp.bind(_self));
                         
             });
             _self.tokensRepeater.$el.removeClass('form-group');
@@ -118,6 +119,7 @@ var AutoCompleteEx = KxGenerator.createComponent({
         }).on('blur', function (e) {
             alert("blur");
         }.bind(this));
+        this.suggestionsRepeater.$el.removeClass('form-group');
     },
     removeItem: function(){
         console.log(arguments);
@@ -186,14 +188,24 @@ var AutoCompleteEx = KxGenerator.createComponent({
                         this.openSuggestionsList();
                         e.preventDefault();
                         break;
-                    default:
-                        //TODO:Duhet eventi keyup per kete rast
-                        this.delayQuerySuggestions(this.tokenInput.value);
                 }
             }
     },
+    tokenInputKeyUp: function(e){
+        if(!e.isDefaultPrevented()){
+
+            var inp = String.fromCharCode(e.keyCode);
+            if (/[a-zA-Z0-9-_ ]/.test(inp)){
+                var t = this.delayQuerySuggestions(this.tokenInput.value);
+                //clearTimeout(t);
+            }
+        }
+    },
     querySuggestions: function(toMatch){
         console.log("querySuggestions for: ", toMatch);
+        var ac = differenceOnKeyMatch (this.dataProvider, this._value, this.valueField);
+        this.suggestions = sortBestMatch(ac, toMatch, this.matchType, this.labelField);
+        this.openSuggestionsList();
     },
     /*
     <a href="#" class="inputLink">Did you mean xxyYY?</a>
