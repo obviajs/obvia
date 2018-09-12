@@ -1,7 +1,7 @@
 var flowerCM = window.flowerCM || {};
 //base Components
 rjs.define("./components/base/Selectable.js", "Selectable");
-//TextInput componentttt
+//TextInput component
 rjs.define("./components/Text.js", "TextInput");
 rjs.define("./lib/dependencies/scripts/jquery.inputmask.bundle.min.js", "InputMaskBundle");
 rjs.define("./examples/Text/example.js", "TextExample");
