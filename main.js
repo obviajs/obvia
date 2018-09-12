@@ -1,6 +1,8 @@
 var flowerCM = window.flowerCM || {};
 //base Components
 rjs.define("./components/base/Selectable.js", "Selectable");
+//TextField
+rjs.define("./components/TextField.js", "TextFieldInput");
 //TextInput
 rjs.define("./components/Text.js", "TextInput");
 rjs.define("./lib/dependencies/scripts/jquery.inputmask.bundle.min.js", "InputMaskBundle");
@@ -94,6 +96,9 @@ rjs.define("lib/dependencies/efilemanager/skin-lion/ui.fancytree.css", "FancyTre
 
 //rjs.define("./examples/DataGrid/example.js", "DataGridExample");
 rjs.define("./examples/Image/example.js", "ImageExample");
+//rjs.define("./examples/Text/example.js", "Text");
+
+rjs.define("./examples/TextField/example.js", "TextField");
 //Loader
 var loader = new Loader({ id: 'loader' });
 $('#root').append(loader.render());
@@ -134,6 +139,7 @@ rjs.require([
     "ComboBox",
     "ComboScript",
     "ComboCSS",
+    "TextFieldInput",
     //"GoogleMapScript",
     //"GoogleMap",
     "ToggleCSS",
@@ -156,7 +162,7 @@ rjs.require([
     "Image",
     "ImageExample"
 ], function () {
-    // rjs.define("./examples/AutoComplete/example.js", "AutoComplete");
+     rjs.define("./examples/TextField/example.js", "TextField");
     alert("hello");
     // rjs.define("./examples/CheckBox/example.js", "CheckBoxExample");
     // rjs.define("./examples/RadioButton/example.js", "RadioButtonExample");+
