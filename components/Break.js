@@ -1,5 +1,5 @@
 /**
- * This is a Break Element
+ * This is a Break Element Component
  * 
  * Kreatx 2018
  */
