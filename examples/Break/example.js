@@ -13,7 +13,7 @@ myBreak.on('creationComplete', function(e){
 });
 myBreak.on('load', myBreakLoaded);
 $('#root').append(myBreak.render());
-console.log("break loaded successfully")
+console.log("break loaded successfullyyy")
 
 function myBreakLoaded(e){
     console.log("Break Loaded");

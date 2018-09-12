@@ -4,7 +4,7 @@
  * Kreatx 2018
  */
 
-//component definition
+//component definitionnn
 var Break = KxGenerator.createComponent({
     //component data
     initModel: function () {
