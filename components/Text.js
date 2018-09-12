@@ -7,6 +7,7 @@
 //component definition
 var TextInput = KxGenerator.createComponent({
 
+    value:"",
     //inner component data
     initModel: function () {
         return {
@@ -112,9 +113,8 @@ var TextInput = KxGenerator.createComponent({
     },
     template: function () {
         var html = 
-            (!this.embedded?("<div id='" + this.domID + "-wrapper' class='form-group col-sm-" + this.colspan + " rowspan" + this.rowspan + " resizable '>") : "") +
+            (!this.embedded?("<div id='" + this.domID + "-wrapper' class='"+(this.colspan?"col-sm-" + this.colspan:"")+" form-group rowspan" + this.rowspan + " resizable '>") : "") +
             (!this.embedded?("<label rv-style='versionStyle' rv-for='domID'><b>{label}</b> <span rv-if='required'>*</span></label>") : "") + 
-            (!this.embedded?("<span rv-if='blockProcessAttr' class='block-process'> * </span>") : "") + 
             "<input rv-type='type' " +
             "id='" + this.domID + "' name='" + this.domID + "' rv-value='value' " +
             "class='form-control rowspan" + this.rowspan + "' " +

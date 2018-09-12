@@ -5,7 +5,6 @@ var myAutoComplete = new AutoCompleteEx({
     label: 'Ministrite',
     blockProcessAttr: false,
     required: false,
-    multipleSelection: true,
     valueField: "value",
     labelField: "ministri",
     allowNewItem: false, //allow the user to add items that are not included in the specified dataProvider
@@ -24,10 +23,14 @@ var myAutoComplete = new AutoCompleteEx({
         getData_Action: "http://139.162.158.49/rca/index.php",
         recordsPerPage: 5
     },
+    multiSelect: false,
     matchType:StringMatchType.STARTS_WITH
 });
 myAutoComplete.on('creationComplete', function () {
     loader.hide();
+    myAutoComplete.on('noSuggestionsFound', function (e, toMatch) {
+        console.log("Nothing found for:"+ toMatch);
+    });
 });
 $('#root').append(myAutoComplete.render());
 /*

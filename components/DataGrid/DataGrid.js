@@ -28,9 +28,7 @@ var DataGrid = KxGenerator.createComponent({
             {dataProviderField:this.checkedField, states:{on:true, off:false}}
         ];
         this.direction = this.direction==undefined||this.direction==null?'vertical':this.direction;
-        this.$container = this.$el.find('#' + this.domID + '-container');
-        this.multiselect = (this.multiselect!=undefined && this.multiselect!=null?this.multiselect:true);
-        
+        this.multiSelect = (this.multiSelect?this.multiSelect:false);
     },
 
     registerEvents: function () {
@@ -72,14 +70,10 @@ var DataGrid = KxGenerator.createComponent({
         return this;  
     },
     template: function () {
-        return "<div id='" + this.domID + "-wrapper' class='col-sm-" + this.colspan + " resizable'>" +
-                    "<div id='" + this.domID + "-container' class='card' role='group' style='padding:10px'>" +
-                        "<table class='table' id='" + this.domID + "-table'>"+
-                            "<thead id='" + this.domID + "-header'>"+
-                            "</thead>"+
-                        "</table>"+
-                    "</div>"+
-                "</div>";
+        return "<table class='table' id='" + this.domID + "'>"+
+                    "<thead id='" + this.domID + "-header'>"+
+                    "</thead>"+
+                "</table>";
     },
 
     render: function () {
@@ -87,9 +81,9 @@ var DataGrid = KxGenerator.createComponent({
         var model = this.getModel();
         
         this.$el.trigger('onBeginDraw');
+      
 
-        this.$container = this.$el.find('#' + this.domID + '-container'); 
-        this.$table = this.$el.find('#' + this.domID + '-table'); 
+        this.$table = this.$el.attr('id') == this.domID?this.$el:this.$el.find("#" + this.domID);
         this.$header = this.$el.find('#' + this.domID + '-header'); 
         
         _self.createHeader();
@@ -163,7 +157,7 @@ var DataGrid = KxGenerator.createComponent({
             this.cellItemRenderers[this.editPosition.rowIndex][this.editPosition.columnIndex].show();
         }
 
-        this.editPosition = {"rowIndex":rowIndex, "columnIndex":columnIndex}; 
+        this.editPosition = {"rowIndex":rowIndex, "columnIndex":columnIndex, "column":column, "data":data, "event":1}; 
 
         this.cellItemRenderers[rowIndex][columnIndex].hide();
         var itemEditorInfo = this.cellItemEditors[columnIndex];
@@ -175,14 +169,27 @@ var DataGrid = KxGenerator.createComponent({
             }
             column.itemEditor.props.embedded = true;
             column.itemEditor.props.label = column.headerText; 
-            itemEditor = new column.itemEditor.constructor(column.itemEditor.props);
+            var props = extend(true, true, column.itemEditor.props);
+            delete props["value"];
+            itemEditor = new column.itemEditor.constructor(props);
             itemEditor.parent = this;
             itemEditor.parentType = 'repeater';
             itemEditor.parentForm = this.parentForm;
             itemEditor.$el.css("margin","0px");
-            itemEditor.$el.addClass("form-control-sm");
-            
+            //itemEditor.$el.addClass("form-control-sm");
+            itemEditor.$el.removeClass('form-group');
+            itemEditor.$el.removeClass('form-control');
+            itemEditor.$el.css({"outline":"none", "font-size":"14px"});
+
             this.cellItemEditors[columnIndex] = {"itemEditor":itemEditor, "rowIndex":rowIndex}; 
+
+            itemEditor.on('creationComplete', function(){
+
+                if (typeof itemEditor['focus'] === "function") { 
+                    // safe to use the function
+                    itemEditor.focus();
+                }
+            });    
         }else
         {
             itemEditor = itemEditorInfo.itemEditor;
@@ -190,10 +197,9 @@ var DataGrid = KxGenerator.createComponent({
             if(itemEditorInfo.rowIndex != rowIndex)
             {
                 itemEditorInfo.rowIndex = rowIndex;
-                //itemEditor.$el.remove();
                 itemEditor.$el.detach();
+                //itemEditor.$el.detach();
             }
-            
         }
         var _self = this;
         itemEditor.on('blur', (function(rowIndex, columnIndex, column, data){
@@ -208,6 +214,7 @@ var DataGrid = KxGenerator.createComponent({
                 e.preventDefault();
                 switch (e.keyCode) {
                     case 13: // ENTER - apply value
+                        console.log("finished editing");
                         _self.cellEditFinished(rowIndex, columnIndex, column, data, true);
                         break;
                     case 27: // ESC - get back to old value
@@ -233,16 +240,17 @@ var DataGrid = KxGenerator.createComponent({
         }else
             itemEditor.setValue(column.itemEditor.props["value"] || data[column.dataField]);
         
-
-        itemEditor.on('creationComplete', function(){
-
+        
+        this.cells[rowIndex][columnIndex].append(itemEditor.render());
+        itemEditor.show();
+        if(itemEditorInfo != undefined)
+        {
             if (typeof itemEditor['focus'] === "function") { 
                 // safe to use the function
                 itemEditor.focus();
             }
-        });    
-        this.cells[rowIndex][columnIndex].append(itemEditor.render());
-        itemEditor.show();
+        }
+        
       
         
     },
@@ -255,6 +263,7 @@ var DataGrid = KxGenerator.createComponent({
         if(applyEdit){
             this.dataProvider[column.dataField] = itemEditor.getValue();
         }
+        this.editPosition.event = 2;
     },
     cellItemRenderers:[[]],
     cellItemEditors:[],

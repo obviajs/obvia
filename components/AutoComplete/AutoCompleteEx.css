@@ -1,1 +1,2 @@
-.inputLink{ left:5px; position:absolute; top:5px; z-index:5; }
+.inputLink{ left:5px; position:relative; z-index:5; font-size: 14px;}
+/*.innerWidth() left: -(vleren e innerWidth)*/

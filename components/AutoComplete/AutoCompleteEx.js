@@ -15,6 +15,7 @@ var AutoCompleteEx = KxGenerator.createComponent({
 
     beforeAttach: function () {
         this.delayQuerySuggestions = debounce(this.querySuggestions, 400);
+        this.delayRemoveTokenItemAt = debounce(this.removeTokenItemAt, 200);
         this.cComponents = [];
         var _self = this;
         this.countChildren = 2;
@@ -22,7 +23,7 @@ var AutoCompleteEx = KxGenerator.createComponent({
         this.$input = this.$el.attr('id') == this.domID?this.$el:this.$el.find("#" + this.domID);
         this.$tokenContainer = this.$el.find("#" + this.domID+"_tokenContainer");
         this.$suggestionsDropDown = this.$el.find("#" + this.domID+"_suggestionsDropDown");
-        
+        this.$suggestionsDropDown.css({'left':'inherit', 'top':'inherit'});
 
         if(this.tokenRenderer==null||this.tokenRenderer==undefined){
             this.tokenRenderer = {
@@ -116,9 +117,13 @@ var AutoCompleteEx = KxGenerator.createComponent({
             dataProvider: this.suggestions,
             components: [this.suggestionRenderer],
             parent: _self
-        }).on('blur', function (e) {
+        })
+        .on('blur', function (e) {
             alert("blur");
-        }.bind(this));
+        }.bind(this))
+        .on('creationComplete', function(e){
+            e.stopPropagation();
+        });
         this.suggestionsRepeater.$el.removeClass('form-group');
     },
     removeItem: function(){
@@ -155,8 +160,10 @@ var AutoCompleteEx = KxGenerator.createComponent({
 
         if(!e.isDefaultPrevented()){
             switch (e.keyCode) {
+                case 9:
                 case 13: // ENTER - apply value
                     console.log("DD ENTER");
+                    //e.preventDefault();
                     break;
                 case 27: // ESC - get back to old value
                     console.log("DD ESCAPE");
@@ -183,7 +190,7 @@ var AutoCompleteEx = KxGenerator.createComponent({
                         console.log("TAB");
                         break;
                     case 40: // TAB - apply and move to next column on the same row 
-                        console.log("DOWN Array");
+                        console.log("DOWN Arrow");
                         this.suggestions  = differenceOnKeyMatch (this.dataProvider, this._value, this.valueField);
                         this.openSuggestionsList();
                         e.preventDefault();
@@ -198,6 +205,11 @@ var AutoCompleteEx = KxGenerator.createComponent({
             if (/[a-zA-Z0-9-_ ]/.test(inp)){
                 var t = this.delayQuerySuggestions(this.tokenInput.value);
                 //clearTimeout(t);
+            }else if(e.keyCode == 8) {
+                if(this.tokenInput.value == ""){
+                    this.delayRemoveTokenItemAt(this.value.length-1);
+                }
+
             }
         }
     },
@@ -212,7 +224,7 @@ var AutoCompleteEx = KxGenerator.createComponent({
     */
     suggestions:[],
     openSuggestionsList: function(){
-        //sugesstions found
+        //suggestions found
         if(this.suggestions.length>0)
         {
             this.suggestionsRepeater.dataProvider = this.suggestions;
@@ -220,9 +232,13 @@ var AutoCompleteEx = KxGenerator.createComponent({
             if(this.suggestionsRepeater.$el!=undefined)
                 this.suggestionsRepeater.$el.detach();
             this.$suggestionsDropDown.append(this.suggestionsRepeater.render());
+            this.$suggestionsDropDown.addClass('show');
+            this.$suggestionsDropDown.attr('aria-expanded', true);
+        }else
+        {
+            this.tokenInput.$el.attr('placeholder','No results found :(').delay(1000).queue(function(n) {$(this).attr('placeholder','Type something...');n();});
+            this.trigger("noSuggestionsFound", [this.tokenInput.value]);
         }
-        this.$suggestionsDropDown.addClass('show');
-        this.$suggestionsDropDown.attr('aria-expanded', true);
        // myAutoComplete.suggestionsRepeater.rowItems[0]['suggestion'].$el.focus();
     },
     closeSuggestionsList: function(){
@@ -233,12 +249,24 @@ var AutoCompleteEx = KxGenerator.createComponent({
     tokenRendererCloseIconClickHandler: function(e, repeaterEventArgs){
         console.log(repeaterEventArgs);
         //"this" refers to the components in the repeater
-        this.parent.parent.removeItemAt(repeaterEventArgs.currentIndex);
+        var acEx = this.parent.parent;
+        acEx.removeTokenItemAt(repeaterEventArgs.currentIndex);
+        acEx.tokenInput.$el.focus();
     },
     suggestionRendererClickHandler: function(e, repeaterEventArgs){
         console.log(repeaterEventArgs);
-        this.parent.parent.addItems(repeaterEventArgs.currentItem);
-        this.parent.parent.closeSuggestionsList();
+        //this.parent.parent.addTokenItems(repeaterEventArgs.currentItem);
+        var acEx = this.parent.parent;
+        if(acEx.multiSelect){
+            //TODO:check because concat will return a new value
+            acEx.value = acEx.value.concat([repeaterEventArgs.currentItem]);
+        }else{
+            acEx.value = repeaterEventArgs.currentItem;
+        }
+
+        acEx.removeSuggestionItemAt(repeaterEventArgs.currentIndex);
+        acEx.closeSuggestionsList();
+        acEx.tokenInput.$el.focus();
     },
     suggestionRendererDoubleClickHandler: function(e, repeaterEventArgs){
         console.log(repeaterEventArgs);
@@ -246,7 +274,7 @@ var AutoCompleteEx = KxGenerator.createComponent({
     suggestionRendererMouseDownHandler: function(e, repeaterEventArgs){
         console.log(repeaterEventArgs);
     },
-    addItems: function(items) {
+    addTokenItems: function(items) {
         if(typeof(items)==="object" && !(items instanceof Array)){
             items = [items];
         }
@@ -279,7 +307,15 @@ var AutoCompleteEx = KxGenerator.createComponent({
         }
         
     },
-    removeItemAt: function(index){
+    removeSuggestionItemAt: function(index){
+        //TODO: If we are going to keep item ordering in the view the save as in value
+        if(index>=0 && index<this.suggestions.length){
+            this.suggestionsRepeater.removeRow(index+1, false, false); 
+            //this._value.splice(index, 1);
+        }else
+            console.log("Index out of range. No item will be removed.");
+    },
+    removeTokenItemAt: function(index){
         //TODO: If we are going to keep item ordering in the view the save as in value
         if(index>=0 && index<this._value.length){
             this.tokensRepeater.removeRow(index+1, false, false); 
@@ -287,7 +323,7 @@ var AutoCompleteEx = KxGenerator.createComponent({
         }else
             console.log("Index out of range. No item will be removed.");
     },
-    removeItems: function(items){
+    removeTokenItems: function(items){
         if(typeof(items)==="object" && !(items instanceof Array)){
             items = [items];
         }
@@ -301,27 +337,30 @@ var AutoCompleteEx = KxGenerator.createComponent({
         }    
         
     },
-    removeAllItems: function(){
+    removeAllTokenItems: function(){
         this.tokensRepeater.removeAllRows();
         this._value = [];
     },
     _value: [],
     set value(v){
-        if(typeof(v)==="object" && !(v instanceof Array)){
-            v = [v];
-        }
-        if(!this._value.equals(v))
-        {
-            if(this.tokensRepeater)
+        if(v){
+            if(typeof(v)==="object" && !(v instanceof Array)){
+                v = [v];
+            }
+            if(!this._value.equals(v))
             {
-                var itemsToRemove = differenceOnKeyMatch(this._value, v, this.valueField) //value;
-                this.removeItems(itemsToRemove);  
-                this.addItems(v);
-                //this._value = v;
+                //is the tokenRepeater rendered yet ? 
+                if(this.tokensRepeater && this.tokensRepeater.$container)
+                {
+                    var itemsToRemove = differenceOnKeyMatch(this._value, v, this.valueField) //value;
+                    this.removeTokenItems(itemsToRemove);  
+                    this.addTokenItems(v);
+                    //this._value = v;
 
-                this.trigger('change');
-            }else
-                this._value = v;
+                    this.trigger('change');
+                }else
+                    this._value.splicea(0, this._value.length, v);
+            }
         }
     },
     get value(){
@@ -396,9 +435,8 @@ var AutoCompleteEx = KxGenerator.createComponent({
 
     template: function () {
         var html = 
-                         "<div id='" + this.domID + "-wrapper' class='form-group col-sm-" + this.colspan + " rowspan" + this.rowspan + " resizable'>"+
+                         "<div id='" + this.domID + "-wrapper' class='"+(this.colspan?"col-sm-" + this.colspan:"")+ " form-group rowspan" + this.rowspan + " resizable'>"+
         (!this.embedded?("<label rv-style='versionStyle' rv-for='domID'><b>{label}</b> <span rv-if='required'>*</span></label>") : "") +
-        (!this.embedded?("<span rv-if='model.blockProcessAttr' class='block-process'> * </span>") : "") +
                             "<select type='hidden' style='display:none' name='" + this.domID + "[]' id='" + this.domID + "_select'></select>" +                          
                             '<div id="'+ this.domID + '_tokenContainer" class="border"></div>'+
                             '<div id="'+ this.domID + '_suggestionsDropDown" class="dropdown-menu" role="menu">'+
@@ -408,7 +446,10 @@ var AutoCompleteEx = KxGenerator.createComponent({
     },
 
     render: function () {
-        this.$tokenContainer.append(this.tokensRepeater.render());
+        if(this.tokensRepeater.$container == undefined)
+        {
+            this.$tokenContainer.append(this.tokensRepeater.render());
+        }
         return this.$el;
     }
 });

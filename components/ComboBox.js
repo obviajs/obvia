@@ -43,7 +43,7 @@ var ComboBoxInit = {
     },
 
     beforeAttach: function () {
-        this.$input = this.$el.find('#' + this.domID)
+        this.$input = this.$el.attr('id') == this.domID?this.$el:this.$el.find("#" + this.domID);
         this.$popup = this.$el.find('#' + this.domID + ' _popup');
     },
 
@@ -65,7 +65,7 @@ var ComboBoxInit = {
     afterAttach: function (e) {
         var _self = this;
         
-        if (e.target.id == this.domID + '-wrapper' && !this.attached) {
+        if (e.target.id == this.$el.attr('id') && !this.attached) {
             var element = "#" + this.domID;
             KxRequest.promise(this.getData(this.dataProvider)).done(function (result) {
                 if (typeof result == "string")
@@ -161,12 +161,11 @@ var ComboBoxInit = {
     },
 
     template: function () {
-        return "<div id='" + this.domID + "-wrapper' class='col-sm-" + this.colspan + " form-group rowspan" + this.rowspan + " resizable'>" +
-                    "<div id='" + this.domID + "-block'>" +
-                    "<label rv-style='versionStyle' rv-for='fieldName'><b>{label}</b> <span rv-if='required'>*</span></label>" +
-                    "<span rv-if='blockProcessAttr' class='block-process'> * </span>" +
+        return 
+        (!this.embedded?("<div id='" + this.domID + "-wrapper' class='"+(this.colspan?"col-sm-" + this.colspan:"")+" form-group rowspan" + this.rowspan + " resizable'>"):"") +
+        (!this.embedded?("<label rv-style='versionStyle' rv-for='fieldName'><b>{label}</b> <span rv-if='required'>*</span></label>"):"") +
                     "<select class='form-control' name='" + this.domID + "[]' control-blocked='controlBlocked' style='min-width: 250px;' id='" + this.domID + "'></select>" +
-                "</div>";
+        (!this.embedded?("</div>"):"");
     },
 
     render: function () {

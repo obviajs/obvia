@@ -15,12 +15,11 @@ var DateTimeCb = KxGenerator.createComponent({
         return {
             label: this.label + ((this.mode == "date") ? " (Dite/Muaj/Vit)" :
                 (this.mode == "time") ? " (Ore/min/sek)" : " (Dite/Muaj/Vit Ore/min/sek)"),
-            blockProcessAttr: this.required ? false : this.blockProcessAttr
         }
     },
 
     beforeAttach: function () {
-        this.$dateContainer = this.$el.find("#dateContainer-" + this.domID);
+        this.$dateContainer = this.$el.attr('id') == this.domID?this.$el:this.$el.find("#" + this.domID);
     },
 
     registerEvents: function () {
@@ -96,6 +95,7 @@ var DateTimeCb = KxGenerator.createComponent({
             textField: "text",
             valueField: "value",
             value: value,
+            embedded:true
         });
 
         this.daySelect.on('creationComplete', function (e) {
@@ -119,6 +119,7 @@ var DateTimeCb = KxGenerator.createComponent({
             textField: "text",
             valueField: "value",
             value: value,
+            embedded:true
         });
 
         this.monthSelect.on('creationComplete', function (e) {
@@ -141,6 +142,7 @@ var DateTimeCb = KxGenerator.createComponent({
             textField: "text",
             valueField: "value",
             value: value,
+            embedded:true
         });
 
         this.yearSelect.on('creationComplete', function (e) {
@@ -163,6 +165,7 @@ var DateTimeCb = KxGenerator.createComponent({
             textField: "text",
             valueField: "value",
             value: value,
+            embedded:true
         });
 
         this.hourSelect.on('creationComplete', function (e) {
@@ -185,6 +188,7 @@ var DateTimeCb = KxGenerator.createComponent({
             textField: "text",
             valueField: "value",
             value: value,
+            embedded:true
         });
 
         this.minSelect.on('creationComplete', function (e) {
@@ -207,6 +211,7 @@ var DateTimeCb = KxGenerator.createComponent({
             textField: "text",
             valueField: "value",
             value: value,
+            embedded:true
         });
 
         this.secSelect.on('creationComplete', function (e) {
@@ -252,7 +257,7 @@ var DateTimeCb = KxGenerator.createComponent({
 
     afterAttach: function (e) {
         // console.log(e);
-        if (e.target.id == this.domID + '-wrapper' && !this.attached) {
+        if (e.target.id == this.$el.attr('id') && !this.attached) {
             this.attached = true;
 
             var day, month, year, hour, min;
@@ -348,15 +353,12 @@ var DateTimeCb = KxGenerator.createComponent({
     },
 
     template: function () {         
-        return "<div id='" + this.domID + "-wrapper' class='form-group col-sm-" + this.colspan + " rowspan" + this.rowspan + " resizable'>" +
-                    "<div id='" + this.domID + "-block'>" + 
-                        "<label rv-style='versionStyle' rv-for='domID'><b>{model.label}</b> <span rv-if='required'>*</span></label>" + 
-                        "<span rv-if='model.blockProcessAttr' class='block-process'> * </span>" + 
-                            "<div id='dateContainer-" + this.domID + "' style='width: 100% !important; float: left;'>" + 
-                            
+        return 
+                (!this.embedded?("<div id='" + this.domID + "-wrapper' class='"+(this.colspan?"col-sm-" + this.colspan:"")+" form-group rowspan" + this.rowspan + " resizable'>"):"") +
+                (!this.embedded?("<label rv-style='versionStyle' rv-for='domID'><b>{model.label}</b> <span rv-if='required'>*</span></label>"):"") + 
+                            "<div id='" + this.domID + "' style='width: 100% !important; float: left;'>" +                            
                             "</div>" +
-                    "</div>" +
-                "</div>";    
+                (!this.embedded?("</div>"):"");    
     },
  
     render: function () {

@@ -11,6 +11,8 @@ rjs.define("./components/Form.js", "Form");
 rjs.define("./components/Button.js", "Button");
 //Label
 rjs.define("./components/Label.js", "Label");
+//Link
+rjs.define("./components/Link.js", "Link");
 //Repeater
 rjs.define("./components/Repeater.js", "Repeater");
 //List
@@ -27,6 +29,8 @@ rjs.define("./components/RadioGroup.js", "RadioGroup");
 rjs.define("./components/HierarchicalTree.js", "HierarchicalTree");
 //Amount
 rjs.define("./components/Amount.js", "Amount");
+//Image
+rjs.define("./components/Image.js", "Image");
 //TextArea
 livespell___installPath = window.location.origin + "/resources/inner_resources/scripts/plugins/SpellCheck/";
 //rjs.define("lib/dependencies/scripts/plugins/SpellCheck/include.js", "SpellCheckJS");
@@ -86,7 +90,10 @@ rjs.define("./components/Spacer.js", "Spacer");
 //rjs.define("https://cdnjs.cloudflare.com/ajax/libs/jquery.fancytree/2.28.1/jquery.fancytree-all-deps.js", "FancyTreeScript");
 rjs.define("lib/dependencies/efilemanager/skin-lion/ui.fancytree.css", "FancyTreeCSS");
 
-rjs.define("./examples/AutoComplete/example.js", "AutoComplete");
+//rjs.define("./examples/AutoComplete/example.js", "AutoComplete");
+
+//rjs.define("./examples/DataGrid/example.js", "DataGridExample");
+rjs.define("./examples/Image/example.js", "ImageExample");
 //Loader
 var loader = new Loader({ id: 'loader' });
 $('#root').append(loader.render());
@@ -101,6 +108,7 @@ rjs.require([
     "List",
     "Amount",
     "Label",
+    "Link",
     "TextInput", 
     "InputMaskBundle",
     "TextArea",
@@ -145,9 +153,10 @@ rjs.require([
     "FancyTreeCSS",
     "FormUpload",
     "Spacer",
-    "AutoComplete"
+    "Image",
+    "ImageExample"
 ], function () {
-   //js.define("./examples/AutoComplete/example.js", "AutoComplete");
+    // rjs.define("./examples/AutoComplete/example.js", "AutoComplete");
     alert("hello");
     // rjs.define("./examples/CheckBox/example.js", "CheckBoxExample");
     // rjs.define("./examples/RadioButton/example.js", "RadioButtonExample");+
@@ -163,6 +172,5 @@ rjs.require([
 	//rjs.define("./examples/Repeater/example.js", "RepeaterExample");
     //rjs.define("./examples/ComboBox/example.js", "ComboBoxExample");
     //rjs.define("./examples/List/example.js", "ListExample");
-    //rjs.define("./examples/DataGrid/example.js", "DataGridExample");
 
 }, flowerCM);

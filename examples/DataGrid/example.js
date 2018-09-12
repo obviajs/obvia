@@ -41,15 +41,15 @@ var myDataGrid = new DataGrid({
             editable:true,
 
             itemEditor:{
-                constructor: AutoComplete,
+                constructor: AutoCompleteEx,
                 props: {
                     id: 'autocomplete',
-                    colspan: '6',
+                    embedded: true,
                     label: '{autocompleteLabel}',
                     fieldName: 'autocomplete',
                     blockProcessAttr: false,
                     required: false,
-                    multipleSelection: true,
+                    multiSelect: false,
                     valueField: "id",
                     labelField: "text",
                     dataProvider: [{ "id": "1", "text": "Ministria e Puneve te Jashtme" }, { "id": "2", "text": "Ministria e Drejtesise" }, { "id": "3", "text": "Ministria e Brendshme" }],
@@ -71,7 +71,7 @@ var myDataGrid = new DataGrid({
                 constructor: TextInput,
                 props: {
                     id: 'text',
-                    colspan: '6',
+                    embedded: true,
                     label: '{textLabel}',
                     fieldName: 'text',
                     blockProcessAttr: false,
@@ -91,7 +91,7 @@ var myDataGrid = new DataGrid({
                 constructor: CheckBox,
                 props: {
                     id: 'checkbox',
-                    colspan: '6',
+                    embedded: true,
                     label: 'Vertete',
                     fieldName: 'checkbox',
                     blockProcessAttr: false,
@@ -108,7 +108,7 @@ var myDataGrid = new DataGrid({
                 constructor: CheckBox,
                 props: {
                     id: 'checkbox',
-                    colspan: '6',
+                    embedded: true,
                     label: 'Aktiv',
                     fieldName: 'checkbox',
                     blockProcessAttr: false,

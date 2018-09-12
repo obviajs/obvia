@@ -48,7 +48,7 @@ var DateTime = KxGenerator.createComponent({
     },
 
     beforeAttach: function () {
-        this.$input = this.$el.find("#" + this.domID);
+        this.$input = this.$el.attr('id') == this.domID?this.$el:this.$el.find("#" + this.domID);
     },
 
     afterAttach: function (e) {
@@ -108,16 +108,14 @@ var DateTime = KxGenerator.createComponent({
     },
 
     template: function () {         
-        return "<div id='" + this.domID + "-wrapper' class='form-group col-sm-" + this.colspan + " resizable'>" +
-                    "<div id='" + this.domID + "-block'>" + 
-                        "<label rv-style='versionStyle' rv-for='id'><b>{label}</b> <span rv-if='required'>*</span></label>" + 
-                        "<span rv-if='model.blockProcessAttr' class='block-process'> * </span>" + 
+        return 
+        (!this.embedded?("<div id='" + this.domID + "-wrapper' class='"+(this.colspan?"col-sm-" + this.colspan:"")+" form-group resizable'>"):"") +
+        (!this.embedded?("<label rv-style='versionStyle' rv-for='id'><b>{label}</b> <span rv-if='required'>*</span></label>"):"") + 
                             "<input type='text'" + 
                                 "id='" + this.domID + "' name='" + this.domID + "' rv-value='value'" +
                                 "class='form-control rowspan"+ this.rowspan +"'" +
                                 "rv-placeholder='label' rv-enabled='model.enabled'/>" +
-                    "</div>" +
-                "</div>";    
+        (!this.embedded?("</div>"):"");    
     },
  
     render: function () {

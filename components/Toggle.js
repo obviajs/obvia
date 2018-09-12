@@ -19,7 +19,7 @@ var Toggle = KxGenerator.createComponent({
         if (this.value == "1")
             this.value = true;
         
-        this.$input = this.$el.find("#" + this.domID);
+        this.$input = this.$el.attr('id') == this.domID?this.$el:this.$el.find("#" + this.domID);
     },
 
     registerEvents: function () {
@@ -62,21 +62,11 @@ var Toggle = KxGenerator.createComponent({
     },
 
     template: function () {
-        return "<div id='" + this.domID + "-wrapper' class='form-group col-sm-" + this.colspan + " rowspan" + this.rowspan +" resizable'>" +
-                    "<div id='" + this.domID + "-block'>" +
-                        "<label rv-style='versionStyle' rv-for='id'><b>{label}</b><span rv-if='required'>*</span></label>" +
-                        "<div class=''>" +
+        return 
+        (!this.embedded?("<div id='" + this.domID + "-wrapper' class='"+(this.colspan?"col-sm-" + this.colspan:"")+" form-group rowspan" + this.rowspan +" resizable'>"):"")+
+        (!this.embedded?("<label rv-style='versionStyle' rv-for='id'><b>{label}</b><span rv-if='required'>*</span></label>"):"")+
                             "<input type='checkbox' rv-checked='value' switch-toggle='toggle' data-on='"+this.checkedLabel+"' data-off='"+this.unCheckedLabel+"'+ data-style='slow'  id='"+this.domID+"'  name='" + this.domID + "'/>"+
-                        "</div>" +
-                        "<div class='col-sm-10' style='padding-left:20px;'>" +
-                            "<div style='padding-top: 5px;'>" +
-                                "<div>"+
-                                    "<span rv-if='model.blockProcessAttr' class='block-process'> * </span>" +
-                                "</div>" +
-                            "</div>" +
-                        "</div>" +
-                    "</div>" +
-                "</div>";
+        (!this.embedded?("</div>"):"");
     },
 
     render: function () {

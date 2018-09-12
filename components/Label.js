@@ -15,7 +15,7 @@ var Label = KxGenerator.createComponent({
     },
 
     beforeAttach: function () {
-        this.$label = this.$el.find("label"); 
+        this.$label = this.$el.attr('id') == this.domID?this.$el:this.$el.find("#" + this.domID);
     },
 
     registerEvents: function () {
@@ -49,9 +49,10 @@ var Label = KxGenerator.createComponent({
     },
 
     template: function () {         
-        return  "<div id='" + this.domID + "-wrapper' rv-class='model.class' rv-style='model.style'>"+
-                    "<label><b>{label}</b></label>"+
-                "</div>";    
+        return  
+        (!this.embedded?("<div id='" + this.domID + "-wrapper' rv-class='model.class' rv-style='model.style'>"):"")+
+                    "<label id='" + this.domID + "'><b>{label}</b></label>"+
+        (!this.embedded?("</div>"):"");    
     },
 
     render: function () {

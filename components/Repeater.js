@@ -513,7 +513,7 @@ var Repeater = KxGenerator.createComponent({
     },
 
     template: function () {
-        return "<div id='" + this.domID + "-wrapper' class='"+(this.colspan!=undefined?"col-sm-" + this.colspan:"")+ " form-group rowspan" + this.rowspan + " resizable'>" +
+        return "<div id='" + this.domID + "-wrapper' class='"+(this.colspan?"col-sm-" + this.colspan:"")+ " form-group rowspan" + this.rowspan + " resizable'>" +
     (!this.embedded?("<label><b>{label}</b></label>"):"") +    
                     "<div id='" + this.domID + "-container'></div>" +  
     (this.rendering.actions?("<div id='actions_" + this.domID  + "' class='col-sm-offset-10 col-sm-2 px-0 float-right' style='overflow:hidden;'>" +

@@ -15,7 +15,7 @@ var Select = KxGenerator.createComponent({
     },
 
     beforeAttach: function () {
-        this.$select = this.$el.find("#" + this.domID);
+        this.$select = this.$el.attr('id') == this.domID?this.$el:this.$el.find("#" + this.domID);
     },
     
     registerEvents: function () {
@@ -43,11 +43,11 @@ var Select = KxGenerator.createComponent({
     },
 
     template: function () {         
-        return  "<div id='" + this.domID + "-wrapper'>" + 
-                    "<label rv-if='label'><b>{label}</b></label>" +             
+        return  (!this.embedded?("<div id='" + this.domID + "-wrapper' class='"+(this.colspan?"col-sm-" + this.colspan:"")+" form-group rowspan" + this.rowspan + " resizable '>"):"") + 
+                (!this.embedded?("<label rv-if='label'><b>{label}</b></label>"):"") +             
                     "<select rv-enabled='model.enabled' rv-class='model.class' id='" + this.domID + "'>" +
                     "</select>" +
-                "</div>";    
+                (!this.embedded?("</div>"):"");    
     },
 
     setValue: function (value) {
