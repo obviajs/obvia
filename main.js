@@ -1,10 +1,11 @@
 var flowerCM = window.flowerCM || {};
 //base Components
 rjs.define("./components/base/Selectable.js", "Selectable");
-//TextInput component
+//TextField
+rjs.define("./components/TextField.js", "TextFieldInput");
+//TextInput
 rjs.define("./components/Text.js", "TextInput");
 rjs.define("./lib/dependencies/scripts/jquery.inputmask.bundle.min.js", "InputMaskBundle");
-rjs.define("./examples/Text/example.js", "TextExample");
 //Form
 rjs.define("lib/dependencies/scripts/bootstrap-bootbox.js", "BootBox");
 rjs.define("./components/Form.js", "Form");
@@ -32,8 +33,6 @@ rjs.define("./components/HierarchicalTree.js", "HierarchicalTree");
 rjs.define("./components/Amount.js", "Amount");
 //Image
 rjs.define("./components/Image.js", "Image");
-//Break
-rjs.define("./components/Break.js", "Break");
 //TextArea
 livespell___installPath = window.location.origin + "/resources/inner_resources/scripts/plugins/SpellCheck/";
 //rjs.define("lib/dependencies/scripts/plugins/SpellCheck/include.js", "SpellCheckJS");
@@ -93,16 +92,14 @@ rjs.define("./components/Spacer.js", "Spacer");
 //rjs.define("https://cdnjs.cloudflare.com/ajax/libs/jquery.fancytree/2.28.1/jquery.fancytree-all-deps.js", "FancyTreeScript");
 rjs.define("lib/dependencies/efilemanager/skin-lion/ui.fancytree.css", "FancyTreeCSS");
 
+//rjs.define("./examples/AutoComplete/example.js", "AutoComplete");
 
-
-
-rjs.define("./examples/AutoComplete/example.js", "AutoComplete");
-// rjs.define("./examples/DataGrid/example.js", "DataGridExample");
+//rjs.define("./examples/DataGrid/example.js", "DataGridExample");
 rjs.define("./examples/Image/example.js", "ImageExample");
-rjs.define("./examples/Break/example.js", "BreakExample");
+//rjs.define("./examples/Text/example.js", "Text");
+
+rjs.define("./examples/TextField/example.js", "TextField");
 //Loader
-
-
 var loader = new Loader({ id: 'loader' });
 $('#root').append(loader.render());
 loader.show();
@@ -142,6 +139,7 @@ rjs.require([
     "ComboBox",
     "ComboScript",
     "ComboCSS",
+    "TextFieldInput",
     //"GoogleMapScript",
     //"GoogleMap",
     "ToggleCSS",
@@ -162,10 +160,9 @@ rjs.require([
     "FormUpload",
     "Spacer",
     "Image",
-    "BreakExample",
     "ImageExample"
 ], function () {
-    // rjs.define("./examples/AutoComplete/example.js", "AutoComplete");
+     rjs.define("./examples/TextField/example.js", "TextField");
     alert("hello");
     // rjs.define("./examples/CheckBox/example.js", "CheckBoxExample");
     // rjs.define("./examples/RadioButton/example.js", "RadioButtonExample");+
