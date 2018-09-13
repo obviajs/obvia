@@ -77,15 +77,11 @@ var HRule = KxGenerator.createComponent({
 
 
 
-    template: function () {    
-        // a ka nevoje hr per id?     
+    template: function () {        
         return  '<hr id="' + this.domID + '" align="'+this.align +'" size="'+this.size +'"   width="'+this.width +'" >';    
     },
 
     render: function () {
-        if(this.$el.complete){
-            this.trigger('load');
-        }
         return this.$el;
     }
 });
