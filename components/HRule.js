@@ -1,11 +1,11 @@
 /**
- * This is a Break Element Component
+ * This is a HRule Element Component
  * 
  * Kreatx 2018
  */
 
 //component definition
-var Break = KxGenerator.createComponent({
+var HRule = KxGenerator.createComponent({
     //component data
     initModel: function () {
         return {
@@ -15,7 +15,7 @@ var Break = KxGenerator.createComponent({
     },
 
     beforeAttach: function () {
-        this.$break = this.$el;
+        this.$hrule = this.$el;
     },
 
     registerEvents: function () {
@@ -23,19 +23,11 @@ var Break = KxGenerator.createComponent({
             {
                 registerTo: this.$el, events: {
                     'afterAttach': this.afterAttach.bind(this),
-                    'load': this.handlebreakonload.bind(this) 
                 }
             }
         ]
     },
-    handlebreakonload: function(e){
-        if (typeof this.onload == 'function')
-            this.onload.apply(this, arguments);
-
-        if(!e.isDefaultPrevented()){
-            //
-        }
-    },
+   
     afterAttach: function (e) {
         this.trigger('creationComplete');
     },
@@ -99,7 +91,7 @@ var Break = KxGenerator.createComponent({
 });
 
 //component prototype
-Break.type = 'break';
+HRule.type = 'hrule';
 
 //register dom element for this component
-KxGenerator.registerDOMElement(Break, 'kx-break');
+KxGenerator.registerDOMElement(HRule, 'kx-hrule');

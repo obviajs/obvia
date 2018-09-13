@@ -13,6 +13,8 @@ rjs.define("./components/Form.js", "Form");
 rjs.define("./components/Button.js", "Button");
 //Label
 rjs.define("./components/Label.js", "Label");
+//HRule
+rjs.define("./components/HRule.js", "HRule");
 //Link
 rjs.define("./components/Link.js", "Link");
 //Repeater
@@ -96,6 +98,7 @@ rjs.define("lib/dependencies/efilemanager/skin-lion/ui.fancytree.css", "FancyTre
 
 //rjs.define("./examples/DataGrid/example.js", "DataGridExample");
 rjs.define("./examples/Image/example.js", "ImageExample");
+rjs.define("./examples/HRule/example.js", "HRuleExample");
 //rjs.define("./examples/Text/example.js", "Text");
 
 rjs.define("./examples/TextField/example.js", "TextField");
@@ -160,7 +163,9 @@ rjs.require([
     "FormUpload",
     "Spacer",
     "Image",
-    "ImageExample"
+    "ImageExample",
+    "HRule",
+    "HRuleExample"
 ], function () {
      rjs.define("./examples/TextField/example.js", "TextField");
     alert("hello");
