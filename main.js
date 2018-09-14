@@ -2,7 +2,7 @@ var flowerCM = window.flowerCM || {};
 //base Components
 rjs.define("./components/base/Selectable.js", "Selectable");
 //TextField
-rjs.define("./components/TextField.js", "TextFieldInput");
+rjs.define("./components/TextField.js", "TextField");
 //TextInput
 rjs.define("./components/Text.js", "TextInput");
 rjs.define("./lib/dependencies/scripts/jquery.inputmask.bundle.min.js", "InputMaskBundle");
@@ -97,8 +97,8 @@ rjs.define("lib/dependencies/efilemanager/skin-lion/ui.fancytree.css", "FancyTre
 //rjs.define("./examples/AutoComplete/example.js", "AutoComplete");
 
 //rjs.define("./examples/DataGrid/example.js", "DataGridExample");
-rjs.define("./examples/Image/example.js", "ImageExample");
-rjs.define("./examples/HRule/example.js", "HRuleExample");
+ rjs.define("./examples/Image/example.js", "ImageExample");
+ rjs.define("./examples/HRule/example.js", "HRuleExample");
 //rjs.define("./examples/Text/example.js", "Text");
 
 rjs.define("./examples/TextField/example.js", "TextField");
@@ -142,7 +142,7 @@ rjs.require([
     "ComboBox",
     "ComboScript",
     "ComboCSS",
-    "TextFieldInput",
+    "TextField",
     //"GoogleMapScript",
     //"GoogleMap",
     "ToggleCSS",

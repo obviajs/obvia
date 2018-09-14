@@ -59,7 +59,7 @@ var TextField = KxGenerator.createComponent({
                 console.log("===================================");
                 console.log(mask);
                 console.log("===================================");
-               // this.$input.inputmask(mask);
+                this.$input.inputmask(mask);
             }
 
             if (typeof this.onafterAttach == 'function')
@@ -116,7 +116,7 @@ var TextField = KxGenerator.createComponent({
             this._mask= v;
         }
     },
-    get src(){
+    get mask(){
         return this._mask;
     },
 
