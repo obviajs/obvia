@@ -18,8 +18,8 @@ var DataGridColumn = function(p)
         },
         itemEditor: null,
         editable: false,
-        cellStyleFunction: null,
-        cellValueFunction: null
+        oncellstyling: null,
+        oncelleditfinished: null
     };
     var props = extend(false, false, [],[],["itemRenderer", "itemEditor"], _defaultParams, p);
 
@@ -32,6 +32,6 @@ var DataGridColumn = function(p)
     this.itemRenderer = props.itemRenderer;
     this.itemEditor = props.itemEditor;
     this.editable = props.editable;
-    this.cellStyleFunction = props.cellStyleFunction;
-    this.cellValueFunction = props.cellValueFunction;
+    this.oncellstyling = props.oncellstyling;
+    this.oncelleditfinished = props.oncelleditfinished;
 }

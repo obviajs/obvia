@@ -47,9 +47,41 @@ var Link = KxGenerator.createComponent({
     setValue: function (value) {
         this.$el.text(value);
     },
-
+    set hyperlink(v){
+        if(this._hyperlink != v){
+            if(this.$el){
+                this.$el.attr('hyperlink', v);
+            }
+            this._hyperlink = v;
+        }
+    },
+    get hyperlink(){
+        return this._hyperlink;
+    },
+    set target(v){
+        if(this._target != v){
+            if(this.$el){
+                this.$el.attr('target', v);
+            }
+            this._target = v;
+        }
+    },
+    get target(){
+        return this._target;
+    },
+    set label(v){
+        if(this._label != v){
+            if(this.$el){
+                this.$el.attr('target', v);
+            }
+            this._label = v;
+        }
+    },
+    get label(){
+        return this._label;
+    },
     template: function () {         
-        return "<a id='" + this.domID + "-wrapper' href='" + this.hyperlink + "' "+(this.target?"target='" +this.target+"'":"")+ ">" + this.label + "</a>";
+        return "<a id='" + this.domID + "' href='" + this._hyperlink + "' "+(this._target?"target='" +this._target+"'":"")+ ">" + this._label + "</a>";
     },
 
     render: function () {

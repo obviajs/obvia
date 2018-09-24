@@ -1,18 +1,40 @@
-var cellStyleFunction_ex = function(currentItem, rowIndex, colIndex)
+var oncellstyling_ex = function(e, rowIndex, columnIndex, column, data)
 {
     return "css object";
 }
-var cellValueFunction_ex = function(currentItem, rowIndex, colIndex)
+var oncelleditfinished_ex = function(e, rowIndex, columnIndex, column, data, itemEditorInfo)
 {
-    return "object";
+    //e.preventDefault();
+    console.log("oncelleditfinished_ex");
+   // itemEditorInfo.itemEditor
+    //itemEditorInfo.dataProviderValueField
+    var value = itemEditorInfo.itemEditor.getValue();
+    this.dataProvider[rowIndex][itemEditorInfo.dataProviderValueField] = value;
+    //test flash element to get attention if value is not valid and then preventDefault behavior
+    itemEditorInfo.itemEditor.$el.delay(500).fadeTo(100, 0.3, function(){$(this).fadeTo(500,1)});
+   // e.preventDefault();
+
+    var label = "";
+    if(value.length>0)
+    {
+        if(itemEditorInfo.itemEditor["labelField"] && isObject(value[0]) && value[0][itemEditorInfo.itemEditor.labelField])
+        {
+            label = value[0][itemEditorInfo.itemEditor.labelField];
+        }
+    }
+    //e.preventDefault();
+    //this.dataProvider[rowIndex][column.dataField] = value;
+    return label;
 }
-var rowStyleFunction_ex = function(currentItem, rowIndex)
+var onrowstyling_ex = function(e, rowIndex, data)
 {
     return "css object";
 }
 var myDataGrid = new DataGrid({
     id: 'DataGrid',
-    rowStyleFunction:rowStyleFunction_ex,
+    onrowstyling:onrowstyling_ex,
+    allowNewItem: true, //allow the user to add items that are not included in the specified dataProvider
+    rowCount:5, //visible rows count - virtual scrolling wil be applied on scroll
     dataProvider: [
             {
                 id:7,
@@ -27,7 +49,50 @@ var myDataGrid = new DataGrid({
                 ministry_ac: [{ "id": "3", "text": "Ministria e Brendshme" }],
                 textLabel: 'black jack',
                 checkboxValue:false
+            },
+            {
+                id:7,
+                ministry: 'Ministria e Drejtesise',
+                ministry_ac: [{ "id": "2", "text": "Ministria e Drejtesise" }],
+                textLabel: 'metaxa',
+                checkboxValue:true
+            },
+            { 
+                id:5,
+                ministry: 'Ministria e Brendshme',
+                ministry_ac: [{ "id": "3", "text": "Ministria e Brendshme" }],
+                textLabel: 'vodka',
+                checkboxValue:false
+            },
+            {
+                id:7,
+                ministry: 'Ministria e Drejtesise',
+                ministry_ac: [{ "id": "2", "text": "Ministria e Drejtesise" }],
+                textLabel: 'rum',
+                checkboxValue:true
+            },
+            { 
+                id:5,
+                ministry: 'Ministria e Brendshme',
+                ministry_ac: [{ "id": "3", "text": "Ministria e Brendshme" }],
+                textLabel: 'russian standard',
+                checkboxValue:false
+            },
+            {
+                id:7,
+                ministry: 'Ministria e Drejtesise',
+                ministry_ac: [{ "id": "2", "text": "Ministria e Drejtesise" }],
+                textLabel: 'Kremlin Walls',
+                checkboxValue:true
+            },
+            { 
+                id:5,
+                ministry: 'Ministria e Brendshme',
+                ministry_ac: [{ "id": "3", "text": "Ministria e Brendshme" }],
+                textLabel: 'Jacky Qwerty',
+                checkboxValue:false
             }
+
     ],
     columns: [
         {
@@ -35,8 +100,8 @@ var myDataGrid = new DataGrid({
             headerText: "Ministria",
             sortable:true,
             sortInfo:{sortOrder:0, sortDirection:"ASC"},
-            cellStyleFunction:cellStyleFunction_ex,
-            cellValueFunction:cellValueFunction_ex,
+            oncellstyling:oncellstyling_ex,
+            oncelleditfinished: oncelleditfinished_ex,
             itemRenderer:null,
             editable:true,
 
@@ -62,8 +127,8 @@ var myDataGrid = new DataGrid({
             headerText: "Pija Preferuar",
             sortable:false,
             sortInfo:{sortOrder:0, sortDirection:"ASC"},
-            cellStyleFunction:cellStyleFunction_ex,
-            cellValueFunction:cellValueFunction_ex,
+            oncellstyling:oncellstyling_ex,
+            //oncelleditfinished:oncelleditfinished_ex,
             itemRenderer:null,
             editable:true,
 
@@ -85,8 +150,8 @@ var myDataGrid = new DataGrid({
             headerText: "Vertete",
             sortable:false,
             sortInfo:{sortOrder:0, sortDirection:"ASC"},
-            cellStyleFunction:cellStyleFunction_ex,
-            cellValueFunction:cellValueFunction_ex,
+            oncellstyling:oncellstyling_ex,
+            //oncelleditfinished:oncelleditfinished_ex,
             itemRenderer:{
                 constructor: CheckBox,
                 props: {
