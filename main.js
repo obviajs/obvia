@@ -7,6 +7,7 @@ rjs.define("./lib/dependencies/scripts/jquery.inputmask.bundle.min.js", "InputMa
 rjs.define('./lib/dependencies/color-picker/jscolor.js', 'jscolor');
 //Form
 rjs.define("lib/dependencies/scripts/bootstrap-bootbox.js", "BootBox");
+
 rjs.define("./components/Form.js", "Form");
 //Button
 rjs.define("./components/Button.js", "Button");
