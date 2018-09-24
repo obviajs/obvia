@@ -62,11 +62,10 @@ var Toggle = KxGenerator.createComponent({
     },
 
     template: function () {
-        return 
-        (!this.embedded?("<div id='" + this.domID + "-wrapper' class='"+(this.colspan?"col-sm-" + this.colspan:"")+" form-group rowspan" + this.rowspan +" resizable'>"):"")+
+        return (!this.embedded?("<div id='" + this.domID + "-wrapper' class='"+(this.colspan?"col-sm-" + this.colspan:"")+" form-group rowspan" + this.rowspan +" resizable'>"):"")+
         (!this.embedded?("<label rv-style='versionStyle' rv-for='id'><b>{label}</b><span rv-if='required'>*</span></label>"):"")+
                             "<input type='checkbox' rv-checked='value' switch-toggle='toggle' data-on='"+this.checkedLabel+"' data-off='"+this.unCheckedLabel+"'+ data-style='slow'  id='"+this.domID+"'  name='" + this.domID + "'/>"+
-        (!this.embedded?("</div>"):"");
+        (!this.embedded?("</div>"):"");      
     },
 
     render: function () {
