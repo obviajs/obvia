@@ -1,6 +1,8 @@
 var flowerCM = window.flowerCM || {};
 //base Components
 rjs.define("./components/base/Selectable.js", "Selectable");
+//TextField
+rjs.define("./components/TextField.js", "TextField");
 //TextInput
 rjs.define("./components/Text.js", "TextInput");
 rjs.define("./lib/dependencies/scripts/jquery.inputmask.bundle.min.js", "InputMaskBundle");
@@ -11,6 +13,8 @@ rjs.define("./components/Form.js", "Form");
 rjs.define("./components/Button.js", "Button");
 //Label
 rjs.define("./components/Label.js", "Label");
+//HRule
+rjs.define("./components/HRule.js", "HRule");
 //Link
 rjs.define("./components/Link.js", "Link");
 //Repeater
@@ -88,6 +92,15 @@ rjs.define("./components/Spacer.js", "Spacer");
 //rjs.define("https://cdnjs.cloudflare.com/ajax/libs/jquery.fancytree/2.28.1/jquery.fancytree-all-deps.js", "FancyTreeScript");
 rjs.define("lib/dependencies/efilemanager/skin-lion/ui.fancytree.css", "FancyTreeCSS");
 
+//rjs.define("./examples/AutoComplete/example.js", "AutoComplete");
+
+//rjs.define("./examples/DataGrid/example.js", "DataGridExample");
+//rjs.define("./examples/Image/example.js", "ImageExample");
+//rjs.define("./examples/Label/example.js", "Label");
+//rjs.define("./examples/HRule/example.js", "HRuleExample");
+//rjs.define("./examples/Text/example.js", "Text");
+
+//rjs.define("./examples/TextField/example.js", "TextField");
 //Loader
 var loader = new Loader({ id: 'loader' });
 $('#root').append(loader.render());
@@ -126,6 +139,7 @@ rjs.require([
     "ComboBox",
     "ComboScript",
     "ComboCSS",
+    "TextField",
     //"GoogleMapScript",
     //"GoogleMap",
     "ToggleCSS",
@@ -145,14 +159,15 @@ rjs.require([
     "FancyTreeCSS",
     "Spacer",
     "Image",
-   // "ImageExample"
+    "HRule",
+    "HRuleExample",
+    "ImageExample"
 ], function () {
     // rjs.define("./examples/AutoComplete/example.js", "AutoCompleteExample");
 
     rjs.define("./examples/DataGrid/example.js", "DataGridExample");
-    //alert("hello");
-
-    //rjs.define("./examples/Image/example.js", "ImageExample");
+    
+    //rjs.define("./examples/TextField/example.js", "TextField");
     // rjs.define("./examples/CheckBox/example.js", "CheckBoxExample");
     // rjs.define("./examples/RadioButton/example.js", "RadioButtonExample");+
     // rjs.define("./examples/CheckBoxGroup/example.js", "CheckBoxGroupExample");

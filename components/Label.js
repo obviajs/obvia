@@ -49,10 +49,10 @@ var Label = KxGenerator.createComponent({
     },
 
     template: function () {         
-        return  
-        (!this.embedded?("<div id='" + this.domID + "-wrapper' rv-class='model.class' rv-style='model.style'>"):"")+
-                    "<label id='" + this.domID + "'><b>{label}</b></label>"+
-        (!this.embedded?("</div>"):"");    
+        return "<label id='" + this.domID + "'><b>{label}</b></label>"; 
+        // (!this.embedded?("<div id='" + this.domID + "-wrapper' rv-class='model.class' rv-style='model.style'>"):"")+
+        //             "<label id='" + this.domID + "'><b>{label}</b></label>"+
+        // (!this.embedded?("</div>"):"");    
     },
 
     render: function () {
