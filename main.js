@@ -13,6 +13,8 @@ rjs.define("./components/Button.js", "Button");
 rjs.define("./components/Label.js", "Label");
 //HRule
 rjs.define("./components/HRule.js", "HRule");
+// Color Picker
+rjs.define("./components/Color.js", "Color");
 //Link
 rjs.define("./components/Link.js", "Link");
 //Repeater
@@ -93,9 +95,10 @@ rjs.define("lib/dependencies/efilemanager/skin-lion/ui.fancytree.css", "FancyTre
 //rjs.define("./examples/AutoComplete/example.js", "AutoComplete");
 
 //rjs.define("./examples/DataGrid/example.js", "DataGridExample");
-//rjs.define("./examples/Image/example.js", "ImageExample");
+rjs.define("./examples/Image/example.js", "ImageExample");
 //rjs.define("./examples/Label/example.js", "Label");
-//rjs.define("./examples/HRule/example.js", "HRuleExample");
+rjs.define("./examples/HRule/example.js", "HRuleExample");
+rjs.define("./examples/Color/example.js", "ColorExample");
 //rjs.define("./examples/Text/example.js", "Text");
 //Loader
 var loader = new Loader({ id: 'loader' });
@@ -154,13 +157,16 @@ rjs.require([
     "FancyTreeCSS",
     "Spacer",
     "Image",
+    "ImageExample",
     "HRule",
     "HRuleExample",
-    "ImageExample"
+    "Color",
+    "ColorExample"
+    
 ], function () {
     // rjs.define("./examples/AutoComplete/example.js", "AutoCompleteExample");
 
-    rjs.define("./examples/DataGrid/example.js", "DataGridExample");
+    // rjs.define("./examples/DataGrid/example.js", "DataGridExample");
     
     // rjs.define("./examples/CheckBox/example.js", "CheckBoxExample");
     // rjs.define("./examples/RadioButton/example.js", "RadioButtonExample");+
