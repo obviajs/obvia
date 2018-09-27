@@ -15,8 +15,8 @@ rjs.define("./components/Label.js", "Label");
 rjs.define("./components/HRule.js", "HRule");
 // Color Picker
 rjs.define("./components/Color.js", "Color");
-//Subreport
-rjs.define("./components/Subreport.js", "Subreport");
+//Container
+rjs.define("./components/Container.js", "Container");
 //Link
 rjs.define("./components/Link.js", "Link");
 //Repeater
@@ -102,7 +102,7 @@ rjs.define("./examples/Image/example.js", "ImageExample");
 //rjs.define("./examples/Label/example.js", "Label");
 rjs.define("./examples/HRule/example.js", "HRuleExample");
 rjs.define("./examples/Color/example.js", "ColorExample");
-rjs.define("./examples/Subreport/example.js", "SubreportExample");
+rjs.define("./examples/Container/example.js", "ContainerExample");
 
 //rjs.define("./examples/Text/example.js", "Text");
 //Loader
@@ -167,8 +167,8 @@ rjs.require([
     "HRuleExample",
     "Color",
     "ColorExample",
-    "Subreport",
-    "SubreportExample"
+    "Container",
+    "ContainerExample"
     
 ], function () {
     // rjs.define("./examples/AutoComplete/example.js", "AutoCompleteExample");
