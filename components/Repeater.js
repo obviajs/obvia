@@ -12,6 +12,7 @@ var Repeater = KxGenerator.createComponent({
     dataProviderKeys: [],
 
     initModel: function () {
+        console.log("Init Model func thirret sa here krijoet nje repeater i ri")
         if(this.defaultItem!=undefined && this.defaultItem!=null){
             this.dataProviderKeys = Object.keys(this.defaultItem);
         }else if(this.dataProvider.length>0){
@@ -45,11 +46,14 @@ var Repeater = KxGenerator.createComponent({
             else
                 dI[key] = "";
         }
-
+        console.log("Default Item is created here",dI)
         return dI;
     },
 
+
+
     registerEvents: function () {
+        console.log("register events is called every time that a repeater is created")
         return ([].concat((this.rendering.actions ? 
         [
             {
@@ -69,53 +73,64 @@ var Repeater = KxGenerator.createComponent({
                 }
             }
         ])));
+        
     },
+
+
+
     containerKeyDown: function(e){
         if (typeof this.keydown == 'function')
             this.keydown.apply(this, arguments);
+            console.log("containerKeyDown")
     
-            if(!e.isDefaultPrevented()){
+            // if(!e.isDefaultPrevented()){
                 
-                switch (e.keyCode) {
-                    case 13: // ENTER - apply value
-                        console.log("Repeater ENTER");
-                        break;
-                    case 27: // ESC - get back to old value
-                        console.log("Repeater ESCAPE");
-                        break;
-                    case 9: // TAB - apply and move to next column on the same row 
-                        console.log("Repeater TAB");
-                        break;
-                    case 40: //  
-                        console.log("Repeater DOWN Arrow");
-                        this.focusComponent(++this.focusedRow, this.focusedComponent);
-                        e.preventDefault();
+            //     switch (e.keyCode) {
+            //         case 13: // ENTER - apply value
+            //             console.log("Repeater ENTER");
+            //             break;
+            //         case 27: // ESC - get back to old value
+            //             console.log("Repeater ESCAPE");
+            //             break;
+            //         case 9: // TAB - apply and move to next column on the same row 
+            //             console.log("Repeater TAB");
+            //             break;
+            //         case 40: //  
+            //             console.log("Repeater DOWN Arrow");
+            //             this.focusComponent(++this.focusedRow, this.focusedComponent);
+            //             e.preventDefault();
                
-                        break;
-                    case 39: // 
-                        console.log("Repeater Right Arrow");
-                        this.focusComponent(this.focusedRow, ++this.focusedComponent);
-                        e.preventDefault();
+            //             break;
+            //         case 39: // 
+            //             console.log("Repeater Right Arrow");
+            //             this.focusComponent(this.focusedRow, ++this.focusedComponent);
+            //             e.preventDefault();
                
-                        break;
-                    case 38: // 
-                        console.log("Repeater Up Arrow");
-                        this.focusComponent(--this.focusedRow, this.focusedComponent);
-                        e.preventDefault();
+            //             break;
+            //         case 38: // 
+            //             console.log("Repeater Up Arrow");
+            //             this.focusComponent(--this.focusedRow, this.focusedComponent);
+            //             e.preventDefault();
                
-                        break;
-                    case 37: // 
-                        console.log("Repeater Left Arrow");
-                        this.focusComponent(this.focusedRow, --this.focusedComponent);
-                        e.preventDefault();
+            //             break;
+            //         case 37: // 
+            //             console.log("Repeater Left Arrow");
+            //             this.focusComponent(this.focusedRow, --this.focusedComponent);
+            //             e.preventDefault();
                
-                        break;
-                }
-            }
+            //             break;
+            //     }
+            // }
     }, 
+
     focusedRow:0,
     focusedComponent:0,
+
     focusComponent: function(rowIndex, cIndex){
+        console.log("focus Component function")
+        console.log("focus component param")
+        console.log(rowIndex) // 0
+        console.log(cIndex) // 0
        
         if(rowIndex>this.dataProvider.length-1)
         {
@@ -151,23 +166,26 @@ var Repeater = KxGenerator.createComponent({
         }
     },
    
-    validate: function () {
-        var _self = this;
-        var valid = true;
-        this.errorList = [];
+    // validate: function () {
+    //     var _self = this;
+    //     var valid = true;
+    //     this.errorList = [];
+    //     console.log("_self",_self)
+    //     this.components.forEach(function (component) {
+    //         _self[component.props.id].forEach(function (instance) {
+    //             if (!instance.validate()) {
+    //                 _self.errorList = _self.errorList.concat(instance.errorList)
+    //                 valid = false;
+    //             }
+    //         });
+    //     });
 
-        this.components.forEach(function (component) {
-            _self[component.props.id].forEach(function (instance) {
-                if (!instance.validate()) {
-                    _self.errorList = _self.errorList.concat(instance.errorList)
-                    valid = false;
-                }
-            });
-        });
+    //     return valid;
+    // },
 
-        return valid;
-    },
 
+
+    
     //handle row add click
     addRowHandler: function () {
         this.addRow(this.defaultItem, this.currentIndex + 1, true)
@@ -176,6 +194,7 @@ var Repeater = KxGenerator.createComponent({
     bindings: {},
     
     dataProviderChanged: function (arrFields) {
+        console.log("dataProviderChanged thirret saapo krijohet nje el repeater")
         if (arrFields.length == 0)
             return;    
         //{"component":cmp, "property":prop, "dataProviderField":dataProviderField, "dataProviderIndex":index}
@@ -214,6 +233,7 @@ var Repeater = KxGenerator.createComponent({
 
     //renders a new row, adds components in stack
     addRow: function (data, index, isPreventable = false, focusOnRowAdd = true) {
+        console.log("addRow func")
         var _self = this;
         index = index || this.rows.length+1;
         var model = this.getModel();
@@ -398,10 +418,13 @@ var Repeater = KxGenerator.createComponent({
         
     },
 
+
+
     //handle row delete click, nese i shtojme te register events remove dhe add kemi mundesine te heqim/shtojme ne cdo index
     //remove dhe add duhet te modifikojne dhe dataProvider - splice
     removeRowHandler: function () {
         this.removeRow(this.currentIndex, true);
+        console.log("removerowHandler")
     },
     rows:[],
     mode:"append", //TODO: prepend will add rows to the beginning, but if we are about to iterate the rows or use rowIndex we need to take this into consideration (using reverse of array is the easiest solution)

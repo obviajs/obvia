@@ -15,10 +15,13 @@ rjs.define("./components/Label.js", "Label");
 rjs.define("./components/HRule.js", "HRule");
 // Color Picker
 rjs.define("./components/Color.js", "Color");
+//Subreport
+rjs.define("./components/Subreport.js", "Subreport");
 //Link
 rjs.define("./components/Link.js", "Link");
 //Repeater
-rjs.define("./components/Repeater.js", "Repeater");
+// rjs.define("./components/Repeater.js", "Repeater");
+
 //List
 rjs.define("./components/List.js", "List");
 //CheckBox
@@ -99,6 +102,8 @@ rjs.define("./examples/Image/example.js", "ImageExample");
 //rjs.define("./examples/Label/example.js", "Label");
 rjs.define("./examples/HRule/example.js", "HRuleExample");
 rjs.define("./examples/Color/example.js", "ColorExample");
+rjs.define("./examples/Subreport/example.js", "SubreportExample");
+
 //rjs.define("./examples/Text/example.js", "Text");
 //Loader
 var loader = new Loader({ id: 'loader' });
@@ -110,7 +115,7 @@ rjs.require([
     "Form",
     "HierarchicalTree",
     "BootBox",
-    "Repeater",
+    // "Repeater",
     "List",
     "Amount",
     "Label",
@@ -161,7 +166,9 @@ rjs.require([
     "HRule",
     "HRuleExample",
     "Color",
-    "ColorExample"
+    "ColorExample",
+    "Subreport",
+    "SubreportExample"
     
 ], function () {
     // rjs.define("./examples/AutoComplete/example.js", "AutoCompleteExample");
