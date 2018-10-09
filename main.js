@@ -94,7 +94,7 @@ rjs.define("lib/dependencies/efilemanager/skin-lion/ui.fancytree.css", "FancyTre
 
 //rjs.define("./examples/AutoComplete/example.js", "AutoComplete");
 
-//rjs.define("./examples/DataGrid/example.js", "DataGridExample");
+rjs.define("./examples/DataGrid/example.js", "DataGridExample");
 //rjs.define("./examples/Image/example.js", "ImageExample");
 //rjs.define("./examples/Label/example.js", "Label");
 //rjs.define("./examples/HRule/example.js", "HRuleExample");
@@ -155,6 +155,7 @@ rjs.require([
     "DataGridCellRenderer",
     "DataGridColumn",
     "DataGrid",
+    "DataGridExample",
    // "FancyTreeScript",
     "FancyTreeCSS",
     "Spacer",
@@ -165,7 +166,6 @@ rjs.require([
 ], function () {
     // rjs.define("./examples/AutoComplete/example.js", "AutoCompleteExample");
 
-    rjs.define("./examples/DataGrid/example.js", "DataGridExample");
     
     //rjs.define("./examples/TextField/example.js", "TextField");
     // rjs.define("./examples/CheckBox/example.js", "CheckBoxExample");

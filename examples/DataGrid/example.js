@@ -4,6 +4,7 @@ var oncellstyling_ex = function(e, rowIndex, columnIndex, column, data)
 }
 var oncelleditfinished_ex = function(e, rowIndex, columnIndex, column, data, itemEditorInfo)
 {
+    var realRowIndex = rowIndex % this.rowCount;
     //e.preventDefault();
     console.log("oncelleditfinished_ex");
    // itemEditorInfo.itemEditor
@@ -11,7 +12,7 @@ var oncelleditfinished_ex = function(e, rowIndex, columnIndex, column, data, ite
     var value = itemEditorInfo.itemEditor.getValue();
     this.dataProvider[rowIndex][itemEditorInfo.dataProviderValueField] = value;
     //test flash element to get attention if value is not valid and then preventDefault behavior
-    itemEditorInfo.itemEditor.$el.delay(500).fadeTo(100, 0.3, function(){$(this).fadeTo(500,1)});
+    //itemEditorInfo.itemEditor.$el.delay(500).fadeTo(100, 0.3, function(){$(this).fadeTo(500,1)});
    // e.preventDefault();
 
     var label = "";
@@ -38,56 +39,280 @@ var myDataGrid = new DataGrid({
     dataProvider: [
             {
                 id:7,
-                ministry: 'Ministria e Drejtesise',
+                ministry: 'Ministria 1',
                 ministry_ac: [{ "id": "2", "text": "Ministria e Drejtesise" }],
                 textLabel: 'jim beam',
                 checkboxValue:true
             },
             { 
                 id:5,
-                ministry: 'Ministria e Brendshme',
+                ministry: 'Ministria 2',
                 ministry_ac: [{ "id": "3", "text": "Ministria e Brendshme" }],
                 textLabel: 'black jack',
                 checkboxValue:false
             },
             {
                 id:7,
-                ministry: 'Ministria e Drejtesise',
+                ministry: 'Ministria 3',
                 ministry_ac: [{ "id": "2", "text": "Ministria e Drejtesise" }],
                 textLabel: 'metaxa',
                 checkboxValue:true
             },
             { 
                 id:5,
-                ministry: 'Ministria e Brendshme',
+                ministry: 'Ministria 4',
                 ministry_ac: [{ "id": "3", "text": "Ministria e Brendshme" }],
                 textLabel: 'vodka',
                 checkboxValue:false
             },
             {
                 id:7,
-                ministry: 'Ministria e Drejtesise',
+                ministry: 'Ministria 5',
                 ministry_ac: [{ "id": "2", "text": "Ministria e Drejtesise" }],
                 textLabel: 'rum',
                 checkboxValue:true
             },
             { 
                 id:5,
-                ministry: 'Ministria e Brendshme',
+                ministry: 'Ministria 6',
                 ministry_ac: [{ "id": "3", "text": "Ministria e Brendshme" }],
                 textLabel: 'russian standard',
                 checkboxValue:false
             },
             {
                 id:7,
-                ministry: 'Ministria e Drejtesise',
+                ministry: 'Ministria 7',
                 ministry_ac: [{ "id": "2", "text": "Ministria e Drejtesise" }],
                 textLabel: 'Kremlin Walls',
                 checkboxValue:true
             },
             { 
                 id:5,
-                ministry: 'Ministria e Brendshme',
+                ministry: 'Ministria 8',
+                ministry_ac: [{ "id": "3", "text": "Ministria e Brendshme" }],
+                textLabel: 'Jacky Qwerty',
+                checkboxValue:false
+            },
+            {
+                id:7,
+                ministry: 'Ministria 9',
+                ministry_ac: [{ "id": "2", "text": "Ministria e Drejtesise" }],
+                textLabel: 'jim beam',
+                checkboxValue:true
+            },
+            { 
+                id:5,
+                ministry: 'Ministria 10',
+                ministry_ac: [{ "id": "3", "text": "Ministria e Brendshme" }],
+                textLabel: 'black jack',
+                checkboxValue:false
+            },
+            {
+                id:7,
+                ministry: 'Ministria 11',
+                ministry_ac: [{ "id": "2", "text": "Ministria e Drejtesise" }],
+                textLabel: 'metaxa',
+                checkboxValue:true
+            },
+            { 
+                id:5,
+                ministry: 'Ministria 12',
+                ministry_ac: [{ "id": "3", "text": "Ministria e Brendshme" }],
+                textLabel: 'vodka',
+                checkboxValue:false
+            },
+            {
+                id:7,
+                ministry: 'Ministria 13',
+                ministry_ac: [{ "id": "2", "text": "Ministria e Drejtesise" }],
+                textLabel: 'rum',
+                checkboxValue:true
+            },
+            { 
+                id:5,
+                ministry: 'Ministria 14',
+                ministry_ac: [{ "id": "3", "text": "Ministria e Brendshme" }],
+                textLabel: 'russian standard',
+                checkboxValue:false
+            },
+            {
+                id:7,
+                ministry: 'Ministria 15',
+                ministry_ac: [{ "id": "2", "text": "Ministria e Drejtesise" }],
+                textLabel: 'Kremlin Walls',
+                checkboxValue:true
+            },
+            { 
+                id:5,
+                ministry: 'Ministria 16',
+                ministry_ac: [{ "id": "3", "text": "Ministria e Brendshme" }],
+                textLabel: 'Jacky Qwerty',
+                checkboxValue:false
+            },
+            {
+                id:7,
+                ministry: 'Ministria 17',
+                ministry_ac: [{ "id": "2", "text": "Ministria e Drejtesise" }],
+                textLabel: 'jim beam',
+                checkboxValue:true
+            },
+            { 
+                id:5,
+                ministry: 'Ministria 18',
+                ministry_ac: [{ "id": "3", "text": "Ministria e Brendshme" }],
+                textLabel: 'black jack',
+                checkboxValue:false
+            },
+            {
+                id:7,
+                ministry: 'Ministria 19',
+                ministry_ac: [{ "id": "2", "text": "Ministria e Drejtesise" }],
+                textLabel: 'metaxa',
+                checkboxValue:true
+            },
+            { 
+                id:5,
+                ministry: 'Ministria 20',
+                ministry_ac: [{ "id": "3", "text": "Ministria e Brendshme" }],
+                textLabel: 'vodka',
+                checkboxValue:false
+            },
+            {
+                id:7,
+                ministry: 'Ministria 21',
+                ministry_ac: [{ "id": "2", "text": "Ministria e Drejtesise" }],
+                textLabel: 'rum',
+                checkboxValue:true
+            },
+            { 
+                id:5,
+                ministry: 'Ministria 22',
+                ministry_ac: [{ "id": "3", "text": "Ministria e Brendshme" }],
+                textLabel: 'russian standard',
+                checkboxValue:false
+            },
+            {
+                id:7,
+                ministry: 'Ministria 23',
+                ministry_ac: [{ "id": "2", "text": "Ministria e Drejtesise" }],
+                textLabel: 'Kremlin Walls',
+                checkboxValue:true
+            },
+            { 
+                id:5,
+                ministry: 'Ministria 24',
+                ministry_ac: [{ "id": "3", "text": "Ministria e Brendshme" }],
+                textLabel: 'Jacky Qwerty',
+                checkboxValue:false
+            },
+            {
+                id:7,
+                ministry: 'Ministria 25',
+                ministry_ac: [{ "id": "2", "text": "Ministria e Drejtesise" }],
+                textLabel: 'jim beam',
+                checkboxValue:true
+            },
+            { 
+                id:5,
+                ministry: 'Ministria 26',
+                ministry_ac: [{ "id": "3", "text": "Ministria e Brendshme" }],
+                textLabel: 'black jack',
+                checkboxValue:false
+            },
+            {
+                id:7,
+                ministry: 'Ministria 27',
+                ministry_ac: [{ "id": "2", "text": "Ministria e Drejtesise" }],
+                textLabel: 'metaxa',
+                checkboxValue:true
+            },
+            { 
+                id:5,
+                ministry: 'Ministria 28',
+                ministry_ac: [{ "id": "3", "text": "Ministria e Brendshme" }],
+                textLabel: 'vodka',
+                checkboxValue:false
+            },
+            {
+                id:7,
+                ministry: 'Ministria 29',
+                ministry_ac: [{ "id": "2", "text": "Ministria e Drejtesise" }],
+                textLabel: 'rum',
+                checkboxValue:true
+            },
+            { 
+                id:5,
+                ministry: 'Ministria 30',
+                ministry_ac: [{ "id": "3", "text": "Ministria e Brendshme" }],
+                textLabel: 'russian standard',
+                checkboxValue:false
+            },
+            {
+                id:7,
+                ministry: 'Ministria 31',
+                ministry_ac: [{ "id": "2", "text": "Ministria e Drejtesise" }],
+                textLabel: 'Kremlin Walls',
+                checkboxValue:true
+            },
+            { 
+                id:5,
+                ministry: 'Ministria 32',
+                ministry_ac: [{ "id": "3", "text": "Ministria e Brendshme" }],
+                textLabel: 'Jacky Qwerty',
+                checkboxValue:false
+            },
+            {
+                id:7,
+                ministry: 'Ministria 33',
+                ministry_ac: [{ "id": "2", "text": "Ministria e Drejtesise" }],
+                textLabel: 'jim beam',
+                checkboxValue:true
+            },
+            { 
+                id:5,
+                ministry: 'Ministria 34',
+                ministry_ac: [{ "id": "3", "text": "Ministria e Brendshme" }],
+                textLabel: 'black jack',
+                checkboxValue:false
+            },
+            {
+                id:7,
+                ministry: 'Ministria 35',
+                ministry_ac: [{ "id": "2", "text": "Ministria e Drejtesise" }],
+                textLabel: 'metaxa',
+                checkboxValue:true
+            },
+            { 
+                id:5,
+                ministry: 'Ministria 36',
+                ministry_ac: [{ "id": "3", "text": "Ministria e Brendshme" }],
+                textLabel: 'vodka',
+                checkboxValue:false
+            },
+            {
+                id:7,
+                ministry: 'Ministria 37',
+                ministry_ac: [{ "id": "2", "text": "Ministria e Drejtesise" }],
+                textLabel: 'rum',
+                checkboxValue:true
+            },
+            { 
+                id:5,
+                ministry: 'Ministria 38',
+                ministry_ac: [{ "id": "3", "text": "Ministria e Brendshme" }],
+                textLabel: 'russian standard',
+                checkboxValue:false
+            },
+            {
+                id:7,
+                ministry: 'Ministria 39',
+                ministry_ac: [{ "id": "2", "text": "Ministria e Drejtesise" }],
+                textLabel: 'Kremlin Walls',
+                checkboxValue:true
+            },
+            { 
+                id:5,
+                ministry: 'Ministria 40',
                 ministry_ac: [{ "id": "3", "text": "Ministria e Brendshme" }],
                 textLabel: 'Jacky Qwerty',
                 checkboxValue:false

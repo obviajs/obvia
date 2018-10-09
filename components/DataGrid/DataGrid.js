@@ -8,7 +8,7 @@
 var DataGrid = KxGenerator.createComponent({
     currentIndex: 1,
     currentItem: {},
-    rowItems: {},
+    rowItems: [],
     dataProviderKeys: [],
     rowIndex:true,
 
@@ -36,7 +36,8 @@ var DataGrid = KxGenerator.createComponent({
             {
                 registerTo: this.$el, events: {
                     'afterAttach': this.afterAttach.bind(this),
-                    'cellEditFinished': this.cellEditFinished.bind(this)
+                    'cellEditFinished': this.cellEditFinished.bind(this),
+                    'cellEdit': this.cellEdit.bind(this)
                 }
             }
         ];
@@ -45,23 +46,76 @@ var DataGrid = KxGenerator.createComponent({
     afterAttach: function (e) {
         if(e.target == this.$el[0]){
             //we now know the parent and element dimensions
-            var avgRowHeight = (this.$table.height() - this.$header.height())/ this.rowCount;
-            var initialHeight = this.dataProvider.length * avgRowHeight;
-            var pos = this.$table.position();
-            var left = pos.left + this.$table.width() - 10;
-            var top = pos.top + this.$header.height();
+            this.avgRowHeight = (this.$table.height() - this.$header.height())/ this.rowCount;
+            this.virtualHeight = this.dataProvider.length * this.avgRowHeight;
 
-            this.$scroller = $("<div/>");//position:"absolute", "top":top+"px", "left":left+"px",
-            this.$scroller.css({border: "1px", opacity:0,  width:"1px", height : initialHeight + "px"});
+            this.bufferedRowsCount = this.rowCount;
+
+            var pos = this.$table.position();
+            var left = pos.left + this.$table.width() - 14;
+            var top = pos.top + this.$header.height();
+            this.realHeight = (this.$table.height()+this.$header.height()-16);
+            this.$message = $("<div>Creating Rows</div>");
+
+            this.$scroller = $("<div/>");
+            this.$scroller.css({border: "1px", opacity:100, "margin-top":-this.realHeight+"px", float: "right",position:"relative", "margin-left": "-16px", width:"10px", height : this.virtualHeight + "px"});
             
-            var $scrollContainer = $("<div/>");
-            $scrollContainer.css({"overflow-y": "scroll", border: "1px", position:"absolute", "top":top+"px", "left":left+"px", width:"10px", height : (this.$table.height() - this.$header.height())});
-            
-            $scrollContainer.append(this.$scroller);
-            this.$el.parent().append($scrollContainer);
+            this.$el.css({border: "1px solid black"});
+            this.$el.css({height:this.$table.height()});
+            this.$table.after(this.$scroller);
+
+            this.delayScroll = debounce(this.onScroll, 400);
+
+            this.$el.on("scroll", function(e){
+                if(this.virtualHeight > (e.target.scrollTop+this.realHeight)-this.avgRowHeight){
+                    e.preventDefault && e.preventDefault();
+                    this.loading = true;
+                    this.$message.css({position:"absolute", top:150+"px", left:150+"px", "background-color":"white","z-index":9999});
+                    this.$el.append(this.$message);
+                    this.$table.css({"margin-top":e.target.scrollTop});
+                    this.$scroller.css({"margin-top": (-(this.realHeight)-e.target.scrollTop)+"px"})
+                    var cScrollHeight =  this.$scroller.css("height");
+                    this.delayScroll.apply(this, arguments)
+                //this.onScroll.apply(this, arguments);
+                }
+            }.bind(this));
         }
     },
+    prevScrollTop:0,
+    bufferedRowsCount:0,
+    avgRowHeight: undefined,
+    virtualIndex:0,
+    onScroll: function(e) {
+        var scrollTop = e.target.scrollTop;
+        this.scroll(scrollTop);
+    },
 
+    scroll(scrollTop){
+        console.log("scrollTop:",scrollTop);
+             
+        var deltaScroll = this.prevScrollTop - scrollTop;
+        var virtualIndex = Math.ceil(scrollTop / this.avgRowHeight);
+
+        var scrollRowStep = Math.ceil(Math.abs(deltaScroll) / this.avgRowHeight);
+
+        if(deltaScroll < 0){
+            console.log("scroll down");
+            //this.$scroller.css({"height":(this.$scroller.outerHeight()- e.target.scrollTop)+"px"});
+               
+        }else{
+            console.log("scroll up");  
+            //this.$scroller.css({"height":(this.$scroller.outerHeight()+Math.max(0, e.target.scrollTop-369))+"px"});
+                 
+        }
+        virtualIndex = (this.rowCount+virtualIndex < this.dataProvider.length) ? virtualIndex : (this.dataProvider.length-this.rowCount);
+        if(this.virtualIndex != virtualIndex){
+            this.applyBindings(virtualIndex);
+            this.virtualIndex = virtualIndex;
+        }
+        
+        this.prevScrollTop = scrollTop;
+        this.$message.remove();
+    },
     setValue: function (value) {
         this.value = value;
         this.list.setValue(value);        
@@ -87,10 +141,14 @@ var DataGrid = KxGenerator.createComponent({
         return this;  
     },
     template: function () {
-        return "<table class='table' id='" + this.domID + "'>"+
+        var html = 
+            "<div id='" + this.domID + "-wrapper' style='overflow-y: scroll'>" +
+                "<table class='table' id='" + this.domID + "'>"+
                     "<thead id='" + this.domID + "-header'>"+
                     "</thead>"+
-                "</table>";
+                "</table>"+
+            "</div>";    
+        return html;
     },
 
     render: function () {
@@ -103,18 +161,10 @@ var DataGrid = KxGenerator.createComponent({
         this.$table = this.$el.attr('id') == this.domID?this.$el:this.$el.find("#" + this.domID);
         this.$header = this.$el.find('#' + this.domID + '-header'); 
         
-        _self.createHeader();
-        if(this.allowNewItem)
-        { 
-            var emptyObj = createEmptyObject(this.columns, "dataField", "headerText");
-            this.dataProvider.pad(emptyObj, 1);
-        }
-        // this.rowItems = {}; we need this if we create Repeater instances via Object.assign
+        this.createHeader();
         var len = this.rowCount? Math.min(this.rowCount, this.dataProvider.length): this.dataProvider.length;
-        for(var i=0;i<len;i++)
-        {
-            _self.addRow(extend(false, false, this.dataProvider[i]), i + 1);
-        }
+       
+        this.renderRows(0, len);
         //this.dataProvider.forEach(function (data, index) {  
             
        // });
@@ -123,6 +173,48 @@ var DataGrid = KxGenerator.createComponent({
         this.$el.trigger('onEndDraw');
 
         return this.$el;
+    },
+    renderRows:function(startIndex, endIndex) {
+       
+        endIndex = endIndex > this.dataProvider.length ? this.dataProvider.length: endIndex;
+        startIndex = startIndex < 0 ? 0: startIndex;
+        // this.rowItems = {}; we need this if we create Repeater instances via Object.assign
+        for(var i=startIndex;i<endIndex;i++)
+        {
+            this.addRow(extend(false, false, this.dataProvider[i]), i + 1);
+        } 
+        if(this.allowNewItem && endIndex==this.dataProvider.length)
+        { 
+            var emptyObj = createEmptyObject(this.columns, "dataField", "headerText");
+            this.dataProvider.pad(emptyObj, 1);
+            this.addRow(extend(false, false, this.dataProvider[i]), i + 1);
+        }
+    },
+    applyBindings: function(virtualIndex){
+        for(var rowIndex=0;rowIndex<this.rowCount;rowIndex++){
+            for(var columnIndex=0;columnIndex<this.columns.length;columnIndex++){
+                for(var i=0;i<this.watchers[rowIndex][columnIndex].length;i++){
+                    this.watchers[rowIndex][columnIndex][i].reset();
+                }
+                this.cellItemRenderers[rowIndex][columnIndex].repeaterIndex = rowIndex + virtualIndex;
+                this.watchers[rowIndex][columnIndex] = this.applyItemRendererBindings(this.bindingExpressions[columnIndex], this.dataProvider[rowIndex + virtualIndex], this.cellItemRenderers[rowIndex][columnIndex]);
+            }
+
+            this.cells[rowIndex][0].prev().text(rowIndex + virtualIndex + 1);
+        }
+    },
+    applyItemRendererBindings: function(bindings, data, el){
+        var watchers = [];
+        for(var bi=0;bi<bindings.length;bi++){
+            (function(currentItem, bindingExp, site, site_chain){
+                return (function(e) { // a closure is created
+                    this["currentItem"] = currentItem;
+                   // var context = extend(false, true, this, obj);
+                    watchers.splicea(watchers.length, 0, BindingUtils.getValue(this, bindingExp, site, site_chain, "currentItem"));
+                })();	
+            })(data, bindings[bi].expression, el, [bindings[bi].property]);
+        }
+        return watchers;
     },
     headerClickHandler: function (e, hIndex, column) {
         if (typeof this.onheaderclick == 'function')
@@ -176,12 +268,44 @@ var DataGrid = KxGenerator.createComponent({
         }
         return dI;
     },
-    cellEdit: function(rowIndex, columnIndex, column, data){
+    cellEdit: function(e, rowIndex, columnIndex){
+
+        if(rowIndex>this.dataProvider.length-1)
+        {
+            rowIndex = 0;
+        }else if(rowIndex<0)
+        {
+            rowIndex = this.dataProvider.length-1;
+        }
+        
+        if(columnIndex > this.columns.length-1)
+        {
+            columnIndex = 0;
+            ++rowIndex;
+        }else if(columnIndex < 0)
+        {
+            columnIndex = this.columns.length-1;
+            --rowIndex;
+        }
+        if(rowIndex>this.dataProvider.length-1 || (rowIndex<0))
+        {
+            rowIndex = 0;
+        }
+        if(rowIndex > this.rowCount - 1){
+            this.scroll(this.prevScrollTop + this.avgRowHeight);
+            rowIndex = this.rowCount - 1;
+        }else if(rowIndex < this.virtualIndex){
+            this.scroll(this.prevScrollTop - this.avgRowHeight);
+            rowIndex = 0;
+        }
+        
+        var column = this.columns[columnIndex];
+        var data = this.dataProvider[rowIndex+this.virtualIndex];
 
         if(this.editPosition!=null && (this.editPosition.rowIndex != rowIndex || this.editPosition.columnIndex != columnIndex)){
            
             var cellEditFinishedEvent = jQuery.Event("cellEditFinished");
-             this.trigger(cellEditFinishedEvent, [this.editPosition.rowIndex, this.editPosition.columnIndex, this.editPosition.column, this.editPosition.data, true]);
+            this.trigger(cellEditFinishedEvent, [this.editPosition.rowIndex, this.editPosition.columnIndex, this.editPosition.column, this.editPosition.data, true]);
             
             if (cellEditFinishedEvent.isDefaultPrevented()) {
                 return;
@@ -258,7 +382,13 @@ var DataGrid = KxGenerator.createComponent({
                         break;
                     case 9: // TAB - apply and move to next column on the same row 
                         _self.trigger('cellEditFinished', [rowIndex, columnIndex, column, data, true]);
-                        _self.trigger('cellEditFinished', [rowIndex, columnIndex+1, _self.columns[columnIndex+1] , data]);
+                        //TODO: Check columnIndex boundaries and pass to next row if it is 
+                        //the last one, if now rows remaining pass to first row(check repeater implementation)
+                        if(e.shiftKey)
+                            _self.trigger('cellEdit', [rowIndex, columnIndex-1]);
+                        else
+                            _self.trigger('cellEdit', [rowIndex, columnIndex+1]);
+                      
                         break;
                 }
 
@@ -331,6 +461,8 @@ var DataGrid = KxGenerator.createComponent({
     cellItemEditors:[],
     cells:[[]],// matrix
     editPosition:null,
+    bindingExpressions:[], //array of bindings arrays (bindings for each column)
+    watchers:[], //array of watchers arrays (watchers for each row for each column item renderer property binding)
      //renders a new row, adds components in stack
     addRow: function (data, index, isPreventable = false, focusOnRowAdd = true) {
         var _self = this;
@@ -384,35 +516,39 @@ var DataGrid = KxGenerator.createComponent({
                     }
                 }
                 */
-             
-
                 var bindings = [];
-                for (var prop in tempComponent.props) {    
-                    if (typeof prop == 'string') {
-                        //check for binding
-                        if (tempComponent.props[prop]!=null && tempComponent.props[prop][0] == '{' && tempComponent.props[prop][tempComponent.props[prop].length - 1] == '}') {
+                
+                if(!_self.bindingExpressions[columnIndex]){
+                    for (var prop in tempComponent.props) {    
+                        if (typeof prop == 'string') {
+                            //check for binding
+                            if (tempComponent.props[prop]!=null && tempComponent.props[prop][0] == '{' && tempComponent.props[prop][tempComponent.props[prop].length - 1] == '}') {
+                                
+                                var dataProviderField = tempComponent.props[prop].slice(1, -1);
+                                
+                                console.log(prop," dp field:", dataProviderField, " dp field value:",data[dataProviderField])
+                                //cmp[columnIndex][prop] = data[dataProviderField];
+                                
+                                bindings.push({"expression":dataProviderField, "property":prop});
                             
-                            var dataProviderField = tempComponent.props[prop].slice(1, -1);
-                            
-                            console.log(prop," dp field:", dataProviderField, " dp field value:",data[dataProviderField])
-                            //cmp[columnIndex][prop] = data[dataProviderField];
-                            
-                            bindings.push({"expression":dataProviderField, "property":prop});
-                        
-                            
-                            if(_self.bindings[dataProviderField]==undefined){
-                                _self.bindings[dataProviderField] = {};
-                                if(_self.bindings[dataProviderField][tempComponent.props.id]==undefined){
-                                    _self.bindings[dataProviderField][tempComponent.props.id] = {"component":cmp, "property":prop, "dataProviderField":dataProviderField, "dataProviderIndex":index};
+                                
+                                if(_self.bindings[dataProviderField]==undefined){
+                                    _self.bindings[dataProviderField] = {};
+                                    if(_self.bindings[dataProviderField][tempComponent.props.id]==undefined){
+                                        _self.bindings[dataProviderField][tempComponent.props.id] = {"component":cmp, "property":prop, "dataProviderField":dataProviderField, "dataProviderIndex":index};
+                                    }
                                 }
-                            }
-                            
-                        } else {
-                            //no binding
-                            cmp[columnIndex][prop] = tempComponent.props[prop];
+                                
+                            } //else {
+                                //no binding
+                              //  cmp[columnIndex][prop] = tempComponent.props[prop];
+                           // }
                         }
-                    }
-                }    
+                    }    
+                    _self.bindingExpressions[columnIndex] = bindings;
+                }else{
+                    bindings = _self.bindingExpressions[columnIndex];
+                }
                 
                
                 
@@ -422,7 +558,7 @@ var DataGrid = KxGenerator.createComponent({
                 if (typeof tempComponent.constructor == "string") {
                     tempComponent.constructor = eval(tempComponent.constructor);
                 }
-                var el = new tempComponent.constructor(cmp[columnIndex]);
+                var el = new tempComponent.constructor(tempComponent.props);//cmp[columnIndex]);
                 el.parent = _self;
                 el.parentType = 'repeater';
                 el.parentForm = _self.parentForm;
@@ -432,18 +568,25 @@ var DataGrid = KxGenerator.createComponent({
                 rowItems[column.dataField] = el;
                 _self.rowItems[index - 1] = rowItems;
                 
+                if(!_self.watchers[index-1])
+                    _self.watchers[index-1] = [];
+                _self.watchers[index-1][columnIndex] = _self.applyItemRendererBindings(bindings, data, el);
+               
+                /*
+                 applyBindings: function(bindings){
+                    for(var bi=0;bi<bindings.length;bi++){
+                        (function(currentItem, bindingExp, site, site_chain){
+                            return (function(e) { // a closure is created
+                                var obj = {"currentItem": currentItem};
+                                var context = extend(false, true, _self, obj);
+                                BindingUtils.getValue(context, bindingExp, site, site_chain, "currentItem");
 
-                for(var bi=0;bi<bindings.length;bi++){
-                    (function(currentItem, bindingExp, site, site_chain){
-                        return (function(e) { // a closure is created
-                            var obj = {"currentItem": currentItem};
-                            var context = extend(false, true, _self, obj);
-                            BindingUtils.getValue(context, bindingExp, site, site_chain, "currentItem");
 
-
-                        })();	
-                    })(data, bindings[bi].expression, el, [bindings[bi].property]);
+                            })();	
+                        })(data, bindings[bi].expression, el, [bindings[bi].property]);
+                    }
                 }
+                */
 
 
                 //
@@ -451,7 +594,7 @@ var DataGrid = KxGenerator.createComponent({
                     el.on('dblclick', (function(rowIndex, columnIndex, column, data){
                         return (function(e) { // a closure is created
                             //alert(JSON.stringify(column)+" "+JSON.stringify(data)+" "+(index-1));
-                            _self.cellEdit(rowIndex, columnIndex, column, data);
+                            _self.trigger('cellEdit', [rowIndex, columnIndex]);
                         });	
                     })(index - 1, columnIndex, column, data));
                 }
@@ -506,12 +649,13 @@ var DataGrid = KxGenerator.createComponent({
                     _self.cells[index-1] = [];
                 _self.cells[index-1][columnIndex] = cell;
                 //render component in row
+
                 renderedRow.append(cell.append(el.render()));
             }   
 
             //render row in dom
             _self.$table.append(renderedRow);
-            
+            _self["rows"].push(renderedRow); 
             return rowItems;
         }
 
@@ -523,7 +667,8 @@ var DataGrid = KxGenerator.createComponent({
          
             if (!beforeRowAddEvent.isDefaultPrevented()) {
                 //the event is not canceled outside
-                return buildRow();
+                var rowItems = buildRow();
+                return rowItems;
             } else {
                 //the event default is canceled outside
                 return false;
@@ -533,7 +678,65 @@ var DataGrid = KxGenerator.createComponent({
             //the before add event is not preventable so buildRow anyway
             return buildRow();    
         }
-    }   
+    }, 
+    rows:[],
+    removeAllRows: function(){
+        for(var i=this.rows.length;i>0;i--)
+        {
+            this.removeRow(i, false, false, false);
+        }
+        this.rows = [];
+    },
+    removeRow: function (index, isPreventable = false, focusOnRowDelete = true, removeFromDp = false) {
+        var rowItems = {};
+        var model = this.getModel();
+        
+        var removeRow = function () {
+            //remove dp row
+            var removedItem = null;
+            if(removeFromDp){
+                this.dataProvider.splice(index - 1, 1);
+            }
+            for(var i=index-1;i<this.cellItemRenderers.length;i++){
+                
+                this.cellItemRenderers[i].repeaterIndex -= 1;
+                this.cells[i][0].prev().text(i);
+            }
+            //manage dp
+            this.currentIndex--;
+            this.currentItem = this.dataProvider[index - 1];
+            if (this.currentIndex == 1 && this.allowNewItem) {
+                //model.displayRemoveButton = false;
+            }
+            this.rows[index-1].remove();
+            this.rows.splice(index - 1, 1);
+            this.rowItems.splice(index - 1, 1);
+            this.cells.splice(index - 1, 1);
+            this.cellItemRenderers.splice(index - 1, 1);
+            
+            this.$el.trigger('onRowDelete', [this, new RepeaterEventArgs([], this.currentItem, index, rowItems)]);
+            //animate
+            if (focusOnRowDelete)
+                this.cellItemRenderers[index-2][0].scrollTo();
+            return removedItem;
+        }.bind(this);
+
+        //trigger before row delete event
+        if (isPreventable) {
+            //trigger before row delete event
+            var beforeRowDeleteEvent = jQuery.Event("onBeforeRowDelete");
+            this.$el.trigger(beforeRowDeleteEvent);
+
+            if (!beforeRowDeleteEvent.isDefaultPrevented()) {
+                return removeRow.call(this);
+            } else {
+                return false;
+            }
+        } else {
+            return removeRow.call(this);
+        }
+  
+    }    
 });
 
 //component prototype
