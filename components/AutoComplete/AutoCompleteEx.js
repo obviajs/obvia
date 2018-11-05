@@ -41,7 +41,6 @@ var AutoCompleteEx = KxGenerator.createComponent({
         this.tokenRenderer.props.ondblclick = this.tokenRendererDoubleClickHandler;
         this.tokenRenderer.props.onmousedown = this.tokenRendererMouseDownHandler;
 
-       
         this.tokensRepeater = new Repeater({
             id: 'listRepeater',
             defaultItem: this.defaultItem,
@@ -56,37 +55,68 @@ var AutoCompleteEx = KxGenerator.createComponent({
             parent: _self
         }).on('creationComplete', function (e) {
             e.stopPropagation();
-            _self.cComponents.push(1);
-
-            _self.tokenInput = TextInput({
-                id: 'tokenInput',
-                label: 'Type something...',
-                versionStyle: '',
-                embedded:true,
-            }).on('creationComplete', function(e){
-                e.stopPropagation();
-
-                _self.tokenInput.$el.addClass('border-0');
-                //TODO: te konsiderojme qe form-control si klse te mos i shtohet fare elementeve nese embededd=true
-                _self.tokenInput.$el.removeClass('form-control');
-                _self.tokenInput.$el.css({"outline":"none", "font-size":"14px"});
-            
+            //creation complete will be triggered also on "all rows removed, add a new row" case
+            if(!_self.tokenInput){
                 _self.cComponents.push(1);
-                if (_self.cComponents.length > _self.countChildren-1) {
-                    _self.trigger('creationComplete');  
-                }
-                _self.tokenInput.$el.on('keydown', _self.tokenInputKeyDown.bind(_self));
-                _self.tokenInput.$el.on('keyup', _self.tokenInputKeyUp.bind(_self));
-                        
-            });
-            _self.tokensRepeater.$el.removeClass('form-group');
+                _self.tokensRepeater.$el.removeClass('form-group');
+                _self.tokenInput = TextInput({
+                    id: 'tokenInput',
+                    label: 'Type something...',
+                    versionStyle: '',
+                    embedded:true,
+                }).on('creationComplete', function(e){
+                    e.stopPropagation();
+
+                    _self.tokenInput.$el.addClass('border-0');
+                    _self.tokenInput.$el.addClass('ellipsis');
+                    //TODO: te konsiderojme qe form-control si klse te mos i shtohet fare elementeve nese embededd=true
+                    _self.tokenInput.$el.removeClass('form-control');
+                    _self.tokenInput.$el.css({"outline":"none", "font-size":"14px"});
                 
-            _self.tokensRepeater.$container.append( _self.tokenInput.render());
-          
-            if (_self.cComponents.length > this.countChildren-1) {
-                this.trigger('creationComplete');  
+                    _self.cComponents.push(1);
+                    if (_self.cComponents.length > _self.countChildren-1) {
+                        _self.trigger('creationComplete');  
+                    }
+                    _self.tokenInput.$el.on('keydown', _self.tokenInputKeyDown.bind(_self));
+                    _self.tokenInput.$el.on('keyup', _self.tokenInputKeyUp.bind(_self));
+                        
+                });
+                _self.tokensRepeater.$container.append( _self.tokenInput.render());  
+                
+                if (_self.cComponents.length > this.countChildren-1) {
+                    this.trigger('creationComplete');  
+                }
+                tokenInputReSize();
+                this.tokensRepeater.on('onRowAdd', function(){
+                    tokenInputReSize();
+                });
+                this.tokensRepeater.on('onRowDelete', function(){
+                    tokenInputReSize();
+                });
             }
+           
         }.bind(this));
+
+        var tokenInputReSize = function(){
+            var rowCount = _self.tokensRepeater.rows.length;
+            var rowWidth = 0, rowTop = 0;
+            for(var i=0;i<rowCount;i++){
+                var rowPos = _self.tokensRepeater.rows[i].position();
+                if(rowPos.top != rowTop){
+                    rowTop = rowPos.top;
+                    rowWidth = _self.tokensRepeater.rows[i].width();
+                }else{
+                    rowWidth += _self.tokensRepeater.rows[i].width();
+                }
+            }
+            var tokenInputWidth = _self.$el.width() - rowWidth - 2;
+            var tokeInputSetWidth = whenDefined(_self, "tokenInput", function(tiw){
+                _self.tokenInput.$el.css({"width": tiw+"px"});
+            }); 
+            tokeInputSetWidth(tokenInputWidth);
+        }; 
+        
+
 
         //Suggestions Renderer
         if(this.suggestionRenderer==null||this.suggestionRenderer==undefined){
@@ -303,6 +333,7 @@ var AutoCompleteEx = KxGenerator.createComponent({
         itemsToAdd = differenceOnKeyMatch (itemsToAdd, this._value, this.valueField);
         for(var j=0;j<itemsToAdd.length;j++)
         {
+            this._value.push(itemsToAdd[j]);
             this.tokensRepeater.addRow(itemsToAdd[j]);
         }
         
@@ -370,7 +401,7 @@ var AutoCompleteEx = KxGenerator.createComponent({
     focus:function(){
         if(this.tokenInput != null)
         {
-            this.tokenInput.$el.focus();
+            this.tokenInput.$el[0].focus({preventScroll:true});
         }
     },
     destruct: function () {

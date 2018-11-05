@@ -1,11 +1,11 @@
 /**
- * This is a Text Field Input Element
+ * This is a Color Element
  * 
  * Kreatx 2018
  */
 
 //component definition
-var TextField = KxGenerator.createComponent({
+var Color = KxGenerator.createComponent({
 
     value:"",
     //inner component data
@@ -56,9 +56,7 @@ var TextField = KxGenerator.createComponent({
                 } catch (error) {
                     mask = this.mask;
                 }
-                console.log("===================================");
-                console.log(mask);
-                console.log("===================================");
+                
                 this.$input.inputmask(mask);
             }
 
@@ -94,6 +92,25 @@ var TextField = KxGenerator.createComponent({
         } else
             return true;
     },
+
+    // valueSetter:function(r,a){
+    //     for(var i=0;i<formProps.provider.mask.length;i++)
+    //     if(formProps.provider.mask[i].input_mask_name==r)
+    //     return this.maskId=formProps.provider.mask[i].input_mask_id,void this.$input.inputmask(JSON.parse(formProps.provider.mask[i].dataField));
+    //     this.maskId=0,this.$input.inputmask({alias:"",prefix:""})
+    // },
+    valueSetter: function (mask,value) {
+        if (this.value != value) {
+            if (typeof value == "object") {
+                value = JSON.stringify(value);
+            }
+            this.value = value;
+        }
+
+        this.trigger('change');
+
+        return this;
+    },
     
     setValue: function (value) {
         if (this.value != value) {
@@ -107,19 +124,6 @@ var TextField = KxGenerator.createComponent({
 
         return this;
     },
-
-    set mask(v){
-        if(this._src != v){
-            if(this.$el){
-                this.$el.attr('mask', v);
-            }
-            this._mask= v;
-        }
-    },
-    get mask(){
-        return this._mask;
-    },
-
     focus:function(){
         if(this.$input != null)
         {
@@ -127,11 +131,7 @@ var TextField = KxGenerator.createComponent({
         }
     },
     template: function () {
-        var html = 
-            "<input rv-type='type' " +
-            "id='" + this.domID + "' name='" + this.domID + "' rv-value='value' " +
-            "class='form-control rowspan" + this.rowspan + "' " +
-            "rv-placeholder='label' rv-enabled='enabled' autofocus/>";
+    var html = '<input type="color" id="' + this.domID + '" style = "width:20px;height:20px">'; 
         return html;
     },
 
@@ -141,10 +141,10 @@ var TextField = KxGenerator.createComponent({
 });
 
 //component prototype
-TextField.type = 'textfield';
+Color.type = 'color';
 
 //register dom element for this component
-KxGenerator.registerDOMElement(TextField, 'kx-text-field');
+KxGenerator.registerDOMElement(Color, 'kx-color');
 
 
 

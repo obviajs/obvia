@@ -17,7 +17,6 @@ var DataGrid = KxGenerator.createComponent({
             this.dataProviderKeys = Object.keys(this.defaultItem);
         }else if(this.dataProvider.length>0){
             this.dataProviderKeys = Object.keys(this.dataProvider[0]);
-            this.defaultItem = this.buildDefaultItem(this.dataProvider);
         }
     },
     bindings: {},
@@ -67,8 +66,7 @@ var DataGrid = KxGenerator.createComponent({
             this.delayScroll = debounce(this.onScroll, 400);
 
             this.$el.on("scroll", function(e){
-                if(this.virtualHeight > (e.target.scrollTop+this.realHeight)-this.avgRowHeight){
-                    e.preventDefault && e.preventDefault();
+                if(this.virtualHeight > (e.target.scrollTop+this.realHeight)-2*this.avgRowHeight){
                     this.loading = true;
                     this.$message.css({position:"absolute", top:150+"px", left:150+"px", "background-color":"white","z-index":9999});
                     this.$el.append(this.$message);
@@ -79,42 +77,83 @@ var DataGrid = KxGenerator.createComponent({
                 //this.onScroll.apply(this, arguments);
                 }
             }.bind(this));
+
+
+            this.setCellsWidth();
         }
     },
     prevScrollTop:0,
-    bufferedRowsCount:0,
     avgRowHeight: undefined,
     virtualIndex:0,
+    scrollRowStep:0,
+
     onScroll: function(e) {
         var scrollTop = e.target.scrollTop;
         this.scroll(scrollTop);
     },
 
     scroll(scrollTop){
-        console.log("scrollTop:",scrollTop);
-             
-        var deltaScroll = this.prevScrollTop - scrollTop;
-        var virtualIndex = Math.ceil(scrollTop / this.avgRowHeight);
+        if(scrollTop>=0){
+            console.log("scrollTop:",scrollTop);
+                
+            var virtualIndex = Math.ceil(scrollTop / this.avgRowHeight);
+            scrollTop = virtualIndex * this.avgRowHeight;
+            //this.scroll(scrollTop);
 
-        var scrollRowStep = Math.ceil(Math.abs(deltaScroll) / this.avgRowHeight);
-
-        if(deltaScroll < 0){
-            console.log("scroll down");
-            //this.$scroller.css({"height":(this.$scroller.outerHeight()- e.target.scrollTop)+"px"});
-               
-        }else{
-            console.log("scroll up");  
-            //this.$scroller.css({"height":(this.$scroller.outerHeight()+Math.max(0, e.target.scrollTop-369))+"px"});
-                 
-        }
-        virtualIndex = (this.rowCount+virtualIndex < this.dataProvider.length) ? virtualIndex : (this.dataProvider.length-this.rowCount);
-        if(this.virtualIndex != virtualIndex){
-            this.applyBindings(virtualIndex);
-            this.virtualIndex = virtualIndex;
-        }
+            var deltaScroll =  this.prevScrollTop - scrollTop;
         
-        this.prevScrollTop = scrollTop;
-        this.$message.remove();
+
+            var scrollRowStep = Math.ceil(Math.abs(deltaScroll) / this.avgRowHeight) * (deltaScroll/Math.abs(deltaScroll));
+
+            if(deltaScroll < 0){
+                console.log("scroll down");
+                
+            }else{
+                console.log("scroll up");  
+                    
+            }
+        
+            virtualIndex = (this.rowCount+virtualIndex < this.dataProvider.length) ? virtualIndex : (this.dataProvider.length-this.rowCount);        
+            this.prevScrollTop = scrollTop;
+            if(this.virtualIndex != virtualIndex){
+                this.applyBindings(virtualIndex);
+                this.virtualIndex = virtualIndex;
+
+                if(scrollRowStep!=0){
+                    if(this.editPosition!=null){
+                        var newEditPosition = (this.editPosition.rowIndex + scrollRowStep);
+                        if(this.editPosition.event == 1 || this.editPosition.event==3){
+                        
+                            if(this.editPosition.event == 1){
+                                var cellEditFinishedEvent = jQuery.Event("cellEditFinished");
+                                this.trigger(cellEditFinishedEvent, [this.editPosition.rowIndex, this.editPosition.columnIndex, false]);
+                                this.cellItemRenderers[this.editPosition.rowIndex][this.editPosition.columnIndex].show();  
+                            }
+                            
+                            this.editPosition.rowIndex = newEditPosition;
+
+                            if((newEditPosition >=0) && (newEditPosition<this.rowCount)){
+                                console.log("show editor phase", this.editPosition.event, " at: ", newEditPosition," ",this.editPosition.rowIndex," ",scrollRowStep);
+                                this.trigger('cellEdit', [newEditPosition, this.editPosition.columnIndex]);
+                                //TODO:need to add a parameter to cellEdit handler 
+                                //so that we do not set the value of the editor to the value in the dp, but just keep the not-yet stored value.
+                            }else{
+                                //edited cell is out of view
+                                console.log("event = 3");
+                                this.editPosition.event = 3;
+                                this.scrollRowStep = scrollRowStep;
+                                
+                            }
+                        
+                        }else{
+                            //normalize edit row index
+                            this.editPosition.rowIndex = newEditPosition;
+                        }
+                    }
+                }
+            }
+            this.$message.remove();
+        }
     },
     setValue: function (value) {
         this.value = value;
@@ -163,7 +202,6 @@ var DataGrid = KxGenerator.createComponent({
         
         this.createHeader();
         var len = this.rowCount? Math.min(this.rowCount, this.dataProvider.length): this.dataProvider.length;
-       
         this.renderRows(0, len);
         //this.dataProvider.forEach(function (data, index) {  
             
@@ -174,21 +212,47 @@ var DataGrid = KxGenerator.createComponent({
 
         return this.$el;
     },
+    setCellsWidth: function(){
+        //at least one row ?
+        if(this.cells.length>0){
+            var definedWidth = 0; var autoWidthColumns = [];
+            for (var columnIndex=0;columnIndex<this.columns.length;columnIndex++) {
+                var column = this.columns[columnIndex];
+                if(column["width"]){
+                    definedWidth += column.calculatedWidth = column.width;
+                }else{
+                    autoWidthColumns.push(column);
+                }
+            }
+            var autoWidth = (this.$table.width() - definedWidth) / autoWidthColumns.length;
+            for (var columnIndex=0;columnIndex<autoWidthColumns.length;columnIndex++) {
+                var column = autoWidthColumns[columnIndex];
+                column.calculatedWidth = autoWidth;
+            }
+            for (var columnIndex=0;columnIndex<this.cells[0].length;columnIndex++) {
+                this.cells[0][columnIndex].css({"width":(this.columns[columnIndex].calculatedWidth)+"px"}); 
+            }
+        }
+    },
     renderRows:function(startIndex, endIndex) {
        
         endIndex = endIndex > this.dataProvider.length ? this.dataProvider.length: endIndex;
         startIndex = startIndex < 0 ? 0: startIndex;
         // this.rowItems = {}; we need this if we create Repeater instances via Object.assign
+        
         for(var i=startIndex;i<endIndex;i++)
         {
             this.addRow(extend(false, false, this.dataProvider[i]), i + 1);
         } 
         if(this.allowNewItem && endIndex==this.dataProvider.length)
         { 
-            var emptyObj = createEmptyObject(this.columns, "dataField", "headerText");
-            this.dataProvider.pad(emptyObj, 1);
-            this.addRow(extend(false, false, this.dataProvider[i]), i + 1);
+            this.addEmptyRow();
         }
+    },
+    addEmptyRow:function(){
+        var emptyObj = this.defaultItem = createEmptyObject(this.columns, "dataField", "headerText");
+        this.dataProvider.pad(emptyObj, 1);
+        this.addRow(extend(false, false, this.dataProvider[i]), i + 1);
     },
     applyBindings: function(virtualIndex){
         for(var rowIndex=0;rowIndex<this.rowCount;rowIndex++){
@@ -261,23 +325,20 @@ var DataGrid = KxGenerator.createComponent({
         $header.append(colElements);
         this.$header.append($header);
     },
-    buildDefaultItem: function (dp) {
-        var dI = {};
-        for (var column in this.columns) {
-            dI[column.dataField] = column.headerText;
-        }
-        return dI;
-    },
     cellEdit: function(e, rowIndex, columnIndex){
 
-        if(rowIndex>this.dataProvider.length-1)
-        {
-            rowIndex = 0;
-        }else if(rowIndex<0)
-        {
-            rowIndex = this.dataProvider.length-1;
+        if(this.editPosition!=null && this.editPosition.event==1 && (this.editPosition.rowIndex != rowIndex || this.editPosition.columnIndex != columnIndex)){
+           
+            var cellEditFinishedEvent = jQuery.Event("cellEditFinished");
+            this.trigger(cellEditFinishedEvent, [this.editPosition.rowIndex, this.editPosition.columnIndex, true]);
+            
+            if (cellEditFinishedEvent.isDefaultPrevented()) {
+                return;
+            }
+            this.editPosition.event = 1;
+            this.cellItemRenderers[this.editPosition.rowIndex][this.editPosition.columnIndex].show();
         }
-        
+
         if(columnIndex > this.columns.length-1)
         {
             columnIndex = 0;
@@ -287,34 +348,43 @@ var DataGrid = KxGenerator.createComponent({
             columnIndex = this.columns.length-1;
             --rowIndex;
         }
-        if(rowIndex>this.dataProvider.length-1 || (rowIndex<0))
-        {
-            rowIndex = 0;
-        }
-        if(rowIndex > this.rowCount - 1){
-            this.scroll(this.prevScrollTop + this.avgRowHeight);
-            rowIndex = this.rowCount - 1;
-        }else if(rowIndex < this.virtualIndex){
-            this.scroll(this.prevScrollTop - this.avgRowHeight);
-            rowIndex = 0;
-        }
-        
         var column = this.columns[columnIndex];
-        var data = this.dataProvider[rowIndex+this.virtualIndex];
+        var data;
 
-        if(this.editPosition!=null && (this.editPosition.rowIndex != rowIndex || this.editPosition.columnIndex != columnIndex)){
-           
-            var cellEditFinishedEvent = jQuery.Event("cellEditFinished");
-            this.trigger(cellEditFinishedEvent, [this.editPosition.rowIndex, this.editPosition.columnIndex, this.editPosition.column, this.editPosition.data, true]);
+        if(rowIndex > this.rowCount - 1){
+            this.editPosition.rowIndex = rowIndex;
+            this.editPosition.columnIndex = columnIndex;
+
+            rowIndex = this.rowCount - 1;
+            this.editPosition.event = this.editPosition.event==1?3:this.editPosition.event;
             
-            if (cellEditFinishedEvent.isDefaultPrevented()) {
-                return;
-            }
-            this.cellItemRenderers[this.editPosition.rowIndex][this.editPosition.columnIndex].show();
+            //this.$el.scrollTop(this.prevScrollTop + this.avgRowHeight);
+            var ps = this.prevScrollTop ;
+            this.scroll(ps + this.avgRowHeight);
+            //this.$table.css({"margin-top":(ps + this.avgRowHeight)});
+           // this.$scroller.css({"margin-top": (-(this.realHeight)-(ps + this.avgRowHeight))+"px"});
+
+            data = this.dataProvider[rowIndex+this.virtualIndex];
+            
+            
+        }else if(rowIndex < 0){
+            this.editPosition.rowIndex = rowIndex;
+            this.editPosition.columnIndex = columnIndex;
+
+            rowIndex = 0;
+            this.editPosition.event = this.editPosition.event==1?3:this.editPosition.event;
+            this.$el.scrollTop(this.prevScrollTop - this.avgRowHeight);
+           
+            //this.scroll(this.prevScrollTop - this.avgRowHeight);
+
+            data = this.dataProvider[rowIndex+this.virtualIndex];
+            
+        }else{
+            data = this.dataProvider[rowIndex+this.virtualIndex];
         }
 
         this.editPosition = {"rowIndex":rowIndex, "columnIndex":columnIndex, "column":column, "data":data, "event":1}; 
-
+        
         this.cellItemRenderers[rowIndex][columnIndex].hide();
         var itemEditorInfo = this.cellItemEditors[columnIndex];
         var itemEditor;
@@ -335,7 +405,9 @@ var DataGrid = KxGenerator.createComponent({
             //itemEditor.$el.addClass("form-control-sm");
             itemEditor.$el.removeClass('form-group');
             itemEditor.$el.removeClass('form-control');
-            itemEditor.$el.css({"outline":"none", "font-size":"14px"});
+           // var itemEditorWidth = column.calculatedWidth-(this.cells[rowIndex][columnIndex].outerWidth() - this.cells[rowIndex][columnIndex].innerWidth()) - 2;
+           var itemEditorWidth = column.calculatedWidth-46;
+            itemEditor.$el.css({"outline":"none", "font-size":"14px", "width":itemEditorWidth+"px"});
 
             this.cellItemEditors[columnIndex] = {"itemEditor":itemEditor, "rowIndex":rowIndex}; 
 
@@ -345,7 +417,32 @@ var DataGrid = KxGenerator.createComponent({
                     // safe to use the function
                     itemEditor.focus();
                 }
-            });    
+            });  
+            var _self = this;
+            itemEditor.on('keydown', function(e) { 
+                    e.preventDefault();
+                     
+                    switch (e.keyCode) {
+                        case 13: // ENTER - apply value
+                            console.log("finished editing");
+                            _self.trigger('cellEditFinished', [_self.editPosition.rowIndex, _self.editPosition.columnIndex, true]);
+                            break;
+                        case 27: // ESC - get back to old value
+                            _self.trigger('cellEditFinished', [_self.editPosition.rowIndex, _self.editPosition.columnIndex, false]);
+                            break;
+                        case 9: // TAB - apply and move to next column on the same row 
+                            //_self.trigger('cellEditFinished', [rowIndex, columnIndex, column, data, true]);
+                            //TODO: Check columnIndex boundaries and pass to next row if it is 
+                            //the last one, if now rows remaining pass to first row(check repeater implementation)
+                            if(e.shiftKey)
+                                _self.trigger('cellEdit', [_self.editPosition.rowIndex, _self.editPosition.columnIndex-1]);
+                            else
+                                _self.trigger('cellEdit', [_self.editPosition.rowIndex, _self.editPosition.columnIndex+1]);
+                          
+                            break;
+                    }
+            });	
+
         }else
         {
             itemEditor = itemEditorInfo.itemEditor;
@@ -358,10 +455,13 @@ var DataGrid = KxGenerator.createComponent({
             }
         }
         var _self = this;
+        /*
         itemEditor.off('blur');
         itemEditor.on('blur', function(){
             _self.trigger('cellEditFinished', [rowIndex, columnIndex, column, data, true]);
         });
+        */
+
        /*itemEditor.on('blur', (function(rowIndex, columnIndex, column, data){
             return (function(e) { // a closure is created
                 _self.cellEditFinished(rowIndex, columnIndex, column, data);
@@ -369,34 +469,8 @@ var DataGrid = KxGenerator.createComponent({
         })(rowIndex, columnIndex, column, data));
 */
 
-        itemEditor.on('keydown', (function(rowIndex, columnIndex, column, data){
-            return (function(e) { // a closure is created
-                e.preventDefault();
-                switch (e.keyCode) {
-                    case 13: // ENTER - apply value
-                        console.log("finished editing");
-                        _self.trigger('cellEditFinished', [rowIndex, columnIndex, column, data, true]);
-                        break;
-                    case 27: // ESC - get back to old value
-                        _self.trigger('cellEditFinished', [rowIndex, columnIndex, column, data, false]);
-                        break;
-                    case 9: // TAB - apply and move to next column on the same row 
-                        _self.trigger('cellEditFinished', [rowIndex, columnIndex, column, data, true]);
-                        //TODO: Check columnIndex boundaries and pass to next row if it is 
-                        //the last one, if now rows remaining pass to first row(check repeater implementation)
-                        if(e.shiftKey)
-                            _self.trigger('cellEdit', [rowIndex, columnIndex-1]);
-                        else
-                            _self.trigger('cellEdit', [rowIndex, columnIndex+1]);
-                      
-                        break;
-                }
+     
 
-
-                });	
-        })(rowIndex, columnIndex, column, data));
-
-        this.cells[rowIndex][columnIndex].css("width", this.cells[rowIndex][columnIndex].innerWidth()+"px")
         itemEditor.repeaterIndex = rowIndex;
         //TODO: te evitojme v
         if (column.itemEditor.props["value"]!=null && column.itemEditor.props["value"][0] == '{' && column.itemEditor.props["value"][column.itemEditor.props["value"].length - 1] == '}') 
@@ -421,7 +495,11 @@ var DataGrid = KxGenerator.createComponent({
       
         
     },
-    cellEditFinished: function(e, rowIndex, columnIndex, column, data, applyEdit){
+    cellEditFinished: function(e, rowIndex, columnIndex, applyEdit){
+        //console.trace();
+        console.log("cellEditFinished:", rowIndex, " ", columnIndex);
+        var column = this.columns[columnIndex];
+        var data = this.dataProvider[rowIndex+this.virtualIndex];
         var value = null, calledHandler = false;
         var itemEditorInfo = this.cellItemEditors[columnIndex];
         var itemEditor = itemEditorInfo.itemEditor;
@@ -438,12 +516,9 @@ var DataGrid = KxGenerator.createComponent({
             calledHandler = true;
         }
         
-        if(!applyEdit || !e.isDefaultPrevented()){
-      
-           
+        if(!applyEdit || !e.isDefaultPrevented()){           
             itemEditor.hide();
             this.cellItemRenderers[rowIndex][columnIndex].show();
-            this.cells[rowIndex][columnIndex].css("width","");
             if(applyEdit){
                 if(!calledHandler){
                     value = itemEditor.getValue();
@@ -452,14 +527,14 @@ var DataGrid = KxGenerator.createComponent({
                     }
                 }
                 //TODO:dataProviderChanged or integrate Binding ? 
-                this.dataProvider[rowIndex][column.dataField] = value;
+                this.dataProvider[rowIndex+this.virtualIndex][column.dataField] = value;
             }
             this.editPosition.event = 2;
         }
     },
     cellItemRenderers:[[]],
     cellItemEditors:[],
-    cells:[[]],// matrix
+    cells:[],// matrix
     editPosition:null,
     bindingExpressions:[], //array of bindings arrays (bindings for each column)
     watchers:[], //array of watchers arrays (watchers for each row for each column item renderer property binding)
@@ -644,6 +719,7 @@ var DataGrid = KxGenerator.createComponent({
 
                     _self.$el.trigger('onRowEdit', [_self, new RepeaterEventArgs(rowItems, data, index)]);
                 });
+                //width='"+column.calculatedWidth+"'
                 var cell = $("<td id='cell_"+(index-1)+"_"+columnIndex+"'></td>");
                 if(_self.cells[index-1]== undefined)
                     _self.cells[index-1] = [];
@@ -658,7 +734,7 @@ var DataGrid = KxGenerator.createComponent({
             _self["rows"].push(renderedRow); 
             return rowItems;
         }
-
+      
         //trigger before row add event
         if (isPreventable) {
             //the before add event is preventable

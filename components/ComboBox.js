@@ -161,11 +161,10 @@ var ComboBoxInit = {
     },
 
     template: function () {
-        return 
-        (!this.embedded?("<div id='" + this.domID + "-wrapper' class='"+(this.colspan?"col-sm-" + this.colspan:"")+" form-group rowspan" + this.rowspan + " resizable'>"):"") +
+        return (!this.embedded?("<div id='" + this.domID + "-wrapper' class='"+(this.colspan?"col-sm-" + this.colspan:"")+" form-group rowspan" + this.rowspan + " resizable'>"):"") +
         (!this.embedded?("<label rv-style='versionStyle' rv-for='fieldName'><b>{label}</b> <span rv-if='required'>*</span></label>"):"") +
                     "<select class='form-control' name='" + this.domID + "[]' control-blocked='controlBlocked' style='min-width: 250px;' id='" + this.domID + "'></select>" +
-        (!this.embedded?("</div>"):"");
+        (!this.embedded?("</div>"):"");s
     },
 
     render: function () {

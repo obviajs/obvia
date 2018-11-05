@@ -2,7 +2,7 @@ var flowerCM = window.flowerCM || {};
 //base Components
 rjs.define("./components/base/Selectable.js", "Selectable");
 //TextField
-rjs.define("./components/TextField.js", "TextField");
+rjs.define("./components/TextField.js", "TextFieldInput");
 //TextInput
 rjs.define("./components/Text.js", "TextInput");
 rjs.define("./lib/dependencies/scripts/jquery.inputmask.bundle.min.js", "InputMaskBundle");
@@ -13,8 +13,6 @@ rjs.define("./components/Form.js", "Form");
 rjs.define("./components/Button.js", "Button");
 //Label
 rjs.define("./components/Label.js", "Label");
-//HRule
-rjs.define("./components/HRule.js", "HRule");
 //Link
 rjs.define("./components/Link.js", "Link");
 //Repeater
@@ -47,14 +45,16 @@ rjs.define("./components/TextArea.js", "TextArea");
 rjs.define("./components/Select.js", "Select");
 //DateTime
 rjs.define("./components/DateTime.js", "DateTime");
-rjs.define("lib/dependencies/scripts/moment.js", "MomentJS");
-rjs.define("https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/js/bootstrap-datepicker.min.js", "DatePickerScript");
-rjs.define("https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/css/bootstrap-datepicker.min.css", "DatePickerCSS");
+//rjs.define("lib/dependencies/scripts/moment.js", "MomentJS");
+//rjs.define("https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/js/bootstrap-datepicker.min.js", "DatePickerScript");
+//rjs.define("https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/css/bootstrap-datepicker.min.css", "DatePickerCSS");
 //DateTimeCb
 rjs.define("./components/DateTimeCb.js", "DateTimeCb");
 //Modal
 rjs.define("./components/Modal.js", "Modal");
 //AutoComplete
+//rjs.define("https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js", "Select2Script");
+//rjs.define("https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css", "Select2CSS");
 rjs.define("./components/AutoComplete/AutoCompleteEx.js", "AutoCompleteEx");
 rjs.define("./components/AutoComplete/AutoCompleteEx.css", "AutoCompleteExCSS");
 rjs.define("./components/AutoComplete/TokenRenderer.js", "TokenRenderer");
@@ -94,13 +94,11 @@ rjs.define("lib/dependencies/efilemanager/skin-lion/ui.fancytree.css", "FancyTre
 
 //rjs.define("./examples/AutoComplete/example.js", "AutoComplete");
 
-rjs.define("./examples/DataGrid/example.js", "DataGridExample");
-//rjs.define("./examples/Image/example.js", "ImageExample");
-//rjs.define("./examples/Label/example.js", "Label");
-//rjs.define("./examples/HRule/example.js", "HRuleExample");
+//rjs.define("./examples/DataGrid/example.js", "DataGridExample");
+rjs.define("./examples/Image/example.js", "ImageExample");
 //rjs.define("./examples/Text/example.js", "Text");
 
-//rjs.define("./examples/TextField/example.js", "TextField");
+rjs.define("./examples/TextField/example.js", "TextField");
 //Loader
 var loader = new Loader({ id: 'loader' });
 $('#root').append(loader.render());
@@ -121,7 +119,7 @@ rjs.require([
     "TextArea",
     // "SpellCheckJS",
     "Select",
-    //"TextEditor",
+    "TextEditor",
     "DateTime",
     "MomentJS",
     "DatePickerScript",
@@ -135,11 +133,13 @@ rjs.require([
     "SuggestionRenderer",
     "AutoCompleteEx",
     "AutoCompleteExCSS",
+    "Select2Script",
+    "Select2CSS",
     "Modal",
     "ComboBox",
     "ComboScript",
     "ComboCSS",
-    "TextField",
+    "TextFieldInput",
     //"GoogleMapScript",
     //"GoogleMap",
     "ToggleCSS",
@@ -155,19 +155,15 @@ rjs.require([
     "DataGridCellRenderer",
     "DataGridColumn",
     "DataGrid",
-    "DataGridExample",
-   // "FancyTreeScript",
+    "FancyTreeScript",
     "FancyTreeCSS",
+    "FormUpload",
     "Spacer",
     "Image",
-    "HRule",
-    "HRuleExample",
     "ImageExample"
 ], function () {
-    // rjs.define("./examples/AutoComplete/example.js", "AutoCompleteExample");
-
-    
-    //rjs.define("./examples/TextField/example.js", "TextField");
+     rjs.define("./examples/TextField/example.js", "TextField");
+    alert("hello");
     // rjs.define("./examples/CheckBox/example.js", "CheckBoxExample");
     // rjs.define("./examples/RadioButton/example.js", "RadioButtonExample");+
     // rjs.define("./examples/CheckBoxGroup/example.js", "CheckBoxGroupExample");

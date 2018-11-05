@@ -92,6 +92,25 @@ var TextInput = KxGenerator.createComponent({
         } else
             return true;
     },
+
+    // valueSetter:function(r,a){
+    //     for(var i=0;i<formProps.provider.mask.length;i++)
+    //     if(formProps.provider.mask[i].input_mask_name==r)
+    //     return this.maskId=formProps.provider.mask[i].input_mask_id,void this.$input.inputmask(JSON.parse(formProps.provider.mask[i].dataField));
+    //     this.maskId=0,this.$input.inputmask({alias:"",prefix:""})
+    // },
+    valueSetter: function (mask,value) {
+        if (this.value != value) {
+            if (typeof value == "object") {
+                value = JSON.stringify(value);
+            }
+            this.value = value;
+        }
+
+        this.trigger('change');
+
+        return this;
+    },
     
     setValue: function (value) {
         if (this.value != value) {

@@ -2,7 +2,7 @@ var oncellstyling_ex = function(e, rowIndex, columnIndex, column, data)
 {
     return "css object";
 }
-var oncelleditfinished_ex = function(e, rowIndex, columnIndex, column, data, itemEditorInfo)
+var oncelleditfinished_ex = function(e, rowIndex, columnIndex, itemEditorInfo)
 {
     var realRowIndex = rowIndex % this.rowCount;
     //e.preventDefault();
@@ -321,6 +321,7 @@ var myDataGrid = new DataGrid({
     ],
     columns: [
         {
+            width:400,
             dataField: "ministry",
             headerText: "Ministria",
             sortable:true,

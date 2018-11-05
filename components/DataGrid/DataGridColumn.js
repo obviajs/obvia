@@ -22,7 +22,8 @@ var DataGridColumn = function(p)
         oncelleditfinished: null
     };
     var props = extend(false, false, [],[],["itemRenderer", "itemEditor"], _defaultParams, p);
-
+    this.width = props["width"];
+    this.calculatedWidth = undefined;
     this.dataField = props.dataField;
     this.dataFieldToFilter = props.dataFieldToFilter;   
 	this.headerText = props.headerText;
