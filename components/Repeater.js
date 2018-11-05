@@ -179,12 +179,21 @@ var Repeater = KxGenerator.createComponent({
     //             }
     //         });
     //     });
+<<<<<<< HEAD
 
     //     return valid;
     // },
 
 
 
+=======
+
+    //     return valid;
+    // },
+
+
+
+>>>>>>> 882112066650c705ef6cef5d7430ea4f49578ca6
     
     //handle row add click
     addRowHandler: function () {

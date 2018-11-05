@@ -1,8 +1,6 @@
 var flowerCM = window.flowerCM || {};
 //base Components
 rjs.define("./components/base/Selectable.js", "Selectable");
-//TextField
-rjs.define("./components/TextField.js", "TextFieldInput");
 //TextInput
 rjs.define("./components/Text.js", "TextInput");
 rjs.define("./lib/dependencies/scripts/jquery.inputmask.bundle.min.js", "InputMaskBundle");
@@ -13,10 +11,17 @@ rjs.define("./components/Form.js", "Form");
 rjs.define("./components/Button.js", "Button");
 //Label
 rjs.define("./components/Label.js", "Label");
+//HRule
+rjs.define("./components/HRule.js", "HRule");
+// Color Picker
+rjs.define("./components/Color.js", "Color");
+//Container
+rjs.define("./components/Container.js", "Container");
 //Link
 rjs.define("./components/Link.js", "Link");
 //Repeater
-rjs.define("./components/Repeater.js", "Repeater");
+// rjs.define("./components/Repeater.js", "Repeater");
+
 //List
 rjs.define("./components/List.js", "List");
 //CheckBox
@@ -99,6 +104,12 @@ rjs.define("./examples/Image/example.js", "ImageExample");
 //rjs.define("./examples/Text/example.js", "Text");
 
 rjs.define("./examples/TextField/example.js", "TextField");
+//rjs.define("./examples/Label/example.js", "Label");
+rjs.define("./examples/HRule/example.js", "HRuleExample");
+rjs.define("./examples/Color/example.js", "ColorExample");
+rjs.define("./examples/Container/example.js", "ContainerExample");
+
+//rjs.define("./examples/Text/example.js", "Text");
 //Loader
 var loader = new Loader({ id: 'loader' });
 $('#root').append(loader.render());
@@ -109,7 +120,7 @@ rjs.require([
     "Form",
     "HierarchicalTree",
     "BootBox",
-    "Repeater",
+    // "Repeater",
     "List",
     "Amount",
     "Label",
@@ -139,7 +150,6 @@ rjs.require([
     "ComboBox",
     "ComboScript",
     "ComboCSS",
-    "TextFieldInput",
     //"GoogleMapScript",
     //"GoogleMap",
     "ToggleCSS",
@@ -160,10 +170,19 @@ rjs.require([
     "FormUpload",
     "Spacer",
     "Image",
-    "ImageExample"
+    "ImageExample",
+    "HRule",
+    "HRuleExample",
+    "Color",
+    "ColorExample",
+    "Container",
+    "ContainerExample"
+    
 ], function () {
-     rjs.define("./examples/TextField/example.js", "TextField");
-    alert("hello");
+    // rjs.define("./examples/AutoComplete/example.js", "AutoCompleteExample");
+
+    // rjs.define("./examples/DataGrid/example.js", "DataGridExample");
+    
     // rjs.define("./examples/CheckBox/example.js", "CheckBoxExample");
     // rjs.define("./examples/RadioButton/example.js", "RadioButtonExample");+
     // rjs.define("./examples/CheckBoxGroup/example.js", "CheckBoxGroupExample");
