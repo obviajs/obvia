@@ -20,7 +20,7 @@ rjs.define("./components/Container.js", "Container");
 //Link
 rjs.define("./components/Link.js", "Link");
 //Repeater
-// rjs.define("./components/Repeater.js", "Repeater");
+rjs.define("./components/Repeater.js", "Repeater");
 
 //List
 rjs.define("./components/List.js", "List");
@@ -99,17 +99,8 @@ rjs.define("lib/dependencies/efilemanager/skin-lion/ui.fancytree.css", "FancyTre
 
 //rjs.define("./examples/AutoComplete/example.js", "AutoComplete");
 
-//rjs.define("./examples/DataGrid/example.js", "DataGridExample");
-rjs.define("./examples/Image/example.js", "ImageExample");
-//rjs.define("./examples/Text/example.js", "Text");
+rjs.define("./examples/DataGrid/example.js", "DataGridExample");
 
-rjs.define("./examples/TextField/example.js", "TextField");
-//rjs.define("./examples/Label/example.js", "Label");
-rjs.define("./examples/HRule/example.js", "HRuleExample");
-rjs.define("./examples/Color/example.js", "ColorExample");
-rjs.define("./examples/Container/example.js", "ContainerExample");
-
-//rjs.define("./examples/Text/example.js", "Text");
 //Loader
 var loader = new Loader({ id: 'loader' });
 $('#root').append(loader.render());
@@ -120,7 +111,7 @@ rjs.require([
     "Form",
     "HierarchicalTree",
     "BootBox",
-    // "Repeater",
+    "Repeater",
     "List",
     "Amount",
     "Label",
@@ -168,21 +159,19 @@ rjs.require([
     "FancyTreeScript",
     "FancyTreeCSS",
     "FormUpload",
-    "Spacer",
-    "Image",
-    "ImageExample",
-    "HRule",
-    "HRuleExample",
-    "Color",
-    "ColorExample",
-    "Container",
-    "ContainerExample"
+    "Spacer"
     
 ], function () {
     // rjs.define("./examples/AutoComplete/example.js", "AutoCompleteExample");
 
-    // rjs.define("./examples/DataGrid/example.js", "DataGridExample");
+    rjs.define("./examples/DataGrid/example.js", "DataGridExample");
     
+    //rjs.define("./examples/Image/example.js", "ImageExample");
+    //rjs.define("./examples/Text/example.js", "Text");
+    //rjs.define("./examples/Label/example.js", "Label");
+    //rjs.define("./examples/HRule/example.js", "HRuleExample");
+    //rjs.define("./examples/Color/example.js", "ColorExample");
+    //rjs.define("./examples/Container/example.js", "ContainerExample");
     // rjs.define("./examples/CheckBox/example.js", "CheckBoxExample");
     // rjs.define("./examples/RadioButton/example.js", "RadioButtonExample");+
     // rjs.define("./examples/CheckBoxGroup/example.js", "CheckBoxGroupExample");
@@ -190,7 +179,6 @@ rjs.require([
     // rjs.define("./examples/Upload/example.js", "UploadExample");
     // rjs.define("./examples/Form/example.js", "FormExample");
     // rjs.define("./examples/Form/ajaxExample.js", "FormExample");
-    
     // rjs.define("./examples/HierarchicalTree/example.js", "HierarchicalTreeExample");
     // rjs.define("./examples/Form/example.js", "FormExample");
     // rjs.define("./examples/Form/ajaxExample.js", "FormExample");
