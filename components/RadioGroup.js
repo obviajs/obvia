@@ -72,7 +72,12 @@ var RadioGroup = KxGenerator.createComponent({
                 registerTo: this.$el, events: {
                     'afterAttach': this.afterAttach.bind(this)
                 }
-            }
+            },
+			{
+                registerTo: this.list, events: {
+                    'change': this.changeHandler.bind(this)
+                }
+            },
         ];
     },
 
