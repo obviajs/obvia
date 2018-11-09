@@ -299,46 +299,49 @@ var Repeater = KxGenerator.createComponent({
 
 
                 //handle component change event and delegate it to repeater
-                el.on('creationComplete', function (e) { 
-                    e.stopImmediatePropagation();
-                    e.stopPropagation();
-                    ccComponents.push(el.id);
-                    
-                    if (ccComponents.length == _self.components.length) {
-                        //trigger row add event
-                        _self.$el.trigger('onRowAdd', [_self, new RepeaterEventArgs(_self.rowItems, data, index)]);
-                        //duhet te shtojme nje flag qe ne rast se metoda addRow eshte thirrur nga addRowHangler te mos e exec kodin meposhte
+                el.on('creationComplete', (function (ci) { 
+                    return (function(e) { // a closure is created
+                        e.stopImmediatePropagation();
+                        e.stopPropagation();
+                        ccComponents.push(el.id);
                         
-                        //manage dp
-                        _self.currentItem = data;
+                        if (ccComponents.length == _self.components.length) {
+                            //trigger row add event
+                            _self.$el.trigger('onRowAdd', [_self, new RepeaterEventArgs(_self.rowItems, data, ci)]);
+                            //duhet te shtojme nje flag qe ne rast se metoda addRow eshte thirrur nga addRowHangler te mos e exec kodin meposhte
+                            
+                            //manage dp
+                            _self.currentItem = data;
 
-                        _self.currentIndex <= index ? _self.currentIndex = index : _self.currentIndex = _self.currentIndex;
-                        if (_self.currentIndex > 1 && _self.rendering.actions) {
-                            model.displayRemoveButton = true;
-                        }
-                        if (_self.currentIndex == 1) {
-                            model.displayRemoveButton = false;
-                        }
+                            _self.currentIndex <= ci ? _self.currentIndex = ci : _self.currentIndex = _self.currentIndex;
+                            if (_self.currentIndex > 1 && _self.rendering.actions) {
+                                model.displayRemoveButton = true;
+                            }
+                            if (_self.currentIndex == 1) {
+                                model.displayRemoveButton = false;
+                            }
 
-                        //skip dp if it already exist
-                        var addRowFlag = false;
-                        if (index > _self.dataProvider.length) {
-                            _self.dataProvider.push(_self.currentItem);
-                            addRowFlag = true;
-                        }
+                            //skip dp if it already exist
+                            var addRowFlag = false;
+                            if (ci > _self.dataProvider.length) {
+                                _self.dataProvider.push(_self.currentItem);
+                                addRowFlag = true;
+                            }
+                            
+                            if (_self.currentIndex == _self.dataProvider.length && !addRowFlag) {
+                                _self.trigger('creationComplete');
+                                _self.focusComponent(0, 0);
+                            }
+
+                            //animate
+                            if (addRowFlag && focusOnRowAdd) {
+                                _self.rowItems[_self.rowItems.length - 1][_self.components[0].props.id].scrollTo();
+                            }         
                         
-                        if (_self.currentIndex == _self.dataProvider.length && !addRowFlag) {
-                            _self.trigger('creationComplete');
-                            _self.focusComponent(0, 0);
                         }
+                    });	
+                })(index));
 
-                        //animate
-                        if (addRowFlag && focusOnRowAdd) {
-                            _self.rowItems[index - 1][_self.components[0].props.id].scrollTo();
-                        }         
-                    
-                    }
-                });
 
                 if (_self.rendering.direction == 'horizontal') {
                    // el.$el.addClass('float-left');
@@ -392,6 +395,8 @@ var Repeater = KxGenerator.createComponent({
                 }
                 else
                     _self.$container.prepend(renderedRow);
+            }else{
+                _self.$container.prepend(renderedRow);
             }
             _self["rows"].push(renderedRow); 
             return rowItems;
@@ -460,7 +465,7 @@ var Repeater = KxGenerator.createComponent({
 
                 rowItems[component.props.id] = [this[component.props.id][index - 1]];
                 this[component.props.id].splice(index - 1, 1);
-                this.rows.splice(index - 1, 1);
+                
             }.bind(this));
 
             //manage dp
@@ -472,7 +477,7 @@ var Repeater = KxGenerator.createComponent({
 
             this.$el.trigger('onRowDelete', [this, new RepeaterEventArgs([], this.currentItem, index, rowItems)]);
             this.rowItems.splice(index - 1, 1);
-
+            this.rows.splice(index - 1, 1);
             //animate
             if (focusOnRowDelete)
                 this.rowItems[index - 2][this.components[0].props.id].scrollTo();
