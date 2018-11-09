@@ -67,7 +67,7 @@ var Button = KxGenerator.createComponent({
 
     template: function () {
         return  "<div id='" + this.domID + "-wrapper'>" +
-                    "<button rv-type='type' rv-enabled='model.enabled' rv-style='style' class='btn btn-default " +jcolor+ "' rv-html='value'></button>" +
+                    "<button rv-type='type' rv-enabled='model.enabled' rv-style='style' class='btn btn-default' rv-html='value'></button>" +
                 "</div>";    
     },
     
