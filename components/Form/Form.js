@@ -170,10 +170,24 @@ var Form = KxGenerator.createComponent({
                 if(cXhr.upload){
                     cXhr.upload.addEventListener('progress', 
                     function(e){
+                        if(e.lengthComputable){
+                            var max = e.total;
+                            var current = e.loaded;
+                    
+                            var Percentage = (current * 100)/max;
+                            console.log(Percentage);
+                    
+                    
+                            if(Percentage >= 100)
+                            {
+                               // process completed  
+                            }
+                        }
                         _self.trigger(FormEventType.POST_PROGRESS, [e]);        
                     }
                     ,false);
                 }
+                return cXhr;
             },
             error: function(err){
                 console.error(err);

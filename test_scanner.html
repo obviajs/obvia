@@ -20,6 +20,7 @@
         <script type="text/javascript" src="lib/P3Com/Scanner/PaperType.js"></script>
         <script type="text/javascript" src="lib/P3Com/Scanner/ScannerEventType.js"></script>
         <script type="text/javascript" src="lib/ArrayUtils.js"></script>
+        <script type="text/javascript" src="lib/BinUtils.js"></script>
         <script type="text/javascript" src="lib/ObjectUtils.js"></script>
         <script type="text/javascript" src="lib/StringUtils.js"></script>
         <script type="text/javascript" src="lib/DecoratorUtils.js"></script>
@@ -32,6 +33,8 @@
         <script type="text/javascript" src="components/Modal.js"></script>
         <script type="text/javascript" src="components/List.js"></script>
         <script type="text/javascript" src="components/Button.js"></script>
+        <script type="text/javascript" src="components/Form/Form.js"></script>
+        <script type="text/javascript" src="components/Form/FormEventType.js"></script>
         
         <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
         <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
@@ -43,8 +46,24 @@
     </body>
     <script>
 		var P3ComInstance = new P3Com("ws://192.168.1.62:4669/");
-        var scan = new Scanner(P3ComInstance, "root");
+        var scan = new Scanner(P3ComInstance, "scan");
         
+        var myForm = new Form({
+            id: "form",
+            type: "form",
+            style: "",
+            class: "",
+            action: "test_scanner.php"
+        });
+        
+        var i = 0;
+        myForm.on(FormEventType.POST_PROGRESS, function(e, data) {
+            console.log(e);
+            console.log("======")
+            console.log(data);
+            console.log("-end-" + ++i)
+        });
+
         var myRadioGroup = null;
 		scan.on(ScannerEventType.SCANNER_LIST_LOADED, function(e, scannersList){
 			if(!myRadioGroup)
@@ -66,9 +85,9 @@
 					value: [],
 					onchange : function(e){
                         //console.log(myRadioGroup.value[0].deviceId);
-						scanItem.deviceId = myRadioGroup.value[0].deviceId;
+                        scan.DeviceId = myRadioGroup.value[0].deviceId;
+                        
                         //e.preventDefault();
-                        console.log(scanItem.deviceId);
 					} 
 				});
                 myModal.$body.append(myRadioGroup.render());
@@ -77,9 +96,13 @@
 			}
         });
         
-        scan.on(ScannerEventType.DOCUMENT_SCANNED, function(e, showScannedItem){
+        scan.on(ScannerEventType.DOCUMENT_SCANNED, function(e, base64string, contentType){
             console.log("Dokumenti u skanua. " + e);
-            $("#scan").html(showScannedItem);
+            saveScan.enable();
+
+            var blob = BinUtils.b64toBlob(base64string, contentType);
+            myForm.addFileUploadField("scannedDocument", blob);   
+            myForm.post();          
         });
 			
         function loadScanners() 
@@ -90,21 +113,31 @@
         var scanItem = new ScanProperties();
         scanItem.deviceId = '';
         function scanDocument() 
-        {            
-            scanItem.filepath = "c:\\com\\";
-            scanItem.name = "name";
-            scanItem.extension = FileExtension.PDF;
-            //scanItem.deviceId = "{6BDD1FC6-810F-11D0-BEC7-08002BE2092F}\\0000";
-            scanItem.isAdf = false;
-            
-            paperSize = PaperType.toPixels(PaperType.A4, 140);
-            scanItem.WIA_HORIZONTAL_SCAN_SIZE_PIXELS = 600;//paperSize.width;
-            scanItem.WIA_VERTICAL_SCAN_SIZE_PIXELS = 600;//paperSize.height;
-            console.log(scanItem);
+        {   
+            if (scan.DeviceId) {
+                scanItem.filepath = "c:\\com\\";
+                scanItem.name = "name";
+                scanItem.extension = FileExtension.PDF;
+                //scanItem.deviceId = "{6BDD1FC6-810F-11D0-BEC7-08002BE2092F}\\0000";
+                scanItem.isAdf = true;
+                
+                paperSize = PaperType.toPixels(PaperType.A4, 140);
+                scanItem.WIA_HORIZONTAL_SCAN_SIZE_PIXELS = paperSize.width;
+                scanItem.WIA_VERTICAL_SCAN_SIZE_PIXELS = paperSize.height;
+                console.log(scanItem);
 
-            scan.Scan(scanItem);
+                scan.Scan(scanItem);
+            }
+            else {
+                whenDefined(scan, "DeviceId", scanDocument);
+                loadScanners();
+            }
         }
-		
+
+        function saveScannedItem () {
+            scan.SaveScan();
+        }
+
         var myModal = new Modal({
             id: 'autocomplete-modal-' + this.domID,
             size: 'modal-lg',
@@ -114,7 +147,7 @@
         var myButton = new Button({
             id: 'button',
             type: "button",
-            value: "Click Me",
+            value: "Load Scanners",
             style: '',
             class: "btn btn-success",
             onclick : loadScanners
@@ -124,11 +157,24 @@
         var confirmScanner = new Button({
             id: 'button',
             type: "button",
-            value: "Skano",
+            value: "Scan Document",
             style: '',
             class: "btn btn-success",
             onclick : scanDocument
         });
+        $('#root').append(confirmScanner.render());
+
+        var saveScan = new Button({
+            id: 'button',
+            type: "button",
+            value: "Save Scan",
+            style: '',
+            class: "btn btn-success",
+            //enabled: false,
+            onclick : saveScannedItem            
+        });
+        saveScan.disable();
+        $('#root').append(saveScan.render());
 
         myModal.on('creationComplete', function (e) {
             //trigger autocomplete complete
