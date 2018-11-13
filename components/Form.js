@@ -18,6 +18,7 @@ var Form = KxGenerator.createComponent({
 
         this.ccComponents = [];
         this.$container = this.$el.find('#' + model.componentContainerID);
+        this.$form = this.$el.find('#'+ this.domID + "-form");
     },
 
     addComponent: function (component, container, cIndex) {
@@ -128,7 +129,7 @@ var Form = KxGenerator.createComponent({
 
     template: function () {
         return "<div id='" + this.domID + "-wrapper' class='col-sm-12'>" +
-                    "<form name='view_form' method='POST' rv-action='model.formAction' class='view_form'>" +
+                    "<form name='view_form' id='" + this.domID + "-form' method='POST' rv-action='model.formAction' class='view_form'>" +
                         "<div class='col-sm-12' style='padding: 10px'>" +
                             this.renderFormHeader(this.viewMode) + 
                             "<div>" +
