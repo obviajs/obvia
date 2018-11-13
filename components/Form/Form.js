@@ -129,7 +129,7 @@ var Form = KxGenerator.createComponent({
 
     template: function () {
         return "<div id='" + this.domID + "-wrapper' class='col-sm-12'>" +
-                    "<form name='view_form' id='" + this.domID + "-form' method='POST' rv-action='model.formAction' class='view_form'>" +
+                    "<form name='view_form' id='" + this.domID + "-form' method='POST' action='"+this.action+"' class='view_form'>" +
                         "<div class='col-sm-12' style='padding: 10px'>" +
                             this.renderFormHeader(this.viewMode) + 
                             "<div>" +
@@ -141,12 +141,56 @@ var Form = KxGenerator.createComponent({
                 "</div>";
             
     },
-
+    formData: null,
+    addFileUploadField: function(name, blob){
+        if(!this.formData){
+            this.formData = new FormData(this.$form[0]);
+        }
+        this.formData.append(name, blob);
+    },
+    getFormData: function(){
+        if(!this.formData){
+            this.formData = new FormData(this.$form[0]);
+        }
+        return this.formData;
+    },
+    post: function(dataType){
+        var type = dataType? dataType:"json";
+        var _self = this;
+        $.ajax({
+            url: _self.action,
+            data: this.getFormData(),
+            type: "POST",
+            contentType: false,
+            processData: false,
+            cache: false,
+            "dataType": type, 
+            xhr: function(){
+                var cXhr = $.ajaxSettings.xhr();
+                if(cXhr.upload){
+                    cXhr.upload.addEventListener('progress', 
+                    function(e){
+                        _self.trigger(FormEventType.POST_PROGRESS, [e]);        
+                    }
+                    ,false);
+                }
+            },
+            error: function(err){
+                console.error(err);
+                _self.trigger(FormEventType.POST_ERROR, [err]);
+            },
+            success: function(data){
+                _self.trigger(FormEventType.POST_SUCCESS, [data]);
+            },
+            complete: function(jqXHR, textStatus){
+                _self.trigger(FormEventType.POST_COMPLETE, [jqXHR, textStatus]);
+            }
+        });
+    },
     render: function () {
         this.components.forEach(function (component, cIndex) {
             this.addComponent(component, this.$container, cIndex);
         }.bind(this));
-        
         return this.$el;
     }
 });

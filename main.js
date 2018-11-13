@@ -6,7 +6,8 @@ rjs.define("./components/Text.js", "TextInput");
 rjs.define("./lib/dependencies/scripts/jquery.inputmask.bundle.min.js", "InputMaskBundle");
 //Form
 rjs.define("lib/dependencies/scripts/bootstrap-bootbox.js", "BootBox");
-rjs.define("./components/Form.js", "Form");
+rjs.define("./components/Form/Form.js", "Form");
+rjs.define("./components/Form/FormEventType.js", "FormEventType");
 //Button
 rjs.define("./components/Button.js", "Button");
 //Label
@@ -109,6 +110,7 @@ loader.show();
 rjs.require([
     "DOMContentLoaded",
     "Form",
+    "FormEventType",
     "HierarchicalTree",
     "BootBox",
     "Repeater",
