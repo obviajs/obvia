@@ -45,7 +45,7 @@
         <div id="scan" width="400px" height="400px"></div>
     </body>
     <script>
-		var P3ComInstance = new P3Com("ws://192.168.1.62:4669/");
+		var P3ComInstance = new P3Com("ws://192.168.1.55:4669/");
         var scan = new Scanner(P3ComInstance, "scan");
         
         var myForm = new Form({
@@ -112,7 +112,7 @@
 
         var scanItem = new ScanProperties();
         scanItem.deviceId = '';
-        function scanDocument() 
+        function scanDocument(dpi) 
         {   
             if (scan.DeviceId) {
                 scanItem.filepath = "c:\\com\\";
@@ -120,8 +120,9 @@
                 scanItem.extension = FileExtension.PDF;
                 //scanItem.deviceId = "{6BDD1FC6-810F-11D0-BEC7-08002BE2092F}\\0000";
                 scanItem.isAdf = true;
-                
-                paperSize = PaperType.toPixels(PaperType.A4, 140);
+                scanItem.WIA_HORIZONTAL_SCAN_RESOLUTION_DPI = dpi;
+                scanItem.WIA_VERTICAL_SCAN_RESOLUTION_DPI = dpi;
+                paperSize = PaperType.toPixels(PaperType.A4, dpi);
                 scanItem.WIA_HORIZONTAL_SCAN_SIZE_PIXELS = paperSize.width;
                 scanItem.WIA_VERTICAL_SCAN_SIZE_PIXELS = paperSize.height;
                 console.log(scanItem);
@@ -160,7 +161,7 @@
             value: "Scan Document",
             style: '',
             class: "btn btn-success",
-            onclick : scanDocument
+            onclick : function(e){scanDocument(200);}
         });
         $('#root').append(confirmScanner.render());
 
