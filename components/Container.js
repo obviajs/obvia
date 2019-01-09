@@ -5,19 +5,19 @@
  */
 
 //component definition
-var Container = KxGenerator.createComponent({
+var ContainerInit = {
     //component data
     initModel: function () {
         return {
-            class: this.class || "mb-1 form-group col-sm-" + this.colspan + " rowspan" + this.rowspan + " resizable",
             style: this.style
         }
     },
 
     beforeAttach: function () {
+        this.ccComponents = [];
         this.$container = this.$el.attr('id') == this.domID?this.$el:this.$el.find("#" + this.domID);
     },
-
+    type:"container",
     registerEvents: function () {
         return [
             {
@@ -40,26 +40,14 @@ var Container = KxGenerator.createComponent({
         this.trigger('creationComplete');
     },
 
-    getValue: function () {
-        return null;
-    },
-
-    setValue: function (value) {
-        return null
-    },
-
     template: function () { 
-        return  '<div id="' + this.domID + '" style = "width:200px;height:100px;background-color:lightblue" ><h5>{label}</h5></i></div>'; 
+        return  '<div id="' + this.domID + '" class="container" style="'+(this.width?'width:'+this.width+'px;':'')+(this.height?'width:'+this.height+'px;':'')+'" ></div>'; 
     },
   
-    
-    render: function () {
-        return this.$el;
-    }
-});
-
+};
+ContainerInit = extend(true, true, Parent, ContainerInit);
+var Container = KxGenerator.createComponent(ContainerInit);
 //component prototype
 Container.type = 'container';
-
 //register dom element for this component
 KxGenerator.registerDOMElement(Container, 'kx-container');

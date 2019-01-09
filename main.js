@@ -1,6 +1,8 @@
 var flowerCM = window.flowerCM || {};
 //base Components
 rjs.define("./components/base/Selectable.js", "Selectable");
+rjs.define("./components/base/Parent.js", "Parent");
+rjs.define("./components/base/NavParent.js", "NavParent");
 //TextInput
 rjs.define("./components/Text.js", "TextInput");
 rjs.define("./lib/dependencies/scripts/jquery.inputmask.bundle.min.js", "InputMaskBundle");
@@ -18,11 +20,13 @@ rjs.define("./components/HRule.js", "HRule");
 rjs.define("./components/Color.js", "Color");
 //Container
 rjs.define("./components/Container.js", "Container");
+//Tab
+rjs.define("./components/Tab/TabNavigator.js", "TabNavigator");
+rjs.define("./components/Tab/Tab.js", "Tab");
 //Link
 rjs.define("./components/Link.js", "Link");
 //Repeater
 rjs.define("./components/Repeater.js", "Repeater");
-
 //List
 rjs.define("./components/List.js", "List");
 //CheckBox
@@ -100,8 +104,10 @@ rjs.define("lib/dependencies/efilemanager/skin-lion/ui.fancytree.css", "FancyTre
 
 //rjs.define("./examples/AutoComplete/example.js", "AutoComplete");
 
-rjs.define("./examples/DataGrid/example.js", "DataGridExample");
+//rjs.define("./examples/DataGrid/example.js", "DataGridExample");
 
+//rjs.define("./examples/Container/example.js", "ContainerExample");
+rjs.define("./examples/Tab/example.js", "TabExample");
 //Loader
 var loader = new Loader({ id: 'loader' });
 $('#root').append(loader.render());
@@ -109,6 +115,12 @@ loader.show();
 
 rjs.require([
     "DOMContentLoaded",
+    "Selectable",
+    "Parent",
+    "NavParent",
+    "Container",
+    "TabNavigator",
+    "Tab",
     "Form",
     "FormEventType",
     "HierarchicalTree",
@@ -161,19 +173,19 @@ rjs.require([
     "FancyTreeScript",
     "FancyTreeCSS",
     "FormUpload",
-    "Spacer"
+    "Spacer",
+    "TabExample"
     
 ], function () {
     // rjs.define("./examples/AutoComplete/example.js", "AutoCompleteExample");
 
-    rjs.define("./examples/DataGrid/example.js", "DataGridExample");
+    //rjs.define("./examples/DataGrid/example.js", "DataGridExample");
     
     //rjs.define("./examples/Image/example.js", "ImageExample");
     //rjs.define("./examples/Text/example.js", "Text");
     //rjs.define("./examples/Label/example.js", "Label");
     //rjs.define("./examples/HRule/example.js", "HRuleExample");
     //rjs.define("./examples/Color/example.js", "ColorExample");
-    //rjs.define("./examples/Container/example.js", "ContainerExample");
     // rjs.define("./examples/CheckBox/example.js", "CheckBoxExample");
     // rjs.define("./examples/RadioButton/example.js", "RadioButtonExample");+
     // rjs.define("./examples/CheckBoxGroup/example.js", "CheckBoxGroupExample");

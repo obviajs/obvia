@@ -164,14 +164,14 @@ var ComboBoxInit = {
         return (!this.embedded?("<div id='" + this.domID + "-wrapper' class='"+(this.colspan?"col-sm-" + this.colspan:"")+" form-group rowspan" + this.rowspan + " resizable'>"):"") +
         (!this.embedded?("<label rv-style='versionStyle' rv-for='fieldName'><b>{label}</b> <span rv-if='required'>*</span></label>"):"") +
                     "<select class='form-control' name='" + this.domID + "[]' control-blocked='controlBlocked' style='min-width: 250px;' id='" + this.domID + "'></select>" +
-        (!this.embedded?("</div>"):"");s
+        (!this.embedded?("</div>"):"");
     },
 
     render: function () {
         return this.$el;
     }
 };
-ComboBoxInit = copyAccessors(Selectable, ComboBoxInit);
+ComboBoxInit = extend(true, true, Selectable, ComboBoxInit);
 var ComboBox = KxGenerator.createComponent(ComboBoxInit);
 //component prototype
 ComboBox.type = 'combobox';

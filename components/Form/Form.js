@@ -5,7 +5,7 @@
  */
 
 //component definition
-var Form = KxGenerator.createComponent({
+var FormInit = {
     initModel: function () {
         return {
             formAction: (this.viewMode == "steps") ? "?forms/modify_form_submit" : "#",
@@ -20,38 +20,7 @@ var Form = KxGenerator.createComponent({
         this.$container = this.$el.find('#' + model.componentContainerID);
         this.$form = this.$el.find('#'+ this.domID + "-form");
     },
-
-    addComponent: function (component, container, cIndex) {
-        if (typeof component.constructor == "string") {
-            component.constructor = eval(component.constructor);
-        }
-        var cmp = new component.constructor(component.props);
-     
-        cmp.on('creationComplete', function (e) {
-            e.stopImmediatePropagation();
-            e.stopPropagation();
-
-            this.ccComponents.push(component.props.id);
-          
-            if (this.ccComponents.length == this.components.length) {
-                this.trigger('creationComplete');
-            }
-
-        }.bind(this));
-
-        container.append(cmp.render());
-        
-        //expose component model
-        if (!this.idField)
-            this[cmp.id] = cmp;
-        else
-            this[ cmp[this.idField] ] = cmp;
-
-        cmp.parent = this;
-        cmp.parentType = 'form';
-        cmp.parentForm = this;
-    },
-
+    type:"form",
     validate: function () {
         var valid = true;
         this.errorList = [];
@@ -148,11 +117,20 @@ var Form = KxGenerator.createComponent({
         }
         this.formData.append(name, blob);
     },
+    addHiddenField: function(name, value){
+        if(!this.formData){
+            this.formData = new FormData(this.$form[0]);
+        }
+        this.formData.append(name, value);
+    },
     getFormData: function(){
         if(!this.formData){
             this.formData = new FormData(this.$form[0]);
         }
         return this.formData;
+    },
+    resetFormData: function(){
+        this.formData = undefined;
     },
     post: function(dataType){
         var type = dataType? dataType:"json";
@@ -177,7 +155,6 @@ var Form = KxGenerator.createComponent({
                             var Percentage = (current * 100)/max;
                             console.log(Percentage);
                     
-                    
                             if(Percentage >= 100)
                             {
                                // process completed  
@@ -200,15 +177,10 @@ var Form = KxGenerator.createComponent({
                 _self.trigger(FormEventType.POST_COMPLETE, [jqXHR, textStatus]);
             }
         });
-    },
-    render: function () {
-        this.components.forEach(function (component, cIndex) {
-            this.addComponent(component, this.$container, cIndex);
-        }.bind(this));
-        return this.$el;
     }
-});
-
+};
+FormInit = extend(true, true, Parent, FormInit);
+var Form = KxGenerator.createComponent(FormInit);
 //component prototype
 Form.type = 'form';
 

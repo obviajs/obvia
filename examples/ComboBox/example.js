@@ -10,5 +10,7 @@ var myCombo = new ComboBox({
     required: false,
     value: "2"
 });
-
+myCombo.on('creationComplete', function(e){
+    loader.hide();    
+});
 $('#root').append(myCombo.render());
