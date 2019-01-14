@@ -52,7 +52,7 @@
             id: "form",
             type: "form",
             style: "",
-            class: "",
+            class: "formHtml",
             action: "test_scanner.php"
         });
         
@@ -91,7 +91,7 @@
 					} 
 				});
                 myModal.$body.append(myRadioGroup.render());
-                myModal.$body.append(confirmScanner.render());
+                //myModal.$body.append(confirmScanner.render());
 				myModal.show();
 			}
         });
@@ -100,9 +100,12 @@
             console.log("Dokumenti u skanua. " + e);
             saveScan.enable();
 
-            var blob = BinUtils.b64toBlob(base64string, contentType);
+            var blob = BinUtils.b64toBlob(base64string, contentType);            
             myForm.addFileUploadField("scannedDocument", blob);   
-            myForm.post();          
+            myForm.post();    
+            
+            P3ComInstance = null; 
+            scan = null;     
         });
 			
         function loadScanners() 
@@ -114,17 +117,20 @@
         scanItem.deviceId = '';
         function scanDocument(dpi) 
         {   
+            P3ComInstance = new P3Com("ws://192.168.1.55:4669/");
+            scan = new Scanner(P3ComInstance, "scan");
+            
             if (scan.DeviceId) {
                 scanItem.filepath = "c:\\com\\";
                 scanItem.name = "name";
                 scanItem.extension = FileExtension.PDF;
                 //scanItem.deviceId = "{6BDD1FC6-810F-11D0-BEC7-08002BE2092F}\\0000";
                 scanItem.isAdf = true;
-                scanItem.WIA_HORIZONTAL_SCAN_RESOLUTION_DPI = dpi;
-                scanItem.WIA_VERTICAL_SCAN_RESOLUTION_DPI = dpi;
+                scanItem.HORIZONTAL_SCAN_RESOLUTION_DPI = dpi;
+                scanItem.VERTICAL_SCAN_RESOLUTION_DPI = dpi;
                 paperSize = PaperType.toPixels(PaperType.A4, dpi);
-                scanItem.WIA_HORIZONTAL_SCAN_SIZE_PIXELS = paperSize.width;
-                scanItem.WIA_VERTICAL_SCAN_SIZE_PIXELS = paperSize.height;
+                scanItem.HORIZONTAL_SCAN_SIZE_PIXELS = paperSize.width;
+                scanItem.VERTICAL_SCAN_SIZE_PIXELS = paperSize.height;
                 console.log(scanItem);
 
                 scan.Scan(scanItem);
@@ -156,7 +162,7 @@
         $('#root').append(myButton.render());
 
         var confirmScanner = new Button({
-            id: 'button',
+            id: 'scan',
             type: "button",
             value: "Scan Document",
             style: '',
@@ -166,7 +172,7 @@
         $('#root').append(confirmScanner.render());
 
         var saveScan = new Button({
-            id: 'button',
+            id: 'save-scan',
             type: "button",
             value: "Save Scan",
             style: '',
