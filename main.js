@@ -1,28 +1,31 @@
 var flowerCM = window.flowerCM || {};
 //base Components
+rjs.define("./components/base/Component.js", "Component");
 rjs.define("./components/base/Selectable.js", "Selectable");
-rjs.define("./components/base/Parent.js", "Parent");
-rjs.define("./components/base/NavParent.js", "NavParent");
+//rjs.define("./components/base/Parent.js", "Parent");
+//rjs.define("./components/base/NavParent.js", "NavParent");
 //TextInput
 rjs.define("./components/Text.js", "TextInput");
 rjs.define("./lib/dependencies/scripts/jquery.inputmask.bundle.min.js", "InputMaskBundle");
 //Form
 rjs.define("lib/dependencies/scripts/bootstrap-bootbox.js", "BootBox");
-rjs.define("./components/Form/Form.js", "Form");
+//rjs.define("./components/Form/Form.js", "Form");
 rjs.define("./components/Form/FormEventType.js", "FormEventType");
 //Button
 rjs.define("./components/Button.js", "Button");
 //Label
-rjs.define("./components/Label.js", "Label");
+//rjs.define("./components/Label.js", "Label");
+rjs.define("./components/_Label.js", "Label");
+
 //HRule
 rjs.define("./components/HRule.js", "HRule");
 // Color Picker
 rjs.define("./components/Color.js", "Color");
 //Container
-rjs.define("./components/Container.js", "Container");
+//rjs.define("./components/Container.js", "Container");
 //Tab
-rjs.define("./components/Tab/TabNavigator.js", "TabNavigator");
-rjs.define("./components/Tab/Tab.js", "Tab");
+//rjs.define("./components/Tab/TabNavigator.js", "TabNavigator");
+//rjs.define("./components/Tab/Tab.js", "Tab");
 //Link
 rjs.define("./components/Link.js", "Link");
 //Repeater
@@ -101,103 +104,102 @@ rjs.define("./components/Spacer.js", "Spacer");
 //HierarchicalTree
 //rjs.define("https://cdnjs.cloudflare.com/ajax/libs/jquery.fancytree/2.28.1/jquery.fancytree-all-deps.js", "FancyTreeScript");
 rjs.define("lib/dependencies/efilemanager/skin-lion/ui.fancytree.css", "FancyTreeCSS");
-
+rjs.define("./examples/Label/example.js", "LabelExample");
 //rjs.define("./examples/AutoComplete/example.js", "AutoComplete");
 
 //rjs.define("./examples/DataGrid/example.js", "DataGridExample");
 
 //rjs.define("./examples/Container/example.js", "ContainerExample");
-rjs.define("./examples/Tab/example.js", "TabExample");
+//rjs.define("./examples/Tab/example.js", "TabExample");
 //Loader
-var loader = new Loader({ id: 'loader' });
-$('#root').append(loader.render());
-loader.show();
 
 rjs.require([
-    "DOMContentLoaded",
-    "Selectable",
-    "Parent",
-    "NavParent",
-    "Container",
-    "TabNavigator",
-    "Tab",
-    "Form",
-    "FormEventType",
-    "HierarchicalTree",
-    "BootBox",
-    "Repeater",
-    "List",
-    "Amount",
-    "Label",
-    "Link",
-    "TextInput", 
-    "InputMaskBundle",
-    "TextArea",
-    // "SpellCheckJS",
-    "Select",
-    "TextEditor",
-    "DateTime",
-    "MomentJS",
-    "DatePickerScript",
-    "DatePickerCSS",
-    "CheckBox",
-    "CheckBoxGroup",
-    "RadioButton",
-    "RadioGroup",
-    "DateTimeCb",
-    "TokenRenderer",
-    "SuggestionRenderer",
-    "AutoCompleteEx",
-    "AutoCompleteExCSS",
-    "Select2Script",
-    "Select2CSS",
-    "Modal",
-    "ComboBox",
-    "ComboScript",
-    "ComboCSS",
-    //"GoogleMapScript",
-    //"GoogleMap",
-    "ToggleCSS",
-    "ToggleScript",
-    "Toggle",
-    "TrippleSwitch",
-    "MultiSwitch",
-    "Resumable",
-    "KxUploadCSS",
-    "Upload",
-    "SlimScroll",
-    "FormUpload",
-    "DataGridCellRenderer",
-    "DataGridColumn",
-    "DataGrid",
-    "FancyTreeScript",
-    "FancyTreeCSS",
-    "FormUpload",
-    "Spacer",
-    "TabExample"
-    
-], function () {
-    // rjs.define("./examples/AutoComplete/example.js", "AutoCompleteExample");
+        "DOMContentLoaded",
+        "Component",
+        "Selectable",
+        //"Parent",
+        //"NavParent",
+        //"Container",
+        //"TabNavigator",
+        //"Tab",
+        //"Form",
+        "FormEventType",
+        "HierarchicalTree",
+        "BootBox",
+        "Repeater",
+        "List",
+        "Amount",
+        "Label",
+        "Link",
+        "TextInput", 
+        "InputMaskBundle",
+        "TextArea",
+        // "SpellCheckJS",
+        "Select",
+        "TextEditor",
+        "DateTime",
+        "MomentJS",
+        "DatePickerScript",
+        "DatePickerCSS",
+        "CheckBox",
+        "CheckBoxGroup",
+        "RadioButton",
+        "RadioGroup",
+        "DateTimeCb",
+        "TokenRenderer",
+        "SuggestionRenderer",
+        "AutoCompleteEx",
+        "AutoCompleteExCSS",
+        "Select2Script",
+        "Select2CSS",
+        "Modal",
+        "ComboBox",
+        "ComboScript",
+        "ComboCSS",
+        //"GoogleMapScript",
+        //"GoogleMap",
+        "ToggleCSS",
+        "ToggleScript",
+        "Toggle",
+        "TrippleSwitch",
+        "MultiSwitch",
+        "Resumable",
+        "KxUploadCSS",
+        "Upload",
+        "SlimScroll",
+        "FormUpload",
+        "DataGridCellRenderer",
+        "DataGridColumn",
+        "DataGrid",
+        "FancyTreeScript",
+        "FancyTreeCSS",
+        "FormUpload",
+        "Spacer",
+        //"TabExample",
+        "LabelExample"
+        
+    ], function () {
+        // rjs.define("./examples/AutoComplete/example.js", "AutoCompleteExample");
 
-    //rjs.define("./examples/DataGrid/example.js", "DataGridExample");
-    
-    //rjs.define("./examples/Image/example.js", "ImageExample");
-    //rjs.define("./examples/Text/example.js", "Text");
-    //rjs.define("./examples/Label/example.js", "Label");
-    //rjs.define("./examples/HRule/example.js", "HRuleExample");
-    //rjs.define("./examples/Color/example.js", "ColorExample");
-    // rjs.define("./examples/CheckBox/example.js", "CheckBoxExample");
-    // rjs.define("./examples/RadioButton/example.js", "RadioButtonExample");+
-    // rjs.define("./examples/CheckBoxGroup/example.js", "CheckBoxGroupExample");
-    // rjs.define("./examples/RadioGroup/example.js", "RadioGroupExample");
-    // rjs.define("./examples/Upload/example.js", "UploadExample");
-    // rjs.define("./examples/Form/example.js", "FormExample");
-    // rjs.define("./examples/Form/ajaxExample.js", "FormExample");
-    // rjs.define("./examples/HierarchicalTree/example.js", "HierarchicalTreeExample");
-    // rjs.define("./examples/Form/example.js", "FormExample");
-    // rjs.define("./examples/Form/ajaxExample.js", "FormExample");
-	//rjs.define("./examples/Repeater/example.js", "RepeaterExample");
-    //rjs.define("./examples/ComboBox/example.js", "ComboBoxExample");
-    //rjs.define("./examples/List/example.js", "ListExample");
+        //rjs.define("./examples/DataGrid/example.js", "DataGridExample");
+        
+        //rjs.define("./examples/Image/example.js", "ImageExample");
+        //rjs.define("./examples/Text/example.js", "Text");
+        //rjs.define("./examples/Label/example.js", "Label");
+        //rjs.define("./examples/HRule/example.js", "HRuleExample");
+        //rjs.define("./examples/Color/example.js", "ColorExample");
+        // rjs.define("./examples/CheckBox/example.js", "CheckBoxExample");
+        // rjs.define("./examples/RadioButton/example.js", "RadioButtonExample");+
+        // rjs.define("./examples/CheckBoxGroup/example.js", "CheckBoxGroupExample");
+        // rjs.define("./examples/RadioGroup/example.js", "RadioGroupExample");
+        // rjs.define("./examples/Upload/example.js", "UploadExample");
+        // rjs.define("./examples/Form/example.js", "FormExample");
+        // rjs.define("./examples/Form/ajaxExample.js", "FormExample");
+        // rjs.define("./examples/HierarchicalTree/example.js", "HierarchicalTreeExample");
+        // rjs.define("./examples/Form/example.js", "FormExample");
+        // rjs.define("./examples/Form/ajaxExample.js", "FormExample");
+        //rjs.define("./examples/Repeater/example.js", "RepeaterExample");
+        //rjs.define("./examples/ComboBox/example.js", "ComboBoxExample");
+        //rjs.define("./examples/List/example.js", "ListExample");
 
 }, flowerCM);

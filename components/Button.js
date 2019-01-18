@@ -5,7 +5,8 @@
  */
 
 //component definition
-var Button = KxGenerator.createComponent({
+var Button = function(_props)
+{  
     //inner component data
     initModel: function () {
         return {
@@ -75,10 +76,21 @@ var Button = KxGenerator.createComponent({
         return this.$el;
     }
     
-});
+    var _defaultParams = {
+        label:"",
+        hyperlink:"",
+        target:""
+    };
+    _props = extend(false, false, _defaultParams, _props);
+    
+    var _label = _props.label;
+    var _labelHtml = _label;
+    var _hyperlink = _props.hyperlink;
+    var _target = _props.target;
+
+    var base = Component.call(this, _props);
+    return this;
+};
 
 //component prototype
 Button.type = 'button';
-
-//register dom element for this component
-KxGenerator.registerDOMElement(Button, 'kx-button');

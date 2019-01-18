@@ -5,33 +5,10 @@
  */
 
 //component definition
-var Loader = KxGenerator.createComponent({
-    //component data
-    initModel: function () {
-        return {
-          
-        }
-    },
-
-    beforeAttach: function () {
-        
-    },
-
-    registerEvents: function () {
-        return [
-            {
-                registerTo: this.$el, events: {
-                    'afterAttach': this.afterAttach.bind(this)
-                }
-            }
-        ]
-    },
-
-    afterAttach: function (e) {
-        this.trigger('creationComplete');
-    },
-
-    template: function () {
+var Loader = function(_props)
+{ 
+    this.template = function () 
+    {
         return  "<div id='" + this.domID + "-wrapper' style='display: none;'>" +
                     "<style>" +
                         ".se-pre-con {" +
@@ -47,15 +24,10 @@ var Loader = KxGenerator.createComponent({
                     "</style>"+
                     "<div class='se-pre-con'></div>" +                    
                 "</div>";
-    },
-
-    render: function () {
-        return this.$el;
-    }
-});
+    };
+    var base = Component.call(this, _props);
+    return this;
+};
 
 //component prototype
 Loader.type = 'loader';
-
-//register dom element for this component
-KxGenerator.registerDOMElement(Loader, 'kx-loader');
