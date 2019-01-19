@@ -5,89 +5,79 @@
  */
 
 //component definition
-var HRule = KxGenerator.createComponent({
-    //component data
-    initModel: function () {
-        return {
-            class: this.class || "mb-1 form-group col-sm-" + this.colspan + " rowspan" + this.rowspan + " resizable",
-            style: this.style
-        }
-    },
-
-    beforeAttach: function () {
-        this.$hrule = this.$el;
-    },
-
-    registerEvents: function () {
-        return [
+var HRule = function(_props)
+{
+    
+    Object.defineProperty(this, "height", 
+    {
+        get: function height() 
+        {
+            return _height;
+        },
+        set: function height(v) 
+        {
+            if(_height != v)
             {
-                registerTo: this.$el, events: {
-                    'afterAttach': this.afterAttach.bind(this),
+                _height = v;
+                if(this.$el)
+                {
+                    this.$el.css('height', v+"px");
                 }
             }
-        ]
-    },
+        }
+    });
+  
+    Object.defineProperty(this, "align", 
+    {
+        get: function align() 
+        {
+            return _align;
+        },
+        set: function align(v) 
+        {
+            if(_align != v)
+            {
+                _align = v;
+                if(this.$el)
+                    this.$el.attr('align', v);
+            }
+        }
+    });
+
+    Object.defineProperty(this, "width", 
+    {
+        get: function width() 
+        {
+            return _width;
+        },
+        set: function width(v) 
+        {
+            if(_width != v)
+            {
+                _width = v;
+                if(this.$el)
+                    this.$el.attr('width', v);
+            }
+        }
+    });
+
+
+    this.template = function () 
+    {        
+        return  '<hr id="' + this.domID + '" align="'+_align +'" style="height:'+_height +'px"   width="'+_width +'" >';    
+    };
+
+    var _defaultParams = {
+        width:0,
+        height:0,
+        align:"center" //="left|center|right"
+    };
+
+    _props = extend(false, false, _defaultParams, _props);
+    var _width = _props.width;
+    var _height = _props.height;
+    var _align = _props.align;
    
-    afterAttach: function (e) {
-        this.trigger('creationComplete');
-    },
-
-    getValue: function () {
-        return null;
-    },
-    setValue: function (value) {
-        return null
-    },
-   // align 
-    set align(v){
-        if(this._align != v){
-            if(this.$el){
-                this.$el.attr('align', v);
-            }
-            this._align = v;
-        }
-    },
-    get align(){
-        return this._align;
-    },
-    // size
-    set size(v){
-        if(this._size != v){
-            if(this.$el){
-                this.$el.attr('size', v);
-            }
-            this._size = v;
-        }
-    },
-    get size(){
-        return this._size;
-    },
-    // width
-    set width(v){
-        if(this._alt != v){
-            if(this.$el){
-                this.$el.attr('width', v);
-            }
-            this._width = v;
-        }
-    },
-    get width(){
-        return this._width;
-    },
-
-
-
-    template: function () {        
-        return  '<hr id="' + this.domID + '" align="'+this.align +'" size="'+this.size +'"   width="'+this.width +'" >';    
-    },
-
-    render: function () {
-        return this.$el;
-    }
-});
-
-//component prototype
+    Component.call(this, _props);
+};
 HRule.type = 'hrule';
-
-//register dom element for this component
-KxGenerator.registerDOMElement(HRule, 'kx-hrule');

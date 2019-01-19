@@ -7,31 +7,6 @@
 //component definition
 var Link = function(_props)
 {
-    this.registerEvents = function () 
-    {
-        return [
-            {
-                registerTo: this.$el, events: {
-                    'afterAttach': this.afterAttach.bind(this),
-                    'click': this.clickHandler.bind(this),
-                    'dblclick': this.doubleClickHandler.bind(this)
-                }
-            }
-        ]
-    };
-
-    this.clickHandler = function () 
-    {
-        if (typeof this.onclick == 'function')
-            this.onclick.apply(this, arguments);
-    };
-
-    this.doubleClickHandler = function () 
-    {
-        if (typeof this.ondblclick == 'function')
-            this.ondblclick.apply(this, arguments);
-    };
-
     Object.defineProperty(this, "hyperlink", 
     {
         get: function hyperlink() 
@@ -116,9 +91,6 @@ var Link = function(_props)
     var _hyperlink = _props.hyperlink;
     var _target = _props.target;
 
-    var base = Component.call(this, _props);
-    return this;
-
+    Component.call(this, _props);
 };
-//component prototype
 Link.type = 'link';

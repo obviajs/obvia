@@ -5,92 +5,101 @@
  */
 
 //component definition
-var Button = function(_props)
+var Button = function(_props, overrided=false)
 {  
-    //inner component data
-    initModel: function () {
-        return {
-            enabled: true
-        }
-    },
-    
-    beforeAttach: function () {
-        this.$btn = this.$el.find("button");
-    },
-
-    registerEvents: function () {
-        return [
+    Object.defineProperty(this, "label", 
+    {
+        get: function label() 
+        {
+            return _label;
+        },
+        set: function label(v) 
+        {
+            if(_label != v)
             {
-                registerTo: this.$el, events: { 
-                    'afterAttach': this.afterAttach.bind(this)
-                }
-            },
-            {
-                registerTo: this.$btn, events: {
-                    'mousedown' : this.mouseDownHandler.bind(this),
-                    'click': this.clickHandler.bind(this),
-                    'dblclick': this.doubleClickHandler.bind(this)
-                }
+                _label = v;
+                if(this.$el)
+                    this.$el.html(v);
             }
-        ]
-    },
+        }
+    });
 
-    afterAttach: function (e) {
-        this.trigger('creationComplete');
-    },
+    Object.defineProperty(this, "type", 
+    {
+        get: function type() 
+        {
+            return _type;
+        },
+        set: function type(v) 
+        {
+            if(_type != v)
+            {
+                _type = v;
+                if(_type)
+                {
+                    if(this.$el)
+                    {
+                        this.$el.attr('type', _type);
+                    }
+                }else
+                {
+                    if(this.$el)
+                    {
+                        this.$el.removeAttr('_type');
+                    }
+                }                    
+            }
+        }
+    });
 
-    enable: function () {
-        var model = this.getModel();
-        model.enabled = true;
-        this.enabled = true;
-        return this;
-    },
+    Object.defineProperty(this, "value", 
+    {
+        get: function value() 
+        {
+            return _value;
+        },
+        set: function value(v) 
+        {
+            if(_value != v)
+            {
+                _value = v;
+                if(_value)
+                {
+                    if(this.$el)
+                    {
+                        this.$el.attr('value', _value);
+                    }
+                }else
+                {
+                    if(this.$el)
+                    {
+                        this.$el.removeAttr('value');
+                    }
+                }                    
+            }
+        }
+    });
 
-    disable: function () {
-        var model = this.getModel();
-        model.enabled = false;
-        this.enabled = false;
-        return this;
-    },
-    mouseDownHandler: function () {
-        if (typeof this.onmousedown == 'function')
-            this.onmousedown.apply(this, arguments);
-    },
-    clickHandler: function () {
-        if (typeof this.onclick == 'function')
-            this.onclick.apply(this, arguments);
-    },
-
-    doubleClickHandler: function () {
-        if (typeof this.ondblclick == 'function')
-            this.ondblclick.apply(this, arguments);
-    },
-
-    template: function () {
-        return  "<div id='" + this.domID + "-wrapper'>" +
-                    "<button rv-type='type' rv-enabled='model.enabled' rv-style='style' class='btn btn-default' rv-html='value'></button>" +
-                "</div>";    
-    },
-    
-    render: function () {
-        return this.$el;
-    }
-    
+    this.template = function () 
+    {//
+        return  "<button id='" + this.domID + "' type='"+_type+"' class='"+this.cssClass+"' "+(_value?"value='"+_value+"'":"")+">"+_label+"</button>";
+    };
+   
     var _defaultParams = {
         label:"",
-        hyperlink:"",
-        target:""
+        type:"button",
+        class:"btn btn-default"
     };
     _props = extend(false, false, _defaultParams, _props);
     
     var _label = _props.label;
-    var _labelHtml = _label;
-    var _hyperlink = _props.hyperlink;
-    var _target = _props.target;
+    var _type = _props.type;
+    var _value = _props.value;
 
-    var base = Component.call(this, _props);
-    return this;
+    Component.call(this, _props);
+    if(overrided)
+    {
+        this.keepBase();
+    }
 };
-
-//component prototype
 Button.type = 'button';

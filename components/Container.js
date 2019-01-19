@@ -5,49 +5,64 @@
  */
 
 //component definition
-var ContainerInit = {
-    //component data
-    initModel: function () {
-        return {
-            style: this.style
-        }
-    },
+var Container = function(_props)
+{
 
-    beforeAttach: function () {
-        this.ccComponents = [];
-        this.$container = this.$el.attr('id') == this.domID?this.$el:this.$el.find("#" + this.domID);
-    },
-    type:"container",
-    registerEvents: function () {
-        return [
+    Object.defineProperty(this, "width", 
+    {
+        get: function width() 
+        {
+            return _width;
+        },
+        set: function width(v) 
+        {
+            if(_width != v)
             {
-                registerTo: this.$el, events: {
-                    'afterAttach': this.afterAttach.bind(this)
+                _width = v;
+                if(this.$el)
+                {
+                    this.$el.css('width', v+"px");
                 }
             }
-        ]
-    },
-
-    afterAttach: function (e) {
-        if (this.hyperlink) {
-            var target = '';
-            if (this.hasOwnProperty('target'))
-                target = this.target;
-            
-            this.$container.html("<a href='" + this.hyperlink + "' target='" + target + "'>" + this.container + "</a>");
         }
-        
-        this.trigger('creationComplete');
-    },
+    });
 
-    template: function () { 
-        return  '<div id="' + this.domID + '" class="container" style="'+(this.width?'width:'+this.width+'px;':'')+(this.height?'width:'+this.height+'px;':'')+'" ></div>'; 
-    },
-  
+    Object.defineProperty(this, "height", 
+    {
+        get: function height() 
+        {
+            return _height;
+        },
+        set: function height(v) 
+        {
+            if(_height != v)
+            {
+                _height = v;
+                if(this.$el)
+                {
+                    this.$el.css('height', v+"px");
+                }
+            }
+        }
+    });
+
+    this.template = function ()
+    { 
+        return  '<div id="' + this.domID + '" class="container" style="'+(_width?'width:'+_width+'px;':'')+(_height?'width:'+_height+'px;':'')+'" ></div>'; 
+    };
+    
+    var _defaultParams = {
+    };
+    _props = extend(false, false, _defaultParams, _props);
+    var _width = _props.width;
+    var _height = _props.height;
+    Parent.call(this, _props, true);
+
+    var base = this.base;
+    this.beforeAttach = function() 
+    {
+        this.$container = this.$el;
+        base.beforeAttach();
+    };
 };
-ContainerInit = extend(true, true, Parent, ContainerInit);
-var Container = KxGenerator.createComponent(ContainerInit);
-//component prototype
 Container.type = 'container';
-//register dom element for this component
-KxGenerator.registerDOMElement(Container, 'kx-container');

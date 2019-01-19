@@ -1,50 +1,62 @@
-var Parent = {
-
-    addComponent: function (component, container, cIndex) {
-        if (typeof component.constructor == "string") {
-            component.constructor = eval(component.constructor);
-        }
-        var cmp = new component.constructor(component.props);
-     
-        cmp.on('creationComplete', function (e) {
-            e.stopImmediatePropagation();
-            e.stopPropagation();
-
-            this.ccComponents.push(component.props.id);
-          
-            if (this.ccComponents.length == this.components.length) {
-                this.trigger('creationComplete');
+var Parent = function(_props, overrided=false)
+{
+    var _ccComponents = [];
+    this.components = [];
+    this.$container = null;
+    this.addComponent = function (component, cIndex) 
+    {
+        if(this.$container)
+        {
+            if (typeof component.constructor == "string") {
+                component.constructor = eval(component.constructor);
             }
-
-        }.bind(this));
-
-        container.append(cmp.render());
+            var cmp = new component.constructor(component.props);
         
-        //expose component model
-        if (!this.idField)
-            this[cmp.id] = cmp;
-        else
-            this[ cmp[this.idField] ] = cmp;
+            cmp.on('creationComplete', function (e) {
+                e.stopImmediatePropagation();
+                e.stopPropagation();
 
-        cmp.parent = this;
-        cmp.parentType = this.type;
-        cmp.parentForm = this;
-        return cmp;
-    },
-    render: function () {
+                _ccComponents.push(component.props.id);
+            
+                if (_ccComponents.length == this.components.length) {
+                    this.trigger('creationComplete');
+                }
+
+            }.bind(this));
+            
+            this.$container.append(cmp.render());
+            
+            //expose component model
+            if (!this.idField)
+                this[cmp.id] = cmp;
+            else
+                this[ cmp[this.idField] ] = cmp;
+
+            cmp.parent = this;
+            cmp.parentType = this.type;
+            cmp.parentForm = this;
+            return cmp;
+        }
+    };
+
+    var _defaultParams = {
+    };
+    _props = extend(false, false, _defaultParams, _props);
+    Component.call(this, _props);
+    //override because creationComplete will be thrown when all children components are created
+    this.afterAttach = undefined;
+
+    this.beforeAttach = function()
+    {
         if(this.components && Array.isArray(this.components))
         {
             this.components.forEach(function (component, cIndex) {
-                this.addComponent(component, this.$container, cIndex);
+                this.addComponent(component, cIndex);
             }.bind(this));
         }
-        return this.$el;
-    },
-    getValue: function () {
-        return null;
-    },
-
-    setValue: function (value) {
-        return null
+    }
+    if(overrided)
+    {
+        this.keepBase();
     }
 }

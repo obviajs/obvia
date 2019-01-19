@@ -1,13 +1,20 @@
+var loader = new Loader({ id: 'loader' });
+$('#root').append(loader.render());
+loader.show();
 
-rjs.define('./lib/dependencies/color-picker/jscolor.js', 'jcolor');
 var myButton = new Button({
     id: 'button',
-    classColor: 'jscolor {valueElement:null,value:"e8eef7"}',
     type: "button",
     value: "",
-    style: '',
+    label:"Click Me",
     class: "btn btn-success",
-    onclick : function(e){console.log("From ClickAction");}
+    click : function(e){console.log("From ClickAction");}
 });
-
+myButton.on('creationComplete', function(e){
+    loader.hide();
+});
 $('#root').append(myButton.render());
+
+
+
+

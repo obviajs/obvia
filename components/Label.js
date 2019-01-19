@@ -5,63 +5,140 @@
  */
 
 //component definition
-var Label = KxGenerator.createComponent({
-    //component data
-    initModel: function () {
-        return {
-            class: this.class || "mb-1 form-group col-sm-" + this.colspan + " rowspan" + this.rowspan + " resizable",
-            style: this.style
-        }
-    },
-
-    beforeAttach: function () {
-        this.$label = this.$el.attr('id') == this.domID?this.$el:this.$el.find("#" + this.domID);
-    },
-
-    registerEvents: function () {
-        return [
+var Label = function(_props)
+{   
+    Object.defineProperty(this, "label", 
+    {
+        get: function label() 
+        {
+            return _label;
+        },
+        set: function label(v) 
+        {
+            if(_label != v)
             {
-                registerTo: this.$el, events: {
-                    'afterAttach': this.afterAttach.bind(this)
-                }
+                _label = v;
+                if(this.$el)
+                    this.$el.html(v);
             }
-        ]
-    },
-
-    afterAttach: function (e) {
-        if (this.hyperlink) {
-            var target = '';
-            if (this.hasOwnProperty('target'))
-                target = this.target;
-            
-            this.$label.html("<a href='" + this.hyperlink + "' target='" + target + "'>" + this.label + "</a>");
         }
-        
-        this.trigger('creationComplete');
-    },
+    });
 
-    getValue: function () {
-        return null;
-    },
+    Object.defineProperty(this, "labelHtml", 
+    {
+        get: function labelHtml() 
+        {
+            return _labelHtml;
+        },
+        set: function labelHtml(v) 
+        {
+            if(_labelHtml != v)
+            {
+                _labelHtml = v;
+                if(this.$el)
+                    this.$el.html(v);
+            }
+        }
+    });
 
-    setValue: function (value) {
-        return null
-    },
+    Object.defineProperty(this, "hyperlink", 
+    {
+        get: function hyperlink() 
+        {
+            return _hyperlink;
+        },
+        set: function hyperlink(v) 
+        {
+            if(_hyperlink != v)
+            {
+                _hyperlink = v;
+                if(_hyperlink)
+                {
+                    _labelHtml = "<a id='" + this.domID + "_anchor' href='" + _hyperlink + "' target='" + _target + "'>" + _label + "</a>";
+                    if(this.$el)
+                    {
+                        if(this.$anchor && this.$anchor.length>0)
+                        {
+                            this.$anchor.attr('href', _hyperlink);
+                        }else
+                            this.$el.html(_labelHtml);
+                    }
+                }else
+                {
+                    _labelHtml = _label;
+                    if(this.$el)
+                    {
+                        if(this.$anchor && this.$anchor.length>0)
+                        {
+                            this.$anchor.removeAttr('href');
+                        }else
+                            this.$el.html(_labelHtml);
+                    }
+                }                    
+            }
+        }
+    });
+    Object.defineProperty(this, "target", 
+    {
+        get: function target() 
+        {
+            return _target;
+        },
+        set: function target(v) 
+        {
+            if(_target != v)
+            {
+                _target = v;
+                if(_target)
+                {
+                    _labelHtml = "<a id='" + this.domID + "_anchor' href='" + _hyperlink + "' target='" + _target + "'>" + _label + "</a>";
+                    if(this.$el)
+                    {
+                        if(this.$anchor && this.$anchor.length>0)
+                        {
+                            this.$anchor.attr('target', _target);
+                        }else
+                            this.$el.html(_labelHtml);
+                    }
+                }else
+                {
+                    _labelHtml = "<a id='" + this.domID + "_anchor' href='" + _hyperlink + "'>" + _label + "</a>";
+                    if(this.$el)
+                    {
+                        if(this.$anchor && this.$anchor.length>0)
+                        {
+                            this.$anchor.removeAttr('target');
+                        }else
+                            this.$el.html(_labelHtml);
+                    }
+                }
+                    
+            }
+        }
+    });
+    
+    this.beforeAttach = function () 
+    {
+        this.$anchor = this.$el.find("#" + this.domID + "_anchor");
+    };
 
-    template: function () {         
-        return "<label id='" + this.domID + "'><b>{label}</b></label>"; 
-        // (!this.embedded?("<div id='" + this.domID + "-wrapper' rv-class='model.class' rv-style='model.style'>"):"")+
-        //             "<label id='" + this.domID + "'><b>{label}</b></label>"+
-        // (!this.embedded?("</div>"):"");    
-    },
+    this.template = function () 
+    {         
+        return "<label id='" + this.domID + "'>"+_labelHtml+"</label>"; 
+    };
 
-    render: function () {
-        return this.$el;
-    }
-});
+    var _defaultParams = {
+        label:"",
+        hyperlink:"",
+        target:""
+    };
+    _props = extend(false, false, _defaultParams, _props);
+    
+    var _label = _props.label;
+    var _labelHtml = _label;
+    var _hyperlink = _props.hyperlink;
+    var _target = _props.target;
 
-//component prototype
+    Component.call(this, _props);
+};
 Label.type = 'label';
-
-//register dom element for this component
-KxGenerator.registerDOMElement(Label, 'kx-label');

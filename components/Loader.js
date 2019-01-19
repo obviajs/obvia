@@ -25,8 +25,7 @@ var Loader = function(_props)
                     "<div class='se-pre-con'></div>" +                    
                 "</div>";
     };
-    var base = Component.call(this, _props);
-    return this;
+    Component.call(this, _props);
 };
 
 //component prototype

@@ -1,4 +1,4 @@
-var Component = function(_props)
+var Component = function(_props, overrided=false)
 {
     var _defaultParams = {
         id: "Component_"+Component.instanceCnt,
@@ -9,6 +9,11 @@ var Component = function(_props)
     var _guid = guid();
     var _id = _props.id;
     var _enabled = _props.enabled;
+    var _class = _props.class;
+
+    var _mousedown = _props.mousedown;
+    var _click = _props.click;
+    var _dblclick = _props.dblclick;
 
     //var _propUpdateMap = {"label":{"o":$el, "fn":"html", "p":[] }, "hyperlink":{}};
     //generate GUID for this component
@@ -35,6 +40,7 @@ var Component = function(_props)
         }
     });
 
+
     Object.defineProperty(this, "enabled", 
     {
         get: function enabled() 
@@ -51,6 +57,13 @@ var Component = function(_props)
         }
     });
 
+    Object.defineProperty(this, "cssClass", 
+    {
+        get: function cssClass() 
+        {
+            return _class;
+        }
+    });
 
     var _self = this;
 
@@ -74,7 +87,10 @@ var Component = function(_props)
         return [
             {
                 registerTo: this.$el, events: {
-                    'afterAttach': this.afterAttach.bind(this)
+                    'afterAttach': _afterAttach && typeof _afterAttach == 'function' ? _afterAttach.bind(this) : undefined,
+                    'mousedown' : _mousedown && typeof _mousedown == 'function' ? _mousedown.bind(this) : undefined,
+                    'click': _click && typeof _click == 'function' ? _click.bind(this) : undefined,
+                    'dblclick': _dblclick && typeof _dblclick == 'function' ? _dblclick.bind(this) : undefined
                 }
             }
         ]
@@ -85,8 +101,10 @@ var Component = function(_props)
         return this.$el;
     };
 
-    this.afterAttach = function (e) 
+    var _afterAttach = function (e) 
     {
+        if (typeof _props.afterAttach == 'function')
+            _props.afterAttach.apply(this, arguments);
         this.trigger('creationComplete');
     };
     //action methods on component
@@ -186,7 +204,7 @@ var Component = function(_props)
     ++Component.instanceCnt; 
 
     //execute functions before component attached on dom
-    if (this['beforeAttach'] && typeof this.beforeAttach == 'function')
+    if (this['beforeAttach'] && (typeof this.beforeAttach == 'function'))
         this.beforeAttach();
     
     
@@ -234,6 +252,17 @@ var Component = function(_props)
      
         _self.trigger('afterAttach');
     });
-    return this;
+    if(overrided)
+    {
+        this.keepBase();
+    }
+    this.keepBase = function()
+    {
+        this.base = {};
+        for(var prop in this)
+        {
+            this.base[prop] = this[prop];
+        }
+    }
 }
 Component.instanceCnt = 0;

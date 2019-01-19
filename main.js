@@ -15,7 +15,7 @@ rjs.define("./components/Form/FormEventType.js", "FormEventType");
 rjs.define("./components/Button.js", "Button");
 //Label
 //rjs.define("./components/Label.js", "Label");
-rjs.define("./components/_Label.js", "Label");
+rjs.define("./components/Label.js", "Label");
 
 //HRule
 rjs.define("./components/HRule.js", "HRule");
@@ -104,13 +104,7 @@ rjs.define("./components/Spacer.js", "Spacer");
 //HierarchicalTree
 //rjs.define("https://cdnjs.cloudflare.com/ajax/libs/jquery.fancytree/2.28.1/jquery.fancytree-all-deps.js", "FancyTreeScript");
 rjs.define("lib/dependencies/efilemanager/skin-lion/ui.fancytree.css", "FancyTreeCSS");
-rjs.define("./examples/Label/example.js", "LabelExample");
-//rjs.define("./examples/AutoComplete/example.js", "AutoComplete");
-
-//rjs.define("./examples/DataGrid/example.js", "DataGridExample");
-
-//rjs.define("./examples/Container/example.js", "ContainerExample");
-//rjs.define("./examples/Tab/example.js", "TabExample");
+rjs.define("./examples/Button/example.js", "ButtonExample");
 //Loader
 
 rjs.require([
@@ -176,9 +170,20 @@ rjs.require([
         "FormUpload",
         "Spacer",
         //"TabExample",
-        "LabelExample"
-        
+        //"LabelExample"
+        "Button",
+        "ButtonExample"
     ], function () {
+        
+
+        //rjs.define("./examples/Label/example.js", "LabelExample");
+        // rjs.define("./examples/RadioButton/example.js", "RadioButtonExample");+
+        //rjs.define("./examples/AutoComplete/example.js", "AutoComplete");
+
+        //rjs.define("./examples/DataGrid/example.js", "DataGridExample");
+
+        //rjs.define("./examples/Container/example.js", "ContainerExample");
+        //rjs.define("./examples/Tab/example.js", "TabExample");
         // rjs.define("./examples/AutoComplete/example.js", "AutoCompleteExample");
 
         //rjs.define("./examples/DataGrid/example.js", "DataGridExample");
