@@ -87,7 +87,7 @@ var Component = function(_props, overrided=false)
         return [
             {
                 registerTo: this.$el, events: {
-                    'afterAttach': _afterAttach && typeof _afterAttach == 'function' ? _afterAttach.bind(this) : undefined,
+                    'afterAttach': this.afterAttach && typeof this.afterAttach == 'function' ? this.afterAttach.bind(this) : undefined,
                     'mousedown' : _mousedown && typeof _mousedown == 'function' ? _mousedown.bind(this) : undefined,
                     'click': _click && typeof _click == 'function' ? _click.bind(this) : undefined,
                     'dblclick': _dblclick && typeof _dblclick == 'function' ? _dblclick.bind(this) : undefined
@@ -101,7 +101,7 @@ var Component = function(_props, overrided=false)
         return this.$el;
     };
 
-    var _afterAttach = function (e) 
+    this.afterAttach = function (e) 
     {
         if (typeof _props.afterAttach == 'function')
             _props.afterAttach.apply(this, arguments);
