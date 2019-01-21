@@ -1,10 +1,14 @@
+var loader = new Loader({ id: 'loader' });
+$('#root').append(loader.render());
+loader.show();
+
 var myImage = new Image({
     id: 'image',
     src: 'https://d28hgpri8am2if.cloudfront.net/book_images/cvr9781451648539_9781451648539_hr.jpg',
     alt: "Steve Jobs",
     height: 200,
     width: 200,
-    onload: myImageLoaded
+    load: myImageLoaded
 
 });
 

@@ -5,11 +5,11 @@
  */
 
 //component definition
-var FormInit = {
+var Form = function(_props)
+{
     initModel: function () {
         return {
-            formAction: (this.viewMode == "steps") ? "?forms/modify_form_submit" : "#",
-            componentContainerID: this.domID + '_component_container'
+            formAction: (this.viewMode == "steps") ? "?forms/modify_form_submit" : "#"
         }
     },
 
@@ -47,36 +47,40 @@ var FormInit = {
         }.bind(this));
     },
 
-    enable: function () {
-        this.enabled = true;
-        this.components.forEach(function (component) {
-            this[component.props.id].enable();
-        }.bind(this));
+  
 
-        return this;
-    },
+    Object.defineProperty(this, "enabled", 
+    {
+        get: function enabled() 
+        {
+            return _enabled;
+        },
+        set: function enabled(v) 
+        {
+            if(_enabled != v)
+            {
+                _enabled = v;
+                this.components.forEach(function (component) {
+                    this[component.props.id].enabled = v;
+                }.bind(this));
+            }
+        }
+    });
 
-    serialize: function (encode = false) {
+    this.serialize = function (encode = false) 
+    {
         var value = {};
         this.components.forEach(function (component) {
             value[component.props.id] = this[component.props.id].getValue();
         }.bind(this));
 
+        var serialized = JSON.stringify(value);
         if (encode) {
-            return btoa(JSON.stringify(value));   
+            serialized = btoa(serialized);   
         }
+        return serialized;
+    };
 
-        return JSON.stringify(value);
-    },
-
-    disable: function () {
-        this.enabled = false;
-        this.components.forEach(function (component) {
-            this[component.props.id].disable();
-        }.bind(this));
-
-        return this;
-    },
 
     renderFormHeader: function (viewMode) {
         return (
@@ -96,43 +100,65 @@ var FormInit = {
         )    
     },
 
-    template: function () {
+    this.template = function () 
+    {
         return "<div id='" + this.domID + "-wrapper' class='col-sm-12'>" +
                     "<form name='view_form' id='" + this.domID + "-form' method='POST' action='"+this.action+"' class='view_form'>" +
                         "<div class='col-sm-12' style='padding: 10px'>" +
                             this.renderFormHeader(this.viewMode) + 
                             "<div>" +
-                                "<div class='row' rv-id='model.componentContainerID'>" +
+                                "<div class='row' id='"+this.domID + "_component_container'>" +
                                 "</div>" +
                             "</div>" +
                         "</div>" +
                     "</form>" +
                 "</div>";
             
-    },
-    formData: null,
-    addFileUploadField: function(name, blob){
-        if(!this.formData){
-            this.formData = new FormData(this.$form[0]);
+    };
+    
+    this.addFormData = function(name, value)
+    {
+        if(!_formData){
+            _formData = new FormData(this.$form[0]);
         }
-        this.formData.append(name, blob);
-    },
-    addHiddenField: function(name, value){
-        if(!this.formData){
-            this.formData = new FormData(this.$form[0]);
+        _formData.append(name, value);
+    };
+
+    this.removeFormData = function(name)
+    {
+        if(_formData)
+        {
+            if(typeof _formData["delete"] == 'function')
+            {
+                _formData.delete(name);
+            }else
+            {
+                var _formData2 = new FormData();
+                for (var pair of _formData.entries())
+                {
+                    if(pair[0]!=name){
+                        _formData2.append(pair[0], pair[1]);
+                    }
+                }
+                _formData = _formData2;
+            }
         }
-        this.formData.append(name, value);
-    },
-    getFormData: function(){
-        if(!this.formData){
-            this.formData = new FormData(this.$form[0]);
+    };
+    
+    this.getFormData = function()
+    {
+        if(!_formData){
+            _formData = new FormData(this.$form[0]);
         }
-        return this.formData;
-    },
-    resetFormData: function(){
-        this.formData = undefined;
-    },
-    post: function(dataType){
+        return _formData;
+    };
+    this.resetFormData = function()
+    {
+        _formData = undefined;
+    };
+
+    this.post = function(dataType)
+    {
         var type = dataType? dataType:"json";
         var _self = this;
         $.ajax({
@@ -178,11 +204,21 @@ var FormInit = {
             }
         });
     }
-};
-FormInit = extend(true, true, Parent, FormInit);
-var Form = KxGenerator.createComponent(FormInit);
-//component prototype
-Form.type = 'form';
 
-//register dom element for this component
-KxGenerator.registerDOMElement(Form, 'kx-form');
+    var _defaultParams = {
+    };
+    _props = extend(false, false, _defaultParams, _props);
+    var _width = _props.width;
+    var _height = _props.height;
+    var _formData = null;
+
+    Parent.call(this, _props, true);
+
+    var base = this.base;
+    this.beforeAttach = function() 
+    {
+        this.$container = this.$el;
+        base.beforeAttach();
+    };
+};
+Form.type = 'form';

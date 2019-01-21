@@ -5,48 +5,45 @@
  */
 
 //component definition
-var TabInit = {
-
-    beforeAttach: function () {
-        this.ccComponents = [];
-        this.$container = this.$el;
-        this.$anchor = $('<a class="nav-link" data-toggle="tab" href="#' + this.domID + '">'+this._label+'</a>');
-        this.$header = $('<li class="nav-item"></li>');
-        this.$header.append(this.$anchor);
-    },
-    registerEvents: function () {
-        return [
+var Tab = function(_props)
+{
+  
+    Object.defineProperty(this, "label", 
+    {
+        get: function label() 
+        {
+            return _label;
+        },
+        set: function label(v) 
+        {
+            if(_label != v)
             {
-                registerTo: this.$el, events: {
-                    'afterAttach': this.afterAttach.bind(this)
-                }
-            }
-        ]
-    },
-
-    afterAttach: function (e) {
-        this.trigger('creationComplete');
-    },
-    type:"tab",
-    set label(v){
-        if(this._label != v){
-            this._label = v;
-            if(this.$anchor){
-                this.$anchor.html(v);
+                _label = v;
+                if(this.$anchor)
+                    this.$anchor.html(v);
             }
         }
-    },
-    get label(){
-        return this._label;
-    },
-    template: function () { 
+    });
+    
+    this.template = function () 
+    { 
         return  '<div id="' + this.domID + '" class="tab-pane container fade"></div>'; 
     }
-};
-TabInit = extend(true, true, Parent, TabInit);
-var Tab = KxGenerator.createComponent(TabInit);
-//component prototype
-Tab.type = 'tab';
+    var _defaultParams = {
+    };
+    _props = extend(false, false, _defaultParams, _props);
+    var _label = _props.label;
+    Parent.call(this, _props, true);
+    var base = this.base;
 
-//register dom element for this component
-KxGenerator.registerDOMElement(Tab, 'kx-tab');
+    this.beforeAttach = function () 
+    {
+        this.$container = this.$el;
+        this.$anchor = $('<a class="nav-link" data-toggle="tab" href="#' + this.domID + '">'+_label+'</a>');
+        this.$header = $('<li class="nav-item"></li>');
+        this.$header.append(this.$anchor);
+        base.beforeAttach();
+    };
+
+};
+Tab.type = 'tab';

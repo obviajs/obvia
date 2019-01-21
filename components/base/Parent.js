@@ -42,6 +42,7 @@ var Parent = function(_props, overrided=false)
     var _defaultParams = {
     };
     _props = extend(false, false, _defaultParams, _props);
+    this.components = _props.components;
     Component.call(this, _props);
     //override because creationComplete will be thrown when all children components are created
     this.afterAttach = undefined;

@@ -51,7 +51,7 @@ var Component = function(_props, overrided=false)
         {
             if(_enabled != v)
             {
-                _enabled = !v;
+                _enabled = v;
                 this.$el.prop('disabled', !v);
             }
         }
@@ -252,10 +252,6 @@ var Component = function(_props, overrided=false)
      
         _self.trigger('afterAttach');
     });
-    if(overrided)
-    {
-        this.keepBase();
-    }
     this.keepBase = function()
     {
         this.base = {};
@@ -264,5 +260,10 @@ var Component = function(_props, overrided=false)
             this.base[prop] = this[prop];
         }
     }
+    if(overrided)
+    {
+        this.keepBase();
+    }
+    
 }
 Component.instanceCnt = 0;

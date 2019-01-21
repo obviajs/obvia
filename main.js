@@ -2,14 +2,14 @@ var flowerCM = window.flowerCM || {};
 //base Components
 rjs.define("./components/base/Component.js", "Component");
 rjs.define("./components/base/Selectable.js", "Selectable");
-//rjs.define("./components/base/Parent.js", "Parent");
-//rjs.define("./components/base/NavParent.js", "NavParent");
+rjs.define("./components/base/Parent.js", "Parent");
+rjs.define("./components/base/NavParent.js", "NavParent");
 //TextInput
 rjs.define("./components/Text.js", "TextInput");
 rjs.define("./lib/dependencies/scripts/jquery.inputmask.bundle.min.js", "InputMaskBundle");
 //Form
 rjs.define("lib/dependencies/scripts/bootstrap-bootbox.js", "BootBox");
-//rjs.define("./components/Form/Form.js", "Form");
+rjs.define("./components/Form/Form.js", "Form");
 rjs.define("./components/Form/FormEventType.js", "FormEventType");
 //Button
 rjs.define("./components/Button.js", "Button");
@@ -22,10 +22,10 @@ rjs.define("./components/HRule.js", "HRule");
 // Color Picker
 rjs.define("./components/Color.js", "Color");
 //Container
-//rjs.define("./components/Container.js", "Container");
+rjs.define("./components/Container.js", "Container");
 //Tab
-//rjs.define("./components/Tab/TabNavigator.js", "TabNavigator");
-//rjs.define("./components/Tab/Tab.js", "Tab");
+rjs.define("./components/Tab/TabNavigator.js", "TabNavigator");
+rjs.define("./components/Tab/Tab.js", "Tab");
 //Link
 rjs.define("./components/Link.js", "Link");
 //Repeater
@@ -64,7 +64,8 @@ rjs.define("./components/DateTime.js", "DateTime");
 //DateTimeCb
 rjs.define("./components/DateTimeCb.js", "DateTimeCb");
 //Modal
-rjs.define("./components/Modal.js", "Modal");
+rjs.define("./components/Modal/ModalSize.js", "ModalSize");
+rjs.define("./components/Modal/Modal.js", "Modal");
 //AutoComplete
 //rjs.define("https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js", "Select2Script");
 //rjs.define("https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css", "Select2CSS");
@@ -104,19 +105,20 @@ rjs.define("./components/Spacer.js", "Spacer");
 //HierarchicalTree
 //rjs.define("https://cdnjs.cloudflare.com/ajax/libs/jquery.fancytree/2.28.1/jquery.fancytree-all-deps.js", "FancyTreeScript");
 rjs.define("lib/dependencies/efilemanager/skin-lion/ui.fancytree.css", "FancyTreeCSS");
-rjs.define("./examples/Button/example.js", "ButtonExample");
+//rjs.define("./examples/Button/example.js", "ButtonExample");
+//rjs.define("./examples/Image/example.js", "ImageExample");
 //Loader
 
 rjs.require([
         "DOMContentLoaded",
         "Component",
         "Selectable",
-        //"Parent",
-        //"NavParent",
-        //"Container",
-        //"TabNavigator",
-        //"Tab",
-        //"Form",
+        "Parent",
+        "NavParent",
+        "Container",
+        "TabNavigator",
+        "Tab",
+        "Form",
         "FormEventType",
         "HierarchicalTree",
         "BootBox",
@@ -146,6 +148,7 @@ rjs.require([
         "AutoCompleteExCSS",
         "Select2Script",
         "Select2CSS",
+        "ModalSize",
         "Modal",
         "ComboBox",
         "ComboScript",
@@ -171,8 +174,9 @@ rjs.require([
         "Spacer",
         //"TabExample",
         //"LabelExample"
-        "Button",
-        "ButtonExample"
+        //"Button",
+        //"ButtonExample"
+        "ImageExample"
     ], function () {
         
 

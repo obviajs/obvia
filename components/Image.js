@@ -91,7 +91,7 @@ var Image = function(_props)
     var _src = _props.src;
     var _load = _props.load;
 
-    Component.call(this, _props), true;
+    Component.call(this, _props, true);
     var base = this.base;
 
     this.registerEvents = function () 
