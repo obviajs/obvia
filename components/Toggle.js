@@ -1,79 +1,82 @@
 /**
  * This is a Toggle Element
- * 
- * Kreatx 2018
+ *
+ * Kreatx 2019
  */
 
-//component definition
-var Toggle = KxGenerator.createComponent({
-    //component data
-    initModel: function () {
-        return {
-            blockProcessAttr: this.required ? false : this.blockProcessAttr,
-        }
-    },
+var Toggle = function (_props, overrided = false) {
 
-    beforeAttach: function () {
-        if (this.value == "0")
-            this.value = false;
-        if (this.value == "1")
-            this.value = true;
-        
-        this.$input = this.$el.attr('id') == this.domID?this.$el:this.$el.find("#" + this.domID);
-    },
-
-    registerEvents: function () {
-        return [
-            {
-                registerTo: this.$el, events: {
-                    'afterAttach': this.afterAttach.bind(this)
+    Object.defineProperty(this, "label",
+        {
+            get: function label() {
+                return _label;
+            },
+            set: function label(v) {
+                if (_label != v) {
+                    _label = v;
+                    var target = this.$el.find("label");
+                    if (target[0]) {
+                        target[0].textContent = _label;
+                        target[0].style.fontWeight = "bold";
+                    }
                 }
             }
-        ]
-    },
+        });
 
-    afterAttach: function () {
-        this.$input.bootstrapToggle(); 
-
-        this.trigger('creationComplete');
-    },
-
-    setValue: function (value) {
-        if (this.value != value) {
-            this.value = value;
-
-            this.$input.bootstrapToggle('destroy');
-            this.$input.bootstrapToggle();
+    Object.defineProperty(this, "value", {
+        set: function value(v) {
+            if (_value != v) {
+                _value = v;
+                this.$input.bootstrapToggle('destroy');
+                this.$input.bootstrapToggle();
+            }
         }
-        
-        return this;
-    },
+    });
 
-    enable: function () {
-        this.$input.bootstrapToggle('enable');
-        this.enabled = true;
-        return this;    
-    },
+    this.afterAttach = function () {
+        this.$input.bootstrapToggle();
+    };
 
-    disable: function () {
-        this.$input.bootstrapToggle('disable');
-        this.enabled = false;
-        return this;
-    },
+    this.beforeAttach = function () {
+        _enabled = (_enabled !== undefined && _enabled != null ? _enabled : true);
+        this.$input = this.$el.find("#" + this.domID);
+    };
 
-    template: function () {
-        return (!this.embedded?("<div id='" + this.domID + "-wrapper' class='"+(this.colspan?"col-sm-" + this.colspan:"")+" form-group rowspan" + this.rowspan +" resizable'>"):"")+
-        (!this.embedded?("<label rv-style='versionStyle' rv-for='id'><b>{label}</b><span rv-if='required'>*</span></label>"):"")+
-                            "<input type='checkbox' rv-checked='value' switch-toggle='toggle' data-on='"+this.checkedLabel+"' data-off='"+this.unCheckedLabel+"'+ data-style='slow'  id='"+this.domID+"'  name='" + this.domID + "'/>"+
-        (!this.embedded?("</div>"):"");      
-    },
+    this.template = function () {
+        return (!_embedded ? ("<div id='" + this.domID + "-wrapper' class='" + (_colspan ? "col-sm-" + _colspan : "") + " form-group rowspan" + _rowspan + " resizable'>") : "") +
+            (!_embedded ? ("<label rv-style='versionStyle' rv-for='id'><b>" + _label + "</b></label>") : "") + "<span rv-if='" + _required + "'>*</span>" +
+            "<input type='checkbox' rv-checked='" + _value + "' switch-toggle='toggle' data-on='" + _checkedLabel + "' data-off='" + _unCheckedLabel + "' data-style='slow'  id='" + this.domID + "'  name='" + this.domID + "'/>" +
+            (!_embedded ? ("</div>") : "");
+    };
 
-    render: function () {
-        return this.$el;
+    var _defaultParams = {
+        label: 'Toggle',
+        blockProcessAttr: false,
+        required: false,
+        value: true,
+        unCheckedLabel: "Jo",
+        checkedLabel: "Po",
+        afterAttach: this.afterAttach
+    };
+
+    _props = extend(false, false, _defaultParams, _props);
+
+    var _colspan = _props.colspan;
+    var _rowspan = _props.rowspan;
+    var _label = _props.label;
+    var _embedded = _props.embedded;
+    var _enabled = _props.enabled;
+    var _blockProcessAttr = _props.required ? false : _props.blockProcessAttr;
+    var _required = _props.required;
+    var _value = _props.value;
+    var _unCheckedLabel = _props.unCheckedLabel;
+    var _checkedLabel = _props.checkedLabel;
+
+    Component.call(this, _props);
+
+    if (overrided) {
+        this.keepBase();
     }
-});
+};
 
-//component prototype
-Toggle.type = 'toggle';
-
-KxGenerator.registerDOMElement(Toggle, 'kx-toggle');
+Toggle.type = "toggle";
