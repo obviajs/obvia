@@ -1,105 +1,87 @@
 /**
  * This is a Radio Button Element
- * 
- * Kreatx 2018
+ *
+ * Kreatx 2019
  */
 
 //component definition
-var RadioButton = KxGenerator.createComponent({
-    enabled: true,
-    blockProcessAttr: this.required ? false : this.blockProcessAttr,
-    _checked: false,
-    _value: null,
-    //inner component data
-    initModel: function () {
-        return {
-        }
-    },
-    
-    beforeAttach: function () {
-        this.$input = this.$el.find("input");
-        this.enabled = (this.enabled!=undefined && this.enabled!=null?this.enabled:true);
-    },
-    registerEvents: function () {
-        return [
-            {
-                registerTo: this.$el, events: { 
-                    'afterAttach': this.afterAttach.bind(this)
-                }
+var RadioButton = function (_props, overrided = false) {
+    Object.defineProperty(this, "label",
+        {
+            get: function label() {
+                return _label;
             },
-            {
-                registerTo: this.$input, events: { 
-                    'change': this.changeHandler.bind(this),
-                    'click': this.clickHandler.bind(this)
+            set: function label(v) {
+                if (_label != v) {
+                    _label = v;
+                    if (this.$input)
+                        this.$input[0].nextSibling.textContent = v;
                 }
             }
-        ]
-    },
+        });
 
-    afterAttach: function (e) {
-		//this.$input.prop('checked', this.checked);
-		//this.$input.val(this.value);
-        this.trigger('creationComplete');
-    },
-
-    enable: function () {
-        this.enabled = true;
-        return this;
-    },
-
-    disable: function () {
-        this.enabled = false;
-        return this;
-    },
-    set value(v){
-        if(this._value!=v)
+    Object.defineProperty(this, "checked",
         {
-            this._value = v;
-        }else{
-            this.checked = true;
-        }
-		if(this.$input!=undefined)
-			this.$input.val(v);
-    },
-    get value(){
-        return this._value;
-    },
-    set checked(v){
-        if(v)
+            get: function checked() {
+                return _checked;
+            },
+            set: function checked(v) {
+                if (_checked != v) {
+                    _checked = !!v;
+                    if (this.$input)
+                        this.$input.prop('checked', v)
+                }
+            }
+        });
+
+    Object.defineProperty(this, "value",
         {
-            this._checked = true;
-        }else
-			this._checked = false;
-		if(this.$input!=undefined)
-			this.$input.prop('checked', v)
-    },
-	get checked(){
-        return this._checked;
-    },
-    clickHandler: function () {
-        if (typeof this.onclick == 'function')
-            this.onclick.apply(this, arguments);
-    },
-    changeHandler: function () {
-        if (typeof this.onchange == 'function')
-            this.onchange.apply(this, arguments);
-    },
-    template: function () {         
-        return "<div id='" + this.domID + "-wrapper'>" +
-                    "<label>" +    
-                        "<input id='" + this.domID + "' name='" + this.domID + "' type='radio' value='"+this.value+"' + rv-enabled='enabled' "+(this.checked?"checked='checked'":'')+"> {label}" +
-                    "</label>"+
-                "</div>";    
-    },
-    
-    render: function () {
-        return this.$el;
+            get: function value() {
+                return _value;
+            },
+            set: function value(v) {
+                if (_value != v)
+                    _value = v;
+                else
+                    _checked = true;
+                if (this.$input)
+                    this.$input.val(v);
+            }
+        });
+
+    this.beforeAttach = function () {
+        this.$input = this.$el.find("#" + this.domID);
+        _enabled = (_enabled != undefined && _enabled != null ? _enabled : true);
+    };
+
+    this.template = function () {
+        return "<label>" +
+            "<input data-triggers='click' id='" + this.domID + "' name='" + this.domID + "' type='radio' class='" + this.cssClass + "' value='" + _value + "' + rv-enabled='enabled' " + (_checked ? "checked='checked'" : '') + ">" + _label +
+            "</label>";
+    };
+
+
+    var _defaultParams = {
+        label: "",
+        enabled: "",
+        value: "",
+        blockProcessAttr: false,
+        checked: false
+    };
+    _props = extend(false, false, _defaultParams, _props);
+
+    var _label = _props.label;
+    var _enabled = _props.enabled;
+    var _value = _props.value;
+    var _blockProcessAttr = _props.required ? false : _props.blockProcessAttr;
+    var _checked = _props.checked;
+
+    Component.call(this, _props);
+
+    if (overrided) {
+        this.keepBase();
     }
-    
-});
+};
 
 //component prototype
 RadioButton.type = 'radio';
-
-//register dom element for this component
-KxGenerator.registerDOMElement(RadioButton, 'kx-radio');

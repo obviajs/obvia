@@ -11,29 +11,25 @@ var Component = function(_props, overrided=false)
     var _enabled = _props.enabled;
     var _class = _props.class;
 
-    var _mousedown = _props.mousedown;
-    var _click = _props.click;
-    var _dblclick = _props.dblclick;
-
     //var _propUpdateMap = {"label":{"o":$el, "fn":"html", "p":[] }, "hyperlink":{}};
     //generate GUID for this component
-    Object.defineProperty(this, "guid", 
+    Object.defineProperty(this, "guid",
     {
-        get: function enabled() 
+        get: function enabled()
         {
             return _guid;
         }
     });
 
     //domID property
-    Object.defineProperty(this, 'id', 
+    Object.defineProperty(this, 'id',
     {
         get: function () {
             return _id;
         }
     });
 
-    Object.defineProperty(this, 'domID', 
+    Object.defineProperty(this, 'domID',
     {
         get: function () {
             return _id + '_' + _guid;
@@ -41,13 +37,13 @@ var Component = function(_props, overrided=false)
     });
 
 
-    Object.defineProperty(this, "enabled", 
+    Object.defineProperty(this, "enabled",
     {
-        get: function enabled() 
+        get: function enabled()
         {
             return _enabled;
         },
-        set: function enabled(v) 
+        set: function enabled(v)
         {
             if(_enabled != v)
             {
@@ -57,9 +53,9 @@ var Component = function(_props, overrided=false)
         }
     });
 
-    Object.defineProperty(this, "cssClass", 
+    Object.defineProperty(this, "cssClass",
     {
-        get: function cssClass() 
+        get: function cssClass()
         {
             return _class;
         }
@@ -72,7 +68,7 @@ var Component = function(_props, overrided=false)
     this.$el = $(this.template());
 
     //spacing of element
-    if (_props['spacing']) 
+    if (_props['spacing'])
     {
         if (_props.spacing['offset'])
             this.$el.addClass('offset-sm-' + _props.spacing.offset);
@@ -82,47 +78,67 @@ var Component = function(_props, overrided=false)
             this.$el.addClass('mt-' + _props.spacing.mt);
     }
 
-    this.registerEvents = function () 
+    this.dataTriggerEvents = function () {
+        var customEvents = [];
+
+        this.$el.find('[data-triggers]').addBack('[data-triggers]').each(function () {
+            var eventsObj = {};
+            var events = $(this).data('triggers');
+            var eventsArr = events.split(" ");
+
+            for (var i = 0; i < eventsArr.length; i++) {
+                var privateEvent = _props[eventsArr[i]];
+                eventsObj[eventsArr[i]] = privateEvent && typeof privateEvent == 'function' ? privateEvent.bind(this) : undefined;
+            }
+
+            customEvents = customEvents.concat([{
+                registerTo: $(this),
+                events: eventsObj
+            }]);
+
+        });
+
+        return customEvents;
+    };
+
+    this.registerEvents = function ()
     {
         return [
             {
                 registerTo: this.$el, events: {
                     'afterAttach': this.afterAttach && typeof this.afterAttach == 'function' ? this.afterAttach.bind(this) : undefined,
-                    'mousedown' : _mousedown && typeof _mousedown == 'function' ? _mousedown.bind(this) : undefined,
-                    'click': _click && typeof _click == 'function' ? _click.bind(this) : undefined,
-                    'dblclick': _dblclick && typeof _dblclick == 'function' ? _dblclick.bind(this) : undefined
                 }
             }
-        ]
+        ].concat(this.dataTriggerEvents());
     };
 
-    this.render = function () 
+    this.render = function ()
     {
         return this.$el;
     };
 
-    this.afterAttach = function (e) 
+    this.afterAttach = function (e)
     {
         if (typeof _props.afterAttach == 'function')
             _props.afterAttach.apply(this, arguments);
         this.trigger('creationComplete');
     };
     //action methods on component
-    this.show = function () 
+    this.show = function ()
     {
         if(this.$el)
             this.$el.show();
         return this;
     }
-    
-    this.hide = function () 
+
+    this.hide = function ()
     {
         if(this.$el)
             this.$el.hide();
         return this;
     }
 
-    this.setColspan = function (colspan) 
+    this.setColspan = function (colspan)
     {
         if(this.$el && !isNaN(colspan))
         {
@@ -135,8 +151,8 @@ var Component = function(_props, overrided=false)
         return this;
     }
 
-   
-    this.scrollTo = function () 
+
+    this.scrollTo = function ()
     {
         if(this.$el)
         {
@@ -147,7 +163,7 @@ var Component = function(_props, overrided=false)
         return this;
     }
 
-    this.destruct = function () 
+    this.destruct = function ()
     {
         if(this.$el)
             this.$el.remove();
@@ -155,17 +171,17 @@ var Component = function(_props, overrided=false)
 
     //register outside handlers
     //event handling
-    this.on = function (eventType, fnc) 
+    this.on = function (eventType, fnc)
     {
-        if (typeof fnc !== 'function') 
+        if (typeof fnc !== 'function')
         {
             throw Error("The specified parameter is not a callback");
-        } else 
+        } else
         {
-            if (typeof fnc == 'function') 
+            if (typeof fnc == 'function')
             {
                 if(this.$el)
-                    this.$el.on(eventType, function () 
+                    this.$el.on(eventType, function ()
                     {
                         var args = [];
                         for (var i = 0; i < arguments.length; i++) {
@@ -190,28 +206,28 @@ var Component = function(_props, overrided=false)
         return this;
     }
 
-    this.trigger = function () 
+    this.trigger = function ()
     {
         if(this.$el)
             this.$el.trigger.apply(this.$el, arguments);
     }
 
-    this.off = function () 
+    this.off = function ()
     {
         if(this.$el)
             this.$el.off.apply(this.$el, arguments);
     }
-    ++Component.instanceCnt; 
+    ++Component.instanceCnt;
 
     //execute functions before component attached on dom
     if (this['beforeAttach'] && (typeof this.beforeAttach == 'function'))
         this.beforeAttach();
-    
-    
+
+
     ready("#" + this.domID, function (element) {
         //execute inner handlers if theres any registered
         var handlers = [];
-        if (_self['registerEvents'] && (typeof _self.registerEvents == 'function')) 
+        if (_self['registerEvents'] && (typeof _self.registerEvents == 'function'))
         {
             handlers = _self.registerEvents();
             //call inner event
@@ -229,7 +245,7 @@ var Component = function(_props, overrided=false)
                                     //append RepeaterEventArgs to event
                                     if (component.parentType && component.parentType == 'repeater') {
                                         args = args.concat(
-                                            [   
+                                            [
                                                 new RepeaterEventArgs(
                                                     component.parent.rowItems[component.repeaterIndex],
                                                     component.parent.dataProvider[component.repeaterIndex],
@@ -249,7 +265,7 @@ var Component = function(_props, overrided=false)
                 }
             });
         }
-     
+
         _self.trigger('afterAttach');
     });
     this.keepBase = function()
@@ -264,6 +280,6 @@ var Component = function(_props, overrided=false)
     {
         this.keepBase();
     }
-    
+
 }
 Component.instanceCnt = 0;

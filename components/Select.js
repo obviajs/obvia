@@ -1,116 +1,118 @@
 /**
  * This is a Select Html Element
- * 
- * Kreatx 2018
+ *
+ * Kreatx 2019
  */
 
 //component definition
-var Select = KxGenerator.createComponent({
-    //inner component data
-    initModel: function () {
-        return {
-            class: "form-control",
-            enabled: true
-        }
-    },
-
-    beforeAttach: function () {
-        this.$select = this.$el.attr('id') == this.domID?this.$el:this.$el.find("#" + this.domID);
-    },
-    
-    registerEvents: function () {
-        return [
-            {
-                registerTo: this.$el, events: { 
-                    'afterAttach': this.afterAttach.bind(this),
-                }
+var Select = function (_props, overrided=false) {
+    Object.defineProperty(this, "label",
+        {
+            get: function label() {
+                return _label;
             },
-            {
-                registerTo: this.$select, events: {
-                    'change': this.handleChange.bind(this),
+            set: function label(v) {
+                if (_label != v && _label !== undefined) {
+                    _label = v;
+                    if (this.$label)
+                        this.$label.html(v);
                 }
             }
-        ]
-    },
+        });
 
-    afterAttach: function (e) {
-        this.$select.html(this.renderOptions());
-        this.trigger('creationComplete');
-    },
+    Object.defineProperty(this, "value",
+        {
+            set: function value(v) {
+                if (_value != v) {
+                    _value = v;
+                    this.$select.val(v);
+                    this.trigger('change');
+                }
+            }
+        });
 
-    handleChange: function (e) {
-        this.value = this.$select.val()
-    },
-
-    template: function () {         
-        return  (!this.embedded?("<div id='" + this.domID + "-wrapper' class='"+(this.colspan?"col-sm-" + this.colspan:"")+" form-group rowspan" + this.rowspan + " resizable '>"):"") + 
-                (!this.embedded?("<label rv-if='label'><b>{label}</b></label>"):"") +             
-                    "<select rv-enabled='model.enabled' rv-class='model.class' id='" + this.domID + "'>" +
-                    "</select>" +
-                (!this.embedded?("</div>"):"");    
-    },
-
-    setValue: function (value) {
-        if (this.value != value) {
-            this.value = value;
-            this.$select.val(value);
-
-            this.trigger('change');
+    this.beforeAttach = function () {
+        if (_embedded)
+            this.$select = this.$el;
+        else {
+            this.$select = this.$el.find("#" + this.domID);
+            this.$label = this.$el.find("label");
         }
 
-        return this;
-    },
+    };
 
-    selectByText: function (text) {
+    this.afterAttach = function (e) {
+        this.$select.html(this.renderOptions());
+    };
+
+    this.handleChange = function (e) {
+        _value = this.$select.val();
+    };
+
+    this.template = function () {
+        return (!_embedded ? ("<div id='" + this.domID + "-wrapper' class='" + (this.colspan ? "col-sm-" + this.colspan : "") + " form-group rowspan" + this.rowspan + " resizable '>") : "") +
+            (!_embedded ? ("<label rv-if='label'><b>"+_label+"</b></label>") : "") +
+            "<select data-triggers='change' rv-enabled='"+_enabled+"' rv-class='"+this.cssClass+"' id='" + this.domID + "'>" +
+            "</select>" +
+            (!_embedded ? ("</div>") : "");
+    };
+
+    this.selectByText = function (text) {
         var _self = this;
 
         this.$select.find('option').each(function () {
             if ($(this).html() == text) {
                 _self.setValue($(this).attr('value'));
-                return;
             }
         });
 
         return this;
-    },
+    };
 
-    enable: function () {
-        var model = this.getModel();
-        model.enabled = true;
-        this.enabled = true;
-
-        return this;
-    },
-
-    disable: function () {
-        var model = this.getModel();
-        model.enabled = false;
-        this.enabled = false;
-
-        return this;
-    },
-
-    renderOptions: function () {
+    this.renderOptions = function () {
         var opts = "";
-        this.dataProvider.forEach(function (option, index) {
-            if (option[this.valueField] == this.value) {
-                opts += "<option value=" + option[this.valueField] + " selected>" + option[this.textField] + "</option>"; 
+
+        _dataProvider.forEach(function (option, index) {
+            if (option[_valueField] == _value) {
+                opts += "<option value=" + option[_valueField] + " selected>" + option[_textField] + "</option>";
             } else {
-                opts += "<option value=" + option[this.valueField] + ">" + option[this.textField] + "</option>"; 
+                opts += "<option value=" + option[_valueField] + ">" + option[_textField] + "</option>";
             }
         }.bind(this));
 
         return opts;
-    },
-    
-    render: function () {
-        return this.$el;
+    };
+
+    var _defaultParams = {
+        label: "",
+        dataProvider: null,
+        textField: "",
+        valueField: "",
+        value: "",
+        class: "form-control",
+        enabled: true,
+        embedded: false,
+        afterAttach: this.afterAttach,
+        change: this.handleChange.bind(this)
+    };
+
+    _props = extend(false, false, _defaultParams, _props);
+
+    var _embedded = _props.embedded;
+    var _label = !_embedded ? _props.label : undefined;
+    var _dataProvider = _props.dataProvider;
+    var _textField = _props.textField;
+    var _valueField = _props.valueField;
+    var _value = _props.value;
+    var _enabled = _props.enabled;
+
+    Component.call(this, _props);
+
+    if(overrided)
+    {
+        this.keepBase();
     }
-    
-});
+};
 
 //component prototype
 Select.type = 'select';
-
-//register dom element for this component
-KxGenerator.registerDOMElement(Select, 'kx-select');
