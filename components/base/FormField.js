@@ -85,7 +85,7 @@ var FormField = function(_props)
     { 
         '<div class="form-group '+(this.colspan?"col-sm-" + this.colspan:"")+'">'+
             "<label id='" + this.domID + "_label'  for='"+_cmp.domID+"'>"+_label+"</label>"+
-            _cmp.render()+
+            _cmp.template()+
         '</div>';
     }
 

@@ -107,9 +107,9 @@ rjs.define("./components/Spacer.js", "Spacer");
 rjs.define("lib/dependencies/efilemanager/skin-lion/ui.fancytree.css", "FancyTreeCSS");
 //rjs.define("./examples/Button/example.js", "ButtonExample");
 //rjs.define("./examples/Image/example.js", "ImageExample");
-//rjs.define("./examples/Repeater/example.js", "RepeaterExample");
+rjs.define("./examples/Repeater/example.js", "RepeaterExample");
 //rjs.define("./examples/Link/example.js", "LinkExample");
-rjs.define("./examples/AutoComplete/example.js", "AutoCompleteExample");
+//rjs.define("./examples/AutoComplete/example.js", "AutoCompleteExample");
 //Loader
 
 rjs.require([
@@ -180,9 +180,9 @@ rjs.require([
         //"Button",
         //"ButtonExample"
         //"ImageExample"
-        //"RepeaterExample"
+        "RepeaterExample"
         //"LinkExample"
-        "AutoCompleteExample"
+        //"AutoCompleteExample"
     ], function () {
         
 

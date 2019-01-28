@@ -3,8 +3,9 @@ $('#root').append(loader.render());
 loader.show();
 
 var myFormField = new FormField({
-    id: 'repeater',
-    label: 'Example Repeater',
+    id: 'formFieldEx',
+    label: 'Example formField',
+    name: 'formFieldEx',
 	component:
         {
             constructor: Button,

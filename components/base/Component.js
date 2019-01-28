@@ -12,6 +12,10 @@ var Component = function(_props, overrided=false)
     var _class = _props.class;
     var _colSpan = _props.colSpan;
 
+    var _mousedown = _props.mousedown;
+    var _click = _props.click;
+    var _dblclick = _props.dblclick;
+
     //var _propUpdateMap = {"label":{"o":$el, "fn":"html", "p":[] }, "hyperlink":{}};
     //generate GUID for this component
     Object.defineProperty(this, "guid",
@@ -81,23 +85,53 @@ var Component = function(_props, overrided=false)
             this.$el.addClass('mt-' + _props.spacing.mt);
     }
 
+    var _defaultHandlers =
+    [
+        {
+            registerTo: this.$el, events: {
+                'mousedown' : _mousedown && typeof _mousedown == 'function' ? _mousedown.bind(this) : undefined,
+                'click': _click && typeof _click == 'function' ? _click.bind(this) : undefined,
+                'dblclick': _dblclick && typeof _dblclick == 'function' ? _dblclick.bind(this) : undefined
+            }
+        }
+    ];
+
     this.dataTriggerEvents = function () {
-        var customEvents = [];
+        var customEvents = _defaultHandlers;
 
         this.$el.find('[data-triggers]').addBack('[data-triggers]').each(function () {
             var eventsObj = {};
             var events = $(this).data('triggers');
             var eventsArr = events.split(" ");
 
-            for (var i = 0; i < eventsArr.length; i++) {
-                var privateEvent = _props[eventsArr[i]];
+            for (var i = 0; i < eventsArr.length; i++) 
+            {
+                var eventType = eventsArr[i];
+                if(customEvents[0][eventType])
+                {
+                    //overrided listener, so remove default listener on $el
+                    delete customEvents[0][eventType];
+                }
+                var privateEvent = _props[eventType];
                 eventsObj[eventsArr[i]] = privateEvent && typeof privateEvent == 'function' ? privateEvent.bind(this) : undefined;
             }
-
-            customEvents = customEvents.concat([{
-                registerTo: $(this),
-                events: eventsObj
-            }]);
+            var found = false;
+            for(var i=0;i<customEvents.length;i++)
+            {
+                if(customEvents[i].registerTo.attr('id') == $(this).attr('id'))
+                {
+                    extend(false, false, eventsObj, customEvents[i].events);
+                    found = true;
+                    break;
+                }
+            }
+            if(!found)
+            {
+                customEvents = customEvents.concat([{
+                    registerTo: $(this),
+                    events: eventsObj
+                }]);
+            }
 
         });
 
@@ -236,7 +270,7 @@ var Component = function(_props, overrided=false)
         this.beforeAttach();
 
 
-    ready("#" + this.domID, function (element) {
+    ready("#" + this.$el.attr('id'), function (element) {
         //execute inner handlers if theres any registered
         var handlers = [];
         if (_self['registerEvents'] && (typeof _self.registerEvents == 'function'))
