@@ -5,7 +5,7 @@
  */
 
 //component definition
-var TextInput = function(_props, overrided=false)
+var TextArea = function(_props, overrided=false)
 {
     Object.defineProperty(this, "name",
         {
@@ -88,10 +88,64 @@ var TextInput = function(_props, overrided=false)
                 }
             }
         });
+    Object.defineProperty(this, "cols",
+        {
+            get: function cols()
+            {
+                return _cols;
+            },
+            set: function cols(v)
+            {
+                if(_cols != v)
+                {
+                    _cols = v;
+                    if(_cols)
+                    {
+                        if(this.$el)
+                        {
+                            this.$el.attr('cols', _cols);
+                        }
+                    }else
+                    {
+                        if(this.$el)
+                        {
+                            this.$el.removeAttr('cols');
+                        }
+                    }
+                }
+            }
+        });
+    Object.defineProperty(this, "rows",
+        {
+            get: function rows()
+            {
+                return _rows;
+            },
+            set: function rows(v)
+            {
+                if(_rows != v)
+                {
+                    _rows = v;
+                    if(_rows)
+                    {
+                        if(this.$el)
+                        {
+                            this.$el.attr('rows', _rows);
+                        }
+                    }else
+                    {
+                        if(this.$el)
+                        {
+                            this.$el.removeAttr('rows');
+                        }
+                    }
+                }
+            }
+        });
 
     this.template = function ()
     {
-        return  "<input type='text' id='" + this.domID + "' "+(_name?"name='"+_name+"'":"")+"  "+(_required?"required":"")+"  "+(_disabled?"disabled":"")+" class='"+this.cssClass+"' "+(_value?"value='"+_value+"'":"")+">";
+        return  "<textarea "+(_rows?"rows='"+_rows+"'":"")+" "+(_cols?"cols='"+_cols+"'":"")+" id='" + this.domID + "' "+(_name?"name='"+_name+"'":"")+"  "+(_required?"required":"")+"  "+(_disabled?"disabled":"")+" class='"+this.cssClass+"'>" +(_value ? _value :"")+"</textarea>";
     };
 
     var _defaultParams = {
@@ -107,6 +161,12 @@ var TextInput = function(_props, overrided=false)
     var _required = _props.required;
     var _disabled = _props.disabled;
     var _change = _props.change;
+    var _rows = _props.rows;
+    var _cols = _props.cols;
+
+    this.spellCHeckClickHandler = function (e) {
+        this.$el.spellCheckInDialog({ defaultDictionary: this.spellCheck.defaultDictionary });
+    };
 
     Component.call(this, _props, true);
 
@@ -126,4 +186,4 @@ var TextInput = function(_props, overrided=false)
         this.keepBase();
     }
 };
-TextInput.type = 'text';
+TextArea.type = 'textarea';
