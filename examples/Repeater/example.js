@@ -143,7 +143,10 @@ var myRepeater = new Repeater({
                 value: "{textValue}",
                 label:"{textValue}",
                 class: "btn btn-success",
-                click : function(e){console.log("From ClickAction");}
+                click : function(e, rargs){
+                    console.log("From ClickAction");
+                    myRepeater.dataProvider[rargs.currentIndex].textValue = "Clicked";
+                }
             }
         }
     ]

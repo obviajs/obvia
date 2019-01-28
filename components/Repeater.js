@@ -222,38 +222,17 @@ var Repeater = function(_props)
             var rowItems = {};
             _self.components.forEach(function (component, vcolIndex) {
                 //clone objects
-                var tempComponent = Object.assign({}, component);
-                var p = Object.assign({}, tempComponent.props);
+                var el = Component.fromLiteral(component, data);
+                var cmpId = component.props.id;
 
                 //build components properties, check bindings
-                if (_self[p.id] == undefined)
-                    _self[p.id] = [];
-                var cmp = _self[p.id];
-                var cmpId = p.id;
+                if (_self[cmpId] == undefined)
+                    _self[cmpId] = [];
+
+                var cmp = _self[cmpId];
                 if (cmp[index - 1] == undefined)
                     cmp[index - 1] = {};
                 
-                var bindings = [];
-                for (var prop in p) {
-                    if (typeof prop == 'string') {
-                        //check for binding
-                        if (p[prop] && p[prop][0] == '{' && p[prop][p[prop].length - 1] == '}') {
-                            var dataProviderField = p[prop].slice(1, -1);
-                            bindings.push({"expression":dataProviderField, "property":prop});
-                            
-                        } else {
-                            //no binding
-                            cmp[index - 1][prop] = p[prop];
-                        }
-                    }
-                }
-
-               
-                //construct the component
-                if (typeof tempComponent.constructor == "string") {
-                    tempComponent.constructor = eval(tempComponent.constructor);
-                }
-                var el = new tempComponent.constructor(cmp[index - 1]);
                 el.parent = _self;
                 el.parentType = 'repeater';
                 el.parentForm = _self.parentForm;
@@ -262,11 +241,6 @@ var Repeater = function(_props)
                 cmp[index - 1] = el;
                 rowItems[cmpId] = el;
                 _self.rowItems[index - 1] = rowItems;
-
-                if(!_self.watchers[index-1])
-                    _self.watchers[index-1] = [];
-                _self.watchers[index-1][cmpId] = _self.applyItemRendererBindings(bindings, data, el);
-
 
                 //handle component change event and delegate it to repeater
                 el.on('creationComplete', (function (ci) { 
@@ -392,23 +366,6 @@ var Repeater = function(_props)
             return buildRow();    
         }
         
-    };
-
-    this.applyItemRendererBindings = function(bindings, data, el)
-    {
-        var watchers = [];
-        for(var bi=0;bi<bindings.length;bi++){
-            (function(currentItem, bindingExp, site, site_chain){
-                return (function(e) { // a closure is created
-                    //this here refers to window context
-                    var defaultBindTo = "currentItem_"+el.guid;
-                    this[defaultBindTo] = currentItem;
-                   // var context = extend(false, true, this, obj);
-                    watchers.splicea(watchers.length, 0, BindingUtils.getValue(this, bindingExp, site, site_chain, defaultBindTo));
-                })();	
-            })(data, bindings[bi].expression, el, [bindings[bi].property]);
-        }
-        return watchers;
     };
 
     //handle row delete click, nese i shtojme te register events remove dhe add kemi mundesine te heqim/shtojme ne cdo index
