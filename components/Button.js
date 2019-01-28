@@ -81,8 +81,8 @@ var Button = function(_props, overrided=false)
     });
 
     this.template = function () 
-    {//
-        return  "<button id='" + this.domID + "' type='"+_type+"' class='"+this.cssClass+"' "+(_value?"value='"+_value+"'":"")+">"+_label+"</button>";
+    {
+        return  "<button data-triggers='click' id='" + this.domID + "' type='"+_type+"' class='"+this.cssClass+"' "+(_value?"value='"+_value+"'":"")+">"+_label+"</button>";
     };
    
     var _defaultParams = {

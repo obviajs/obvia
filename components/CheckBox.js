@@ -1,118 +1,89 @@
 /**
  * This is a CheckBox Element
- * 
- * Kreatx 2018
+ *
+ * Kreatx 2019
  */
 
-//component definition
-var CheckBox = KxGenerator.createComponent({
-    _enabled: true,
-    blockProcessAttr: this.required ? false : this.blockProcessAttr,
-	_checked: false,
-    _value: null,
-   //inner component data
-   initModel: function () {
-        return {
-            
-        }
-    }, 
-    beforeAttach: function () {
-        this.$input = this.$el.find("input");
-        this.enabled = (this.enabled!=undefined && this.enabled!=null?this.enabled:true);
-    },
-    registerEvents: function () {
-        return [
-            {
-                registerTo: this.$el, events: { 
-                    'afterAttach': this.afterAttach.bind(this)
-                }
+var CheckBox = function (_props, overrided = false) {
+
+    Object.defineProperty(this, "label",
+        {
+            get: function label() {
+                return _label;
             },
-            {
-                registerTo: this.$input, events: { 
-                    'change': this.changeHandler.bind(this),
-                    'click': this.clickHandler.bind(this)
+            set: function label(v) {
+                if (_label != v) {
+                    _label = v;
+                    if (this.$input)
+                        this.$input[0].nextSibling.textContent = v;
                 }
             }
-        ]
-    },
- 
-    afterAttach: function (e) {
-		//this.$input.prop('checked', this.checked);
-		//this.$input.val(this.value);
-        this.trigger('creationComplete');
-    },
+        });
 
-    changeHandler: function () {
-        if (typeof this.onchange == 'function')
-            this.onchange.apply(this, arguments);
-    },
+    Object.defineProperty(this, "value", {
+        get: function value() {
+            return _value;
+        },
+        set: function value(v) {
+            if (_value !== v) {
+                _value = v;
+            } else {
+                _checked = true;
+            }
+            if (this.$input !== undefined)
+                this.$input.val(v);
+        }
+    });
 
-    clickHandler: function () {
-        if (typeof this.onclick == 'function')
-            this.onclick.apply(this, arguments);       
-    },
-    enable: function () {
-        this.enabled = true;
-        return this;
-    },
+    Object.defineProperty(this, "checked", {
+        get: function checked() {
+            return _checked;
+        },
+        set: function checked(v) {
+            if (_checked != v) {
+                _checked = !!v;
+                if (this.$input !== undefined) {
+                    this.$input.prop('checked', v);
+                }
+            }
+        }
+    });
 
-    disable: function () {
-        this.enabled = false;
-        return this;
-    },
-	set value(v){
-        if(this._value!=v)
-        {
-            this._value = v;
-        }else{
-            this.checked = true;
-        }
-		if(this.$input!=undefined)
-			this.$input.val(v);
-    },
-    get value(){
-        return this._value;
-    },
-    set checked(v){
-        if(v)
-        {
-            this._checked = true;
-        }else
-			this._checked = false;
-		if(this.$input!=undefined){
-            this.$input.prop('checked', v);
-        }
-    },
-    get enabled(){
-        return this._enabled;
-    },
-    set enabled(v){
-        if(this._enabled!=v)
-        {
-            this._enabled = v;
-            if(this.$input!=undefined)
-                this.$input.prop('disabled', !v)
-        }
-    },
-	get checked(){
-        return this._checked;
-    },
-    template: function () {      
-        return  "<div id='" + this.domID + "-wrapper' class='checkbox'>" +
-        (!this.embedded?("<span rv-if='blockProcessAttr' class='block-process'> * </span>") : "") + 
-                    "<label><input id='" + this.domID + "' name='" + this.domID + "'  value='"+this.value+"' " +                    
-                    (this.enabled?'':"disabled='disabled'")+ 
-                    (this.checked?"checked='checked'":'')+" type='checkbox'/>{label}</label>" +
-                "</div>"; 
-    },
-    render: function () {
-        return this.$el;
+    this.beforeAttach = function () {
+        this.$input = this.$el.find("#" + this.domID);
+        _enabled = (_enabled !== undefined && _enabled != null ? _enabled : true);
+    };
+
+    this.template = function () {
+        return (!_embedded ? ("<span rv-if='" + _blockProcessAttr + "' class='block-process'> * </span>") : "") +
+            "<label><input data-triggers='click'  id='" + this.domID + "' name='" + this.domID + "'  value='" + _value + "' " +
+            (_enabled ? '' : "disabled='" + this.enabled + "'") +
+            (_checked ? "checked='checked'" : '') + " type='checkbox'/>" + _label + "</label>";
+    };
+
+    var _defaultParams = {
+        label: 'CheckBox Label',
+        blockProcessAttr: false,
+        value: null,
+        enabled: true,
+        checked: false,
+        embedded: false
+    };
+
+    _props = extend(false, false, _defaultParams, _props);
+
+    var _label = _props.label;
+    var _blockProcessAttr = _props.required ? false : _props.blockProcessAttr;
+    var _value = _props.value;
+    var _enabled = _props.enabled;
+    var _checked = _props.checked;
+    var _embedded = _props.embedded;
+
+    Component.call(this, _props);
+
+    if (overrided) {
+        this.keepBase();
     }
-    
-});
+};
 
-//component prototype
-CheckBox.type = 'checkbox';
-
-//register dom element for this component
-KxGenerator.registerDOMElement(CheckBox, 'kx-checkbox');
+CheckBox.type = "checkbox";
