@@ -1,9 +1,10 @@
 var myRepeater = new Repeater({
     id: 'repeater',
+    label: 'Example Repeater',
 	rendering: {
 				direction: 'vertical',
 				seperator: true,
-				actions: true
+				actions: false
 			},
     defaultItem: {
         comboLabel: 'Zgjidh Shtetin',
@@ -41,7 +42,7 @@ var myRepeater = new Repeater({
                 autocompleteLabel: 'Ministrite',
                 autocompleteValue: [{ "id": "3", "text": "Ministria e Brendshme" }],
                 textLabel: 'Emri',
-                textValue: '',
+                textValue: 'Cowboy Bebop',
                 radioValue: "3",
                 mapValue: {
                     latitude: 41.1533,
@@ -52,7 +53,7 @@ var myRepeater = new Repeater({
             }
         ],
     components: [
-        {
+       /* {
             constructor: AutoComplete,
             props: {
                 id: 'autocomplete',
@@ -132,6 +133,17 @@ var myRepeater = new Repeater({
                 labelField: 'text',
                 valueField: 'id',
                 value: '{radioValue}' 
+            }
+        }*/
+        {
+            constructor: Button,
+            props: {
+                id: 'button',
+                type: "button",
+                value: "{textValue}",
+                label:"{textValue}",
+                class: "btn btn-success",
+                click : function(e){console.log("From ClickAction");}
             }
         }
     ]

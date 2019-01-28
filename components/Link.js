@@ -84,7 +84,8 @@ var Link = function(_props)
     {         
         return "<a id='" + this.domID + "' href='" + _hyperlink + "' "+(_target?"target='" +_target+"'":"")+ ">" + _label + "</a>";
     };
-
+    var _defaultParams = {
+    };
     _props = extend(false, false, _defaultParams, _props);
     
     var _label = _props.label;

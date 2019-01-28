@@ -5,17 +5,12 @@
  */
 
 //component definition
-var AutoCompleteEx = KxGenerator.createComponent({
-    //component data
-    initModel: function () {
-        return {
-            blockProcessAttr: this.required ? false : this.blockProcessAttr,
-        }
-    },
+var AutoCompleteEx = function(_props)
+{
 
-    beforeAttach: function () {
-        this.delayQuerySuggestions = debounce(this.querySuggestions, 400);
-        this.delayRemoveTokenItemAt = debounce(this.removeTokenItemAt, 200);
+    this.beforeAttach = function () 
+    {
+        
         this.cComponents = [];
         var _self = this;
         this.countChildren = 2;
@@ -30,9 +25,10 @@ var AutoCompleteEx = KxGenerator.createComponent({
                 constructor: TokenRenderer,
                 props: {
                     id: 'token',
-                    label: '{'+this.labelField+'}',
-                    value: '{'+this.valueField+'}',
-                    closeiconclickhandler: this.tokenRendererCloseIconClickHandler
+                    label: '{'+_labelField+'}',
+                    value: '{'+_valueField+'}',
+                    closeiconclickhandler: _tokenRendererCloseIconClickHandler,
+                    closeIconSide: _closeIconSide
                 }
             };
         }
@@ -50,7 +46,7 @@ var AutoCompleteEx = KxGenerator.createComponent({
                 actions: false
             },
             embedded:true,
-            dataProvider: this._value,
+            dataProvider: _value,
             components: [this.tokenRenderer],
             parent: _self
         }).on('creationComplete', function (e) {
@@ -59,7 +55,7 @@ var AutoCompleteEx = KxGenerator.createComponent({
             if(!_self.tokenInput){
                 _self.cComponents.push(1);
                 _self.tokensRepeater.$el.removeClass('form-group');
-                _self.tokenInput = TextInput({
+                _self.tokenInput = new TextInput({
                     id: 'tokenInput',
                     label: 'Type something...',
                     versionStyle: '',
@@ -77,8 +73,8 @@ var AutoCompleteEx = KxGenerator.createComponent({
                     if (_self.cComponents.length > _self.countChildren-1) {
                         _self.trigger('creationComplete');  
                     }
-                    _self.tokenInput.$el.on('keydown', _self.tokenInputKeyDown.bind(_self));
-                    _self.tokenInput.$el.on('keyup', _self.tokenInputKeyUp.bind(_self));
+                    _self.tokenInput.$el.on('keydown', _tokenInputKeyDown.bind(_self));
+                    _self.tokenInput.$el.on('keyup', _tokenInputKeyUp.bind(_self));
                         
                 });
                 _self.tokensRepeater.$container.append( _self.tokenInput.render());  
@@ -124,15 +120,15 @@ var AutoCompleteEx = KxGenerator.createComponent({
                 constructor: SuggestionRenderer,
                 props: {
                     id: 'suggestion',
-                    label: '{'+this.labelField+'}',
-                    value: '{'+this.valueField+'}'
+                    label: '{'+_labelField+'}',
+                    value: '{'+_valueField+'}'
                 }
             };
         }
         //TODO: we are overriding those handlers, we should exec them after our internal handlers
-        this.suggestionRenderer.props.onclick = this.suggestionRendererClickHandler;
-        this.suggestionRenderer.props.ondblclick = this.suggestionRendererDoubleClickHandler;
-        this.suggestionRenderer.props.onmousedown = this.suggestionRendererMouseDownHandler;
+        this.suggestionRenderer.props.onclick = _suggestionRendererClickHandler;
+        this.suggestionRenderer.props.ondblclick = _suggestionRendererDoubleClickHandler;
+        this.suggestionRenderer.props.onmousedown = _suggestionRendererMouseDownHandler;
 
        
         this.suggestionsRepeater = new Repeater({
@@ -144,7 +140,7 @@ var AutoCompleteEx = KxGenerator.createComponent({
                 actions: false
             },
             embedded: true,
-            dataProvider: this.suggestions,
+            dataProvider: _suggestions,
             components: [this.suggestionRenderer],
             parent: _self
         })
@@ -155,36 +151,11 @@ var AutoCompleteEx = KxGenerator.createComponent({
             e.stopPropagation();
         });
         this.suggestionsRepeater.$el.removeClass('form-group');
-    },
-    removeItem: function(){
-        console.log(arguments);
-    },
-    afterAttach: function (e) {
-        if (e.target.id == this.$el.attr('id')) {
-            //this.renderSelect2();
-        }
-    },
+    };
 
-    registerEvents: function () {
-        return [
-            {
-                registerTo: this.$suggestionsDropDown, events: {
-                    'keydown': this.suggestionsDropDownKeyDown.bind(this)
-                }
-            },
-            {
-                registerTo: this.$el, events: {
-                    'afterAttach': this.afterAttach.bind(this)
-                }
-            },
-            {
-                registerTo: this.$input, events: {
-                    'change': this.changeHandler.bind(this)
-                }
-            }
-        ]
-    },
-    suggestionsDropDownKeyDown: function(e){
+   
+    var _suggestionsDropDownKeyDown = function(e)
+    {
         if (typeof this.suggestionsdropdownkeydown == 'function')
         this.suggestionsdropdownkeydown.apply(this, arguments);
 
@@ -197,12 +168,13 @@ var AutoCompleteEx = KxGenerator.createComponent({
                     break;
                 case 27: // ESC - get back to old value
                     console.log("DD ESCAPE");
-                    this.closeSuggestionsList();
+                    _closeSuggestionsList();
                     break;
             }
         }
-    },
-    tokenInputKeyDown: function(e){
+    };
+    var _tokenInputKeyDown = function(e)
+    {
         if (typeof this.tokeninputkeydown == 'function')
             this.tokeninputkeydown.apply(this, arguments);
     
@@ -213,7 +185,7 @@ var AutoCompleteEx = KxGenerator.createComponent({
                         break;
                     case 27: // ESC - get back to old value
                         console.log("ESCAPE");
-                        this.closeSuggestionsList();
+                        _closeSuggestionsList();
                         e.preventDefault();
                         break;
                     case 9: // TAB - apply and move to next column on the same row 
@@ -221,43 +193,44 @@ var AutoCompleteEx = KxGenerator.createComponent({
                         break;
                     case 40: // TAB - apply and move to next column on the same row 
                         console.log("DOWN Arrow");
-                        this.suggestions  = differenceOnKeyMatch (this.dataProvider, this._value, this.valueField);
-                        this.openSuggestionsList();
+                        _suggestions  = differenceOnKeyMatch (this.dataProvider, _value, this.valueField);
+                        _openSuggestionsList();
                         e.preventDefault();
                         break;
                 }
             }
-    },
-    tokenInputKeyUp: function(e){
-        if(!e.isDefaultPrevented()){
-
+    };
+    var _tokenInputKeyUp = function(e)
+    {
+        if(!e.isDefaultPrevented())
+        {
             var inp = String.fromCharCode(e.keyCode);
             if (/[a-zA-Z0-9-_ ]/.test(inp)){
-                var t = this.delayQuerySuggestions(this.tokenInput.value);
+                var t = _delayQuerySuggestions(this.tokenInput.value);
                 //clearTimeout(t);
             }else if(e.keyCode == 8) {
                 if(this.tokenInput.value == ""){
-                    this.delayRemoveTokenItemAt(this.value.length-1);
+                    _delayRemoveTokenItemAt(this.value.length-1);
                 }
 
             }
         }
-    },
-    querySuggestions: function(toMatch){
+    };
+    var _querySuggestions = function(toMatch){
         console.log("querySuggestions for: ", toMatch);
-        var ac = differenceOnKeyMatch (this.dataProvider, this._value, this.valueField);
-        this.suggestions = sortBestMatch(ac, toMatch, this.matchType, this.labelField);
-        this.openSuggestionsList();
-    },
+        var ac = differenceOnKeyMatch (this.dataProvider, _value, _valueField);
+        _suggestions = sortBestMatch(ac, toMatch, this.matchType, _labelField);
+        _openSuggestionsList();
+    };
     /*
     <a href="#" class="inputLink">Did you mean xxyYY?</a>
     */
-    suggestions:[],
-    openSuggestionsList: function(){
+   
+    var _openSuggestionsList = function(){
         //suggestions found
-        if(this.suggestions.length>0)
+        if(_suggestions.length>0)
         {
-            this.suggestionsRepeater.dataProvider = this.suggestions;
+            this.suggestionsRepeater.dataProvider = _suggestions;
 
             if(this.suggestionsRepeater.$el!=undefined)
                 this.suggestionsRepeater.$el.detach();
@@ -270,20 +243,23 @@ var AutoCompleteEx = KxGenerator.createComponent({
             this.trigger("noSuggestionsFound", [this.tokenInput.value]);
         }
        // myAutoComplete.suggestionsRepeater.rowItems[0]['suggestion'].$el.focus();
-    },
-    closeSuggestionsList: function(){
+    };
+    var closeSuggestionsList = function()
+    {
         this.$suggestionsDropDown.attr('aria-expanded', false);
         this.$suggestionsDropDown.removeClass('show');
         this.tokenInput.$el.focus();
-    },
-    tokenRendererCloseIconClickHandler: function(e, repeaterEventArgs){
+    };
+    var _tokenRendererCloseIconClickHandler = function(e, repeaterEventArgs)
+    {
         console.log(repeaterEventArgs);
         //"this" refers to the components in the repeater
         var acEx = this.parent.parent;
         acEx.removeTokenItemAt(repeaterEventArgs.currentIndex);
         acEx.tokenInput.$el.focus();
-    },
-    suggestionRendererClickHandler: function(e, repeaterEventArgs){
+    };
+    var _suggestionRendererClickHandler = function(e, repeaterEventArgs)
+    {
         console.log(repeaterEventArgs);
         //this.parent.parent.addTokenItems(repeaterEventArgs.currentItem);
         var acEx = this.parent.parent;
@@ -297,28 +273,31 @@ var AutoCompleteEx = KxGenerator.createComponent({
         acEx.removeSuggestionItemAt(repeaterEventArgs.currentIndex);
         acEx.closeSuggestionsList();
         acEx.tokenInput.$el.focus();
-    },
-    suggestionRendererDoubleClickHandler: function(e, repeaterEventArgs){
+    };
+    var _suggestionRendererDoubleClickHandler = function(e, repeaterEventArgs)
+    {
         console.log(repeaterEventArgs);
-    },
-    suggestionRendererMouseDownHandler: function(e, repeaterEventArgs){
+    };
+    var _suggestionRendererMouseDownHandler = function(e, repeaterEventArgs)
+    {
         console.log(repeaterEventArgs);
-    },
-    addTokenItems: function(items) {
+    };
+    var _addTokenItems = function(items) 
+    {
         if(typeof(items)==="object" && !(items instanceof Array)){
             items = [items];
         }
         var itemsToAdd = [];
         for(var i=0;i<items.length;i++){
             var item = items[i];
-            if(item != undefined && item != null && item[this.valueField] != undefined && item[this.labelField]!= undefined)
+            if(item != undefined && item != null && item[_valueField] != undefined && item[_labelField]!= undefined)
             {
                 var itemToAdd = [item];
                 if(!this.allowNewItem)
                 {
-                    itemToAdd = intersectOnKeyMatch(this.dataProvider, itemToAdd, this.valueField) //value;
+                    itemToAdd = intersectOnKeyMatch(this.dataProvider, itemToAdd, _valueField) //value;
                     if(itemToAdd.length==0){
-                        itemToAdd = intersectOnKeyMatch(this.suggestions, itemToAdd, this.valueField) //value;
+                        itemToAdd = intersectOnKeyMatch(_suggestions, itemToAdd, _valueField) //value;
                         if(itemToAdd.length==0){
                             console.log("This value was not found in the dataProvider and you are not allowed to add new items.");
                             continue;
@@ -327,34 +306,36 @@ var AutoCompleteEx = KxGenerator.createComponent({
                 }
                 itemsToAdd.push(itemToAdd[0]);
             }else
-                console.log("Please specify a valid object on row: "+i+". The provided one is either null or doesn`t have '"+his.valueField+"' and '"+this.labelField+"' properties.");
+                console.log("Please specify a valid object on row: "+i+". The provided one is either null or doesn`t have '"+_valueField+"' and '"+_labelField+"' properties.");
         }
         //TODO:If Repeating will be allowed we need to add condition below based on a new property to control this setting
-        itemsToAdd = differenceOnKeyMatch (itemsToAdd, this._value, this.valueField);
+        itemsToAdd = differenceOnKeyMatch (itemsToAdd, _value, _valueField);
         for(var j=0;j<itemsToAdd.length;j++)
         {
-            this._value.push(itemsToAdd[j]);
+            _value.push(itemsToAdd[j]);
             this.tokensRepeater.addRow(itemsToAdd[j]);
         }
         
-    },
-    removeSuggestionItemAt: function(index){
+    };
+    this.removeSuggestionItemAt = function(index){
         //TODO: If we are going to keep item ordering in the view the save as in value
-        if(index>=0 && index<this.suggestions.length){
+        if(index>=0 && index<_suggestions.length){
             this.suggestionsRepeater.removeRow(index+1, false, false); 
             //this._value.splice(index, 1);
         }else
             console.log("Index out of range. No item will be removed.");
-    },
-    removeTokenItemAt: function(index){
+    };
+    var _removeTokenItemAt = function(index)
+    {
         //TODO: If we are going to keep item ordering in the view the save as in value
         if(index>=0 && index<this._value.length){
             this.tokensRepeater.removeRow(index+1, false, false); 
             //this._value.splice(index, 1);
         }else
             console.log("Index out of range. No item will be removed.");
-    },
-    removeTokenItems: function(items){
+    };
+    this.removeTokenItems = function(items)
+    {
         if(typeof(items)==="object" && !(items instanceof Array)){
             items = [items];
         }
@@ -367,58 +348,73 @@ var AutoCompleteEx = KxGenerator.createComponent({
             }
         }    
         
-    },
-    removeAllTokenItems: function(){
+    };
+    
+    this.removeAllTokenItems = function()
+    {
         this.tokensRepeater.removeAllRows();
-        this._value = [];
-    },
-    _value: [],
-    set value(v){
-        if(v){
-            if(typeof(v)==="object" && !(v instanceof Array)){
-                v = [v];
-            }
-            if(!this._value.equals(v))
+        _value = [];
+    };
+    
+    Object.defineProperty(this, "value", 
+    {
+        get: function value() 
+        {
+            return _value;
+        },
+        set: function value(v) 
+        {
+            if(v)
             {
-                //is the tokenRepeater rendered yet ? 
-                if(this.tokensRepeater && this.tokensRepeater.$container)
+                if(typeof(v)==="object" && !(v instanceof Array)){
+                    v = [v];
+                }
+                if(!_value.equals(v))
                 {
-                    var itemsToRemove = differenceOnKeyMatch(this._value, v, this.valueField) //value;
-                    this.removeTokenItems(itemsToRemove);  
-                    this.addTokenItems(v);
-                    //this._value = v;
-
-                    this.trigger('change');
-                }else
-                    this._value.splicea(0, this._value.length, v);
+                    //is the tokenRepeater rendered yet ? 
+                    if(this.tokensRepeater && this.tokensRepeater.$container)
+                    {
+                        var itemsToRemove = differenceOnKeyMatch(_value, v, this.valueField) //value;
+                        this.removeTokenItems(itemsToRemove);  
+                        _addTokenItems(v);
+                        //this._value = v;
+    
+                        this.trigger('change');
+                    }else
+                        _value.splicea(0, _value.length, v);
+                }
             }
         }
-    },
-    get value(){
-        return this._value;
-    },
-    allowNewItem: false,
-    focus:function(){
+    });
+   
+    this.focus = function()
+    {
         if(this.tokenInput != null)
         {
             this.tokenInput.$el[0].focus({preventScroll:true});
         }
-    },
+    };
+
+    Object.defineProperty(this, "enabled", 
+    {
+        get: function enabled() 
+        {
+            return _enabled;
+        },
+        set: function enabled(v) 
+        {
+            if(_enabled != v)
+            {
+                _enabled = v;
+                this.$input.prop('disabled', !v);
+            }
+        },
+        configurable: true
+    });
+/*
     destruct: function () {
-       //TODO: Destruct ? 
-    },
-
-    enable: function () {
-        this.$input.prop("disabled", false);
-        this.enabled = true;
-        return this;
-    },
-
-    disable: function () {
-        this.$input.prop("disabled", true);
-        this.enabled = false;
-        return this;
-    },
+        //TODO: Destruct ? 
+     },
     changeHandler : function(e){
         if (typeof this.onchange == 'function')
             this.onchange.apply(this, arguments);
@@ -427,9 +423,9 @@ var AutoCompleteEx = KxGenerator.createComponent({
         if (typeof this.onmousedown == 'function')
             this.onmousedown.apply(this, arguments);
         
-        /*if(!e.isDefaultPrevented()){
-            this.handleComponentMouseDown.apply(this, arguments);
-        }*/
+        // f(!e.isDefaultPrevented()){
+        //     this.handleComponentMouseDown.apply(this, arguments);
+        // }
     },    
 
     tokenRendererClickHandler: function (e, repeaterEventArgs) {
@@ -464,9 +460,21 @@ var AutoCompleteEx = KxGenerator.createComponent({
         var v = repeaterEventArgs.currentItem;
     },
 
-    template: function () {
+    removeItem: function(){
+        console.log(arguments);
+    },
+    afterAttach: function (e) {
+        if (e.target.id == this.$el.attr('id')) {
+            //this.renderSelect2();
+        }
+    },
+
+    
+*/
+    this.template = function () 
+    {
         var html = 
-                         "<div id='" + this.domID + "-wrapper' class='"+(this.colspan?"col-sm-" + this.colspan:"")+ " form-group rowspan" + this.rowspan + " resizable'>"+
+                         "<div id='" + this.domID + "-wrapper' class='"+(this.colspan?"col-sm-" + this.colspan:"")+ " form-group resizable'>"+
         (!this.embedded?("<label rv-style='versionStyle' rv-for='domID'><b>{label}</b> <span rv-if='required'>*</span></label>") : "") +
                             "<select type='hidden' style='display:none' name='" + this.domID + "[]' id='" + this.domID + "_select'></select>" +                          
                             '<div id="'+ this.domID + '_tokenContainer" class="border"></div>'+
@@ -474,19 +482,58 @@ var AutoCompleteEx = KxGenerator.createComponent({
                             '</div>'+
                         "</div>"                 
         return html;        
-    },
+    };
 
-    render: function () {
+
+    var _defaultParams = {
+        closeIconSide:"left",
+        value:[],
+        allowNewItem: false
+    };
+    _props = extend(false, false, _defaultParams, _props);
+    var _value = _props.value;
+    var_allowNewItem = _props.allowNewItem;
+    var _label = _props.label;  
+    var _closeIconSide = _props.closeIconSide;
+    var  _suggestions = [];
+    var _enabled = true;
+    var _valueField = _props.valueField;
+    var _labelField = _props.labelField;
+    var _delayQuerySuggestions = debounce(_querySuggestions, 400);
+    var _delayRemoveTokenItemAt = debounce(_removeTokenItemAt, 200);
+
+    Component.call(this, _props, true);
+    
+    this.render = function () 
+    {
         if(this.tokensRepeater.$container == undefined)
         {
             this.$tokenContainer.append(this.tokensRepeater.render());
         }
         return this.$el;
-    }
-});
+    };
 
-//component prototype
+    this.registerEvents = function () 
+    {
+        return [
+            {
+                registerTo: this.$suggestionsDropDown, events: {
+                    'keydown': _suggestionsDropDownKeyDown.bind(this)
+                }
+            }
+            // ,
+            // {
+            //     registerTo: this.$el, events: {
+            //         'afterAttach': this.afterAttach.bind(this)
+            //     }
+            // },
+            // {
+            //     registerTo: this.$input, events: {
+            //         'change': this.changeHandler.bind(this)
+            //     }
+            // }
+        ]
+    };
+    
+};
 AutoCompleteEx.type = 'autocomplete';
-
-//register dom element for this component
-KxGenerator.registerDOMElement(AutoCompleteEx, 'kx-autocomplete');

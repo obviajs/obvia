@@ -10,6 +10,7 @@ var Component = function(_props, overrided=false)
     var _id = _props.id;
     var _enabled = _props.enabled;
     var _class = _props.class;
+    var _colSpan = _props.colSpan;
 
     var _mousedown = _props.mousedown;
     var _click = _props.click;
@@ -19,7 +20,7 @@ var Component = function(_props, overrided=false)
     //generate GUID for this component
     Object.defineProperty(this, "guid", 
     {
-        get: function enabled() 
+        get: function guid() 
         {
             return _guid;
         }
@@ -52,9 +53,11 @@ var Component = function(_props, overrided=false)
             if(_enabled != v)
             {
                 _enabled = v;
-                this.$el.prop('disabled', !v);
+                if(this.$el)
+                    this.$el.prop('disabled', !v);
             }
-        }
+        },
+        configurable: true
     });
 
     Object.defineProperty(this, "cssClass", 
@@ -121,20 +124,29 @@ var Component = function(_props, overrided=false)
             this.$el.hide();
         return this;
     }
-
-    this.setColspan = function (colspan) 
+    Object.defineProperty(this, "colSpan", 
     {
-        if(this.$el && !isNaN(colspan))
+        get: function colSpan() 
         {
-            this.$el.removeClass([
-                'col-sm-0', 'col-sm-1', 'col-sm-2', 'col-sm-3', 'col-sm-4', 'col-sm-5',
-                'col-sm-6', 'col-sm-7', 'col-sm-8', 'col-sm-9', 'col-sm-10', 'col-sm-11', 'col-sm-12'
-            ]);
-            this.$el.addClass('col-sm-' + colspan);
-        }
-        return this;
-    }
-
+            return _colSpan;
+        },
+        set: function colSpan(v) 
+        {
+            if(_colSpan != v)
+            {
+                _colSpan = v;
+                if(this.$el && v && !isNaN(v))
+                {
+                    this.$el.removeClass([
+                        'col-sm-0', 'col-sm-1', 'col-sm-2', 'col-sm-3', 'col-sm-4', 'col-sm-5',
+                        'col-sm-6', 'col-sm-7', 'col-sm-8', 'col-sm-9', 'col-sm-10', 'col-sm-11', 'col-sm-12'
+                    ]);
+                    this.$el.addClass('col-sm-' + v);
+                }
+            }
+        },
+        configurable: true
+    });
    
     this.scrollTo = function () 
     {
@@ -252,6 +264,25 @@ var Component = function(_props, overrided=false)
      
         _self.trigger('afterAttach');
     });
+
+    this.applyBindings = function(bindings, data)
+    {
+        var watchers = [];
+        var _self = this;
+        for(var bi=0;bi<bindings.length;bi++){
+            (function(currentItem, bindingExp, site, site_chain){
+                return (function(e) { // a closure is created
+                    //this here refers to window context
+                    var defaultBindTo = "currentItem_"+_self.guid;
+                    this[defaultBindTo] = currentItem;
+                   // var context = extend(false, true, this, obj);
+                    watchers.splicea(watchers.length, 0, BindingUtils.getValue(this, bindingExp, site, site_chain, defaultBindTo));
+                })();	
+            })(data, bindings[bi].expression, this, [bindings[bi].property]);
+        }
+        return watchers;
+    };
+
     this.keepBase = function()
     {
         this.base = {};
@@ -264,6 +295,36 @@ var Component = function(_props, overrided=false)
     {
         this.keepBase();
     }
-    
 }
 Component.instanceCnt = 0;
+Component.fromLiteral = function(_literal, bindingDefaultContext=null)
+{
+    var _literal = Object.assign({}, _literal);
+    var props = Object.assign({}, _literal.props);
+
+    //build components properties, check bindings
+    var _processedProps = {};
+    
+    var bindings = [];
+    for (var prop in props) {
+        if (typeof prop == 'string') {
+            //check for binding
+            if (props[prop] && props[prop][0] == '{' && props[prop][props[prop].length - 1] == '}') {
+                var expression = props[prop].slice(1, -1);
+                bindings.push({"expression":expression, "property":prop});
+            } else {
+                //no binding
+                _processedProps[prop] = props[prop];
+            }
+        }
+    }
+
+   
+    //construct the component
+    if (typeof _literal.constructor == "string") {
+        _literal.constructor = eval(_literal.constructor);
+    }
+    var el = new _literal.constructor(_processedProps);
+    el.applyBindings(bindings, bindingDefaultContext);
+    return el;
+}

@@ -107,6 +107,9 @@ rjs.define("./components/Spacer.js", "Spacer");
 rjs.define("lib/dependencies/efilemanager/skin-lion/ui.fancytree.css", "FancyTreeCSS");
 //rjs.define("./examples/Button/example.js", "ButtonExample");
 //rjs.define("./examples/Image/example.js", "ImageExample");
+//rjs.define("./examples/Repeater/example.js", "RepeaterExample");
+//rjs.define("./examples/Link/example.js", "LinkExample");
+rjs.define("./examples/AutoComplete/example.js", "AutoCompleteExample");
 //Loader
 
 rjs.require([
@@ -176,7 +179,10 @@ rjs.require([
         //"LabelExample"
         //"Button",
         //"ButtonExample"
-        "ImageExample"
+        //"ImageExample"
+        //"RepeaterExample"
+        //"LinkExample"
+        "AutoCompleteExample"
     ], function () {
         
 
@@ -188,7 +194,7 @@ rjs.require([
 
         //rjs.define("./examples/Container/example.js", "ContainerExample");
         //rjs.define("./examples/Tab/example.js", "TabExample");
-        // rjs.define("./examples/AutoComplete/example.js", "AutoCompleteExample");
+        // 
 
         //rjs.define("./examples/DataGrid/example.js", "DataGridExample");
         
@@ -207,7 +213,7 @@ rjs.require([
         // rjs.define("./examples/HierarchicalTree/example.js", "HierarchicalTreeExample");
         // rjs.define("./examples/Form/example.js", "FormExample");
         // rjs.define("./examples/Form/ajaxExample.js", "FormExample");
-        //rjs.define("./examples/Repeater/example.js", "RepeaterExample");
+        
         //rjs.define("./examples/ComboBox/example.js", "ComboBoxExample");
         //rjs.define("./examples/List/example.js", "ListExample");
 

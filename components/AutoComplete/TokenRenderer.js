@@ -5,23 +5,15 @@
  */
 
 //component definition
-var TokenRenderer = KxGenerator.createComponent({
-    //component data
-    initModel: function () {
-        return {
-            class: this.class,
-            style: this.style
-        }
-    },
-    _value:null,
-    _label:null,
-    closeIconSide:"left",
-    beforeAttach: function () {
+var TokenRenderer = function(_props)
+{
+    /*
 
+    this.beforeAttach = function () 
+    {
         this.$closeIcon = this.$el.find('#'+ this.domID + '_closeIcon');
         this.$label = this.$el.find('#'+ this.domID + '_label');
-        
-    },
+    };
 
     registerEvents: function () {
         return [
@@ -58,48 +50,64 @@ var TokenRenderer = KxGenerator.createComponent({
     },
     afterAttach: function (e) {        
         this.trigger('creationComplete');
-    },
-
-    set value(v){
-        if(this._value!=v)
+    }*/
+   
+    Object.defineProperty(this, "value", 
+    {
+        get: function value() 
         {
-            this._value = v;
-            if(this.$label!=undefined)
-			    this.$label.data('value', v);
-        }
-    },
-    get value(){
-        return this._value;
-    },
-    set label(v){
-        if(this._label!=v)
+            return _value;
+        },
+        set: function value(v) 
         {
-            this._label = v;
-            if(this.$label!=undefined)
-			    this.$label.text(v);
+            if(_value != v)
+            {
+                _value = v;
+                if(this.$label)
+                    this.$label.data('value', v);
+            }
         }
-    },
-    get label(){
-        return this._label;
-    },
+    });
 
-    template: function () {         
+    Object.defineProperty(this, "label", 
+    {
+        get: function label() 
+        {
+            return _label;
+        },
+        set: function label(v) 
+        {
+            if(_label != v)
+            {
+                _label = v;
+                if(this.$label)
+                    this.$label.text(v);
+            }
+        }
+    });
+
+    this.template = function () 
+    {         
         var html =  
-            '<div id="'+ this.domID + '-wrapper">'+
-                '<span id="'+ this.domID + '_label" data-value="'+(this._value!=null && this._value!=undefined ? this._value:'')+'" class="badge badge-info" style="font-size: 14px; margin:2px">'+
+            '<div id="'+ this.domID + '">'+
+                '<span id="'+ this.domID + '_label" data-value="'+(_value!=null && _value!=undefined ? _value:'')+'" class="badge badge-info" style="font-size: 14px; margin:2px">'+
                 (this.closeIconSide=="left"?('<a class="badge badge-info" id="'+ this.domID + '_closeIcon"href="#" tabindex="-1">×</a>'):"")+          
-                (this._label!=null && this._label!=undefined ? this._label:'')+
+                (_label!=null && _label!=undefined ? _label:'')+
                 (this.closeIconSide=="right"?('<a class="badge badge-info" id="'+ this.domID + '_closeIcon"href="#" tabindex="-1">×</a>'):"")+            
                 '</span>'+
             '</div>';
         return html;
                             
-    },
+    };
+    var _defaultParams = {
+        closeIconSide:"left",
+    };
+    _props = extend(false, false, _defaultParams, _props);
+    var _value = _props.value;
+    var _label = _props.label;
+    var _closeIconSide = _props.closeIconSide;
+    
 
-    render: function () {
-        return this.$el;
-    }
-});
-
-//component prototype
+    Component.call(this, _props, true);
+};
 TokenRenderer.type = 'tokenrenderer';

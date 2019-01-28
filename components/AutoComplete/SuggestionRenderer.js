@@ -5,22 +5,16 @@
  */
 
 //component definition
-var SuggestionRenderer = KxGenerator.createComponent({
-    //component data
-    initModel: function () {
-        return {
-            class: this.class,
-            style: this.style
-        }
-    },
-    _value:null,
-    _label:null,
-    closeIconSide:"left",
-    beforeAttach: function () {
-        this.$label = this.$el.attr('id') == this.domID?this.$el:this.$el.find("#" + this.domID);
-        
-    },
+var SuggestionRenderer = function(_props)
+{
 
+    this.beforeAttach = function () 
+    {
+        this.$el.addClass('dropdown-item');
+        if(_value)
+            this.$el.data('value', _value);
+    };
+/*
     registerEvents: function () {
         return [
             {
@@ -32,59 +26,34 @@ var SuggestionRenderer = KxGenerator.createComponent({
                 }
             }
         ]
-    },
-    mouseDownHandler: function () {
-        if (typeof this.onmousedown == 'function')
-            this.onmousedown.apply(this, arguments);
-    },
-    clickHandler: function () {
-        if (typeof this.onclick == 'function')
-            this.onclick.apply(this, arguments);
-    },
-    doubleClickHandler: function () {
-        if (typeof this.ondblclick == 'function')
-            this.ondblclick.apply(this, arguments);
-    },
-    afterAttach: function (e) {        
-        this.trigger('creationComplete');
-    },
-
-    set value(v){
-        if(this._value!=v)
-        {
-            this._value = v;
-            if(this.$label!=undefined)
-			    this.$label.data('value', v);
-        }
-    },
-    get value(){
-        return this._value;
-    },
-    set label(v){
-        if(this._label!=v)
-        {
-            this._label = v;
-            if(this.$label!=undefined)
-			    this.$label.text(v);
-        }
-    },
-    get label(){
-        return this._label;
-    },
-
-    template: function () {         
-        var html =  
-            '<a href="#" class="dropdown-item" id="'+ this.domID + '" data-value="'+(this._value!=null && this._value!=undefined ? this._value:'')+'">'+
-            (this._label!=null && this._label!=undefined ? this._label:'')+
-            '</a>';
-        return html;
-                            
-    },
-
-    render: function () {
-        return this.$el;
     }
-});
+*/
+    Object.defineProperty(this, "value", 
+    {
+        get: function value() 
+        {
+            return _value;
+        },
+        set: function value(v) 
+        {
+            if(_value != v)
+            {
+                _value = v;
+                if(this.$el)
+                    this.$el.data('value', v);
+            }
+        }
+    });
 
-//component prototype
+    var _defaultParams = {
+        closeIconSide:"left",
+    };
+    _props = extend(false, false, _defaultParams, _props);
+    var _value = _props.value;
+    _props.hyperlink = "#";
+    var _closeIconSide = _props.closeIconSide;
+    
+
+    Link.call(this, _props, true);
+};
 SuggestionRenderer.type = 'suggestionrenderer';

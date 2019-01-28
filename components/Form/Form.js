@@ -7,21 +7,39 @@
 //component definition
 var Form = function(_props)
 {
+    /*
     initModel: function () {
         return {
             formAction: (this.viewMode == "steps") ? "?forms/modify_form_submit" : "#"
         }
     },
 
-    beforeAttach: function () {
-        var model = this.getModel();
+    renderFormHeader: function (viewMode) {
+        return (
+            viewMode == 'steps' ? 
+                "<div class='row'>" +
+                "</div>" :
+                
+                "<div class='row'>" +
+                    "<div class='col-sm-12'>" +
+                        "<center>" +
+                            "<h4>" +
+                                "{formName}" +
+                            "</h4>" +
+                        "</center>" +
+                    "</div>" +
+                "</div><hr>"
+        )    
+    },*/
 
-        this.ccComponents = [];
+    this.beforeAttach = function () 
+    {
         this.$container = this.$el.find('#' + model.componentContainerID);
         this.$form = this.$el.find('#'+ this.domID + "-form");
-    },
-    type:"form",
-    validate: function () {
+    }
+
+    this.validate = function () 
+    {
         var valid = true;
         this.errorList = [];
 
@@ -33,9 +51,10 @@ var Form = function(_props)
         }.bind(this));
 
         return valid;
-    },
+    };
 
-    clear: function () {
+    this.clear = function () 
+    {
         this.components.forEach(function (component) {
             try {
                 if (typeof this[component.props.id].getValue() == "string")
@@ -45,7 +64,7 @@ var Form = function(_props)
                 
             }   
         }.bind(this));
-    },
+    };
 
   
 
@@ -82,23 +101,6 @@ var Form = function(_props)
     };
 
 
-    renderFormHeader: function (viewMode) {
-        return (
-            viewMode == 'steps' ? 
-                "<div class='row'>" +
-                "</div>" :
-                
-                "<div class='row'>" +
-                    "<div class='col-sm-12'>" +
-                        "<center>" +
-                            "<h4>" +
-                                "{formName}" +
-                            "</h4>" +
-                        "</center>" +
-                    "</div>" +
-                "</div><hr>"
-        )    
-    },
 
     this.template = function () 
     {

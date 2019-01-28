@@ -5,13 +5,15 @@
  */
 
 //component definition
-var Repeater = KxGenerator.createComponent({
-    currentIndex: 1,
-    currentItem: {},
-    rowItems: [],
-    dataProviderKeys: [],
+var Repeater = function(_props)
+{
+    this.currentIndex = 1;
+    this.currentItem = {};
+    this.rowItems = [];
+    this.dataProviderKeys = [];
 
-    initModel: function () {
+    this.initModel = function () 
+    {
         console.log("Init Model func thirret sa here krijoet nje repeater i ri")
         if(this.defaultItem!=undefined && this.defaultItem!=null){
             this.dataProviderKeys = Object.keys(this.defaultItem);
@@ -19,22 +21,14 @@ var Repeater = KxGenerator.createComponent({
             this.dataProviderKeys = Object.keys(this.dataProvider[0]);
             this.defaultItem = this.buildDefaultItem(this.dataProvider);
         }
-		
-		var _defaultRendering = 
-		{
-			direction: 'vertical',
-			seperator: true,
-			actions: true
-		};
-		
-		extend(_defaultRendering, this.rendering);
-        return {
-            displayAddButton: this.rendering.actions,
-            displayRemoveButton: this.rendering.actions
-        }
-    },
 
-    buildDefaultItem: function (dp) {
+        return {
+            displayAddButton: _rendering.actions,
+            displayRemoveButton: _rendering.actions
+        }
+    };
+
+    this.buildDefaultItem = function (dp) {
         var dI = {};
         for (var key in dp[0]) {
             if (typeof dp[0][key] == "object")
@@ -48,37 +42,14 @@ var Repeater = KxGenerator.createComponent({
         }
         console.log("Default Item is created here",dI)
         return dI;
-    },
+    };
 
 
 
-    registerEvents: function () {
-        console.log("register events is called every time that a repeater is created")
-        return ([].concat((this.rendering.actions ? 
-        [
-            {
-                registerTo: this.$btnRemoveRow, events: { 
-                    'click': this.removeRowHandler.bind(this)
-                }
-            },
-            {
-                registerTo: this.$btnAddRow, events: { 
-                    'click': this.addRowHandler.bind(this)
-                }
-            }
-        ]:[
-            {
-                registerTo: this.$container, events: {
-                    'keydown': this.containerKeyDown.bind(this)
-                }
-            }
-        ])));
-        
-    },
+    
 
-
-
-    containerKeyDown: function(e){
+    this.containerKeyDown = function(e)
+    {
         if (typeof this.keydown == 'function')
             this.keydown.apply(this, arguments);
             console.log("containerKeyDown")
@@ -121,12 +92,13 @@ var Repeater = KxGenerator.createComponent({
             //             break;
             //     }
             // }
-    }, 
+    }; 
 
-    focusedRow:0,
-    focusedComponent:0,
+    this.focusedRow = 0;
+    this.focusedComponent = 0;
 
-    focusComponent: function(rowIndex, cIndex){
+    this.focusComponent = function(rowIndex, cIndex)
+    {
         console.log("focus Component function")
         console.log("focus component param")
         console.log(rowIndex) // 0
@@ -164,7 +136,7 @@ var Repeater = KxGenerator.createComponent({
        
             this.rowItems[rowIndex][cIndex].$el.focus();
         }
-    },
+    };
    
     // validate: function () {
     //     var _self = this;
@@ -187,13 +159,15 @@ var Repeater = KxGenerator.createComponent({
 
     
     //handle row add click
-    addRowHandler: function () {
+    var _addRowHandler = function () 
+    {
         this.addRow(this.defaultItem, this.currentIndex + 1, true)
-    },
+    };
 
-    bindings: {},
+    this.bindings = {};
     
-    dataProviderChanged: function (arrFields) {
+    this.dataProviderChanged = function (arrFields) 
+    {
         console.log("dataProviderChanged thirret saapo krijohet nje el repeater")
         if (arrFields.length == 0)
             return;    
@@ -217,9 +191,10 @@ var Repeater = KxGenerator.createComponent({
                 }
             }
         }
-    },
+    };
 
-    getValue: function () {
+    this.getValue = function () 
+    {
         var value = {};
         this.components.forEach(function (components) {
             value[components.props.id] = [];
@@ -229,14 +204,17 @@ var Repeater = KxGenerator.createComponent({
         }.bind(this));
 
         return value;
-    },
+    };
 
     //renders a new row, adds components in stack
-    addRow: function (data, index, isPreventable = false, focusOnRowAdd = true) {
+    this.addRow = function (data, index, isPreventable = false, focusOnRowAdd = true) 
+    {
         console.log("addRow func")
         var _self = this;
         index = index || this.rows.length+1;
+        /* model check
         var model = this.getModel();
+        */
         //row col-sm-12
         var renderedRow = $('<div>').addClass('');
         var ccComponents = [];
@@ -254,27 +232,14 @@ var Repeater = KxGenerator.createComponent({
                 var cmpId = p.id;
                 if (cmp[index - 1] == undefined)
                     cmp[index - 1] = {};
-        
+                
+                var bindings = [];
                 for (var prop in p) {
                     if (typeof prop == 'string') {
                         //check for binding
                         if (p[prop] && p[prop][0] == '{' && p[prop][p[prop].length - 1] == '}') {
                             var dataProviderField = p[prop].slice(1, -1);
-                            var path = dataProviderField.split(".");
-                            if (path.length > 1) {
-                                var dataProviderValue = data;
-                                path.forEach(function (key) {
-                                    dataProviderValue = dataProviderValue[key];
-                                });
-                                cmp[index - 1][prop] = dataProviderValue;
-                            }else
-                                cmp[index - 1][prop] = data[dataProviderField];
-                            if(_self.bindings[dataProviderField]==undefined){
-                                _self.bindings[dataProviderField] = {};
-                                if(_self.bindings[dataProviderField][p.id]==undefined){
-                                    _self.bindings[dataProviderField][p.id] = {"component":cmp, "property":prop, "dataProviderField":dataProviderField, "dataProviderIndex":index};
-                                }
-                            }
+                            bindings.push({"expression":dataProviderField, "property":prop});
                             
                         } else {
                             //no binding
@@ -283,6 +248,7 @@ var Repeater = KxGenerator.createComponent({
                     }
                 }
 
+               
                 //construct the component
                 if (typeof tempComponent.constructor == "string") {
                     tempComponent.constructor = eval(tempComponent.constructor);
@@ -296,6 +262,10 @@ var Repeater = KxGenerator.createComponent({
                 cmp[index - 1] = el;
                 rowItems[cmpId] = el;
                 _self.rowItems[index - 1] = rowItems;
+
+                if(!_self.watchers[index-1])
+                    _self.watchers[index-1] = [];
+                _self.watchers[index-1][cmpId] = _self.applyItemRendererBindings(bindings, data, el);
 
 
                 //handle component change event and delegate it to repeater
@@ -314,12 +284,13 @@ var Repeater = KxGenerator.createComponent({
                             _self.currentItem = data;
 
                             _self.currentIndex <= ci ? _self.currentIndex = ci : _self.currentIndex = _self.currentIndex;
+                            /* model check
                             if (_self.currentIndex > 1 && _self.rendering.actions) {
                                 model.displayRemoveButton = true;
                             }
                             if (_self.currentIndex == 1) {
                                 model.displayRemoveButton = false;
-                            }
+                            }*/
 
                             //skip dp if it already exist
                             var addRowFlag = false;
@@ -343,7 +314,7 @@ var Repeater = KxGenerator.createComponent({
                 })(index));
 
 
-                if (_self.rendering.direction == 'horizontal') {
+                if (_rendering.direction == 'horizontal') {
                    // el.$el.addClass('float-left');
                 }
                 el.on('focus', function (e, repeaterEventArgs) {
@@ -384,8 +355,8 @@ var Repeater = KxGenerator.createComponent({
                */
             renderedRow
               .addClass("repeated-block")
-              .css((_self.rendering.direction == 'horizontal' ? {display: 'inline-block'} : {}))
-              .append((_self.rendering.seperator && (index > 1) && (index < _self.dataProvider.length-1) ? '<hr id="repeated-block-hr">' : ''));            
+              .css((_rendering.direction == 'horizontal' ? {display: 'inline-block'} : {}))
+              .append((_rendering.seperator && (index > 1) && (index < _self.dataProvider.length-1) ? '<hr id="repeated-block-hr">' : ''));            
            
             if(_self.mode =="append")
             {
@@ -421,29 +392,51 @@ var Repeater = KxGenerator.createComponent({
             return buildRow();    
         }
         
-    },
+    };
 
-
+    this.applyItemRendererBindings = function(bindings, data, el)
+    {
+        var watchers = [];
+        for(var bi=0;bi<bindings.length;bi++){
+            (function(currentItem, bindingExp, site, site_chain){
+                return (function(e) { // a closure is created
+                    //this here refers to window context
+                    var defaultBindTo = "currentItem_"+el.guid;
+                    this[defaultBindTo] = currentItem;
+                   // var context = extend(false, true, this, obj);
+                    watchers.splicea(watchers.length, 0, BindingUtils.getValue(this, bindingExp, site, site_chain, defaultBindTo));
+                })();	
+            })(data, bindings[bi].expression, el, [bindings[bi].property]);
+        }
+        return watchers;
+    };
 
     //handle row delete click, nese i shtojme te register events remove dhe add kemi mundesine te heqim/shtojme ne cdo index
     //remove dhe add duhet te modifikojne dhe dataProvider - splice
-    removeRowHandler: function () {
+    var _removeRowHandler = function () 
+    {
         this.removeRow(this.currentIndex, true);
         console.log("removerowHandler")
-    },
-    rows:[],
-    mode:"append", //TODO: prepend will add rows to the beginning, but if we are about to iterate the rows or use rowIndex we need to take this into consideration (using reverse of array is the easiest solution)
-    removeAllRows: function(){
+    };
+    this.watchers = [];
+    this.rows = [];
+    this.mode = "append"; //TODO: prepend will add rows to the beginning, but if we are about to iterate the rows or use rowIndex we need to take this into consideration (using reverse of array is the easiest solution)
+    this.removeAllRows = function()
+    {
         for(var i=this.rows.length;i>0;i--)
         {
             this.removeRow(i, false, false);
         }
         this.rows = [];
-    },
-    removeRow: function (index, isPreventable = false, focusOnRowDelete = true) {
+    };
+
+    this.removeRow = function (index, isPreventable = false, focusOnRowDelete = true) 
+    {
         var rowItems = {};
+        /* model check
         var model = this.getModel();
-        
+        */
+
         var removeRow = function () {
             //remove dp row
             var removedItem = this.dataProvider.splice(index - 1, 1);
@@ -471,9 +464,10 @@ var Repeater = KxGenerator.createComponent({
             //manage dp
             this.currentIndex--;
             this.currentItem = this.dataProvider[index - 1];
-            if (this.currentIndex == 1 && this.rendering.actions) {
+            /* model check
+            if (this.currentIndex == 1 && _rendering.actions) {
                 model.displayRemoveButton = false;
-            }
+            }*/
 
             this.$el.trigger('onRowDelete', [this, new RepeaterEventArgs([], this.currentItem, index, rowItems)]);
             this.rowItems.splice(index - 1, 1);
@@ -500,74 +494,85 @@ var Repeater = KxGenerator.createComponent({
             return removeRow.call(this);
         }
   
-    },
+    };
 
-    enable: function () {
-        var _self = this;
-        var model = this.getModel();
-        this.enabled = true;
-        
-        if (this.rendering.actions) {
-            model.displayAddButton = true;
-            model.displayRemoveButton = true;
+    Object.defineProperty(this, "label", 
+    {
+        get: function label() 
+        {
+            return _label;
+        },
+        set: function label(v) 
+        {
+            if(_label != v)
+            {
+                _label = v;
+                if(this.$label)
+                    this.$label.html(v);
+            }
         }
-        
-        for (var i = 0; i < this.dataProvider.length; i++) {
-            this.components.forEach(function (component) {
-                _self[component.props.id][i].enable();
-            });
-        }
+    });
 
-        return this; 
-    },
-
-    disable: function () {
-        var _self = this;
-        var model = this.getModel();
-        this.enabled = false;
-
-        if (this.rendering.actions) {
-            model.displayAddButton = false;
-            model.displayRemoveButton = false;
-        }
-
-        for (var i = 0; i < this.dataProvider.length; i++){
-            this.components.forEach(function (component) {
-                _self[component.props.id][i].disable();
-            });
-        }
-
-        return this;  
-    },
-
-    template: function () {
-        return "<div id='" + this.domID + "-wrapper' class='"+(this.colspan?"col-sm-" + this.colspan:"")+ " form-group rowspan" + this.rowspan + " resizable'>" +
-    (!this.embedded?("<label><b>{label}</b></label>"):"") +    
-                    "<div id='" + this.domID + "-container'></div>" +  
-    (this.rendering.actions?("<div id='actions_" + this.domID  + "' class='col-sm-offset-10 col-sm-2 px-0 float-right' style='overflow:hidden;'>" +
-                        "<button id='btnAddRow_" + this.domID  + "' type='button' class='float-right btn btn-sm btn-secondary' rv-if='model.displayAddButton'>" +
+    this.template = function () 
+    {
+        return "<div id='" + this.domID + "' class='"+(this.colspan?"col-sm-" + this.colspan:"")+ " form-group resizable'>" +
+    (!_embedded?("<label id='" + this.domID + "_label'>"+_label+"</label>"):"") +    
+                    "<div id='" + this.domID + "_container'></div>" +  
+    (_rendering.actions?("<div id='actions_" + this.domID  + "' class='col-sm-offset-10 col-sm-2 px-0 float-right' style='overflow:hidden;'>" +
+                        "<button id='" + this.domID  + "_btnAddRow' type='button' class='float-right btn btn-sm btn-secondary'>" +
                             "<i class='fas fa-plus'></i> Add" +
                         "</button>" +
-                        "<button id='btnRemoveRow_" + this.domID  + "' type='button' class='mx-1 float-right btn btn-sm btn-danger' rv-if='model.displayRemoveButton'>" +
+                        "<button id='" + this.domID  + "_btnRemoveRow' type='button' class='mx-1 float-right btn btn-sm btn-danger'>" +
                             "<i class='fas fa-minus'></i> Remove" + 
                         "</button>" +
                     "</div>"):"");
                 "</div>";
-    },
-    userCanManageItems:true,
-    render: function () {
+    };
+    this.userCanManageItems = true;
+
+    var _defaultParams = {
+        rendering: {
+			direction: 'vertical',
+			seperator: true,
+			actions: false
+        },
+        dataProvider:[],
+        embedded:true
+    };
+    _props = extend(false, false, _defaultParams, _props);
+    var _dataProvider = _props.dataProvider;
+    var _rendering = _props.rendering;
+    var _label = _props.label;
+    var _embedded = _props.embedded;
+    this.components = _props.components;
+
+    Component.call(this, _props, true);
+    var base = this.base;
+    // this.initModel();
+/*
+    var click =  props.click;
+    _props.click = function(e)
+    {
+        if (typeof _click == 'function')
+            _click.apply(this, arguments);
+
+        alert("overrided")
+    };*/
+
+    this.render = function () 
+    {
         var _self = this;
-        var model = this.getModel();
 
         var parent = this.$el.parent();
        // if(parent.length>0)
        //     this.$el.remove();
         this.$el.trigger('onBeginDraw');
 
-        this.$container = this.$container || this.$el.find('#' + this.domID + '-container'); 
-        this.$btnAddRow = this.$btnAddRow || this.$el.find('#btnAddRow_' + this.domID);
-        this.$btnRemoveRow = this.$btnRemoveRow || this.$el.find('#btnRemoveRow_' + this.domID);
-        
+        this.$container = this.$container || this.$el.find('#' + this.domID + '_container'); 
+        this.$btnAddRow = this.$btnAddRow || this.$el.find('#' + this.domID+'_btnAddRow');
+        this.$btnRemoveRow = this.$btnRemoveRow || this.$el.find('#' + this.domID);
+        this.$label = this.$label || this.$el.find('#'+this.domID+'_label'+'_btnRemoveRow');
+
         this.$container.empty();
         this.rows = [];
         this.focusedRow = 0,
@@ -582,11 +587,73 @@ var Repeater = KxGenerator.createComponent({
      //   if(parent.length>0)
      //       parent.append(this.$el);
         return this.$el;
-    }
-});
+    };
 
-//component prototype
+    this.registerEvents = function () 
+    {
+        console.log("register events is called every time that a repeater is created")
+        return ([].concat((_rendering.actions ? 
+        [
+            {
+                registerTo: this.$btnRemoveRow, events: { 
+                    'click': _removeRowHandler.bind(this)
+                }
+            },
+            {
+                registerTo: this.$btnAddRow, events: { 
+                    'click': _addRowHandler.bind(this)
+                }
+            }
+        ]:[
+            {
+                registerTo: this.$container, events: {
+                    'keydown': this.containerKeyDown.bind(this)
+                }
+            }
+        ])));        
+    };
+    Object.defineProperty(this, "dataProvider", 
+    {
+        get: function dataProvider() 
+        {
+            return _dataProvider;
+        },
+        set: function dataProvider(v) 
+        {
+            if(_dataProvider != v)
+            {
+                _dataProvider = v;
+            }
+        }
+    });
+    Object.defineProperty(this, "enabled", 
+    {
+        get: function enabled() 
+        {
+            return _enabled;
+        },
+        set: function enabled(v) 
+        {
+            if(_enabled != v)
+            {
+                _enabled = v;
+                var _self = this;
+                /* model check
+                var model = this.getModel();
+                if (_rendering.actions) {
+                    model.displayAddButton = false;
+                    model.displayRemoveButton = false;
+                }*/
+
+                for (var i = 0; i < this.dataProvider.length; i++)
+                {
+                    this.components.forEach(function (component) {
+                        _self[component.props.id][i].enabled = v;
+                    });
+                }
+
+            }
+        }
+    });
+};
 Repeater.type = 'repeater';
-
-//register dom element for this component
-KxGenerator.registerDOMElement(Repeater, 'kx-repeater');

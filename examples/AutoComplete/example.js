@@ -1,3 +1,7 @@
+var loader = new Loader({ id: 'loader' });
+$('#root').append(loader.render());
+loader.show();
+
 var myAutoComplete = new AutoCompleteEx({
     id: 'autocomplete',
     
