@@ -107,10 +107,10 @@ var Component = function(_props, overrided=false)
             for (var i = 0; i < eventsArr.length; i++) 
             {
                 var eventType = eventsArr[i];
-                if(customEvents[0][eventType])
+                if(customEvents[0].events[eventType])
                 {
                     //overrided listener, so remove default listener on $el
-                    delete customEvents[0][eventType];
+                    delete customEvents[0].events[eventType];
                 }
                 var privateEvent = _props[eventType];
                 eventsObj[eventsArr[i]] = privateEvent && typeof privateEvent == 'function' ? privateEvent.bind(this) : undefined;
@@ -120,7 +120,7 @@ var Component = function(_props, overrided=false)
             {
                 if(customEvents[i].registerTo.attr('id') == $(this).attr('id'))
                 {
-                    extend(false, false, eventsObj, customEvents[i].events);
+                    customEvents[i].events = extend(false, false, eventsObj, customEvents[i].events);
                     found = true;
                     break;
                 }
@@ -270,7 +270,7 @@ var Component = function(_props, overrided=false)
         this.beforeAttach();
 
 
-    ready("#" + this.$el.attr('id'), function (element) {
+    ready("#" + ( this.$el.attr('id') ? this.$el.attr('id') : this.domID ), function (element) {
         //execute inner handlers if theres any registered
         var handlers = [];
         if (_self['registerEvents'] && (typeof _self.registerEvents == 'function'))

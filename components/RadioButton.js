@@ -6,6 +6,7 @@
 
 //component definition
 var RadioButton = function (_props, overrided = false) {
+
     Object.defineProperty(this, "label",
         {
             get: function label() {
@@ -51,29 +52,24 @@ var RadioButton = function (_props, overrided = false) {
 
     this.beforeAttach = function () {
         this.$input = this.$el.find("#" + this.domID);
-        _enabled = (_enabled != undefined && _enabled != null ? _enabled : true);
     };
 
     this.template = function () {
         return "<label>" +
-            "<input data-triggers='click' id='" + this.domID + "' name='" + this.domID + "' type='radio' class='" + this.cssClass + "' value='" + _value + "' + rv-enabled='enabled' " + (_checked ? "checked='checked'" : '') + ">" + _label +
+            "<input data-triggers='click' id='" + this.domID + "' name='" + this.domID + "' type='radio' class='" + this.cssClass + "' value='" + this.value + "' " + (!this.enabled ? "disabled" : "") +  (this.checked ? "checked='checked'" : '') + ">" + this.label +
             "</label>";
     };
 
 
     var _defaultParams = {
         label: "",
-        enabled: "",
         value: "",
-        blockProcessAttr: false,
         checked: false
     };
     _props = extend(false, false, _defaultParams, _props);
 
     var _label = _props.label;
-    var _enabled = _props.enabled;
     var _value = _props.value;
-    var _blockProcessAttr = _props.required ? false : _props.blockProcessAttr;
     var _checked = _props.checked;
 
     Component.call(this, _props);
