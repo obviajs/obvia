@@ -6,6 +6,7 @@
 
 //component definition
 var Select = function (_props, overrided = false) {
+    var _self = this;
 
     Object.defineProperty(this, "value",
         {
@@ -28,7 +29,7 @@ var Select = function (_props, overrided = false) {
     };
 
     this.changeHandler = function (e) {
-        this.value = this.$el.val();
+        _value = this.$el.val();
     };
 
     this.template = function () {
@@ -64,8 +65,7 @@ var Select = function (_props, overrided = false) {
         valueField: "",
         value: "",
         class: "form-control",
-        afterAttach: this.afterAttach,
-        change: this.changeHandler.bind(this)
+        afterAttach: this.afterAttach
     };
     _props = extend(false, false, _defaultParams, _props);
 
@@ -73,6 +73,17 @@ var Select = function (_props, overrided = false) {
     var _textField = _props.textField;
     var _valueField = _props.valueField;
     var _value = _props.value;
+    var _change = _props.change;
+
+    _props.change = function () {
+        if (typeof _change == 'function')
+            _change.apply(this, arguments);
+
+        var e = arguments[0];
+        if (!e.isDefaultPrevented()) {
+            _self.changeHandler();
+        }
+    };
 
     Component.call(this, _props);
 

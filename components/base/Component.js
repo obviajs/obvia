@@ -270,7 +270,7 @@ var Component = function(_props, overrided=false)
         this.beforeAttach();
 
 
-    ready("#" + ( this.$el.attr('id') ? this.$el.attr('id') : this.domID ), function (element) {
+    ready("#" + this.$el.attr('id'), function (element) {
         //execute inner handlers if theres any registered
         var handlers = [];
         if (_self['registerEvents'] && (typeof _self.registerEvents == 'function'))
