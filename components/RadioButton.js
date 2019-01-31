@@ -51,12 +51,12 @@ var RadioButton = function (_props, overrided = false) {
         });
 
     this.beforeAttach = function () {
-        this.$input = this.$el.find("#" + this.domID);
+        this.$input = this.$el.find("#" + this.domID + "-radio");
     };
 
     this.template = function () {
-        return "<label>" +
-            "<input data-triggers='click' id='" + this.domID + "' name='" + this.domID + "' type='radio' class='" + this.cssClass + "' value='" + this.value + "' " + (!this.enabled ? "disabled" : "") +  (this.checked ? "checked='checked'" : '') + ">" + this.label +
+        return "<label id='" + this.domID + "'>" +
+            "<input data-triggers='click' id='" + this.domID + "-radio' name='" + this.domID + "-radio' type='radio' class='" + this.cssClass + "' value='" + this.value + "' " + (!this.enabled ? "disabled" : "") + (this.checked ? "checked='checked'" : '') + ">" + this.label +
             "</label>";
     };
 

@@ -6,6 +6,7 @@
 
 //component definition
 var TextArea = function (_props, overrided = false) {
+    var _self = this;
 
     Object.defineProperty(this, "value",
         {
@@ -26,7 +27,6 @@ var TextArea = function (_props, overrided = false) {
 
     this.beforeAttach = function () {
         this.$input = this.$el.filter('#' + this.domID);
-        this.$spellCheckBtn = _spellCheck ? this.$el.filter('#' + this.domID + '-spellCheck') : null;
     };
 
     this.changeHandler = function (e) {
@@ -34,21 +34,24 @@ var TextArea = function (_props, overrided = false) {
     };
 
     this.validate = function () {
-        if (this.required) {
+        if (_props.required) {
             if (this.value == "" || this.value == undefined) {
                 this.errorList = [
                     KxGenerator.getErrorList().call(this)['empty']
                 ];
                 this.$el.addClass('invalid');
+
+                return false;
             } else {
                 this.errorList = [];
                 this.$el.removeClass('invalid');
             }
         }
+        return true;
     };
 
     this.spellCHeckClickHandler = function (e) {
-        this.$el.spellCheckInDialog({defaultDictionary: _spellCheck.defaultDictionary});
+        this.$input.spellCheckInDialog({defaultDictionary: _spellCheck.defaultDictionary});
     };
 
     this.template = function () {
@@ -59,14 +62,34 @@ var TextArea = function (_props, overrided = false) {
     var _defaultParams = {
         value: "",
         spellCheck: null,
-        class: "form-control",
-        change: this.changeHandler.bind(this),
-        click: this.spellCHeckClickHandler.bind(this)
+        class: "form-control"
     };
     _props = extend(false, false, _defaultParams, _props);
 
     var _spellCheck = _props.spellCheck;
     var _value = _props.value;
+    var _change = _props.change;
+    var _click = _props.click;
+
+    _props.change = function () {
+        if (typeof _change == 'function')
+            _change.apply(this, arguments);
+
+        var e = arguments[0];
+        if (!e.isDefaultPrevented()) {
+            _self.changeHandler();
+        }
+    };
+
+    _props.click = function () {
+        if (typeof  _click == 'function')
+            _click.apply(this, arguments);
+
+        var e = arguments[0];
+        if(!e.isDefaultPrevented()) {
+            _self.spellCHeckClickHandler();
+        }
+    };
 
     Component.call(this, _props);
 
