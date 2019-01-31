@@ -50,15 +50,14 @@ var CheckBox = function (_props, overrided = false) {
     });
 
     this.beforeAttach = function () {
-        this.$input = this.$el.find("#" + this.domID);
+        this.$input = this.$el.find("#" + this.domID + "-checkbox");
         _enabled = (_enabled !== undefined && _enabled != null ? _enabled : true);
     };
 
     this.template = function () {
-        return (!_embedded ? ("<span rv-if='" + _blockProcessAttr + "' class='block-process'> * </span>") : "") +
-            "<label><input data-triggers='click'  id='" + this.domID + "' name='" + this.domID + "'  value='" + _value + "' " +
-            (_enabled ? '' : "disabled='" + this.enabled + "'") +
-            (_checked ? "checked='checked'" : '') + " type='checkbox'/>" + _label + "</label>";
+        return "<label  id='" + this.domID + "'>" +
+            "<input data-triggers='click'  id='" + this.domID + "-checkbox' name='" + this.domID + "'  value='" + _value + "' " +
+            " type='checkbox'/>" + _label + "</label>";
     };
 
     var _defaultParams = {

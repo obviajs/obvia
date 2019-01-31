@@ -1,130 +1,120 @@
 /**
  * This is a DateTime Input Element
- * 
- * Kreatx 2018
+ *
+ * Kreatx 2019
  */
 
-//component definition
-var DateTime = KxGenerator.createComponent({
-    //inner component data
-    initModel: function () {
-        return {
-            enabled: true,
-            blockProcessAttr: this.required ? false : this.blockProcessAttr
-        }
-    },
-
-    registerEvents: function () {
-        return [
-            {
-                registerTo: this.$el, events: {
-                    'afterAttach': this.afterAttach.bind(this),
-                }
+var DateTime = function (_props, overrided = false) {
+    var _self = this;
+    Object.defineProperty(this, "label",
+        {
+            get: function label() {
+                return _label;
             },
-            {
-                registerTo: this.$input, events: {
-                    'change': this.changeHandler.bind(this),
-                },
+            set: function label(v) {
+                if (_label != v) {
+                    _label = v;
+                    var target = this.$el.find("label");
+                    if (target) {
+                        target.children(":first-child").html(v);
+                    }
+                }
             }
-        ]
-    },
-
-    changeHandler: function (e) {
-        this.validate();
-    },
-
-    enable: function () {
-        var model = this.getModel();
-        model.enabled = true;
-        this.enabled = true;
-        return this;
-    },
-
-    disable: function () {
-        var model = this.getModel();
-        model.enabled = false;
-        this.enabled = false;
-        return this;
-    },
-
-    beforeAttach: function () {
-        this.$input = this.$el.attr('id') == this.domID?this.$el:this.$el.find("#" + this.domID);
-    },
-
-    afterAttach: function (e) {
-        //init datepicker
-        var _self = this;
-        if (this.value != "" && this.value != null && this.value != "0000-00-00 00:00:00")
-            this.value = moment(this.$input.val()).format(this.inputFormat)
-        else
-            this.value = ""
-        
-        this.$input.datepicker({
-            format: {
-                toDisplay: function (date, format, language) {
-                    return moment(date).format(_self.displayFormat);
-                },
-                toValue: function (date, format, language) {
-                    return moment(date).format(_self.displayFormat);
-                }
-            },
-            autoclose: true,
-            todayBtn: true,
-            todayHighlight: true,
-            forceParse: true
         });
 
-        this.trigger('creationComplete');
-    },
+    Object.defineProperty(this, "value", {
+        get: function value() {
+            var date = moment(this.$input.val(), _inputFormat).format(_outputFormat);
+            return (date == "Invalid date" || date == "") ? "" : date;
+        },
+        set: function value(v) {
+            _value = moment(v).format(_inputFormat);
+            this.trigger('change');
+        }
+    });
 
-    getValue: function () {
-        var date = moment(this.$input.val(), this.inputFormat).format(this.outputFormat);
-        return  (date == "Invalid date" || date == "") ? "" : date
-    },
+    this.beforeAttach = function () {
+        this.$input = this.$el.filter("#" + this.domID + "-datetime");
+        _enabled = (_enabled !== undefined && _enabled != null ? _enabled : true);
+    };
 
-    setValue: function (value) {
-        this.value = moment(value).format(this.inputFormat);
+    this.afterAttach = function (e) {
+        //init datepicker
 
-        this.trigger('change');
-        return this;
-    },
+        if (_value != "" && _value != null && _value != "0000-00-00 00:00:00")
+            _value = moment(this.$input.val()).format(_inputFormat);
+        else
+            _value = "";
 
-    validate: function () {
-        if (this.required) {
-            if (this.getValue() == "" || this.getValue() == undefined) {
+        this.$input.datepicker({
+            uiLibrary: 'bootstrap4',
+            format: "dd/mm/yyyy",
+        });
+    };
+
+    this.validate = function () {
+        if (_required) {
+            if (_value == "" || _value == undefined) {
                 this.errorList = [
                     KxGenerator.getErrorList().call(this)['empty']
                 ];
 
                 this.$input.addClass('invalid');
-                return false;
             } else {
                 this.errorList = [];
                 this.$input.removeClass('invalid');
-                return true;  
             }
-        } else
-            return true;    
-    },
+        }
+    };
 
-    template: function () {         
-        return 
-        (!this.embedded?("<div id='" + this.domID + "-wrapper' class='"+(this.colspan?"col-sm-" + this.colspan:"")+" form-group resizable'>"):"") +
-        (!this.embedded?("<label rv-style='versionStyle' rv-for='id'><b>{label}</b> <span rv-if='required'>*</span></label>"):"") + 
-                            "<input type='text'" + 
-                                "id='" + this.domID + "' name='" + this.domID + "' rv-value='value'" +
-                                "class='form-control rowspan"+ this.rowspan +"'" +
-                                "rv-placeholder='label' rv-enabled='model.enabled'/>" +
-        (!this.embedded?("</div>"):"");    
-    },
- 
-    render: function () {
-        return this.$el;
+    this.changeHandler = function (e) {
+        this.validate();
+    };
+
+    this.template = function () {
+        return "<label id='" + this.domID + "'><b>" + _label + "</b></label>" +
+            "<input data-triggers='change' type='text' id='" + this.domID + "-datetime' name='" + this.domID + "' value='" + _value + "' class='form-control'  placeholder='" + _label + "'/>";
+    };
+
+    var _defaultParams = {
+        id: 'datetime',
+        colspan: '4',
+        label: 'qqq',
+        versionStyle: '',
+        blockProcessAttr: false,
+        required: true,
+        inputFormat: 'DD/MM/YYYY',
+        outputFormat: 'DD-MM-YYYY',
+        displayFormat: 'DD/MM/YYYY',
+        value: '20/10/2010',
+        afterAttach: this.afterAttach,
+    };
+
+    _props = extend(false, false, _defaultParams, _props);
+    var _label = _props.label;
+    var _required = _props.required;
+    var _inputFormat = _props.inputFormat;
+    var _outputFormat = _props.outputFormat;
+    var _displayFormat = _props.displayFormat;
+    var _value = _props.value;
+    var _enabled = _props.enabled;
+    var _embedded = _props.embedded;
+    var _change = _props.change;
+
+    _props.change = function () {
+        if (typeof _change == 'function')
+            _change.apply(this, arguments);
+
+        var e = arguments[0];
+        if (!e.isDefaultPrevented()) {
+            _self.changeHandler();
+        }
+    };
+    Component.call(this, _props);
+
+    if (overrided) {
+        this.keepBase();
     }
-});
+};
 
-//component prototype
-DateTime.type = 'datetime';
-
-//register dom element for this component
-KxGenerator.registerDOMElement(DateTime, 'kx-datetime');
+DateTime.type = "datetime";

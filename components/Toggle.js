@@ -14,10 +14,8 @@ var Toggle = function (_props, overrided = false) {
             set: function label(v) {
                 if (_label != v) {
                     _label = v;
-                    var target = this.$el.find("label");
-                    if (target[0]) {
-                        target[0].textContent = _label;
-                        target[0].style.fontWeight = "bold";
+                    if (this.$el) {
+                        this.$el[0].textContent = v;
                     }
                 }
             }
@@ -38,21 +36,17 @@ var Toggle = function (_props, overrided = false) {
     };
 
     this.beforeAttach = function () {
-        _enabled = (_enabled !== undefined && _enabled != null ? _enabled : true);
-        this.$input = this.$el.find("#" + this.domID);
+        this.$input = this.$el.filter("#" + this.domID + "-toggle");
     };
 
     this.template = function () {
-        return (!_embedded ? ("<div id='" + this.domID + "-wrapper' class='" + (_colspan ? "col-sm-" + _colspan : "") + " form-group rowspan" + _rowspan + " resizable'>") : "") +
-            (!_embedded ? ("<label rv-style='versionStyle' rv-for='id'><b>" + _label + "</b></label>") : "") + "<span rv-if='" + _required + "'>*</span>" +
-            "<input type='checkbox' rv-checked='" + _value + "' switch-toggle='toggle' data-on='" + _checkedLabel + "' data-off='" + _unCheckedLabel + "' data-style='slow'  id='" + this.domID + "'  name='" + this.domID + "'/>" +
-            (!_embedded ? ("</div>") : "");
+        return "<label  id='" + this.domID + "'>" + _label + "</label>" +
+            "<input data-triggers='click' type='checkbox' switch-toggle='toggle' data-on='" + _checkedLabel + "' data-off='" + _unCheckedLabel +
+            "' data-style='slow'  id='" + this.domID + "-toggle'  name='" + this.domID + "'/>";
     };
 
     var _defaultParams = {
         label: 'Toggle',
-        blockProcessAttr: false,
-        required: false,
         value: true,
         unCheckedLabel: "Jo",
         checkedLabel: "Po",
@@ -61,13 +55,7 @@ var Toggle = function (_props, overrided = false) {
 
     _props = extend(false, false, _defaultParams, _props);
 
-    var _colspan = _props.colspan;
-    var _rowspan = _props.rowspan;
     var _label = _props.label;
-    var _embedded = _props.embedded;
-    var _enabled = _props.enabled;
-    var _blockProcessAttr = _props.required ? false : _props.blockProcessAttr;
-    var _required = _props.required;
     var _value = _props.value;
     var _unCheckedLabel = _props.unCheckedLabel;
     var _checkedLabel = _props.checkedLabel;
