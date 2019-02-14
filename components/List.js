@@ -1,33 +1,92 @@
 /**
- * This is a List component
- * 
- * Kreatx 2018
+ * This is a List Element
+ *
+ * Kreatx 2019
  */
 
-//component definition
-var List = KxGenerator.createComponent({
-    //model binds to the template
-    //if you want variables to bind, you must declare them in the model object
-    initModel: function () {
-        return {
-            blockProcessAttr: this.required ? false : this.blockProcessAttr,
+var List = function (_props, overrided = false) {
+    var _self = this;
+
+    Object.defineProperty(this, "label",
+        {
+            get: function label() {
+                return _label;
+            },
+            set: function label(v) {
+                if (_label != v) {
+                    _label = v;
+                    var target = this.$el.find("label");
+                    if (target) {
+                        target.children(":first-child").html(v);
+                    }
+                }
+            }
+        });
+
+    Object.defineProperty(this, "value", {
+        get: function value() {
+            return _value;
+        },
+        set: function (value) {
+            if (!_value.equals(value)) {
+                var arrDpFieldsChanged = [];
+                var v = {};
+                if (value == undefined || value == null) {
+                    value = [];
+                } else if (typeof value === "string") {
+                    v[_valueField] = value;
+                    value = [v];
+                } else if (typeof (value) === "object" && !(value instanceof Array)) {
+                    value = [value];
+                } else if (!(typeof (value) === "object" && (value instanceof Array))) {
+                    v[_valueField] = value;
+                    value = [v];
+                }
+                _value = intersectOnKeyMatch(_dataProvider, value, _valueField); //value;
+                var unselect = _dataProvider.difference(_value);
+
+                unselect.forEach(function (v) {
+                    var arrDpIndex = (v == undefined || v == null || v[_valueField] == undefined) ? -1 : indexOfObject(_dataProvider, _valueField, v[_valueField]);
+                    if (arrDpIndex != -1) {
+                        _states.forEach(function (state) {
+                            _dataProvider[arrDpIndex][state.dataProviderField] = state.states.off;
+                            arrDpFieldsChanged.pushUnique(state.dataProviderField);
+                        }.bind(this));
+                    }
+                }.bind(this));
+
+                this.value.slice(0).forEach(function (v, i) {
+                    var arrDpIndex = (v == undefined || v == null || v[_valueField] == undefined) ? -1 : indexOfObject(_dataProvider, _valueField, v[_valueField]);
+                    if (arrDpIndex != -1) {
+                        _states.forEach(function (state) {
+                            _dataProvider[arrDpIndex][state.dataProviderField] = state.states.on;
+                            arrDpFieldsChanged.pushUnique(state.dataProviderField);
+                        }.bind(this));
+                    } else {
+                        self.value.splice(i, 1);
+                    }
+                }.bind(this));
+
+                this.trigger('change');
+                // this.repeater.dataProviderChanged(arrDpFieldsChanged);
+            }
+            return this;
         }
-    },
+    });
 
-    beforeAttach: function () {
-        this.$container = this.$el.find('#' + this.domID + '-container');
-        //TODO: we are overriding those handlers, we should exec them(if they are set) after our internal handlers
-        this.components[0].props.onclick = this.clickHandler.bind(this);
-        this.components[0].props.ondblclick = this.doubleClickHandler.bind(this);
-        this.components[0].props.onmousedown = this.mouseDownHandler.bind(this);
+    this.beforeAttach = function () {
+        this.$container = this.$el.filter('#' + this.domID + '-list');
 
-        this.direction = this.direction==undefined||this.direction==null?'horizontal':this.direction;
-       
-        this.states = this.states==undefined || this.states==null?
-        [
-            {dataProviderField:this.classField, states:{on:this.selectedClass, off:this.defaultClass}}
-        ]:this.states;
-        
+        _components[0].props.click = click.bind(this);
+        // this.components[0].props.ondblclick = this.doubleClickHandler.bind(this);
+        // this.components[0].props.onmousedown = this.mouseDownHandler.bind(this);
+
+        _direction = _direction == undefined || _direction == null ? 'horizontal' : _direction;
+        _states = _states == undefined || _states == null ?
+            [
+                {dataProviderField: _classField, states: {on: _selectedClass, off: _defaultClass}}
+            ] : _states;
+
         this.repeater = new Repeater({
             id: 'listRepeater',
             defaultItem: this.defaultItem,
@@ -36,185 +95,154 @@ var List = KxGenerator.createComponent({
                 seperator: this.seperator || false,
                 actions: false
             },
-            dataProvider: this.dataProvider,
-            components: this.components
+            dataProvider: _dataProvider,
+            components: _components
         }).on('creationComplete', function (e) {
             e.stopPropagation();
-            if (this.value == undefined || this.value == "")    
-                this.value = [];    
+            if (self.value == undefined || self.value == "")
+                self.value = [];
             var v = this.value.slice();
             //trick to pass property value updated check on the first setValue call below (initial value)
             this.value = [];
-            this.setValue(v, false);
+            this.value = v;
             this.trigger('creationComplete');
         }.bind(this));
-    },
+    };
 
-    registerEvents: function () {
-        return [
-            {
-                registerTo: this.$el, events: {
-                    'afterAttach': this.afterAttach.bind(this)
-                }
-            },
-            {
-                registerTo: this, events: {
-                    'change': this.changeHandler.bind(this)
-                }
-            }
-        ];
-    },
-
-    afterAttach: function (e) {
-       
-    },
-
-    setValue: function (value, manualRender=true) {
-        if(!this.value.equals(value))
-        {
-            var arrDpFieldsChanged = [];
-            if(value==undefined || value==null){
-                value = [];
-            }else if (typeof value === "string"){
-                v = {};
-                v[this.valueField] = value;
-                value = [v];
-            }else if(typeof(value)==="object" && !(value instanceof Array)){
-               value = [value];
-            }else if(!(typeof(value)==="object" && (value instanceof Array))){
-                v = {};
-                v[this.valueField] = value;
-                value = [v];
-            }
-            this.value = intersectOnKeyMatch(this.dataProvider, value, this.valueField) //value;
-            var unselect = this.dataProvider.difference(this.value);
-            
-            unselect.forEach(function (v) {
-                var arrDpIndex = (v==undefined||v==null||v[this.valueField]==undefined)?-1:indexOfObject(this.dataProvider, this.valueField,  v[this.valueField]);
-                if(arrDpIndex!=-1){
-                    this.states.forEach(function (state) { 
-                        this.dataProvider[arrDpIndex][state.dataProviderField] = state.states.off;
-                        arrDpFieldsChanged.pushUnique(state.dataProviderField);
-                    }.bind(this));
-                }
-            }.bind(this));
-
-            this.value.slice(0).forEach(function (v, i) {
-                var arrDpIndex = (v==undefined||v==null||v[this.valueField]==undefined)?-1:indexOfObject(this.dataProvider, this.valueField,  v[this.valueField]);
-                if(arrDpIndex!=-1){
-                    this.states.forEach(function (state) { 
-                        this.dataProvider[arrDpIndex][state.dataProviderField] = state.states.on;
-                        arrDpFieldsChanged.pushUnique(state.dataProviderField);
-                    }.bind(this));
-                }else{
-                    this.value.splice(i, 1);
-                }
-            }.bind(this));
-
-            this.trigger('change');
-            this.repeater.dataProviderChanged(arrDpFieldsChanged);
-        }
-        return this;
-    },
-
-    changeHandler : function(e){
-        if (typeof this.onchange == 'function')
-            this.onchange.apply(this, arguments);
-    },
-    mouseDownHandler: function (e) {
-        if (typeof this.onmousedown == 'function')
-            this.onmousedown.apply(this, arguments);
-        
-        /*if(!e.isDefaultPrevented()){
-            this.handleComponentMouseDown.apply(this, arguments);
-        }*/
-    },    
-    clickHandler: function (e) {
-        if (typeof this.onclick == 'function')
-            this.onclick.apply(this, arguments);
-        
-        if(!e.isDefaultPrevented()){
-            this.handleComponentClick.apply(this, arguments);
-        }
-    },
-
-    doubleClickHandler: function (e) {
-        if (typeof this.ondblclick == 'function')
-            this.ondblclick.apply(this, arguments);
-
-        if (!e.isDefaultPrevented()) {
-            this.handleComponentClick.apply(this, arguments);
-        }
-    },
-
-    handleComponentClick: function (e, repeaterEventArgs) {
-        var componentID = this.repeater.components[0].props.id;
+    this.handleComponentClick = function (e, repeaterEventArgs) {
+        var componentID = _self.repeater.components[0].props.id;
         var clickedComponent = repeaterEventArgs.currentRow[componentID];
         var index = repeaterEventArgs.currentIndex;
-        
+
         var v = repeaterEventArgs.currentItem;
-        var arrDpIndex = -1; 
-        var arrValueIndex = indexOfObject(this.value, this.valueField,  v[this.valueField]);  
-        var _value = this.value.slice();       
-        if (arrValueIndex==-1){
-            if (this.multiselect){   
-                _value.push(v);
-            }else
-                _value = [v];     
-        }else{
-            if (this.multiselect){   
-                _value.splice(arrValueIndex, 1);
-            }else
-                _value = []; 
-        }    
-        this.setValue(_value);
-    },
+        var arrDpIndex = -1;
+        var arrValueIndex = indexOfObject(this.value, _valueField, v[_valueField]);
+        var newValue = this.value.slice();
+        if (arrValueIndex == -1) {
+            if (this.multiselect) {
+                newValue.push(v);
+            } else
+                newValue = [v];
+        } else {
+            if (_multiselect) {
+                newValue.splice(arrValueIndex, 1);
+            } else
+                newValue = [];
+        }
+        this.value = newValue;
+    };
 
-    addRow: function (item, index, isPreventable = false, focusOnRowAdd = false) {
+    this.addRow = function (item, index, isPreventable = false, focusOnRowAdd = false) {
         if (index == undefined)
-            index = this.repeater.currentIndex + 1;    
+            index = this.repeater.currentIndex + 1;
         this.repeater.addRow(item, index, isPreventable, focusOnRowAdd);
-    },
+    };
 
-    removeRow: function (index, isPreventable = false, focusOnRowDelete = false) {
+    this.removeRow = function (index, isPreventable = false, focusOnRowDelete = false) {
         if (index == undefined)
-            index = this.repeater.currentIndex + 1;     
-        this.repeater.removeRow(index, isPreventable, focusOnRowDelete);  
-    },
+            index = this.repeater.currentIndex + 1;
+        this.repeater.removeRow(index, isPreventable, focusOnRowDelete);
+    };
 
-    enable: function () {         
-        this.repeater.enable();
-        this.enabled = true;
-        return this; 
-    },
+    this.template = function () {
+        return "<label>" + _label + " </label>" +
+            "<br>" +
+            "<div id='" + this.domID + "-list' role='group' style='padding:0'>" +
 
-    disable: function () {
-        this.repeater.disable();
-        this.enabled = false;
-        return this;  
-    },
+            "</div>";
+    };
 
-    template: function () {
-        return "<div id='" + this.domID + "-wrapper'>" +
-        (!this.embedded?("<div class='col-sm-" + this.colspan + "' id='" + this.domID + "-block' resizable' style='padding-top: 10px; padding-bottom: 10px; overflow:hidden'>" +
-                        "<label rv-style='versionStyle' rv-for='domID'>{label} <span rv-if='required'>*</span></label>" +
-                        "<span rv-if='model.blockProcessAttr' class='block-process'> * </span>" +
-                        "<br>") : "") +
-                        "<div id='" + this.domID + "-container' role='group' style='padding:0'>" +
-                            
-                        "</div>" +
-        (!this.embedded?"</div>":"") +
-                "</div>";
-    },
+    var _defaultParams = {
+        id: 'list',
+        colspan: '6',
+        label: 'Ministrite',
+        fieldName: 'list',
+        blockProcessAttr: this.blockProcessAttr,
+        required: true,
+        direction: 'horizontal',
+        multiselect: false,
+        dataProvider: [],
+        valueField: "id",
+        classField: "buttonClass",
+        defaultClass: "btn btn-sm btn-default",
+        selectedClass: "btn btn-sm btn-success",
+        value: [],
+        components: [
+            {
+                constructor: Button,
+                props: {
+                    id: 'button',
+                    type: "button",
+                    value: "{text}",
+                    label: "",
+                    class: "{buttonClass}",
+                    style: "float: left; border-radius: 0px"
+                }
+            }
+        ],
+    };
 
-    render: function () {
+    _props = extend(false, false, _defaultParams, _props);
+
+    var _id = _props.id;
+    var _multiselect = _props.multiselect;
+    var _dataProvider = _props.dataProvider;
+    var _label = _props.label;
+    var _components = _props.components;
+    var _value = _props.value;
+    var _states = _props.states;
+    var _direction = _props.direction;
+    var _valueField = _props.valueField;
+    var _classField = _props.classField;
+    var _selectedClass = _props.selectedClass;
+    var _defaultClass = _props.defaultClass;
+    var _embedded = _props.embedded;
+    // var _change = _props.change;
+    // var _mousedown = _props.mouseDownHandler;
+    var _click = _props.click;
+    var _dblclick = _props.dblclick;
+    //
+    // _props.change = function (e) {
+    //     if (typeof _change == 'function')
+    //         _change.apply(this, arguments);
+    // };
+    // // //
+    // _props.mouseDownHandler = function (e) {
+    //     if (typeof this.onmousedown == 'function')
+    //         this.onmousedown.apply(this, arguments);
+    // };
+    click = function (e) {
+        if (typeof this.click == 'function')
+            this.click.apply(this, arguments);
+
+        if (!e.isDefaultPrevented()) {
+            _self.handleComponentClick.apply(this, arguments);
+        }
+    };
+
+    _props.dblclick = function (e) {
+        if (typeof _dblclick == 'function')
+            _dblclick.apply(this, arguments);
+
+        if (!e.isDefaultPrevented()) {
+            _self.handleComponentClick.apply(this, arguments);
+        }
+    };
+
+    Component.call(this, _props);
+    this.afterAttach = function (e) {
+
+    };
+
+    this.render = function () {
         this.$container.append(this.repeater.render());
         return this.$el;
+    };
+
+    if (overrided) {
+        this.keepBase();
     }
-});
 
-//component prototype
+};
+
 List.type = 'list';
-
-//register dom element for this component
-KxGenerator.registerDOMElement(List, 'kx-list');
