@@ -1,74 +1,51 @@
 /**
  * This is an Amount Element
- * 
- * Kreatx 2018
+ *
+ * Kreatx 2019
  */
 
 //component definition
-var Amount = KxGenerator.createComponent({
-    value: {
-        amount: "",
-        currency: "1",
-        moneyamount_id: "-666"
-    },
+var Amount = function (_props, overrided = false) {
+    var _self = this;
 
-    //component data
-    initModel: function () {
-        return {
-            blockProcessAttr: this.required ? false : this.blockProcessAttr,
-        }
-    },
-    
-    beforeAttach: function () {
-        this.$inputContainer = this.$el.find('.input-container');
-    },
+    Object.defineProperty(this, "value",
+        {
+            set: function value(v) {
+                if (JSON.stringify(_value) != JSON.stringify(v)) {
+                    _value.amount = v.amount;
+                    _value.currency = v.currency;
 
-    registerEvents: function () {
-        return [
-            {
-                registerTo: this.$el, events: {
-                    'afterAttach': this.afterAttach.bind(this)
-                }
-            },
-            {
-                registerTo: this.$inputContainer, events: {
-                    'change': this.handleChange.bind(this)
+                    this.amountInput.value = v.amount;
+                    this.amountInput.currency = v.currency;
                 }
             }
-        ]
-    },
+        });
 
-    handleChange: function (e) {
-        this.value.amount = this.amountInput.getValue();
-        this.value.currency = this.currencySelect.getValue();
+    this.changeHandler = function (e) {
+        _value.amount = this.amountInput.value;
+        _value.currency = this.currencySelect.value;
 
         this.validate();
-    },
+    };
 
-    attached: false,
-    
-    afterAttach: function (e) {
+    this.attached = false;
+    this.afterAttach = function (e) {
         this.cComponents = [];
-        if (e.target.id == this.domID + '-wrapper' && !this.attached) {
+        if (e.target.id == this.$el.attr("id") && !this.attached) {
             this.attached = true;
 
-            this.$inputContainer
-                .append(this.renderAmountInput(this.value.amount))
-            
-            this.amountInput
-                .$input
-                .parent()
-                .append(this.renderCurrencySelect(this.currencyList, this.value.currency));
-            
-            this.amountInput.$input.css({ 'width': '80%', 'float': 'left' });
+            this.$el
+                .append(this.renderAmountInput(_value.amount))
+                .append(this.renderCurrencySelect(_currencyList, _value.currency));
+
+            this.amountInput.$el.css({ 'width': '80%', 'float': 'left' });
             this.currencySelect.$el.css({ 'width': '20%', 'float': 'left' });
         }
-    },
+    };
 
-    renderAmountInput: function (value) {
+    this.renderAmountInput = function (value) {
         this.amountInput = new TextInput({
             id: 'amountInput-' + this.id,
-            colspan: '',
             mask: {
                 alias: "decimal",
                 prefix: ''
@@ -78,119 +55,116 @@ var Amount = KxGenerator.createComponent({
 
         var _self = this;
         this.amountInput.on('creationComplete', function (e) {
-            e.stopPropagation(); 
+            e.stopImmediatePropagation();
+            e.stopPropagation();
             _self.cComponents.push(this);
 
             if (_self.cComponents.length > 1) {
-                if (this.enabled)
-                    this.enable();
-                else this.disable();
+                _self.enabled = this.enabled;
 
-                _self.trigger('creationComplete');  
+                _self.trigger('creationComplete');
             }
-                
+
         });
 
         return this.amountInput.render();
-    },
+    };
 
-    renderCurrencySelect: function (currencyList, selected) {
+    this.renderCurrencySelect = function (currencyList, selected) {
         this.currencySelect = new Select({
             id: 'currencySelect-' + this.id,
             dataProvider: currencyList,
-            textField: this.labelField || "text",
-            valueField: this.valueField || "id",
+            textField: _labelField,
+            valueField: _valueField,
             value: selected,
         });
 
         var _self = this;
         this.currencySelect.on('creationComplete', function (e) {
+            e.stopImmediatePropagation();
             e.stopPropagation();
             _self.cComponents.push(this);
-      
-            if (_self.cComponents.length > 1) {
-                if (this.enabled)
-                    this.enable();
-                else this.disable();
 
-                _self.trigger('creationComplete');  
+            if (_self.cComponents.length > 1) {
+                _self.enabled = this.enabled;
+
+                _self.trigger('creationComplete');
             }
         });
 
         return this.currencySelect.render();
-    },
+    };
 
-    setValue: function (value) {
-        this.value.amount = value.amount;
-        this.value.currency = value.currency;
-
-        this.amountInput.setValue(value.amount);
-        this.currencySelect.setValue(value.currency);
-
-        return this;
-    },
-
-    enable: function () {
-        this.amountInput.enable();
-        this.currencySelect.enable();
-        this.enabled = true;
-        return this;
-    },
-
-    disable: function () {
-        this.amountInput.disable();
-        this.currencySelect.disable();
-        this.enabled = false;
-        return this;
-    },
-
-    validate: function () {
-        if (this.required && this.amountInput.validate()) {
-            if (this.amountInput.getValue() == "0.00" || this.amountInput.getValue() == "0") {
+    this.validate = function () {
+        if (_props.required && this.amountInput.validate()) {
+            if (this.amountInput.value == "0.00" || this.amountInput.value == "0") {
                 this.errorList = [
                     KxGenerator.getErrorList().call(this)['zero']
                 ];
-                this.amountInput.$input.addClass('invalid');
+                this.amountInput.$el.addClass('invalid');
+
                 return false;
             } else {
                 this.errorList = [];
-                this.amountInput.$input.removeClass('invalid');
-                return true;
+                this.amountInput.$el.removeClass('invalid');
             }
         } else {
-            if (this.required) {
+            if (_props.required) {
                 this.errorList = [
                     KxGenerator.getErrorList().call(this)['zero']
                 ];
-                this.amountInput.$input.addClass('invalid');
+                this.amountInput.$el.addClass('invalid');
+
                 return false;
             } else {
                 this.errorList = [];
-                this.amountInput.$input.removeClass('invalid');
-                return true;
+                this.amountInput.$el.removeClass('invalid');
             }
-            
         }
-    },
 
-    template: function () {
-        return "<div id='" + this.domID + "-wrapper' class='form-group col-sm-" + this.colspan + " rowspan" + this.rowspan + " resizable'>" +    
-                    "<label rv-style='versionStyle' rv-for='domID'><b>{label}</b> <span rv-if='required'>*</span></label>" +
-                    "<span rv-if='model.blockProcessAttr' class='block-process'> * </span>" +
-                        "<div class='input-container'>" +
-                    
-                        "</div>" +
-                "</div>";
-    },
+        return true;
+    };
 
-    render: function () {
-        return this.$el;
+    this.template = function () {
+        return "<div data-triggers='change' id='" + this.domID + "'></div>";
+    };
+
+    var _defaultParams = {
+        value: {
+            amount: "",
+            currency: "1",
+            moneyamount_id: "-666"
+        },
+        currencyList: null,
+        labelField: 'text',
+        valueField: 'id',
+        afterAttach: this.afterAttach
+    };
+    _props = extend(false, false, _defaultParams, _props);
+
+    var _value = _props.value;
+    var _currencyList = _props.currencyList;
+    var _labelField = _props.labelField;
+    var _valueField = _props.valueField;
+    var _change = _props.change;
+
+    _props.change = function () {
+        if (typeof _change == 'function')
+            _change.apply(this, arguments);
+
+        var e = arguments[0];
+        if (!e.isDefaultPrevented()) {
+            _self.changeHandler();
+        }
+    };
+
+    Component.call(this, _props, true);
+
+    if (overrided) {
+        this.keepBase();
     }
-});
+
+};
 
 //component prototype
 Amount.type = 'amount';
-
-//register dom element for this component
-KxGenerator.registerDOMElement(Amount, 'kx-amount');
-
