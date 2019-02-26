@@ -1,23 +1,27 @@
 /**
  * This is a MultiSwitch component
- * 
- * Kreatx 2018
+ *
+ * Kreatx 2019
  */
 
-//component definition
-var MultiSwitch = KxGenerator.createComponent({
-    //model binds to the template
-    //if you want variables to bind, you must declare them in the model object
-    initModel: function () {
-        return {
-            blockProcessAttr: this.required ? false : this.blockProcessAttr,
-        }
-    },
+var MultiSwitch = function (_props, overrided = false) {
+    _self = this;
 
-    beforeAttach: function () {
-        this.$container = this.$el.find('#' + this.domID + '-container');
-        this.direction = this.direction==undefined||this.direction==null?'horizontal':this.direction;
-        
+    Object.defineProperty(this, "value", {
+        get: function value() {
+            return _value;
+        },
+        set: function value(v) {
+            _value = v;
+            this.list.set(v);
+            this.trigger('change');
+        }
+    });
+
+    this.beforeAttach = function () {
+        this.$container = this.$el.filter('#' + this.domID + '-container');
+        this.direction = this.direction == undefined || this.direction == null ? 'horizontal' : this.direction;
+
         this.list = new List({
             id: 'list',
             colspan: '6',
@@ -26,100 +30,101 @@ var MultiSwitch = KxGenerator.createComponent({
             blockProcessAttr: this.blockProcessAttr,
             required: true,
             direction: this.direction,
-            multiselect: this.multiselect,
-            dataProvider: this.dataProvider,
-            valueField: this.valueField,
-            labelField: this.labelField,
-            classField: this.classField,
-            defaultClass: this.defaultClass,
-            selectedClass: this.selectedClass,  
-            value: this.value,
-            embedded: true,        
+            multiselect: _multiselect,
+            dataProvider: _dataProvider,
+            valueField: _valueField,
+            labelField: _labelField,
+            classField: _classField,
+            defaultClass: _defaultClass,
+            selectedClass: _selectedClass,
+            value: _value,
+            embedded: true,
             components: [
                 {
                     constructor: Button,
                     props: {
                         id: 'button',
                         type: "button",
-                        value: "{" + this.labelField + "}",
-                        class: "{" + this.classField + "}",
+                        label: "{" + _labelField + "}",
+                        value: "{" + _labelField + "}",
+                        class: "{" + _classField + "}",
                         style: "float: left; border-radius: 0px",
                         onclick: this.clickHandler.bind(this),
-                        embedded: true  
+                        embedded: true
                     }
                 }
             ],
-            onclick : this.onclick,
-            onchange : this.onchange
+            onclick: this.onclick,
+            onchange: this.onchange
         }).on('creationComplete', function (e) {
             e.stopPropagation();
-            this.trigger('creationComplete');   
-        }.bind(this)).on('change', function(){
-            this.value = this.list.value;
+            this.trigger('creationComplete');
+        }.bind(this)).on('change', function () {
+            _value = this.list.value;
         }.bind(this));
-    },
+    };
 
-    registerEvents: function () {
-        return [
-            {
-                registerTo: this.$el, events: {
-                    'afterAttach': this.afterAttach.bind(this)
-                }
-            }
-        ];
-    },
+    this.afterAttach = function () {
 
-    afterAttach: function (e) {
-    
-    },
-    setValue: function (value) {
-        this.value = value;
-        this.list.setValue(value);        
-        this.trigger('change');
-        return this;
-    },
-    changeHandler : function(e){
+    };
+
+    this.changeHandler = function (e) {
         if (typeof this.onchange == 'function')
             this.onchange.apply(this, arguments);
-    },
-    clickHandler: function (e) {
+    };
+
+    this.clickHandler = function (e) {
         if (typeof this.onclick == 'function')
             this.onclick.apply(this, arguments);
-    },
+    };
 
-    enable: function () {         
-        this.list.enable();
-        this.enabled = true;
-        return this; 
-    },
+    this.template = function () {
+        return "<div id='" + this.domID + "-container' role='group' style='padding:0'>" +
+            "</div>";
+    };
 
-    disable: function () {
-        this.list.disable();
-        this.enabled = false;
-        return this;  
-    },
+    var _defaultParams = {
+        id: '',
+        colspan: '',
+        label: '',
+        fieldName: '',
+        blockProcessAttr: false,
+        required: true,
+        multiselect: true,
+        dataProvider: [],
+        valueField: "",
+        labelField: "",
+        classField: "",
+        defaultClass: '',
+        selectedClass: '',
+        value: [],
+        onclick: function (e) {
+            console.log("From MultiSwitch ClickAction");
+            //e.preventDefault();
+        }
+    };
 
-    template: function () {
-        return "<div id='" + this.domID + "-wrapper' class='col-sm-" + this.colspan + " resizable' style='padding-top: 10px; padding-bottom: 10px; overflow:hidden'>" +
-        (!this.embedded?("<div>" +
-                        "<label rv-style='versionStyle' rv-for='domID'><b>{label}</b> <span rv-if='required'>*</span></label>" +
-                        "<span rv-if='model.blockProcessAttr' class='block-process'> * </span>" +
-                        "<br>") : "") + 
-                        "<div id='" + this.domID + "-container' role='group' style='padding:0'>" +
-                            
-                        "</div>" +
-        (!this.embedded?"</div>":"") +
-                "</div>";
-    },
+    _props = extend(false, false, _defaultParams, _props);
 
-    render: function () {
+    var _value = _props.value;
+    var _multiselect = _props.multiselect;
+    var _dataProvider = _props.dataProvider;
+    var _valueField = _props.valueField;
+    var _labelField = _props.labelField;
+    var _classField = _props.classField;
+    var _defaultClass = _props.defaultClass;
+    var _selectedClass = _props.selectedClass;
+
+    Component.call(this, _props);
+
+    this.render = function () {
         this.$container.append(this.list.render());
         return this.$el;
+    };
+
+    if (overrided) {
+        this.keepBase();
     }
-});
+};
 
-//component prototype
 MultiSwitch.type = 'multiswitch';
-
-//register dom element for this component
-KxGenerator.registerDOMElement(MultiSwitch, 'kx-multiswitch');

@@ -7,22 +7,6 @@
 var CheckBoxGroup = function (_props, overrided = false) {
     var _self = this;
 
-    Object.defineProperty(this, "label",
-        {
-            get: function label() {
-                return _label;
-            },
-            set: function label(v) {
-                if (_label != v) {
-                    _label = v;
-                    var target = this.$el.find("label");
-                    if (target) {
-                        target.children(":first-child").html(v);
-                    }
-                }
-            }
-        });
-
     Object.defineProperty(this, "value", {
         get: function value() {
             return _value;
@@ -31,22 +15,18 @@ var CheckBoxGroup = function (_props, overrided = false) {
             _value = v;
             this.list.set(v);
             this.trigger('change');
-            return _value;
         }
     });
 
     this.beforeAttach = function () {
         this.checkedField = "checked_" + this.id;
-        _states = [
+        this.states = [
             {dataProviderField: _classField, states: {on: _selectedClass, off: _defaultClass}},
-            {dataProviderField: _checkedField, states: {on: true, off: false}}
+            {dataProviderField: this.checkedField, states: {on: true, off: false}}
         ];
         this.direction = this.direction == undefined || this.direction == null ? 'vertical' : this.direction;
-
-        this.$container = this.$el.filter('#' + this.domID + '-list');
-
         this.multiselect = (this.multiselect != undefined && this.multiselect != null ? this.multiselect : true);
-
+        this.$container = this.$el.filter('#' + this.domID + '-list');
         this.list = new List({
             id: 'list',
             colspan: '6',
@@ -56,7 +36,7 @@ var CheckBoxGroup = function (_props, overrided = false) {
             blockProcessAttr: this.blockProcessAttr,
             required: this.required,
             direction: this.direction,
-            multiselect: this.multiselect,
+            multiselect: _multiselect,
             dataProvider: _dataProvider,
             valueField: _valueField,
             labelField: _labelField,
@@ -72,10 +52,9 @@ var CheckBoxGroup = function (_props, overrided = false) {
                         id: 'checkBox',
                         label: "{" + _labelField + "}",
                         value: "{" + _valueField + "}",
-                        checked: "{" + _checkedField + "}",
+                        checked: _checkedField,
                         class: "{" + _classField + "}",
                         enabled: "{" + _enabledField + "}",
-                        embedded: true
                     }
                 }
             ],
@@ -89,7 +68,6 @@ var CheckBoxGroup = function (_props, overrided = false) {
 
     this.template = function () {
         return "<div id='" + this.domID + "-list' class='card' role='group' style='padding:10px'>" +
-            "<label><b>" + _label + "</b> </label>" +
             "</div>";
     };
 
@@ -98,27 +76,18 @@ var CheckBoxGroup = function (_props, overrided = false) {
         colspan: '6',
         label: 'Ministrite',
         fieldName: 'checkBoxGroupInputR',
-        checkedField: true,
+        checkedField: false,
         blockProcessAttr: false,
         required: true,
-        dataProvider: [
-            {
-                "id": "1",
-                "text": "Ministria e Puneve te Jashtme 1",
-                "buttonClass": 'btn btn-xs btn-default',
-                "enabled": true
-            },
-            // { "id": "2", "text": "Ministria e Drejtesise 1", "buttonClass": 'btn btn-xs btn-default', "enabled":true},
-            // { "id": "3", "text": "Ministria e Brendshme 1", "buttonClass": 'btn btn-xs btn-success', "enabled":true},
-            // { "id": "4", "text": "Ministria e Mbrojtjes 1", "buttonClass": 'btn btn-xs btn-default', "enabled":true}
-        ],
+        multiselect: true,
+        dataProvider: [],
         valueField: "id",
         labelField: "text",
         classField: "buttonClass",
         defaultClass: 'btn btn-xs btn-default',
         selectedClass: 'btn btn-xs btn-success',
         enabledField: "enabled",
-        value: [{"id": "3", "text": "Ministria e Brendshme", "buttonClass": 'btn btn-xs btn-success', "enabled": true}],
+        value: [],
         function(e) {
             console.log("From CheckBoxGroup ClickAction");
             //e.preventDefault();
@@ -128,10 +97,10 @@ var CheckBoxGroup = function (_props, overrided = false) {
     _props = extend(false, false, _defaultParams, _props);
 
     var _valueField = _props.valueField;
-    var _label = _props.label;
     var _value = _props.value;
     var _dataProvider = _props.dataProvider;
     var _labelField = _props.labelField;
+    var _multiselect = _props.multiselect;
     var _classField = _props.classField;
     var _enabledField = _props.enabledField;
     var _checkedField = _props.checkedField;
@@ -141,11 +110,20 @@ var CheckBoxGroup = function (_props, overrided = false) {
 
     Component.call(this, _props);
 
+    this.afterAttach = function (e) {
+        _value.forEach(function (element) {
+            for (var i = 0; i < _dataProvider.length; i++) {
+                if (element.id == _dataProvider[i].id) {
+                    _self.list.repeater.checkBox[i].checked = true;
+                }
+            }
+        })
+    };
+
     this.render = function () {
         this.$container.append(this.list.render());
         return this.$el;
     };
-
 
     if (overrided) {
         this.keepBase();
