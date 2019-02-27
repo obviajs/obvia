@@ -6,6 +6,7 @@
 
 //component definition
 var RadioButton = function (_props, overrided = false) {
+
     Object.defineProperty(this, "label",
         {
             get: function label() {
@@ -14,8 +15,8 @@ var RadioButton = function (_props, overrided = false) {
             set: function label(v) {
                 if (_label != v) {
                     _label = v;
-                    if (this.$input)
-                        this.$input[0].nextSibling.textContent = v;
+                    if (this.$el)
+                        this.$el.find("span").html(v);
                 }
             }
         });
@@ -49,33 +50,36 @@ var RadioButton = function (_props, overrided = false) {
             }
         });
 
+    Object.defineProperty(this, "name", {
+        set: function name(v) {
+            this.$input.attr("name", v)
+        }
+    });
+
     this.beforeAttach = function () {
-        this.$input = this.$el.find("#" + this.domID);
-        _enabled = (_enabled != undefined && _enabled != null ? _enabled : true);
+        this.$input = this.$el.find("#" + this.domID + "-radio");
     };
 
     this.template = function () {
-        return "<label>" +
-            "<input data-triggers='click' id='" + this.domID + "' name='" + this.domID + "' type='radio' class='" + this.cssClass + "' value='" + _value + "' + rv-enabled='enabled' " + (_checked ? "checked='checked'" : '') + ">" + _label +
+        return "<label id='" + this.domID + "'>" +
+            "<input data-triggers='click' id='" + this.domID + "-radio' name='" + _name + "-radio' type='radio' class='" + this.cssClass + "' value='" + _value + "' " + (!_enabled ? "disabled" : "") + (_checked ? "checked='checked'" : '') + ">" +
+            "<span>" + _label + "</span>" +
             "</label>";
     };
 
-
     var _defaultParams = {
         label: "",
-        enabled: "",
         value: "",
-        blockProcessAttr: false,
-        checked: false
+        checked: false,
+        enabled: true,
     };
     _props = extend(false, false, _defaultParams, _props);
 
     var _label = _props.label;
-    var _enabled = _props.enabled;
+    var _name = _props.name;
     var _value = _props.value;
-    var _blockProcessAttr = _props.required ? false : _props.blockProcessAttr;
     var _checked = _props.checked;
-
+    var _enabled = _props.enabled;
     Component.call(this, _props);
 
     if (overrided) {

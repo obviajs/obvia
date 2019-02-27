@@ -1,156 +1,103 @@
 /**
  * This is a Hierarchical Tree  Element
- * 
- * Kreatx 2018
+ *
+ * Kreatx 2019
  */
 
 //component definition
-var HierarchicalTree = KxGenerator.createComponent({
-    //inner component data
-    initModel: function () {
-        return {
-            enabled: true
-        }
-    },
-    
-    beforeAttach: function () {
-        this.$tree = this.$el.find("#tree-"+this.domID);
+var HierarchicalTree = function (_props, overrided = false) {
+//inner component data
+
+    this.beforeAttach = function () {
         this.treeInstance = null;
-    },
+    };
 
-    registerEvents: function () {
-        return [
-            {
-                registerTo: this.$el, events: { 
-                    'afterAttach': this.afterAttach.bind(this)
-                },
-                
-            }        
-        ]
-    },
-
-    afterAttach: function (e) {
-        var _self = this;
-        var cmp = this;
+    this.afterAttach = function (e) {
         var config = {};
-        var currentNode = {
-            id_node: 0
+        var parentNodes = {
+            id_node: "0"
         };
-       
-        if(this.lazy){
+
+        if (_lazy) {
             config = {
-                extensions: this.extensions || [],
-                source: {
-                    url: this.dataProvider,
-                    dataType: "json",
+                expandIcon: _expandIcon,
+                collapseIcon: _collapseIcon,
+                levels: 1,
+
+                dataUrl: {
+                    url: _dataProvider,
                     method: "POST",
-                    data: currentNode
+                    data: parentNodes
                 },
-                init: function (event, data, flag) {
-
-                },
-                renderNode: function (event, data) {
-                    if (typeof this.renderNode == "function") {
-                        this.renderNode(event, data);
-                    }
-                }.bind(this),
-                lazyLoad: function (event, data) {
-                    data.result = {
-                        url: this.dataProvider,
+                lazyLoad: function (node, display) {
+                    $.ajax({
+                        url: _dataProvider,
+                        cache: false,
+                        dataType: "json",
                         method: "POST",
-                        data: currentNode,
-                    };
-                }.bind(this),
-                click: function (event, data) {
-                    currentNode = {
-                        id_node: data.node.key,
-                    }
-                    if (typeof _self.onclick == "function") {
-                        _self.onclick(event, data);
-                    }
+                        data: {
+                            id_node: node.nodeId
+                        },
+                        success: function (data) {
+                            display(data);
+                        },
+                        error: function (xhr, status, error) {
+                            console.log("Error fetching tree nodes:");
+                            console.log("Xhr: " + xhr + " Status: " + status + " Error: " + error)
+                        }
+                    });
                 },
-                renderColumns: function (event, data) {
-                    if (typeof _self.renderColumns == "function")
-                        _self.renderColumns(event, data);
-                }
             }
-        }else{
-            config = {
-                source: this.dataProvider
-            }
-        }
-        this.treeInstance = this.$tree.fancytree(config);
-
-        this.trigger('creationComplete');
-    },
- 
-    enable: function () {
-        var model = this.getModel();
-        model.enabled = true;
-        this.enabled = true;
-        return this;
-    },
-
-    disable: function () {
-        var model = this.getModel();
-        model.enabled = false;
-        this.enabled = false;
-        return this;
-    },
-
-    getSelectedNode: function () {
-        var node = this.$tree.fancytree("getActiveNode");
-        return (node != null) ? node.key : 0;
-    },
-
-    getNodeByKey: function (key) {
-        return this.$tree.fancytree("getTree").getNodeByKey(key);
-    },
-
-    expandNode: function (node) {
-        this.getNodeByKey(node.key).setExpanded();
-    },
-
-    doubleClickHandler: function () {
-        if (typeof this.ondblclick == 'function')
-            this.ondblclick.apply(this, arguments);
-    },
-
-    template: function () {   
-        if (this.extensions != undefined && this.extensions.indexOf("table") != "-1") {
-             return  "<div id='" + this.domID + "-wrapper' class='col-sm-12 p-0'>" +
-                            '<table id="tree-' +this.domID + '" class="table table-hover">' +
-                                '<thead>' +
-                                    '<tr>' +
-                                        '<th> DataView  </th>' +
-                                        '<th style="width:25%"> Actions </th>' +
-                                    '</tr>' +
-                                '</thead>' +
-                                '<tbody>' +
-                                    '<tr>' +
-                                        '<td> </td>' +
-                                        '<td> </td>' +
-                                    '</tr>' +
-                                '</tbody>' +
-                            '</table>' +
-                    "</div>";   
         } else {
-            return  "<div id='" + this.domID + "-wrapper'>" +
-                        "<div id='tree-"+this.domID + "'>" +
-                            "</div>" +
-                        "</div>";   
+            config = {
+                data: _dataProvider,
+                expandIcon: _expandIcon,
+                collapseIcon: _collapseIcon
+            }
         }
-        
-    },
-    
-    render: function () {
-        return this.$el;
+
+        this.treeInstance = this.$el.treeview(config);
+    };
+
+    this.getSelectedNode = function (idOnly = true) {
+        var node = this.$el.treeview("getSelected");
+        return (node.length != 0) ? (idOnly ? node[0].nodeId : node[0]) : 0;
+    };
+
+    this.getNodeByKey = function (key) {
+        return this.$el.treeview("findNodes", [key, "nodeId"]);
+    };
+
+    this.expandNode = function (node) {
+        this.$el.treeview('expandNode', [node]);
+    };
+
+    this.template = function () {
+        return "<div data-triggers='click' id='" + this.domID + "'>" + "</div>";
+    };
+
+    var _defaultParams = {
+        lazy: false,
+        dataProvider: null,
+        afterAttach: this.afterAttach,
+        expandIcon: 'fas fa-chevron-circle-right',
+        collapseIcon: 'fas fa-chevron-circle-down',
+        loadingIcon: 'fas fa-spinner'
+    };
+    _props = extend(false, false, _defaultParams, _props);
+
+    var _lazy = _props.lazy;
+    var _dataProvider = _props.dataProvider;
+    var _expandIcon = _props.expandIcon;
+    var _collapseIcon = _props.collapseIcon;
+
+    Component.call(this, _props);
+
+    if (overrided) {
+        this.keepBase();
     }
-    
-});
+
+};
 
 //component prototype
 HierarchicalTree.type = 'hierarchical_tree';
-
-//register dom element for this component
-KxGenerator.registerDOMElement(HierarchicalTree, 'kx-hierarchicaltree');

@@ -42,9 +42,8 @@ var CheckBox = function (_props, overrided = false) {
         set: function checked(v) {
             if (_checked != v) {
                 _checked = !!v;
-                if (this.$input !== undefined) {
-                    this.$input.prop('checked', v);
-                }
+                if (this.$input)
+                    this.$input.prop('checked', v)
             }
         }
     });
@@ -56,7 +55,7 @@ var CheckBox = function (_props, overrided = false) {
  
     this.template = function () {
         return "<label  id='" + this.domID + "'>" +
-            "<input data-triggers='click'  id='" + this.domID + "-checkbox' name='" + this.domID + "'  value='" + _value + "' " +
+            "<input data-triggers='click' " + (this.checked ? "checked='checked'" : '') + " id='" + this.domID + "-checkbox' name='" + this.domID + "'  value='" + _value + "' " +
             " type='checkbox'/>" + _label + "</label>";
     };
  
@@ -72,12 +71,9 @@ var CheckBox = function (_props, overrided = false) {
     _props = extend(false, false, _defaultParams, _props);
  
     var _label = _props.label;
-    var _blockProcessAttr = _props.required ? false : _props.blockProcessAttr;
     var _value = _props.value;
     var _enabled = _props.enabled;
     var _checked = _props.checked;
-    var _embedded = _props.embedded;
- 
     Component.call(this, _props);
  
     if (overrided) {

@@ -47,7 +47,6 @@ var TextInput = function (_props, overrided = false) {
         _value = this.$el.val();
         this.validate();
     };
- 
     this.validate = function () {
         if (_props.required) {
             if (this.value == "" || this.value == undefined) {
@@ -55,7 +54,6 @@ var TextInput = function (_props, overrided = false) {
                     KxGenerator.getErrorList().call(this)['empty']
                 ];
                 this.$el.addClass('invalid');
- 
                 return false;
             } else {
                 this.errorList = [];

@@ -1,163 +1,121 @@
 /**
  * This is a TrippleSwitch component
- * 
- * Kreatx 2018
+ *
+ * Kreatx 2019
  */
 
-//component definition
-var TrippleSwitch = KxGenerator.createComponent({
-    //component data
-    initModel: function () {
-        var mappings = {
-            'btnLeft': 'btn btn-success',
-            'btnMiddle': 'btn btn-warning',
-            'btnRight': 'btn btn-danger',
-            'default': 'btn btn-default'
+var TrippleSwitch = function (_props, overrided = false) {
+    var _self = this;
+
+    Object.defineProperty(this, "value", {
+        get: function value() {
+            return _value;
+        },
+        set: function value(v) {
+            _value = v;
+
+            if (_value == "1") {
+                _btnLeft = _mappings.btnLeft;
+                _btnRight = _mappings.default;
+                _btnMiddle = _mappings.default;
+            } else if (_value == "0") {
+                _btnRight = _mappings.btnRight;
+                _btnLeft = _mappings.default;
+                _btnMiddle = _mappings.default;
+            } else {
+                _btnLeft = _mappings.default;
+                _btnRight = _mappings.default;
+                _btnMiddle = _mappings.btnMiddle;
+            }
+            this.trigger('change');
         }
+    });
 
-        return {
-            blockProcessAttr: this.required ? false : this.blockProcessAttr,
-            mappings: {
-                'btnLeft': 'btn btn-success',
-                'btnMiddle': 'btn btn-warning',
-                'btnRight': 'btn btn-danger',
-                'default': 'btn btn-default'
-            },
-            btnLeft: (this.value == "1") ? mappings['btnLeft'] : mappings['default'],
-            btnMiddle: (this.value == "-1" || this.value == "" || this.value == undefined) ? mappings['btnMiddle'] : mappings['default'],
-            btnRight: (this.value == "0") ? mappings['btnRight'] : mappings['default'],
-
-            enabled: true
-        }
-    },
-
-    beforeAttach: function () {
+    this.beforeAttach = function () {
         this.$btnLeft = this.$el.find("#btnLeft-" + this.domID);
         this.$btnMiddle = this.$el.find("#btnMiddle-" + this.domID);
         this.$btnRight = this.$el.find("#btnRight-" + this.domID);
-    },
+    };
 
-    registerEvents: function(){
-        return [
-            {
-                registerTo: this.$el, events: { 'afterAttach': this.afterAttach.bind(this) }
-            },
-            {
-                registerTo: this.$btnLeft, events: { 
-                    'click': function() { 
-                        var args = [];
-                        for (var i = 0; i < arguments.length; i++) {
-                            args.push(arguments[i]);
-                        }
-                        args.splice(1, 0, 'btnLeft');
-                        this.handleClick.apply(this, args);
-                    }  
-                }
-            },
-            {
-                registerTo: this.$btnMiddle, events: { 
-                    'click': function() { 
-                        var args = [];
-                        for (var i = 0; i < arguments.length; i++) {
-                            args.push(arguments[i]);
-                        }
-                        args.splice(1, 0, 'btnMiddle');
-                        this.handleClick.apply(this, args);
-                    }
-                }    
-            },
-            {
-                registerTo: this.$btnRight, events: { 
-                    'click': function() { 
-                        var args = [];
-                        for (var i = 0; i < arguments.length; i++) {
-                            args.push(arguments[i]);
-                        }
-                        args.splice(1, 0, 'btnRight');
-                        this.handleClick.apply(this, args);
-                    }
-                }    
-            }
-        ]
-    },
-
-    afterAttach: function(e) {
+    this.afterAttach = function (e) {
         this.trigger('creationComplete');
-    },
+    };
 
-    enable: function () {
-        var model = this.getModel();
-        model.enabled = true;
-        this.enabled = true;
-
-        return this;
-    },
-
-    disable: function () {
-        var model = this.getModel();
-        model.enabled = false;
-        this.enabled = false;
-
-        return this;
-    },
-
-    setValue: function (value) {
-        var model = this.getModel();
-        this.value = value;
-
-        if (this.value == "1") {
-            model.btnLeft = model.mappings.btnLeft;
-            model.btnRight = model.mappings.default;
-            model.btnMiddle = model.mappings.default;
-        } else if (this.value == "0") {
-            model.btnRight = model.mappings.btnRight;
-            model.btnLeft = model.mappings.default;
-            model.btnMiddle = model.mappings.default;
-        } else {
-            model.btnLeft = model.mappings.default;
-            model.btnRight = model.mappings.default;
-            model.btnMiddle = model.mappings.btnMiddle;
-        }   
-        
-        this.trigger('change');
-        
-        return this;    
-    },
-
-    handleClick: function (e, btn) {
-        var model = this.getModel();
-    
-        //check clicked, uncheck others
-        model.btnLeft = (btn == 'btnLeft') ? model.mappings[btn] : model.mappings['default'];
-        model.btnMiddle = (btn == 'btnMiddle') ? model.mappings[btn] : model.mappings['default'];
-        model.btnRight = (btn == 'btnRight') ? model.mappings[btn] : model.mappings['default'];
-
+    this.handleClick = function (e, btn) {
         this.value = (btn == 'btnLeft') ? "1" :
-            (btn == 'btnRight') ? "0" : "-1"; 
-        
+            (btn == 'btnRight') ? "0" : "-1";
+
         this.trigger('change');
-    },
+    };
 
-    template: function () {
-        return "<div id='" + this.domID + "-wrapper' class='col-sm-" + this.colspan + "'>" +
-                    "<label rv-style='versionStyle' rv-for='fieldName'><b>{label}</b> <span rv-if='required'>*</span></label>" +
-                    "<span rv-if='blockProcessAttr' class='block-process'> * </span>" +
-                    "<br>" +
-                    "<div class='btn btn-group' role='group' style='padding:0'>" +
-                        "<button type='button' rv-enabled='model.enabled' id='btnLeft-" + this.domID + "' rv-class='model.btnLeft'>{left}</button> " +
-                        "<button type='button' rv-enabled='model.enabled' id='btnMiddle-" + this.domID + "' rv-class='model.btnMiddle'>{middle}</button>" +
-                        "<button type='button' rv-enabled='model.enabled' id='btnRight-" + this.domID + "' rv-class='model.btnRight'>{right}</button>" +
-                    "</div>" +
-                "</div>";
-    },
+    this.template = function () {
+        return "<div id='" + this.domID + "' class='btn btn-group' role='group' style='padding:0'>" +
+            "<button class='btn btn-success' type='button'  id='btnLeft-" + this.domID + "'>left</button> " +
+            "<button class='btn btn-default' type='button'  id='btnMiddle-" + this.domID + "'>mid</button>" +
+            "<button class='btn btn-default' type='button' id='btnRight-" + this.domID + "'>right</button>" +
+            "</div>";
+    };
 
-    render: function () {
-        return this.$el;
+    var _defaultParams = {
+        id: 'trippleswitch',
+        colspan: '3',
+        label: '',
+        versionStyle: "",
+        blockProcessAttr: false,
+        required: false,
+        dataProvider: {},
+        value: "1" //1,-1,0
+    };
+
+    _props = extend(false, false, _defaultParams, _props);
+
+    var _mappings = {
+        'btnLeft': 'btn btn-success',
+        'btnMiddle': 'btn btn-warning',
+        'btnRight': 'btn btn-danger',
+        'default': 'btn btn-default'
+    };
+
+    var _value = _props.value;
+    var _click = _props.click;
+
+    _props.click = function () {
+        if (typeof _click == 'function')
+            _click.apply(this, arguments);
+
+        var e = arguments[0];
+        if (!e.isDefaultPrevented()) {
+            var args = [];
+            for (var i = 0; i < arguments.length; i++) {
+                args.push(arguments[i]);
+            }
+            if (arguments[0].target.id == myTrippleswitch.$btnLeft.attr('id')) {
+                myTrippleswitch.$btnLeft.attr('class', _mappings['btnLeft']);
+                myTrippleswitch.$btnMiddle.attr('class', _mappings['default']);
+                myTrippleswitch.$btnRight.attr('class', _mappings['default']);
+                args.splice(1, 0, 'btnLeft');
+                _self.handleClick.apply(this, args);
+            } else if (arguments[0].target.id == myTrippleswitch.$btnMiddle.attr('id')) {
+                myTrippleswitch.$btnLeft.attr('class', _mappings['default']);
+                myTrippleswitch.$btnMiddle.attr('class', _mappings['btnMiddle']);
+                myTrippleswitch.$btnRight.attr('class', _mappings['default']);
+                args.splice(1, 0, 'btnMiddle');
+                _self.handleClick.apply(this, args);
+            } else {
+                myTrippleswitch.$btnLeft.attr('class', _mappings['default']);
+                myTrippleswitch.$btnMiddle.attr('class', _mappings['default']);
+                myTrippleswitch.$btnRight.attr('class', _mappings['btnRight']);
+                args.splice(1, 0, 'btnRight');
+                _self.handleClick.apply(this, args);
+            }
+        }
+    };
+
+    Component.call(this, _props);
+
+    if (overrided) {
+        this.keepBase();
     }
-});
+};
 
-//component prototype
 TrippleSwitch.type = 'trippleswitch';
-
-//register dom element for this component
-KxGenerator.registerDOMElement(TrippleSwitch, 'kx-trippleswitch');

@@ -1,122 +1,102 @@
 /**
- * This is a TextArea element
- * 
- * Kreatx 2018
+ * This is a Text Input Element
+ *
+ * Kreatx 2019
  */
 
 //component definition
-var TextArea = KxGenerator.createComponent({
-    //component data
-    initModel: function () {
-        return {
-            blockProcessAttr: this.required ? false : this.blockProcessAttr,
-            enabled: true
-        }
-    },
+var TextArea = function (_props, overrided = false) {
+    var _self = this;
 
-    beforeAttach: function () {
-        this.$input = this.$el.find("#" + this.domID);
-        this.$spellCheckBtn = null;
-
-        if (this.spellCheck != false) 
-            this.$spellCheckBtn = this.$el.find('#' + this.domID + '-spellCheck');
-    },
-
-    registerEvents: function () {
-        var events = [
-            {
-                registerTo: this.$el, events: {
-                    'afterAttach': this.afterAttach.bind(this),
-                }
+    Object.defineProperty(this, "value",
+        {
+            get: function value() {
+                return _value;
             },
-
-            {
-                registerTo: this.$input, events: {
-                    'change': this.changeHandler.bind(this),
+            set: function value(v) {
+                if (_value != v) {
+                    _value = v;
+                    if (this.$input) {
+                        this.$input.val(_value);
+                        this.trigger('change');
+                    }
                 }
             }
-        ];
+        });
 
-        if (this.hasOwnProperty('spellCheck')) {
-            if (this.spellCheck != false) {
-                events.push({
-                    registerTo: this.$spellCheckBtn, events: {
-                        'click': this.spellCHeckClickHandler.bind(this)
-                    }
-                })
-            }
-        }
 
-        return events;
-    },
+    this.beforeAttach = function () {
+        this.$input = this.$el.filter('#' + this.domID);
+    };
 
-    changeHandler: function (e) {
+    this.changeHandler = function (e) {
         this.validate();
-    },
+    };
 
-    spellCHeckClickHandler: function (e) {
-        this.$input.spellCheckInDialog({ defaultDictionary: this.spellCheck.defaultDictionary });
-    },
-
-    afterAttach: function (e) {
-        this.trigger('creationComplete');
-    },
-
-    enable: function () {
-        var model = this.getModel();
-        model.enabled = true;
-        this.enabled = true;
-
-        return this;
-    },
-
-    disable: function () {
-        var model = this.getModel();
-        model.enabled = false;
-        this.enabled = false;
-
-        return this;
-    },
-
-    validate: function () {
-        if (this.required) {
+    this.validate = function () {
+        if (_props.required) {
             if (this.value == "" || this.value == undefined) {
                 this.errorList = [
                     KxGenerator.getErrorList().call(this)['empty']
                 ];
-
-                this.$input.addClass('invalid');
+                this.$el.addClass('invalid');
 
                 return false;
             } else {
                 this.errorList = [];
-                this.$input.removeClass('invalid');
-                return true;
+                this.$el.removeClass('invalid');
             }
-        } else
-            return true;
-    },
+        }
+        return true;
+    };
 
-    template: function () {
-        return "<div id='" + this.domID + "-wrapper' class='form-group col-sm-" + this.colspan + " rowspan" + this.rowspan + " resizable '>" +
-                "<div id='" + this.domID + "-block'> " +
-                    "<label rv-style='versionStyle' rv-for='domID'><b>{label}</b> <span rv-if='required'>*</span></label>" +
-                        "<span rv-if='model.blockProcessAttr' class='block-process'> * </span>" +
-                            "<textarea rv-type='type' rv-value='value' " +
-                            "name='" + this.domID + "' id='" + this.domID + "' class='form-control rowspan"+ this.rowspan +
-                            "' rv-placeholder='label' rv-enabled='model.enabled' autofocus></textarea>" +
-            "<button type='button' rv-if='spellCheck' id='" + this.domID + "-spellCheck' class='btn btn-sm btn-primary float-right'  rv-enabled='model.enabled'><i class='fas fa-book'></i> Spell Check</button>" +
-                "</div>" +
-            "</div>";
-    },
+    this.spellCHeckClickHandler = function (e) {
+        this.$input.spellCheckInDialog({defaultDictionary: _spellCheck.defaultDictionary});
+    };
 
-    render: function () {
-        return this.$el;
+    this.template = function () {
+        return "<textarea data-triggers='change' id='" + this.domID + "' " + (!this.enabled ? "disabled" : "") + " class='" + this.cssClass + "'>" + this.value + "</textarea>" +
+            (_spellCheck ? "<button data-triggers='click' type='button' id='" + this.domID + "-spellCheck' class='btn btn-sm btn-primary float-right'><i class='fas fa-book'></i> Spell Check </button>" : "");
+    };
+
+    var _defaultParams = {
+        value: "",
+        spellCheck: null,
+        class: "form-control"
+    };
+    _props = extend(false, false, _defaultParams, _props);
+
+    var _spellCheck = _props.spellCheck;
+    var _value = _props.value;
+    var _change = _props.change;
+    var _click = _props.click;
+
+    _props.change = function () {
+        if (typeof _change == 'function')
+            _change.apply(this, arguments);
+
+        var e = arguments[0];
+        if (!e.isDefaultPrevented()) {
+            _self.changeHandler();
+        }
+    };
+
+    _props.click = function () {
+        if (typeof  _click == 'function')
+            _click.apply(this, arguments);
+
+        var e = arguments[0];
+        if(!e.isDefaultPrevented()) {
+            _self.spellCHeckClickHandler();
+        }
+    };
+
+    Component.call(this, _props);
+
+    if (overrided) {
+        this.keepBase();
     }
-});
+};
 
 //component prototype
 TextArea.type = 'textarea';
-
-//register dom element for this component
-KxGenerator.registerDOMElement(TextArea, 'kx-textarea');

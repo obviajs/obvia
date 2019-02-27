@@ -5,68 +5,44 @@
  */
 
 //component definition
-var Select = function (_props, overrided=false) {
-    Object.defineProperty(this, "label",
-        {
-            get: function label() {
-                return _label;
-            },
-            set: function label(v) {
-                if (_label != v && _label !== undefined) {
-                    _label = v;
-                    if (this.$label)
-                        this.$label.html(v);
-                }
-            }
-        });
+var Select = function (_props, overrided = false) {
+    var _self = this;
 
     Object.defineProperty(this, "value",
         {
+            get: function value() {
+                return _value;
+            },
             set: function value(v) {
                 if (_value != v) {
                     _value = v;
-                    this.$select.val(v);
-                    this.trigger('change');
+                    if (this.$el) {
+                        this.$el.val(v);
+                        this.trigger('change');
+                    }
                 }
             }
         });
 
-    this.beforeAttach = function () {
-        if (_embedded)
-            this.$select = this.$el;
-        else {
-            this.$select = this.$el.find("#" + this.domID);
-            this.$label = this.$el.find("label");
-        }
-
-    };
-
     this.afterAttach = function (e) {
-        this.$select.html(this.renderOptions());
+        this.$el.html(this.renderOptions());
     };
 
-    this.handleChange = function (e) {
-        _value = this.$select.val();
+    this.changeHandler = function (e) {
+        _value = this.$el.val();
     };
 
     this.template = function () {
-        return (!_embedded ? ("<div id='" + this.domID + "-wrapper' class='" + (this.colspan ? "col-sm-" + this.colspan : "") + " form-group rowspan" + this.rowspan + " resizable '>") : "") +
-            (!_embedded ? ("<label rv-if='label'><b>"+_label+"</b></label>") : "") +
-            "<select data-triggers='change' rv-enabled='"+_enabled+"' rv-class='"+this.cssClass+"' id='" + this.domID + "'>" +
-            "</select>" +
-            (!_embedded ? ("</div>") : "");
+        return "<select data-triggers='change' " + (!this.enabled ? "disabled" : "") + " class='" + this.cssClass + "' id='" + this.domID + "'>" + "</select>";
     };
 
     this.selectByText = function (text) {
-        var _self = this;
-
-        this.$select.find('option').each(function () {
+        this.$el.find('option').each(function () {
             if ($(this).html() == text) {
-                _self.setValue($(this).attr('value'));
+                this.value = $(this).attr('value');
             }
         });
 
-        return this;
     };
 
     this.renderOptions = function () {
@@ -84,32 +60,34 @@ var Select = function (_props, overrided=false) {
     };
 
     var _defaultParams = {
-        label: "",
         dataProvider: null,
         textField: "",
         valueField: "",
         value: "",
         class: "form-control",
-        enabled: true,
-        embedded: false,
-        afterAttach: this.afterAttach,
-        change: this.handleChange.bind(this)
+        afterAttach: this.afterAttach
     };
-
     _props = extend(false, false, _defaultParams, _props);
 
-    var _embedded = _props.embedded;
-    var _label = !_embedded ? _props.label : undefined;
     var _dataProvider = _props.dataProvider;
     var _textField = _props.textField;
     var _valueField = _props.valueField;
     var _value = _props.value;
-    var _enabled = _props.enabled;
+    var _change = _props.change;
+
+    _props.change = function () {
+        if (typeof _change == 'function')
+            _change.apply(this, arguments);
+
+        var e = arguments[0];
+        if (!e.isDefaultPrevented()) {
+            _self.changeHandler();
+        }
+    };
 
     Component.call(this, _props);
 
-    if(overrided)
-    {
+    if (overrided) {
         this.keepBase();
     }
 };

@@ -1,138 +1,148 @@
-////
 /**
  * This is a RadioGroup component
- * 
- * Kreatx 2018
+ *
+ * Kreatx 2019
  */
 
-//component definition
-var RadioGroup = KxGenerator.createComponent({
-    //model binds to the template
-    //if you want variables to bind, you must declare them in the model object
-    initModel: function () {
-        return {
-            blockProcessAttr: this.required ? false : this.blockProcessAttr,
-        }
-    },
+var RadioGroup = function (_props, overrided = false) {
 
-    beforeAttach: function () {
-        this.checkedField = "checked_"+this.id;
-        this.states = [
-            {dataProviderField:this.classField, states:{on:this.selectedClass, off:this.defaultClass}},
-            {dataProviderField:this.checkedField, states:{on:true, off:false}}
+    Object.defineProperty(this, "label",
+        {
+            get: function label() {
+                return _label;
+            },
+            set: function label(v) {
+                if (_label != v) {
+                    _label = v;
+                    var target = this.$el.find("label");
+                    if (target) {
+                        target.children(":first-child").html(v);
+                    }
+                }
+            }
+        });
+
+    Object.defineProperty(this, "value", {
+        get: function value() {
+            return _value;
+        },
+        set: function value(v) {
+            _value = v;
+            this.list.value = v;
+            this.trigger('change');
+        }
+    });
+
+    this.beforeAttach = function () {
+        this.checkedField = "checked_" + this.id;
+        _states = [
+            {dataProviderField: _classField, states: {on: _selectedClass, off: _defaultClass}},
+            {dataProviderField: _checkedField, states: {on: true, off: false}}
         ];
-        this.direction = this.direction==undefined||this.direction==null?'vertical':this.direction;
-        this.$container = this.$el.find('#' + this.domID + '-container');
+        this.direction = this.direction == undefined || this.direction == null ? 'vertical' : this.direction;
+        this.$container = this.$el.filter('#' + this.domID + '-radiogroup');
         this.list = new List({
             id: 'list',
             colspan: '6',
             label: 'Ministrite',
             fieldName: 'list',
-            states: this.states,
+            states: _states,
             blockProcessAttr: this.blockProcessAttr,
             required: this.required,
             direction: this.direction,
             multiselect: false,
-            dataProvider: this.dataProvider,
-            valueField: this.valueField,
-            labelField: this.labelField,
-            classField: this.classField,
-            defaultClass: this.defaultClass,
-            selectedClass: this.selectedClass,  
-            value: this.value,
-            embedded: true,        
+            dataProvider: _dataProvider,
+            valueField: _valueField,
+            labelField: _labelField,
+            classField: _classField,
+            defaultClass: _defaultClass,
+            selectedClass: _selectedClass,
+            value: _value,
+            embedded: true,
             components: [
                 {
                     constructor: RadioButton,
                     props: {
                         id: 'radioButton',
-                        label: "{" + this.labelField + "}",
-                        value: "{" + this.valueField + "}",
-                        checked: "{" + this.checkedField + "}",
-                        class: "{" + this.classField + "}",
-                        onclick: this.clickHandler.bind(this),
-                        enabled: "{" + this.enabledField + "}",
+                        label: "{" + _labelField + "}",
+                        value: "{" + _valueField + "}",
+                        name: this.id,
+                        checked: "{" + _checkedField + "}",
+                        class: _classField,
+                        click: this.clickHandler.bind(this),
+                        enabled: "{" + _enabledField + "}",
                         embedded: true
                     }
                 }
             ],
-            onclick : this.onclick,
-            onchange : this.onchange
         }).on('creationComplete', function (e) {
             e.stopPropagation();
-            this.trigger('creationComplete');   
-        }.bind(this)).on('change', function(){
-            this.value = this.list.value;
+            this.trigger('creationComplete');
+        }.bind(this)).on('change', function () {
+            _value = this.list.value;
         }.bind(this));
-    },
+    };
 
-    registerEvents: function () {
-        return [
-            {
-                registerTo: this.$el, events: {
-                    'afterAttach': this.afterAttach.bind(this)
-                }
-            },
-			{
-                registerTo: this.list, events: {
-                    'change': this.changeHandler.bind(this)
-                }
-            },
-        ];
-    },
-
-    afterAttach: function (e) {
-
-    },
-
-    setValue: function (value) {
-        this.value = value;
-        this.list.setValue(value);        
-        this.trigger('change');
-        return this;
-    },
-    changeHandler : function(e){
-        if (typeof this.onchange == 'function')
-            this.onchange.apply(this, arguments);
-    },
-    clickHandler: function (e) {
+    this.clickHandler = function (e) {
         if (typeof this.onclick == 'function')
             this.onclick.apply(this, arguments);
-    },
+    };
 
-    enable: function () {         
-        this.list.enable();
-        this.enabled = true;
-        return this; 
-    },
+    this.template = function () {
+        return "<div id='" + this.domID + "-radiogroup' class='radiogroup card' style='padding:10px;'>" +
+            "<label><b>" + _label + "</b></label>" +
+            "</div>"
+    };
 
-    disable: function () {
-        this.list.disable();
-        this.enabled = false;
-        return this;  
-    },
+    var _defaultParams = {
+        id: 'radiogroup',
+        colspan: '6',
+        label: 'Radiogroup',
+        fieldName: 'radioInput',
+        blockProcessAttr: false,
+        required: false,
+        checkedField: true,
+        dataProvider: [],
+        valueField: 'id',
+        labelField: 'text',
+        classField: "buttonClass",
+        defaultClass: 'btn btn-xs btn-default',
+        selectedClass: 'btn btn-xs btn-success',
+        enabledField: "enabled",
+        value: [],
+        click: function (e) {
+            console.log("From RadioGroup ClickAction");
+        }
+    };
 
-    template: function () {
-        return "<div id='" + this.domID + "-wrapper' class='form-group col-sm-" + this.colspan + " rowspan" + this.rowspan + " resizable'>" +
-        (!this.embedded?("<div id='" + this.domID + "-block'>" +
-                    "<label rv-style='versionStyle' rv-for='domID'><b>{label}</b><span rv-if='required'>*</span></label>") : "") + 
-                    "<div id='" + this.domID + "-container' class='radiogroup card' style='padding:10px;'>" +
-            
-                    "</div>" +
-        (!this.embedded?"</div>":"") +
-                "</div>";         
-    },
+    _props = extend(false, false, _defaultParams, _props);
 
-    render: function () {
+    var _value = _props.value;
+    var _label = _props.label;
+    var _labelField = _props.labelField;
+    var _valueField = _props.valueField;
+    var _checkedField = _props.checkedField;
+    var _classField = _props.classField;
+    var _enabledField = _props.enabledField;
+    var _dataProvider = _props.dataProvider;
+    var _states = _props.states;
+    var _selectedClass = _props.selectedClass;
+    var _defaultClass = _props.defaultClass;
+
+    Component.call(this, _props);
+
+    this.afterAttach = function (e) {
+
+    };
+
+    this.render = function () {
         this.$container.append(this.list.render());
         return this.$el;
+    };
+
+    if (overrided) {
+        this.keepBase();
     }
-});
+};
 
-//component prototype
-RadioGroup.type = 'radiogroup';
-//register dom element for this component
-KxGenerator.registerDOMElement(RadioGroup, 'kx-radiogroup');
-
-
-
+RadioGroup.type = "radiogroup";
