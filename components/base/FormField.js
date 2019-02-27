@@ -10,14 +10,16 @@ var FormField = function(_props)
     var _defaultParams = {
         id: "Component_"+Component.instanceCnt,
         enabled: true,
+        required: false 
     };
    
    
     _props = extend(false, false, _defaultParams, _props);
     var _placeholder;
     var _name;
+    var _required;
     var _label = _props.label;
-   
+    
 
     var _cmp = Component.fromLiteral(_props.component);
     _cmp.$el.addClass("form-control");  
@@ -26,6 +28,7 @@ var FormField = function(_props)
         e.stopPropagation();
         _self.placeholder = _props.placeholder;
         _self.name = _props.name;
+        _self.required = _props.required;
     });
     
     Component.call(this, _props);
@@ -41,8 +44,15 @@ var FormField = function(_props)
             if(_placeholder != v)
             {  
                 _placeholder = v;
-                if(_cmp.$el)
-                    _cmp.$el.attr("placeholder", _placeholder);
+                if(_placeholder)
+                {
+                    if(_cmp.$el)
+                        _cmp.$el.attr("placeholder", _placeholder);
+                }else
+                {
+                    if(_cmp.$el)
+                        _cmp.$el.removeAttr('placeholder');
+                }
             }
         }
     });
@@ -58,8 +68,39 @@ var FormField = function(_props)
             if(_name != v)
             {  
                 _name = v;
-                if(_cmp.$el)
-                    _cmp.$el.attr("name", _name);
+                if(_name)
+                {
+                    if(_cmp.$el)
+                        _cmp.$el.attr("name", _name);
+                }else
+                {
+                    if(_cmp.$el)
+                        _cmp.$el.removeAttr('name');
+                }
+            }
+        }
+    });
+
+    Object.defineProperty(this, "required",
+    {
+        get: function required()
+        {
+            return _required;
+        },
+        set: function required(v)
+        {
+            if(_required != v)
+            {
+                _required = v;
+                if(_required)
+                {
+                    if(_cmp.$el)
+                        _cmp.$el.attr('required', _required);
+                }else
+                {
+                    if(_cmp.$el)
+                        _cmp.$el.removeAttr('required');
+                }
             }
         }
     });

@@ -472,8 +472,7 @@ var Repeater = function(_props)
 
     this.template = function () 
     {
-        return "<div id='" + this.domID + "' class='"+(this.colspan?"col-sm-" + this.colspan:"")+ " form-group resizable'>" +
-    (!_embedded?("<label id='" + this.domID + "_label'>"+_label+"</label>"):"") +    
+        return "<div id='" + this.domID + "' class='"+(this.colspan?"col-sm-" + this.colspan:"")+ "'>" +
                     "<div id='" + this.domID + "_container'></div>" +  
     (_rendering.actions?("<div id='actions_" + this.domID  + "' class='col-sm-offset-10 col-sm-2 px-0 float-right' style='overflow:hidden;'>" +
                         "<button id='" + this.domID  + "_btnAddRow' type='button' class='float-right btn btn-sm btn-secondary'>" +
@@ -482,8 +481,7 @@ var Repeater = function(_props)
                         "<button id='" + this.domID  + "_btnRemoveRow' type='button' class='mx-1 float-right btn btn-sm btn-danger'>" +
                             "<i class='fas fa-minus'></i> Remove" + 
                         "</button>" +
-                    "</div>"):"");
-                "</div>";
+                    "</div>"):"</div>");
     };
     this.userCanManageItems = true;
 

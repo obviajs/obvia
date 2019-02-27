@@ -11,7 +11,7 @@ var DataGridColumn = function(p)
             constructor: DataGridCellRenderer,
             props: {
                 id: 'cell_',
-                label: '',
+                label: '{'+p.dataField+'}',
                 hyperlink: false,
                 target:null
             }

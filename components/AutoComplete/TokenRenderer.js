@@ -51,7 +51,12 @@ var TokenRenderer = function(_props)
     afterAttach: function (e) {        
         this.trigger('creationComplete');
     }*/
-   
+    this.beforeAttach = function () 
+    {
+        this.$label = this.$el.find("#"+ this.domID + "_label");
+        this.$closeIcon = this.$el.find("#"+ this.domID + "_closeIcon");
+    };
+
     Object.defineProperty(this, "value", 
     {
         get: function value() 
@@ -64,7 +69,10 @@ var TokenRenderer = function(_props)
             {
                 _value = v;
                 if(this.$label)
-                    this.$label.data('value', v);
+                    if(v || v===false)
+                        this.$label.data('value', v);
+                    else
+                        this.$label.removeData('value');
             }
         }
     });
@@ -88,13 +96,14 @@ var TokenRenderer = function(_props)
 
     this.template = function () 
     {         
-        var html =  
-            '<div id="'+ this.domID + '">'+
-                '<span id="'+ this.domID + '_label" data-value="'+(_value!=null && _value!=undefined ? _value:'')+'" class="badge badge-info" style="font-size: 14px; margin:2px">'+
-                (this.closeIconSide=="left"?('<a class="badge badge-info" id="'+ this.domID + '_closeIcon"href="#" tabindex="-1">×</a>'):"")+          
-                (_label!=null && _label!=undefined ? _label:'')+
-                (this.closeIconSide=="right"?('<a class="badge badge-info" id="'+ this.domID + '_closeIcon"href="#" tabindex="-1">×</a>'):"")+            
+        var xHtml = '<a data-triggers="closeiconclick" class="badge badge-info" id="'+ this.domID + '_closeIcon" href="#" tabindex="-1">×</a>';
+        var html = 
+            '<div id="'+ this.domID + '" class="badge badge-info" style="font-size: 14px; margin:2px">'+
+                (_closeIconSide=="left"?xHtml:"")+    
+                '<span id="'+ this.domID + '_label" data-value="'+(_value!=null && _value!=undefined ? _value:'')+'">'+                      
+                (_label!=null ? _label:'')+
                 '</span>'+
+                (_closeIconSide=="right"?xHtml:"")+      
             '</div>';
         return html;
                             
@@ -105,9 +114,30 @@ var TokenRenderer = function(_props)
     _props = extend(false, false, _defaultParams, _props);
     var _value = _props.value;
     var _label = _props.label;
+    var _self = this;
     var _closeIconSide = _props.closeIconSide;
-    
+
+    var _closeiconclick = _props.closeiconclick;
+    _props.closeiconclick = function()
+    {
+        if (typeof _closeiconclick == 'function')
+            _closeiconclick.apply(_self, arguments);
+        var e = arguments[0];
+        if(!e.isDefaultPrevented()){
+        //
+        }
+    };
 
     Component.call(this, _props, true);
+    var base = this.base;
+    this.afterAttach = function()
+    {
+        this.$closeIcon.click(function(e)
+        {
+            e.stopImmediatePropagation();
+            $(this).trigger("closeiconclick");
+        });
+        base.afterAttach();
+    }
 };
 TokenRenderer.type = 'tokenrenderer';

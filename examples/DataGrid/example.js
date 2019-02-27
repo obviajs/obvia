@@ -1,3 +1,7 @@
+var loader = new Loader({ id: 'loader' });
+$('#root').append(loader.render());
+loader.show();
+
 var oncellstyling_ex = function(e, rowIndex, columnIndex, column, data)
 {
     return "css object";
@@ -9,7 +13,7 @@ var oncelleditfinished_ex = function(e, rowIndex, columnIndex, itemEditorInfo)
     console.log("oncelleditfinished_ex");
    // itemEditorInfo.itemEditor
     //itemEditorInfo.dataProviderValueField
-    var value = itemEditorInfo.itemEditor.getValue();
+    var value = itemEditorInfo.itemEditor.value;
     this.dataProvider[rowIndex][itemEditorInfo.dataProviderValueField] = value;
     //test flash element to get attention if value is not valid and then preventDefault behavior
     //itemEditorInfo.itemEditor.$el.delay(500).fadeTo(100, 0.3, function(){$(this).fadeTo(500,1)});
@@ -336,7 +340,6 @@ var myDataGrid = new DataGrid({
                 props: {
                     id: 'autocomplete',
                     embedded: true,
-                    label: '{autocompleteLabel}',
                     fieldName: 'autocomplete',
                     blockProcessAttr: false,
                     required: false,

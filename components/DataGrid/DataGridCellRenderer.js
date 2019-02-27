@@ -5,65 +5,10 @@
  */
 
 //component definition
-var DataGridCellRenderer = KxGenerator.createComponent({
+var DataGridCellRenderer = function(_props){
     //component data
-    initModel: function () {
-        return {
-            class: this.class,
-            style: this.style
-        }
-    },
-
-    beforeAttach: function () {
-    },
-
-    registerEvents: function () {
-        return [
-            {
-                registerTo: this.$el, events: {
-                    'afterAttach': this.afterAttach.bind(this),
-                    'click': this.clickHandler.bind(this),
-                    'dblclick': this.doubleClickHandler.bind(this)
-                }
-            }
-        ]
-    },
-    clickHandler: function () {
-        if (typeof this.onclick == 'function')
-            this.onclick.apply(this, arguments);
-    },
-    doubleClickHandler: function () {
-        if (typeof this.ondblclick == 'function')
-            this.ondblclick.apply(this, arguments);
-    },
-    afterAttach: function (e) {
-        if (this.hyperlink) {
-            var target = '';
-            if (this.hasOwnProperty('target'))
-                target = this.target;
-            
-            this.$el.html("<a href='" + this.hyperlink + "' target='" + target + "'>" + this.label + "</a>");
-        }
-        
-        this.trigger('creationComplete');
-    },
-
-    getValue: function () {
-        return this.$el.text();
-    },
-
-    setValue: function (value) {
-        this.$el.text(value);
-    },
-
-    template: function () {         
-        return  "<label id='" + this.domID + "-wrapper'>{label}</label>";
-    },
-
-    render: function () {
-        return this.$el;
-    }
-});
+    Label.call(this, _props);
+};
 
 //component prototype
 DataGridCellRenderer.type = 'datagridcellrenderer';

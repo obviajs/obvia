@@ -11,10 +11,15 @@ var Component = function(_props, overrided=false)
     var _enabled = _props.enabled;
     var _class = _props.class;
     var _colSpan = _props.colSpan;
-
+    var _parent = _props.parent;
     var _mousedown = _props.mousedown;
     var _click = _props.click;
     var _dblclick = _props.dblclick;
+    var _keydown = _props.keydown;
+    var _keyup = _props.keyup;
+    
+    var _watchers = [];
+    var _bindings = [];
 
     //var _propUpdateMap = {"label":{"o":$el, "fn":"html", "p":[] }, "hyperlink":{}};
     //generate GUID for this component
@@ -41,6 +46,43 @@ var Component = function(_props, overrided=false)
         }
     });
 
+    Object.defineProperty(this, "parent",
+    {
+        get: function parent() 
+        {
+            return _parent;
+        },
+        set: function parent(v)
+        {
+            if(_parent != v)
+            {
+                if(_parent)
+                {
+                    if(_self.$el)
+                    {
+                        _parent.detach(_self.$el);
+                    }
+                }
+                _parent = v;
+            }
+        }
+    });
+
+    Object.defineProperty(this, "watchers",
+    {
+        get: function watchers()
+        {
+            return _watchers;
+        }
+    });
+
+    Object.defineProperty(this, "bindings",
+    {
+        get: function bindings()
+        {
+            return _bindings;
+        }
+    });
 
     Object.defineProperty(this, "enabled",
     {
@@ -68,22 +110,9 @@ var Component = function(_props, overrided=false)
         }
     });
 
-    var _self = this;
-
     this.$el = null;
     this.embedded = false;
     this.$el = $(this.template());
-
-    //spacing of element
-    if (_props['spacing'])
-    {
-        if (_props.spacing['offset'])
-            this.$el.addClass('offset-sm-' + _props.spacing.offset);
-        if (_props.spacing['mb'])
-            this.$el.addClass('mb-' + _props.spacing.mb);
-        if (this.spacing['mt'])
-            this.$el.addClass('mt-' + _props.spacing.mt);
-    }
 
     var _defaultHandlers =
     [
@@ -91,7 +120,9 @@ var Component = function(_props, overrided=false)
             registerTo: this.$el, events: {
                 'mousedown' : _mousedown && typeof _mousedown == 'function' ? _mousedown.bind(this) : undefined,
                 'click': _click && typeof _click == 'function' ? _click.bind(this) : undefined,
-                'dblclick': _dblclick && typeof _dblclick == 'function' ? _dblclick.bind(this) : undefined
+                'dblclick': _dblclick && typeof _dblclick == 'function' ? _dblclick.bind(this) : undefined,
+                'keydown': _keydown && typeof _keydown == 'function' ? _keydown.bind(this) : undefined,
+                'keyup': _keyup && typeof _keyup == 'function' ? _keyup.bind(this) : undefined
             }
         }
     ];
@@ -107,10 +138,10 @@ var Component = function(_props, overrided=false)
             for (var i = 0; i < eventsArr.length; i++) 
             {
                 var eventType = eventsArr[i];
-                if(customEvents[0][eventType])
+                if(customEvents[0].events[eventType])
                 {
                     //overrided listener, so remove default listener on $el
-                    delete customEvents[0][eventType];
+                    delete customEvents[0].events[eventType];
                 }
                 var privateEvent = _props[eventType];
                 eventsObj[eventsArr[i]] = privateEvent && typeof privateEvent == 'function' ? privateEvent.bind(this) : undefined;
@@ -120,7 +151,7 @@ var Component = function(_props, overrided=false)
             {
                 if(customEvents[i].registerTo.attr('id') == $(this).attr('id'))
                 {
-                    extend(false, false, eventsObj, customEvents[i].events);
+                    customEvents[i].events = extend(false, false, eventsObj, customEvents[i].events);
                     found = true;
                     break;
                 }
@@ -138,6 +169,18 @@ var Component = function(_props, overrided=false)
         return customEvents;
     };
 
+    var _dataTriggerEventList = this.dataTriggerEvents();
+    //spacing of element
+    if (_props['spacing'])
+    {
+        if (_props.spacing['offset'])
+            this.$el.addClass('offset-sm-' + _props.spacing.offset);
+        if (_props.spacing['mb'])
+            this.$el.addClass('mb-' + _props.spacing.mb);
+        if (this.spacing['mt'])
+            this.$el.addClass('mt-' + _props.spacing.mt);
+    }
+
     this.registerEvents = function ()
     {
         return [
@@ -146,8 +189,8 @@ var Component = function(_props, overrided=false)
                     'afterAttach': this.afterAttach && typeof this.afterAttach == 'function' ? this.afterAttach.bind(this) : undefined,
                 }
             }
-        ].concat(this.dataTriggerEvents());
-    };
+        ].concat(_dataTriggerEventList);
+    };//
 
     this.render = function ()
     {
@@ -159,6 +202,7 @@ var Component = function(_props, overrided=false)
         if (typeof _props.afterAttach == 'function')
             _props.afterAttach.apply(this, arguments);
         this.trigger('creationComplete');
+        console.log("creation Complete", this.$el.attr("id"));
     };
     //action methods on component
     this.show = function ()
@@ -219,6 +263,7 @@ var Component = function(_props, overrided=false)
     //event handling
     this.on = function (eventType, fnc)
     {
+        var _self = this;
         if (typeof fnc !== 'function')
         {
             throw Error("The specified parameter is not a callback");
@@ -243,7 +288,7 @@ var Component = function(_props, overrided=false)
                                 )
                             ]);
                         }
-                        fnc.apply(_self, args);
+                        return fnc.apply(_self, args);
                     });
                 else
                     throw Error("$el in not defined");
@@ -269,10 +314,11 @@ var Component = function(_props, overrided=false)
     if (this['beforeAttach'] && (typeof this.beforeAttach == 'function'))
         this.beforeAttach();
 
-
-    ready("#" + this.$el.attr('id'), function (element) {
+    //"#" + this.$el.attr('id'), 
+    Component.ready(this, function (element) {
         //execute inner handlers if theres any registered
         var handlers = [];
+        var _self = this;
         if (_self['registerEvents'] && (typeof _self.registerEvents == 'function'))
         {
             handlers = _self.registerEvents();
@@ -314,10 +360,24 @@ var Component = function(_props, overrided=false)
 
         _self.trigger('afterAttach');
     });
+    
+    this.resetBindings = function()
+    {
+        for(var i=0;i<_watchers.length;i++)
+        {
+            _watchers[i].reset();        
+        }
+    };
+
+    this.refreshBindings = function(data)
+    {
+        this.resetBindings();
+        this.applyBindings(_bindings, data);
+    };
 
     this.applyBindings = function(bindings, data)
     {
-        var watchers = [];
+        _bindings = bindings;
         var _self = this;
         for(var bi=0;bi<bindings.length;bi++){
             (function(currentItem, bindingExp, site, site_chain){
@@ -326,11 +386,10 @@ var Component = function(_props, overrided=false)
                     var defaultBindTo = "currentItem_"+_self.guid;
                     this[defaultBindTo] = currentItem;
                    // var context = extend(false, true, this, obj);
-                    watchers.splicea(watchers.length, 0, BindingUtils.getValue(this, bindingExp, site, site_chain, defaultBindTo));
+                   _watchers.splicea(_watchers.length, 0, BindingUtils.getValue(this, bindingExp, site, site_chain, defaultBindTo));
                 })();	
             })(data, bindings[bi].expression, this, [bindings[bi].property]);
         }
-        return watchers;
     };
 
     this.keepBase = function()
@@ -345,23 +404,23 @@ var Component = function(_props, overrided=false)
     {
         this.keepBase();
     }
+   
 }
 Component.instanceCnt = 0;
 Component.fromLiteral = function(_literal, bindingDefaultContext=null)
 {
     var _literal = Object.assign({}, _literal);
     var props = Object.assign({}, _literal.props);
-
+    var _bindings = [];
     //build components properties, check bindings
     var _processedProps = {};
     
-    var bindings = [];
     for (var prop in props) {
         if (typeof prop == 'string') {
             //check for binding
             if (props[prop] && props[prop][0] == '{' && props[prop][props[prop].length - 1] == '}') {
                 var expression = props[prop].slice(1, -1);
-                bindings.push({"expression":expression, "property":prop});
+                _bindings.push({"expression":expression, "property":prop});
             } else {
                 //no binding
                 _processedProps[prop] = props[prop];
@@ -375,6 +434,68 @@ Component.fromLiteral = function(_literal, bindingDefaultContext=null)
         _literal.constructor = eval(_literal.constructor);
     }
     var el = new _literal.constructor(_processedProps);
-    el.applyBindings(bindings, bindingDefaultContext);
+    el.applyBindings(_bindings, bindingDefaultContext);
     return el;
+}
+Component.listeners = []
+Component.MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
+
+Component.ready = function(cmp, fn) 
+{
+    // Store the selector and callback to be monitored
+    if(cmp.$el)
+    {
+        Component.listeners.push({
+            element: cmp,
+            fn: fn
+        });
+    }
+    if (!Component.observer) 
+    {
+        Component.observer = new MutationObserver(Component.check);
+        // Watch for changes in the document window.document.documentElement
+        Component.observer.observe(document, {
+            childList: true,
+            subtree: true
+        });
+    }
+// Check if the element is currently in the DOM
+    //Component.check();
+}
+
+Component.check = function(mutations) 
+{
+    if (mutations && mutations.length > 0) 
+    {
+        for(var g=0;g<mutations.length;g++)
+        {
+            for(var h=0;h<mutations[g].addedNodes.length;h++)
+            {
+                var DOMNode = mutations[g].addedNodes[h];
+                if(DOMNode.querySelectorAll)
+                {
+                    // Check the DOM for elements matching a stored selector
+                    for (var i = 0, len = Component.listeners.length, listener, elements; i < len; i++) 
+                    {
+                        listener = Component.listeners[i];
+                        var $el = listener.element.$el;
+                        var id = $el.attr('id');
+                        //console.log(DOMNode.id);
+                        var resultNodes = DOMNode.id==id?[DOMNode]:DOMNode.querySelectorAll("#"+id);
+
+                        // Make sure the callback isn't invoked with the 
+                        // same element more than once
+                    // if (mutations.addedNodes[h]==element && !element.ready) 
+                        if(resultNodes.length>0 && !resultNodes[0].ready)
+                        {
+                            resultNodes[0].ready = true;
+                            // Invoke the callback with the element
+                            //listener.element.addedOnDOM();
+                            listener.fn.call(listener.element, $el);
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

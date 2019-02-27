@@ -5,7 +5,7 @@ rjs.define("./components/base/Selectable.js", "Selectable");
 rjs.define("./components/base/Parent.js", "Parent");
 rjs.define("./components/base/NavParent.js", "NavParent");
 //TextInput
-rjs.define("./components/Text.js", "TextInput");
+rjs.define("./components/TextInput.js", "TextInput");
 rjs.define("./lib/dependencies/scripts/jquery.inputmask.bundle.min.js", "InputMaskBundle");
 //Form
 rjs.define("lib/dependencies/scripts/bootstrap-bootbox.js", "BootBox");
@@ -107,9 +107,11 @@ rjs.define("./components/Spacer.js", "Spacer");
 rjs.define("lib/dependencies/efilemanager/skin-lion/ui.fancytree.css", "FancyTreeCSS");
 //rjs.define("./examples/Button/example.js", "ButtonExample");
 //rjs.define("./examples/Image/example.js", "ImageExample");
-rjs.define("./examples/Repeater/example.js", "RepeaterExample");
+//rjs.define("./examples/Repeater/example.js", "RepeaterExample");
 //rjs.define("./examples/Link/example.js", "LinkExample");
 //rjs.define("./examples/AutoComplete/example.js", "AutoCompleteExample");
+
+rjs.define("./examples/DataGrid/example.js", "DataGridExample");
 //Loader
 
 rjs.require([
@@ -180,9 +182,10 @@ rjs.require([
         //"Button",
         //"ButtonExample"
         //"ImageExample"
-        "RepeaterExample"
+        //"RepeaterExample"
         //"LinkExample"
         //"AutoCompleteExample"
+        "DataGridExample"
     ], function () {
         
 
@@ -190,7 +193,6 @@ rjs.require([
         // rjs.define("./examples/RadioButton/example.js", "RadioButtonExample");+
         //rjs.define("./examples/AutoComplete/example.js", "AutoComplete");
 
-        //rjs.define("./examples/DataGrid/example.js", "DataGridExample");
 
         //rjs.define("./examples/Container/example.js", "ContainerExample");
         //rjs.define("./examples/Tab/example.js", "TabExample");

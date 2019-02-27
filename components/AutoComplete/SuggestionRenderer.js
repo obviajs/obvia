@@ -39,8 +39,12 @@ var SuggestionRenderer = function(_props)
             if(_value != v)
             {
                 _value = v;
+                
                 if(this.$el)
-                    this.$el.data('value', v);
+                    if(v || v===false)
+                        this.$el.data('value', v);
+                    else if(v==null)
+                        this.$el.removeData('value');
             }
         }
     });
@@ -53,7 +57,6 @@ var SuggestionRenderer = function(_props)
     _props.hyperlink = "#";
     var _closeIconSide = _props.closeIconSide;
     
-
     Link.call(this, _props, true);
 };
 SuggestionRenderer.type = 'suggestionrenderer';
