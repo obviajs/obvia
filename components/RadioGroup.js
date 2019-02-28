@@ -54,10 +54,9 @@ var RadioGroup = function (_props, overrided = false) {
                         value: "{" + _valueField + "}",
                         name: this.id,
                         checked: "{" + _checkedField + "}",
-                        class: _classField,
+                        class: "{" + _classField + "}",
                         click: this.clickHandler.bind(this),
                         enabled: "{" + this.enabled + "}",
-                        embedded: true
                     }
                 }
             ],

@@ -5,6 +5,7 @@
  */
 
 var CheckBox = function (_props, overrided = false) {
+    var _self = this;
 
     Object.defineProperty(this, "label",
         {
@@ -35,27 +36,31 @@ var CheckBox = function (_props, overrided = false) {
         }
     });
 
-    Object.defineProperty(this, "checked", {
-        get: function checked() {
-            return _checked;
-        },
-        set: function checked(v) {
-            if (_checked != v) {
-                _checked = !!v;
-                if (this.$input)
-                    this.$input.prop('checked', v)
+    Object.defineProperty(this, "checked",
+        {
+            get: function checked() {
+                return _checked;
+            },
+            set: function checked(v) {
+                if (_checked != v) {
+                    _checked = !!v;
+                    if (this.$input)
+                        this.$input.prop('checked', v)
+                }
             }
-        }
-    });
+        });
 
     this.beforeAttach = function () {
         this.$input = this.$el.find("#" + this.domID + "-checkbox");
-        _enabled = (_enabled !== undefined && _enabled != null ? _enabled : true);
+    };
+
+    this.changeHandler = function () {
+        _checked = !_checked;
     };
 
     this.template = function () {
         return "<label  id='" + this.domID + "'>" +
-            "<input data-triggers='click' " + (this.checked ? "checked='checked'" : '') + " id='" + this.domID + "-checkbox'  value='" + _value + "' " +
+            "<input data-triggers='click change' " + (_checked ? "checked='checked'" : '') + " id='" + this.domID + "-checkbox'  value='" + _value + "' " +
             " type='checkbox'/>" + _label + "</label>";
     };
 
@@ -74,6 +79,18 @@ var CheckBox = function (_props, overrided = false) {
     var _value = _props.value;
     var _enabled = _props.enabled;
     var _checked = _props.checked;
+    var _change = _props.change;
+
+    _props.change = function () {
+        if (typeof _change == 'function')
+            _change.apply(this, arguments);
+
+        var e = arguments[0];
+        if (!e.isDefaultPrevented()) {
+            _self.changeHandler();
+        }
+    };
+
     Component.call(this, _props);
 
     if (overrided) {

@@ -55,7 +55,7 @@ var CheckBoxGroup = function (_props, overrided = false) {
                         id: 'checkBox',
                         label: "{" + _labelField + "}",
                         value: "{" + _valueField + "}",
-                        checked: _checkedField,
+                        checked: "{" + _checkedField + "}",
                         class: "{" + _classField + "}",
                         enabled: "{" + _enabledField + "}",
                     }

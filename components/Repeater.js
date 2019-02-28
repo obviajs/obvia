@@ -453,23 +453,6 @@ var Repeater = function(_props)
   
     };
 
-    Object.defineProperty(this, "label", 
-    {
-        get: function label() 
-        {
-            return _label;
-        },
-        set: function label(v) 
-        {
-            if(_label != v)
-            {
-                _label = v;
-                if(this.$label)
-                    this.$label.html(v);
-            }
-        }
-    });
-
     this.template = function () 
     {
         return "<div id='" + this.domID + "' class='"+(this.colspan?"col-sm-" + this.colspan:"")+ "'>" +
@@ -497,7 +480,6 @@ var Repeater = function(_props)
     _props = extend(false, false, _defaultParams, _props);
     var _dataProvider = _props.dataProvider;
     var _rendering = _props.rendering;
-    var _label = _props.label;
     var _embedded = _props.embedded;
     var _enabled = _props.enabled;
     this.components = _props.components;
@@ -527,7 +509,6 @@ var Repeater = function(_props)
         this.$container = this.$container || this.$el.find('#' + this.domID + '_container'); 
         this.$btnAddRow = this.$btnAddRow || this.$el.find('#' + this.domID+'_btnAddRow');
         this.$btnRemoveRow = this.$btnRemoveRow || this.$el.find('#' + this.domID);
-        this.$label = this.$label || this.$el.find('#'+this.domID+'_label'+'_btnRemoveRow');
 
         this.$container.empty();
         this.rows = [];

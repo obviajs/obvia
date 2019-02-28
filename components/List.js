@@ -7,22 +7,6 @@
 var List = function (_props, overrided = false) {
     var _self = this;
 
-    Object.defineProperty(this, "label",
-        {
-            get: function label() {
-                return _label;
-            },
-            set: function label(v) {
-                if (_label != v) {
-                    _label = v;
-                    var target = this.$el.find("label");
-                    if (target) {
-                        target.children(":first-child").html(v);
-                    }
-                }
-            }
-        });
-
     Object.defineProperty(this, "value", {
         get: function value() {
             return _value;
@@ -70,7 +54,6 @@ var List = function (_props, overrided = false) {
                 this.trigger('change');
                 // this.repeater.dataProviderChanged(arrDpFieldsChanged);
             }
-            return this;
         }
     });
 
@@ -119,7 +102,7 @@ var List = function (_props, overrided = false) {
         var arrValueIndex = indexOfObject(this.value, _valueField, v[_valueField]);
         var newValue = this.value.slice();
         if (arrValueIndex == -1) {
-            if (this.multiselect) {
+            if (_multiselect) {
                 newValue.push(v);
             } else
                 newValue = [v];
