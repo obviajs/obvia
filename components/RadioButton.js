@@ -62,7 +62,7 @@ var RadioButton = function (_props, overrided = false) {
 
     this.template = function () {
         return "<label id='" + this.domID + "'>" +
-            "<input data-triggers='click' id='" + this.domID + "-radio' name='" + _name + "-radio' type='radio' class='" + this.cssClass + "' value='" + _value + "' " + (!_enabled ? "disabled" : "") + (_checked ? "checked='checked'" : '') + ">" +
+            "<input data-triggers='click' id='" + this.domID + "-radio' type='radio' class='" + this.cssClass + "' value='" + _value + "' " + (!_enabled ? "disabled" : "") + (_checked ? "checked='checked'" : '') + ">" +
             "<span>" + _label + "</span>" +
             "</label>";
     };

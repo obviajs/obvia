@@ -12,8 +12,11 @@ var CheckBoxGroup = function (_props, overrided = false) {
             return _value;
         },
         set: function value(v) {
-            _value = v;
-            this.list.set(v);
+            
+            if(_value && !_value.equals(v)){
+                _value = v;
+            }
+            this.list.value = v;
             this.trigger('change');
         }
     });

@@ -3,9 +3,9 @@
  *
  * Kreatx 2019
  */
- 
+
 var CheckBox = function (_props, overrided = false) {
- 
+
     Object.defineProperty(this, "label",
         {
             get: function label() {
@@ -19,7 +19,7 @@ var CheckBox = function (_props, overrided = false) {
                 }
             }
         });
- 
+
     Object.defineProperty(this, "value", {
         get: function value() {
             return _value;
@@ -34,7 +34,7 @@ var CheckBox = function (_props, overrided = false) {
                 this.$input.val(v);
         }
     });
- 
+
     Object.defineProperty(this, "checked", {
         get: function checked() {
             return _checked;
@@ -47,18 +47,18 @@ var CheckBox = function (_props, overrided = false) {
             }
         }
     });
- 
+
     this.beforeAttach = function () {
         this.$input = this.$el.find("#" + this.domID + "-checkbox");
         _enabled = (_enabled !== undefined && _enabled != null ? _enabled : true);
     };
- 
+
     this.template = function () {
         return "<label  id='" + this.domID + "'>" +
-            "<input data-triggers='click' " + (this.checked ? "checked='checked'" : '') + " id='" + this.domID + "-checkbox' name='" + this.domID + "'  value='" + _value + "' " +
+            "<input data-triggers='click' " + (this.checked ? "checked='checked'" : '') + " id='" + this.domID + "-checkbox'  value='" + _value + "' " +
             " type='checkbox'/>" + _label + "</label>";
     };
- 
+
     var _defaultParams = {
         label: 'CheckBox Label',
         blockProcessAttr: false,
@@ -67,18 +67,18 @@ var CheckBox = function (_props, overrided = false) {
         checked: false,
         embedded: false
     };
- 
+
     _props = extend(false, false, _defaultParams, _props);
- 
+
     var _label = _props.label;
     var _value = _props.value;
     var _enabled = _props.enabled;
     var _checked = _props.checked;
     Component.call(this, _props);
- 
+
     if (overrided) {
         this.keepBase();
     }
 };
- 
+
 CheckBox.type = "checkbox";

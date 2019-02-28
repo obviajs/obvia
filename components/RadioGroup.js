@@ -6,28 +6,14 @@
 
 var RadioGroup = function (_props, overrided = false) {
 
-    Object.defineProperty(this, "label",
-        {
-            get: function label() {
-                return _label;
-            },
-            set: function label(v) {
-                if (_label != v) {
-                    _label = v;
-                    var target = this.$el.find("label");
-                    if (target) {
-                        target.children(":first-child").html(v);
-                    }
-                }
-            }
-        });
-
     Object.defineProperty(this, "value", {
         get: function value() {
             return _value;
         },
         set: function value(v) {
-            _value = v;
+            if(_value && !_value.equals(v)){
+                _value = v;
+            }
             this.list.value = v;
             this.trigger('change');
         }
@@ -70,7 +56,7 @@ var RadioGroup = function (_props, overrided = false) {
                         checked: "{" + _checkedField + "}",
                         class: _classField,
                         click: this.clickHandler.bind(this),
-                        enabled: "{" + _enabledField + "}",
+                        enabled: "{" + this.enabled + "}",
                         embedded: true
                     }
                 }

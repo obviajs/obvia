@@ -193,13 +193,13 @@ var Repeater = function(_props)
         }
     };
 
-    this.getValue = function () 
+    this.getValue = function ()
     {
         var value = {};
         this.components.forEach(function (components) {
             value[components.props.id] = [];
             this[components.props.id].forEach(function (component, index) {
-                value[components.props.id].push(this[components.props.id][index].getValue());
+                value[components.props.id].push(this[components.props.id][index].value);
             }.bind(this));
         }.bind(this));
 
@@ -298,8 +298,8 @@ var Repeater = function(_props)
                 });
                 el.on('change', function (e) {
                     var currentItem = _self.dataProvider[index - 1];
-                    if (tempComponent.props.value[0] == '{' && tempComponent.props.value[tempComponent.props.value.length - 1] == '}') {
-                        var bindedValue = tempComponent.props.value.slice(1, -1);
+                    if (component.props.value[0] == '{' && component.props.value[component.props.value.length - 1] == '}') {
+                        var bindedValue = component.props.value.slice(1, -1);
                         var path = bindedValue.split(".");
                         if (path.length > 1) {
                             var bindedValue = data;
@@ -307,7 +307,7 @@ var Repeater = function(_props)
                                 bindedValue = bindedValue[key];
                             });
                         }
-                        data[bindedValue] = this.getValue();
+                        data[bindedValue] = this.value;
                     }
 
                     _self.$el.trigger('onRowEdit', [_self, new RepeaterEventArgs(rowItems, data, index)]);
@@ -499,6 +499,7 @@ var Repeater = function(_props)
     var _rendering = _props.rendering;
     var _label = _props.label;
     var _embedded = _props.embedded;
+    var _enabled = _props.enabled;
     this.components = _props.components;
 
     Component.call(this, _props, true);
