@@ -5,13 +5,12 @@ var Parent = function(_props, overrided=false)
     this.$container = null;
     this.addComponent = function (component, cIndex) 
     {
+        alert("add component");
+        console.log("inside addComponent",this.$container);
+        console.log("component to be added",component);
         if(this.$container)
         {
-            if (typeof component.constructor == "string") {
-                component.constructor = eval(component.constructor);
-            }
-            var cmp = new component.constructor(component.props);
-        
+            var cmp = Component.fromLiteral(component);
             cmp.on('creationComplete', function (e) {
                 e.stopImmediatePropagation();
                 e.stopPropagation();
@@ -23,9 +22,13 @@ var Parent = function(_props, overrided=false)
                 }
 
             }.bind(this));
-            
+            var maxIndex = this.$container.children().length;
+            console.log("maxIndex",maxIndex);
+
+            // this.$container.children().eq(cIndex).after((cmp.render()));
+            console.log("this.$container after shtim",this.$container);
             this.$container.append(cmp.render());
-            
+             console.log("component added",this.$container);
             //expose component model
             if (!this.idField)
                 this[cmp.id] = cmp;
@@ -43,19 +46,20 @@ var Parent = function(_props, overrided=false)
     };
     _props = extend(false, false, _defaultParams, _props);
     this.components = _props.components;
-    Component.call(this, _props);
+    
     //override because creationComplete will be thrown when all children components are created
-    this.afterAttach = undefined;
+    // this.afterAttach = undefined;
 
-    this.beforeAttach = function()
+    this.addComponents = function(components)
     {
-        if(this.components && Array.isArray(this.components))
+        if(components && Array.isArray(components))
         {
-            this.components.forEach(function (component, cIndex) {
+            components.forEach(function (component, cIndex) {
                 this.addComponent(component, cIndex);
             }.bind(this));
         }
     }
+    Component.call(this, _props);
     if(overrided)
     {
         this.keepBase();

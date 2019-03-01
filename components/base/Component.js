@@ -310,56 +310,7 @@ var Component = function(_props, overrided=false)
     }
     ++Component.instanceCnt;
 
-    //execute functions before component attached on dom
-    if (this['beforeAttach'] && (typeof this.beforeAttach == 'function'))
-        this.beforeAttach();
-
-    //"#" + this.$el.attr('id'), 
-    Component.ready(this, function (element) {
-        //execute inner handlers if theres any registered
-        var handlers = [];
-        var _self = this;
-        if (_self['registerEvents'] && (typeof _self.registerEvents == 'function'))
-        {
-            handlers = _self.registerEvents();
-            //call inner event
-            handlers.forEach(function (handler, i) {
-                for (var innerEventIn in handler.events) {
-                    if (typeof handler.events[innerEventIn] == 'function') {
-                        if(handler.registerTo != undefined && handler.registerTo != null){
-                            handler.registerTo.on(innerEventIn, (function (innerEventIn, component) { // a closure is created
-                                return function () {
-                                    var args = [];
-                                    for (var i = 0; i < arguments.length; i++) {
-                                        args.push(arguments[i]);
-                                    }
-
-                                    //append RepeaterEventArgs to event
-                                    if (component.parentType && component.parentType == 'repeater') {
-                                        args = args.concat(
-                                            [
-                                                new RepeaterEventArgs(
-                                                    component.parent.rowItems[component.repeaterIndex],
-                                                    component.parent.dataProvider[component.repeaterIndex],
-                                                    component.repeaterIndex
-                                                )
-                                            ]
-                                        );
-                                    }
-                                    handler.events[innerEventIn].apply(component, args);
-                                }
-                            })(innerEventIn, _self));
-                        }else
-                        {
-                            console.log("Event handler registration on '"+_self.id+"' failed because the target is undefined");
-                        }
-                    }
-                }
-            });
-        }
-
-        _self.trigger('afterAttach');
-    });
+ 
     
     this.resetBindings = function()
     {
@@ -404,6 +355,57 @@ var Component = function(_props, overrided=false)
     {
         this.keepBase();
     }
+
+       //execute functions before component attached on dom
+       if (this['beforeAttach'] && (typeof this.beforeAttach == 'function'))
+       this.beforeAttach();
+
+   //"#" + this.$el.attr('id'), 
+   Component.ready(this, function (element) {
+       //execute inner handlers if theres any registered
+       var handlers = [];
+       var _self = this;
+       if (_self['registerEvents'] && (typeof _self.registerEvents == 'function'))
+       {
+           handlers = _self.registerEvents();
+           //call inner event
+           handlers.forEach(function (handler, i) {
+               for (var innerEventIn in handler.events) {
+                   if (typeof handler.events[innerEventIn] == 'function') {
+                       if(handler.registerTo != undefined && handler.registerTo != null){
+                           handler.registerTo.on(innerEventIn, (function (innerEventIn, component) { // a closure is created
+                               return function () {
+                                   var args = [];
+                                   for (var i = 0; i < arguments.length; i++) {
+                                       args.push(arguments[i]);
+                                   }
+
+                                   //append RepeaterEventArgs to event
+                                   if (component.parentType && component.parentType == 'repeater') {
+                                       args = args.concat(
+                                           [
+                                               new RepeaterEventArgs(
+                                                   component.parent.rowItems[component.repeaterIndex],
+                                                   component.parent.dataProvider[component.repeaterIndex],
+                                                   component.repeaterIndex
+                                               )
+                                           ]
+                                       );
+                                   }
+                                   handler.events[innerEventIn].apply(component, args);
+                               }
+                           })(innerEventIn, _self));
+                       }else
+                       {
+                           console.log("Event handler registration on '"+_self.id+"' failed because the target is undefined");
+                       }
+                   }
+               }
+           });
+       }
+
+       _self.trigger('afterAttach');
+   });
    
 }
 Component.instanceCnt = 0;

@@ -66,12 +66,12 @@ var Modal = function(_props)
     _props = extend(false, false, _defaultParams, _props);
     var _title = _props.title;
     var _size = _props.size;
-    Parent.call(this, _props, true);
+    
     var base = this.base;
 
     this.beforeAttach = function () 
     {
-        
+        console.log("Modal before attach");
         this.$body = this.$el.find('#' + this.domID + '-modal-body');
         this.$modalDialog = this.$el.first();
         this.$footer = this.$el.find('#' + this.domID + '-modal-footer');
@@ -79,8 +79,13 @@ var Modal = function(_props)
         this.$title = this.$el.find('#' + this.domID + '-modal-title');
         this.$container = this.$body;
         this.$modal = this.$el;
-        base.beforeAttach();
+        this.addComponents(this.components);
     };
+
+    Parent.call(this, _props, true);
+    
+
+    
 
 };
 Modal.type = 'modal';

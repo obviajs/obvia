@@ -1,3 +1,10 @@
+var myLabel = {constructor: "Label",
+    props:{
+        id: 'label',
+        label: 'Label'
+    }
+};
+
 var myModal = new Modal({
     id: 'autocomplete-modal',
     size: 'modal-lg',
@@ -12,18 +19,21 @@ var myModal = new Modal({
         '</tr>' +
         '</thead>' +
         '</table>' +
-
         '</div>' +
         '</div>' +
         '</div>'
 });
 
-this.$modal = this.modal.$el;
+
+this.$modal = this.myModal.$el;
 var _self = this;
-this.modal.on('creationComplete', function (e) {
+this.myModal.on('creationComplete', function (e) {
     //trigger autocomplete complete
     e.stopPropagation();
-    _self.trigger('creationComplete');
-})
-
+});
 $('#root').append(myModal.render());
+// myModal.show();
+this.$modal.modal('show');
+// myModal.$container = $('<div>Hello Container<div>');
+myModal.addComponent(myLabel,0);
+console.log("Modal after adding a new component",myModal);
