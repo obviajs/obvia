@@ -193,18 +193,20 @@ var Repeater = function(_props)
         }
     };
 
-    this.getValue = function ()
-    {
-        var value = {};
-        this.components.forEach(function (components) {
-            value[components.props.id] = [];
-            this[components.props.id].forEach(function (component, index) {
-                value[components.props.id].push(this[components.props.id][index].value);
-            }.bind(this));
-        }.bind(this));
-
-        return value;
-    };
+    Object.defineProperty(this, "value", {
+        get: function value() {
+            var value = {};
+            for(var i=0;i<this.components.length;i++)
+            {
+                value[components[i].props.id] = [];        
+                for(var j=0;j<this[components[i].props.id].length;j++)
+                {
+                    value[components[i].props.id].push(this[components[i].props.id][j].value);
+                }
+            }
+            return value;
+        }
+    });
 
     //renders a new row, adds components in stack
     this.addRow = function (data, index, isPreventable = false, focusOnRowAdd = true) 

@@ -25,15 +25,13 @@ var myModal = new Modal({
 });
 
 
-this.$modal = this.myModal.$el;
-var _self = this;
-this.myModal.on('creationComplete', function (e) {
+myModal.on('creationComplete', function (e) {
     //trigger autocomplete complete
     e.stopPropagation();
-});
-$('#root').append(myModal.render());
-// myModal.show();
-this.$modal.modal('show');
-// myModal.$container = $('<div>Hello Container<div>');
+   
+    myModal.show();
+}); 
 myModal.addComponent(myLabel,0);
+$('#root').append(myModal.render());
+
 console.log("Modal after adding a new component",myModal);

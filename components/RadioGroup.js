@@ -11,26 +11,26 @@ var RadioGroup = function (_props, overrided = false) {
             return _value;
         },
         set: function value(v) {
-            if(_value && !_value.equals(v)){
+            if(_value && !_value.equals(v))
+            {
                 _value = v;
+                this.list.value = v;
+                this.trigger('change');
             }
-            this.list.value = v;
-            this.trigger('change');
         }
     });
 
     this.beforeAttach = function () {
-        this.checkedField = "checked_" + this.id;
+        
         _states = [
             {dataProviderField: _classField, states: {on: _selectedClass, off: _defaultClass}},
             {dataProviderField: _checkedField, states: {on: true, off: false}}
         ];
         this.direction = this.direction == undefined || this.direction == null ? 'vertical' : this.direction;
-        this.$container = this.$el.filter('#' + this.domID + '-radiogroup');
+        this.$container = this.$el;
         this.list = new List({
             id: 'list',
             colspan: '6',
-            label: 'Ministrite',
             fieldName: 'list',
             states: _states,
             blockProcessAttr: this.blockProcessAttr,
@@ -52,11 +52,10 @@ var RadioGroup = function (_props, overrided = false) {
                         id: 'radioButton',
                         label: "{" + _labelField + "}",
                         value: "{" + _valueField + "}",
-                        name: this.id,
                         checked: "{" + _checkedField + "}",
                         class: "{" + _classField + "}",
                         click: this.clickHandler.bind(this),
-                        enabled: "{" + this.enabled + "}",
+                        enabled: "{" + _enabledField + "}",
                     }
                 }
             ],
@@ -74,18 +73,13 @@ var RadioGroup = function (_props, overrided = false) {
     };
 
     this.template = function () {
-        return "<div id='" + this.domID + "-radiogroup' class='radiogroup card' style='padding:10px;'>" +
-            "<label><b>" + _label + "</b></label>" +
+        return "<div id='" + this.domID + "' class='radiogroup card' style='padding:10px;'>" +
             "</div>"
     };
 
     var _defaultParams = {
         id: 'radiogroup',
         colspan: '6',
-        label: 'Radiogroup',
-        fieldName: 'radioInput',
-        blockProcessAttr: false,
-        required: false,
         checkedField: true,
         dataProvider: [],
         valueField: 'id',
@@ -103,7 +97,6 @@ var RadioGroup = function (_props, overrided = false) {
     _props = extend(false, false, _defaultParams, _props);
 
     var _value = _props.value;
-    var _label = _props.label;
     var _labelField = _props.labelField;
     var _valueField = _props.valueField;
     var _checkedField = _props.checkedField;

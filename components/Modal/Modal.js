@@ -24,20 +24,6 @@ var Modal = function(_props)
         }
     });
     
-    this.show = function () 
-    {
-        if(this.$modal)
-            this.$modal.modal('show');
-        return this;
-    };
-    
-    this.hide = function () 
-    {
-        if(this.$modal)
-            this.$modal.modal('hide');
-        return this;
-    };
-
     this.template = function () 
     {
         return '<div class="modal fade modal-fullscreen" id="' + this.domID + '" tabindex="-1" role="dialog">' +
@@ -84,8 +70,18 @@ var Modal = function(_props)
 
     Parent.call(this, _props, true);
     
-
+    this.show = function () 
+    {
+        if(this.$modal)
+            this.$modal.modal('show');
+        return this;
+    };
     
-
+    this.hide = function () 
+    {
+        if(this.$modal)
+            this.$modal.modal('hide');
+        return this;
+    };  
 };
 Modal.type = 'modal';

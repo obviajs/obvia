@@ -58,7 +58,7 @@ var List = function (_props, overrided = false) {
     });
 
     this.beforeAttach = function () {
-        this.$container = this.$el.filter('#' + this.domID + '-list');
+        this.$container = this.$el;
 
         _components[0].props.click = click.bind(this);
         // this.components[0].props.ondblclick = this.doubleClickHandler.bind(this);
@@ -128,20 +128,13 @@ var List = function (_props, overrided = false) {
     };
 
     this.template = function () {
-        return "<label>" + _label + " </label>" +
-            "<br>" +
-            "<div id='" + this.domID + "-list' role='group' style='padding:0'>" +
-
+        return "<div id='" + this.domID + "' role='group' style='padding:0'>" +
             "</div>";
     };
 
     var _defaultParams = {
         id: 'list',
         colspan: '6',
-        label: 'Ministrite',
-        fieldName: 'list',
-        blockProcessAttr: this.blockProcessAttr,
-        required: true,
         direction: 'horizontal',
         multiselect: false,
         dataProvider: [],
@@ -167,10 +160,8 @@ var List = function (_props, overrided = false) {
 
     _props = extend(false, false, _defaultParams, _props);
 
-    var _id = _props.id;
     var _multiselect = _props.multiselect;
     var _dataProvider = _props.dataProvider;
-    var _label = _props.label;
     var _components = _props.components;
     var _value = _props.value;
     var _states = _props.states;
@@ -179,7 +170,6 @@ var List = function (_props, overrided = false) {
     var _classField = _props.classField;
     var _selectedClass = _props.selectedClass;
     var _defaultClass = _props.defaultClass;
-    var _embedded = _props.embedded;
     // var _change = _props.change;
     // var _mousedown = _props.mouseDownHandler;
     var _click = _props.click;

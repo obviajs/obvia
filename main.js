@@ -109,10 +109,10 @@ rjs.define("lib/dependencies/efilemanager/skin-lion/ui.fancytree.css", "FancyTre
 //rjs.define("./examples/Image/example.js", "ImageExample");
 //rjs.define("./examples/Repeater/example.js", "RepeaterExample");
 //rjs.define("./examples/Link/example.js", "LinkExample");
-rjs.define("./examples/Modal/example.js", "ModalExample");
+//rjs.define("./examples/Modal/example.js", "ModalExample");
 //rjs.define("./examples/AutoComplete/example.js", "AutoCompleteExample");
 
-// rjs.define("./examples/DataGrid/example.js", "DataGridExample");
+rjs.define("./examples/DataGrid/example.js", "DataGridExample");
 //Loader
 
 rjs.require([

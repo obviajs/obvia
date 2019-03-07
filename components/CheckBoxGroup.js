@@ -13,27 +13,26 @@ var CheckBoxGroup = function (_props, overrided = false) {
         },
         set: function value(v) {
             
-            if(_value && !_value.equals(v)){
+            if(_value && !_value.equals(v))
+            {
                 _value = v;
+                this.list.value = v;
+                this.trigger('change');
             }
-            this.list.value = v;
-            this.trigger('change');
         }
     });
 
     this.beforeAttach = function () {
-        this.checkedField = "checked_" + this.id;
         this.states = [
             {dataProviderField: _classField, states: {on: _selectedClass, off: _defaultClass}},
-            {dataProviderField: this.checkedField, states: {on: true, off: false}}
+            {dataProviderField: _checkedField, states: {on: true, off: false}}
         ];
         this.direction = this.direction == undefined || this.direction == null ? 'vertical' : this.direction;
-        this.multiselect = (this.multiselect != undefined && this.multiselect != null ? this.multiselect : true);
-        this.$container = this.$el.filter('#' + this.domID + '-list');
+        _multiselect = (_multiselect != null ? _multiselect : true);
+        this.$container = this.$el;
         this.list = new List({
             id: 'list',
             colspan: '6',
-            label: 'Ministrite',
             fieldName: 'list',
             states: _states,
             blockProcessAttr: this.blockProcessAttr,
@@ -70,16 +69,14 @@ var CheckBoxGroup = function (_props, overrided = false) {
     };
 
     this.template = function () {
-        return "<div id='" + this.domID + "-list' class='card' role='group' style='padding:10px'>" +
+        return "<div id='" + this.domID + "' class='card' role='group' style='padding:10px'>" +
             "</div>";
     };
 
     var _defaultParams = {
-        id: 'checkBoxGroupLonely1',
+        id: 'checkBoxGroup',
         colspan: '6',
-        label: 'Ministrite',
         fieldName: 'checkBoxGroupInputR',
-        checkedField: false,
         blockProcessAttr: false,
         required: true,
         multiselect: true,
@@ -90,6 +87,7 @@ var CheckBoxGroup = function (_props, overrided = false) {
         defaultClass: 'btn btn-xs btn-default',
         selectedClass: 'btn btn-xs btn-success',
         enabledField: "enabled",
+        checkedField: "checked",
         value: [],
         function(e) {
             console.log("From CheckBoxGroup ClickAction");

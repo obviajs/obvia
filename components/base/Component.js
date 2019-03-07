@@ -356,9 +356,9 @@ var Component = function(_props, overrided=false)
         this.keepBase();
     }
 
-       //execute functions before component attached on dom
-       if (this['beforeAttach'] && (typeof this.beforeAttach == 'function'))
-       this.beforeAttach();
+    //execute functions before component attached on dom
+    if (this['beforeAttach'] && (typeof this.beforeAttach == 'function'))
+    this.beforeAttach();
 
    //"#" + this.$el.attr('id'), 
    Component.ready(this, function (element) {

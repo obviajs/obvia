@@ -3,12 +3,18 @@ var Parent = function(_props, overrided=false)
     var _ccComponents = [];
     this.components = [];
     this.$container = null;
-    this.addComponent = function (component, cIndex) 
+
+    this.addComponent = function (component, cIndex)
     {
-        alert("add component");
-        console.log("inside addComponent",this.$container);
+        this.components.push(component);
+        _addComponentInternal(component, cIndex);
+    }
+
+    var _addComponentInternal = function (component, cIndex) 
+    {
+        console.log("inside addComponent",_self.$container);
         console.log("component to be added",component);
-        if(this.$container)
+        if(_self.$container)
         {
             var cmp = Component.fromLiteral(component);
             cmp.on('creationComplete', function (e) {
@@ -17,35 +23,36 @@ var Parent = function(_props, overrided=false)
 
                 _ccComponents.push(component.props.id);
             
-                if (_ccComponents.length == this.components.length) {
-                    this.trigger('creationComplete');
+                if (_ccComponents.length == _self.components.length && !_creationFinished) {
+                    _creationFinished = true;
+                    _self.trigger('creationComplete');
                 }
 
-            }.bind(this));
-            var maxIndex = this.$container.children().length;
+            }.bind(_self));
+            var maxIndex = _self.$container.children().length;
             console.log("maxIndex",maxIndex);
 
-            // this.$container.children().eq(cIndex).after((cmp.render()));
-            console.log("this.$container after shtim",this.$container);
-            this.$container.append(cmp.render());
-             console.log("component added",this.$container);
+            // _self.$container.children().eq(cIndex).after((cmp.render()));
+            console.log("this.$container after shtim",_self.$container);
+            _self.$container.append(cmp.render());
+             console.log("component added",_self.$container);
             //expose component model
-            if (!this.idField)
-                this[cmp.id] = cmp;
-            else
-                this[ cmp[this.idField] ] = cmp;
+            _self[cmp.id] = cmp;
 
-            cmp.parent = this;
-            cmp.parentType = this.type;
-            cmp.parentForm = this;
+            cmp.parent = _self;
+            cmp.parentType = _self.type;
+            cmp.parentForm = _self;
             return cmp;
         }
     };
 
     var _defaultParams = {
+        components:[]
     };
     _props = extend(false, false, _defaultParams, _props);
     this.components = _props.components;
+    var _self = this;
+    var _creationFinished = false;
     
     //override because creationComplete will be thrown when all children components are created
     // this.afterAttach = undefined;
@@ -55,7 +62,7 @@ var Parent = function(_props, overrided=false)
         if(components && Array.isArray(components))
         {
             components.forEach(function (component, cIndex) {
-                this.addComponent(component, cIndex);
+                _addComponentInternal(component, cIndex);
             }.bind(this));
         }
     }
