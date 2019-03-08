@@ -54,7 +54,7 @@ var CheckBox = function (_props, overrided = false) {
         this.$input = this.$el.find("#" + this.domID + "-checkbox");
     };
 
-    this.changeHandler = function () {
+    var _changeHandler = function () {
         _checked = !_checked;
     };
 
@@ -87,7 +87,7 @@ var CheckBox = function (_props, overrided = false) {
 
         var e = arguments[0];
         if (!e.isDefaultPrevented()) {
-            _self.changeHandler();
+            _changeHandler();
         }
     };
 

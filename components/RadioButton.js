@@ -76,7 +76,6 @@ var RadioButton = function (_props, overrided = false) {
     _props = extend(false, false, _defaultParams, _props);
 
     var _label = _props.label;
-    var _name = _props.name;
     var _value = _props.value;
     var _checked = _props.checked;
     var _enabled = _props.enabled;

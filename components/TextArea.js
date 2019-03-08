@@ -26,36 +26,19 @@ var TextArea = function (_props, overrided = false) {
 
 
     this.beforeAttach = function () {
-        this.$input = this.$el.filter('#' + this.domID);
+        this.$input = this.$el;
     };
 
     this.changeHandler = function (e) {
         this.validate();
     };
 
-    this.validate = function () {
-        if (_props.required) {
-            if (this.value == "" || this.value == undefined) {
-                this.errorList = [
-                    KxGenerator.getErrorList().call(this)['empty']
-                ];
-                this.$el.addClass('invalid');
-
-                return false;
-            } else {
-                this.errorList = [];
-                this.$el.removeClass('invalid');
-            }
-        }
-        return true;
-    };
-
-    this.spellCHeckClickHandler = function (e) {
+    _spellCheckClickHandler = function (e) {
         this.$input.spellCheckInDialog({defaultDictionary: _spellCheck.defaultDictionary});
     };
 
     this.template = function () {
-        return "<textarea data-triggers='change' id='" + this.domID + "' " + (!this.enabled ? "disabled" : "") + " class='" + this.cssClass + "'>" + this.value + "</textarea>" +
+        return "<textarea data-triggers='change' id='" + this.domID + "' " + (!this.enabled ? "disabled" : "") + " class='" + this.cssClass + "'>" + _value + "</textarea>" +
             (_spellCheck ? "<button data-triggers='click' type='button' id='" + this.domID + "-spellCheck' class='btn btn-sm btn-primary float-right'><i class='fas fa-book'></i> Spell Check </button>" : "");
     };
 
@@ -71,23 +54,13 @@ var TextArea = function (_props, overrided = false) {
     var _change = _props.change;
     var _click = _props.click;
 
-    _props.change = function () {
-        if (typeof _change == 'function')
-            _change.apply(this, arguments);
-
-        var e = arguments[0];
-        if (!e.isDefaultPrevented()) {
-            _self.changeHandler();
-        }
-    };
-
     _props.click = function () {
         if (typeof  _click == 'function')
             _click.apply(this, arguments);
 
         var e = arguments[0];
         if(!e.isDefaultPrevented()) {
-            _self.spellCHeckClickHandler();
+            _spellCheckClickHandler();
         }
     };
 

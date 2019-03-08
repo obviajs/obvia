@@ -11,6 +11,7 @@ rjs.define("./lib/dependencies/scripts/jquery.inputmask.bundle.min.js", "InputMa
 rjs.define("lib/dependencies/scripts/bootstrap-bootbox.js", "BootBox");
 rjs.define("./components/Form/Form.js", "Form");
 rjs.define("./components/Form/FormEventType.js", "FormEventType");
+rjs.define("./components/Form/FormField.js", "FormField");
 //Button
 rjs.define("./components/Button.js", "Button");
 //Label
@@ -111,8 +112,8 @@ rjs.define("lib/dependencies/efilemanager/skin-lion/ui.fancytree.css", "FancyTre
 //rjs.define("./examples/Link/example.js", "LinkExample");
 //rjs.define("./examples/Modal/example.js", "ModalExample");
 //rjs.define("./examples/AutoComplete/example.js", "AutoCompleteExample");
-
-rjs.define("./examples/DataGrid/example.js", "DataGridExample");
+//rjs.define("./examples/DataGrid/example.js", "DataGridExample");
+rjs.define("./examples/Form/example.js", "FormFieldExample");
 //Loader
 
 rjs.require([
@@ -125,6 +126,7 @@ rjs.require([
         "TabNavigator",
         "Tab",
         "Form",
+        "FormField",
         "FormEventType",
         "HierarchicalTree",
         "BootBox",
@@ -187,7 +189,8 @@ rjs.require([
         //"RepeaterExample"
         //"LinkExample"
         //"AutoCompleteExample"
-        "DataGridExample"
+        //"DataGridExample",
+        "FormFieldExample"
     ], function () {
         
 
