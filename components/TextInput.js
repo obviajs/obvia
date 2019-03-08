@@ -38,8 +38,9 @@ var TextInput = function (_props, overrided = false) {
                 this.$el.inputmask(_mask);
                 this.attached = true;
             }
- 
-            this.validate();
+
+            if (typeof this.validate === "function")
+                this.validate();
         }
     };
  
