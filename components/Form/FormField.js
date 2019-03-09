@@ -116,6 +116,14 @@ var FormField = function(_props)
             return _spacing;
         }
     });
+
+    Object.defineProperty(this, "cmp", 
+    {
+        get: function cmp() 
+        {
+            return _cmp;
+        }
+    });
     /**
          this.validate = function () {
         if (_props.required) {

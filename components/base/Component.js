@@ -2,14 +2,15 @@ var Component = function(_props, overrided=false)
 {
     var _defaultParams = {
         id: "Component_"+Component.instanceCnt,
-        enabled: true
+        enabled: true,
+        _classes: []
     };
 
     _props = extend(false, false, _defaultParams, _props);
     var _guid = guid();
     var _id = _props.id;
     var _enabled = _props.enabled;
-    var _class = _props.class;
+    var _classes;
     var _parent = _props.parent;
     var _mousedown = _props.mousedown;
     var _click = _props.click;
@@ -101,18 +102,30 @@ var Component = function(_props, overrided=false)
         configurable: true
     });
 
-    Object.defineProperty(this, "cssClass",
+    Object.defineProperty(this, "classes",
     {
-        get: function cssClass()
+        get: function classes()
         {
-            return _class;
+            return _classes;
+        },
+        set: function classes(v)
+        {
+            if((!_classes && v) || (_classes && !_classes.equals(v)))
+            {
+                _classes = v;
+                if(this.$el)
+                    this.$el.addClass(_classes);
+            }
         }
     });
 
     this.$el = null;
     this.embedded = false;
     this.$el = $(this.template());
-
+    if(_props.classes)
+    {
+        this.classes = _props.classes;
+    }
     var _defaultHandlers =
     [
         {

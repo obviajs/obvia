@@ -88,7 +88,16 @@ var myForm = new Form({
                     }
                 }
             }
-        }
+        },
+        {
+            constructor: Hidden,
+            props: {
+                id: 'hiddenField4',
+                name: 'hiddenField4',
+                value: '777'
+            }
+            
+        },
     ]});    
 
 myForm.on('creationComplete', function(e){

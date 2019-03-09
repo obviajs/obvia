@@ -21,6 +21,7 @@ var Container = function(_props)
                 _width = v;
                 if(this.$el)
                 {
+                    v = v || 0;
                     this.$el.css('width', v+"px");
                 }
             }
@@ -40,15 +41,24 @@ var Container = function(_props)
                 _height = v;
                 if(this.$el)
                 {
+                    v = v || 0;
                     this.$el.css('height', v+"px");
                 }
             }
         }
     });
+    
+    Object.defineProperty(this, "spacing", 
+    {
+        get: function spacing() 
+        {
+            return _spacing;
+        }
+    });
 
     this.template = function ()
     { 
-        return  '<div id="' + this.domID + '" class="container" style="'+(_width?'width:'+_width+'px;':'')+(_height?'width:'+_height+'px;':'')+'" ></div>'; 
+        return  '<div id="' + this.domID + '"></div>'; 
     };
     this.beforeAttach = function() 
     {
@@ -57,13 +67,21 @@ var Container = function(_props)
     };
 
     var _defaultParams = {
+        type: ContainerType.CONTAINER
     };
     _props = extend(false, false, _defaultParams, _props);
-    var _width = _props.width;
-    var _height = _props.height;
+    var _width;
+    var _height;
+    var _type = _props.type;
     
-    Parent.call(this, _props, true);
-    var base = this.base;
+    Parent.call(this, _props);
+    var _spacing = new Spacing(_props.spacing, this.$el);
+
+    this.width = _props.width;
+    this.height = _props.height;
+
+    if(_type)
+        this.$el.addClass(_type); 
     
 };
 Container.type = 'container';

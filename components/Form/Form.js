@@ -7,31 +7,6 @@
 //component definition
 var Form = function(_props)
 {
-    /*
-    initModel: function () {
-        return {
-            formAction: (this.viewMode == "steps") ? "?forms/modify_form_submit" : "#"
-        }
-    },
-
-    renderFormHeader: function (viewMode) {
-        return (
-            viewMode == 'steps' ? 
-                "<div class='row'>" +
-                "</div>" :
-                
-                "<div class='row'>" +
-                    "<div class='col-sm-12'>" +
-                        "<center>" +
-                            "<h4>" +
-                                "{formName}" +
-                            "</h4>" +
-                        "</center>" +
-                    "</div>" +
-                "</div><hr>"
-        )    
-    },*/
-
     this.validate = function () 
     {
         var valid = true;
@@ -51,9 +26,9 @@ var Form = function(_props)
     {
         this.components.forEach(function (component) {
             try {
-                if (typeof this[component.props.id].getValue() == "string")
-                    this[component.props.id].setValue("");
-                else this[component.props.id].setValue([]);
+                if (typeof this[component.props.id].cmp.value == "string")
+                    this[component.props.id].cmp.value = "";
+                else this[component.props.id].cmp.value = [];
             } catch (error) {
                 
             }   
@@ -64,7 +39,7 @@ var Form = function(_props)
     {
         var value = {};
         this.components.forEach(function (component) {
-            value[component.props.id] = this[component.props.id].getValue();
+            value[component.props.id] = this[component.props.id].cmp.value;
         }.bind(this));
 
         var serialized = JSON.stringify(value);

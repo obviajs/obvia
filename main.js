@@ -6,6 +6,7 @@ rjs.define("./components/base/Spacing.js", "Spacing");
 rjs.define("./components/base/Selectable.js", "Selectable");
 rjs.define("./components/base/Parent.js", "Parent");
 rjs.define("./components/base/NavParent.js", "NavParent");
+rjs.define("./components/base/ContainerType.js","ContainerType");
 //TextInput
 rjs.define("./lib/dependencies/scripts/jquery.inputmask.bundle.min.js", "InputMaskBundle");
 rjs.define("./components/TextInput.js", "TextInput");
@@ -15,6 +16,7 @@ rjs.define("./components/Form/Form.js", "Form");
 rjs.define("./components/Form/FormEventType.js", "FormEventType");
 rjs.define("./components/Form/FormField.js", "FormField");
 rjs.define("./components/Form/FormFieldSize.js", "FormFieldSize");
+rjs.define("./components/Form/Hidden.js", "Hidden");
 //Button
 rjs.define("./components/Button.js", "Button");
 //Label
@@ -110,6 +112,7 @@ rjs.require([
         "Spacing",
         "Selectable",
         "Parent",
+        "ContainerType",
         "NavParent",
         "Container",
         "TabNavigator",
@@ -118,6 +121,7 @@ rjs.require([
         "FormField",
         "FormFieldSize",
         "FormEventType",
+        "Hidden",
         "HierarchicalTree",
         "BootBox",
         "Repeater",
@@ -182,13 +186,13 @@ rjs.require([
        // "FormFieldExample"
     ], function () {
         
-        rjs.define("./examples/Form/ffExample.js", "FormFieldExample");
+        //rjs.define("./examples/Form/ffExample.js", "FormFieldExample");
         //rjs.define("./examples/Label/example.js", "LabelExample");
         // rjs.define("./examples/RadioButton/example.js", "RadioButtonExample");+
         //rjs.define("./examples/AutoComplete/example.js", "AutoComplete");
 
 
-        //rjs.define("./examples/Container/example.js", "ContainerExample");
+        rjs.define("./examples/Container/example.js", "ContainerExample");
         //rjs.define("./examples/Tab/example.js", "TabExample");
         // 
 
