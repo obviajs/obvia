@@ -38,8 +38,6 @@ var TextInput = function (_props, overrided = false) {
                 this.$el.inputmask(_mask);
                 this.attached = true;
             }
- 
-            this.validate();
         }
     };
  
@@ -55,7 +53,7 @@ var TextInput = function (_props, overrided = false) {
  
     this.template = function () {
         return  "<input data-triggers='change' type='text' id='" + this.domID + "' " +
-            (!this.enabled ? "disabled" : "") + " class='" + this.cssClass + "' value='" + this.value + "' >";
+            (!this.enabled ? "disabled" : "") + " value='" + this.value + "' >";
     };
  
     var _defaultParams = {

@@ -50,19 +50,20 @@ var Container = function(_props)
     { 
         return  '<div id="' + this.domID + '" class="container" style="'+(_width?'width:'+_width+'px;':'')+(_height?'width:'+_height+'px;':'')+'" ></div>'; 
     };
-    
+    this.beforeAttach = function() 
+    {
+        this.$container = this.$el;
+        this.addComponents(this.components);
+    };
+
     var _defaultParams = {
     };
     _props = extend(false, false, _defaultParams, _props);
     var _width = _props.width;
     var _height = _props.height;
+    
     Parent.call(this, _props, true);
-
     var base = this.base;
-    this.beforeAttach = function() 
-    {
-        this.$container = this.$el;
-        base.beforeAttach();
-    };
+    
 };
 Container.type = 'container';

@@ -1,21 +1,23 @@
 var flowerCM = window.flowerCM || {};
+rjs.init({debug:false});
 //base Components
 rjs.define("./components/base/Component.js", "Component");
+rjs.define("./components/base/Spacing.js", "Spacing");
 rjs.define("./components/base/Selectable.js", "Selectable");
 rjs.define("./components/base/Parent.js", "Parent");
 rjs.define("./components/base/NavParent.js", "NavParent");
 //TextInput
-rjs.define("./components/TextInput.js", "TextInput");
 rjs.define("./lib/dependencies/scripts/jquery.inputmask.bundle.min.js", "InputMaskBundle");
+rjs.define("./components/TextInput.js", "TextInput");
 //Form
 rjs.define("lib/dependencies/scripts/bootstrap-bootbox.js", "BootBox");
 rjs.define("./components/Form/Form.js", "Form");
 rjs.define("./components/Form/FormEventType.js", "FormEventType");
 rjs.define("./components/Form/FormField.js", "FormField");
+rjs.define("./components/Form/FormFieldSize.js", "FormFieldSize");
 //Button
 rjs.define("./components/Button.js", "Button");
 //Label
-//rjs.define("./components/Label.js", "Label");
 rjs.define("./components/Label.js", "Label");
 
 //HRule
@@ -52,24 +54,22 @@ livespell___installPath = window.location.origin + "/resources/inner_resources/s
 //rjs.define("lib/dependencies/scripts/plugins/SpellCheck/include.js", "SpellCheckJS");
 rjs.define("./components/TextArea.js", "TextArea");
 //TextEditor
-//rjs.define("./components/TextEditor.js", "TextEditor");
-//rjs.define("lib/dependencies/summernote/summernote.css", "SummerNoteCSS");
-//rjs.define("lib/dependencies/summernote/summernote.min.js", "SummerNoteScript");
+rjs.define("./components/TextEditor.js", "TextEditor");
+rjs.define("lib/dependencies/summernote/summernote.css", "SummerNoteCSS");
+rjs.define("lib/dependencies/summernote/summernote.min.js", "SummerNoteScript");
 //Select
 rjs.define("./components/Select.js", "Select");
 //DateTime
 rjs.define("./components/DateTime.js", "DateTime");
-//rjs.define("lib/dependencies/scripts/moment.js", "MomentJS");
-//rjs.define("https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/js/bootstrap-datepicker.min.js", "DatePickerScript");
-//rjs.define("https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/css/bootstrap-datepicker.min.css", "DatePickerCSS");
+rjs.define("lib/dependencies/scripts/moment.js", "MomentJS");
+rjs.define("https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/js/bootstrap-datepicker.min.js", "DatePickerScript");
+rjs.define("https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/css/bootstrap-datepicker.min.css", "DatePickerCSS");
 //DateTimeCb
 rjs.define("./components/DateTimeCb.js", "DateTimeCb");
 //Modal
 rjs.define("./components/Modal/ModalSize.js", "ModalSize");
 rjs.define("./components/Modal/Modal.js", "Modal");
 //AutoComplete
-//rjs.define("https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js", "Select2Script");
-//rjs.define("https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css", "Select2CSS");
 rjs.define("./components/AutoComplete/AutoCompleteEx.js", "AutoCompleteEx");
 rjs.define("./components/AutoComplete/AutoCompleteEx.css", "AutoCompleteExCSS");
 rjs.define("./components/AutoComplete/TokenRenderer.js", "TokenRenderer");
@@ -101,24 +101,13 @@ rjs.define("./components/FormUpload.js", "FormUpload");
 rjs.define("./components//DataGrid/DataGridCellRenderer.js", "DataGridCellRenderer");
 rjs.define("./components//DataGrid/DataGridColumn.js", "DataGridColumn");
 rjs.define("./components//DataGrid/DataGrid.js", "DataGrid");
-//Spacer
-rjs.define("./components/Spacer.js", "Spacer");
-//HierarchicalTree
-//rjs.define("https://cdnjs.cloudflare.com/ajax/libs/jquery.fancytree/2.28.1/jquery.fancytree-all-deps.js", "FancyTreeScript");
-rjs.define("lib/dependencies/efilemanager/skin-lion/ui.fancytree.css", "FancyTreeCSS");
-//rjs.define("./examples/Button/example.js", "ButtonExample");
-//rjs.define("./examples/Image/example.js", "ImageExample");
-//rjs.define("./examples/Repeater/example.js", "RepeaterExample");
-//rjs.define("./examples/Link/example.js", "LinkExample");
-//rjs.define("./examples/Modal/example.js", "ModalExample");
-//rjs.define("./examples/AutoComplete/example.js", "AutoCompleteExample");
-//rjs.define("./examples/DataGrid/example.js", "DataGridExample");
-rjs.define("./examples/Form/example.js", "FormFieldExample");
+
 //Loader
 
 rjs.require([
         "DOMContentLoaded",
         "Component",
+        "Spacing",
         "Selectable",
         "Parent",
         "NavParent",
@@ -127,6 +116,7 @@ rjs.require([
         "Tab",
         "Form",
         "FormField",
+        "FormFieldSize",
         "FormEventType",
         "HierarchicalTree",
         "BootBox",
@@ -135,11 +125,13 @@ rjs.require([
         "Amount",
         "Label",
         "Link",
-        "TextInput", 
         "InputMaskBundle",
+        "TextInput", 
         "TextArea",
         // "SpellCheckJS",
         "Select",
+        "SummerNoteCSS",
+        "SummerNoteScript",
         "TextEditor",
         "DateTime",
         "MomentJS",
@@ -154,11 +146,8 @@ rjs.require([
         "SuggestionRenderer",
         "AutoCompleteEx",
         "AutoCompleteExCSS",
-        "Select2Script",
-        "Select2CSS",
         "ModalSize",
         "Modal",
-        "ModalExample",
         "ComboBox",
         "ComboScript",
         "ComboCSS",
@@ -177,10 +166,10 @@ rjs.require([
         "DataGridCellRenderer",
         "DataGridColumn",
         "DataGrid",
-        "FancyTreeScript",
-        "FancyTreeCSS",
         "FormUpload",
-        "Spacer",
+        "HRule",
+        "Color",
+        "Image"
         //"TabExample",
         //"LabelExample"
         //"Button",
@@ -190,10 +179,10 @@ rjs.require([
         //"LinkExample"
         //"AutoCompleteExample"
         //"DataGridExample",
-        "FormFieldExample"
+       // "FormFieldExample"
     ], function () {
         
-
+        rjs.define("./examples/Form/ffExample.js", "FormFieldExample");
         //rjs.define("./examples/Label/example.js", "LabelExample");
         // rjs.define("./examples/RadioButton/example.js", "RadioButtonExample");+
         //rjs.define("./examples/AutoComplete/example.js", "AutoComplete");
@@ -223,5 +212,11 @@ rjs.require([
         
         //rjs.define("./examples/ComboBox/example.js", "ComboBoxExample");
         //rjs.define("./examples/List/example.js", "ListExample");
+        //rjs.define("./examples/Button/example.js", "ButtonExample");
+        //rjs.define("./examples/Repeater/example.js", "RepeaterExample");
+        //rjs.define("./examples/Link/example.js", "LinkExample");
+        //rjs.define("./examples/Modal/example.js", "ModalExample");
+        //rjs.define("./examples/AutoComplete/example.js", "AutoCompleteExample");
+        //rjs.define("./examples/DataGrid/example.js", "DataGridExample");
 
 }, flowerCM);

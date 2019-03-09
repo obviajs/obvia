@@ -7,14 +7,12 @@ var Parent = function(_props, overrided=false)
     this.addComponent = function (component, cIndex)
     {
         this.components.push(component);
-        _addComponentInternal(component, cIndex);
+        return this.addComponentInContainer(this.$container, component, cIndex);
     }
 
-    var _addComponentInternal = function (component, cIndex) 
+    this.addComponentInContainer = function (container, component, cIndex) 
     {
-        console.log("inside addComponent",_self.$container);
-        console.log("component to be added",component);
-        if(_self.$container)
+        if(container)
         {
             var cmp = Component.fromLiteral(component);
             cmp.on('creationComplete', function (e) {
@@ -29,13 +27,9 @@ var Parent = function(_props, overrided=false)
                 }
 
             }.bind(_self));
-            var maxIndex = _self.$container.children().length;
-            console.log("maxIndex",maxIndex);
-
+            var maxIndex = container.children().length;
             // _self.$container.children().eq(cIndex).after((cmp.render()));
-            console.log("this.$container after shtim",_self.$container);
-            _self.$container.append(cmp.render());
-             console.log("component added",_self.$container);
+            container.append(cmp.render());
             //expose component model
             _self[cmp.id] = cmp;
 
@@ -62,7 +56,7 @@ var Parent = function(_props, overrided=false)
         if(components && Array.isArray(components))
         {
             components.forEach(function (component, cIndex) {
-                _addComponentInternal(component, cIndex);
+                this.addComponentInContainer(this.$container, component, cIndex);
             }.bind(this));
         }
     }

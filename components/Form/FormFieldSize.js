@@ -1,5 +1,5 @@
 var FormFieldSize = 
 {
-    "SMALL":"input-sm",
-    "LARGE":"input-lg"
+    "SMALL":"form-control-sm",
+    "LARGE":"form-control-lg"
 }

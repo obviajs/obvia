@@ -53,8 +53,6 @@ var Modal = function(_props)
     var _title = _props.title;
     var _size = _props.size;
     
-    var base = this.base;
-
     this.beforeAttach = function () 
     {
         console.log("Modal before attach");
@@ -69,6 +67,7 @@ var Modal = function(_props)
     };
 
     Parent.call(this, _props, true);
+    var base = this.base;
     
     this.show = function () 
     {

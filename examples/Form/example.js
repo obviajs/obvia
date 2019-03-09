@@ -1,3 +1,7 @@
+var loader = new Loader({ id: 'loader' });
+$('#root').append(loader.render());
+loader.show();
+
 var Case = {
     form: {
         id: 1,
@@ -119,7 +123,7 @@ var myForm = new Form({
             }
         },
         {
-            constructor: AutoComplete,
+            constructor: AutoCompleteEx,
             props: {
                 id: 'autocomplete',
                 colspan: '6',
@@ -173,7 +177,7 @@ var myForm = new Form({
                 value: "2"
             }
         },
-        {
+     /*   {
             constructor: GoogleMap,
             props: {
                 id: 'map',
@@ -189,7 +193,7 @@ var myForm = new Form({
                     zoomLevel: 7
                 }
             }
-        },
+        },*/
         {
             constructor: Toggle,
             props: {
@@ -418,7 +422,7 @@ var myForm = new Form({
                 ],
                 components: [
                     {
-                        constructor: AutoComplete,
+                        constructor: AutoCompleteEx,
                         props: {
                             id: 'autocompleteR',
                             colspan: '6',
@@ -549,7 +553,7 @@ var myForm = new Form({
                             checkedLabel: "Po"
                         }
                     },
-                    {
+                  /*  {
                         constructor: GoogleMap,
                         props: {
                             id: 'mapR',
@@ -562,7 +566,7 @@ var myForm = new Form({
                             required: false,
                             value: '{mapValue}'
                         }
-                    },
+                    },*/
                     {
                         constructor: RadioGroup,
                         props: {
@@ -816,7 +820,7 @@ var myForm2 = new Form({
                 ],
                 components: [
                     {
-                        constructor: AutoComplete,
+                        constructor: AutoCompleteEx,
                         props: {
                             id: 'autocompleteR',
                             colspan: '6',

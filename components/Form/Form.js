@@ -32,12 +32,6 @@ var Form = function(_props)
         )    
     },*/
 
-    this.beforeAttach = function () 
-    {
-        this.$container = this.$el.find('#' + model.componentContainerID);
-        this.$form = this.$el.find('#'+ this.domID + "-form");
-    }
-
     this.validate = function () 
     {
         var valid = true;
@@ -66,26 +60,6 @@ var Form = function(_props)
         }.bind(this));
     };
 
-  
-
-    Object.defineProperty(this, "enabled", 
-    {
-        get: function enabled() 
-        {
-            return _enabled;
-        },
-        set: function enabled(v) 
-        {
-            if(_enabled != v)
-            {
-                _enabled = v;
-                this.components.forEach(function (component) {
-                    this[component.props.id].enabled = v;
-                }.bind(this));
-            }
-        }
-    });
-
     this.serialize = function (encode = false) 
     {
         var value = {};
@@ -100,22 +74,9 @@ var Form = function(_props)
         return serialized;
     };
 
-
-
     this.template = function () 
     {
-        return "<div id='" + this.domID + "-wrapper' class='col-sm-12'>" +
-                    "<form name='view_form' id='" + this.domID + "-form' method='POST' action='"+this.action+"' class='view_form'>" +
-                        "<div class='col-sm-12' style='padding: 10px'>" +
-                            this.renderFormHeader(this.viewMode) + 
-                            "<div>" +
-                                "<div class='row' id='"+this.domID + "_component_container'>" +
-                                "</div>" +
-                            "</div>" +
-                        "</div>" +
-                    "</form>" +
-                "</div>";
-            
+        return  "<form id='" + this.domID + "' method='"+_method+"' action='"+_action+"'></form>";
     };
     
     this.addFormData = function(name, value)
@@ -208,19 +169,67 @@ var Form = function(_props)
     }
 
     var _defaultParams = {
+        method: "POST"
     };
     _props = extend(false, false, _defaultParams, _props);
     var _width = _props.width;
     var _height = _props.height;
     var _formData = null;
+    var _action = _props.action;
+    var _method = _props.method;
+    
+    this.beforeAttach = function() 
+    {
+        this.$container = this.$form = this.$el;
+        if(this.components && Array.isArray(this.components))
+        {
+            var $form_group;
+            var rowColSpan = 0;
+            for(var i=0;i<this.components.length;i++)
+            {
+                var component = Object.assign({}, this.components[i]);
+                var container = this.$container;
+                if(component.props['spacing'] && component.props['spacing']['colSpan'] && component.props['spacing']['colSpan']>0)
+                {
+                    if(rowColSpan + component.props.spacing.colSpan > 12 || !$form_group)
+                    {
+                        $form_group = $('<div class="form-group row"></div>');
+                        this.$container.append($form_group);
+                    }
+                    container = $form_group;
+                    rowColSpan += component.props.spacing.colSpan;
+                }
+                var cmpInst = this.addComponentInContainer(container, component);
+                if(!component.props['spacing'] || !component.props['spacing']['colSpan'] || component.props['spacing']['colSpan']==0)
+                {
+                    cmpInst.$el.addClass("form-group")
+                }
+            }
+        }
+    };
 
     Parent.call(this, _props, true);
 
     var base = this.base;
-    this.beforeAttach = function() 
+
+    Object.defineProperty(this, "enabled", 
     {
-        this.$container = this.$el;
-        base.beforeAttach();
-    };
+        get: function enabled() 
+        {
+            return _enabled;
+        },
+        set: function enabled(v) 
+        {
+            if(_enabled != v)
+            {
+                _enabled = v;
+                this.components.forEach(function (component) {
+                    this[component.props.id].enabled = v;
+                }.bind(this));
+            }
+        },
+        configurable: true
+    });
+
 };
 Form.type = 'form';

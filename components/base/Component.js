@@ -10,7 +10,6 @@ var Component = function(_props, overrided=false)
     var _id = _props.id;
     var _enabled = _props.enabled;
     var _class = _props.class;
-    var _colSpan = _props.colSpan;
     var _parent = _props.parent;
     var _mousedown = _props.mousedown;
     var _click = _props.click;
@@ -170,17 +169,7 @@ var Component = function(_props, overrided=false)
     };
 
     var _dataTriggerEventList = this.dataTriggerEvents();
-    //spacing of element
-    if (_props['spacing'])
-    {
-        if (_props.spacing['offset'])
-            this.$el.addClass('offset-sm-' + _props.spacing.offset);
-        if (_props.spacing['mb'])
-            this.$el.addClass('mb-' + _props.spacing.mb);
-        if (this.spacing['mt'])
-            this.$el.addClass('mt-' + _props.spacing.mt);
-    }
-
+   
     this.registerEvents = function ()
     {
         return [
@@ -218,29 +207,6 @@ var Component = function(_props, overrided=false)
             this.$el.hide();
         return this;
     }
-    Object.defineProperty(this, "colSpan", 
-    {
-        get: function colSpan() 
-        {
-            return _colSpan;
-        },
-        set: function colSpan(v) 
-        {
-            if(_colSpan != v)
-            {
-                _colSpan = v;
-                if(this.$el && v && !isNaN(v))
-                {
-                    this.$el.removeClass([
-                        'col-sm-0', 'col-sm-1', 'col-sm-2', 'col-sm-3', 'col-sm-4', 'col-sm-5',
-                        'col-sm-6', 'col-sm-7', 'col-sm-8', 'col-sm-9', 'col-sm-10', 'col-sm-11', 'col-sm-12'
-                    ]);
-                    this.$el.addClass('col-sm-' + v);
-                }
-            }
-        },
-        configurable: true
-    });
    
     this.scrollTo = function () 
     {
@@ -335,7 +301,7 @@ var Component = function(_props, overrided=false)
                 return (function(e) { // a closure is created
                     //this here refers to window context
                     var defaultBindTo = "currentItem_"+_self.guid;
-                    this[defaultBindTo] = currentItem;
+                    this[defaultBindTo] = (currentItem || Component.defaultContext);
                    // var context = extend(false, true, this, obj);
                    _watchers.splicea(_watchers.length, 0, BindingUtils.getValue(this, bindingExp, site, site_chain, defaultBindTo));
                 })();	
@@ -501,3 +467,4 @@ Component.check = function(mutations)
         }
     }
 }
+Component.defaultContext = window;
