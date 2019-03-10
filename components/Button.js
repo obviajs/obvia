@@ -82,13 +82,12 @@ var Button = function(_props, overrided=false)
 
     this.template = function () 
     {
-        return  "<button data-triggers='click' id='" + this.domID + "' type='"+_type+"' class='"+this.cssClass+"' "+(_value?"value='"+_value+"'":"")+">"+_label+"</button>";
+        return  "<button data-triggers='click' id='" + this.domID + "' type='"+_type+"'  "+(_value?"value='"+_value+"'":"")+">"+_label+"</button>";
     };
    
     var _defaultParams = {
         label:"",
         type:"button",
-        class:"btn btn-default"
     };
     _props = extend(false, false, _defaultParams, _props);
     

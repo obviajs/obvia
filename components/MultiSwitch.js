@@ -12,23 +12,21 @@ var MultiSwitch = function (_props, overrided = false) {
             return _value;
         },
         set: function value(v) {
-            _value = v;
-            this.list.set(v);
-            this.trigger('change');
+            if((!_value && v) || (_value && !_value.equals(v)))
+            {
+                _value = v;
+                this.list.value = v;
+                this.trigger('change');
+            }
         }
     });
 
     this.beforeAttach = function () {
-        this.$container = this.$el.filter('#' + this.domID + '-container');
+        this.$container = this.$el;
         this.direction = this.direction == undefined || this.direction == null ? 'horizontal' : this.direction;
 
         this.list = new List({
             id: 'list',
-            colspan: '6',
-            label: 'Ministrite',
-            fieldName: 'list',
-            blockProcessAttr: this.blockProcessAttr,
-            required: true,
             direction: this.direction,
             multiselect: _multiselect,
             dataProvider: _dataProvider,
@@ -49,7 +47,7 @@ var MultiSwitch = function (_props, overrided = false) {
                         value: "{" + _labelField + "}",
                         class: "{" + _classField + "}",
                         style: "float: left; border-radius: 0px",
-                        onclick: this.clickHandler.bind(this),
+                        click: this.clickHandler.bind(this),
                         embedded: true
                     }
                 }
@@ -79,17 +77,12 @@ var MultiSwitch = function (_props, overrided = false) {
     };
 
     this.template = function () {
-        return "<div id='" + this.domID + "-container' role='group' style='padding:0'>" +
+        return "<div id='" + this.domID + "' role='group' style='padding:0'>" +
             "</div>";
     };
 
     var _defaultParams = {
         id: '',
-        colspan: '',
-        label: '',
-        fieldName: '',
-        blockProcessAttr: false,
-        required: true,
         multiselect: true,
         dataProvider: [],
         valueField: "",

@@ -13,7 +13,7 @@ var CheckBoxGroup = function (_props, overrided = false) {
         },
         set: function value(v) {
             
-            if(_value && !_value.equals(v))
+            if((!_value && v) || (_value && !_value.equals(v)))
             {
                 _value = v;
                 this.list.value = v;
@@ -32,11 +32,7 @@ var CheckBoxGroup = function (_props, overrided = false) {
         this.$container = this.$el;
         this.list = new List({
             id: 'list',
-            colspan: '6',
-            fieldName: 'list',
             states: _states,
-            blockProcessAttr: this.blockProcessAttr,
-            required: this.required,
             direction: this.direction,
             multiselect: _multiselect,
             dataProvider: _dataProvider,
@@ -46,7 +42,6 @@ var CheckBoxGroup = function (_props, overrided = false) {
             defaultClass: _defaultClass,
             selectedClass: _selectedClass,
             value: _value,
-            embedded: true,
             components: [
                 {
                     constructor: CheckBox,
@@ -75,10 +70,6 @@ var CheckBoxGroup = function (_props, overrided = false) {
 
     var _defaultParams = {
         id: 'checkBoxGroup',
-        colspan: '6',
-        fieldName: 'checkBoxGroupInputR',
-        blockProcessAttr: false,
-        required: true,
         multiselect: true,
         dataProvider: [],
         valueField: "id",

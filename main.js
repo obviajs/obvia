@@ -192,7 +192,7 @@ rjs.require([
         //rjs.define("./examples/AutoComplete/example.js", "AutoComplete");
 
 
-        rjs.define("./examples/Container/example.js", "ContainerExample");
+        //rjs.define("./examples/Container/example.js", "ContainerExample");
         //rjs.define("./examples/Tab/example.js", "TabExample");
         // 
 
@@ -215,7 +215,7 @@ rjs.require([
         // rjs.define("./examples/Form/ajaxExample.js", "FormExample");
         
         //rjs.define("./examples/ComboBox/example.js", "ComboBoxExample");
-        //rjs.define("./examples/List/example.js", "ListExample");
+        rjs.define("./examples/List/example.js", "ListExample");
         //rjs.define("./examples/Button/example.js", "ButtonExample");
         //rjs.define("./examples/Repeater/example.js", "RepeaterExample");
         //rjs.define("./examples/Link/example.js", "LinkExample");

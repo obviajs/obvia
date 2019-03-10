@@ -70,7 +70,7 @@ var FormUpload = KxGenerator.createComponent({
             id: 'list',
             colspan: '6',
             direction: this.direction,
-            seperator: true,
+            separator: true,
             defaultItem: this.defaultItem,
             dataProvider: this.dataProvider,
             embedded: true,

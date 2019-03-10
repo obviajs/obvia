@@ -13,7 +13,6 @@ var List = function (_props, overrided = false) {
         },
         set: function (value) {
             if (!_value.equals(value)) {
-                var arrDpFieldsChanged = [];
                 var v = {};
                 if (value == undefined || value == null) {
                     value = [];
@@ -33,66 +32,71 @@ var List = function (_props, overrided = false) {
                     var arrDpIndex = (v == undefined || v == null || v[_valueField] == undefined) ? -1 : indexOfObject(_dataProvider, _valueField, v[_valueField]);
                     if (arrDpIndex != -1) {
                         _states.forEach(function (state) {
+                            if(state.dataProviderField == _classesField){
+                                this.repeater[_component.props.id][arrDpIndex].$el.removeClass(state.states.on);
+                            }
                             _dataProvider[arrDpIndex][state.dataProviderField] = state.states.off;
-                            arrDpFieldsChanged.pushUnique(state.dataProviderField);
                         }.bind(this));
                     }
                 }.bind(this));
 
                 this.value.slice(0).forEach(function (v, i) {
-                    var arrDpIndex = (v == undefined || v == null || v[_valueField] == undefined) ? -1 : indexOfObject(_dataProvider, _valueField, v[_valueField]);
+                    var arrDpIndex = (v == null || v[_valueField] == null) ? -1 : indexOfObject(_dataProvider, _valueField, v[_valueField]);
                     if (arrDpIndex != -1) {
                         _states.forEach(function (state) {
+                            if(state.dataProviderField == _classesField){
+                                this.repeater[_component.props.id][arrDpIndex].$el.removeClass(state.states.off);
+                            }
                             _dataProvider[arrDpIndex][state.dataProviderField] = state.states.on;
-                            arrDpFieldsChanged.pushUnique(state.dataProviderField);
                         }.bind(this));
                     } else {
-                        self.value.splice(i, 1);
+                        _self.value.splice(i, 1);
                     }
                 }.bind(this));
 
                 this.trigger('change');
-                // this.repeater.dataProviderChanged(arrDpFieldsChanged);
             }
         }
     });
 
     this.beforeAttach = function () {
         this.$container = this.$el;
-
-        _components[0].props.click = click.bind(this);
-        // this.components[0].props.ondblclick = this.doubleClickHandler.bind(this);
-        // this.components[0].props.onmousedown = this.mouseDownHandler.bind(this);
-
-        _direction = _direction == undefined || _direction == null ? 'horizontal' : _direction;
-        _states = _states == undefined || _states == null ?
-            [
-                {dataProviderField: _classField, states: {on: _selectedClass, off: _defaultClass}}
-            ] : _states;
+        if(_component) {
+            _component.props.click = _click.bind(this);
+            _component.props.dblclick = _dblclick.bind(this);
+        }
+       
 
         this.repeater = new Repeater({
             id: 'listRepeater',
             defaultItem: this.defaultItem,
             rendering: {
-                direction: this.direction,
-                seperator: this.seperator || false,
+                direction: _direction,
+                separator: this.separator || false,
                 actions: false
             },
             dataProvider: _dataProvider,
-            components: _components
+            components: [_component]
         }).on('creationComplete', function (e) {
             e.stopPropagation();
-            if (self.value == undefined || self.value == "")
-                self.value = [];
+            if (_self.value == undefined || _self.value == "")
+                _self.value = [];
             var v = this.value.slice();
             //trick to pass property value updated check on the first setValue call below (initial value)
+            _states = _states == null ?
+            [
+                {dataProviderField: _classesField, states: {on: _selectedClasses, off: _defaultClasses}}
+            ] : _states;
+            if(_classesField==null  && this.repeater[_component.props.id] && this.repeater[_component.props.id].length>0){
+                _classesField = this.repeater[_component.props.id][0].getBindingExpression("classes");
+            }
             this.value = [];
-            this.value = v;
+            this.value = v; 
             this.trigger('creationComplete');
         }.bind(this));
     };
 
-    this.handleComponentClick = function (e, repeaterEventArgs) {
+    this.selectComponent = function (e, repeaterEventArgs) {
         var componentID = _self.repeater.components[0].props.id;
         var clickedComponent = repeaterEventArgs.currentRow[componentID];
         var index = repeaterEventArgs.currentIndex;
@@ -128,81 +132,58 @@ var List = function (_props, overrided = false) {
     };
 
     this.template = function () {
-        return "<div id='" + this.domID + "' role='group' style='padding:0'>" +
+        return "<div data-triggers='change' id='" + this.domID + "' role='group' style='padding:0'>" +
             "</div>";
     };
 
     var _defaultParams = {
         id: 'list',
-        colspan: '6',
         direction: 'horizontal',
         multiselect: false,
         dataProvider: [],
         valueField: "id",
-        classField: "buttonClass",
-        defaultClass: "btn btn-sm btn-default",
-        selectedClass: "btn btn-sm btn-success",
+        defaultClasses: ["btn btn-sm btn-default"],
+        selectedClasses: ["btn btn-sm btn-success"],
         value: [],
-        components: [
-            {
-                constructor: Button,
-                props: {
-                    id: 'button',
-                    type: "button",
-                    value: "{text}",
-                    label: "",
-                    class: "{buttonClass}",
-                    style: "float: left; border-radius: 0px"
-                }
-            }
-        ],
     };
 
     _props = extend(false, false, _defaultParams, _props);
 
     var _multiselect = _props.multiselect;
     var _dataProvider = _props.dataProvider;
-    var _components = _props.components;
+    var _component = _props.component;
     var _value = _props.value;
     var _states = _props.states;
     var _direction = _props.direction;
     var _valueField = _props.valueField;
-    var _classField = _props.classField;
-    var _selectedClass = _props.selectedClass;
-    var _defaultClass = _props.defaultClass;
-    // var _change = _props.change;
-    // var _mousedown = _props.mouseDownHandler;
-    var _click = _props.click;
-    var _dblclick = _props.dblclick;
-    //
-    // _props.change = function (e) {
-    //     if (typeof _change == 'function')
-    //         _change.apply(this, arguments);
-    // };
-    // // //
-    // _props.mouseDownHandler = function (e) {
-    //     if (typeof this.onmousedown == 'function')
-    //         this.onmousedown.apply(this, arguments);
-    // };
-    click = function (e) {
-        if (typeof this.click == 'function')
-            this.click.apply(this, arguments);
+    var _classesField = _props.classesField;
+    var _selectedClasses = _props.selectedClasses;
+    var _defaultClasses = _props.defaultClasses;
+    var _change = _props.change;
+ 
+    var _cmpClick = _component.props.click;
+    var _cmpDblClick = _component.props.dblclick;
+
+    var _click = function (e) {
+        if (typeof _cmpClick == 'function')
+            _cmpClick.apply(this, arguments);
 
         if (!e.isDefaultPrevented()) {
-            _self.handleComponentClick.apply(this, arguments);
+            _self.selectComponent.apply(this, arguments);
         }
     };
 
-    _props.dblclick = function (e) {
-        if (typeof _dblclick == 'function')
-            _dblclick.apply(this, arguments);
+    var _dblclick = function (e) {
+        if (typeof _cmpDblClick == 'function')
+            _cmpDblClick.apply(this, arguments);
 
         if (!e.isDefaultPrevented()) {
-            _self.handleComponentClick.apply(this, arguments);
+            _self.selectComponent.apply(this, arguments);
         }
     };
 
     Component.call(this, _props);
+
     this.afterAttach = function (e) {
 
     };

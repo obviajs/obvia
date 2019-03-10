@@ -677,7 +677,7 @@ var DataGrid = function(_props)
     var _defaultParams = {
         rendering: {
 			direction: 'vertical',
-			seperator: true,
+			separator: true,
 			actions: false
         },
         showRowIndex:true,

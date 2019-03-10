@@ -11,7 +11,7 @@ var RadioGroup = function (_props, overrided = false) {
             return _value;
         },
         set: function value(v) {
-            if(_value && !_value.equals(v))
+            if((!_value && v) || (_value && !_value.equals(v)))
             {
                 _value = v;
                 this.list.value = v;
@@ -30,11 +30,7 @@ var RadioGroup = function (_props, overrided = false) {
         this.$container = this.$el;
         this.list = new List({
             id: 'list',
-            colspan: '6',
-            fieldName: 'list',
             states: _states,
-            blockProcessAttr: this.blockProcessAttr,
-            required: this.required,
             direction: this.direction,
             multiselect: false,
             dataProvider: _dataProvider,
@@ -44,7 +40,6 @@ var RadioGroup = function (_props, overrided = false) {
             defaultClass: _defaultClass,
             selectedClass: _selectedClass,
             value: _value,
-            embedded: true,
             components: [
                 {
                     constructor: RadioButton,
@@ -79,7 +74,6 @@ var RadioGroup = function (_props, overrided = false) {
 
     var _defaultParams = {
         id: 'radiogroup',
-        colspan: '6',
         checkedField: true,
         dataProvider: [],
         valueField: 'id',

@@ -325,14 +325,14 @@ var Repeater = function(_props)
                     $('<div>')
                         .addClass("repeated-block")
                         .css((_self.rendering.direction == 'horizontal' ? {display: 'inline-block'} : {}))
-                        .append((_self.rendering.seperator && (index > 1) ? '<hr id="repeated-block-hr">' : ''))
+                        .append((_self.rendering.separator && (index > 1) ? '<hr id="repeated-block-hr">' : ''))
                         .append(renderedRow)
                 );   
                */
             renderedRow
               .addClass("repeated-block")
               .css((_rendering.direction == 'horizontal' ? {display: 'inline-block'} : {}))
-              .append((_rendering.seperator && (index > 1) && (index < _self.dataProvider.length-1) ? '<hr id="repeated-block-hr">' : ''));            
+              .append((_rendering.separator && (index > 1) && (index < _self.dataProvider.length-1) ? '<hr id="repeated-block-hr">' : ''));            
            
             if(_self.mode =="append")
             {
@@ -473,7 +473,7 @@ var Repeater = function(_props)
     var _defaultParams = {
         rendering: {
 			direction: 'vertical',
-			seperator: true,
+			separator: true,
 			actions: false
         },
         dataProvider:[],
@@ -530,7 +530,6 @@ var Repeater = function(_props)
 
     this.registerEvents = function () 
     {
-        console.log("register events is called every time that a repeater is created")
         return ([].concat((_rendering.actions ? 
         [
             {

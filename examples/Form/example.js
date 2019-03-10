@@ -332,7 +332,7 @@ var myForm = new Form({
                 id: 'repeater',
                 rendering: {
                     direction: 'vertical',
-                    seperator: true,
+                    separator: true,
                     actions: true
                 },
                 defaultItem: {
@@ -730,7 +730,7 @@ var myForm2 = new Form({
                 id: 'repeater',
                 rendering: {
                     direction: 'vertical',
-                    seperator: true,
+                    separator: true,
                     actions: true
                 },
                 defaultItem: {

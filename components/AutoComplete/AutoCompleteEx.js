@@ -55,7 +55,7 @@ var AutoCompleteEx = function(_props)
             defaultItem: this.defaultItem,
             rendering: {
                 direction: 'horizontal',
-                seperator: this.seperator || false,
+                separator: this.separator || false,
                 actions: false
             },
             embedded:true,
@@ -151,7 +151,7 @@ var AutoCompleteEx = function(_props)
             defaultItem: this.defaultItem,
             rendering: {
                 direction: 'vertical',
-                seperator: this.seperator || false,
+                separator: this.separator || false,
                 actions: false
             },
             embedded: true,

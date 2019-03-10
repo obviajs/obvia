@@ -13,6 +13,8 @@ var Component = function(_props, overrided=false)
     var _classes;
     var _parent = _props.parent;
     var _mousedown = _props.mousedown;
+    var _mouseover = _props.mouseover;
+    var _mouseup = _props.mouseup;
     var _click = _props.click;
     var _dblclick = _props.dblclick;
     var _keydown = _props.keydown;
@@ -130,7 +132,9 @@ var Component = function(_props, overrided=false)
     [
         {
             registerTo: this.$el, events: {
-                'mousedown' : _mousedown && typeof _mousedown == 'function' ? _mousedown.bind(this) : undefined,
+                'mousedown': _mousedown && typeof _mousedown == 'function' ? _mousedown.bind(this) : undefined,
+                'mouseover': _mouseover && typeof _mouseover == 'function' ? _mouseover.bind(this) : undefined,
+                'mouseup': _mouseup && typeof _mouseup == 'function' ? _mouseup.bind(this) : undefined,
                 'click': _click && typeof _click == 'function' ? _click.bind(this) : undefined,
                 'dblclick': _dblclick && typeof _dblclick == 'function' ? _dblclick.bind(this) : undefined,
                 'keydown': _keydown && typeof _keydown == 'function' ? _keydown.bind(this) : undefined,
@@ -290,7 +294,16 @@ var Component = function(_props, overrided=false)
     ++Component.instanceCnt;
 
  
-    
+    this.getBindingExpression = function(property)
+    {
+        var match = getMatching(_bindings, "property",  property, true);
+        var expression = null;
+        if(match.objects.length>0){
+            expression = match.objects[0]["expression"];
+        }
+        return expression;
+    },
+
     this.resetBindings = function()
     {
         for(var i=0;i<_watchers.length;i++)

@@ -3,7 +3,7 @@ var myRepeater = new Repeater({
     label: 'Example Repeater',
 	rendering: {
 				direction: 'vertical',
-				seperator: true,
+				separator: true,
 				actions: false
 			},
     defaultItem: {
