@@ -12,8 +12,8 @@ var List = function (_props, overrided = false) {
             return _value;
         },
         set: function (value) {
-            if (!_value.equals(value)) {
-                var v = {};
+            if((!_value && value) || (_value && !_value.equals(value))){
+               var v = {};
                 if (value == undefined || value == null) {
                     value = [];
                 } else if (typeof value === "string") {
@@ -33,7 +33,8 @@ var List = function (_props, overrided = false) {
                     if (arrDpIndex != -1) {
                         _states.forEach(function (state) {
                             if(state.dataProviderField == _classesField){
-                                this.repeater[_component.props.id][arrDpIndex].$el.removeClass(state.states.on);
+                                if(this.repeater)
+                                    this.repeater[_component.props.id][arrDpIndex].$el.removeClass(state.states.on);
                             }
                             _dataProvider[arrDpIndex][state.dataProviderField] = state.states.off;
                         }.bind(this));
@@ -45,7 +46,8 @@ var List = function (_props, overrided = false) {
                     if (arrDpIndex != -1) {
                         _states.forEach(function (state) {
                             if(state.dataProviderField == _classesField){
-                                this.repeater[_component.props.id][arrDpIndex].$el.removeClass(state.states.off);
+                                if(this.repeater)
+                                    this.repeater[_component.props.id][arrDpIndex].$el.removeClass(state.states.off);
                             }
                             _dataProvider[arrDpIndex][state.dataProviderField] = state.states.on;
                         }.bind(this));
@@ -53,8 +55,9 @@ var List = function (_props, overrided = false) {
                         _self.value.splice(i, 1);
                     }
                 }.bind(this));
-
-                this.trigger('change');
+                if(this.attached){
+                    this.trigger('change');
+                }
             }
         }
     });
@@ -79,21 +82,33 @@ var List = function (_props, overrided = false) {
             components: [_component]
         }).on('creationComplete', function (e) {
             e.stopPropagation();
-            if (_self.value == undefined || _self.value == "")
-                _self.value = [];
-            var v = this.value.slice();
             //trick to pass property value updated check on the first setValue call below (initial value)
-            _states = _states == null ?
+            this.trigger('creationComplete');
+        }.bind(this));
+
+        _states = _states == null ?
             [
                 {dataProviderField: _classesField, states: {on: _selectedClasses, off: _defaultClasses}}
             ] : _states;
-            if(_classesField==null  && this.repeater[_component.props.id] && this.repeater[_component.props.id].length>0){
-                _classesField = this.repeater[_component.props.id][0].getBindingExpression("classes");
+        
+        var lookUpValues = _value ? (!Array.isArray(_value) ? (_value=[_value], true):true):false;
+        var ind = -1;
+        for(var i=0;i<_dataProvider.length;i++)
+        {
+            if(lookUpValues){
+                ind = indexOfObject(_value, _valueField,  _dataProvider[i][_valueField]);
+                _states.forEach(function (state) {
+                    if(ind>-1){
+                        _dataProvider[i][state.dataProviderField] = state.states.on;
+                    }
+                });
             }
-            this.value = [];
-            this.value = v; 
-            this.trigger('creationComplete');
-        }.bind(this));
+            if(!lookUpValues || ind == -1) {
+                _states.forEach(function (state) {
+                    _dataProvider[i][state.dataProviderField] = state.states.off;
+                });
+            }
+        }
     };
 
     this.selectComponent = function (e, repeaterEventArgs) {
@@ -132,7 +147,7 @@ var List = function (_props, overrided = false) {
     };
 
     this.template = function () {
-        return "<div data-triggers='change' id='" + this.domID + "' role='group' style='padding:0'>" +
+        return "<div data-triggers='change itemClick itemDblClick' id='" + this.domID + "' role='group' style='padding:0'>" +
             "</div>";
     };
 
@@ -167,7 +182,7 @@ var List = function (_props, overrided = false) {
     var _click = function (e) {
         if (typeof _cmpClick == 'function')
             _cmpClick.apply(this, arguments);
-
+        this.$el.trigger("itemClick", arguments);
         if (!e.isDefaultPrevented()) {
             _self.selectComponent.apply(this, arguments);
         }
@@ -176,7 +191,7 @@ var List = function (_props, overrided = false) {
     var _dblclick = function (e) {
         if (typeof _cmpDblClick == 'function')
             _cmpDblClick.apply(this, arguments);
-
+        this.$el.trigger("itemDblClick", arguments);
         if (!e.isDefaultPrevented()) {
             _self.selectComponent.apply(this, arguments);
         }
@@ -185,7 +200,15 @@ var List = function (_props, overrided = false) {
     Component.call(this, _props);
 
     this.afterAttach = function (e) {
-
+        if (e.target.id == this.domID) 
+        {
+            if (_value == null || _value == "")
+                _value = [];
+            var v = _value.slice(0);  
+            _value = null;  
+            this.value = v; 
+            this.attached = true;
+        }
     };
 
     this.render = function () {
@@ -196,6 +219,36 @@ var List = function (_props, overrided = false) {
     if (overrided) {
         this.keepBase();
     }
+
+    Object.defineProperty(this, "dataProvider", 
+    {
+        get: function dataProvider() 
+        {
+            return _dataProvider;
+        },
+        set: function dataProvider(v) 
+        {
+            if(_dataProvider != v)
+            {
+                _dataProvider = v;
+            }
+        }
+    });
+    Object.defineProperty(this, "enabled", 
+    {
+        get: function enabled() 
+        {
+            return _enabled;
+        },
+        set: function enabled(v) 
+        {
+            if(_enabled != v)
+            {
+                _enabled = v;
+                this.repeater.enabled = v;
+            }
+        }
+    });
 
 };
 

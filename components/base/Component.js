@@ -22,6 +22,7 @@ var Component = function(_props, overrided=false)
     
     var _watchers = [];
     var _bindings = [];
+    var _attached = false;
 
     //var _propUpdateMap = {"label":{"o":$el, "fn":"html", "p":[] }, "hyperlink":{}};
     //generate GUID for this component
@@ -85,7 +86,7 @@ var Component = function(_props, overrided=false)
             return _bindings;
         }
     });
-
+    
     Object.defineProperty(this, "enabled",
     {
         get: function enabled()
@@ -395,7 +396,6 @@ var Component = function(_props, overrided=false)
                }
            });
        }
-
        _self.trigger('afterAttach');
    });
    

@@ -21,54 +21,45 @@ var RadioGroup = function (_props, overrided = false) {
     });
 
     this.beforeAttach = function () {
-        
-        _states = [
-            {dataProviderField: _classField, states: {on: _selectedClass, off: _defaultClass}},
-            {dataProviderField: _checkedField, states: {on: true, off: false}}
-        ];
-        this.direction = this.direction == undefined || this.direction == null ? 'vertical' : this.direction;
         this.$container = this.$el;
+        _states = [
+            {dataProviderField: _classesField, states: {on: _selectedClasses, off: _defaultClasses}},
+            {dataProviderField: _checkedField, states: {on: true, off: false}}
+        ];        
         this.list = new List({
             id: 'list',
             states: _states,
-            direction: this.direction,
+            direction: _direction,
             multiselect: false,
             dataProvider: _dataProvider,
             valueField: _valueField,
             labelField: _labelField,
-            classField: _classField,
-            defaultClass: _defaultClass,
-            selectedClass: _selectedClass,
+            classesField: _classesField,
+            defaultClasses: _defaultClasses,
+            selectedClasses: _selectedClasses,
             value: _value,
-            components: [
-                {
-                    constructor: RadioButton,
-                    props: {
-                        id: 'radioButton',
-                        label: "{" + _labelField + "}",
-                        value: "{" + _valueField + "}",
-                        checked: "{" + _checkedField + "}",
-                        class: "{" + _classField + "}",
-                        click: this.clickHandler.bind(this),
-                        enabled: "{" + _enabledField + "}",
-                    }
+            component: {
+                constructor: RadioButton,
+                props: {
+                    id: 'radioButton',
+                    label: "{" + _labelField + "}",
+                    value: "{" + _valueField + "}",
+                    checked: "{" + _checkedField + "}",
+                    class: "{" + _classesField + "}",
+                    enabled: "{" + _enabledField + "}",
                 }
-            ],
+            },
         }).on('creationComplete', function (e) {
             e.stopPropagation();
             this.trigger('creationComplete');
         }.bind(this)).on('change', function () {
-            _value = this.list.value;
+            e.stopImmediatePropagation();
+            this.value = this.list.value;
         }.bind(this));
     };
 
-    this.clickHandler = function (e) {
-        if (typeof this.onclick == 'function')
-            this.onclick.apply(this, arguments);
-    };
-
     this.template = function () {
-        return "<div id='" + this.domID + "' class='radiogroup card' style='padding:10px;'>" +
+        return "<div data-triggers='change itemClick itemDblClick' id='" + this.domID + "' class='radiogroup card' style='padding:10px;'>" +
             "</div>"
     };
 
@@ -78,14 +69,13 @@ var RadioGroup = function (_props, overrided = false) {
         dataProvider: [],
         valueField: 'id',
         labelField: 'text',
-        classField: "buttonClass",
-        defaultClass: 'btn btn-xs btn-default',
-        selectedClass: 'btn btn-xs btn-success',
+        classesField: "buttonClass",
+        defaultClasses: [],
+        selectedClasses: [],
         enabledField: "enabled",
+        checkedField: "checked",
         value: [],
-        click: function (e) {
-            console.log("From RadioGroup ClickAction");
-        }
+        direction: "vertical"
     };
 
     _props = extend(false, false, _defaultParams, _props);
@@ -94,12 +84,13 @@ var RadioGroup = function (_props, overrided = false) {
     var _labelField = _props.labelField;
     var _valueField = _props.valueField;
     var _checkedField = _props.checkedField;
-    var _classField = _props.classField;
+    var _classesField = _props.classesField;
     var _enabledField = _props.enabledField;
     var _dataProvider = _props.dataProvider;
     var _states = _props.states;
-    var _selectedClass = _props.selectedClass;
-    var _defaultClass = _props.defaultClass;
+    var _selectedClasses = _props.selectedClasses;
+    var _defaultClasses = _props.defaultClasses;
+    var _direction = _props.direction;
 
     Component.call(this, _props);
 

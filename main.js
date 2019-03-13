@@ -205,7 +205,7 @@ rjs.require([
         //rjs.define("./examples/Color/example.js", "ColorExample");
         // rjs.define("./examples/CheckBox/example.js", "CheckBoxExample");
         // rjs.define("./examples/RadioButton/example.js", "RadioButtonExample");+
-        // rjs.define("./examples/CheckBoxGroup/example.js", "CheckBoxGroupExample");
+         rjs.define("./examples/CheckBoxGroup/example.js", "CheckBoxGroupExample");
         // rjs.define("./examples/RadioGroup/example.js", "RadioGroupExample");
         // rjs.define("./examples/Upload/example.js", "UploadExample");
         // rjs.define("./examples/Form/example.js", "FormExample");
@@ -215,7 +215,7 @@ rjs.require([
         // rjs.define("./examples/Form/ajaxExample.js", "FormExample");
         
         //rjs.define("./examples/ComboBox/example.js", "ComboBoxExample");
-        rjs.define("./examples/List/example.js", "ListExample");
+        //rjs.define("./examples/List/example.js", "ListExample");
         //rjs.define("./examples/Button/example.js", "ButtonExample");
         //rjs.define("./examples/Repeater/example.js", "RepeaterExample");
         //rjs.define("./examples/Link/example.js", "LinkExample");
