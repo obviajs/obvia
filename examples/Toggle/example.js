@@ -1,12 +1,11 @@
 var myToggle = new Toggle({
     id: 'checkbox',
-    colspan: '6',
-    label: 'Checkbox',
-    blockProcessAttr: false,
-    required: false,
     value: true,
-    unCheckedLabel: "Jo",
-    checkedLabel: "Po"
+    offLabel: "Jo",
+    onLabel: "Po",
+    change: changeTest
 });
-
+function changeTest(){
+    console.log("Toggle ChangeTest");
+}
 $('#root').append(myToggle.render());
