@@ -21,11 +21,6 @@ var Repeater = function(_props)
             this.dataProviderKeys = Object.keys(this.dataProvider[0]);
             this.defaultItem = this.buildDefaultItem(this.dataProvider);
         }
-
-        return {
-            displayAddButton: _rendering.actions,
-            displayRemoveButton: _rendering.actions
-        }
     };
 
     this.buildDefaultItem = function (dp) {
@@ -457,33 +452,37 @@ var Repeater = function(_props)
 
     this.template = function () 
     {
-        return "<div id='" + this.domID + "' class='"+(this.colspan?"col-sm-" + this.colspan:"")+ "'>" +
-                    "<div id='" + this.domID + "_container'></div>" +  
-    (_rendering.actions?("<div id='actions_" + this.domID  + "' class='col-sm-offset-10 col-sm-2 px-0 float-right' style='overflow:hidden;'>" +
-                        "<button id='" + this.domID  + "_btnAddRow' type='button' class='float-right btn btn-sm btn-secondary'>" +
-                            "<i class='fas fa-plus'></i> Add" +
-                        "</button>" +
-                        "<button id='" + this.domID  + "_btnRemoveRow' type='button' class='mx-1 float-right btn btn-sm btn-danger'>" +
-                            "<i class='fas fa-minus'></i> Remove" + 
-                        "</button>" +
-                    "</div>"):"</div>");
+        if(_container)
+            if(_container.jquery)
+                this.$el = _container
+            else{
+                _container.props.guid = this.guid;
+                this.$el = Component.fromLiteral(_container).$el;
+            }
+        return null;
     };
+
     this.userCanManageItems = true;
 
     var _defaultParams = {
         rendering: {
 			direction: 'vertical',
-			separator: true,
-			actions: false
+			separator: true
         },
         dataProvider:[],
-        embedded:true
+        container:{
+            constructor: Container,
+            props: {
+                id: _props.id,
+                type: ContainerType.NONE
+            }
+        }
     };
     _props = extend(false, false, _defaultParams, _props);
     var _dataProvider = _props.dataProvider;
     var _rendering = _props.rendering;
-    var _embedded = _props.embedded;
     var _enabled = _props.enabled;
+    var _container = _props.container;
     this.components = _props.components;
 
     Component.call(this, _props, true);
@@ -502,16 +501,11 @@ var Repeater = function(_props)
     this.render = function () 
     {
         var _self = this;
-
         var parent = this.$el.parent();
        // if(parent.length>0)
        //     this.$el.remove();
         this.$el.trigger('onBeginDraw');
-
-        this.$container = this.$container || this.$el.find('#' + this.domID + '_container'); 
-        this.$btnAddRow = this.$btnAddRow || this.$el.find('#' + this.domID+'_btnAddRow');
-        this.$btnRemoveRow = this.$btnRemoveRow || this.$el.find('#' + this.domID);
-
+        this.$container = this.$el;
         this.$container.empty();
         this.rows = [];
         this.focusedRow = 0,
@@ -530,25 +524,13 @@ var Repeater = function(_props)
 
     this.registerEvents = function () 
     {
-        return ([].concat((_rendering.actions ? 
-        [
-            {
-                registerTo: this.$btnRemoveRow, events: { 
-                    'click': _removeRowHandler.bind(this)
-                }
-            },
-            {
-                registerTo: this.$btnAddRow, events: { 
-                    'click': _addRowHandler.bind(this)
-                }
-            }
-        ]:[
+        return [
             {
                 registerTo: this.$container, events: {
                     'keydown': this.containerKeyDown.bind(this)
                 }
             }
-        ])));        
+        ];        
     };
     Object.defineProperty(this, "dataProvider", 
     {
@@ -576,12 +558,6 @@ var Repeater = function(_props)
             {
                 _enabled = v;
                 var _self = this;
-                /* model check
-                var model = this.getModel();
-                if (_rendering.actions) {
-                    model.displayAddButton = false;
-                    model.displayRemoveButton = false;
-                }*/
 
                 for (var i = 0; i < this.dataProvider.length; i++)
                 {

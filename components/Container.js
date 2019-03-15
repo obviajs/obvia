@@ -66,22 +66,42 @@ var Container = function(_props)
         this.addComponents(this.components);
     };
 
+    this.afterAttach = function (e) 
+    {
+        if (e.target.id == this.domID) 
+        {
+            if (typeof _afterAttach == 'function')
+                _afterAttach.apply(this, arguments);
+            e.preventDefault();
+        }
+    };
+
     var _defaultParams = {
-        type: ContainerType.CONTAINER
+        type: ContainerType.CONTAINER,
+        components:[]
     };
     _props = extend(false, false, _defaultParams, _props);
     var _width;
     var _height;
     var _type = _props.type;
-    
+    var _afterAttach = _props.afterAttach;
+    _props.afterAttach = this.afterAttach;
+   
+
     Parent.call(this, _props);
     var _spacing = new Spacing(_props.spacing, this.$el);
 
     this.width = _props.width;
     this.height = _props.height;
 
-    if(_type)
+    if(_type && _type !="")
         this.$el.addClass(_type); 
     
+    
+    /*
+    this.registerEvents = function () 
+    {
+        return [];
+    }*/
 };
 Container.type = 'container';

@@ -12,15 +12,10 @@ var CheckBoxGroup = function (_props, overrided = false) {
             return _value;
         },
         set: function value(v) {
-            if((!_value && v) || (_value && !_value.equals(v)))
-            {
-                _value = v;
-                this.list.value = v;
-                this.trigger('change');
-            }
+            this.list.value = v;
         }
     });
-
+    
     this.beforeAttach = function () {
         _multiselect = (_multiselect != null ? _multiselect : true);
         this.$container = this.$el;
@@ -56,7 +51,10 @@ var CheckBoxGroup = function (_props, overrided = false) {
             this.trigger('creationComplete');
         }.bind(this)).on('change', function (e) {
             e.stopImmediatePropagation();
-            this.value = this.list.value;
+            if (e.target.id == this.list.domID){
+                _value = this.list.value;
+                this.trigger('change');
+            }
         }.bind(this));
     };
 

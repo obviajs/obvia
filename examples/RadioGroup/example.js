@@ -13,10 +13,14 @@ var myRadioGroup = new RadioGroup({
     enabledField: "enabled",
     checkedField: "checked",
     value: [{ "id": "2", "text": "Ministria e Drejtesise", "enabled":true}],
-    onclick : function(e){
+    itemClick : function(e){
         console.log("From RadioGroup ClickAction"); 
         //e.preventDefault();
-    } 
+    },
+    change : function(e){
+        console.log("From RadioGroup ChangeAction"); 
+        //e.preventDefault();
+    }
 });
 
 $('#root').append(myRadioGroup.render());

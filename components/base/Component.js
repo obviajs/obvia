@@ -3,11 +3,12 @@ var Component = function(_props, overrided=false)
     var _defaultParams = {
         id: "Component_"+Component.instanceCnt,
         enabled: true,
-        _classes: []
+        classes: [],
+        guid: guid()
     };
 
     _props = extend(false, false, _defaultParams, _props);
-    var _guid = guid();
+    var _guid = _props.guid;
     var _id = _props.id;
     var _enabled = _props.enabled;
     var _classes;
@@ -48,6 +49,17 @@ var Component = function(_props, overrided=false)
             return _id + '_' + _guid;
         }
     });
+
+    Object.defineProperty(this, "props", {
+        get: function props() {
+            var obj = {};
+            for(var prop in _props){
+                if(this.hasOwnProperty(prop))
+                    obj[prop] = this[prop];
+            }
+            return obj;
+        }
+    });  
 
     Object.defineProperty(this, "parent",
     {
@@ -124,7 +136,11 @@ var Component = function(_props, overrided=false)
 
     this.$el = null;
     this.embedded = false;
-    this.$el = $(this.template());
+    var tpl = this.template();
+    if('jquery' in Object(tpl))
+        this.$el = tpl;
+    else if(tpl && tpl!="")
+        this.$el = $(tpl);
     if(_props.classes)
     {
         this.classes = _props.classes;
@@ -206,10 +222,15 @@ var Component = function(_props, overrided=false)
 
     this.afterAttach = function (e)
     {
-        if (typeof _props.afterAttach == 'function')
-            _props.afterAttach.apply(this, arguments);
-        this.trigger('creationComplete');
-        console.log("creation Complete", this.$el.attr("id"));
+        if (e.target.id == this.domID) 
+        {
+            if (typeof _props.afterAttach == 'function')
+                _props.afterAttach.apply(this, arguments);
+            if(!e.isDefaultPrevented()){
+                this.trigger('creationComplete');
+                console.log("creation Complete", this.$el.attr("id"));
+            }
+        }
     };
     //action methods on component
     this.show = function ()

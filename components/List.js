@@ -64,27 +64,7 @@ var List = function (_props, overrided = false) {
 
     this.beforeAttach = function () {
         this.$container = this.$el;
-        if(_component) {
-            _component.props.click = _click.bind(this);
-            _component.props.dblclick = _dblclick.bind(this);
-        }
-       
-
-        this.repeater = new Repeater({
-            id: 'listRepeater',
-            defaultItem: this.defaultItem,
-            rendering: {
-                direction: _direction,
-                separator: this.separator || false,
-                actions: false
-            },
-            dataProvider: _dataProvider,
-            components: [_component]
-        }).on('creationComplete', function (e) {
-            e.stopPropagation();
-            //trick to pass property value updated check on the first setValue call below (initial value)
-            this.trigger('creationComplete');
-        }.bind(this));
+        
 
         _states = _states == null ?
             [
@@ -146,11 +126,41 @@ var List = function (_props, overrided = false) {
         this.repeater.removeRow(index, isPreventable, focusOnRowDelete);
     };
 
-    this.template = function () {
-        return "<div data-triggers='change itemClick itemDblClick' id='" + this.domID + "' role='group' style='padding:0'>" +
-            "</div>";
-    };
+    this.template = function () { 
+        /*if(_container)
+            if(_container.jquery)
+                this.$el = _container
+            else{
+                _container.props.guid = this.guid;
+                this.$el = Component.fromLiteral(_container).$el;
+            }
+            */
+        
+        this.repeater = new Repeater({
+            id: 'listRepeater',
+            guid: this.guid,
+            defaultItem: this.defaultItem,
+            rendering: {
+                direction: _direction,
+                separator: this.separator || false
+            },
+            container: _container,//this.$el,
+            dataProvider: _dataProvider,
+            components: [_component]
+        }).on('creationComplete', function (e) {
+          
+            if(this.repeater.$el != this.$el){
+                e.stopImmediatePropagation();
+                this.trigger('creationComplete');
+            }
+        }.bind(this));
+        this.repeater.$el.data("triggers", "change itemClick itemDblClick");
+        this.$el = this.repeater.$el;
 
+        return null; /*"<div data-triggers='change itemClick itemDblClick' id='" + this.domID + "' role='group'>" +
+            "</div>";*/
+    };
+   
     var _defaultParams = {
         id: 'list',
         direction: 'horizontal',
@@ -160,6 +170,13 @@ var List = function (_props, overrided = false) {
         defaultClasses: ["btn btn-sm btn-default"],
         selectedClasses: ["btn btn-sm btn-success"],
         value: [],
+        container:{
+            constructor: Container,
+            props: {
+                id: _props.id,
+                type: ContainerType.NONE
+            }
+        }
     };
 
     _props = extend(false, false, _defaultParams, _props);
@@ -175,7 +192,7 @@ var List = function (_props, overrided = false) {
     var _selectedClasses = _props.selectedClasses;
     var _defaultClasses = _props.defaultClasses;
     var _change = _props.change;
- 
+    var _container = _props.container;
     var _cmpClick = _component.props.click;
     var _cmpDblClick = _component.props.dblclick;
 
@@ -197,19 +214,24 @@ var List = function (_props, overrided = false) {
         }
     };
 
-    Component.call(this, _props);
+    if(_component) {
+        _component.props.click = _click.bind(this);
+        _component.props.dblclick = _dblclick.bind(this);
+    }
 
-    this.afterAttach = function (e) {
+    var _containerAfterAttach = _container.props.afterAttach;
+     //container afterAttach
+     _afterAttach = function (e) {
         if (e.target.id == this.domID) 
         {
-            if (_value == null || _value == "")
-                _value = [];
-            var v = _value.slice(0);  
-            _value = null;  
-            this.value = v; 
-            this.attached = true;
+            if (typeof _containerAfterAttach == 'function')
+                _containerAfterAttach.apply(this, arguments);       
+            _self.attached = true;
         }
     };
+    _container.props.afterAttach = _afterAttach;
+
+    Component.call(this, _props);
 
     this.render = function () {
         this.$container.append(this.repeater.render());
@@ -219,6 +241,11 @@ var List = function (_props, overrided = false) {
     if (overrided) {
         this.keepBase();
     }
+    /*
+    this.registerEvents = function () 
+    {
+        return [];
+    }*/
 
     Object.defineProperty(this, "dataProvider", 
     {

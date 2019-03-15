@@ -11,12 +11,7 @@ var RadioGroup = function (_props, overrided = false) {
             return _value;
         },
         set: function value(v) {
-            if((!_value && v) || (_value && !_value.equals(v)))
-            {
-                _value = v;
-                this.list.value = v;
-                this.trigger('change');
-            }
+            this.list.value = v;
         }
     });
 
@@ -52,9 +47,12 @@ var RadioGroup = function (_props, overrided = false) {
         }).on('creationComplete', function (e) {
             e.stopPropagation();
             this.trigger('creationComplete');
-        }.bind(this)).on('change', function () {
+        }.bind(this)).on('change', function (e) {
             e.stopImmediatePropagation();
-            this.value = this.list.value;
+            if (e.target.id == this.list.domID){
+                _value = this.list.value;
+                this.trigger('change');
+            }
         }.bind(this));
     };
 
