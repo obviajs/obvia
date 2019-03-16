@@ -152,7 +152,7 @@ var FormField = function(_props)
         id: "Component_"+Component.instanceCnt,
         enabled: true,
         required: false,
-        
+        size: FormFieldSize.SMALL                     
     };
    
     _props = extend(false, false, _defaultParams, _props);
@@ -164,9 +164,6 @@ var FormField = function(_props)
     var _size = _props.size;
   
     var _cmp = Component.fromLiteral(_props.component);
-    _cmp.$el.addClass("form-control");  
-    if(_size)
-        _cmp.$el.addClass(_size); 
 
     var _self = this;
     Component.call(this, _props);
@@ -180,6 +177,16 @@ var FormField = function(_props)
     _self.$el.append(_cmp.render());
     _cmp.on('creationComplete', function(e){
         e.stopPropagation();
+        var _cmpObj;
+        if(["input", "select"].indexOf(_cmp.$el[0].tagName.toLowerCase())>-1){
+            _cmpObj = _cmp.$el;
+        }else{
+            _cmpObj = _cmp.$el.find("input, select");
+        }
+        _cmpObj.addClass("form-control");
+        if(_size)
+            _cmpObj.addClass(_size); 
+
         _self.placeholder = _props.placeholder;
         _self.name = _props.name;
         _self.required = _props.required;

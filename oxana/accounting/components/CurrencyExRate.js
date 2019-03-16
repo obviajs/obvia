@@ -1,11 +1,11 @@
 /**
- * This is an Amount Element
+ * This is an CurrencyExRate Element
  *
  * Kreatx 2019
  */
 
 //component definition
-var Amount = function (_props, overrided = false) {
+var CurrencyExRate = function (_props, overrided = false) {
     var _self = this;
 
     Object.defineProperty(this, "value",
@@ -37,11 +37,11 @@ var Amount = function (_props, overrided = false) {
                 _afterAttach.apply(this, arguments);
             e.preventDefault();
             this.$el
-                .append(this.renderAmountInput(_value.amount))
-                .append(this.renderCurrencySelect(_currencyList, _value.currency));
+                .append(this.renderCurrencySelect(_currencyList, _value.currency))
+                .append(this.renderAmountInput(_value.amount));
 
-            this.amountInput.$el.css({ 'width': '80%', 'float': 'left' });
-            this.currencySelect.$el.css({ 'width': '20%', 'float': 'left' });
+            this.amountInput.$el.css({ 'width': '50%', 'float': 'left' });
+            this.currencySelect.$el.css({ 'width': '50%', 'float': 'left' });
         }
     };
 
@@ -170,4 +170,4 @@ var Amount = function (_props, overrided = false) {
 };
 
 //component prototype
-Amount.type = 'amount';
+CurrencyExRate.type = 'currencyexrate';

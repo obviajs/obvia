@@ -104,6 +104,7 @@ rjs.define("./components//DataGrid/DataGridCellRenderer.js", "DataGridCellRender
 rjs.define("./components//DataGrid/DataGridColumn.js", "DataGridColumn");
 rjs.define("./components//DataGrid/DataGrid.js", "DataGrid");
 
+rjs.define("./oxana/accounting/components/CurrencyExRate.js", "CurrencyExRate");
 //Loader
 
 rjs.require([
@@ -173,7 +174,9 @@ rjs.require([
         "FormUpload",
         "HRule",
         "Color",
-        "Image"
+        "Image",
+        //
+        "CurrencyExRate"
         //"TabExample",
         //"LabelExample"
         //"Button",
@@ -207,7 +210,8 @@ rjs.require([
         // rjs.define("./examples/RadioButton/example.js", "RadioButtonExample");
         // rjs.define("./examples/CheckBoxGroup/example.js", "CheckBoxGroupExample");
         // rjs.define("./examples/RadioGroup/example.js", "RadioGroupExample");
-        rjs.define("./examples/Toggle/example.js", "ToggleExample");
+        //rjs.define("./examples/Toggle/example.js", "ToggleExample");
+        rjs.define("./oxana/accounting/invoice.js", "Invoice");
         // rjs.define("./examples/Upload/example.js", "UploadExample");
         // rjs.define("./examples/Form/example.js", "FormExample");
         // rjs.define("./examples/Form/ajaxExample.js", "FormExample");

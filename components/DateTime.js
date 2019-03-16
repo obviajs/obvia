@@ -6,21 +6,6 @@
 
 var DateTime = function (_props, overrided = false) {
     var _self = this;
-    Object.defineProperty(this, "label",
-        {
-            get: function label() {
-                return _label;
-            },
-            set: function label(v) {
-                if (_label != v) {
-                    _label = v;
-                    var target = this.$el.find("label");
-                    if (target) {
-                        target.children(":first-child").html(v);
-                    }
-                }
-            }
-        });
 
     Object.defineProperty(this, "value", {
         get: function value() {
@@ -34,7 +19,7 @@ var DateTime = function (_props, overrided = false) {
     });
 
     this.beforeAttach = function () {
-        this.$input = this.$el.filter("#" + this.domID + "-datetime");
+        this.$input = this.$el;
         _enabled = (_enabled !== undefined && _enabled != null ? _enabled : true);
     };
 
@@ -52,37 +37,15 @@ var DateTime = function (_props, overrided = false) {
         });
     };
 
-    this.validate = function () {
-        if (_required) {
-            if (_value == "" || _value == undefined) {
-                this.errorList = [
-                    KxGenerator.getErrorList().call(this)['empty']
-                ];
-
-                this.$input.addClass('invalid');
-            } else {
-                this.errorList = [];
-                this.$input.removeClass('invalid');
-            }
-        }
-    };
-
     this.changeHandler = function (e) {
-        this.validate();
     };
 
     this.template = function () {
-        return "<label id='" + this.domID + "'><b>" + _label + "</b></label>" +
-            "<input data-triggers='change' type='text' id='" + this.domID + "-datetime' name='" + this.domID + "' value='" + _value + "' class='form-control'  placeholder='" + _label + "'/>";
+        return "<input data-triggers='change' type='text' id='" + this.domID + "' value='" + _value + "'/>";
     };
 
     var _defaultParams = {
         id: 'datetime',
-        colspan: '4',
-        label: 'qqq',
-        versionStyle: '',
-        blockProcessAttr: false,
-        required: true,
         inputFormat: 'DD/MM/YYYY',
         outputFormat: 'DD-MM-YYYY',
         displayFormat: 'DD/MM/YYYY',
@@ -91,14 +54,11 @@ var DateTime = function (_props, overrided = false) {
     };
 
     _props = extend(false, false, _defaultParams, _props);
-    var _label = _props.label;
-    var _required = _props.required;
     var _inputFormat = _props.inputFormat;
     var _outputFormat = _props.outputFormat;
     var _displayFormat = _props.displayFormat;
     var _value = _props.value;
     var _enabled = _props.enabled;
-    var _embedded = _props.embedded;
     var _change = _props.change;
 
     _props.change = function () {
