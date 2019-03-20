@@ -4,11 +4,6 @@ loader.show();
 
 var myAutoComplete = new AutoCompleteEx({
     id: 'autocomplete',
-    
-    colspan: '9',
-    label: 'Ministrite',
-    blockProcessAttr: false,
-    required: false,
     valueField: "value",
     labelField: "ministri",
     allowNewItem: false, //allow the user to add items that are not included in the specified dataProvider

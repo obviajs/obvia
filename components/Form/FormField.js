@@ -181,7 +181,9 @@ var FormField = function(_props)
         if(["input", "select"].indexOf(_cmp.$el[0].tagName.toLowerCase())>-1){
             _cmpObj = _cmp.$el;
         }else{
-            _cmpObj = _cmp.$el.find("input, select");
+            _cmpObj = _cmp.$el.find("input, select").filter(function(){ 
+                return ($(this).closest(".no-form-control").length == 0);
+            });
         }
         _cmpObj.addClass("form-control");
         if(_size)

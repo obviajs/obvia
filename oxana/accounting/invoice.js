@@ -3,6 +3,28 @@ $('#root').append(loader.render());
 loader.show();
 var _currencies = [{ "id": "1", "text": "EUR" }, { "id": "2", "text": "ALL" }, { "id": "3", "text": "GBP" }];
 var _commercialterms = [{"commercialterms_id":"1","name":"Arke"},{"commercialterms_id":"2","name":"Banke"}];
+//RCAs
+var _suppliers = [{
+    "supplier_id": "1",
+    "supplier_name": "Kreatx"
+}, {
+    "supplier_id": "2",
+    "supplier_name": "Horizon"
+}, {
+    "supplier_id": "3",
+    "supplier_name": "Albanian Technology Distribution"
+}];
+var _warehouses =  [{
+    "warehouse_id": "1",
+    "warehouse_name": "TR Magazina 1"
+}, {
+    "warehouse_id": "2",
+    "warehouse_name": "DR Magazina 2"
+}, {
+    "warehouse_id": "3",
+    "warehouse_name": "FR Magazina 3"
+}];
+var _orders = [{"order_id":1, "order_resume":"7777-Acme"}];
 
 var myForm = new Form({
     id: 'form',
@@ -149,6 +171,83 @@ var myForm = new Form({
                                                     }
                                                 }
                                             } 
+                                        ]
+                                    }
+                                },
+                                {
+                                    constructor: Container,
+                                    props: {
+                                        id: '',
+                                        type: ContainerType.COLUMN,
+                                        spacing: {colSpan:3},
+                                        classes:["border"],
+                                        components:[
+                                            {
+                                                constructor: FormField,
+                                                props: {
+                                                    id: 'formFieldEx',
+                                                    label: 'Furnitori',
+                                                    name: 'formFieldEx',
+                                                    size: FormFieldSize.SMALL,
+                                                    component: {
+                                                        constructor:AutoCompleteEx,
+                                                        props: {
+                                                            id: 'suppliers_id_supplier',
+                                                            valueField: "supplier_id",
+                                                            labelField: "supplier_name",
+                                                            allowNewItem: false,
+                                                            dataProvider: _suppliers,
+                                                            value: [{ "supplier_id": "1"}],
+                                                            multiSelect: false,
+                                                            matchType:StringMatchType.STARTS_WITH
+                                                        }
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                constructor: FormField,
+                                                props: {
+                                                    id: 'formFieldEx',
+                                                    label: 'Magazina',
+                                                    name: 'formFieldEx',
+                                                    size: FormFieldSize.SMALL,
+                                                    component: {
+                                                        constructor:AutoCompleteEx,
+                                                        props: {
+                                                            id: 'idwarehouse_entry',
+                                                            valueField: "warehouse_id",
+                                                            labelField: "warehouse_name",
+                                                            allowNewItem: false,
+                                                            dataProvider: _warehouses,
+                                                            value: [{ "warehouse_id": "1"}],
+                                                            multiSelect: false,
+                                                            matchType:StringMatchType.STARTS_WITH
+                                                        }
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                constructor: FormField,
+                                                props: {
+                                                    id: 'formFieldEx',
+                                                    label: 'Urdher Blerje',
+                                                    name: 'formFieldEx',
+                                                    size: FormFieldSize.SMALL,
+                                                    component: {
+                                                        constructor:AutoCompleteEx,
+                                                        props: {
+                                                            id: 'id_order',
+                                                            valueField: "order_id",
+                                                            labelField: "order_resume",
+                                                            allowNewItem: false,
+                                                            dataProvider: _orders,
+                                                            value: [{ "order_id": "1"}],
+                                                            multiSelect: false,
+                                                            matchType:StringMatchType.STARTS_WITH
+                                                        }
+                                                    }
+                                                }
+                                            }
                                         ]
                                     }
                                 }

@@ -130,14 +130,14 @@ var TokenRenderer = function(_props)
 
     Component.call(this, _props, true);
     var base = this.base;
-    this.afterAttach = function()
+    this.afterAttach = function(e)
     {
-        this.$closeIcon.click(function(e)
+        this.$closeIcon.click(function(evt)
         {
-            e.stopImmediatePropagation();
+            evt.stopImmediatePropagation();
             $(this).trigger("closeiconclick");
         });
-        base.afterAttach();
+        base.afterAttach.call(this, e);
     }
 };
 TokenRenderer.type = 'tokenrenderer';

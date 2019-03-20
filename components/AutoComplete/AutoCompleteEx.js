@@ -504,7 +504,7 @@ var AutoCompleteEx = function(_props)
     this.template = function () 
     {
         var html = 
-                "<div id='" + this.domID + "' class='"+(this.colspan?"col-sm-" + this.colspan:"")+ "'>"+
+                "<div id='" + this.domID + "' class='no-form-control'>"+
                     "<select type='hidden' style='display:none' name='" + this.domID + "[]' id='" + this.domID + "_select'></select>" +                          
                     '<div id="'+ this.domID + '_tokenContainer" class="border"></div>'+
                     '<div id="'+ this.domID + '_suggestionsDropDown" class="dropdown-menu" role="menu">'+
@@ -522,16 +522,19 @@ var AutoCompleteEx = function(_props)
         multiSelect: false
     };
     _props = extend(false, false, _defaultParams, _props);
+    var _valueField = _props.valueField;
+    var _labelField = _props.labelField;
     var _dataProvider = _props.dataProvider;
     
     var _value = _props.value;
+    _value = intersectOnKeyMatch(_dataProvider, _value, _valueField); 
+
     var_allowNewItem = _props.allowNewItem;
     var _label = _props.label;  
     var _closeIconSide = _props.closeIconSide;
     var  _suggestions = [];
     var _enabled = true;
-    var _valueField = _props.valueField;
-    var _labelField = _props.labelField;
+    
     var _delayQuerySuggestions = debounce(_querySuggestions, 400);
     var _delayRemoveTokenItemAt = debounce.call(this, this.removeTokenItemAt, 200);
     var _multiSelect = _props.multiSelect;
