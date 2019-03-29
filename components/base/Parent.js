@@ -40,6 +40,16 @@ var Parent = function(_props, overrided=false)
         }
     };
 
+    this.afterAttach = function (e) 
+    {
+        if (e.target.id == this.domID) 
+        {
+            if (typeof _afterAttach == 'function')
+                _afterAttach.apply(this, arguments);
+            e.preventDefault();
+        }
+    };
+
     var _defaultParams = {
         components:[]
     };
@@ -47,6 +57,8 @@ var Parent = function(_props, overrided=false)
     this.components = _props.components;
     var _self = this;
     var _creationFinished = false;
+    var _afterAttach = _props.afterAttach;
+    _props.afterAttach = this.afterAttach;
     
     //override because creationComplete will be thrown when all children components are created
     // this.afterAttach = undefined;

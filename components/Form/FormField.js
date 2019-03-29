@@ -178,10 +178,10 @@ var FormField = function(_props)
     _cmp.on('creationComplete', function(e){
         e.stopPropagation();
         var _cmpObj;
-        if(["input", "select"].indexOf(_cmp.$el[0].tagName.toLowerCase())>-1){
+        if(["input", "select", "textarea"].indexOf(_cmp.$el[0].tagName.toLowerCase())>-1){
             _cmpObj = _cmp.$el;
         }else{
-            _cmpObj = _cmp.$el.find("input, select").filter(function(){ 
+            _cmpObj = _cmp.$el.find("input, select", "textarea").filter(function(){ 
                 return ($(this).closest(".no-form-control").length == 0);
             });
         }

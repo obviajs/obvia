@@ -1,6 +1,3 @@
-var loader = new Loader({ id: 'loader' });
-$('#root').append(loader.render());
-loader.show();
 var _currencies = [{ "id": "1", "text": "EUR" }, { "id": "2", "text": "ALL" }, { "id": "3", "text": "GBP" }];
 var _commercialterms = [{"commercialterms_id":"1","name":"Arke"},{"commercialterms_id":"2","name":"Banke"}];
 //RCAs
@@ -25,7 +22,7 @@ var _warehouses =  [{
     "warehouse_name": "FR Magazina 3"
 }];
 var _orders = [{"order_id":1, "order_resume":"7777-Acme"}];
-
+var _signees = [{"employee_id":1, "employee_name":"Ryu"}];
 var myForm = new Form({
     id: 'form',
     formName: 'My Form',
@@ -250,6 +247,80 @@ var myForm = new Form({
                                             }
                                         ]
                                     }
+                                },
+                                {
+                                    constructor: Container,
+                                    props: {
+                                        id: '',
+                                        type: ContainerType.COLUMN,
+                                        spacing: {colSpan:3},
+                                        classes:["border"],
+                                        components:[
+                                            {
+                                                constructor: FormField,
+                                                props: {
+                                                    id: 'formFieldEx',
+                                                    label: 'Bleresi',
+                                                    name: 'formFieldEx',
+                                                    size: FormFieldSize.SMALL,
+                                                    component: {
+                                                        constructor:AutoCompleteEx,
+                                                        props: {
+                                                            id: 'id_order',
+                                                            valueField: "order_id",
+                                                            labelField: "order_resume",
+                                                            allowNewItem: false,
+                                                            dataProvider: _orders,
+                                                            value: [{ "order_id": "1"}],
+                                                            multiSelect: false,
+                                                            matchType:StringMatchType.STARTS_WITH
+                                                        }
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                constructor: FormField,
+                                                props: {
+                                                    id: 'formFieldEx',
+                                                    label: 'Firmosi',
+                                                    name: 'formFieldEx',
+                                                    size: FormFieldSize.SMALL,
+                                                    component: {
+                                                        constructor:AutoCompleteEx,
+                                                        props: {
+                                                            id: 'signee',
+                                                            valueField: "employee_id",
+                                                            labelField: "employee_name",
+                                                            allowNewItem: false,
+                                                            dataProvider: _signees,
+                                                            value: [{ "employee_id": "1"}],
+                                                            multiSelect: false,
+                                                            matchType:StringMatchType.STARTS_WITH
+                                                        }
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                constructor: FormField,
+                                                props: {
+                                                    id: 'formFieldEx',
+                                                    label: 'Pershkrim',
+                                                    name: 'formFieldEx',
+                                                    size: FormFieldSize.SMALL,
+                                                    component: {
+                                                        constructor:TextArea,
+                                                        props: {
+                                                            id: 'description',
+                                                            spellCheck: {
+                                                                defaultDictionary: 'English',//Albanian
+                                                            },
+                                                            value: ''
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        ]
+                                    }
                                 }
                             ]
                         }
@@ -259,10 +330,73 @@ var myForm = new Form({
         }
     ]
 });
-myForm.on('creationComplete', function(e){
-    loader.hide();    
-});
-$('#root').append(myForm.render());
+
+
+var App = function(_props){
+    var _defaultParams = {
+        root: document.body
+    };
+    _props = extend(false, false, _defaultParams, _props);
+    var _root = _props.root;
+    var _self = this;
+
+    if(!('jquery' in Object(_root)))
+        _root = $(_root);
+    
+    var _rootID = _root.attr('id');
+    if(!_rootID){
+        _rootID = guid();
+        _root.attr('id', _rootID);
+    }
+
+    this.behaviors = {};
+    this.behaviorimplementations = {};
+
+    //default behavior is to hide loader on creationComplete
+    this.behaviors[_rootID] = {};
+    this.behaviors[_rootID]['creationComplete'] = "APP_LOADED";
+    this.behaviorimplementations["APP_LOADED"] = function() {
+        _loader.hide(); 
+    };
+
+    var _eventTypeArr = [];
+    for(var cmpId in this.behaviors)
+    {
+        for(var eventType in this.behaviors[cmpId])
+        {
+            _eventTypeArr.pushUnique(eventType);
+        }
+    }
+    var _eventTypeArrJoined = _eventTypeArr.join(" ");
+    _root.on(_eventTypeArrJoined, function(e) {
+        var cmpBehaviors = _self.behaviors[$(this).attr('id')];
+        if(cmpBehaviors[e.type]) {
+            var behavior = _self.behaviorimplementations["APP_LOADED"];
+            if(behavior && typeof behavior == 'function') {
+                behavior.apply(this, arguments);
+            }
+        }
+    });
+
+    var _loader = new Loader({ id: 'loader' });
+       
+    this.init = function()
+    {
+        _root.append(_loader.render());
+        _loader.show();
+        _root.append(myForm.render());
+    }
+
+    
+}
+//kjo klasa APP mesiper duhet quajtuar view 
+//viewve tu ndryshojme datat 
+//APP klase qe ka disa view dhe we can switch between them, object pooling per strukturen.
+var oxana = new App();
+oxana.behaviors["CMP_ID_HERE"] = {};
+oxana.behaviors["CMP_ID_HERE"]["CMP_EVENT"] = "BEHAVIOR";
+oxana.init();
+
 /*
 
 

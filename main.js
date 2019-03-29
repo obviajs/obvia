@@ -53,7 +53,7 @@ rjs.define("./components/Amount.js", "Amount");
 rjs.define("./components/Image.js", "Image");
 //TextArea
 livespell___installPath = window.location.origin + "/resources/inner_resources/scripts/plugins/SpellCheck/";
-//rjs.define("lib/dependencies/scripts/plugins/SpellCheck/include.js", "SpellCheckJS");
+rjs.define("lib/dependencies/scripts/plugins/SpellCheck/include.js", "SpellCheckJS");
 rjs.define("./components/TextArea.js", "TextArea");
 //TextEditor
 rjs.define("./components/TextEditor.js", "TextEditor");
@@ -133,7 +133,7 @@ rjs.require([
         "InputMaskBundle",
         "TextInput", 
         "TextArea",
-        // "SpellCheckJS",
+        "SpellCheckJS",
         "Select",
         "SummerNoteCSS",
         "SummerNoteScript",

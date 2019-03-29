@@ -34,12 +34,11 @@ var TextArea = function (_props, overrided = false) {
     };
 
     _spellCheckClickHandler = function (e) {
-        this.$input.spellCheckInDialog({defaultDictionary: _spellCheck.defaultDictionary});
+        _self.$input.spellCheckInDialog({defaultDictionary: _spellCheck.defaultDictionary});
     };
 
     this.template = function () {
-        return "<textarea data-triggers='change' id='" + this.domID + "' " + (!this.enabled ? "disabled" : "") + " class='" + this.cssClass + "'>" + _value + "</textarea>" +
-            (_spellCheck ? "<button data-triggers='click' type='button' id='" + this.domID + "-spellCheck' class='btn btn-sm btn-primary float-right'><i class='fas fa-book'></i> Spell Check </button>" : "");
+        return "<textarea data-triggers='change' id='" + this.domID + "' " + (!this.enabled ? "disabled" : "") + ">" + _value + "</textarea>";
     };
 
     var _defaultParams = {
@@ -52,11 +51,11 @@ var TextArea = function (_props, overrided = false) {
     var _spellCheck = _props.spellCheck;
     var _value = _props.value;
     var _change = _props.change;
-    var _click = _props.click;
+    var _dblclick = _props.dblclick;
 
-    _props.click = function () {
-        if (typeof  _click == 'function')
-            _click.apply(this, arguments);
+    _props.dblclick = function () {
+        if (typeof _dblclick == 'function')
+            _dblclick.apply(this, arguments);
 
         var e = arguments[0];
         if(!e.isDefaultPrevented()) {
