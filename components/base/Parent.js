@@ -4,6 +4,14 @@ var Parent = function(_props, overrided=false)
     this.components = [];
     this.$container = null;
 
+    Object.defineProperty(this, "children", 
+    {
+        get: function children() 
+        {
+            return _children;
+        }
+    });
+
     this.addComponent = function (component, cIndex)
     {
         this.components.push(component);
@@ -31,7 +39,7 @@ var Parent = function(_props, overrided=false)
             // _self.$container.children().eq(cIndex).after((cmp.render()));
             container.append(cmp.render());
             //expose component model
-            _self[cmp.id] = cmp;
+            _self.children[cmp.id] = cmp;
 
             cmp.parent = _self;
             cmp.parentType = _self.type;
@@ -59,6 +67,8 @@ var Parent = function(_props, overrided=false)
     var _creationFinished = false;
     var _afterAttach = _props.afterAttach;
     _props.afterAttach = this.afterAttach;
+    var _children = {};
+   
     
     //override because creationComplete will be thrown when all children components are created
     // this.afterAttach = undefined;
@@ -77,4 +87,25 @@ var Parent = function(_props, overrided=false)
     {
         this.keepBase();
     }
+    
+    var _enabled = _props.enabled;
+    Object.defineProperty(this, "enabled", 
+    {
+        get: function enabled() 
+        {
+            return _enabled;
+        },
+        set: function enabled(v) 
+        {
+            if(_enabled != v)
+            {
+                _enabled = v;
+                for(var childId in this.children)
+                {
+                    this.children[childId].enabled = v;
+                }
+            }
+        },
+        configurable: true
+    });
 }

@@ -9,7 +9,7 @@ var Component = function(_props, overrided=false)
 
     _props = extend(false, false, _defaultParams, _props);
     var _guid = _props.guid;
-    var _id = _props.id;
+    var _id = _props.id =="" ? _defaultParams.id : _props.id;
     var _enabled = _props.enabled;
     var _classes;
     var _parent = _props.parent;
@@ -24,6 +24,10 @@ var Component = function(_props, overrided=false)
     var _watchers = [];
     var _bindings = [];
     var _attached = false;
+    if(Component.usedComponentIDS[_id]==1) {
+        _id += "_" +Component.instanceCnt;
+    }
+    Component.usedComponentIDS[_id] = 1;
 
     //var _propUpdateMap = {"label":{"o":$el, "fn":"html", "p":[] }, "hyperlink":{}};
     //generate GUID for this component
@@ -111,7 +115,35 @@ var Component = function(_props, overrided=false)
             {
                 _enabled = v;
                 if(this.$el)
-                    this.$el.prop('disabled', !v);
+                    this.$el.find("input, select, textarea, button").addBack("input, select, textarea, button").each(function(){
+                        if(!v)
+                            $(this).prop('disabled', 'disabled');
+                        else
+                            $(this).removeAttr('disabled');
+                    });
+            }
+        },
+        configurable: true
+    });
+
+    Object.defineProperty(this, "readonly",
+    {
+        get: function readonly()
+        {
+            return _readonly;
+        },
+        set: function readonly(v)
+        {
+            if(_readonly != v)
+            {
+                _readonly = v;
+                if(this.$el)
+                    this.$el.find("input, select, textarea, button").addBack("input, select, textarea, button").each(function(){
+                        if(!v)
+                            $(this).prop('readonly', 'readonly');
+                        else
+                            $(this).removeAttr('readonly');
+                    });
             }
         },
         configurable: true
@@ -314,7 +346,6 @@ var Component = function(_props, overrided=false)
             this.$el.off.apply(this.$el, arguments);
     }
     ++Component.instanceCnt;
-
  
     this.getBindingExpression = function(property)
     {
@@ -515,3 +546,4 @@ Component.check = function(mutations)
     }
 }
 Component.defaultContext = window;
+Component.usedComponentIDS = {};

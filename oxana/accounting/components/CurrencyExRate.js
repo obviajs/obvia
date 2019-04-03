@@ -9,23 +9,21 @@ var CurrencyExRate = function (_props, overrided = false) {
     var _self = this;
 
     Object.defineProperty(this, "value",
-        {
-            set: function value(v) {
-                if (JSON.stringify(_value) != JSON.stringify(v)) {
-                    _value.amount = v.amount;
-                    _value.currency = v.currency;
+    {
+        set: function value(v) {
+            if (JSON.stringify(_value) != JSON.stringify(v)) {
+                _value.amount = v.amount;
+                _value.currency = v.currency;
 
-                    this.amountInput.value = v.amount;
-                    this.amountInput.currency = v.currency;
-                }
+                this.amountInput.value = v.amount;
+                this.amountInput.currency = v.currency;
             }
-        });
+        }
+    });
 
     this.changeHandler = function (e) {
         _value.amount = this.amountInput.value;
         _value.currency = this.currencySelect.value;
-
-        this.validate();
     };
 
     this.attached = false;
@@ -97,36 +95,6 @@ var CurrencyExRate = function (_props, overrided = false) {
         return this.currencySelect.render();
     };
 
-    this.validate = function () {
-        if (_props.required && this.amountInput.validate()) {
-            if (this.amountInput.value == "0.00" || this.amountInput.value == "0") {
-                this.errorList = [
-                    KxGenerator.getErrorList().call(this)['zero']
-                ];
-                this.amountInput.$el.addClass('invalid');
-
-                return false;
-            } else {
-                this.errorList = [];
-                this.amountInput.$el.removeClass('invalid');
-            }
-        } else {
-            if (_props.required) {
-                this.errorList = [
-                    KxGenerator.getErrorList().call(this)['zero']
-                ];
-                this.amountInput.$el.addClass('invalid');
-
-                return false;
-            } else {
-                this.errorList = [];
-                this.amountInput.$el.removeClass('invalid');
-            }
-        }
-
-        return true;
-    };
-
     this.template = function () {
         return "<div data-triggers='change' id='" + this.domID + "'></div>";
     };
@@ -138,8 +106,7 @@ var CurrencyExRate = function (_props, overrided = false) {
         },
         currencyList: [],
         labelField: 'text',
-        valueField: 'id',
-        afterAttach: this.afterAttach
+        valueField: 'id'
     };
     _props = extend(false, false, _defaultParams, _props);
 

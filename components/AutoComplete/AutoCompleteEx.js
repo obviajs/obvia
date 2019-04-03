@@ -28,7 +28,6 @@ var AutoCompleteEx = function(_props)
         this.cComponents = [];
         this.countChildren = 2;
 
-        this.$input = this.$el.attr('id') == this.domID?this.$el:this.$el.find("#" + this.domID);
         this.$tokenContainer = this.$el.find("#" + this.domID+"_tokenContainer");
         this.$suggestionsDropDown = this.$el.find("#" + this.domID+"_suggestionsDropDown");
         this.$suggestionsDropDown.css({'left':'inherit', 'top':'inherit'});
@@ -92,6 +91,7 @@ var AutoCompleteEx = function(_props)
                     //_self.tokenInput.$el.on('keyup', _tokenInputKeyUp.bind(_self));
                         
                 });
+                _self.$input = _self.tokenInput.$el;
                 _self.tokensRepeater.$container.append( _self.tokenInput.render());  
                 
                 if (_self.cComponents.length > this.countChildren-1) {
@@ -267,11 +267,14 @@ var AutoCompleteEx = function(_props)
     };
     var _tokenRendererCloseIconClickHandler = function(e, repeaterEventArgs)
     {
-        console.log(repeaterEventArgs);
-        //"this" refers to the components in the repeater
-        var acEx = this.parent.parent;
-        acEx.removeTokenItemAt(repeaterEventArgs.currentIndex);
-        acEx.tokenInput.$el.focus();
+        if(_enabled)
+        {
+            console.log(repeaterEventArgs);
+            //"this" refers to the components in the repeater
+            var acEx = this.parent.parent;
+            acEx.removeTokenItemAt(repeaterEventArgs.currentIndex);
+            acEx.tokenInput.$el.focus();
+        }
     };
     var _suggestionRendererClickHandler = function(e, repeaterEventArgs)
     {
@@ -424,23 +427,6 @@ var AutoCompleteEx = function(_props)
             this.tokenInput.$el[0].focus({preventScroll:true});
         }
     };
-
-    Object.defineProperty(this, "enabled", 
-    {
-        get: function enabled() 
-        {
-            return _enabled;
-        },
-        set: function enabled(v) 
-        {
-            if(_enabled != v)
-            {
-                _enabled = v;
-                this.$input.prop('disabled', !v);
-            }
-        },
-        configurable: true
-    });
 /*
     destruct: function () {
         //TODO: Destruct ? 
@@ -572,6 +558,23 @@ var AutoCompleteEx = function(_props)
             // }
         ]
     };
+
+    Object.defineProperty(this, "enabled", 
+    {
+        get: function enabled() 
+        {
+            return _enabled;
+        },
+        set: function enabled(v) 
+        {
+            if(_enabled != v)
+            {
+                _enabled = v;
+                this.$input.prop('disabled', !v);
+            }
+        },
+        configurable: true
+    });
     
 };
 AutoCompleteEx.type = 'autocomplete';

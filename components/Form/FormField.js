@@ -181,7 +181,7 @@ var FormField = function(_props)
         if(["input", "select", "textarea"].indexOf(_cmp.$el[0].tagName.toLowerCase())>-1){
             _cmpObj = _cmp.$el;
         }else{
-            _cmpObj = _cmp.$el.find("input, select", "textarea").filter(function(){ 
+            _cmpObj = _cmp.$el.find("input, select, textarea").filter(function(){ 
                 return ($(this).closest(".no-form-control").length == 0);
             });
         }
@@ -193,6 +193,25 @@ var FormField = function(_props)
         _self.name = _props.name;
         _self.required = _props.required;
         _self.trigger('creationComplete');
+    });
+
+    var _enabled = _props.enabled;
+    Object.defineProperty(this, "enabled",
+    {
+        get: function enabled()
+        {
+            return _enabled;
+        },
+        set: function enabled(v)
+        {
+            if(_enabled != v)
+            {
+                _enabled = v;
+                if(_cmp)
+                    _cmp.enabled = !!v;
+            }
+        },
+        configurable: true
     });
 }
 //component prototype

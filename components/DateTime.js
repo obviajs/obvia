@@ -25,6 +25,8 @@ var DateTime = function (_props, overrided = false) {
 
     this.afterAttach = function (e) {
         //init datepicker
+        if (typeof _afterAttach == 'function')
+            _afterAttach.apply(this, arguments);
 
         if (_value != "" && _value != null && _value != "0000-00-00 00:00:00")
             _value = moment(this.$input.val()).format(_inputFormat);
@@ -49,8 +51,7 @@ var DateTime = function (_props, overrided = false) {
         inputFormat: 'DD/MM/YYYY',
         outputFormat: 'DD-MM-YYYY',
         displayFormat: 'DD/MM/YYYY',
-        value: '20/10/2010',
-        afterAttach: this.afterAttach,
+        value: '20/10/2010'
     };
 
     _props = extend(false, false, _defaultParams, _props);
@@ -60,6 +61,8 @@ var DateTime = function (_props, overrided = false) {
     var _value = _props.value;
     var _enabled = _props.enabled;
     var _change = _props.change;
+    var _afterAttach = _props.afterAttach;
+    _props.afterAttach = this.afterAttach;
 
     _props.change = function () {
         if (typeof _change == 'function')

@@ -186,25 +186,5 @@ var Form = function(_props)
     Parent.call(this, _props, true);
 
     var base = this.base;
-
-    Object.defineProperty(this, "enabled", 
-    {
-        get: function enabled() 
-        {
-            return _enabled;
-        },
-        set: function enabled(v) 
-        {
-            if(_enabled != v)
-            {
-                _enabled = v;
-                this.components.forEach(function (component) {
-                    this[component.props.id].enabled = v;
-                }.bind(this));
-            }
-        },
-        configurable: true
-    });
-
 };
 Form.type = 'form';
