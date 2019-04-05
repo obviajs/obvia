@@ -137,4 +137,4 @@ var Amount = function (_props, overrided = false) {
 };
 
 //component prototype
-Amount.type = 'amount';
+Amount.prototype.type = 'Amount';

@@ -46,4 +46,4 @@ var Tab = function(_props)
     };
 
 };
-Tab.type = 'tab';
+Tab.prototype.type = 'Tab';

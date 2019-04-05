@@ -166,7 +166,4 @@ var AutoComplete = KxGenerator.createComponent({
 });
 
 //component prototype
-AutoComplete.type = 'autocomplete';
-
-//register dom element for this component
-KxGenerator.registerDOMElement(AutoComplete, 'kx-autocomplete');
+AutoComplete.prototype.type = 'AutoComplete';

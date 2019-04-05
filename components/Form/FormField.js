@@ -215,4 +215,4 @@ var FormField = function(_props)
     });
 }
 //component prototype
-FormField.type = 'formfield';
+FormField.prototype.type = 'FormField';

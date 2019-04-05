@@ -108,4 +108,4 @@ var CheckBoxGroup = function (_props, overrided = false) {
     }
 };
 
-CheckBoxGroup.type = "checkboxgroup";
+CheckBoxGroup.prototype.type = "CheckBoxGroup";

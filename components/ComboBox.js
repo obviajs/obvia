@@ -174,7 +174,4 @@ var ComboBoxInit = {
 ComboBoxInit = extend(true, true, Selectable, ComboBoxInit);
 var ComboBox = KxGenerator.createComponent(ComboBoxInit);
 //component prototype
-ComboBox.type = 'combobox';
-
-//register dom element for this component
-KxGenerator.registerDOMElement(ComboBox, 'kx-combobox');
+ComboBox.prototype.type = 'ComboBox';

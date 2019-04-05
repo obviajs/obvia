@@ -570,4 +570,4 @@ var Repeater = function(_props)
         }
     });
 };
-Repeater.type = 'repeater';
+Repeater.prototype.type = 'Repeater';

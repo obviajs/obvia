@@ -83,4 +83,4 @@ var Modal = function(_props)
         return this;
     };  
 };
-Modal.type = 'modal';
+Modal.prototype.type = 'Modal';

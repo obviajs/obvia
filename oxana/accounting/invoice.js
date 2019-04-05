@@ -23,437 +23,326 @@ var _warehouses =  [{
 }];
 var _orders = [{"order_id":1, "order_resume":"7777-Acme"}];
 var _signees = [{"employee_id":1, "employee_name":"Ryu"}];
-var myForm = new Form({
-    id: 'form',
-    formName: 'My Form',
-    action:"",
-    components: [
-        {
-            constructor: Container,
-            props: {
-                id: 'nestedLayout',
-                components:[
-                    {
-                        constructor: Container,
-                        props: {
-                            id: '',
-                            type: ContainerType.ROW,
-                            components:[
-                                {
-                                    constructor: Container,
-                                    props: {
-                                        id: '',
-                                        type: ContainerType.COLUMN,
-                                        spacing: {colSpan:3},
-                                        classes:["border"],
-                                        components:[
-                                            {
-                                                constructor: FormField,
-                                                props: {
-                                                    id: 'formFieldEx',
-                                                    label: 'Data',
-                                                    name: 'document_date',
-                                                    size: FormFieldSize.SMALL,
-                                                    component: {
-                                                        constructor:DateTime,
-                                                        props:{
-                                                            id: 'document_date',
-                                                            inputFormat: 'DD/MM/YYYY',
-                                                            outputFormat: 'DD-MM-YYYY',
-                                                            displayFormat: 'MM/DD/YYYY',
-                                                            value: '2022/02/04'
+var myForm = 
+{
+    constructor: Form,
+    props: {
+        id: 'form',
+        formName: 'My Form',
+        action:"",
+        components: [
+            {
+                constructor: Container,
+                props: {
+                    id: 'nestedLayout',
+                    components:[
+                        {
+                            constructor: Container,
+                            props: {
+                                id: '',
+                                type: ContainerType.ROW,
+                                components:[
+                                    {
+                                        constructor: Container,
+                                        props: {
+                                            id: '',
+                                            type: ContainerType.COLUMN,
+                                            spacing: {colSpan:3},
+                                            classes:["border"],
+                                            components:[
+                                                {
+                                                    constructor: FormField,
+                                                    props: {
+                                                        id: 'formFieldEx',
+                                                        label: 'Data',
+                                                        name: 'document_date',
+                                                        size: FormFieldSize.SMALL,
+                                                        component: {
+                                                            constructor:DateTime,
+                                                            props:{
+                                                                id: 'document_date',
+                                                                inputFormat: 'DD/MM/YYYY',
+                                                                outputFormat: 'DD-MM-YYYY',
+                                                                displayFormat: 'MM/DD/YYYY',
+                                                                value: '2022/02/04'
+                                                            }
                                                         }
                                                     }
-                                                }
-                                            },
-                                            {
-                                                constructor: FormField,
-                                                props: {
-                                                    id: 'formFieldEx',
-                                                    label: 'Nr. Serial',
-                                                    name: 'serial_number',
-                                                    size: FormFieldSize.SMALL,
-                                                    component: {
-                                                        constructor:TextInput,
-                                                        props:{
-                                                            id: 'serial_number',
-                                                            value: ''
+                                                },
+                                                {
+                                                    constructor: FormField,
+                                                    props: {
+                                                        id: 'formFieldEx',
+                                                        label: 'Nr. Serial',
+                                                        name: 'serial_number',
+                                                        size: FormFieldSize.SMALL,
+                                                        component: {
+                                                            constructor:TextInput,
+                                                            props:{
+                                                                id: 'serial_number',
+                                                                value: ''
+                                                            }
                                                         }
                                                     }
-                                                }
-                                            },
-                                            {
-                                                constructor: FormField,
-                                                props: {
-                                                    id: 'formFieldEx',
-                                                    label: 'Nr. Dokumenti',
-                                                    name: 'document_number',
-                                                    size: FormFieldSize.SMALL,
-                                                    component: {
-                                                        constructor:TextInput,
-                                                        props:{
-                                                            id: 'document_number',
-                                                            value: ''
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        ]
-                                    }
-                                },
-                                {
-                                    constructor: Container,
-                                    props: {
-                                        id: '',
-                                        type: ContainerType.COLUMN,
-                                        spacing: {colSpan:3},
-                                        classes:["border"],
-                                        components:[
-                                            {
-                                                constructor: FormField,
-                                                props: {
-                                                    id: 'formFieldEx',
-                                                    label: 'Example formField',
-                                                    name: 'formFieldEx',
-                                                    size: FormFieldSize.SMALL,
-                                                    component: {
-                                                        constructor:Amount,
-                                                        props: {
-                                                            id: 'amount',
-                                                            currencyList: _currencies,
-                                                            value: {
-                                                                "amount": "132323",
-                                                                "currency": "2"
+                                                },
+                                                {
+                                                    constructor: FormField,
+                                                    props: {
+                                                        id: 'formFieldEx',
+                                                        label: 'Nr. Dokumenti',
+                                                        name: 'document_number',
+                                                        size: FormFieldSize.SMALL,
+                                                        component: {
+                                                            constructor:TextInput,
+                                                            props:{
+                                                                id: 'document_number',
+                                                                value: ''
                                                             }
                                                         }
                                                     }
                                                 }
-                                            },
-                                            {
-                                                constructor: FormField,
-                                                props: {
-                                                    id: 'formFieldEx',
-                                                    label: 'Termat Tregtare',
-                                                    name: 'id_commercialterms',
-                                                    size: FormFieldSize.SMALL,
-                                                    component: {
-                                                        constructor: Select,
-                                                        props: {
-                                                            id: 'id_commercialterms',
-                                                            dataProvider: _commercialterms,
-                                                            textField: "name",
-                                                            valueField: "commercialterms_id",
-                                                            value: [],
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        constructor: Container,
+                                        props: {
+                                            id: '',
+                                            type: ContainerType.COLUMN,
+                                            spacing: {colSpan:3},
+                                            classes:["border"],
+                                            components:[
+                                                {
+                                                    constructor: FormField,
+                                                    props: {
+                                                        id: 'formFieldEx',
+                                                        label: 'Example formField',
+                                                        name: 'formFieldEx',
+                                                        size: FormFieldSize.SMALL,
+                                                        component: {
+                                                            constructor:Amount,
+                                                            props: {
+                                                                id: 'amount',
+                                                                currencyList: _currencies,
+                                                                value: {
+                                                                    "amount": "132323",
+                                                                    "currency": "2"
+                                                                }
+                                                            }
                                                         }
                                                     }
-                                                }
-                                            },
-                                            {
-                                                constructor: FormField,
-                                                props: {
-                                                    id: 'formFieldEx',
-                                                    label: 'Monedha/Kursi',
-                                                    name: 'formFieldEx',
-                                                    size: FormFieldSize.SMALL,
-                                                    component: {
-                                                        constructor: CurrencyExRate,
-                                                        props: {
-                                                            id: 'amount',
-                                                            currencyList: _currencies,
-                                                            value: {
-                                                                "amount": "132323",
-                                                                "currency": "2"
+                                                },
+                                                {
+                                                    constructor: FormField,
+                                                    props: {
+                                                        id: 'formFieldEx',
+                                                        label: 'Termat Tregtare',
+                                                        name: 'id_commercialterms',
+                                                        size: FormFieldSize.SMALL,
+                                                        component: {
+                                                            constructor: Select,
+                                                            props: {
+                                                                id: 'id_commercialterms',
+                                                                dataProvider: _commercialterms,
+                                                                textField: "name",
+                                                                valueField: "commercialterms_id",
+                                                                value: [],
+                                                            }
+                                                        }
+                                                    }
+                                                },
+                                                {
+                                                    constructor: FormField,
+                                                    props: {
+                                                        id: 'formFieldEx',
+                                                        label: 'Monedha/Kursi',
+                                                        name: 'formFieldEx',
+                                                        size: FormFieldSize.SMALL,
+                                                        component: {
+                                                            constructor: CurrencyExRate,
+                                                            props: {
+                                                                id: 'amount',
+                                                                currencyList: _currencies,
+                                                                value: {
+                                                                    "amount": "132323",
+                                                                    "currency": "2"
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                } 
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        constructor: Container,
+                                        props: {
+                                            id: '',
+                                            type: ContainerType.COLUMN,
+                                            spacing: {colSpan:3},
+                                            classes:["border"],
+                                            components:[
+                                                {
+                                                    constructor: FormField,
+                                                    props: {
+                                                        id: 'formFieldEx',
+                                                        label: 'Furnitori',
+                                                        name: 'formFieldEx',
+                                                        size: FormFieldSize.SMALL,
+                                                        component: {
+                                                            constructor:AutoCompleteEx,
+                                                            props: {
+                                                                id: 'suppliers_id_supplier',
+                                                                valueField: "supplier_id",
+                                                                labelField: "supplier_name",
+                                                                allowNewItem: false,
+                                                                dataProvider: _suppliers,
+                                                                value: [{ "supplier_id": "1"}],
+                                                                multiSelect: false,
+                                                                matchType:StringMatchType.STARTS_WITH
+                                                            }
+                                                        }
+                                                    }
+                                                },
+                                                {
+                                                    constructor: FormField,
+                                                    props: {
+                                                        id: 'formFieldEx',
+                                                        label: 'Magazina',
+                                                        name: 'formFieldEx',
+                                                        size: FormFieldSize.SMALL,
+                                                        component: {
+                                                            constructor:AutoCompleteEx,
+                                                            props: {
+                                                                id: 'idwarehouse_entry',
+                                                                valueField: "warehouse_id",
+                                                                labelField: "warehouse_name",
+                                                                allowNewItem: false,
+                                                                dataProvider: _warehouses,
+                                                                value: [{ "warehouse_id": "1"}],
+                                                                multiSelect: false,
+                                                                matchType:StringMatchType.STARTS_WITH
+                                                            }
+                                                        }
+                                                    }
+                                                },
+                                                {
+                                                    constructor: FormField,
+                                                    props: {
+                                                        id: 'formFieldEx',
+                                                        label: 'Urdher Blerje',
+                                                        name: 'formFieldEx',
+                                                        size: FormFieldSize.SMALL,
+                                                        component: {
+                                                            constructor:AutoCompleteEx,
+                                                            props: {
+                                                                id: 'id_order',
+                                                                valueField: "order_id",
+                                                                labelField: "order_resume",
+                                                                allowNewItem: false,
+                                                                dataProvider: _orders,
+                                                                value: [{ "order_id": "1"}],
+                                                                multiSelect: false,
+                                                                matchType:StringMatchType.STARTS_WITH
                                                             }
                                                         }
                                                     }
                                                 }
-                                            } 
-                                        ]
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        constructor: Container,
+                                        props: {
+                                            id: '',
+                                            type: ContainerType.COLUMN,
+                                            spacing: {colSpan:3},
+                                            classes:["border"],
+                                            components:[
+                                                {
+                                                    constructor: FormField,
+                                                    props: {
+                                                        id: 'formFieldEx',
+                                                        label: 'Bleresi',
+                                                        name: 'formFieldEx',
+                                                        size: FormFieldSize.SMALL,
+                                                        component: {
+                                                            constructor:AutoCompleteEx,
+                                                            props: {
+                                                                id: 'id_order',
+                                                                valueField: "order_id",
+                                                                labelField: "order_resume",
+                                                                allowNewItem: false,
+                                                                dataProvider: _orders,
+                                                                value: [{ "order_id": "1"}],
+                                                                multiSelect: false,
+                                                                matchType:StringMatchType.STARTS_WITH
+                                                            }
+                                                        }
+                                                    }
+                                                },
+                                                {
+                                                    constructor: FormField,
+                                                    props: {
+                                                        id: 'formFieldEx',
+                                                        label: 'Firmosi',
+                                                        name: 'formFieldEx',
+                                                        size: FormFieldSize.SMALL,
+                                                        component: {
+                                                            constructor:AutoCompleteEx,
+                                                            props: {
+                                                                id: 'signee',
+                                                                valueField: "employee_id",
+                                                                labelField: "employee_name",
+                                                                allowNewItem: false,
+                                                                dataProvider: _signees,
+                                                                value: [{ "employee_id": "1"}],
+                                                                multiSelect: false,
+                                                                matchType:StringMatchType.STARTS_WITH
+                                                            }
+                                                        }
+                                                    }
+                                                },
+                                                {
+                                                    constructor: FormField,
+                                                    props: {
+                                                        id: 'formFieldEx',
+                                                        label: 'Pershkrim',
+                                                        name: 'formFieldEx',
+                                                        size: FormFieldSize.SMALL,
+                                                        component: {
+                                                            constructor:TextArea,
+                                                            props: {
+                                                                id: 'description',
+                                                                spellCheck: {
+                                                                    defaultDictionary: 'English',//Albanian
+                                                                },
+                                                                value: ''
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            ]
+                                        }
                                     }
-                                },
-                                {
-                                    constructor: Container,
-                                    props: {
-                                        id: '',
-                                        type: ContainerType.COLUMN,
-                                        spacing: {colSpan:3},
-                                        classes:["border"],
-                                        components:[
-                                            {
-                                                constructor: FormField,
-                                                props: {
-                                                    id: 'formFieldEx',
-                                                    label: 'Furnitori',
-                                                    name: 'formFieldEx',
-                                                    size: FormFieldSize.SMALL,
-                                                    component: {
-                                                        constructor:AutoCompleteEx,
-                                                        props: {
-                                                            id: 'suppliers_id_supplier',
-                                                            valueField: "supplier_id",
-                                                            labelField: "supplier_name",
-                                                            allowNewItem: false,
-                                                            dataProvider: _suppliers,
-                                                            value: [{ "supplier_id": "1"}],
-                                                            multiSelect: false,
-                                                            matchType:StringMatchType.STARTS_WITH
-                                                        }
-                                                    }
-                                                }
-                                            },
-                                            {
-                                                constructor: FormField,
-                                                props: {
-                                                    id: 'formFieldEx',
-                                                    label: 'Magazina',
-                                                    name: 'formFieldEx',
-                                                    size: FormFieldSize.SMALL,
-                                                    component: {
-                                                        constructor:AutoCompleteEx,
-                                                        props: {
-                                                            id: 'idwarehouse_entry',
-                                                            valueField: "warehouse_id",
-                                                            labelField: "warehouse_name",
-                                                            allowNewItem: false,
-                                                            dataProvider: _warehouses,
-                                                            value: [{ "warehouse_id": "1"}],
-                                                            multiSelect: false,
-                                                            matchType:StringMatchType.STARTS_WITH
-                                                        }
-                                                    }
-                                                }
-                                            },
-                                            {
-                                                constructor: FormField,
-                                                props: {
-                                                    id: 'formFieldEx',
-                                                    label: 'Urdher Blerje',
-                                                    name: 'formFieldEx',
-                                                    size: FormFieldSize.SMALL,
-                                                    component: {
-                                                        constructor:AutoCompleteEx,
-                                                        props: {
-                                                            id: 'id_order',
-                                                            valueField: "order_id",
-                                                            labelField: "order_resume",
-                                                            allowNewItem: false,
-                                                            dataProvider: _orders,
-                                                            value: [{ "order_id": "1"}],
-                                                            multiSelect: false,
-                                                            matchType:StringMatchType.STARTS_WITH
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        ]
-                                    }
-                                },
-                                {
-                                    constructor: Container,
-                                    props: {
-                                        id: '',
-                                        type: ContainerType.COLUMN,
-                                        spacing: {colSpan:3},
-                                        classes:["border"],
-                                        components:[
-                                            {
-                                                constructor: FormField,
-                                                props: {
-                                                    id: 'formFieldEx',
-                                                    label: 'Bleresi',
-                                                    name: 'formFieldEx',
-                                                    size: FormFieldSize.SMALL,
-                                                    component: {
-                                                        constructor:AutoCompleteEx,
-                                                        props: {
-                                                            id: 'id_order',
-                                                            valueField: "order_id",
-                                                            labelField: "order_resume",
-                                                            allowNewItem: false,
-                                                            dataProvider: _orders,
-                                                            value: [{ "order_id": "1"}],
-                                                            multiSelect: false,
-                                                            matchType:StringMatchType.STARTS_WITH
-                                                        }
-                                                    }
-                                                }
-                                            },
-                                            {
-                                                constructor: FormField,
-                                                props: {
-                                                    id: 'formFieldEx',
-                                                    label: 'Firmosi',
-                                                    name: 'formFieldEx',
-                                                    size: FormFieldSize.SMALL,
-                                                    component: {
-                                                        constructor:AutoCompleteEx,
-                                                        props: {
-                                                            id: 'signee',
-                                                            valueField: "employee_id",
-                                                            labelField: "employee_name",
-                                                            allowNewItem: false,
-                                                            dataProvider: _signees,
-                                                            value: [{ "employee_id": "1"}],
-                                                            multiSelect: false,
-                                                            matchType:StringMatchType.STARTS_WITH
-                                                        }
-                                                    }
-                                                }
-                                            },
-                                            {
-                                                constructor: FormField,
-                                                props: {
-                                                    id: 'formFieldEx',
-                                                    label: 'Pershkrim',
-                                                    name: 'formFieldEx',
-                                                    size: FormFieldSize.SMALL,
-                                                    component: {
-                                                        constructor:TextArea,
-                                                        props: {
-                                                            id: 'description',
-                                                            spellCheck: {
-                                                                defaultDictionary: 'English',//Albanian
-                                                            },
-                                                            value: ''
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        ]
-                                    }
-                                }
-                            ]
+                                ]
+                            }
                         }
-                    }
-                ]
-            }
-        }
-    ]
-});
-
-
-var App = function(_props){
-    var _defaultParams = {
-        root: document.body,
-        idleInterval: 60000,
-        inactivityInterval: 60000
-    };
-    _props = extend(false, false, _defaultParams, _props);
-    var _root = _props.root;
-    var _self = this;
-    var _idleTime = 0;
-    var _idleInterval = _props.idleInterval;
-    var _inactivityInterval = _props.inactivityInterval;
-
-    if(!('jquery' in Object(_root)))
-        _root = $(_root);
-    
-    var _rootID = _root.attr('id');
-    if(!_rootID){
-        _rootID = guid();
-        _root.attr('id', _rootID);
-    }
-
-    var timerIncrement = function () {
-        _idleTime = _idleTime + _idleInterval;
-        if (_idleTime >= _inactivityInterval) { 
-            var idleCount = Math.floor(_idleTime/_inactivityInterval);
-            _root.trigger("InactivityDetected", [_idleTime, idleCount]);
-        }
-    }
-    var t = setInterval(timerIncrement, _idleInterval); 
-
-    var _visible = true;
-    var visibilityEvents = ['visibilitychange', 'webkitvisibilitychange', 'mozvisibilitychange', 'msvisibilitychange'];
-    visibilityEvents.forEach(function (event){
-        window.addEventListener(event, function (event){
-            if (document.hidden || document.webkitHidden || document.mozHidden || document.msHidden) {
-                if (_visible){
-                    _visible = false;
-                    _root.trigger("WindowHide", []);
-                }
-            } else {
-                if (!_visible){
-                    _visible = true;
-                    _root.trigger("WindowShow", []);
+                    ]
                 }
             }
-        });
-    });
-
-    this.behaviors = {};
-    this.behaviorimplementations = {};
-
-    this.behaviors[_rootID] = {};
-    this.behaviors[_rootID]['creationComplete'] = "APP_LOADED";
-    this.behaviors[_rootID]['InactivityDetected'] = "APP_INACTIVE";
-    this.behaviors[_rootID]['ActivityDetected'] = "APP_ACTIVE";
-    this.behaviors[_rootID]['WindowHide'] = "APP_WINDOW_HIDDEN";
-    this.behaviors[_rootID]['WindowShow'] = "APP_WINDOW_SHOWN";
-
-    //default behavior is to hide loader on creationComplete
-    this.behaviorimplementations["APP_LOADED"] = function() {
-        _loader.hide(); 
-    };
-    this.behaviorimplementations["APP_INACTIVE"] = function(e, idleTime, idleCount) {
-        console.log("App became Inactive, Launch a cool screensaver here");
-    };
-    this.behaviorimplementations["APP_ACTIVE"] = function(e, idleTime, idleCount) {
-        console.log("App became Active, Disable screensaver and show login if session expired here");
-    };
-    this.behaviorimplementations["APP_WINDOW_HIDDEN"] = function(e, idleTime, idleCount) {
-        console.log("App Window was minimized, you may want to stop network traffic or do sth cpu intensive here.");
-    };
-    this.behaviorimplementations["APP_WINDOW_SHOWN"] = function(e, idleTime, idleCount) {
-        console.log("App Window was maximized, you may want to greet the user.");
-    };
-
-    var _eventTypeArr = ["mousedown", "mouseover", "mouseup", "click", "dblclick", "keydown", "keyup"];
-    for(var cmpId in this.behaviors)
-    {
-        for(var eventType in this.behaviors[cmpId])
-        {
-            _eventTypeArr.pushUnique(eventType);
-        }
+        ]
     }
+};
 
-    var _eventTypeArrJoined = _eventTypeArr.join(" ");
-    _root.on(_eventTypeArrJoined, function(e) {
-        if(e.type != "InactivityDetected" && e.type != "ActivityDetected"){
-            if(_idleTime >= _inactivityInterval){
-                var idleCount = Math.floor(_idleTime/_inactivityInterval);
-                _root.trigger("ActivityDetected", [_idleTime, idleCount]);
-            }
-            _idleTime = 0;
-        }
-        var cmpBehaviors = _self.behaviors[$(this).attr('id')];
-        if(cmpBehaviors[e.type]) {
-            var behaviorName = cmpBehaviors[e.type];
-            var behavior = _self.behaviorimplementations[behaviorName];
-            if(behavior && typeof behavior == 'function') {
-                behavior.apply(this, arguments);
-            }
-        }
-    });
-
-    var _loader = new Loader({ id: 'loader' });
-       
-    this.init = function()
-    {
-        _root.append(_loader.render());
-        _loader.show();
-        _root.append(myForm.render());
-    }
-
-    
-}
 //kjo klasa APP mesiper duhet quajtuar view 
 //viewve tu ndryshojme datat 
 //APP klase qe ka disa view dhe we can switch between them, object pooling per strukturen.
-var oxana = new App();
+var oxana = new App({components:[myForm]});
 oxana.behaviors["CMP_ID_HERE"] = {};
 oxana.behaviors["CMP_ID_HERE"]["CMP_EVENT"] = "BEHAVIOR";
 oxana.init();
+
 
 /*
 

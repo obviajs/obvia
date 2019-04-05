@@ -60,4 +60,4 @@ var Toggle = function (_props, overrided = false) {
     }
 };
 
-Toggle.type = "toggle";
+Toggle.prototype.type = "Toggle";

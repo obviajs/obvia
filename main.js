@@ -7,6 +7,8 @@ rjs.define("./components/base/Selectable.js", "Selectable");
 rjs.define("./components/base/Parent.js", "Parent");
 rjs.define("./components/base/NavParent.js", "NavParent");
 rjs.define("./components/base/ContainerType.js","ContainerType");
+rjs.define("./components/base/ViewStack.js", "ViewStack");
+rjs.define("./components/base/App.js", "App");
 //TextInput
 rjs.define("./lib/dependencies/scripts/jquery.inputmask.bundle.min.js", "InputMaskBundle");
 rjs.define("./components/TextInput.js", "TextInput");
@@ -118,6 +120,8 @@ rjs.require([
         "Container",
         "TabNavigator",
         "Tab",
+        "ViewStack",
+        "App",
         "Form",
         "FormField",
         "FormFieldSize",

@@ -93,4 +93,4 @@ var Select = function (_props, overrided = false) {
 };
 
 //component prototype
-Select.type = 'select';
+Select.prototype.type = 'Select';

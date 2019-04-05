@@ -7,7 +7,6 @@
 //component definition
 var Container = function(_props)
 {
-
     Object.defineProperty(this, "width", 
     {
         get: function width() 
@@ -104,4 +103,4 @@ var Container = function(_props)
         return [];
     }*/
 };
-Container.type = 'container';
+Container.prototype.type = 'Container';

@@ -87,4 +87,4 @@ var RadioButton = function (_props, overrided = false) {
 };
 
 //component prototype
-RadioButton.type = 'radio';
+RadioButton.prototype.type = 'RadioButton';

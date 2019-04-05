@@ -7,10 +7,6 @@
 //component definition
 var TabNavigator = function(_props) 
 {
-   
-
-    type:"tabNavigator",
-    
     Object.defineProperty(this, "selectedIndex", 
     {
         get: function selectedIndex() 
@@ -21,30 +17,35 @@ var TabNavigator = function(_props)
         {
             if(_selectedIndex != v)
             {
-                _selectedIndex = v;
-                for(var i=0;i<this.components.length;i++)
+                var event = jQuery.Event("change");
+                this.$el.trigger(event, [_selectedIndex, v]);
+                if (!event.isDefaultPrevented()) 
                 {
-                    var cTab = this[(this.components[i]).props.id];
-                    if(cTab)
+                    _selectedIndex = v;
+                    for(var i=0;i<this.components.length;i++)
                     {
-                        if(i==v){
-                            cTab.$el.addClass("active");
-                            cTab.$anchor.addClass("active");
-                            cTab.$el.removeClass("fade");
-                        }else{
-                            cTab.$el.addClass("fade");
-                            cTab.$el.removeClass("active");
-                            cTab.$anchor.removeClass("active");
+                        var cTab = this.children[(this.components[i]).props.id];
+                        if(cTab)
+                        {
+                            if(i==v){
+                                cTab.$el.addClass("active");
+                                cTab.$anchor.addClass("active");
+                                cTab.$el.removeClass("fade");
+                            }else{
+                                cTab.$el.addClass("fade");
+                                cTab.$el.removeClass("active");
+                                cTab.$anchor.removeClass("active");
+                            }
                         }
-                    }
-                } 
+                    } 
+                }
             }
         }
     });
 
     this.template = function () 
     { 
-        return (!_embedded?("<div id='" + this.domID + "-wrapper' class='container "+(this.colspan?"col-sm-" + this.colspan:"")+"'>"):"") +
+        return (!_embedded?("<div data-triggers='change' id='" + this.domID + "' class='container "+(this.colspan?"col-sm-" + this.colspan:"")+"'>"):"") +
         '<ul class="nav nav-tabs" id="' + this.domID + '_navigation"></ul>'+ 
         '<div class="tab-content" id="' + this.domID + '_container"></div>'+
         (!_embedded?("</div>"):"");
@@ -66,4 +67,4 @@ var TabNavigator = function(_props)
     };
 };
 //component prototype
-TabNavigator.type = 'tabNavigator';
+TabNavigator.prototype.type = 'TabNavigator';

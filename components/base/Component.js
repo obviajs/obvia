@@ -20,6 +20,7 @@ var Component = function(_props, overrided=false)
     var _dblclick = _props.dblclick;
     var _keydown = _props.keydown;
     var _keyup = _props.keyup;
+    var _creationComplete = _props.creationComplete;
     
     var _watchers = [];
     var _bindings = [];
@@ -187,7 +188,9 @@ var Component = function(_props, overrided=false)
                 'click': _click && typeof _click == 'function' ? _click.bind(this) : undefined,
                 'dblclick': _dblclick && typeof _dblclick == 'function' ? _dblclick.bind(this) : undefined,
                 'keydown': _keydown && typeof _keydown == 'function' ? _keydown.bind(this) : undefined,
-                'keyup': _keyup && typeof _keyup == 'function' ? _keyup.bind(this) : undefined
+                'keyup': _keyup && typeof _keyup == 'function' ? _keyup.bind(this) : undefined,
+                'creationComplete': _creationComplete && typeof _creationComplete == 'function' ? _creationComplete.bind(this) : undefined
+
             }
         }
     ];

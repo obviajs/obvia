@@ -80,4 +80,4 @@ var HRule = function(_props)
    
     Component.call(this, _props);
 };
-HRule.type = 'hrule';
+HRule.prototype.type = 'HRule';

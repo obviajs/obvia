@@ -1,9 +1,5 @@
 var Parent = function(_props, overrided=false)
 {
-    var _ccComponents = [];
-    this.components = [];
-    this.$container = null;
-
     Object.defineProperty(this, "children", 
     {
         get: function children() 
@@ -12,9 +8,17 @@ var Parent = function(_props, overrided=false)
         }
     });
 
+    Object.defineProperty(this, "components", 
+    {
+        get: function components() 
+        {
+            return _components;
+        }
+    });
+
     this.addComponent = function (component, cIndex)
     {
-        this.components.push(component);
+        _components.push(component);
         return this.addComponentInContainer(this.$container, component, cIndex);
     }
 
@@ -39,7 +43,8 @@ var Parent = function(_props, overrided=false)
             // _self.$container.children().eq(cIndex).after((cmp.render()));
             container.append(cmp.render());
             //expose component model
-            _self.children[cmp.id] = cmp;
+            component.props.id = cmp.id;
+            _children[cmp.id] = cmp;
 
             cmp.parent = _self;
             cmp.parentType = _self.type;
@@ -62,7 +67,10 @@ var Parent = function(_props, overrided=false)
         components:[]
     };
     _props = extend(false, false, _defaultParams, _props);
-    this.components = _props.components;
+    var _components = _props.components;
+    var _ccComponents = [];
+    this.$container = null;
+
     var _self = this;
     var _creationFinished = false;
     var _afterAttach = _props.afterAttach;
@@ -77,9 +85,10 @@ var Parent = function(_props, overrided=false)
     {
         if(components && Array.isArray(components))
         {
-            components.forEach(function (component, cIndex) {
-                this.addComponentInContainer(this.$container, component, cIndex);
-            }.bind(this));
+            for(var i=0;i<components.length;i++)
+            {
+                this.addComponentInContainer(this.$container, components[i], i);
+            }
         }
     }
     Component.call(this, _props);
@@ -109,3 +118,4 @@ var Parent = function(_props, overrided=false)
         configurable: true
     });
 }
+Parent.prototype.type = 'Parent';

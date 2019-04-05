@@ -48,32 +48,6 @@ var Color = function (_props, overrided = false) {
     this.changeHandler = function () {
         if (typeof this.onchange == 'function')
             this.onchange.apply(this, arguments);
-        this.validate();
-    };
-
-    this.validate = function () {
-        if (this.required) {
-            if (this.value == "" || this.value == undefined) {
-                this.errorList = [
-                    KxGenerator.getErrorList().call(this)['empty']
-                ];
-
-                this.$input.addClass('invalid');
-
-                return false;
-            } else {
-                this.errorList = [];
-                this.$input.removeClass('invalid');
-                return true;
-            }
-        } else
-            return true;
-    };
-
-    this.changeHandler = function () {
-        if (typeof this.onchange == 'function')
-            this.onchange.apply(this, arguments);
-        this.validate();
     };
 
     this.focus = function(){
@@ -104,3 +78,5 @@ var Color = function (_props, overrided = false) {
     }
 
 };
+
+Color.prototype.type = "Color";

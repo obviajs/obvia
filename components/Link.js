@@ -94,4 +94,4 @@ var Link = function(_props)
 
     Component.call(this, _props);
 };
-Link.type = 'link';
+Link.prototype.type = 'Link';

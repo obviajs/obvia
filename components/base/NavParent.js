@@ -11,12 +11,13 @@ var NavParent = function(_props, overrided=false)
         var _self = this;
         if(this.components && Array.isArray(this.components))
         {
-            this.components.forEach(function (component, cIndex) {
-                var cmpInstance = this.addComponent(component, cIndex);
+            for(var i=0;i<this.components.length;i++)
+            {
+                var cmpInstance = this.addComponent(this.components[i], i);
                 if(_self.$navigation && cmpInstance.$header){
                     _self.$navigation.append(cmpInstance.$header);        
                 }
-            }.bind(this));
+            }
         }
     };
 
@@ -25,3 +26,4 @@ var NavParent = function(_props, overrided=false)
         this.keepBase();
     }
 }
+NavParent.prototype.type = 'NavParent';

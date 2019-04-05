@@ -101,4 +101,4 @@ var Button = function(_props, overrided=false)
         this.keepBase();
     }
 };
-Button.type = 'button';
+Button.prototype.type = 'Button';

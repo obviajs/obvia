@@ -100,4 +100,4 @@ var HierarchicalTree = function (_props, overrided = false) {
 };
 
 //component prototype
-HierarchicalTree.type = 'hierarchical_tree';
+HierarchicalTree.prototype.type = 'HierarchicalTree';

@@ -84,4 +84,4 @@ var TextInput = function (_props, overrided = false) {
 };
  
 //component prototype
-TextInput.type = 'text';
+TextInput.prototype.type = 'TextInput';

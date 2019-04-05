@@ -329,3 +329,4 @@ var DateTimeCb = function (_props, overrided = false) {
         this.keepBase();
     }
 };
+DateTimeCb.prototype.type = "DateTimeCb";
