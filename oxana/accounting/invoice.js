@@ -335,10 +335,95 @@ var myForm =
     }
 };
 
+
+var myForm2 = {
+    constructor: Container,
+    props: {
+        id: '',
+        components:[{
+                constructor: Form,
+                props: {
+                    id: '',
+                    spacing: {colSpan:3},
+                    classes:["border"],
+                    components:[
+                        {
+                            constructor: FormField,
+                            props: {
+                                id: 'formFieldEx',
+                                label: 'Example formField',
+                                name: 'formFieldEx',
+                                size: FormFieldSize.SMALL,
+                                component: {
+                                    constructor:Amount,
+                                    props: {
+                                        id: 'amount',
+                                        currencyList: _currencies,
+                                        value: {
+                                            "amount": "132323",
+                                            "currency": "2"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            constructor: FormField,
+                            props: {
+                                id: 'formFieldEx',
+                                label: 'Termat Tregtare',
+                                name: 'id_commercialterms',
+                                size: FormFieldSize.SMALL,
+                                component: {
+                                    constructor: Select,
+                                    props: {
+                                        id: 'id_commercialterms',
+                                        dataProvider: _commercialterms,
+                                        textField: "name",
+                                        valueField: "commercialterms_id",
+                                        value: [],
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            constructor: FormField,
+                            props: {
+                                id: 'formFieldEx',
+                                label: 'Monedha/Kursi',
+                                name: 'formFieldEx',
+                                size: FormFieldSize.SMALL,
+                                component: {
+                                    constructor: CurrencyExRate,
+                                    props: {
+                                        id: 'amount',
+                                        currencyList: _currencies,
+                                        value: {
+                                            "amount": "132323",
+                                            "currency": "2"
+                                        }
+                                    }
+                                }
+                            }
+                        } 
+                    ]
+                }
+            }
+        ]
+    }
+};
 //kjo klasa APP mesiper duhet quajtuar view 
 //viewve tu ndryshojme datat 
 //APP klase qe ka disa view dhe we can switch between them, object pooling per strukturen.
-var oxana = new App({components:[myForm]});
+var oxana = new App({
+    components:[
+        {
+            constructor: ViewStack,
+            props: {
+                components: [myForm, myForm2]
+            }
+        }        
+    ]});
 oxana.behaviors["CMP_ID_HERE"] = {};
 oxana.behaviors["CMP_ID_HERE"]["CMP_EVENT"] = "BEHAVIOR";
 oxana.init();

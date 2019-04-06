@@ -100,9 +100,9 @@ var ViewStack = function(_props)
                         if(c)
                         {
                             if(i==v){
-                                this.$container.append(cTab.$el);
+                                this.$container.append(c.$el);
                             }else if(c.$el.parent().length > 0){
-                                c.detach();
+                                c.$el.detach();
                             }
                         }
                     } 
@@ -119,23 +119,25 @@ var ViewStack = function(_props)
             for(var i=0;i<_components.length;i++)
             {
                 var cmp = Component.fromLiteral(_components[i]);
-                cmp.on('creationComplete', function (e) {
-                    e.stopImmediatePropagation();
-                    e.stopPropagation();
-    
-                    _ccComponents.push(component.props.id);
-                
-                    if (_ccComponents.length == _self.components.length && !_creationFinished) {
-                        _creationFinished = true;
-                        _self.trigger('creationComplete');
-                    }
-    
-                }.bind(_self));
-                var maxIndex = container.children().length;
+                (function(i){
+                    cmp.on('creationComplete', function (e) {
+                            e.stopImmediatePropagation();
+                            e.stopPropagation();
+            
+                            _ccComponents.push(_components[i].props.id);
+                        
+                            if (_ccComponents.length == _self.components.length && !_creationFinished) {
+                                _creationFinished = true;
+                                _self.trigger('creationComplete');
+                            }
+        
+                    });
+                })(i);
+                var maxIndex = this.$container.children().length;
                 if(_selectedIndex==i)
-                    container.append(cmp.render());
+                    this.$container.append(cmp.render());
                 //expose component model
-                component.props.id = cmp.id;
+                _components[i].props.id = cmp.id;
                 _children[cmp.id] = cmp;
     
                 cmp.parent = _self;
@@ -156,6 +158,8 @@ var ViewStack = function(_props)
     var _ccComponents = [];
     var _components = _props.components;
     var _children = {};
+    var _self = this;
+    var _creationFinished = false;
 
     Component.call(this, _props, true);
 

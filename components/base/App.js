@@ -120,11 +120,14 @@ var App = function(_props){
         _loader.show();
         if(_components && Array.isArray(_components))
         {
-            var cmp = Component.fromLiteral(_components[i]);
-            _children[cmp.id] = cmp;    
-            _root.append(cmp.render());
-            cmp.parent = this;
-            cmp.parentType = this.type;
+            for(var i=0;i<_components.length;i++)
+            {
+                var cmp = Component.fromLiteral(_components[i]);
+                _children[cmp.id] = cmp;    
+                _root.append(cmp.render());
+                cmp.parent = this;
+                cmp.parentType = this.type;
+            }
         }
     }
 
