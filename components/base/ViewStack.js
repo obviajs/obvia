@@ -111,6 +111,29 @@ var ViewStack = function(_props)
         }
     });
     
+    var _mutationHandler = function(e, ci)
+    {
+        var c = _self.children[(_components[ci]).props.id];
+        if(c)
+        {
+            var parent = c.children[c.components[0].props.id];
+            var c = parent.children[e.oldValue.props.id];
+
+            //
+            if(c.$el.parent().length > 0){
+                c.$el.detach();
+            }
+            var cmp = Component.fromLiteral(e.newValue);
+            parent.$container.append(cmp.$el);
+            parent.children[cmp.id] = cmp;
+//pergjithesoje, komponenti i ri te shtohet te indexi ku ishte i vjetri
+            cmp.parent = _self;
+            cmp.parentType = _self.type;
+            cmp.parentForm = _self;
+        }       
+        console.log(arguments);
+    }
+
     this.beforeAttach = function() 
     {
         this.$container = this.$el;
@@ -118,7 +141,14 @@ var ViewStack = function(_props)
         {
             for(var i=0;i<_components.length;i++)
             {
-                var cmp = Component.fromLiteral(_components[i]);
+                var cmp, cmpLiteral, w;
+                cmp = cmpLiteral = _components[i];
+                if(cmpLiteral.type == "JTemplate")
+                {
+                    cmp = _components[i] = cmpLiteral.parse();   
+                }
+                var cmp = Component.fromLiteral(cmp);
+                _components[i].props.id = cmp.id;
                 (function(i){
                     cmp.on('creationComplete', function (e) {
                             e.stopImmediatePropagation();
@@ -132,6 +162,14 @@ var ViewStack = function(_props)
                             }
         
                     });
+                    if(cmpLiteral.type == "JTemplate")
+                    {
+                        for(var j=0;j<cmpLiteral.mutations.length;j++)
+                        {
+                            w = ChangeWatcher.getInstance(cmpLiteral.mutations[j]["host"]);
+                            w.watch(cmpLiteral.mutations[j]["host"], cmpLiteral.mutations[j]["chain"], function(e) {_mutationHandler(e, i);});
+                        }
+                    }
                 })(i);
                 var maxIndex = this.$container.children().length;
                 if(_selectedIndex==i)

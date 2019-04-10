@@ -412,15 +412,80 @@ var myForm2 = {
         ]
     }
 };
+var myContainerTemplateLiteral = {
+    constructor: Container,
+    props: {
+        id: '',
+        components:[{
+                constructor: Form,
+                props: {
+                    id: '',
+                    spacing: {colSpan:3},
+                    classes:["border"],
+                    components:[
+                        "{{movingPart.formfield}}",
+                        {
+                            constructor: FormField,
+                            props: {
+                                id: 'formFieldEx',
+                                label: 'Termat Tregtare',
+                                name: 'id_commercialterms',
+                                size: FormFieldSize.SMALL,
+                                component: {
+                                    constructor: Select,
+                                    props: {
+                                        id: 'id_commercialterms',
+                                        dataProvider: _commercialterms,
+                                        textField: "name",
+                                        valueField: "commercialterms_id",
+                                        value: [],
+                                    }
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+};
+var movingPart = {};
+movingPart.formfield = {
+    constructor: FormField,
+    props: {
+        id: 'formFieldEx',
+        label: 'Example formField',
+        name: 'formFieldEx',
+        size: FormFieldSize.SMALL,
+        component: {
+            constructor:Amount,
+            props: {
+                id: 'amount',
+                currencyList: _currencies,
+                value: {
+                    "amount": "132323",
+                    "currency": "2"
+                }
+            }
+        }
+    }
+};
+movingPart.view2 = myContainerTemplateLiteral;
+
+var myContainerTemplate = new JTemplate(myContainerTemplateLiteral);
+//var myContainerChildrenTemplate = new JTemplate([myForm, "{{movingPart.view2}}"]);
+//[myForm, myForm2, myContainerTemplate]
+
 //kjo klasa APP mesiper duhet quajtuar view 
 //viewve tu ndryshojme datat 
 //APP klase qe ka disa view dhe we can switch between them, object pooling per strukturen.
+var literalTemplate = new JTemplate("{\"obj\":{{hello.world}}}");
 var oxana = new App({
     components:[
         {
             constructor: ViewStack,
             props: {
-                components: [myForm, myForm2]
+                components: [myForm, myForm2, myContainerTemplate]
             }
         }        
     ]});

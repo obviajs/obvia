@@ -149,7 +149,6 @@ var FormField = function(_props)
     }
 
     var _defaultParams = {
-        id: "Component_"+Component.instanceCnt,
         enabled: true,
         required: false,
         size: FormFieldSize.SMALL                     
