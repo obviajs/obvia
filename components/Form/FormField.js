@@ -19,6 +19,13 @@ var FormField = function(_props)
         this.$label = this.$el.find("#" + this.domID + "_label");
     };
 
+    Object.defineProperty(this, "component", 
+    {
+        get: function component() 
+        {
+            return _component;
+        }
+    });
 
     Object.defineProperty(this, "placeholder", 
     {
@@ -159,10 +166,12 @@ var FormField = function(_props)
     var _name;
     var _required;
     var _label;
+    var _component = _props.component;
         
     var _size = _props.size;
   
-    var _cmp = Component.fromLiteral(_props.component);
+    var _cmp = Component.fromLiteral(_component);
+    _component.props.id = _cmp.id;
 
     var _self = this;
     Component.call(this, _props);
@@ -212,6 +221,32 @@ var FormField = function(_props)
         },
         configurable: true
     });
+
+    Object.defineProperty(this, "props", {
+        get: function props() {
+            var obj = {};
+            for(var prop in _props)
+            {
+                if(typeof _props[prop] != 'function')
+                {
+                    switch(prop)
+                    {
+                        case "component":
+                            var component = {};
+                            component.constructor = _component.constructor;
+                            component.props = _cmp.props;
+                            obj[prop] = component;
+                            break;
+                        default:
+                            if(this.hasOwnProperty(prop))
+                                obj[prop] = this[prop];
+                    }
+                }
+            }
+            return obj;
+        },
+        configurable: true
+    }); 
 }
 //component prototype
 FormField.prototype.type = 'FormField';

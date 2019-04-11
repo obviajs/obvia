@@ -59,11 +59,12 @@ var Component = function(_props, overrided=false)
         get: function props() {
             var obj = {};
             for(var prop in _props){
-                if(this.hasOwnProperty(prop))
+                if(this.hasOwnProperty(prop) && (typeof _props[prop] != 'function'))
                     obj[prop] = this[prop];
             }
             return obj;
-        }
+        },
+        configurable: true
     });  
 
     Object.defineProperty(this, "parent",

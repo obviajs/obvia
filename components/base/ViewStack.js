@@ -118,13 +118,16 @@ var ViewStack = function(_props)
         {
             var parent = c.children[c.components[0].props.id];
             var c = parent.children[e.oldValue.props.id];
-
+            delete parent.children[e.oldValue.props.id];
             //
             if(c.$el.parent().length > 0){
                 c.$el.detach();
             }
             var cmp = Component.fromLiteral(e.newValue);
-            parent.$container.append(cmp.$el);
+            e.newValue.props.id = cmp.id;
+            parent.$container.insertAt(0, cmp.$el);
+
+            //parent.$container.append(cmp.$el);
             parent.children[cmp.id] = cmp;
 //pergjithesoje, komponenti i ri te shtohet te indexi ku ishte i vjetri
             cmp.parent = _self;

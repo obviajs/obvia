@@ -117,5 +117,36 @@ var Parent = function(_props, overrided=false)
         },
         configurable: true
     });
+
+    Object.defineProperty(this, "props", {
+        get: function props() {
+            var obj = {};
+            for(var prop in _props)
+            {
+                if(typeof _props[prop] != 'function')
+                {
+                    switch(prop)
+                    {
+                        case "components":
+                            var components = [];
+                            for(var i=0;i<_components.length;i++)
+                            {
+                                var component = {};
+                                component.constructor = _components[i].constructor;
+                                component.props = _children[_components[i].props.id].props;
+                                components.push(component);
+                            }
+                            obj[prop] = components;
+                            break;
+                        default:
+                            if(this.hasOwnProperty(prop))
+                                obj[prop] = this[prop];
+                    }
+                }
+            }
+            return obj;
+        },
+        configurable: true
+    });  
 }
 Parent.prototype.type = 'Parent';
