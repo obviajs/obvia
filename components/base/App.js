@@ -123,7 +123,8 @@ var App = function(_props){
             for(var i=0;i<_components.length;i++)
             {
                 var cmp = Component.fromLiteral(_components[i]);
-                _children[cmp.id] = cmp;    
+                _children[cmp.id] = cmp;   
+                _components[i].props.id = cmp.id;
                 _root.append(cmp.render());
                 cmp.parent = this;
                 cmp.parentType = this.type;
@@ -146,5 +147,60 @@ var App = function(_props){
             return _components;
         }
     });
+
+    Object.defineProperty(this, "root", 
+    {
+        get: function root() 
+        {
+            return _root;
+        }
+    });
+
+    Object.defineProperty(this, "idleInterval", 
+    {
+        get: function idleInterval() 
+        {
+            return _idleInterval;
+        }
+    });
+
+    Object.defineProperty(this, "inactivityInterval", 
+    {
+        get: function inactivityInterval() 
+        {
+            return _inactivityInterval;
+        }
+    });
+
+    Object.defineProperty(this, "props", {
+        get: function props() {
+            var obj = {};
+            for(var prop in _props)
+            {
+                if(typeof _props[prop] != 'function')
+                {
+                    switch(prop)
+                    {
+                        case "components":
+                            var components = [];
+                            for(var i=0;i<_components.length;i++)
+                            {
+                                var component = {};
+                                component.constructor = _components[i].constructor;
+                                component.props = _children[_components[i].props.id].props;
+                                components.push(component);
+                            }
+                            obj[prop] = components;
+                            break;
+                        default:
+                            if(this.hasOwnProperty(prop))
+                                obj[prop] = this[prop];
+                    }
+                }
+            }
+            return obj;
+        },
+        configurable: true
+    });  
 }
 App.prototype.type = 'App';
