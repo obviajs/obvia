@@ -2,6 +2,8 @@ var flowerCM = window.flowerCM || {};
 rjs.init({debug:false});
 //base Components
 rjs.define("lib/EventDispatcher.js", "EventDispatcher");
+rjs.define("lib/rca/RemoteCursorEvent.js", "RemoteCursorEvent");
+rjs.define("lib/rca/RemoteObject.js", "RemoteObject");
 rjs.define("./components/base/Component.js", "Component");
 rjs.define("./components/base/Spacing.js", "Spacing");
 rjs.define("./components/base/Selectable.js", "Selectable");
@@ -113,6 +115,8 @@ rjs.define("./oxana/accounting/components/CurrencyExRate.js", "CurrencyExRate");
 rjs.require([
         "DOMContentLoaded",
         "EventDispatcher",
+        "RemoteCursorEvent",
+        "RemoteObject", 
         "Component",
         "Spacing",
         "Selectable",
