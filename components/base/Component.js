@@ -28,7 +28,11 @@ var Component = function(_props, overrided=false)
     if(Component.usedComponentIDS[_id]==1) {
         _id += "_" +Component.instanceCnt;
     }
+    var _domID = _id + '_' + _guid;
+
     Component.usedComponentIDS[_id] = 1;
+    Component.domID2ID[_domID] = _id;
+    Component.instances[_id] = this;
 
     //var _propUpdateMap = {"label":{"o":$el, "fn":"html", "p":[] }, "hyperlink":{}};
     //generate GUID for this component
@@ -51,7 +55,7 @@ var Component = function(_props, overrided=false)
     Object.defineProperty(this, 'domID',
     {
         get: function () {
-            return _id + '_' + _guid;
+            return _domID;
         }
     });
 
@@ -159,12 +163,40 @@ var Component = function(_props, overrided=false)
         },
         set: function classes(v)
         {
-            if((!_classes && v) || (_classes && !_classes.equals(v)))
+            var _toggle = _toggleStack.pop();
+                    
+            if((!_classes && v) || (_classes && (!_classes.equals(v) || _toggle)))
             {
                 _classes = v;
                 if(this.$el)
-                    this.$el.addClass(_classes);
+                {
+                    if(_toggle)
+                    {
+                        for(var i =0;i<_classes.length;i++)
+                        {
+                            var _class = _classes[i];
+                            if(this.$el.hasClass(_class))
+                                this.$el.removeClass(_class);
+                            else
+                                this.$el.addClass(_class);
+                        }
+                    }else
+                        this.$el.addClass(_classes);
+                }
+                    
             }
+        }
+    });
+
+    var _toggleStack = [];
+    Object.defineProperty(this, "toggle", {
+        get: function toggle()
+        {
+            return _toggleStack[_toggleStack.length-1];
+        },
+        set: function toggle(v)
+        {
+            _toggleStack.push(v);
         }
     });
 
@@ -264,7 +296,7 @@ var Component = function(_props, overrided=false)
                 _props.afterAttach.apply(this, arguments);
             if(!e.isDefaultPrevented()){
                 this.trigger('creationComplete');
-                console.log("creation Complete", this.$el.attr("id"));
+                //console.log("creation Complete", this.$el.attr("id"));
             }
         }
     };
@@ -480,12 +512,15 @@ Component.fromLiteral = function(_literal, bindingDefaultContext=null)
 
    
     //construct the component
-    if (typeof _literal.constructor == "string") {
-        _literal.constructor = eval(_literal.constructor);
+    if(_literal.constructor)
+    {
+        if (typeof _literal.constructor == "string") {
+            _literal.constructor = eval(_literal.constructor);
+        }
+        var el = new _literal.constructor(_processedProps);
+        el.applyBindings(_bindings, bindingDefaultContext);
+        return el;
     }
-    var el = new _literal.constructor(_processedProps);
-    el.applyBindings(_bindings, bindingDefaultContext);
-    return el;
 }
 Component.listeners = []
 Component.MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
@@ -550,4 +585,7 @@ Component.check = function(mutations)
     }
 }
 Component.defaultContext = window;
+Component.registered = {};
 Component.usedComponentIDS = {};
+Component.domID2ID = {};
+Component.instances = {};

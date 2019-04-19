@@ -14,6 +14,9 @@ var App = function(_props){
     var _inactivityInterval = _props.inactivityInterval;
     var _components = _props.components;
     var _children = {};
+    var _style = _props.style;
+
+    
 
     if(!('jquery' in Object(_root)))
         _root = $(_root);
@@ -24,6 +27,11 @@ var App = function(_props){
         _root.attr('id', _rootID);
     }
     window.id = _rootID;
+
+    if(_style)
+    {
+        $("<style id='"+_rootID+"' type='text/css'>"+_style+"</style>").appendTo("head");
+    }
 
     var timerIncrement = function () {
         _idleTime = _idleTime + _idleInterval;
@@ -85,35 +93,69 @@ var App = function(_props){
     };
 
     var _eventTypeArr = ["mousedown", "mouseover", "mouseup", "click", "dblclick", "keydown", "keyup"];
-    for(var cmpId in this.behaviors)
-    {
-        for(var eventType in this.behaviors[cmpId])
-        {
-            _eventTypeArr.pushUnique(eventType);
-        }
-    }
-
-    var _eventTypeArrJoined = _eventTypeArr.join(" ");
-    $(window).on(_eventTypeArrJoined, function(e) {
-        if(e.type != "InactivityDetected" && e.type != "ActivityDetected" && e.type != "WindowHide" && e.type != "WindowShow"){
-            if(_idleTime >= _inactivityInterval){
-                var idleCount = Math.floor(_idleTime/_inactivityInterval);
-                _root.trigger("ActivityDetected", [_idleTime, idleCount]);
-            }
-            _idleTime = 0;
-        }
-        var cmpBehaviors = _self.behaviors[$(this).attr('id')];
-        if(cmpBehaviors[e.type]) {
-            var behaviorName = cmpBehaviors[e.type];
-            var behavior = _self.behaviorimplementations[behaviorName];
-            if(behavior && typeof behavior == 'function') {
-                behavior.apply(this, arguments);
-            }
-        }
-    });
-
+    var _eventTypeArrJoined;
     var _loader = new Loader({ id: 'loader' });
-       
+
+    this.registerBehaviors = function()
+    {
+        //TODO: te bejme difference e oldBehaviors me newBehaviors dhe te shtojme vetem ato si evente per te evituar off dhe on
+        $(window).off(_eventTypeArrJoined);
+        for(var cmpId in this.behaviors)
+        {
+            for(var eventType in this.behaviors[cmpId])
+            {
+                _eventTypeArr.pushUnique(eventType);
+            }
+        }
+        _eventTypeArrJoined = _eventTypeArr.join(" ");
+        $(window).on(_eventTypeArrJoined, function(e) {
+            if(e.type != "InactivityDetected" && e.type != "ActivityDetected" && e.type != "WindowHide" && e.type != "WindowShow"){
+                if(_idleTime >= _inactivityInterval){
+                    var idleCount = Math.floor(_idleTime/_inactivityInterval);
+                    _root.trigger("ActivityDetected", [_idleTime, idleCount]);
+                }
+                _idleTime = 0;
+            }
+            var _domIDCurrentTarget = $(this).attr('id');
+            var _domIDTarget = $(e.target).attr('id'); 
+            
+            var _idCurrentTarget = Component.domID2ID[_domIDCurrentTarget]?Component.domID2ID[_domIDCurrentTarget]:_domIDCurrentTarget;
+            var _idTarget = Component.domID2ID[_domIDTarget]?Component.domID2ID[_domIDTarget]:_domIDTarget;
+
+            var cmpBehaviors;
+            var _idBehaviorManifestor;
+            if(_self.behaviors[_idTarget])
+            {
+                cmpBehaviors = _self.behaviors[_idTarget];
+                _idBehaviorManifestor = _idTarget;
+            }else
+            {
+                cmpBehaviors = _self.behaviors[_idCurrentTarget];
+                _idBehaviorManifestor = _idCurrentTarget;
+            }
+            
+            //console.log(e.type+" "+_idCurrentTarget+ " "+_idTarget)
+            
+            if(cmpBehaviors && cmpBehaviors[e.type]) {
+                var behaviorName = cmpBehaviors[e.type];
+                var behavior = _self.behaviorimplementations[behaviorName];
+                if(behavior) {
+                    if(typeof behavior == 'function') {
+                        behavior.apply(Component.instances[_idBehaviorManifestor], arguments);
+                    }else{
+                        if(isObject(behavior)){
+                            behavior.reaction.apply(Component.instances[_idBehaviorManifestor], arguments);
+                            if(behavior.stopPropagation){
+                                e.stopPropagation();
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    };
+    this.registerBehaviors();   
+
     this.init = function()
     {
         _root.append(_loader.render());

@@ -1,14 +1,14 @@
 var Spacing = function(_props, $el)
 {  
-    this.setClass = function(className, v)
+    this.setClass = function(className, v, max = 13)
     {
         var classArr = [];
-        for(var i=0;i<13;i++)
+        for(var i=0;i<=max;i++)
         {
             classArr.push(className+i);       
         }
-
-        _$el.removeClass(classArr);
+        var _classes = classArr.join(" ");
+        _$el.removeClass(_classes);
         _$el.addClass(className + v);
     }
     Object.defineProperty(this, "colSpan", 
@@ -290,12 +290,132 @@ var Spacing = function(_props, $el)
         }, 
         configurable: true
     });
+
+    Object.defineProperty(this, "p", 
+    {
+        get: function p() 
+        {
+            return _p;
+        },
+        set: function p(v) 
+        {
+            if(_p != v)
+            {
+                _p = v;
+                if(_$el && v && !isNaN(v))
+                {
+                    this.setClass('p-', v);
+                }
+            }
+        }, 
+        configurable: true
+    });
+
+    Object.defineProperty(this, "m", 
+    {
+        get: function m() 
+        {
+            return _m;
+        },
+        set: function m(v) 
+        {
+            if(_m != v)
+            {
+                _m = v;
+                if(_$el && v && !isNaN(v))
+                {
+                    this.setClass('m-', v);
+                }
+            }
+        }, 
+        configurable: true
+    });
+
+    Object.defineProperty(this, "mw", 
+    {
+        get: function mw() 
+        {
+            return _mw;
+        },
+        set: function mw(v) 
+        {
+            if(_mw != v)
+            {
+                _mw = v;
+                if(_$el && v && !isNaN(v))
+                {
+                    this.setClass('mw-', v), 100;
+                }
+            }
+        }, 
+        configurable: true
+    });
+
+    Object.defineProperty(this, "w", 
+    {
+        get: function w() 
+        {
+            return _w;
+        },
+        set: function w(v) 
+        {
+            if(_w != v)
+            {
+                _w = v;
+                if(_$el && v && !isNaN(v))
+                {
+                    this.setClass('w-', v, 100);
+                }
+            }
+        }, 
+        configurable: true
+    });
+
+    Object.defineProperty(this, "mh", 
+    {
+        get: function mh() 
+        {
+            return _mh;
+        },
+        set: function mh(v) 
+        {
+            if(_mh != v)
+            {
+                _mh = v;
+                if(_$el && v && !isNaN(v))
+                {
+                    this.setClass('mh-', v, 100);
+                }
+            }
+        }, 
+        configurable: true
+    });
+
+    Object.defineProperty(this, "h", 
+    {
+        get: function h() 
+        {
+            return _h;
+        },
+        set: function h(v) 
+        {
+            if(_h != v)
+            {
+                _h = v;
+                if(_$el && v && !isNaN(v))
+                {
+                    this.setClass('h-', v, 100);
+                }
+            }
+        }, 
+        configurable: true
+    });
 //mx-auto, my-auto
     var _$el = $el;
-    var _offset, _colSpan, _mb, _mt, _ml, _mr, _mx, _my, _pb, _pt, _pl, _pr, _px, _py;
+    var _offset, _colSpan, _mb, _mt, _ml, _mr, _mx, _my, _pb, _pt, _pl, _pr, _px, _py, _mw, _mh, _w, _h, _m, _p;
     if (_props)
     {
-        var pArr = ['offset', 'colSpan', 'mb', 'mt', 'ml', 'mr', 'mx', 'my', 'pb', 'pt', 'pl', 'pr', 'px', 'py'];
+        var pArr = ['offset', 'colSpan', 'm', 'mb', 'mt', 'ml', 'mr', 'mx', 'my', 'p', 'pb', 'pt', 'pl', 'pr', 'px', 'py', 'mw', 'mh', 'w', 'h'];
         for(var i=0;i<pArr.length;i++)
         {
             var prop = pArr[i];
