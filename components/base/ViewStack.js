@@ -66,14 +66,6 @@ var ViewStack = function(_props)
         }
     });
 
-    Object.defineProperty(this, "spacing", 
-    {
-        get: function spacing() 
-        {
-            return _spacing;
-        }
-    });
-
     this.template = function ()
     { 
         return  '<div id="' + this.domID + '"></div>'; 
@@ -203,8 +195,6 @@ var ViewStack = function(_props)
     var _creationFinished = false;
 
     Component.call(this, _props, true);
-
-    var _spacing = new Spacing(_props.spacing, this.$el);
 
     this.width = _props.width;
     this.height = _props.height;

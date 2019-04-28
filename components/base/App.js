@@ -92,7 +92,7 @@ var App = function(_props){
         console.log("App Window was maximized, you may want to greet the user.");
     };
 
-    var _eventTypeArr = ["mousedown", "mouseover", "mouseup", "click", "dblclick", "keydown", "keyup"];
+    var _eventTypeArr = ["mousedown", "mouseover", "mouseup", "click", "dblclick", "keydown", "keyup", "mousemove"];
     var _eventTypeArrJoined;
     var _loader = new Loader({ id: 'loader' });
 
@@ -137,16 +137,53 @@ var App = function(_props){
             //console.log(e.type+" "+_idCurrentTarget+ " "+_idTarget)
             
             if(cmpBehaviors && cmpBehaviors[e.type]) {
-                var behaviorName = cmpBehaviors[e.type];
-                var behavior = _self.behaviorimplementations[behaviorName];
-                if(behavior) {
-                    if(typeof behavior == 'function') {
-                        behavior.apply(Component.instances[_idBehaviorManifestor], arguments);
-                    }else{
-                        if(isObject(behavior)){
-                            behavior.reaction.apply(Component.instances[_idBehaviorManifestor], arguments);
-                            if(behavior.stopPropagation){
-                                e.stopPropagation();
+                var behaviorNameArr = [], behaviorFilterArr = [];
+                var behaviorName, behaviorFilter;
+                var behaviorObj = cmpBehaviors[e.type];
+
+                if(isObject(behaviorObj))
+                {
+                    for(var prop in behaviorObj){
+                        behaviorNameArr.push(prop);
+                        behaviorFilterArr.push(behaviorObj[prop]);
+                    }
+
+                }else{
+                    behaviorNameArr = [behaviorObj];
+                    behaviorFilterArr = [null];
+                }
+                
+                for(var b=0;b<behaviorNameArr.length;b++)
+                {
+                    behaviorName = behaviorNameArr[b];
+                    behaviorFilter = behaviorFilterArr[b];
+
+                    var behavior = _self.behaviorimplementations[behaviorName];
+                    var qualifies = true, extraArgs = [];
+                    if(behavior && typeof behaviorFilter == 'function') {
+                        qualifies = behaviorFilter.apply(Component.instances[_idBehaviorManifestor], arguments);
+                        if(isObject(qualifies)){
+                            extraArgs = qualifies.extraArgs
+                            qualifies = qualifies.qualifies;
+                        }
+                    }
+                    if(behavior && qualifies) {
+                        var args = [];
+                        for (var i = 0; i < arguments.length; i++) {
+                            args.push(arguments[i]);
+                        }
+                        if(extraArgs.length>0){
+                            args = args.concat(extraArgs);
+                        }
+
+                        if(typeof behavior == 'function') {
+                            behavior.apply(Component.instances[_idBehaviorManifestor], args);
+                        }else{
+                            if(isObject(behavior)){
+                                behavior.reaction.apply(Component.instances[_idBehaviorManifestor], args);
+                                if(behavior.stopPropagation){
+                                    e.stopPropagation();
+                                }
                             }
                         }
                     }

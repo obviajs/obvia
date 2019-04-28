@@ -47,14 +47,6 @@ var Container = function(_props)
         }
     });
     
-    Object.defineProperty(this, "spacing", 
-    {
-        get: function spacing() 
-        {
-            return _spacing;
-        }
-    });
-
     this.template = function ()
     { 
         return  '<div id="' + this.domID + '"></div>'; 
@@ -88,8 +80,7 @@ var Container = function(_props)
    
 
     Parent.call(this, _props);
-    var _spacing = new Spacing(_props.spacing, this.$el);
-
+    
     this.width = _props.width;
     this.height = _props.height;
 

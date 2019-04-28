@@ -11,7 +11,7 @@ var Component = function(_props, overrided=false)
     var _guid = _props.guid;
     var _id = _props.id =="" ? _defaultParams.id : _props.id;
     var _enabled = _props.enabled;
-    var _classes;
+    var _classes = [];
     var _parent = _props.parent;
     var _mousedown = _props.mousedown;
     var _mouseover = _props.mouseover;
@@ -56,6 +56,14 @@ var Component = function(_props, overrided=false)
     {
         get: function () {
             return _domID;
+        }
+    });
+
+    Object.defineProperty(this, "spacing", 
+    {
+        get: function spacing() 
+        {
+            return _spacing;
         }
     });
 
@@ -167,11 +175,11 @@ var Component = function(_props, overrided=false)
                     
             if((!_classes && v) || (_classes && (!_classes.equals(v) || _toggle)))
             {
-                _classes = v;
                 if(this.$el)
                 {
                     if(_toggle)
-                    {
+                    { 
+                        _classes = v;
                         for(var i =0;i<_classes.length;i++)
                         {
                             var _class = _classes[i];
@@ -180,8 +188,17 @@ var Component = function(_props, overrided=false)
                             else
                                 this.$el.addClass(_class);
                         }
-                    }else
+                    }else{
+                        _classes = _classes.difference(v);
+                        for(var i =0;i<_classes.length;i++)
+                        {
+                            var _class = _classes[i];
+                            if(this.$el.hasClass(_class))
+                                this.$el.removeClass(_class);
+                        }
+                        _classes = v;
                         this.$el.addClass(_classes);
+                    } 
                 }
                     
             }
@@ -207,6 +224,9 @@ var Component = function(_props, overrided=false)
         this.$el = tpl;
     else if(tpl && tpl!="")
         this.$el = $(tpl);
+    
+    var _spacing = new Spacing(_props.spacing, this.$el);
+
     if(_props.classes)
     {
         this.classes = _props.classes;

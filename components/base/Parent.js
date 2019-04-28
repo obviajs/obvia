@@ -16,6 +16,25 @@ var Parent = function(_props, overrided=false)
         }
     });
 
+    this.removeChild = function(child)
+    {
+        if(child)
+        {
+            //TODO: kur fshijme child, beji resize siblings; kur fshijme row/col dhe jane 2 gjithsej hiq container prind 
+            _components.splice(indexOfObject(_components, "props.id",  child.id), 1);
+            delete _children[child.id];
+            child.destruct();
+        }
+    }
+
+    this.removeChildAtIndex = function(index)
+    {
+        if(index>0 && index < _components.length)
+        {
+            this.removeChild(_children[_components[index].props.id]);
+        }
+    }
+
     this.addComponent = function (component, cIndex)
     {
         _components.push(component);

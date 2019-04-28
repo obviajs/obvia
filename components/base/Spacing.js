@@ -2,14 +2,17 @@ var Spacing = function(_props, $el)
 {  
     this.setClass = function(className, v, max = 13)
     {
-        var classArr = [];
-        for(var i=0;i<=max;i++)
+        if(v=="auto"||!isNaN(v))
         {
-            classArr.push(className+i);       
+            var classArr = [];
+            for(var i=0;i<=max;i++)
+            {
+                classArr.push(className+i);       
+            }
+            var _classes = classArr.join(" ");
+            _$el.removeClass(_classes);
+            _$el.addClass(className + v);
         }
-        var _classes = classArr.join(" ");
-        _$el.removeClass(_classes);
-        _$el.addClass(className + v);
     }
     Object.defineProperty(this, "colSpan", 
     {
@@ -22,7 +25,7 @@ var Spacing = function(_props, $el)
             if(_colSpan != v)
             {
                 _colSpan = v;
-                if(_$el && v && !isNaN(v))
+                if(_$el && v)
                 {
                     this.setClass('col-sm-', v);
                 }
@@ -42,7 +45,7 @@ var Spacing = function(_props, $el)
             if(_offset != v)
             {
                 _offset = v;
-                if(_$el && v && !isNaN(v))
+                if(_$el && v)
                 {
                     this.setClass('col-sm-offset-', v);
                 }
@@ -62,7 +65,7 @@ var Spacing = function(_props, $el)
             if(_mb != v)
             {
                 _mb = v;
-                if(_$el && v && !isNaN(v))
+                if(_$el && v)
                 {
                     this.setClass('mb-', v);
                 }
@@ -82,7 +85,7 @@ var Spacing = function(_props, $el)
             if(_mt != v)
             {
                 _mt = v;
-                if(_$el && v && !isNaN(v))
+                if(_$el && v)
                 {
                     this.setClass('mt-', v);
                 }
@@ -102,7 +105,7 @@ var Spacing = function(_props, $el)
             if(_ml != v)
             {
                 _ml = v;
-                if(_$el && v && !isNaN(v))
+                if(_$el && v)
                 {
                     this.setClass('ml-', v);
                 }
@@ -122,7 +125,7 @@ var Spacing = function(_props, $el)
             if(_mr != v)
             {
                 _mr = v;
-                if(_$el && v && !isNaN(v))
+                if(_$el && v)
                 {
                     this.setClass('mr-', v);
                 }
@@ -142,7 +145,7 @@ var Spacing = function(_props, $el)
             if(_mx != v)
             {
                 _mx = v;
-                if(_$el && v && !isNaN(v))
+                if(_$el && v)
                 {
                     this.setClass('mx-', v);
                 }
@@ -162,7 +165,7 @@ var Spacing = function(_props, $el)
             if(_my != v)
             {
                 _my = v;
-                if(_$el && v && !isNaN(v))
+                if(_$el && v)
                 {
                     this.setClass('my-', v);
                 }
@@ -182,7 +185,7 @@ var Spacing = function(_props, $el)
             if(_pb != v)
             {
                 _pb = v;
-                if(_$el && v && !isNaN(v))
+                if(_$el && v)
                 {
                     this.setClass('pb-', v);
                 }
@@ -202,7 +205,7 @@ var Spacing = function(_props, $el)
             if(_pt != v)
             {
                 _pt = v;
-                if(_$el && v && !isNaN(v))
+                if(_$el && v)
                 {
                     this.setClass('pt-', v);
                 }
@@ -222,7 +225,7 @@ var Spacing = function(_props, $el)
             if(_pl != v)
             {
                 _pl = v;
-                if(_$el && v && !isNaN(v))
+                if(_$el && v)
                 {
                     this.setClass('pl-', v);
                 }
@@ -242,7 +245,7 @@ var Spacing = function(_props, $el)
             if(_pr != v)
             {
                 _pr = v;
-                if(_$el && v && !isNaN(v))
+                if(_$el && v)
                 {
                     this.setClass('pr-', v);
                 }
@@ -262,7 +265,7 @@ var Spacing = function(_props, $el)
             if(_px != v)
             {
                 _px = v;
-                if(_$el && v && !isNaN(v))
+                if(_$el && v)
                 {
                     this.setClass('px-', v);
                 }
@@ -282,7 +285,7 @@ var Spacing = function(_props, $el)
             if(_py != v)
             {
                 _py = v;
-                if(_$el && v && !isNaN(v))
+                if(_$el && v)
                 {
                     this.setClass('py-', v);
                 }
@@ -302,7 +305,7 @@ var Spacing = function(_props, $el)
             if(_p != v)
             {
                 _p = v;
-                if(_$el && v && !isNaN(v))
+                if(_$el && v)
                 {
                     this.setClass('p-', v);
                 }
@@ -322,7 +325,7 @@ var Spacing = function(_props, $el)
             if(_m != v)
             {
                 _m = v;
-                if(_$el && v && !isNaN(v))
+                if(_$el && v)
                 {
                     this.setClass('m-', v);
                 }
@@ -342,7 +345,7 @@ var Spacing = function(_props, $el)
             if(_mw != v)
             {
                 _mw = v;
-                if(_$el && v && !isNaN(v))
+                if(_$el && v)
                 {
                     this.setClass('mw-', v), 100;
                 }
@@ -362,7 +365,7 @@ var Spacing = function(_props, $el)
             if(_w != v)
             {
                 _w = v;
-                if(_$el && v && !isNaN(v))
+                if(_$el && v)
                 {
                     this.setClass('w-', v, 100);
                 }
@@ -382,7 +385,7 @@ var Spacing = function(_props, $el)
             if(_mh != v)
             {
                 _mh = v;
-                if(_$el && v && !isNaN(v))
+                if(_$el && v)
                 {
                     this.setClass('mh-', v, 100);
                 }
@@ -402,7 +405,7 @@ var Spacing = function(_props, $el)
             if(_h != v)
             {
                 _h = v;
-                if(_$el && v && !isNaN(v))
+                if(_$el && v)
                 {
                     this.setClass('h-', v, 100);
                 }
