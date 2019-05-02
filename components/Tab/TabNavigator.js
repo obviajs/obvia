@@ -67,4 +67,4 @@ var TabNavigator = function(_props)
     };
 };
 //component prototype
-TabNavigator.prototype.type = 'TabNavigator';
+TabNavigator.prototype.ctor = 'TabNavigator';

@@ -26,4 +26,4 @@ var NavParent = function(_props, overrided=false)
         this.keepBase();
     }
 }
-NavParent.prototype.type = 'NavParent';
+NavParent.prototype.ctor = 'NavParent';

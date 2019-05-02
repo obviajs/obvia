@@ -87,4 +87,4 @@ var Hidden = function (_props, overrided = false) {
 };
  
 //component prototype
-TextInput.type = 'text';
+TextInput.prototype.ctor = 'TextInput';

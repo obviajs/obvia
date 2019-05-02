@@ -46,6 +46,26 @@ var Container = function(_props)
             }
         }
     });
+
+    Object.defineProperty(this, "type", 
+    {
+        get: function type() 
+        {
+            return _type;
+        },
+        set: function type(v) 
+        {
+            if(_type != v)
+            {
+                if(this.$el)
+                {
+                    this.$el.removeClass(_type); 
+                    this.$el.addClass(v); 
+                    _type = v;
+                }
+            }
+        }
+    });
     
     this.template = function ()
     { 
@@ -71,27 +91,25 @@ var Container = function(_props)
         type: ContainerType.CONTAINER,
         components:[]
     };
-    _props = extend(false, false, _defaultParams, _props);
+    //_props = extend(false, false, _defaultParams, _props);
+    shallowCopy(extend(false, false, _defaultParams, _props), _props);
     var _width;
     var _height;
-    var _type = _props.type;
+    var _type;
     var _afterAttach = _props.afterAttach;
     _props.afterAttach = this.afterAttach;
    
-
     Parent.call(this, _props);
     
     this.width = _props.width;
     this.height = _props.height;
 
-    if(_type && _type !="")
-        this.$el.addClass(_type); 
-    
-    
+    if(_props.type && _props.type !="")
+        this.type = _props.type; 
     /*
     this.registerEvents = function () 
     {
         return [];
     }*/
 };
-Container.prototype.type = 'Container';
+Container.prototype.ctor = 'Container';

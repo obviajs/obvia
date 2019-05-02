@@ -234,7 +234,7 @@ var ViewStack = function(_props)
                             for(var i=0;i<_components.length;i++)
                             {
                                 var component = {};
-                                component.constructor = _components[i].constructor;
+                                component.constructor = _children[_components[i].props.id].ctor;//_components[i].constructor;
                                 component.props = _children[_components[i].props.id].props;
                                 components.push(component);
                             }
@@ -251,4 +251,4 @@ var ViewStack = function(_props)
         configurable: true
     });  
 };
-ViewStack.prototype.type = 'ViewStack';
+ViewStack.prototype.ctor = 'ViewStack';

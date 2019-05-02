@@ -115,4 +115,4 @@ var Image = function(_props)
         return this.$el;
     }
 };
-Image.prototype.type = 'Image';
+Image.prototype.ctor = 'Image';

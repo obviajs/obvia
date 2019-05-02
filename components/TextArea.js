@@ -71,4 +71,4 @@ var TextArea = function (_props, overrided = false) {
 };
 
 //component prototype
-TextArea.prototype.type = 'TextArea';
+TextArea.prototype.ctor = 'TextArea';

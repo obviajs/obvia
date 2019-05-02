@@ -60,4 +60,4 @@ var Toggle = function (_props, overrided = false) {
     }
 };
 
-Toggle.prototype.type = "Toggle";
+Toggle.prototype.ctor = "Toggle";

@@ -106,4 +106,4 @@ var RadioGroup = function (_props, overrided = false) {
     }
 };
 
-RadioGroup.prototype.type = "RadioGroup";
+RadioGroup.prototype.ctor = "RadioGroup";

@@ -140,4 +140,4 @@ var TokenRenderer = function(_props)
         base.afterAttach.call(this, e);
     }
 };
-TokenRenderer.type = 'tokenrenderer';
+TokenRenderer.prototype.ctor = 'TokenRenderer';

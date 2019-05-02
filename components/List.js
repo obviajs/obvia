@@ -279,4 +279,4 @@ var List = function (_props, overrided = false) {
 
 };
 
-List.prototype.type = 'List';
+List.prototype.ctor = 'List';

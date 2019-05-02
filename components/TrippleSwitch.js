@@ -118,4 +118,4 @@ var TrippleSwitch = function (_props, overrided = false) {
     }
 };
 
-TrippleSwitch.prototype.type = 'TrippleSwitch';
+TrippleSwitch.prototype.ctor = 'TrippleSwitch';

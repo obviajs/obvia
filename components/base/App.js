@@ -265,7 +265,7 @@ var App = function(_props){
                             for(var i=0;i<_components.length;i++)
                             {
                                 var component = {};
-                                component.constructor = _components[i].constructor;
+                                component.constructor = _children[_components[i].props.id].ctor;//_components[i].constructor;
                                 component.props = _children[_components[i].props.id].props;
                                 components.push(component);
                             }
@@ -281,5 +281,12 @@ var App = function(_props){
         },
         configurable: true
     });  
+    
+    Object.defineProperty(this, "literal", {
+        get: function literal() {
+            return {constructor:this.ctor, props:this.props};
+        },
+        configurable: true
+    });  
 }
-App.prototype.type = 'App';
+App.prototype.ctor = 'App';

@@ -577,4 +577,4 @@ var AutoCompleteEx = function(_props)
     });
     
 };
-AutoCompleteEx.type = 'autocomplete';
+AutoCompleteEx.prototype.ctor = 'AutoCompleteEx';

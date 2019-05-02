@@ -98,4 +98,4 @@ var CheckBox = function (_props, overrided = false) {
     }
 };
 
-CheckBox.prototype.type = "CheckBox";
+CheckBox.prototype.ctor = "CheckBox";

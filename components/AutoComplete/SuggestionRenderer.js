@@ -59,4 +59,4 @@ var SuggestionRenderer = function(_props)
     
     Link.call(this, _props, true);
 };
-SuggestionRenderer.type = 'suggestionrenderer';
+SuggestionRenderer.prototype.ctor = 'SuggestionRenderer';

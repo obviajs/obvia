@@ -141,4 +141,4 @@ var Label = function(_props)
 
     Component.call(this, _props);
 };
-Label.prototype.type = 'Label';
+Label.prototype.ctor = 'Label';

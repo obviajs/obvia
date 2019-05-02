@@ -31,7 +31,8 @@ var Spacing = function(_props, $el)
                 }
             }
         },
-        configurable: true
+        configurable: true,
+        enumerable:true
     });
     
     Object.defineProperty(this, "offset", 
@@ -51,7 +52,8 @@ var Spacing = function(_props, $el)
                 }
             }
         },
-        configurable: true
+        configurable: true,
+        enumerable:true
     });
 
     Object.defineProperty(this, "mb", 
@@ -71,7 +73,8 @@ var Spacing = function(_props, $el)
                 }
             }
         },
-        configurable: true
+        configurable: true,
+        enumerable:true
     });
 
     Object.defineProperty(this, "mt", 
@@ -91,7 +94,8 @@ var Spacing = function(_props, $el)
                 }
             }
         },
-        configurable: true
+        configurable: true,
+        enumerable:true
     });
 
     Object.defineProperty(this, "ml", 
@@ -111,7 +115,8 @@ var Spacing = function(_props, $el)
                 }
             }
         },
-        configurable: true
+        configurable: true,
+        enumerable:true
     });
 
     Object.defineProperty(this, "mr", 
@@ -131,7 +136,8 @@ var Spacing = function(_props, $el)
                 }
             }
         },
-        configurable: true
+        configurable: true,
+        enumerable:true
     });
 
     Object.defineProperty(this, "mx", 
@@ -151,7 +157,8 @@ var Spacing = function(_props, $el)
                 }
             }
         },
-        configurable: true
+        configurable: true,
+        enumerable:true
     });
 
     Object.defineProperty(this, "my", 
@@ -171,7 +178,8 @@ var Spacing = function(_props, $el)
                 }
             }
         },
-        configurable: true
+        configurable: true,
+        enumerable:true
     });
 
     Object.defineProperty(this, "pb", 
@@ -191,7 +199,8 @@ var Spacing = function(_props, $el)
                 }
             }
         },
-        configurable: true
+        configurable: true,
+        enumerable:true
     });
 
     Object.defineProperty(this, "pt", 
@@ -211,7 +220,8 @@ var Spacing = function(_props, $el)
                 }
             }
         },
-        configurable: true
+        configurable: true,
+        enumerable:true
     });
 
     Object.defineProperty(this, "pl", 
@@ -231,7 +241,8 @@ var Spacing = function(_props, $el)
                 }
             }
         },
-        configurable: true
+        configurable: true,
+        enumerable:true
     });
 
     Object.defineProperty(this, "pr", 
@@ -251,7 +262,8 @@ var Spacing = function(_props, $el)
                 }
             }
         },
-        configurable: true
+        configurable: true,
+        enumerable:true
     });
 
     Object.defineProperty(this, "px", 
@@ -271,7 +283,8 @@ var Spacing = function(_props, $el)
                 }
             }
         },
-        configurable: true
+        configurable: true,
+        enumerable:true
     });
 
     Object.defineProperty(this, "py", 
@@ -291,7 +304,8 @@ var Spacing = function(_props, $el)
                 }
             }
         }, 
-        configurable: true
+        configurable: true,
+        enumerable:true
     });
 
     Object.defineProperty(this, "p", 
@@ -311,7 +325,8 @@ var Spacing = function(_props, $el)
                 }
             }
         }, 
-        configurable: true
+        configurable: true,
+        enumerable:true
     });
 
     Object.defineProperty(this, "m", 
@@ -331,7 +346,8 @@ var Spacing = function(_props, $el)
                 }
             }
         }, 
-        configurable: true
+        configurable: true,
+        enumerable:true
     });
 
     Object.defineProperty(this, "mw", 
@@ -351,7 +367,8 @@ var Spacing = function(_props, $el)
                 }
             }
         }, 
-        configurable: true
+        configurable: true,
+        enumerable:true
     });
 
     Object.defineProperty(this, "w", 
@@ -371,7 +388,8 @@ var Spacing = function(_props, $el)
                 }
             }
         }, 
-        configurable: true
+        configurable: true,
+        enumerable:true
     });
 
     Object.defineProperty(this, "mh", 
@@ -391,7 +409,8 @@ var Spacing = function(_props, $el)
                 }
             }
         }, 
-        configurable: true
+        configurable: true,
+        enumerable:true
     });
 
     Object.defineProperty(this, "h", 
@@ -411,7 +430,8 @@ var Spacing = function(_props, $el)
                 }
             }
         }, 
-        configurable: true
+        configurable: true,
+        enumerable:true
     });
 //mx-auto, my-auto
     var _$el = $el;

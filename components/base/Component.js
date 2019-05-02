@@ -6,8 +6,7 @@ var Component = function(_props, overrided=false)
         classes: [],
         guid: guid()
     };
-
-    _props = extend(false, false, _defaultParams, _props);
+    shallowCopy(extend(false, false, _defaultParams, _props), _props);
     var _guid = _props.guid;
     var _id = _props.id =="" ? _defaultParams.id : _props.id;
     var _enabled = _props.enabled;
@@ -78,6 +77,13 @@ var Component = function(_props, overrided=false)
         },
         configurable: true
     });  
+    Object.defineProperty(this, "literal", {
+        get: function literal() {
+            return {constructor:this.ctor, props:this.props};
+        },
+        configurable: true
+    });  
+   
 
     Object.defineProperty(this, "parent",
     {
@@ -346,10 +352,10 @@ var Component = function(_props, overrided=false)
         return this;
     }
 
-    this.destruct = function ()
+    this.destruct = function (mode=1)
     {
         if(this.$el)
-            this.$el.remove();
+            mode==1?this.$el.remove():this.$el.detach();
     }
 
     //register outside handlers

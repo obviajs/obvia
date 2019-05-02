@@ -233,7 +233,7 @@ var FormField = function(_props)
                     {
                         case "component":
                             var component = {};
-                            component.constructor = _component.constructor;
+                            component.constructor = _cmp.ctor; //_component.constructor;
                             component.props = _cmp.props;
                             obj[prop] = component;
                             break;
@@ -249,4 +249,4 @@ var FormField = function(_props)
     }); 
 }
 //component prototype
-FormField.prototype.type = 'FormField';
+FormField.prototype.ctor = 'FormField';

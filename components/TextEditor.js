@@ -133,4 +133,4 @@ var TextEditor =  function(_props, overrided = false) {
 };
 
 //component prototype
-TextEditor.prototype.type = 'TextEditor';
+TextEditor.prototype.ctor = 'TextEditor';

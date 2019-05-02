@@ -174,4 +174,4 @@ var ComboBoxInit = {
 ComboBoxInit = extend(true, true, Selectable, ComboBoxInit);
 var ComboBox = KxGenerator.createComponent(ComboBoxInit);
 //component prototype
-ComboBox.prototype.type = 'ComboBox';
+ComboBox.prototype.ctor = 'ComboBox';

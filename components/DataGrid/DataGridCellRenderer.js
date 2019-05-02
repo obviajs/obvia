@@ -11,4 +11,4 @@ var DataGridCellRenderer = function(_props){
 };
 
 //component prototype
-DataGridCellRenderer.type = 'datagridcellrenderer';
+DataGridCellRenderer.prototype.ctor = 'DataGridCellRenderer';

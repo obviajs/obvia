@@ -29,4 +29,4 @@ var Loader = function(_props)
 };
 
 //component prototype
-Loader.prototype.type = 'Loader';
+Loader.prototype.ctor = 'Loader';

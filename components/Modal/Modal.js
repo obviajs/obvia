@@ -83,4 +83,4 @@ var Modal = function(_props)
         return this;
     };  
 };
-Modal.prototype.type = 'Modal';
+Modal.prototype.ctor = 'Modal';

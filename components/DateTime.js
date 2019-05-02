@@ -80,4 +80,4 @@ var DateTime = function (_props, overrided = false) {
     }
 };
 
-DateTime.prototype.type = "DateTime";
+DateTime.prototype.ctor = "DateTime";

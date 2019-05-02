@@ -166,4 +166,4 @@ var AutoComplete = KxGenerator.createComponent({
 });
 
 //component prototype
-AutoComplete.prototype.type = 'AutoComplete';
+AutoComplete.prototype.ctor = 'AutoComplete';

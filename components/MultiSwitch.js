@@ -120,4 +120,4 @@ var MultiSwitch = function (_props, overrided = false) {
     }
 };
 
-MultiSwitch.prototype.type = 'MultiSwitch';
+MultiSwitch.prototype.ctor = 'MultiSwitch';

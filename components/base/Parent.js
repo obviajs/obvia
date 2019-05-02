@@ -7,7 +7,7 @@ var Parent = function(_props, overrided=false)
             return _children;
         }
     });
-
+    
     Object.defineProperty(this, "components", 
     {
         get: function components() 
@@ -15,6 +15,28 @@ var Parent = function(_props, overrided=false)
             return _components;
         }
     });
+
+    Object.defineProperty(this, "magnets", 
+    {
+        get: function magnets() 
+        {
+            return _magnets;
+        }
+    });
+
+    this.addChild = function(child, index)
+    {
+        if(child)
+        {
+            if(index>=0 && index <= _components.length)
+            {
+                index = index || _components.length;
+                this.$el.insertAt(child, index);
+                _components.splice(_components.length, 0, {constructor:child.type, props:child.props});
+                _children[child.id] = child; 
+            }
+        }
+    }
 
     this.removeChild = function(child)
     {
@@ -29,7 +51,7 @@ var Parent = function(_props, overrided=false)
 
     this.removeChildAtIndex = function(index)
     {
-        if(index>0 && index < _components.length)
+        if(index>=0 && index < _components.length)
         {
             this.removeChild(_children[_components[index].props.id]);
         }
@@ -83,10 +105,16 @@ var Parent = function(_props, overrided=false)
     };
 
     var _defaultParams = {
-        components:[]
+        components:[],
+        magnets:{}
     };
-    _props = extend(false, false, _defaultParams, _props);
+    //_props = extend(false, false, _defaultParams, _props);
+    shallowCopy(extend(false, false, _defaultParams, _props), _props);
     var _components = _props.components;
+    var _magnets = _props.magnets;
+    
+    var _magnetized = {};
+
     var _ccComponents = [];
     this.$container = null;
 
@@ -99,17 +127,41 @@ var Parent = function(_props, overrided=false)
     
     //override because creationComplete will be thrown when all children components are created
     // this.afterAttach = undefined;
-
+    var _magnetizedIndexes = {};
     this.addComponents = function(components)
     {
         if(components && Array.isArray(components))
         {
             for(var i=0;i<components.length;i++)
             {
-                this.addComponentInContainer(this.$container, components[i], i);
+                var magnet, isMagnetized = false;
+                if(_magnets && !Object.isEmpty(_magnets))
+                {
+                    for(var magnet in _magnets)
+                    {
+                        if(_magnets[magnet] && _magnets[magnet].length>0)
+                        {
+                            if(_magnets[magnet].indexOf(_components[i].props.id)>-1)
+                            {
+                                isMagnetized = true;
+                                _magnetizedIndexes[i] = magnet;
+                            }
+                        }                    
+                    }   
+                }
+                if(!isMagnetized)
+                    this.addComponentInContainer(this.$container, components[i], i);
             }
+            //TODO:solve magnet dependencies, i.e: component is magnetized to a component that is magnetized to another component  
+            for(var i in _magnetizedIndexes)
+            {
+                var magnetCmp = this.children[_magnetizedIndexes[i]];
+                this.addComponentInContainer(magnetCmp.$container, components[i], i);
+            }
+           
         }
     }
+
     Component.call(this, _props);
     if(overrided)
     {
@@ -151,7 +203,7 @@ var Parent = function(_props, overrided=false)
                             for(var i=0;i<_components.length;i++)
                             {
                                 var component = {};
-                                component.constructor = _components[i].constructor;
+                                component.constructor = _children[_components[i].props.id].ctor;//_components[i].constructor;
                                 component.props = _children[_components[i].props.id].props;
                                 components.push(component);
                             }
@@ -168,4 +220,4 @@ var Parent = function(_props, overrided=false)
         configurable: true
     });  
 }
-Parent.prototype.type = 'Parent';
+Parent.prototype.ctor = 'Parent';

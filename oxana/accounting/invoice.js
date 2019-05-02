@@ -40,13 +40,13 @@ var myForm =
                             constructor: Container,
                             props: {
                                 id: '',
-                                type: ContainerType.ROW,
+                                type:ContainerType.ROW,
                                 components:[
                                     {
                                         constructor: Container,
                                         props: {
                                             id: '',
-                                            type: ContainerType.COLUMN,
+                                            type:ContainerType.COLUMN,
                                             spacing: {colSpan:3},
                                             classes:["border"],
                                             components:[
@@ -108,7 +108,7 @@ var myForm =
                                         constructor: Container,
                                         props: {
                                             id: '',
-                                            type: ContainerType.COLUMN,
+                                            type:ContainerType.COLUMN,
                                             spacing: {colSpan:3},
                                             classes:["border"],
                                             components:[
@@ -178,7 +178,7 @@ var myForm =
                                         constructor: Container,
                                         props: {
                                             id: '',
-                                            type: ContainerType.COLUMN,
+                                            type:ContainerType.COLUMN,
                                             spacing: {colSpan:3},
                                             classes:["border"],
                                             components:[
@@ -255,7 +255,7 @@ var myForm =
                                         constructor: Container,
                                         props: {
                                             id: '',
-                                            type: ContainerType.COLUMN,
+                                            type:ContainerType.COLUMN,
                                             spacing: {colSpan:3},
                                             classes:["border"],
                                             components:[

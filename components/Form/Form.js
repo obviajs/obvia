@@ -187,4 +187,4 @@ var Form = function(_props)
 
     var base = this.base;
 };
-Form.prototype.type = 'Form';
+Form.prototype.ctor = 'Form';

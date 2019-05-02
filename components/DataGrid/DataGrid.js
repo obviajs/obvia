@@ -788,4 +788,4 @@ var DataGrid = function(_props)
     };
 
 };
-DataGrid.type = 'datagrid';
+DataGrid.prototype.ctor = 'DataGrid';

@@ -79,4 +79,4 @@ var Color = function (_props, overrided = false) {
 
 };
 
-Color.prototype.type = "Color";
+Color.prototype.ctor = "Color";
