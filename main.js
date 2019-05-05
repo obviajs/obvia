@@ -223,8 +223,8 @@ rjs.require([
         //rjs.define("./examples/Toggle/example.js", "ToggleExample");
         
         //rjs.define("./oxana/accounting/invoice.js", "Invoice");
-        //rjs.define("./oxana/layoutBuilder.js", "layoutBuilder");
-        rjs.define("./oxana/magnetLayout.js", "magnetLayout");
+        rjs.define("./oxana/layoutBuilder.js", "layoutBuilder");
+        //js.define("./oxana/magnetLayout.js", "magnetLayout");
         
         
         // rjs.define("./examples/Upload/example.js", "UploadExample");

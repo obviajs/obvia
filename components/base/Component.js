@@ -322,7 +322,7 @@ var Component = function(_props, overrided=false)
                 _props.afterAttach.apply(this, arguments);
             if(!e.isDefaultPrevented()){
                 this.trigger('creationComplete');
-                //console.log("creation Complete", this.$el.attr("id"));
+                console.log("creation Complete: Type:",this.ctor +" id:"+ this.$el.attr("id"));
             }
         }
     };

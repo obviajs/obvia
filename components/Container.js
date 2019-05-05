@@ -76,7 +76,7 @@ var Container = function(_props)
         this.$container = this.$el;
         this.addComponents(this.components);
     };
-
+/*
     this.afterAttach = function (e) 
     {
         if (e.target.id == this.domID) 
@@ -85,7 +85,7 @@ var Container = function(_props)
                 _afterAttach.apply(this, arguments);
             e.preventDefault();
         }
-    };
+    };*/
 
     var _defaultParams = {
         type: ContainerType.CONTAINER,

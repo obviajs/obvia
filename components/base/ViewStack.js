@@ -117,7 +117,7 @@ var ViewStack = function(_props)
             }
             var cmp = Component.fromLiteral(e.newValue);
             e.newValue.props.id = cmp.id;
-            parent.$container.insertAt(0, cmp.$el);
+            parent.$container.insertAt(cmp.$el, 0);
 
             //parent.$container.append(cmp.$el);
             parent.children[cmp.id] = cmp;

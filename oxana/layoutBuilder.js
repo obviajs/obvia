@@ -55,6 +55,15 @@ var zeroCool = {
                                                 label:"Split Vertical",
                                                 classes: ["btn", "btn-success"]
                                             }
+                                        },
+                                        {
+                                            constructor: Button,
+                                            props: {
+                                                id: 'saveLayout',
+                                                type: "button",
+                                                label:"Save Layout",
+                                                classes: ["btn", "btn-success"]
+                                            }
                                         }
                                     ]
                                 }
@@ -118,6 +127,9 @@ oxana.behaviors["splitHorizontal"]["click"] = "SPLIT_HOR";
 
 oxana.behaviors["splitVertical"] = {};
 oxana.behaviors["splitVertical"]["click"] = "SPLIT_VERT";
+
+oxana.behaviors["saveLayout"] = {};
+oxana.behaviors["saveLayout"]["click"] = "SAVE_LAYOUT";
 
 oxana.behaviors["workArea"] = {};
 oxana.behaviors["workArea"]["click"] = "BECOME_ACTIVE";
@@ -206,6 +218,7 @@ oxana.behaviorimplementations["SPLIT_VERT"] = function(e) {
     var toAdd = newCell;
     var parent;
     var children_len = 2;
+    
     if(row_len == 0)
     {
         var newCell2 = extend(true, newCell);
@@ -225,7 +238,7 @@ oxana.behaviorimplementations["SPLIT_VERT"] = function(e) {
     {
         parent =  activeContainer.children[activeContainer.components[0].props.id];
         children_len = parent.components.length;
-    }         
+    } 
     if(children_len<12)
     {    
         var newInstance = parent.addComponent(toAdd);
@@ -310,18 +323,68 @@ oxana.behaviorimplementations["WA_RESIZE_EW"] = {
 oxana.behaviorimplementations["WA_REMOVE"] = {
     reaction:function(e) {
         console.log("Container REMOVE");
-        var confirm = true;
+        var c = true;
         if(this.components.length>0){
-            confirm = confirm("Container has children, still want to remove ?");
+            c = confirm("Container has children, still want to remove ?");
         }
-        if(confirm){
-            this.parent.removeChild(this);
+        if(c){
+            if(this.parent.parent.components.length==1)
+            {
+                if(this.parent.components.length>2){
+                    var row = this.parent;
+                    row.removeChild(this);
+                    var children_len = row.components.length;
+                    var colSpan = Math.floor(12/children_len);  
+                    var delta = 12 - colSpan*children_len;
+                    var i = 0;    
+                    for(var childID in row.children){
+                        ++i;
+                        if(i==children_len-1)
+                            row.children[childID].spacing.colSpan = colSpan+delta;
+                        else
+                            row.children[childID].spacing.colSpan = colSpan;
+                    }
+                }else{
+
+                }
+                console.log("column ", this.parent.components.length);
+                //this.parent.components
+            }else{
+                if(this.parent.parent.components.length>2){
+                    var container = this.parent.parent;
+                    container.removeChild(this.parent);
+                    
+                    var children_len = container.components.length;
+                    var height = Math.floor(100/children_len);  
+                    var delta = 100 - height*children_len;
+                    var i = 0;
+                    for(var childID in container.children){
+                        ++i;
+                        if(i==children_len-1)
+                            container.children[childID].spacing.h = height+delta;
+                        else
+                            container.children[childID].spacing.h = height;
+                    } 
+                }else{
+
+                }
+                console.log("row ", this.parent.parent.components.length);
+            }
+            
         }
         e.preventDefault();
     },
     stopPropagation:true
 };
 
+oxana.behaviorimplementations["SAVE_LAYOUT"] = {
+    reaction:function(e) {
+        var snowCrash = Component.instances["snowCrash"];
+        var jsonLayout = JSON.stringify(snowCrash.literal, null, "\t");
+        download("snowCrash.json.txt", jsonLayout); 
+    },
+    stopPropagation:true
+};
 oxana.registerBehaviors();
 oxana.init();
 

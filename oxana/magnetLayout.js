@@ -499,8 +499,17 @@ var zeroCool = {
 				"classes": [],
 				"guid": "59afa462-a3d3-41fe-9ea0-2bf56b426a1f"
 			}
-		}],
-		"magnets": {},
+        },
+        {
+            constructor: Button,
+            props: {
+                id: 'saveLayout',
+                type: "button",
+                label:"Save Layout",
+                classes: ["btn", "btn-success"]
+            }
+        }],
+		"magnets": {workArea_24:["saveLayout"]},
 		"enabled": true,
 		"classes": [],
 		"guid": "2867910e-9330-46e3-a139-261a9a974d93"
