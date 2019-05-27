@@ -3,7 +3,8 @@ var App = function(_props){
         root: document.body,
         idleInterval: 60000,
         inactivityInterval: 60000,
-        components:[]
+        components:[],
+        historyProps: {enabled:true} 
     };
 
     _props = extend(false, false, _defaultParams, _props);
@@ -15,23 +16,34 @@ var App = function(_props){
     var _components = _props.components;
     var _children = {};
     var _style = _props.style;
-
-    
+    var _historyProps = _props.historyProps;
+    var _history;
 
     if(!('jquery' in Object(_root)))
         _root = $(_root);
     
-    var _rootID = _root.attr('id');
-    if(!_rootID){
-        _rootID = guid();
-        _root.attr('id', _rootID);
-    }
+    var _rootID = _props.id = _props.id || _root.attr('id') || guid();
+    _root.attr('id', _rootID);
     window.id = _rootID;
 
     if(_style)
     {
         $("<style id='"+_rootID+"' type='text/css'>"+_style+"</style>").appendTo("head");
     }
+
+    Object.defineProperty(this, "rootID", {
+        get: function rootID()
+        {
+            return _rootID;
+        }
+    });
+
+    Object.defineProperty(this, 'history',
+    {
+        get: function history() {
+            return _history;
+        }
+    });
 
     var timerIncrement = function () {
         _idleTime = _idleTime + _idleInterval;
@@ -62,6 +74,11 @@ var App = function(_props){
 
     this.behaviors = {};
     this.behaviorimplementations = {};
+
+    if(_historyProps.enabled){
+        _history = History.getInstance(".history_"+_rootID);
+        _history.behaviors = this.behaviorimplementations;
+    }
 
     this.behaviors[_rootID] = {};
     this.behaviors[_rootID]['creationComplete'] = "APP_LOADED";
@@ -99,7 +116,8 @@ var App = function(_props){
     this.registerBehaviors = function()
     {
         //TODO: te bejme difference e oldBehaviors me newBehaviors dhe te shtojme vetem ato si evente per te evituar off dhe on
-        $(window).off(_eventTypeArrJoined);
+        if(_eventTypeArrJoined)
+            $(window).off(_eventTypeArrJoined);
         for(var cmpId in this.behaviors)
         {
             for(var eventType in this.behaviors[cmpId])
@@ -180,7 +198,10 @@ var App = function(_props){
                             behavior.apply(Component.instances[_idBehaviorManifestor], args);
                         }else{
                             if(isObject(behavior)){
-                                behavior.reaction.apply(Component.instances[_idBehaviorManifestor], args);
+                                var ret = behavior.do.apply(Component.instances[_idBehaviorManifestor], args);
+                                if(_historyProps.enabled){
+                                    _history.track(behaviorName, ret, Component.instances[_idBehaviorManifestor], args);
+                                }
                                 if(behavior.stopPropagation){
                                     e.stopPropagation();
                                 }

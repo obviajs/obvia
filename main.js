@@ -4,6 +4,9 @@ rjs.init({debug:false});
 rjs.define("lib/EventDispatcher.js", "EventDispatcher");
 rjs.define("lib/rca/RemoteCursorEvent.js", "RemoteCursorEvent");
 rjs.define("lib/rca/RemoteObject.js", "RemoteObject");
+rjs.define("./components/base/History/History.js", "History");
+rjs.define("./components/base/History/HistoryStep.js", "HistoryStep");
+rjs.define("./components/base/History/HistoryEventType.js", "HistoryEventType");
 rjs.define("./components/base/Component.js", "Component");
 rjs.define("./components/base/Spacing.js", "Spacing");
 rjs.define("./components/base/Selectable.js", "Selectable");
@@ -11,6 +14,8 @@ rjs.define("./components/base/Parent.js", "Parent");
 rjs.define("./components/base/NavParent.js", "NavParent");
 rjs.define("./components/base/ContainerType.js","ContainerType");
 rjs.define("./components/base/ViewStack.js", "ViewStack");
+rjs.define("./components/base/EnvType.js", "EnvType");
+rjs.define("./components/base/Env.js", "Env");
 rjs.define("./components/base/App.js", "App");
 //TextInput
 rjs.define("./lib/dependencies/scripts/jquery.inputmask.bundle.min.js", "InputMaskBundle");
@@ -116,6 +121,9 @@ rjs.require([
         "DOMContentLoaded",
         "EventDispatcher",
         "RemoteCursorEvent",
+        "HistoryStep",
+        "History",
+        "HistoryEventType",
         "RemoteObject", 
         "Component",
         "Spacing",
@@ -127,6 +135,8 @@ rjs.require([
         "TabNavigator",
         "Tab",
         "ViewStack",
+        "EnvType",
+        "Env",
         "App",
         "Form",
         "FormField",

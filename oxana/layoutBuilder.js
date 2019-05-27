@@ -137,6 +137,11 @@ oxana.behaviors["workArea"]["mouseover"] = "WA_HOVER";
 oxana.behaviors["workArea"]["mouseout"] = "WA_HOVER";
 oxana.behaviors["workArea"]["contextmenu"] = "WA_REMOVE";
 
+oxana.behaviors[oxana.rootID]["keydown"] = {
+    "WA_UNDO":isKeyCombUndo,
+    "WA_REDO":isKeyCombRedo,
+};
+
 oxana.behaviorimplementations["SPLIT_HOR"] = function(e) {
     console.log("Split Selected Container Horizontally");
     var newRow = {
@@ -276,7 +281,7 @@ oxana.behaviorimplementations["SPLIT_VERT"] = function(e) {
 
 var activeContainer;
 oxana.behaviorimplementations["BECOME_ACTIVE"] = {
-    reaction:function(e) {
+    do:function(e) {
             console.log("Container Became active");
             //this will holde the instance of the component who manifested this behavior (the manifestor)
             if(activeContainer && activeContainer!=this && activeContainer.classes.indexOf("active")>-1){
@@ -295,7 +300,7 @@ oxana.behaviorimplementations["BECOME_ACTIVE"] = {
     };
 
 oxana.behaviorimplementations["WA_HOVER"] = {
-    reaction:function(e) {
+    do:function(e) {
             console.log("Container hovered "+this.id);
             //this will holde the instance of the component who manifested this behavior (the manifestor)
             this.toggle = false;
@@ -307,21 +312,22 @@ oxana.behaviorimplementations["WA_HOVER"] = {
     };
 
 oxana.behaviorimplementations["WA_RESIZE_NS"] = {
-    reaction:function(e) {
+    do:function(e) {
         console.log("Container Resize NS");
       
     },
     stopPropagation:true
 };
 oxana.behaviorimplementations["WA_RESIZE_EW"] = {
-    reaction:function(e) {
+    do:function(e) {
         console.log("Container Resize EW");
       
     },
     stopPropagation:true
 };
 oxana.behaviorimplementations["WA_REMOVE"] = {
-    reaction:function(e) {
+    do:function(e) {
+        var track = false;
         console.log("Container REMOVE");
         var c = true;
         if(this.components.length>0){
@@ -344,6 +350,7 @@ oxana.behaviorimplementations["WA_REMOVE"] = {
                         else
                             row.children[childID].spacing.colSpan = colSpan;
                     }
+                    track = true;
                 }else{
 
                 }
@@ -365,6 +372,7 @@ oxana.behaviorimplementations["WA_REMOVE"] = {
                         else
                             container.children[childID].spacing.h = height;
                     } 
+                    track = true;
                 }else{
 
                 }
@@ -373,17 +381,36 @@ oxana.behaviorimplementations["WA_REMOVE"] = {
             
         }
         e.preventDefault();
+        return track;
+    },
+    undo:function(){
+        console.log("Undo WA_REMOVE");
     },
     stopPropagation:true
 };
 
 oxana.behaviorimplementations["SAVE_LAYOUT"] = {
-    reaction:function(e) {
+    do:function(e) {
         var snowCrash = Component.instances["snowCrash"];
         var jsonLayout = JSON.stringify(snowCrash.literal, null, "\t");
         download("snowCrash.json.txt", jsonLayout); 
     },
     stopPropagation:true
+};
+
+oxana.behaviorimplementations["WA_UNDO"] = {
+    do:function(e) {
+        console.log("UNDO");
+        oxana.history.undo();
+    },
+    stopPropagation:false
+};
+oxana.behaviorimplementations["WA_REDO"] = {
+    do:function(e) {
+        console.log("REDO");
+        oxana.history.redo();
+    },
+    stopPropagation:false
 };
 oxana.registerBehaviors();
 oxana.init();
@@ -472,7 +499,7 @@ function isMouseMoveNS(e){
         debouncedDragNS(e);
         return true;
         //{qualifies, extraArgs}
-        // extraArgs array with additional arguments to be passed to the behavior implementation/reaction
+        // extraArgs array with additional arguments to be passed to the behavior implementation/do
     }else
     {
        // var i = this.classes.indexOf("ns-resize")
@@ -487,3 +514,17 @@ function isMouseMoveNS(e){
 }
 
 //behavior can cause another behavior (throws custom event, so we may avoid filter functions...)
+
+function isKeyCombUndo(e){
+    if ((e.keyCode == 90 || e.keyCode == 122) && ((Env.getInstance().current == EnvType.MAC && e.metaKey && !e.shiftKey) || e.ctrlKey)) {
+        console.log("KeyCombination CTR+Z Here");
+        return true;
+    }
+}
+
+function isKeyCombRedo(e){
+    if ((e.keyCode == 89 || e.keyCode == 121) && ((Env.getInstance().current == EnvType.MAC && e.metaKey && e.shiftKey) || e.ctrlKey)) {
+        console.log("KeyCombination CTR+Y Here");
+        return true;
+    }
+}
