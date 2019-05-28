@@ -518,13 +518,17 @@ function isMouseMoveNS(e){
 function isKeyCombUndo(e){
     if ((e.keyCode == 90 || e.keyCode == 122) && ((Env.getInstance().current == EnvType.MAC && e.metaKey && !e.shiftKey) || e.ctrlKey)) {
         console.log("KeyCombination CTR+Z Here");
+        e.preventDefault();
+        e.stopPropagation();
         return true;
     }
 }
 
 function isKeyCombRedo(e){
-    if ((e.keyCode == 89 || e.keyCode == 121) && ((Env.getInstance().current == EnvType.MAC && e.metaKey && e.shiftKey) || e.ctrlKey)) {
+    if (((e.keyCode == 89 || e.keyCode == 121) && e.ctrlKey) || ((Env.getInstance().current == EnvType.MAC && e.metaKey && e.shiftKey) && (e.keyCode == 90 || e.keyCode == 122))) {
         console.log("KeyCombination CTR+Y Here");
+        e.preventDefault();
+        e.stopPropagation();
         return true;
     }
 }
