@@ -67,8 +67,12 @@ var History = function(_props)
                     //ketu ne currentIndex < length beji splice nga currentIndex e deri ne length
                     _steps.splice(Math.max(_currentIndex,0), _steps.length - Math.max(_currentIndex,0)- 1 );
                 }
+                step.retObj = ret;
                 _steps.push(step);
                 ++_currentIndex;
+
+                var eventObject = $.Event(HistoryEventType.HISTORY_CAN_UNDO);
+                this.trigger(eventObject);
             }
         }else{
             console.log("You need to initialize behaviors first.");
@@ -82,7 +86,10 @@ var History = function(_props)
             var step = _steps[_currentIndex];
             var behavior = _behaviors[step.behaviorName];
             if(behavior.do && typeof behavior.do == 'function'){
-                behavior.do.apply(step.thisObj, step.args);
+                behavior.do.apply(step.thisObj, step.args.concat(step.retObj));
+
+                var eventObject = $.Event(HistoryEventType.HISTORY_CAN_UNDO);
+                this.trigger(eventObject);
             }
         }else{
             console.log("Nothing to redo.");
@@ -97,9 +104,11 @@ var History = function(_props)
             var step = _steps[_currentIndex];
             var behavior = _behaviors[step.behaviorName];
             if(behavior.undo && typeof behavior.undo == 'function'){
-                behavior.undo.apply(step.thisObj, step.args);
+                behavior.undo.apply(step.thisObj, step.args.concat(step.retObj));
             }
             --_currentIndex;
+            var eventObject = $.Event(HistoryEventType.HISTORY_CAN_REDO);
+            this.trigger(eventObject);
         }else{
             console.log("Nothing to undo.");
             var eventObject = $.Event(HistoryEventType.HISTORY_NO_MORE_UNDO);

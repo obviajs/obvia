@@ -122,6 +122,17 @@ var oxana = new App({
             }
         }        
     ]});
+
+var waBehaviors = {
+    "click": "BECOME_ACTIVE",
+    "mouseover": "WA_HOVER",
+    "mouseout": "WA_HOVER",
+    "mousemove": {
+        "WA_RESIZE_NS": isMouseMoveNS
+    },
+    "contextmenu": "WA_REMOVE"
+};
+
 oxana.behaviors["splitHorizontal"] = {};
 oxana.behaviors["splitHorizontal"]["click"] = "SPLIT_HOR";
 
@@ -131,11 +142,7 @@ oxana.behaviors["splitVertical"]["click"] = "SPLIT_VERT";
 oxana.behaviors["saveLayout"] = {};
 oxana.behaviors["saveLayout"]["click"] = "SAVE_LAYOUT";
 
-oxana.behaviors["workArea"] = {};
-oxana.behaviors["workArea"]["click"] = "BECOME_ACTIVE";
-oxana.behaviors["workArea"]["mouseover"] = "WA_HOVER";
-oxana.behaviors["workArea"]["mouseout"] = "WA_HOVER";
-oxana.behaviors["workArea"]["contextmenu"] = "WA_REMOVE";
+oxana.behaviors["workArea"] = waBehaviors;
 
 oxana.behaviors[oxana.rootID]["keydown"] = {
     "WA_UNDO":isKeyCombUndo,
@@ -170,14 +177,7 @@ oxana.behaviorimplementations["SPLIT_HOR"] = function(e) {
         }
         var newRowInstance = activeContainer.addComponent(newRow);
         var newWorkArea = newRowInstance.children[newRowInstance.components[0].props.id];
-        oxana.behaviors[newWorkArea.id] = {};
-        oxana.behaviors[newWorkArea.id]["click"] = "BECOME_ACTIVE";
-        oxana.behaviors[newWorkArea.id]["mouseover"] = "WA_HOVER";
-        oxana.behaviors[newWorkArea.id]["mouseout"] = "WA_HOVER";
-        oxana.behaviors[newWorkArea.id]["mousemove"] = {
-            "WA_RESIZE_NS":isMouseMoveNS
-        };
-        oxana.behaviors[newWorkArea.id]["contextmenu"] = "WA_REMOVE";
+        oxana.behaviors[newWorkArea.id] = waBehaviors;
        // oxana.behaviors[newWorkArea.id]["mousemove"]["WA_RESIZE_EW"] = isMouseMoveEW;
         //{filter: isMouseMoveEw, otherProperties...}
 
@@ -185,98 +185,98 @@ oxana.behaviorimplementations["SPLIT_HOR"] = function(e) {
         {
             var newRowInstance2 = activeContainer.addComponent(newRow2);
             var newWorkArea2 = newRowInstance2.children[newRowInstance2.components[0].props.id];
-            oxana.behaviors[newWorkArea2.id] = {};
-            oxana.behaviors[newWorkArea2.id]["click"] = "BECOME_ACTIVE";
-            oxana.behaviors[newWorkArea2.id]["mouseover"] = "WA_HOVER";
-            oxana.behaviors[newWorkArea2.id]["mouseout"] = "WA_HOVER";
-            oxana.behaviors[newWorkArea2.id]["mousemove"] = {
-                "WA_RESIZE_NS":isMouseMoveNS
-            };
-            oxana.behaviors[newWorkArea2.id]["contextmenu"] = "WA_REMOVE";
+            oxana.behaviors[newWorkArea2.id] = waBehaviors;
         }
 
-        var children_len = activeContainer.components.length;
-        var height = Math.floor(100/children_len);  
-        var delta = 100 - height*children_len;
-        var i = 0;
-        for(var childID in activeContainer.children){
-            ++i;
-            if(i==children_len-1)
-                activeContainer.children[childID].spacing.h = height+delta;
-            else
-                activeContainer.children[childID].spacing.h = height;
-        } 
+        childrenAutoHeight(activeContainer);
 };
 
-oxana.behaviorimplementations["SPLIT_VERT"] = function(e) {
-    console.log("Split Selected Container Vertically");
-    var newCell = {
-        constructor: Container,
-        props: {
-            type: ContainerType.COLUMN,
-            spacing: {colSpan:12, h:100}, 
-            id: 'workArea',
-            classes:["border"]
-        }
-    };
-    var row_len = activeContainer.components.length;
-    var toAdd = newCell;
-    var parent;
-    var children_len = 2;
-    
-    if(row_len == 0)
-    {
-        var newCell2 = extend(true, newCell);
-           
-        //.spacing.colSpan count children and distribute 12 units of space to them. the last child gets the reminder
-        var toAdd = {
+oxana.behaviorimplementations["SPLIT_VERT"] = {
+    do:function(e) {
+        console.log("Split Selected Container Vertically");
+        var ret = {track:false};
+        var newCell = {
             constructor: Container,
             props: {
-                id: '',
-                type: ContainerType.ROW,
-                spacing: {h:100, m:"auto"},
-                components:[newCell, newCell2]
+                type: ContainerType.COLUMN,
+                spacing: {colSpan:12, h:100}, 
+                id: 'workArea',
+                classes:["border"]
             }
         };
-        parent =  activeContainer;
-    }else
-    {
-        parent =  activeContainer.children[activeContainer.components[0].props.id];
-        children_len = parent.components.length;
-    } 
-    if(children_len<12)
-    {    
-        var newInstance = parent.addComponent(toAdd);
-        var row =  activeContainer.children[activeContainer.components[0].props.id];
-        children_len = row.components.length;
-
-        var colSpan = Math.floor(12/children_len);  
-        var delta = 12 - colSpan*children_len;
-        var i = 0;    
-        for(var childID in row.children){
-            ++i;
-            if(i==children_len-1)
-                row.children[childID].spacing.colSpan = colSpan+delta;
-            else
-                row.children[childID].spacing.colSpan = colSpan;
-            var workArea = row.children[childID];    
-            //var workArea = cell.children[cell.components[0].props.id];
-            oxana.behaviors[workArea.id] = {};
-            oxana.behaviors[workArea.id]["click"] = "BECOME_ACTIVE";    
-            oxana.behaviors[workArea.id]["mouseover"] = "WA_HOVER";
-            oxana.behaviors[workArea.id]["mouseout"] = "WA_HOVER";
-            oxana.behaviors[workArea.id]["mousemove"] = {
-                "WA_RESIZE_NS":isMouseMoveNS
+        var row_len = activeContainer.components.length;
+        var toAdd = newCell;
+        var parent;
+        var children_len = 2;
+        
+        if(row_len == 0)
+        {
+            var newCell2 = extend(true, newCell);
+            
+            //.spacing.colSpan count children and distribute 12 units of space to them. the last child gets the reminder
+            var toAdd = {
+                constructor: Container,
+                props: {
+                    id: '',
+                    type: ContainerType.ROW,
+                    spacing: {h:100, m:"auto"},
+                    components:[newCell, newCell2]
+                }
             };
-            oxana.behaviors[workArea.id]["contextmenu"] = "WA_REMOVE";
-                
+            parent =  activeContainer;
+        }else
+        {
+            parent =  activeContainer.children[activeContainer.components[0].props.id];
+            children_len = parent.components.length;
         } 
+        if(children_len<12)
+        {    
+            var newInstance = parent.addComponent(toAdd);
+            var row =  activeContainer.children[activeContainer.components[0].props.id];
+            children_len = row.components.length;
 
-    }else
-    {
-        alert("You may have up to 12 columns for each row.");
+            var colSpan = Math.floor(12/children_len);  
+            var delta = 12 - colSpan*children_len;
+            var i = 0;    
+            for(var childID in row.children){
+                ++i;
+                if(i==children_len-1)
+                    row.children[childID].spacing.colSpan = colSpan+delta;
+                else
+                    row.children[childID].spacing.colSpan = colSpan;
+                var workArea = row.children[childID];    
+                //var workArea = cell.children[cell.components[0].props.id];
+                oxana.behaviors[workArea.id] = waBehaviors;
+            } 
+            ret.track = true;
+        }else
+        {
+            alert("You may have up to 12 columns for each row.");
+        }
+        return ret;
+    },
+    undo:function(){
+        console.log("Undo WA_REMOVE ", arguments);
+        /**
+         *  Params that we get here:
+         *  p.event original parameters of the event that caused this behavior
+         *  p.filterReturn optional: return value of filter function
+         *  p.behaviorReturn return value of the behavior implementation function
+         * */
+        /** 
+         * what if every component generates its undo action for every action called on its instance
+        */
+        /**
+         * ret.container = container;
+                    ret.child = this.parent; */
+        var ret = arguments[arguments.length-1];
+        ret.container.addChild(ret.child);
+        if(ret.removeType=="COLUMN"){
+            childrenAutoWidth(ret.container);
+        }else{
+            childrenAutoHeight(ret.container);
+        }
     }
-       
 };
 
 var activeContainer;
@@ -327,8 +327,8 @@ oxana.behaviorimplementations["WA_RESIZE_EW"] = {
 };
 oxana.behaviorimplementations["WA_REMOVE"] = {
     do:function(e) {
-        var track = false;
-        console.log("Container REMOVE");
+        var ret = {track:false};
+        console.log("Container REMOVE ", arguments);
         var c = true;
         if(this.components.length>0){
             c = confirm("Container has children, still want to remove ?");
@@ -339,18 +339,11 @@ oxana.behaviorimplementations["WA_REMOVE"] = {
                 if(this.parent.components.length>2){
                     var row = this.parent;
                     row.removeChild(this);
-                    var children_len = row.components.length;
-                    var colSpan = Math.floor(12/children_len);  
-                    var delta = 12 - colSpan*children_len;
-                    var i = 0;    
-                    for(var childID in row.children){
-                        ++i;
-                        if(i==children_len-1)
-                            row.children[childID].spacing.colSpan = colSpan+delta;
-                        else
-                            row.children[childID].spacing.colSpan = colSpan;
-                    }
-                    track = true;
+                    childrenAutoWidth(row);
+                    ret.track = true;
+                    ret.container = row;
+                    ret.child = this;
+                    ret.removeType = "COLUMN"; 
                 }else{
 
                 }
@@ -360,19 +353,11 @@ oxana.behaviorimplementations["WA_REMOVE"] = {
                 if(this.parent.parent.components.length>2){
                     var container = this.parent.parent;
                     container.removeChild(this.parent);
-                    
-                    var children_len = container.components.length;
-                    var height = Math.floor(100/children_len);  
-                    var delta = 100 - height*children_len;
-                    var i = 0;
-                    for(var childID in container.children){
-                        ++i;
-                        if(i==children_len-1)
-                            container.children[childID].spacing.h = height+delta;
-                        else
-                            container.children[childID].spacing.h = height;
-                    } 
-                    track = true;
+                    childrenAutoHeight(container);
+                    ret.track = true;
+                    ret.container = container;
+                    ret.child = this.parent;
+                    ret.removeType = "ROW"; 
                 }else{
 
                 }
@@ -381,10 +366,29 @@ oxana.behaviorimplementations["WA_REMOVE"] = {
             
         }
         e.preventDefault();
-        return track;
+        return ret;
     },
     undo:function(){
-        console.log("Undo WA_REMOVE");
+        console.log("Undo WA_REMOVE ", arguments);
+        /**
+         *  Params that we get here:
+         *  p.event original parameters of the event that caused this behavior
+         *  p.filterReturn optional: return value of filter function
+         *  p.behaviorReturn return value of the behavior implementation function
+         * */
+        /** 
+         * what if every component generates its undo action for every action called on its instance
+        */
+         /**
+          * ret.container = container;
+                    ret.child = this.parent; */
+        var ret = arguments[arguments.length-1];
+        ret.container.addChild(ret.child);
+        if(ret.removeType=="COLUMN"){
+            childrenAutoWidth(ret.container);
+        }else{
+            childrenAutoHeight(ret.container);
+        }
     },
     stopPropagation:true
 };
@@ -531,4 +535,32 @@ function isKeyCombRedo(e){
         e.stopPropagation();
         return true;
     }
+}
+
+//utility functions
+function childrenAutoWidth(container){
+    var children_len = container.components.length;
+    var colSpan = Math.floor(12/children_len);  
+    var delta = 12 - colSpan*children_len;
+    var i = 0;    
+    for(var childID in container.children){
+        ++i;
+        if(i==children_len-1)
+            container.children[childID].spacing.colSpan = colSpan+delta;
+        else
+            container.children[childID].spacing.colSpan = colSpan;
+    }
+}
+function childrenAutoHeight(container){
+    var children_len = container.components.length;
+    var height = Math.floor(100/children_len);  
+    var delta = 100 - height*children_len;
+    var i = 0;
+    for(var childID in container.children){
+        ++i;
+        if(i==children_len-1)
+            container.children[childID].spacing.h = height+delta;
+        else
+            container.children[childID].spacing.h = height;
+    } 
 }

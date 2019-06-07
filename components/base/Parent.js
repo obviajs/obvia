@@ -28,6 +28,7 @@ var Parent = function(_props, overrided=false)
     {
         if(child)
         {
+            index = index || _components.length;
             if(index>=0 && index <= _components.length)
             {
                 index = index || _components.length;
