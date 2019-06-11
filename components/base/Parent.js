@@ -115,7 +115,7 @@ var Parent = function(_props, overrided=false)
         {
             if (typeof _afterAttach == 'function')
                 _afterAttach.apply(this, arguments);
-            if(!_creationFinished)    
+            if(!_creationFinished && (this.components && Array.isArray(this.components) && this.components.length>0))    
                 e.preventDefault();
         }
     };

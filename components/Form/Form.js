@@ -156,7 +156,7 @@ var Form = function(_props)
     this.beforeAttach = function() 
     {
         this.$container = this.$form = this.$el;
-        if(this.components && Array.isArray(this.components))
+        if(this.components && Array.isArray(this.components) && this.components.length>0)
         {
             var $form_group;
             var rowColSpan = 0;
