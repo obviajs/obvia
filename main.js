@@ -31,7 +31,7 @@ rjs.define("./components/Form/Hidden.js", "Hidden");
 rjs.define("./components/Button.js", "Button");
 //Label
 rjs.define("./components/Label.js", "Label");
-
+ 
 //HRule
 rjs.define("./components/HRule.js", "HRule");
 // Color Picker
@@ -86,7 +86,7 @@ rjs.define("./components/AutoComplete/AutoCompleteEx.js", "AutoCompleteEx");
 rjs.define("./components/AutoComplete/AutoCompleteEx.css", "AutoCompleteExCSS");
 rjs.define("./components/AutoComplete/TokenRenderer.js", "TokenRenderer");
 rjs.define("./components/AutoComplete/SuggestionRenderer.js", "SuggestionRenderer");
-
+ 
 //ComboBox
 rjs.define("lib/dependencies/styles/bootstrap.multiselect.css", "ComboCSS");
 rjs.define("lib/dependencies/scripts/bootstrap.multiselect.js", "ComboScript");
@@ -109,14 +109,14 @@ rjs.define("lib/dependencies/scripts/resumable.js", "Resumable");
 rjs.define("./components/Upload.js", "Upload");
 rjs.define("./components/FormUpload.js", "FormUpload");
 //DataGrid
-
+ 
 rjs.define("./components//DataGrid/DataGridCellRenderer.js", "DataGridCellRenderer");
 rjs.define("./components//DataGrid/DataGridColumn.js", "DataGridColumn");
 rjs.define("./components//DataGrid/DataGrid.js", "DataGrid");
-
+ 
 rjs.define("./oxana/accounting/components/CurrencyExRate.js", "CurrencyExRate");
 //Loader
-
+ 
 rjs.require([
         "DOMContentLoaded",
         "EventDispatcher",
@@ -208,20 +208,20 @@ rjs.require([
         //"DataGridExample",
        // "FormFieldExample"
     ], function () {
-        
+         
         //rjs.define("./examples/Form/ffExample.js", "FormFieldExample");
         //rjs.define("./examples/Label/example.js", "LabelExample");
-        // rjs.define("./examples/RadioButton/example.js", "RadioButtonExample");+
+        // rjs.define("./examples/RadioButton/example.js", "RadioButtonExample");
         //rjs.define("./examples/AutoComplete/example.js", "AutoComplete");
-
-
+ 
+ 
         //rjs.define("./examples/Container/example.js", "ContainerExample");
         //rjs.define("./examples/Tab/example.js", "TabExample");
         // 
-
-        //rjs.define("./examples/DataGrid/example.js", "DataGridExample");
-        
-        //rjs.define("./examples/Image/example.js", "ImageExample");
+ 
+//rjs.define("./examples/DataGrid/example.js", "DataGridExample");
+         
+//rjs.define("./examples/Image/example.js", "ImageExample");
         //rjs.define("./examples/Text/example.js", "Text");
         //rjs.define("./examples/Label/example.js", "Label");
         //rjs.define("./examples/HRule/example.js", "HRuleExample");
@@ -231,26 +231,25 @@ rjs.require([
         // rjs.define("./examples/CheckBoxGroup/example.js", "CheckBoxGroupExample");
         // rjs.define("./examples/RadioGroup/example.js", "RadioGroupExample");
         //rjs.define("./examples/Toggle/example.js", "ToggleExample");
-        
+         // rjs.define("./examples/Generic/example.js","GenericExample");
         //rjs.define("./oxana/accounting/invoice.js", "Invoice");
-        rjs.define("./oxana/layoutBuilder.js", "layoutBuilder");
+       //rjs.define("./oxana/layoutBuilder.js", "layoutBuilder");
         //js.define("./oxana/magnetLayout.js", "magnetLayout");
-        
-        
-        // rjs.define("./examples/Upload/example.js", "UploadExample");
+         
+       //rjs.define("./examples/Upload/example.js", "UploadExample");
+      //  rjs.define("./examples/Form/example.js", "FormExample");
+      //   rjs.define("./examples/Form/ajaxExample.js", "FormExample");
+       // rjs.define("./examples/HierarchicalTree/example.js", "HierarchicalTreeExample");
         // rjs.define("./examples/Form/example.js", "FormExample");
         // rjs.define("./examples/Form/ajaxExample.js", "FormExample");
-        // rjs.define("./examples/HierarchicalTree/example.js", "HierarchicalTreeExample");
-        // rjs.define("./examples/Form/example.js", "FormExample");
-        // rjs.define("./examples/Form/ajaxExample.js", "FormExample");
-        
-        //rjs.define("./examples/ComboBox/example.js", "ComboBoxExample");
+        rjs.define("./examples/Form/myexample.js","FormExample");
+       // rjs.define("./examples/ComboBox/example.js", "ComboBoxExample");
         //rjs.define("./examples/List/example.js", "ListExample");
         //rjs.define("./examples/Button/example.js", "ButtonExample");
         //rjs.define("./examples/Repeater/example.js", "RepeaterExample");
         //rjs.define("./examples/Link/example.js", "LinkExample");
         //rjs.define("./examples/Modal/example.js", "ModalExample");
         //rjs.define("./examples/AutoComplete/example.js", "AutoCompleteExample");
-        //rjs.define("./examples/DataGrid/example.js", "DataGridExample");
-
+    //   rjs.define("./examples/DataGrid/example.js", "DataGridExample");
+ 
 }, flowerCM);

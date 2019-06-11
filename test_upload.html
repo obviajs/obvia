@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+        <title>Flower UI</title>
+
+        <!-- FLOWER DEPENDENCIES -->
+        <script
+  src="https://code.jquery.com/jquery-3.4.1.min.js"
+  integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+  crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+            crossorigin="anonymous">
+     
+        <link rel="stylesheet" href="http://139.162.158.49/styles/bootstrap-fs-modal.min.css" crossorigin="anonymous">
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+        <script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+
+        <!--Utils -->
+
+        <script src="lib/ArrayUtils.js"></script>
+        <script src="lib/ObjectUtils.js"></script>
+        <script src="lib/StringUtils.js"></script>
+        <script src="lib/DecoratorUtils.js"></script>
+        
+        <script src="lib/Tokenizer.js"></script>
+        <script src="lib/binding/BindingUtils.js"></script>
+        <script src="lib/binding/PropertyChangeEvent.js"></script>
+        <script src="lib/binding/ChangeWatcher.js"></script>
+
+        <script src="lib/base64.js"></script>
+        <script src="lib/my.js"></script>
+        <!-- FLOWER UI -->
+        <!-- <link rel="stylesheet" type="text/css" href="css/main.css" /> -->
+        <!-- <script src="lib/rca/RemoteCursorEvent.js"></script> -->
+        <!-- <script src="lib/rca/RemoteCursorArray.js"></script> -->
+        <!-- <script src="lib/rca/SortField.js"></script> -->
+        <!-- <script src="lib/rivets.bundled.min.js"></script> -->
+        <script src="lib/rjs.js"></script>
+        <script src="lib/JTemplate.js"></script>
+        <script src="lib/DataStore.js"></script>
+        <script src="lib/cache/Cache.js"></script>
+        <script src="lib/cache/CachedVariable.js"></script>
+        <script src="lib/_KxGenerator.js"></script>
+        <script src="components/Loader.js"></script>
+
+        <style>
+            label {
+                margin-bottom: 3px;
+                font-size: 12px;
+                color: #4a4a4a;
+            }
+        </style>
+    </head>
+    <body>
+        <div id='root'></div>
+        <img src="" height="200" alt="" class='myclass' ><br>
+        <input type="file" id="file" onchange="previewFile()"><br>
+        
+        <input type="button"  onclick="upload()">Upload<br>
+    </body>
+    <!-- main entry point script -->
+    <script type="text/javascript" src="main.js"></script>
+</html>
