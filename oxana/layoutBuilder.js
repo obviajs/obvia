@@ -44,7 +44,14 @@ var zeroCool = {
                                                 id: 'splitHorizontal',
                                                 type: "button",
                                                 label:"Split Horizontal",
-                                                classes: ["btn", "btn-success"]
+                                                classes: ["btn", "btn-success"],
+                                                components: [{
+                                                    constructor: Label,
+                                                    props: {
+                                                        id: 'fa',
+                                                        classes: ["fas","fa-columns","fa-rotate-270"]
+                                                    }
+                                                }]
                                             }
                                         },
                                         {
@@ -53,7 +60,14 @@ var zeroCool = {
                                                 id: 'splitVertical',
                                                 type: "button",
                                                 label:"Split Vertical",
-                                                classes: ["btn", "btn-success"]
+                                                classes: ["btn", "btn-success"],
+                                                components: [{
+                                                    constructor: Label,
+                                                    props: {
+                                                        id: 'fa',
+                                                        classes: ["fas","fa-columns"]
+                                                    }
+                                                }]
                                             }
                                         },
                                         {
@@ -149,27 +163,34 @@ oxana.behaviors[oxana.rootID]["keydown"] = {
     "WA_REDO":isKeyCombRedo,
 };
 
-oxana.behaviorimplementations["SPLIT_HOR"] = function(e) {
-    console.log("Split Selected Container Horizontally");
-    var newRow = {
-            constructor: Container,
-            props: {
-                id: '',
-                type: ContainerType.ROW,
-                spacing: {h:100, m:"auto"},
-                components:[
-                    {
-                        constructor: Container,
-                        props: {
-                            type: ContainerType.COLUMN,
-                            spacing: {colSpan:12, h:100}, 
-                            id: 'workArea',
-                            classes:["border"]
+oxana.behaviorimplementations["SPLIT_HOR"] = {
+    do:function(e) {
+        var retFromRedoMaybe = arguments[arguments.length-1];
+        if(retFromRedoMaybe.container){
+            activeContainer = retFromRedoMaybe.container;
+            console.log("called SPLIT_HOR from History(REDO).");
+        }
+        console.log("Split Selected Container Horizontally");
+        var ret = {track:false};
+        var newRow = {
+                constructor: Container,
+                props: {
+                    id: '',
+                    type: ContainerType.ROW,
+                    spacing: {h:100, m:"auto"},
+                    components:[
+                        {
+                            constructor: Container,
+                            props: {
+                                type: ContainerType.COLUMN,
+                                spacing: {colSpan:12, h:100}, 
+                                id: 'workArea',
+                                classes:["border"]
+                            }
                         }
-                    }
-                ]
-            }
-        };
+                    ]
+                }
+            };
         var newRow2;
         if(activeContainer.components.length==0)
         {
@@ -178,7 +199,7 @@ oxana.behaviorimplementations["SPLIT_HOR"] = function(e) {
         var newRowInstance = activeContainer.addComponent(newRow);
         var newWorkArea = newRowInstance.children[newRowInstance.components[0].props.id];
         oxana.behaviors[newWorkArea.id] = waBehaviors;
-       // oxana.behaviors[newWorkArea.id]["mousemove"]["WA_RESIZE_EW"] = isMouseMoveEW;
+    // oxana.behaviors[newWorkArea.id]["mousemove"]["WA_RESIZE_EW"] = isMouseMoveEW;
         //{filter: isMouseMoveEw, otherProperties...}
 
         if(activeContainer.components.length==1)
@@ -186,13 +207,45 @@ oxana.behaviorimplementations["SPLIT_HOR"] = function(e) {
             var newRowInstance2 = activeContainer.addComponent(newRow2);
             var newWorkArea2 = newRowInstance2.children[newRowInstance2.components[0].props.id];
             oxana.behaviors[newWorkArea2.id] = waBehaviors;
+            ret.child2 = newRowInstance2;
         }
 
+        ret.child = newRowInstance;
+        ret.parent = activeContainer;
+        ret.container = activeContainer;
         childrenAutoHeight(activeContainer);
+        return ret;
+    },
+    undo:function(){
+        console.log("Undo SPLIT_HOR ", arguments);
+        /**
+         *  Params that we get here:
+         *  p.event original parameters of the event that caused this behavior
+         *  p.filterReturn optional: return value of filter function
+         *  p.behaviorReturn return value of the behavior implementation function
+         * */
+        /** 
+         * what if every component generates its undo action for every action called on its instance
+        */
+        /**
+         * ret.container = container;
+                    ret.child = this.parent; */
+        var ret = arguments[arguments.length-1];
+        ret.parent.removeChild(ret.child);
+        if(ret.child2){
+            ret.parent.removeChild(ret.child2);
+        }
+        childrenAutoHeight(ret.parent);
+    }
 };
 
 oxana.behaviorimplementations["SPLIT_VERT"] = {
     do:function(e) {
+        var retFromRedoMaybe = arguments[arguments.length-1];
+        if(retFromRedoMaybe.container){
+            activeContainer = retFromRedoMaybe.container;
+            console.log("called SPLIT_VERT from History(REDO).");
+        }
         console.log("Split Selected Container Vertically");
         var ret = {track:false};
         var newCell = {
@@ -248,6 +301,9 @@ oxana.behaviorimplementations["SPLIT_VERT"] = {
                 //var workArea = cell.children[cell.components[0].props.id];
                 oxana.behaviors[workArea.id] = waBehaviors;
             } 
+            ret.parent = parent;
+            ret.child = newInstance;
+            ret.container = activeContainer;
             ret.track = true;
         }else
         {
@@ -256,7 +312,7 @@ oxana.behaviorimplementations["SPLIT_VERT"] = {
         return ret;
     },
     undo:function(){
-        console.log("Undo WA_REMOVE ", arguments);
+        console.log("Undo SPLIT_VERT ", arguments);
         /**
          *  Params that we get here:
          *  p.event original parameters of the event that caused this behavior
@@ -270,12 +326,8 @@ oxana.behaviorimplementations["SPLIT_VERT"] = {
          * ret.container = container;
                     ret.child = this.parent; */
         var ret = arguments[arguments.length-1];
-        ret.container.addChild(ret.child);
-        if(ret.removeType=="COLUMN"){
-            childrenAutoWidth(ret.container);
-        }else{
-            childrenAutoHeight(ret.container);
-        }
+        ret.parent.removeChild(ret.child);
+        childrenAutoWidth(ret.parent);
     }
 };
 
@@ -327,6 +379,10 @@ oxana.behaviorimplementations["WA_RESIZE_EW"] = {
 };
 oxana.behaviorimplementations["WA_REMOVE"] = {
     do:function(e) {
+        var retFromRedoMaybe = arguments[arguments.length-1];
+        if(retFromRedoMaybe.container){
+            console.log("called WA_REMOVE from History(REDO).");
+        }
         var ret = {track:false};
         console.log("Container REMOVE ", arguments);
         var c = true;

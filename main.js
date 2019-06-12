@@ -233,8 +233,8 @@ rjs.require([
         //rjs.define("./examples/Toggle/example.js", "ToggleExample");
          // rjs.define("./examples/Generic/example.js","GenericExample");
         //rjs.define("./oxana/accounting/invoice.js", "Invoice");
-       //rjs.define("./oxana/layoutBuilder.js", "layoutBuilder");
-        //js.define("./oxana/magnetLayout.js", "magnetLayout");
+       rjs.define("./oxana/layoutBuilder.js", "layoutBuilder");
+       // rjs.define("./oxana/magnetLayout.js", "magnetLayout");
          
        //rjs.define("./examples/Upload/example.js", "UploadExample");
       //  rjs.define("./examples/Form/example.js", "FormExample");
@@ -242,7 +242,7 @@ rjs.require([
        // rjs.define("./examples/HierarchicalTree/example.js", "HierarchicalTreeExample");
         // rjs.define("./examples/Form/example.js", "FormExample");
         // rjs.define("./examples/Form/ajaxExample.js", "FormExample");
-        rjs.define("./examples/Form/myexample.js","FormExample");
+        //rjs.define("./examples/Form/myexample.js","FormExample");
        // rjs.define("./examples/ComboBox/example.js", "ComboBoxExample");
         //rjs.define("./examples/List/example.js", "ListExample");
         //rjs.define("./examples/Button/example.js", "ButtonExample");

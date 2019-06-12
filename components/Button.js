@@ -18,8 +18,14 @@ var Button = function(_props, overrided=false)
             if(_label != v)
             {
                 _label = v;
-                if(this.$el)
-                    this.$el.html(v);
+                if(this.$el){
+                    var last = this.$el.children().last();
+                    if(last && last.length>0 && last[0].nextSibling)
+                        this.$el.last()[0].nextSibling.textContent = v;
+                    else
+                        this.$el.appendText(v);
+                        //this.$el.html(v);
+                }
             }
         }
     });
@@ -82,20 +88,39 @@ var Button = function(_props, overrided=false)
 
     this.template = function () 
     {
-        return  "<button data-triggers='click' id='" + this.domID + "' type='"+_type+"'  "+(_value?"value='"+_value+"'":"")+">"+_label+"</button>";
+        return  "<button data-triggers='click' id='" + this.domID + "' type='"+_type+"'  "+(_value?"value='"+_value+"'":"")+"></button>";
     };
-   
+
+    this.beforeAttach = function() 
+    {
+        this.$container = this.$el;
+        this.addComponents(this.components);
+    };
+
     var _defaultParams = {
         label:"",
         type:"button",
+        components:[]
     };
-    _props = extend(false, false, _defaultParams, _props);
-    
-    var _label = _props.label;
+    //_props = extend(false, false, _defaultParams, _props);
+    shallowCopy(extend(false, false, _defaultParams, _props), _props);
+    var _label;
     var _type = _props.type;
     var _value = _props.value;
+    var _afterAttach = _props.afterAttach;
 
-    Component.call(this, _props);
+    _props.afterAttach = function () {
+        if (typeof _afterAttach == 'function')
+            _afterAttach.apply(this, arguments);
+
+        var e = arguments[0];
+        if (!e.isDefaultPrevented()) {
+            this.label = _props.label;
+        }
+    };
+
+   // Component.call(this, _props);
+    Parent.call(this, _props);
     if(overrided)
     {
         this.keepBase();
