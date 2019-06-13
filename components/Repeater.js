@@ -161,29 +161,27 @@ var Repeater = function(_props)
 
     this.bindings = {};
     
-    this.dataProviderChanged = function (arrFields) 
+    this.dataProviderChanged = function () 
     {
-        console.log("dataProviderChanged thirret saapo krijohet nje el repeater")
-        if (arrFields.length == 0)
-            return;    
-        //{"component":cmp, "property":prop, "dataProviderField":dataProviderField, "dataProviderIndex":index}
-        var fieldsSpecified = (arrFields!=undefined) && (arrFields!=null) && (arrFields.length>0);
-        var componentBindings = Object.keys(this.bindings);
-        
-        if(fieldsSpecified) { 
-            componentBindings = intersect(componentBindings, arrFields);
-            if(arrFields.length!=componentBindings.length){
-                console.log("You have specified a field for which there is no binding - possible misstype?")
+        //add or remove rows 
+        var deltaRows = this.dataProvider.length - this.rowItems.length;
+        if(deltaRows>0){
+            for(var i=0;i<deltaRows;i++){
+                var ind = this.rowItems.length + i;
+                this.addRow(this.dataProvider[ind], ind); 
+            }
+        }else{
+            for(var i=0;i>deltaRows;i--){
+                var ind = this.rowItems.length + i;
+                this.removeRow(ind); 
             }
         }
-        
-        for(var c=0; c<componentBindings.length; c++){
-            var dataProviderField = componentBindings[c];
-            for(var cmp in this.bindings[dataProviderField]){
-                for(var i=0;i<this.dataProvider.length;i++){
-                    var property = this.bindings[dataProviderField][cmp]["property"];
-                    this[cmp][i][property] = this.dataProvider[i][dataProviderField];
-                }
+        //for the rows that we just added there is no need to refreshBindings
+        var maxInd = deltaRows>0?this.rowItems.length-deltaRows:this.rowItems.length;
+        for(var i = 0; i<maxInd;i++){
+            for(var cmpID in this.rowItems[i]){
+                var cmp = his.rowItems[i][cmpID];
+                cmp.refreshBindings(this.dataProvider[i]);
             }
         }
     };

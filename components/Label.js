@@ -124,13 +124,14 @@ var Label = function(_props)
 
     this.template = function () 
     {         
-        return "<label id='" + this.domID + "'>"+_labelHtml+"</label>"; 
+        return "<"+_labelType+" id='" + this.domID + "'>"+_labelHtml+"</"+_labelType+">"; 
     };
 
     var _defaultParams = {
         label:"",
         hyperlink:"",
-        target:""
+        target:"",
+        labelType: LabelType.label
     };
     _props = extend(false, false, _defaultParams, _props);
     
@@ -138,6 +139,7 @@ var Label = function(_props)
     var _labelHtml = _label;
     var _hyperlink = _props.hyperlink;
     var _target = _props.target;
+    var _labelType = _props.labelType;
 
     Component.call(this, _props);
 };

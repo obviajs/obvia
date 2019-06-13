@@ -30,6 +30,7 @@ rjs.define("./components/Form/Hidden.js", "Hidden");
 //Button
 rjs.define("./components/Button.js", "Button");
 //Label
+rjs.define("./components/LabelType.js", "LabelType");
 rjs.define("./components/Label.js", "Label");
  
 //HRule
@@ -148,6 +149,7 @@ rjs.require([
         "Repeater",
         "List",
         "Amount",
+        "LabelType",
         "Label",
         "Link",
         "InputMaskBundle",

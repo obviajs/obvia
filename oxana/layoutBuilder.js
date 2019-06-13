@@ -17,7 +17,10 @@ const appStyle = `
 .w-1 {width:1% !important}.w-2 {width:2% !important}.w-3 {width:3% !important}.w-4 {width:4% !important}.w-5 {width:5% !important}.w-6 {width:6% !important}.w-7 {width:7% !important}.w-8 {width:8% !important}.w-9 {width:9% !important}.w-10 {width:10% !important}.w-11 {width:11% !important}.w-12 {width:12% !important}.w-13 {width:13% !important}.w-14 {width:14% !important}.w-15 {width:15% !important}.w-16 {width:16% !important}.w-17 {width:17% !important}.w-18 {width:18% !important}.w-19 {width:19% !important}.w-20 {width:20% !important}.w-21 {width:21% !important}.w-22 {width:22% !important}.w-23 {width:23% !important}.w-24 {width:24% !important}.w-25 {width:25% !important}.w-26 {width:26% !important}.w-27 {width:27% !important}.w-28 {width:28% !important}.w-29 {width:29% !important}.w-30 {width:30% !important}.w-31 {width:31% !important}.w-32 {width:32% !important}.w-33 {width:33% !important}.w-34 {width:34% !important}.w-35 {width:35% !important}.w-36 {width:36% !important}.w-37 {width:37% !important}.w-38 {width:38% !important}.w-39 {width:39% !important}.w-40 {width:40% !important}.w-41 {width:41% !important}.w-42 {width:42% !important}.w-43 {width:43% !important}.w-44 {width:44% !important}.w-45 {width:45% !important}.w-46 {width:46% !important}.w-47 {width:47% !important}.w-48 {width:48% !important}.w-49 {width:49% !important}.w-50 {width:50% !important}.w-51 {width:51% !important}.w-52 {width:52% !important}.w-53 {width:53% !important}.w-54 {width:54% !important}.w-55 {width:55% !important}.w-56 {width:56% !important}.w-57 {width:57% !important}.w-58 {width:58% !important}.w-59 {width:59% !important}.w-60 {width:60% !important}.w-61 {width:61% !important}.w-62 {width:62% !important}.w-63 {width:63% !important}.w-64 {width:64% !important}.w-65 {width:65% !important}.w-66 {width:66% !important}.w-67 {width:67% !important}.w-68 {width:68% !important}.w-69 {width:69% !important}.w-70 {width:70% !important}.w-71 {width:71% !important}.w-72 {width:72% !important}.w-73 {width:73% !important}.w-74 {width:74% !important}.w-75 {width:75% !important}.w-76 {width:76% !important}.w-77 {width:77% !important}.w-78 {width:78% !important}.w-79 {width:79% !important}.w-80 {width:80% !important}.w-81 {width:81% !important}.w-82 {width:82% !important}.w-83 {width:83% !important}.w-84 {width:84% !important}.w-85 {width:85% !important}.w-86 {width:86% !important}.w-87 {width:87% !important}.w-88 {width:88% !important}.w-89 {width:89% !important}.w-90 {width:90% !important}.w-91 {width:91% !important}.w-92 {width:92% !important}.w-93 {width:93% !important}.w-94 {width:94% !important}.w-95 {width:95% !important}.w-96 {width:96% !important}.w-97 {width:97% !important}.w-98 {width:98% !important}.w-99 {width:99% !important}.w-100 {width:100% !important}
 .mw-1 {max-width:1% !important}.mw-2 {max-width:2% !important}.mw-3 {max-width:3% !important}.mw-4 {max-width:4% !important}.mw-5 {max-width:5% !important}.mw-6 {max-width:6% !important}.mw-7 {max-width:7% !important}.mw-8 {max-width:8% !important}.mw-9 {max-width:9% !important}.mw-10 {max-width:10% !important}.mw-11 {max-width:11% !important}.mw-12 {max-width:12% !important}.mw-13 {max-width:13% !important}.mw-14 {max-width:14% !important}.mw-15 {max-width:15% !important}.mw-16 {max-width:16% !important}.mw-17 {max-width:17% !important}.mw-18 {max-width:18% !important}.mw-19 {max-width:19% !important}.mw-20 {max-width:20% !important}.mw-21 {max-width:21% !important}.mw-22 {max-width:22% !important}.mw-23 {max-width:23% !important}.mw-24 {max-width:24% !important}.mw-25 {max-width:25% !important}.mw-26 {max-width:26% !important}.mw-27 {max-width:27% !important}.mw-28 {max-width:28% !important}.mw-29 {max-width:29% !important}.mw-30 {max-width:30% !important}.mw-31 {max-width:31% !important}.mw-32 {max-width:32% !important}.mw-33 {max-width:33% !important}.mw-34 {max-width:34% !important}.mw-35 {max-width:35% !important}.mw-36 {max-width:36% !important}.mw-37 {max-width:37% !important}.mw-38 {max-width:38% !important}.mw-39 {max-width:39% !important}.mw-40 {max-width:40% !important}.mw-41 {max-width:41% !important}.mw-42 {max-width:42% !important}.mw-43 {max-width:43% !important}.mw-44 {max-width:44% !important}.mw-45 {max-width:45% !important}.mw-46 {max-width:46% !important}.mw-47 {max-width:47% !important}.mw-48 {max-width:48% !important}.mw-49 {max-width:49% !important}.mw-50 {max-width:50% !important}.mw-51 {max-width:51% !important}.mw-52 {max-width:52% !important}.mw-53 {max-width:53% !important}.mw-54 {max-width:54% !important}.mw-55 {max-width:55% !important}.mw-56 {max-width:56% !important}.mw-57 {max-width:57% !important}.mw-58 {max-width:58% !important}.mw-59 {max-width:59% !important}.mw-60 {max-width:60% !important}.mw-61 {max-width:61% !important}.mw-62 {max-width:62% !important}.mw-63 {max-width:63% !important}.mw-64 {max-width:64% !important}.mw-65 {max-width:65% !important}.mw-66 {max-width:66% !important}.mw-67 {max-width:67% !important}.mw-68 {max-width:68% !important}.mw-69 {max-width:69% !important}.mw-70 {max-width:70% !important}.mw-71 {max-width:71% !important}.mw-72 {max-width:72% !important}.mw-73 {max-width:73% !important}.mw-74 {max-width:74% !important}.mw-75 {max-width:75% !important}.mw-76 {max-width:76% !important}.mw-77 {max-width:77% !important}.mw-78 {max-width:78% !important}.mw-79 {max-width:79% !important}.mw-80 {max-width:80% !important}.mw-81 {max-width:81% !important}.mw-82 {max-width:82% !important}.mw-83 {max-width:83% !important}.mw-84 {max-width:84% !important}.mw-85 {max-width:85% !important}.mw-86 {max-width:86% !important}.mw-87 {max-width:87% !important}.mw-88 {max-width:88% !important}.mw-89 {max-width:89% !important}.mw-90 {max-width:90% !important}.mw-91 {max-width:91% !important}.mw-92 {max-width:92% !important}.mw-93 {max-width:93% !important}.mw-94 {max-width:94% !important}.mw-95 {max-width:95% !important}.mw-96 {max-width:96% !important}.mw-97 {max-width:97% !important}.mw-98 {max-width:98% !important}.mw-99 {max-width:99% !important}.mw-100 {max-width:100% !important}
 `;
- 
+var oxana = new App({
+    style:appStyle
+}); 
+
 var zeroCool = {
         constructor: Container,
         props: {
@@ -39,47 +42,127 @@ var zeroCool = {
                                     classes:["border"],
                                     components:[
                                         {
-                                            constructor: Button,
+                                            constructor: Container,
                                             props: {
-                                                id: 'splitHorizontal',
-                                                type: "button",
-                                                label:"Split Horizontal",
-                                                classes: ["btn", "btn-success"],
-                                                components: [{
-                                                    constructor: Label,
-                                                    props: {
-                                                        id: 'fa',
-                                                        classes: ["fas","fa-columns","fa-rotate-270"]
+                                                spacing: {h:100},
+                                                components:[
+                                                    {
+                                                        constructor: Container,
+                                                        props: {
+                                                            id: '',
+                                                            type: ContainerType.ROW,
+                                                            spacing: {h:10},
+                                                            components:[
+                                                                {
+                                                                    constructor: Container,
+                                                                    props: {
+                                                                        type: ContainerType.COLUMN,
+                                                                        spacing: {colSpan:12, h:100},
+                                                                        id: 'toolBar',
+                                                                        classes:["border"],
+                                                                        components:[
+                                                                            {
+                                                                                constructor: Button,
+                                                                                props: {
+                                                                                    id: 'splitHorizontal',
+                                                                                    type: "button",
+                                                                                    classes: ["btn", "btn-success"],
+                                                                                    components: [{
+                                                                                        constructor: Label,
+                                                                                        props: {
+                                                                                            id: 'fa',
+                                                                                            labelType: LabelType.i,
+                                                                                            classes: ["fas","fa-columns","fa-rotate-270"]
+                                                                                        }
+                                                                                    }]
+                                                                                }
+                                                                            },
+                                                                            {
+                                                                                constructor: Button,
+                                                                                props: {
+                                                                                    id: 'splitVertical',
+                                                                                    type: "button",
+                                                                                    classes: ["btn", "btn-success"],
+                                                                                    components: [{
+                                                                                        constructor: Label,
+                                                                                        props: {
+                                                                                            id: 'fa',
+                                                                                            labelType: LabelType.i,
+                                                                                            classes: ["fas","fa-columns"]
+                                                                                        }
+                                                                                    }]
+                                                                                }
+                                                                            },
+                                                                            {
+                                                                                constructor: Button,
+                                                                                props: {
+                                                                                    id: 'saveLayout',
+                                                                                    type: "button",
+                                                                                    classes: ["btn", "btn-success"],
+                                                                                    components: [{
+                                                                                        constructor: Label,
+                                                                                        props: {
+                                                                                            id: 'fa',
+                                                                                            labelType: LabelType.i,
+                                                                                            classes: ["fas","fa-save"]
+                                                                                        }
+                                                                                    }]
+                                                                                }
+                                                                            }
+                                                                        ]
+                                                                    }
+                                                                }
+                                                            ]
+                                                        }
+                                                    },
+                                                    {
+                                                        constructor: Container,
+                                                        props: {
+                                                            id: '',
+                                                            type: ContainerType.ROW,
+                                                            spacing: {h:90},
+                                                            components:[
+                                                                {
+                                                                    constructor: Container,
+                                                                    props: {
+                                                                        type: ContainerType.COLUMN,
+                                                                        spacing: {colSpan:12, h:100},
+                                                                        id: 'historySteps',
+                                                                        classes:["border"],
+                                                                        components:[
+                                                                            {
+                                                                                constructor: List,
+                                                                                props: {
+                                                                                    id: 'listHistorySteps',
+                                                                                    direction: 'vertical',
+                                                                                    multiselect: false,
+                                                                                    dataProvider: oxana.history.steps,
+                                                                                    valueField: "id",
+                                                                                    classesField: "buttonClass",
+                                                                                    defaultClasses: ["btn btn-sm btn-default"],
+                                                                                    selectedClasses: ["btn btn-sm btn-success"],    
+                                                                                    value:[{ "id": "1", "text": "Ministria e Puneve te Jashtme 1", "buttonClass": ['btn btn-xs btn-default']}],      
+                                                                                    component: {
+                                                                                        constructor: Label,
+                                                                                        props: {
+                                                                                            id: 'labelHistoryStep',
+                                                                                            value: "{id}",
+                                                                                            label: "{description}",
+                                                                                            //classes: "{buttonClass}"
+                                                                                        }
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        ]
+                                                                    }
+                                                                }
+                                                            ]
+                                                        }
                                                     }
-                                                }]
-                                            }
-                                        },
-                                        {
-                                            constructor: Button,
-                                            props: {
-                                                id: 'splitVertical',
-                                                type: "button",
-                                                label:"Split Vertical",
-                                                classes: ["btn", "btn-success"],
-                                                components: [{
-                                                    constructor: Label,
-                                                    props: {
-                                                        id: 'fa',
-                                                        classes: ["fas","fa-columns"]
-                                                    }
-                                                }]
-                                            }
-                                        },
-                                        {
-                                            constructor: Button,
-                                            props: {
-                                                id: 'saveLayout',
-                                                type: "button",
-                                                label:"Save Layout",
-                                                classes: ["btn", "btn-success"]
+                                                ]
                                             }
                                         }
-                                    ]
+                                    ]    
                                 }
                             },
                             {
@@ -126,16 +209,14 @@ var zeroCool = {
         }
     };
 
-var oxana = new App({
-    style:appStyle,
-    components:[
+oxana.components = [
         {
             constructor: ViewStack,
             props: {
                 components: [zeroCool]
             }
         }        
-    ]});
+    ];
 
 var waBehaviors = {
     "click": "BECOME_ACTIVE",
@@ -156,6 +237,9 @@ oxana.behaviors["splitVertical"]["click"] = "SPLIT_VERT";
 oxana.behaviors["saveLayout"] = {};
 oxana.behaviors["saveLayout"]["click"] = "SAVE_LAYOUT";
 
+oxana.behaviors["listHistorySteps"] = {};
+oxana.behaviors["listHistorySteps"]["change"] = "HISTORY_STEP_DETAILS";
+
 oxana.behaviors["workArea"] = waBehaviors;
 
 oxana.behaviors[oxana.rootID]["keydown"] = {
@@ -163,7 +247,12 @@ oxana.behaviors[oxana.rootID]["keydown"] = {
     "WA_REDO":isKeyCombRedo,
 };
 
+oxana.behaviorimplementations["HISTORY_STEP_DETAILS"] = function(e){
+    console.log("called HISTORY_STEP_DETAILS.");
+};
+
 oxana.behaviorimplementations["SPLIT_HOR"] = {
+    description: "Split selected container horizontally",
     do:function(e) {
         var retFromRedoMaybe = arguments[arguments.length-1];
         if(retFromRedoMaybe.container){

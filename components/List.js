@@ -162,7 +162,6 @@ var List = function (_props, overrided = false) {
     };
    
     var _defaultParams = {
-        id: 'list',
         direction: 'horizontal',
         multiselect: false,
         dataProvider: [],

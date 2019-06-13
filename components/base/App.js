@@ -245,6 +245,11 @@ var App = function(_props){
         get: function components() 
         {
             return _components;
+        },
+        set: function components(v) 
+        {
+            //TODO: Add reset logic here or deny setting components after App was inited first.
+            _components = v;
         }
     });
 
