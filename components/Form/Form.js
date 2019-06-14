@@ -100,9 +100,9 @@ var Form = function(_props)
         var type = dataType? dataType:"json";
         var _self = this;
         $.ajax({
-            url: _self.action,
+            url: _action,
             data: this.getFormData(),
-            type: "POST",
+            type: _method,
             contentType: false,
             processData: false,
             cache: false,
