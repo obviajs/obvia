@@ -363,7 +363,7 @@ var Spacing = function(_props, $el)
                 _mw = v;
                 if(_$el && v)
                 {
-                    this.setClass('mw-', v), 100;
+                    this.setClass('mw-', v, 100);
                 }
             }
         }, 

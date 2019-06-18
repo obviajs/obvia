@@ -8,8 +8,10 @@
 var Amount = function (_props, overrided = false) {
     var _self = this;
 
-    Object.defineProperty(this, "value",
-    {
+    Object.defineProperty(this, "value", {
+        get: function value() {
+            return _value;
+        },
         set: function value(v) {
             if (JSON.stringify(_value) != JSON.stringify(v)) {
                 _value.amount = v.amount;
@@ -22,7 +24,12 @@ var Amount = function (_props, overrided = false) {
     });
 
     this.changeHandler = function (e) {
-        _value.amount = this.amountInput.value;
+        if (_mask.groupSeparator) {
+            var regex = new RegExp(_mask.groupSeparator, 'g');
+            _value.amount = this.amountInput.value.replace(regex, '');
+        } else {
+            _value.amount = this.amountInput.value;
+        }
         _value.currency = this.currencySelect.value;
     };
 
@@ -46,10 +53,7 @@ var Amount = function (_props, overrided = false) {
     this.renderAmountInput = function (value) {
         this.amountInput = new TextInput({
             id: 'amountInput-' + this.id,
-            mask: {
-                alias: "decimal",
-                prefix: ''
-            },
+            mask: _mask,
             value: value
         });
 
@@ -106,7 +110,16 @@ var Amount = function (_props, overrided = false) {
         },
         currencyList: [],
         labelField: 'text',
-        valueField: 'id'
+        valueField: 'id',
+        mask: {
+            'alias': 'decimal',
+            'groupSeparator': ',',
+            'autoGroup': true,
+            'digits': 2,
+            'digitsOptional': false,
+            'placeholder': '0.00'
+        }
+
     };
     _props = extend(false, false, _defaultParams, _props);
 
@@ -114,10 +127,14 @@ var Amount = function (_props, overrided = false) {
     var _currencyList = _props.currencyList;
     var _labelField = _props.labelField;
     var _valueField = _props.valueField;
+    var _mask = _props.mask;
+    if (_mask.groupSeparator == '.') {
+        _mask.groupSeparator = ',';
+    }
     var _change = _props.change;
     var _afterAttach = _props.afterAttach;
     _props.afterAttach = this.afterAttach;
-   
+
     _props.change = function () {
         if (typeof _change == 'function')
             _change.apply(this, arguments);
