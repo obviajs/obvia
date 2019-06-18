@@ -16,6 +16,13 @@ var History = function(_props)
     var _behaviors;
     var _steps = new ArrayEx();
     var _currentIndex = -1;
+    var _id = guid();
+    Object.defineProperty(this, "id", {
+        get: function id()
+        {
+            return _id;
+        }
+    });
 
     var w = ChangeWatcher.getInstance(_steps);
     w.watch(_steps, "length", function(e){
@@ -88,6 +95,11 @@ var History = function(_props)
             if(behavior.do && typeof behavior.do == 'function'){
                 behavior.do.apply(step.thisObj, step.args.concat(step.retObj));
 
+                var redoEventObject = $.Event(HistoryEventType.HISTORY_REDONE);
+                redoEventObject.redone = step;
+                redoEventObject.next = ((_currentIndex+1 >= 0 && _currentIndex < _steps.length-1)?_steps[_currentIndex+1]:null);
+                this.trigger(redoEventObject);
+
                 var eventObject = $.Event(HistoryEventType.HISTORY_CAN_UNDO);
                 this.trigger(eventObject);
             }
@@ -107,6 +119,11 @@ var History = function(_props)
                 behavior.undo.apply(step.thisObj, step.args.concat(step.retObj));
             }
             --_currentIndex;
+            var undoEventObject = $.Event(HistoryEventType.HISTORY_UNDONE);
+            undoEventObject.undone = step;
+            undoEventObject.previous = (_currentIndex>=0?_steps[_currentIndex]:null);
+            this.trigger(undoEventObject);
+
             var eventObject = $.Event(HistoryEventType.HISTORY_CAN_REDO);
             this.trigger(eventObject);
         }else{

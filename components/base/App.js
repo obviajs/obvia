@@ -74,13 +74,19 @@ var App = function(_props){
 
     this.behaviors = {};
     this.behaviorimplementations = {};
-
+    this.behaviors[_rootID] = {};
+   
     if(_historyProps.enabled){
         _history = History.getInstance(".history_"+_rootID);
         _history.behaviors = this.behaviorimplementations;
+        _history.on(HistoryEventType.HISTORY_UNDONE + " "+HistoryEventType.HISTORY_REDONE, function(e){
+            _root.trigger(e);
+        });
+
+        this.behaviors[_rootID][HistoryEventType.HISTORY_UNDONE] = "HISTORY_UNDONE";
+        this.behaviors[_rootID][HistoryEventType.HISTORY_REDONE] = "HISTORY_REDONE";
     }
 
-    this.behaviors[_rootID] = {};
     this.behaviors[_rootID]['creationComplete'] = "APP_LOADED";
     this.behaviors[_rootID]['InactivityDetected'] = "APP_INACTIVE";
     this.behaviors[_rootID]['ActivityDetected'] = "APP_ACTIVE";

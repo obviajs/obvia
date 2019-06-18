@@ -11,6 +11,7 @@ var Repeater = function(_props)
     this.currentItem = {};
     this.rowItems = [];
     this.dataProviderKeys = [];
+    var _self = this;
 
     this.initModel = function () 
     {
@@ -151,16 +152,12 @@ var Repeater = function(_props)
     // },
 
 
-
-    
     //handle row add click
     var _addRowHandler = function () 
     {
         this.addRow(this.defaultItem, this.currentIndex + 1, true)
     };
 
-    this.bindings = {};
-    
     this.dataProviderChanged = function () 
     {
         //add or remove rows 
@@ -168,23 +165,51 @@ var Repeater = function(_props)
         if(deltaRows>0){
             for(var i=0;i<deltaRows;i++){
                 var ind = this.rowItems.length + i;
-                this.addRow(this.dataProvider[ind], ind); 
+                this.addRow(this.dataProvider[ind], ind+1); 
             }
         }else{
             for(var i=0;i>deltaRows;i--){
                 var ind = this.rowItems.length + i;
-                this.removeRow(ind); 
+                this.removeRow(ind, false, true, dpRemove = false); 
             }
         }
         //for the rows that we just added there is no need to refreshBindings
         var maxInd = deltaRows>0?this.rowItems.length-deltaRows:this.rowItems.length;
         for(var i = 0; i<maxInd;i++){
             for(var cmpID in this.rowItems[i]){
-                var cmp = his.rowItems[i][cmpID];
+                var cmp = this.rowItems[i][cmpID];
                 cmp.refreshBindings(this.dataProvider[i]);
             }
         }
     };
+
+    Object.defineProperty(this, "dataProvider", 
+    {
+        get: function dataProvider() 
+        {
+            return _dataProvider;
+        },
+        set: function dataProvider(v) 
+        {
+            if(_dataProvider != v)
+            {
+                if(_dpWatcher){
+                    _dpWatcher.reset();
+                }
+                _dataProvider = v;
+                _dpWatcher = ChangeWatcher.getInstance(_dataProvider);
+                _dpWatcher.watch(_dataProvider, "length", _dpLengthChanged);
+            }
+        }
+    });
+
+    var _dpWatcher;
+    var _dpLengthChanged = function(e)
+    {
+        _self.dataProviderChanged();
+    }
+
+    
 
     Object.defineProperty(this, "value", {
         get: function value() {
@@ -205,7 +230,7 @@ var Repeater = function(_props)
     this.addRow = function (data, index, isPreventable = false, focusOnRowAdd = true) 
     {
         console.log("addRow func")
-        var _self = this;
+        
         index = index || this.rows.length+1;
         /* model check
         var model = this.getModel();
@@ -382,16 +407,19 @@ var Repeater = function(_props)
         this.rows = [];
     };
 
-    this.removeRow = function (index, isPreventable = false, focusOnRowDelete = true) 
+    this.removeRow = function (index, isPreventable = false, focusOnRowDelete = true, dpRemove = true) 
     {
         var rowItems = {};
         /* model check
         var model = this.getModel();
         */
 
-        var removeRow = function () {
+        var removeRow = function (dpRemove = true) {
             //remove dp row
-            var removedItem = this.dataProvider.splice(index - 1, 1);
+            var removedItem;
+            if(dpRemove){
+                removedItem = this.dataProvider.splice(index - 1, 1);
+            } 
 
             //delete component instances on that row
             this.components.forEach(function (component, cI) {  
@@ -438,12 +466,12 @@ var Repeater = function(_props)
             this.$el.trigger(beforeRowDeleteEvent);
 
             if (!beforeRowDeleteEvent.isDefaultPrevented()) {
-                return removeRow.call(this);
+                return removeRow.call(this, dpRemove);
             } else {
                 return false;
             }
         } else {
-            return removeRow.call(this);
+            return removeRow.call(this, dpRemove);
         }
   
     };
@@ -477,7 +505,7 @@ var Repeater = function(_props)
         }
     };
     _props = extend(false, false, _defaultParams, _props);
-    var _dataProvider = _props.dataProvider;
+    var _dataProvider;
     var _rendering = _props.rendering;
     var _enabled = _props.enabled;
     var _container = _props.container;
@@ -495,10 +523,9 @@ var Repeater = function(_props)
 
         alert("overrided")
     };*/
-
+    this.dataProvider = _props.dataProvider;
     this.render = function () 
     {
-        var _self = this;
         var parent = this.$el.parent();
        // if(parent.length>0)
        //     this.$el.remove();
@@ -510,9 +537,12 @@ var Repeater = function(_props)
         this.focusedComponent = 0;
 
         // this.rowItems = {}; we need this if we create Repeater instances via Object.assign
-        this.dataProvider.forEach(function (data, index) {  
-            _self.addRow(data, index + 1);
-        });
+        if(_dataProvider && Array.isArray(_dataProvider))
+        {
+            this.dataProvider.forEach(function (data, index) {  
+                _self.addRow(data, index + 1);
+            });
+        }
        
         this.$el.trigger('onEndDraw');
      //   if(parent.length>0)
@@ -530,20 +560,8 @@ var Repeater = function(_props)
             }
         ];        
     };
-    Object.defineProperty(this, "dataProvider", 
-    {
-        get: function dataProvider() 
-        {
-            return _dataProvider;
-        },
-        set: function dataProvider(v) 
-        {
-            if(_dataProvider != v)
-            {
-                _dataProvider = v;
-            }
-        }
-    });
+    
+
     Object.defineProperty(this, "enabled", 
     {
         get: function enabled() 
@@ -555,7 +573,6 @@ var Repeater = function(_props)
             if(_enabled != v)
             {
                 _enabled = v;
-                var _self = this;
 
                 for (var i = 0; i < this.dataProvider.length; i++)
                 {

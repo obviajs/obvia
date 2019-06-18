@@ -139,9 +139,8 @@ var zeroCool = {
                                                                                     dataProvider: oxana.history.steps,
                                                                                     valueField: "id",
                                                                                     classesField: "buttonClass",
-                                                                                    defaultClasses: ["btn btn-sm btn-default"],
-                                                                                    selectedClasses: ["btn btn-sm btn-success"],    
-                                                                                    value:[{ "id": "1", "text": "Ministria e Puneve te Jashtme 1", "buttonClass": ['btn btn-xs btn-default']}],      
+                                                                                    defaultClasses: ["label", "label-default"],
+                                                                                    selectedClasses: ["label", "label-primary"],    
                                                                                     component: {
                                                                                         constructor: Label,
                                                                                         props: {
@@ -251,6 +250,17 @@ oxana.behaviorimplementations["HISTORY_STEP_DETAILS"] = function(e){
     console.log("called HISTORY_STEP_DETAILS.");
 };
 
+oxana.behaviorimplementations["HISTORY_UNDONE"] = function(e){
+    console.log("called HISTORY_UNDONE.");
+    Component.instances["listHistorySteps"].value = e.previous;
+
+};
+
+oxana.behaviorimplementations["HISTORY_REDONE"] = function(e){
+    console.log("called HISTORY_REDONE.");
+    Component.instances["listHistorySteps"].value = e.next;
+};
+
 oxana.behaviorimplementations["SPLIT_HOR"] = {
     description: "Split selected container horizontally",
     do:function(e) {
@@ -329,6 +339,7 @@ oxana.behaviorimplementations["SPLIT_HOR"] = {
 };
 
 oxana.behaviorimplementations["SPLIT_VERT"] = {
+    description: "Split selected container vertically",
     do:function(e) {
         var retFromRedoMaybe = arguments[arguments.length-1];
         if(retFromRedoMaybe.container){
