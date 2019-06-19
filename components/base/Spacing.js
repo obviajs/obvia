@@ -25,7 +25,7 @@ var Spacing = function(_props, $el)
             if(_colSpan != v)
             {
                 _colSpan = v;
-                if(_$el && v)
+                if(_$el && v!=null)
                 {
                     this.setClass('col-sm-', v);
                 }
@@ -46,7 +46,7 @@ var Spacing = function(_props, $el)
             if(_offset != v)
             {
                 _offset = v;
-                if(_$el && v)
+                if(_$el && v!=null)
                 {
                     this.setClass('col-sm-offset-', v);
                 }
@@ -67,7 +67,7 @@ var Spacing = function(_props, $el)
             if(_mb != v)
             {
                 _mb = v;
-                if(_$el && v)
+                if(_$el && v!=null)
                 {
                     this.setClass('mb-', v);
                 }
@@ -88,7 +88,7 @@ var Spacing = function(_props, $el)
             if(_mt != v)
             {
                 _mt = v;
-                if(_$el && v)
+                if(_$el && v!=null)
                 {
                     this.setClass('mt-', v);
                 }
@@ -109,7 +109,7 @@ var Spacing = function(_props, $el)
             if(_ml != v)
             {
                 _ml = v;
-                if(_$el && v)
+                if(_$el && v!=null)
                 {
                     this.setClass('ml-', v);
                 }
@@ -130,7 +130,7 @@ var Spacing = function(_props, $el)
             if(_mr != v)
             {
                 _mr = v;
-                if(_$el && v)
+                if(_$el && v!=null)
                 {
                     this.setClass('mr-', v);
                 }
@@ -151,7 +151,7 @@ var Spacing = function(_props, $el)
             if(_mx != v)
             {
                 _mx = v;
-                if(_$el && v)
+                if(_$el && v!=null)
                 {
                     this.setClass('mx-', v);
                 }
@@ -172,7 +172,7 @@ var Spacing = function(_props, $el)
             if(_my != v)
             {
                 _my = v;
-                if(_$el && v)
+                if(_$el && v!=null)
                 {
                     this.setClass('my-', v);
                 }
@@ -193,7 +193,7 @@ var Spacing = function(_props, $el)
             if(_pb != v)
             {
                 _pb = v;
-                if(_$el && v)
+                if(_$el && v!=null)
                 {
                     this.setClass('pb-', v);
                 }
@@ -214,7 +214,7 @@ var Spacing = function(_props, $el)
             if(_pt != v)
             {
                 _pt = v;
-                if(_$el && v)
+                if(_$el && v!=null)
                 {
                     this.setClass('pt-', v);
                 }
@@ -235,7 +235,7 @@ var Spacing = function(_props, $el)
             if(_pl != v)
             {
                 _pl = v;
-                if(_$el && v)
+                if(_$el && v!=null)
                 {
                     this.setClass('pl-', v);
                 }
@@ -256,7 +256,7 @@ var Spacing = function(_props, $el)
             if(_pr != v)
             {
                 _pr = v;
-                if(_$el && v)
+                if(_$el && v!=null)
                 {
                     this.setClass('pr-', v);
                 }
@@ -277,7 +277,7 @@ var Spacing = function(_props, $el)
             if(_px != v)
             {
                 _px = v;
-                if(_$el && v)
+                if(_$el && v!=null)
                 {
                     this.setClass('px-', v);
                 }
@@ -298,7 +298,7 @@ var Spacing = function(_props, $el)
             if(_py != v)
             {
                 _py = v;
-                if(_$el && v)
+                if(_$el && v!=null)
                 {
                     this.setClass('py-', v);
                 }
@@ -319,7 +319,7 @@ var Spacing = function(_props, $el)
             if(_p != v)
             {
                 _p = v;
-                if(_$el && v)
+                if(_$el && v!=null)
                 {
                     this.setClass('p-', v);
                 }
@@ -340,7 +340,7 @@ var Spacing = function(_props, $el)
             if(_m != v)
             {
                 _m = v;
-                if(_$el && v)
+                if(_$el && v!=null)
                 {
                     this.setClass('m-', v);
                 }
@@ -361,7 +361,7 @@ var Spacing = function(_props, $el)
             if(_mw != v)
             {
                 _mw = v;
-                if(_$el && v)
+                if(_$el && v!=null)
                 {
                     this.setClass('mw-', v, 100);
                 }
@@ -382,7 +382,7 @@ var Spacing = function(_props, $el)
             if(_w != v)
             {
                 _w = v;
-                if(_$el && v)
+                if(_$el && v!=null)
                 {
                     this.setClass('w-', v, 100);
                 }
@@ -403,7 +403,7 @@ var Spacing = function(_props, $el)
             if(_mh != v)
             {
                 _mh = v;
-                if(_$el && v)
+                if(_$el && v!=null)
                 {
                     this.setClass('mh-', v, 100);
                 }
@@ -424,7 +424,7 @@ var Spacing = function(_props, $el)
             if(_h != v)
             {
                 _h = v;
-                if(_$el && v)
+                if(_$el && v!=null)
                 {
                     this.setClass('h-', v, 100);
                 }
@@ -442,7 +442,7 @@ var Spacing = function(_props, $el)
         for(var i=0;i<pArr.length;i++)
         {
             var prop = pArr[i];
-            if (_props[prop])
+            if (_props[prop] !=null)
                 this[prop] = _props[prop];
         }       
     }

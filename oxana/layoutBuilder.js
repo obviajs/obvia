@@ -66,7 +66,6 @@ var zeroCool = {
                                                                                 props: {
                                                                                     id: 'splitHorizontal',
                                                                                     type: "button",
-                                                                                    classes: ["btn", "btn-success"],
                                                                                     components: [{
                                                                                         constructor: Label,
                                                                                         props: {
@@ -82,7 +81,6 @@ var zeroCool = {
                                                                                 props: {
                                                                                     id: 'splitVertical',
                                                                                     type: "button",
-                                                                                    classes: ["btn", "btn-success"],
                                                                                     components: [{
                                                                                         constructor: Label,
                                                                                         props: {
@@ -98,7 +96,6 @@ var zeroCool = {
                                                                                 props: {
                                                                                     id: 'saveLayout',
                                                                                     type: "button",
-                                                                                    classes: ["btn", "btn-success"],
                                                                                     components: [{
                                                                                         constructor: Label,
                                                                                         props: {

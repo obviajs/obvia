@@ -106,11 +106,13 @@ rjs.define("./components/MultiSwitch.js", "MultiSwitch");
 //Upload
 rjs.define("lib/dependencies/scripts/jquery.slimscroll.js", "SlimScroll");
 rjs.define("lib/dependencies/styles/kx-upload.css", "KxUploadCSS");
-rjs.define("lib/dependencies/scripts/resumable.js", "Resumable");
-rjs.define("./components/Upload.js", "Upload");
+
 rjs.define("./components/FormUpload.js", "FormUpload");
+
+rjs.define("./components/Form/Upload.js", "Upload");
+rjs.define("./components/SingleUpload.js", "SingleUpload");
+
 //DataGrid
- 
 rjs.define("./components//DataGrid/DataGridCellRenderer.js", "DataGridCellRenderer");
 rjs.define("./components//DataGrid/DataGridColumn.js", "DataGridColumn");
 rjs.define("./components//DataGrid/DataGrid.js", "DataGrid");
@@ -185,15 +187,14 @@ rjs.require([
         "Toggle",
         "TrippleSwitch",
         "MultiSwitch",
-        "Resumable",
         "KxUploadCSS",
         "Upload",
         "SlimScroll",
         "FormUpload",
+        "SingleUpload",
         "DataGridCellRenderer",
         "DataGridColumn",
         "DataGrid",
-        "FormUpload",
         "HRule",
         "Color",
         "Image",
@@ -235,9 +236,10 @@ rjs.require([
         //rjs.define("./examples/Toggle/example.js", "ToggleExample");
          // rjs.define("./examples/Generic/example.js","GenericExample");
         //rjs.define("./oxana/accounting/invoice.js", "Invoice");
-       rjs.define("./oxana/layoutBuilder.js", "layoutBuilder");
+       //rjs.define("./oxana/layoutBuilder.js", "layoutBuilder");
        // rjs.define("./oxana/magnetLayout.js", "magnetLayout");
-         
+       rjs.define("./examples/Upload/singleUploadExample.js", "singleUploadExample");
+      
        //rjs.define("./examples/Upload/example.js", "UploadExample");
       //  rjs.define("./examples/Form/example.js", "FormExample");
       //   rjs.define("./examples/Form/ajaxExample.js", "FormExample");
