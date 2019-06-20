@@ -537,7 +537,7 @@ var Repeater = function(_props)
         this.focusedComponent = 0;
 
         // this.rowItems = {}; we need this if we create Repeater instances via Object.assign
-        if(_dataProvider && Array.isArray(_dataProvider))
+        if(_dataProvider && _dataProvider.forEach)
         {
             this.dataProvider.forEach(function (data, index) {  
                 _self.addRow(data, index + 1);

@@ -4,6 +4,7 @@ rjs.init({debug:false});
 rjs.define("lib/EventDispatcher.js", "EventDispatcher");
 rjs.define("lib/rca/RemoteCursorEvent.js", "RemoteCursorEvent");
 rjs.define("lib/rca/RemoteObject.js", "RemoteObject");
+rjs.define("./components/base/BgStyle.js", "BgStyle");
 rjs.define("./components/base/History/History.js", "History");
 rjs.define("./components/base/History/HistoryStep.js", "HistoryStep");
 rjs.define("./components/base/History/HistoryEventType.js", "HistoryEventType");
@@ -110,7 +111,8 @@ rjs.define("lib/dependencies/styles/kx-upload.css", "KxUploadCSS");
 rjs.define("./components/FormUpload.js", "FormUpload");
 
 rjs.define("./components/Form/Upload.js", "Upload");
-rjs.define("./components/SingleUpload.js", "SingleUpload");
+rjs.define("./components/UploadEx.js", "UploadEx");
+rjs.define("./components/MultiUpload.js", "MultiUpload");
 
 //DataGrid
 rjs.define("./components//DataGrid/DataGridCellRenderer.js", "DataGridCellRenderer");
@@ -119,11 +121,16 @@ rjs.define("./components//DataGrid/DataGrid.js", "DataGrid");
  
 rjs.define("./oxana/accounting/components/CurrencyExRate.js", "CurrencyExRate");
 //Loader
- 
+
+//ProgressBar
+rjs.define("./components/ProgressBar/ProgressBar.js", "ProgressBar");
+rjs.define("./components/ProgressBar/ProgressBarStyle.js", "ProgressBarStyle");
+
 rjs.require([
         "DOMContentLoaded",
         "EventDispatcher",
         "RemoteCursorEvent",
+        "BgStyle",
         "HistoryStep",
         "History",
         "HistoryEventType",
@@ -191,13 +198,15 @@ rjs.require([
         "Upload",
         "SlimScroll",
         "FormUpload",
-        "SingleUpload",
+        "UploadEx",
         "DataGridCellRenderer",
         "DataGridColumn",
         "DataGrid",
         "HRule",
         "Color",
         "Image",
+        "ProgressBarStyle",
+        "ProgressBar",
         //
         "CurrencyExRate"
         //"TabExample",
@@ -210,6 +219,8 @@ rjs.require([
         //"AutoCompleteExample"
         //"DataGridExample",
        // "FormFieldExample"
+
+       
     ], function () {
          
         //rjs.define("./examples/Form/ffExample.js", "FormFieldExample");
@@ -238,8 +249,10 @@ rjs.require([
         //rjs.define("./oxana/accounting/invoice.js", "Invoice");
        //rjs.define("./oxana/layoutBuilder.js", "layoutBuilder");
        // rjs.define("./oxana/magnetLayout.js", "magnetLayout");
-       rjs.define("./examples/Upload/singleUploadExample.js", "singleUploadExample");
       
+      // rjs.define("./examples/Upload/singleUploadExample.js", "singleUploadExample");
+      rjs.define("./examples/ProgressBar/example.js", "example");
+
        //rjs.define("./examples/Upload/example.js", "UploadExample");
       //  rjs.define("./examples/Form/example.js", "FormExample");
       //   rjs.define("./examples/Form/ajaxExample.js", "FormExample");

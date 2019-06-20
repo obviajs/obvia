@@ -223,6 +223,10 @@ var Component = function(_props, overrided=false)
         }
     });
 
+    this.my = function(id){
+        return id+"_"+this.guid;
+    } 
+    
     this.$el = null;
     this.embedded = false;
     var tpl = this.template();
@@ -408,7 +412,7 @@ var Component = function(_props, overrided=false)
             this.$el.off.apply(this.$el, arguments);
     }
     ++Component.instanceCnt;
- 
+    
     this.getBindingExpression = function(property)
     {
         var match = getMatching(_bindings, "property",  property, true);

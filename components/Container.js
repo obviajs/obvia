@@ -21,7 +21,7 @@ var Container = function(_props)
                 if(this.$el)
                 {
                     v = v || 0;
-                    this.$el.css('width', v+"px");
+                    this.$el.css('width', v+ (_width.indexOf && _width.indexOf("%")>-1?"":"px"));
                 }
             }
         }
@@ -41,7 +41,30 @@ var Container = function(_props)
                 if(this.$el)
                 {
                     v = v || 0;
-                    this.$el.css('height', v+"px");
+                    this.$el.css('height', v+(_width.indexOf && _width.indexOf("%")>-1?"":"px"));
+                }
+            }
+        }
+    });
+
+    Object.defineProperty(this, "role",
+    {
+        get:function role(){
+            return _role;
+        },
+        set:function role(v){
+            if(_role!=v){
+                _role=v;
+                if(_role){
+                    if(this.$el){
+                        this.$el.attr('role',_role);
+                    }
+                }else
+                {
+                    if(this.$el)
+                    {
+                        this.$el.removeAttr('role');
+                    }                
                 }
             }
         }
@@ -95,14 +118,18 @@ var Container = function(_props)
     shallowCopy(extend(false, false, _defaultParams, _props), _props);
     var _width;
     var _height;
-    var _type;
+    var _type, _role;
     var _afterAttach = _props.afterAttach;
     _props.afterAttach = this.afterAttach;
    
     Parent.call(this, _props);
     
-    this.width = _props.width;
-    this.height = _props.height;
+    if(_props.width)
+        this.width = _props.width;
+    if(_props.height)
+        this.height = _props.height;
+    if(_props.role)
+        this.role = _props.role;
 
     if(_props.type && _props.type !="")
         this.type = _props.type; 

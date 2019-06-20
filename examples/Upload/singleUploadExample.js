@@ -1,10 +1,13 @@
-var singleUpload = new SingleUpload({
+/*
+var singleUpload = new UploadEx({
     id: 'upload',
-    colspan: '4',
-    spacing: { mb: '5' },
-    multiple: true,
-    allowDrop: true,
-    target: 'http://phptest/upload.php'
+    multiple: true
+});
+$('#root').append(singleUpload.render());
+*/
+
+var multiUpl = new MultiUpload({
+
 });
 
-$('#root').append(singleUpload.render());
+$('#root').append(multiUpl.render());
