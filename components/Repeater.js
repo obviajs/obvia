@@ -209,8 +209,6 @@ var Repeater = function(_props)
         _self.dataProviderChanged();
     }
 
-    
-
     Object.defineProperty(this, "value", {
         get: function value() {
             var value = {};
@@ -318,7 +316,7 @@ var Repeater = function(_props)
                 });
                 el.on('change', function (e) {
                     var currentItem = _self.dataProvider[index - 1];
-                    if (component.props.value[0] == '{' && component.props.value[component.props.value.length - 1] == '}') {
+                    if (component.props.value && isString(component.props.value) && component.props.value[0] == '{' && component.props.value[component.props.value.length - 1] == '}') {
                         var bindedValue = component.props.value.slice(1, -1);
                         var path = bindedValue.split(".");
                         if (path.length > 1) {

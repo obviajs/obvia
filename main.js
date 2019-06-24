@@ -250,8 +250,8 @@ rjs.require([
        //rjs.define("./oxana/layoutBuilder.js", "layoutBuilder");
        // rjs.define("./oxana/magnetLayout.js", "magnetLayout");
       
-      // rjs.define("./examples/Upload/singleUploadExample.js", "singleUploadExample");
-      rjs.define("./examples/ProgressBar/example.js", "example");
+       rjs.define("./examples/Upload/singleUploadExample.js", "singleUploadExample");
+      //rjs.define("./examples/ProgressBar/example.js", "example");
 
        //rjs.define("./examples/Upload/example.js", "UploadExample");
       //  rjs.define("./examples/Form/example.js", "FormExample");

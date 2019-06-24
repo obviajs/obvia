@@ -229,6 +229,8 @@ var Component = function(_props, overrided=false)
     
     this.$el = null;
     this.embedded = false;
+
+    
     var tpl = this.template();
     if('jquery' in Object(tpl))
         this.$el = tpl;
@@ -326,10 +328,11 @@ var Component = function(_props, overrided=false)
                 _props.afterAttach.apply(this, arguments);
             if(!e.isDefaultPrevented()){
                 this.trigger('creationComplete');
-                console.log("creation Complete: Type:",this.ctor +" id:"+ this.$el.attr("id"));
             }
+            console.log("AfterAttach : Type:",this.ctor+" id:"+ this.$el.attr("id"));
         }
     };
+
     //action methods on component
     this.show = function ()
     {
@@ -391,6 +394,7 @@ var Component = function(_props, overrided=false)
                                 )
                             ]);
                         }
+                        //console.log(_self.$el.attr('id'), arguments[0]);
                         return fnc.apply(_self, args);
                     });
                 else
@@ -467,57 +471,64 @@ var Component = function(_props, overrided=false)
         this.keepBase();
     }
 
+    var _self = this;
+   //"#" + this.$el.attr('id'), 
+    this.initEvents = function (element, mode=1) //1:real component, 0:surrogate i.e no real DOM element 
+    {
+        //execute inner handlers if theres any registered
+        var handlers = [];
+       
+        if (_self['registerEvents'] && (typeof _self.registerEvents == 'function'))
+        {
+            handlers = _self.registerEvents();
+            //call inner event
+            handlers.forEach(function (handler, i) {
+                for (var innerEventIn in handler.events) {
+                    if (typeof handler.events[innerEventIn] == 'function') {
+                        if(handler.registerTo != undefined && handler.registerTo != null){
+                            handler.registerTo.on(innerEventIn, (function (innerEventIn, component) { // a closure is created
+                                return function () {
+                                    var args = [];
+                                    for (var i = 0; i < arguments.length; i++) {
+                                        args.push(arguments[i]);
+                                    }
+
+                                    //append RepeaterEventArgs to event
+                                    if (component.parentType && component.parentType == 'repeater') {
+                                        args = args.concat(
+                                            [
+                                                new RepeaterEventArgs(
+                                                    component.parent.rowItems[component.repeaterIndex],
+                                                    component.parent.dataProvider[component.repeaterIndex],
+                                                    component.repeaterIndex
+                                                )
+                                            ]
+                                        );
+                                    }
+                                    handler.events[innerEventIn].apply(component, args);
+                                }
+                            })(innerEventIn, _self));
+                        }else
+                        {
+                            console.log("Event handler registration on '"+_self.id+"' failed because the target is undefined");
+                        }
+                    }
+                }
+            });
+        }
+        if(mode==1)
+            _self.trigger('afterAttach');
+    }
+    
     //execute functions before component attached on dom
     if (this['beforeAttach'] && (typeof this.beforeAttach == 'function'))
-    this.beforeAttach();
+        this.beforeAttach();
 
-   //"#" + this.$el.attr('id'), 
-   Component.ready(this, function (element) {
-       //execute inner handlers if theres any registered
-       var handlers = [];
-       var _self = this;
-       if (_self['registerEvents'] && (typeof _self.registerEvents == 'function'))
-       {
-           handlers = _self.registerEvents();
-           //call inner event
-           handlers.forEach(function (handler, i) {
-               for (var innerEventIn in handler.events) {
-                   if (typeof handler.events[innerEventIn] == 'function') {
-                       if(handler.registerTo != undefined && handler.registerTo != null){
-                           handler.registerTo.on(innerEventIn, (function (innerEventIn, component) { // a closure is created
-                               return function () {
-                                   var args = [];
-                                   for (var i = 0; i < arguments.length; i++) {
-                                       args.push(arguments[i]);
-                                   }
-
-                                   //append RepeaterEventArgs to event
-                                   if (component.parentType && component.parentType == 'repeater') {
-                                       args = args.concat(
-                                           [
-                                               new RepeaterEventArgs(
-                                                   component.parent.rowItems[component.repeaterIndex],
-                                                   component.parent.dataProvider[component.repeaterIndex],
-                                                   component.repeaterIndex
-                                               )
-                                           ]
-                                       );
-                                   }
-                                   handler.events[innerEventIn].apply(component, args);
-                               }
-                           })(innerEventIn, _self));
-                       }else
-                       {
-                           console.log("Event handler registration on '"+_self.id+"' failed because the target is undefined");
-                       }
-                   }
-               }
-           });
-       }
-       _self.trigger('afterAttach');
-   });
-   
+    Component.ready(this, function(element){
+        _self.initEvents(element);
+    });
 }
+
 Component.instanceCnt = 0;
 Component.fromLiteral = function(_literal, bindingDefaultContext=null)
 {
@@ -552,7 +563,8 @@ Component.fromLiteral = function(_literal, bindingDefaultContext=null)
         return el;
     }
 }
-Component.listeners = []
+Component.listeners = [];
+Component.objListeners = {};
 Component.MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
 
 Component.ready = function(cmp, fn) 
@@ -564,6 +576,10 @@ Component.ready = function(cmp, fn)
             element: cmp,
             fn: fn
         });
+        if(Component.objListeners[cmp.domID]==null){
+            Component.objListeners[cmp.domID] = [];
+        }
+        Component.objListeners[cmp.domID].push({"element":cmp, "fn":fn});
     }
     if (!Component.observer) 
     {

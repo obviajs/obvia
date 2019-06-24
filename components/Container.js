@@ -21,7 +21,7 @@ var Container = function(_props)
                 if(this.$el)
                 {
                     v = v || 0;
-                    this.$el.css('width', v+ (_width.indexOf && _width.indexOf("%")>-1?"":"px"));
+                    this.$el.css('width', v+ (isString(_width) && _width.indexOf("%")>-1?"":"px"));
                 }
             }
         }
@@ -41,7 +41,7 @@ var Container = function(_props)
                 if(this.$el)
                 {
                     v = v || 0;
-                    this.$el.css('height', v+(_width.indexOf && _width.indexOf("%")>-1?"":"px"));
+                    this.$el.css('height', v+(isString(_width) && _width.indexOf("%")>-1?"":"px"));
                 }
             }
         }

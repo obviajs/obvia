@@ -1,6 +1,9 @@
 var LabelType =
 {
     "i":"i",
+    "b":"b",
+    "u":"u",
     "span":"span",
-    "label":"label"
+    "label":"label",
+    "paragraph":"p"
 }

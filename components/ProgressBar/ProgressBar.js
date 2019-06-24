@@ -100,7 +100,7 @@ var ProgressBar=function(_props, overrided=false){
         valueNow: 25,
         valueMin: 0,
         valueMax: 100,
-        classes:['progress-bar'],
+        classes:[ProgressBarStyle.PROGRESS],
         type: ContainerType.NONE
     };
     _props=extend(false,false,_defaultParams,_props);

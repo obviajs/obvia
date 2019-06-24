@@ -7,16 +7,30 @@
 var UploadEx = function (_props, overrided = false) {
     var _self = this;
     var _cmp;
-    var _upload, _lblFileName, _btnRemove, _removeColumn;
-
+    var _upload, _lblFileName, _btnRemove, _removeColumn, _iconLbl, _lblFileSize;
+    var _lastFileTypeIcon;
     var upload_change = function(e){
-        console.log("File(s) selected");
+
+        var classes = _iconLbl.classes.slice(0);
+        if(_lastFileTypeIcon)
+            classes = classes.splice(classes.indexOf(_lastFileTypeIcon),1);
+        classes.pushUnique("fas");
+        classes.pushUnique("fa-lg");
+        classes.pushUnique("align-middle");
+        classes.pushUnique(getFontAwesomeIconFromMIME(e.target.files[0].type));
+        _iconLbl.classes = classes; 
+        
+        console.log("File(s) selected, type: "+e.target.files[0].type+" "+getFontAwesomeIconFromMIME(e.target.files[0].type));
         var arr = [];
         for(var i=0;i<e.target.files.length;i++){
             arr.push(e.target.files[i].name);
         }
         _lblFileName.label = arr.join(",");
+        _self.$el.trigger(e);
         //e.target.files[0].name
+        _lastFileTypeIcon = getFontAwesomeIconFromMIME(e.target.files[0].type);
+        
+        _lblFileSize.label = formatBytes(e.target.files[0].size);
     }
     
     var selectBtn_click = function(){
@@ -39,11 +53,12 @@ var UploadEx = function (_props, overrided = false) {
 
     var _container;
     
-    var fn = whenDefined(this, "guid", function(){
+    var fnContainerDelayInit = whenDefined(this, "guid", function(){
         _container = {
             constructor: Container,
             props: {
-                id: "mainContainer",
+                id: _self.id,
+                guid: _self.guid,
                 type: ContainerType.NONE,
                 //width:,
                 components:[
@@ -57,9 +72,27 @@ var UploadEx = function (_props, overrided = false) {
                                 {
                                     constructor: Container,
                                     props: {
+                                        id: "iconColumn_"+_self.guid,
+                                        type: ContainerType.COLUMN,
+                                        spacing: {colSpan:1,pr:0, pl:5},
+                                        classes:["border"],
+                                        components:[
+                                            {
+                                                constructor: Label,
+                                                props: {
+                                                    id: "iconLbl_"+_self.guid,
+                                                    labelType: LabelType.i
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    constructor: Container,
+                                    props: {
                                         id: "fileNameColumn_"+_self.guid,
                                         type: ContainerType.COLUMN,
-                                        spacing: {colSpan:9},
+                                        spacing: {colSpan:7},
                                         classes:["border"],
                                         components:[
                                             {
@@ -75,6 +108,23 @@ var UploadEx = function (_props, overrided = false) {
                                                     id: "uploadInput_"+_self.guid,
                                                     classes:["d-none"],
                                                     change: upload_change
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    constructor: Container,
+                                    props: {
+                                        id: "fileSizeColumn_"+_self.guid,
+                                        type: ContainerType.COLUMN,
+                                        spacing: {colSpan:1},
+                                        classes:["border"],
+                                        components:[
+                                            {
+                                                constructor: Label,
+                                                props: {
+                                                    id: "fileSize_"+_self.guid,
                                                 }
                                             }
                                         ]
@@ -319,11 +369,23 @@ var UploadEx = function (_props, overrided = false) {
         }
     });
 
+    Object.defineProperty(this, "upload", 
+    {
+        get: function upload() 
+        {
+            return _upload;
+        }
+    });
+    
     this.template = function () { 
-        fn();
+        fnContainerDelayInit();
         _cmp = Component.fromLiteral(_container);
         _upload = _cmp.children[this.my("mainRow")].children[this.my("fileNameColumn")].children[this.my("uploadInput")];
+        _iconLbl = _cmp.children[this.my("mainRow")].children[this.my("iconColumn")].children[this.my("iconLbl")];
+
         _lblFileName = _cmp.children[this.my("mainRow")].children[this.my("fileNameColumn")].children[this.my("fileName")];
+        _lblFileSize = _cmp.children[this.my("mainRow")].children[this.my("fileSizeColumn")].children[this.my("fileSize")];
+       
         _btnRemove = _cmp.children[this.my("mainRow")].children[this.my("controlsColumn")].children[this.my("controlsCont")].children[this.my("controlsRow")].children[this.my("removeColumn")].children[this.my("removeBtn")];
         _removeColumn = _cmp.children[this.my("mainRow")].children[this.my("controlsColumn")].children[this.my("controlsCont")].children[this.my("controlsRow")].children[this.my("removeColumn")];
         this.$el = _cmp.$el;
@@ -343,6 +405,10 @@ var UploadEx = function (_props, overrided = false) {
 
     _props = extend(false, false, _defaultParams, _props);
 
+    this.beforeAttach = function() {
+        this.initEvents(this.$el, 0);
+    }
+
     Component.call(this, _props);
 
     if(_props.multiple)
@@ -355,6 +421,7 @@ var UploadEx = function (_props, overrided = false) {
     this.render = function () {
         return this.$el;
     };
+    
 };
 
 UploadEx.prototype.ctor = 'UploadEx';
