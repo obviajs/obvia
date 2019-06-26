@@ -85,7 +85,10 @@ var Upload = function (_props, overrided = false) {
             }
         }
     });
-    
+    this.reset = function(){
+        this.$el.wrap('<form class="d-none">').closest('form').get(0).reset();
+        this.$el.unwrap();
+    }
     this.fileDialog = function() {
         this.$el.click();
     }

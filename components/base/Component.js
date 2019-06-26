@@ -2,14 +2,13 @@ var Component = function(_props, overrided=false)
 {
     var _defaultParams = {
         id: "Component_"+Component.instanceCnt,
-        enabled: true,
         classes: [],
         guid: guid()
     };
     shallowCopy(extend(false, false, _defaultParams, _props), _props);
     var _guid = _props.guid;
     var _id = _props.id =="" ? _defaultParams.id : _props.id;
-    var _enabled = _props.enabled;
+    var _enabled;
     var _classes = [];
     var _parent = _props.parent;
     var _mousedown = _props.mousedown;
@@ -143,7 +142,8 @@ var Component = function(_props, overrided=false)
                     });
             }
         },
-        configurable: true
+        configurable: true,
+        enumerable:true
     });
 
     Object.defineProperty(this, "readonly",
@@ -237,6 +237,9 @@ var Component = function(_props, overrided=false)
     else if(tpl && tpl!="")
         this.$el = $(tpl);
     
+    if(_props.enabled!=null)
+        this.enabled = _props.enabled;
+
     var _spacing = new Spacing(_props.spacing, this.$el);
 
     if(_props.classes)
@@ -463,7 +466,10 @@ var Component = function(_props, overrided=false)
         this.base = {};
         for(var prop in this)
         {
-            this.base[prop] = this[prop];
+            if(isGetter(this, prop))
+                copyAccessor(prop, this, this.base);
+            else    
+                this.base[prop] = this[prop];
         }
     }
     if(overrided)
@@ -519,7 +525,7 @@ var Component = function(_props, overrided=false)
         if(mode==1)
             _self.trigger('afterAttach');
     }
-    
+
     //execute functions before component attached on dom
     if (this['beforeAttach'] && (typeof this.beforeAttach == 'function'))
         this.beforeAttach();

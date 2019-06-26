@@ -94,7 +94,9 @@ var Form = function(_props)
     {
         _formData = undefined;
     };
-
+    this.reset = function(){
+        this.$el.get(0).reset();
+    };
     this.post = function(dataType)
     {
         var type = dataType? dataType:"json";
@@ -108,6 +110,7 @@ var Form = function(_props)
             cache: false,
             "dataType": type, 
             xhr: function(){
+                _self.trigger(FormEventType.POST_STARTED);     
                 var cXhr = $.ajaxSettings.xhr();
                 if(cXhr.upload){
                     cXhr.upload.addEventListener('progress', 
@@ -116,13 +119,14 @@ var Form = function(_props)
                             var max = e.total;
                             var current = e.loaded;
                     
-                            var Percentage = (current * 100)/max;
-                            console.log(Percentage);
+                            var percentage = (current * 100)/max;
+                            console.log(percentage);
                     
-                            if(Percentage >= 100)
+                            if(percentage >= 100)
                             {
                                // process completed  
                             }
+                            e.percentage = percentage;
                         }
                         _self.trigger(FormEventType.POST_PROGRESS, [e]);        
                     }
@@ -130,14 +134,14 @@ var Form = function(_props)
                 }
                 return cXhr;
             },
-            error: function(err){
-                console.error(err);
-                _self.trigger(FormEventType.POST_ERROR, [err]);
+            error: function(jqXHR,  textStatus, errorThrown){
+                console.error(errorThrown);
+                _self.trigger(FormEventType.POST_ERROR, [jqXHR,  textStatus, errorThrown]);
             },
-            success: function(data){
-                _self.trigger(FormEventType.POST_SUCCESS, [data]);
+            success: function(data, textStatus, jqXHR){
+                _self.trigger(FormEventType.POST_SUCCESS, [data, textStatus, jqXHR]);
             },
-            complete: function(jqXHR, textStatus){
+            always: function(jqXHR, textStatus){
                 _self.trigger(FormEventType.POST_COMPLETE, [jqXHR, textStatus]);
             }
         });

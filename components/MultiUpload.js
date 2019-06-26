@@ -32,7 +32,8 @@ var MultiUpload = function (_props, overrided = false) {
                                     constructor: UploadEx,
                                     props: {
                                         id: "upload_"+_self.guid,
-                                        change: _upload_change
+                                        change: _upload_change,
+                                        form: _form
                                     }
                                 }
                             ]
@@ -162,19 +163,17 @@ var MultiUpload = function (_props, overrided = false) {
         multiple: false,
         showBtnRemove: false,
         dataProvider: [],
-        valueField: "id",
-        value: [],
-
+        form: null
     };
 
-    var _multiple, _accept, _showBtnRemove;
+    var _multiple, _accept, _showBtnRemove, _form;
 
     _props = extend(false, false, _defaultParams, _props);
     
     this.beforeAttach = function() {
         this.initEvents(this.$el, 0);
     }
-
+    _form = _props.form;
     Component.call(this, _props, true);
 
     if(_props.multiple)
@@ -183,6 +182,7 @@ var MultiUpload = function (_props, overrided = false) {
         this.accept = _props.accept;  
     if(_props.showBtnRemove!=null)
         this.showBtnRemove = _props.showBtnRemove;
+   
     
     var base = this.base;
     this.destruct = function (mode=1)

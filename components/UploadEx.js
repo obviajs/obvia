@@ -7,48 +7,128 @@
 var UploadEx = function (_props, overrided = false) {
     var _self = this;
     var _cmp;
-    var _upload, _lblFileName, _btnRemove, _removeColumn, _iconLbl, _lblFileSize;
+    var _upload, _lblFileName, _btnRemove, _removeColumn, _iconLbl, _lblFileSize, _progressBar, _progressRow, _btnUpload, _btnDownload, _btnSelect;
     var _lastFileTypeIcon;
     var upload_change = function(e){
-
-        var classes = _iconLbl.classes.slice(0);
-        if(_lastFileTypeIcon)
-            classes = classes.splice(classes.indexOf(_lastFileTypeIcon),1);
-        classes.pushUnique("fas");
-        classes.pushUnique("fa-lg");
-        classes.pushUnique("align-middle");
-        classes.pushUnique(getFontAwesomeIconFromMIME(e.target.files[0].type));
-        _iconLbl.classes = classes; 
-        
-        console.log("File(s) selected, type: "+e.target.files[0].type+" "+getFontAwesomeIconFromMIME(e.target.files[0].type));
-        var arr = [];
-        for(var i=0;i<e.target.files.length;i++){
-            arr.push(e.target.files[i].name);
-        }
-        _lblFileName.label = arr.join(",");
+        init(e.target.files);
         _self.$el.trigger(e);
-        //e.target.files[0].name
-        _lastFileTypeIcon = getFontAwesomeIconFromMIME(e.target.files[0].type);
-        
-        _lblFileSize.label = formatBytes(e.target.files[0].size);
     }
-    
+
+    var init = function(files){
+        if((Array.isArray(files) || BinUtils.isFileList(files)) && files.length>0)
+        {
+            if(files[0]["url"]==null){
+                _btnDownload.enabled = false;
+            }
+
+            if(BinUtils.isFile(files[0]) || BinUtils.isBlob(files[0])){
+                _btnUpload.enabled = true;
+            }
+
+            var classes = _iconLbl.classes.slice(0);
+            if(_lastFileTypeIcon)
+                classes = classes.splice(classes.indexOf(_lastFileTypeIcon),1);
+            classes.pushUnique("fas");
+            classes.pushUnique("fa-lg");
+            classes.pushUnique("align-middle");
+            if(files.length>1)
+                _lastFileTypeIcon = "fa-files";
+            else if(files.length>0){
+                _lastFileTypeIcon = getFontAwesomeIconFromMIME(files[0].type);
+                if(_lastFileTypeIcon==null)  
+                    _lastFileTypeIcon = "fa-file";  
+            }
+            else
+                _lastFileTypeIcon = null;
+            if(_lastFileTypeIcon!=null)  
+                classes.pushUnique(_lastFileTypeIcon);
+            
+            _iconLbl.classes = classes; 
+            
+            //console.log("File(s) selected, type: "+e.target.files[0].type+" "+_lastFileTypeIcon);
+            var arr = [], size;
+            for(var i=0;i<files.length;i++){
+                arr.push(files[i].name);
+                if(files[i].size && !isNaN(files[i].size))
+                    if(size==null)
+                        size = 0;
+                    size += files[i].size;
+            }
+            _lblFileName.label = arr.length>0?arr.join(","):"No file selected.";
+            if(size==null)
+                _lblFileSize.label = "";
+            else
+                _lblFileSize.label = formatBytes(size); 
+        }else{
+            _btnDownload.enabled = false;
+            _btnUpload.enabled = false;
+            _btnRemove.enabled = false;
+        }
+    }
+
     var selectBtn_click = function(){
         _upload.fileDialog();
         console.log("selectBtn_click");
     }
+    
+    this.ajaxUpload = function(){
+        if(_form && _form.ctor && _form.ctor == 'Form'){
+            _form.removeFormData(this.id);
+            _form.off(FormEventType.POST_ERROR, _ajaxUpload_error);
+            _form.off(FormEventType.POST_SUCCESS, _ajaxUpload_success);
+            _form.off(FormEventType.POST_PROGRESS, _ajaxUpload_progress);
+            _form.off(FormEventType.POST_COMPLETE, _ajaxUpload_complete);
+            _form.off(FormEventType.POST_STARTED, _ajaxUpload_started);
+            
+            _form.on(FormEventType.POST_ERROR, _ajaxUpload_error);
+            _form.on(FormEventType.POST_SUCCESS, _ajaxUpload_success);
+            _form.on(FormEventType.POST_PROGRESS, _ajaxUpload_progress);
+            _form.on(FormEventType.POST_COMPLETE, _ajaxUpload_complete);
+            _form.on(FormEventType.POST_STARTED, _ajaxUpload_started);
 
-    var uploadBtn_click = function(){
+            for(var i=0;i<_upload.files.length;i++){
+                 _form.addFormData(_upload.id, _upload.files[i]);
+            }
+            _form.post();
+        }
+    }
 
+    this.ajaxDownload = function(){
+        if(_value && Array.isArray(_value) && _value.length>0)
+            downloadFromUrl(_value[0].name, _value[0].url).then().catch();
+    }
+
+    var uploadBtn_click = function(e){
+        _self.ajaxUpload();
+    }
+    var _ajaxUpload_error = function(e, jqXHR,  textStatus, errorThrown){
+        setTimeout(_ajaxUpload_complete, 500);
+    }
+    var _ajaxUpload_success = function(e, textStatus, jqXHR){
+        setTimeout(_ajaxUpload_complete, 500);
+    }
+    var _ajaxUpload_progress = function(e, xhrProgressEvt){
+        _progressBar.valueNow = xhrProgressEvt.percentage;
+    }
+    var _ajaxUpload_started = function(e){
+        var classes = _progressRow.classes.slice(0);
+        classes.splice(classes.indexOf("d-none"),1);
+        _progressBar.valueNow = 0;
+        _progressRow.classes = classes; 
+        
+    }
+    var _ajaxUpload_complete = function(e){
+        var classes = _progressRow.classes.slice(0);
+        classes.pushUnique("d-none");
+        _progressRow.classes = classes; 
     }
 
     var downloadBtn_click = function(){
-
+        _self.ajaxDownload();
     }
 
-
     var removeBtn_click = function(){
-
+        this.value = null;
     }
 
     var _container;
@@ -99,7 +179,7 @@ var UploadEx = function (_props, overrided = false) {
                                                 constructor: Label,
                                                 props: {
                                                     id: "fileName_"+_self.guid,
-                                                    label:"filename.jpg"
+                                                    label:"No file selected."
                                                 }
                                             },
                                             {
@@ -193,6 +273,7 @@ var UploadEx = function (_props, overrided = false) {
                                                                                     props: {
                                                                                         id: "uploadBtn_"+_self.guid,
                                                                                         type: "button",
+                                                                                        enabled:false,
                                                                                         components: [{
                                                                                             constructor: Label,
                                                                                             props: {
@@ -220,6 +301,7 @@ var UploadEx = function (_props, overrided = false) {
                                                                                     props: {
                                                                                         id: "downloadBtn_"+_self.guid,
                                                                                         type: "button",
+                                                                                        enabled:false,
                                                                                         components: [{
                                                                                             constructor: Label,
                                                                                             props: {
@@ -247,6 +329,7 @@ var UploadEx = function (_props, overrided = false) {
                                                                                     props: {
                                                                                         id: "removeBtn_"+_self.guid,
                                                                                         type: "button",
+                                                                                        enabled:false,
                                                                                         components: [{
                                                                                             constructor: Label,
                                                                                             props: {
@@ -287,8 +370,22 @@ var UploadEx = function (_props, overrided = false) {
                                         id: "progressColumn_"+_self.guid,
                                         type: ContainerType.COLUMN,
                                         spacing: {colSpan:12,pl:0},
-                                        classes:["border"],
-                                        components:[]
+                                        classes:["border", "progress"],
+                                        height: 5,
+                                        components:[
+                                            {
+                                                constructor: ProgressBar,
+                                                props: {
+                                                    id:"progressbar_"+_self.guid,
+                                                    valueNow: 0,
+                                                    valueMin: 0,
+                                                    valueMax: 100,
+                                                    width: "100%",
+                                                    height: "100%",
+                                                    classes: [BgStyle.BG_INFO, ProgressBarStyle.PROGRESS, ProgressBarStyle.PROGRESS_ANIMATED, ProgressBarStyle.PROGRESS_STRIPED]
+                                                }
+                                            }
+                                        ]
                                     }
                                 }
                             ]
@@ -376,16 +473,40 @@ var UploadEx = function (_props, overrided = false) {
             return _upload;
         }
     });
-    
+
+    Object.defineProperty(this, "value",
+    {
+        get: function value() {
+            return _value;
+        },
+        set: function value(v) {
+            if (_value != v) {
+                _value = v;
+                if (_value) {
+                    if(!Array.isArray(_value))
+                        _value = [_value];
+                    init(_value);
+                } else {
+                    init([{url:"", name:"", size:"", type:""}]);
+                    _upload.reset();
+                }
+            }
+        }
+    });
+
     this.template = function () { 
         fnContainerDelayInit();
         _cmp = Component.fromLiteral(_container);
         _upload = _cmp.children[this.my("mainRow")].children[this.my("fileNameColumn")].children[this.my("uploadInput")];
         _iconLbl = _cmp.children[this.my("mainRow")].children[this.my("iconColumn")].children[this.my("iconLbl")];
+        _progressRow =  _cmp.children[this.my("progressRow")];
+        _progressBar =  _cmp.children[this.my("progressRow")].children[this.my("progressColumn")].children[this.my("progressbar")];  
 
         _lblFileName = _cmp.children[this.my("mainRow")].children[this.my("fileNameColumn")].children[this.my("fileName")];
         _lblFileSize = _cmp.children[this.my("mainRow")].children[this.my("fileSizeColumn")].children[this.my("fileSize")];
-       
+        _btnSelect = _cmp.children[this.my("mainRow")].children[this.my("controlsColumn")].children[this.my("controlsCont")].children[this.my("controlsRow")].children[this.my("selectColumn")].children[this.my("selectBtn")];
+        _btnUpload = _cmp.children[this.my("mainRow")].children[this.my("controlsColumn")].children[this.my("controlsCont")].children[this.my("controlsRow")].children[this.my("uploadColumn")].children[this.my("uploadBtn")];
+        _btnDownload = _cmp.children[this.my("mainRow")].children[this.my("controlsColumn")].children[this.my("controlsCont")].children[this.my("controlsRow")].children[this.my("downloadColumn")].children[this.my("downloadBtn")];
         _btnRemove = _cmp.children[this.my("mainRow")].children[this.my("controlsColumn")].children[this.my("controlsCont")].children[this.my("controlsRow")].children[this.my("removeColumn")].children[this.my("removeBtn")];
         _removeColumn = _cmp.children[this.my("mainRow")].children[this.my("controlsColumn")].children[this.my("controlsCont")].children[this.my("controlsRow")].children[this.my("removeColumn")];
         this.$el = _cmp.$el;
@@ -394,18 +515,17 @@ var UploadEx = function (_props, overrided = false) {
 
     var _defaultParams = {
         multiple: false,
-        showBtnRemove: false,
-        dataProvider: [],
-        valueField: "id",
         value: [],
+        form: null
 
     };
 
-    var _multiple, _accept, _showBtnRemove;
+    var _multiple, _accept, _showBtnRemove, _form, _value;
 
     _props = extend(false, false, _defaultParams, _props);
 
     this.beforeAttach = function() {
+        //init events for this surrogate component.
         this.initEvents(this.$el, 0);
     }
 
@@ -417,11 +537,9 @@ var UploadEx = function (_props, overrided = false) {
         this.accept = _props.accept;  
     if(_props.showBtnRemove!=null)
         this.showBtnRemove = _props.showBtnRemove;
-
-    this.render = function () {
-        return this.$el;
-    };
-    
+    if(_props.value!=null)
+        this.value = _props.value;
+        
+    _form = _props.form;
 };
-
 UploadEx.prototype.ctor = 'UploadEx';

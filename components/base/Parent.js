@@ -172,7 +172,8 @@ var Parent = function(_props, overrided=false)
             _creationFinished = true;
     }
 
-    Component.call(this, _props);
+    Component.call(this, _props, true);
+    var base = this.base;
     if(overrided)
     {
         this.keepBase();
@@ -190,6 +191,7 @@ var Parent = function(_props, overrided=false)
             if(_enabled != v)
             {
                 _enabled = v;
+                base.enabled = v;
                 for(var childId in this.children)
                 {
                     this.children[childId].enabled = v;
