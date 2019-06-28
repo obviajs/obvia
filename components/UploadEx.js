@@ -9,8 +9,9 @@ var UploadEx = function (_props, overrided = false) {
     var _cmp;
     var _upload, _lblFileName, _btnRemove, _removeColumn, _iconLbl, _lblFileSize, _progressBar, _progressRow, _btnUpload, _btnDownload, _btnSelect;
     var _lastFileTypeIcon;
+
     var upload_change = function(e){
-        init(e.target.files);
+        _self.value = e.target.files;
         _self.$el.trigger(e);
     }
 
@@ -73,7 +74,7 @@ var UploadEx = function (_props, overrided = false) {
     
     this.ajaxUpload = function(){
         if(_form && _form.ctor && _form.ctor == 'Form'){
-            _form.removeFormData(this.id);
+            _form.removeFormData(_upload.id+"[]");
             _form.off(FormEventType.POST_ERROR, _ajaxUpload_error);
             _form.off(FormEventType.POST_SUCCESS, _ajaxUpload_success);
             _form.off(FormEventType.POST_PROGRESS, _ajaxUpload_progress);
@@ -87,7 +88,7 @@ var UploadEx = function (_props, overrided = false) {
             _form.on(FormEventType.POST_STARTED, _ajaxUpload_started);
 
             for(var i=0;i<_upload.files.length;i++){
-                 _form.addFormData(_upload.id, _upload.files[i]);
+                 _form.addFormData(_upload.id+"[]", _upload.files[i]);
             }
             _form.post();
         }
@@ -104,8 +105,11 @@ var UploadEx = function (_props, overrided = false) {
     var _ajaxUpload_error = function(e, jqXHR,  textStatus, errorThrown){
         setTimeout(_ajaxUpload_complete, 500);
     }
-    var _ajaxUpload_success = function(e, textStatus, jqXHR){
+    var _ajaxUpload_success = function(e, data, textStatus, jqXHR){
         setTimeout(_ajaxUpload_complete, 500);
+        for(var i=0;i<_value.length;i++){
+            _value[i].url = data[_upload.id][i].url;
+        }
     }
     var _ajaxUpload_progress = function(e, xhrProgressEvt){
         _progressBar.valueNow = xhrProgressEvt.percentage;
@@ -483,8 +487,8 @@ var UploadEx = function (_props, overrided = false) {
             if (_value != v) {
                 _value = v;
                 if (_value) {
-                    if(!Array.isArray(_value))
-                        _value = [_value];
+                    if(!Array.isArray(_value) && !BinUtils.isFileList(_value))
+                    _value = _upload.files = [_value];
                     init(_value);
                 } else {
                     init([{url:"", name:"", size:"", type:""}]);
@@ -514,7 +518,7 @@ var UploadEx = function (_props, overrided = false) {
     };
 
     var _defaultParams = {
-        multiple: false,
+        multiple: true,
         value: [],
         form: null
 
@@ -531,7 +535,7 @@ var UploadEx = function (_props, overrided = false) {
 
     Component.call(this, _props);
 
-    if(_props.multiple)
+    if(_props.multiple!=null)
         this.multiple = _props.multiple;
     if(_props.accept)
         this.accept = _props.accept;  

@@ -454,6 +454,9 @@ var Component = function(_props, overrided=false)
                     //this here refers to window context
                     var defaultBindTo = "currentItem_"+_self.guid;
                     this[defaultBindTo] = (currentItem || Component.defaultContext);
+                    if(!("currentItem" in this[defaultBindTo])){
+                        this[defaultBindTo]["currentItem"] = this[defaultBindTo];
+                    }
                    // var context = extend(false, true, this, obj);
                    _watchers.splicea(_watchers.length, 0, BindingUtils.getValue(this, bindingExp, site, site_chain, defaultBindTo));
                 })();	

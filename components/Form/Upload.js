@@ -6,39 +6,23 @@
  
 //component definition
 var Upload = function (_props, overrided = false) {
-    var _self = this;
- 
+    var _self = this, _files;
+    var _changeHandler = function (e) {
+        _files = Array.fromIterator(e.target.files);
+    }
+
     Object.defineProperty(this, "files",
     {
         get: function files() {
-            return this.$el[0].files;
+            return _files;
+        },
+        set: function files(v) 
+        {
+            if(_files != v)
+                _files = v;
         }
     });
     
-    Object.defineProperty(this, "name", 
-    {
-        get: function name() 
-        {
-            return _name;
-        },
-        set: function name(v) 
-        {
-            if(_name != v)
-            {  
-                _name = v;
-                if(_name)
-                {
-                    if(this.$el)
-                        this.$el.attr("name", _name);
-                }else
-                {
-                    if(this.$el)
-                        this.$el.removeAttr('name');
-                }
-            }
-        }
-    });
-
     Object.defineProperty(this, "multiple", 
     {
         get: function multiple() 
@@ -102,16 +86,24 @@ var Upload = function (_props, overrided = false) {
     };
     _props = extend(false, false, _defaultParams, _props);
  
-    var _name; 
     var _multiple;
     var _accept;
     var _promise;
+    var _change = _props.change;
+
+    _props.change = function () {
+        if (typeof _change == 'function')
+            _change.apply(this, arguments);
+
+        var e = arguments[0];
+        if (!e.isDefaultPrevented()) {
+            _changeHandler();
+        }
+    };
 
     Component.call(this, _props);
     
-    if(_props.name)
-        this.name = _props.name;
-    if(_props.multiple)
+    if(_props.multiple!=null)
         this.multiple = _props.multiple;  
     if(_props.accept)
         this.accept = _props.accept;      

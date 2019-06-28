@@ -7,7 +7,7 @@
 var MultiUpload = function (_props, overrided = false) {
     var _self = this;
     var _cmp, _lblDrop, _dropContainer, _listRepeater;
-    var _dataProvider = new ArrayEx([{}, {}]);
+    var _dataProvider = new ArrayEx([]);
     var _container;
 
     var fnContainerDelayInit = whenDefined(this, "guid", function(){
@@ -33,7 +33,8 @@ var MultiUpload = function (_props, overrided = false) {
                                     props: {
                                         id: "upload_"+_self.guid,
                                         change: _upload_change,
-                                        form: _form
+                                        form: _form,
+                                        value: "{currentItem}"
                                     }
                                 }
                             ]
@@ -76,9 +77,11 @@ var MultiUpload = function (_props, overrided = false) {
         _cmp.on("creationComplete", function(){
             $("html").on("dragover", _htmlDragOverHandler); 
             $("html").on("drop", _htmlDropHandler);
+            $("html").on("dragleave", _htmlDragLeaveHandler);
             _dropContainer.on('dragenter', _dragEnterHandler);
             _dropContainer.on('dragover', _dragOverHandler);
             _dropContainer.on('drop', _dropHandler);
+            _dropContainer.on('dragleave', _dragLeaveHandler);
             _lblDrop.on('click', _clickHandler);
                 
         });
@@ -98,6 +101,9 @@ var MultiUpload = function (_props, overrided = false) {
         e.preventDefault();
         e.stopPropagation();
     }
+    var _htmlDragLeaveHandler = function(e){
+        _lblDrop.label = "Drag and Drop File or Click Me";
+    }
 
     var _dragEnterHandler = function(e){
         e.preventDefault();
@@ -115,8 +121,24 @@ var MultiUpload = function (_props, overrided = false) {
     var _dropHandler = function(e){
         e.preventDefault();
         e.stopPropagation();
-        _lblDrop.label = "Drag here";
-        _files.comcat(e.originalEvent.dataTransfer.files)
+        _lblDrop.label = "Drag and Drop File or Click Me";
+        _files.splicea(_files.length, 0, Array.fromIterator(e.originalEvent.dataTransfer.files));
+
+        for(var n=0;n<e.originalEvent.dataTransfer.files.length;n++)
+        {
+            var len = _listRepeater[_self.my("upload")] ? _listRepeater[_self.my("upload")].length : 0;
+            var allUsed = true;
+            for(var i=0;i<len && allUsed;i++){
+                var rowUpl = _listRepeater[_self.my("upload")][i];
+                if(rowUpl.upload.files.length==0){
+                    allUsed = false;
+                    rowUpl.upload.fileDialog();
+                }
+            }
+            if(allUsed){
+                _listRepeater.dataProvider.push(e.originalEvent.dataTransfer.files[n]);
+            }
+        }
         /*
         //TODO: add this file to one of the free upload sloats or add a new slot then add file
        
@@ -130,6 +152,10 @@ var MultiUpload = function (_props, overrided = false) {
         uploadData(fd);
         */
     }
+    var _dragLeaveHandler = function(e){
+        _lblDrop.label = "Drag and Drop File or Click Me";
+    }
+
 
     var _clickHandler = function(e){
         var fnUplRowAdded = function(){
@@ -139,7 +165,7 @@ var MultiUpload = function (_props, overrided = false) {
             rowUpl.upload.fileDialog();
         };
 
-        var len = _listRepeater[_self.my("upload")].length;
+        var len = _listRepeater[_self.my("upload")] ? _listRepeater[_self.my("upload")].length : 0;
         var allUsed = true;
         for(var i=0;i<len && allUsed;i++){
             var rowUpl = _listRepeater[_self.my("upload")][i];
@@ -189,10 +215,12 @@ var MultiUpload = function (_props, overrided = false) {
     {
         $("html").off("dragover", _htmlDragOverHandler);  
         $("html").off("drop", _htmlDropHandler);
-        
+        $("html").off("dragleave", _htmlDragLeaveHandler);
+
         _dropContainer.off('dragenter', _dragEnterHandler);
         _dropContainer.off('dragover', _dragOverHandler);
         _dropContainer.off('drop', _dropHandler);
+        _dropContainer.off('dragleave', _dragLeaveHandler);
         _lblDrop.off('click', _clickHandler);
         base.destruct(mode);
     }
