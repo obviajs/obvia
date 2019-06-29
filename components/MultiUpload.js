@@ -100,6 +100,7 @@ var MultiUpload = function (_props, overrided = false) {
     var _htmlDropHandler = function(e){
         e.preventDefault();
         e.stopPropagation();
+        _lblDrop.label = "Drag and Drop File or Click Me";
     }
     var _htmlDragLeaveHandler = function(e){
         _lblDrop.label = "Drag and Drop File or Click Me";

@@ -381,7 +381,10 @@ var Component = function(_props, overrided=false)
             if (typeof fnc == 'function')
             {
                 if(this.$el)
-                    this.$el.on(eventType, function ()
+                {
+                    if(_handlers[eventType]==null)
+                        _handlers[eventType] = [];
+                    var proxyHandler = function ()
                     {
                         var args = [];
                         for (var i = 0; i < arguments.length; i++) {
@@ -399,13 +402,18 @@ var Component = function(_props, overrided=false)
                         }
                         //console.log(_self.$el.attr('id'), arguments[0]);
                         return fnc.apply(_self, args);
-                    });
+                    };
+                    _handlers[eventType].push({"proxyHandler":proxyHandler, "originalHandler":fnc});
+                    this.$el.on(eventType, proxyHandler);
+                }
                 else
                     throw Error("$el in not defined");
             }
         }
         return this;
     }
+    
+    var _handlers = {};
 
     this.trigger = function ()
     {
@@ -415,8 +423,29 @@ var Component = function(_props, overrided=false)
 
     this.off = function ()
     {
-        if(this.$el)
+        if(this.$el){
             this.$el.off.apply(this.$el, arguments);
+            var evt = arguments[0], handler, ind;
+            if(!Array.isArray(evt))
+                evt = [evt]
+            if(typeof arguments[1] == 'function'){
+                handler = arguments[1];
+                ind = 1;
+            } 
+            else if(typeof arguments[2] == 'function'){
+                handler = arguments[2];
+                ind = 2;
+            }
+            var found;
+            for(var i=0;i<evt.length;i++){
+                found = getMatching(_handlers[evt[i]], "originalHandler", handler, true);
+                if(found.objects.length>0){
+                    arguments[ind] = found.objects[0].proxyHandler;
+                    this.$el.off.apply(this.$el, arguments);
+                    _handlers[evt[i]].splice(found.indices[0], 1);
+                }
+            }
+        }            
     }
     ++Component.instanceCnt;
     
@@ -495,7 +524,10 @@ var Component = function(_props, overrided=false)
                 for (var innerEventIn in handler.events) {
                     if (typeof handler.events[innerEventIn] == 'function') {
                         if(handler.registerTo != undefined && handler.registerTo != null){
-                            handler.registerTo.on(innerEventIn, (function (innerEventIn, component) { // a closure is created
+                            if(_handlers[innerEventIn]==null)
+                                _handlers[innerEventIn] = [];
+                            
+                            var proxyHandler = (function (innerEventIn, component) { // a closure is created
                                 return function () {
                                     var args = [];
                                     for (var i = 0; i < arguments.length; i++) {
@@ -516,7 +548,10 @@ var Component = function(_props, overrided=false)
                                     }
                                     handler.events[innerEventIn].apply(component, args);
                                 }
-                            })(innerEventIn, _self));
+                            })(innerEventIn, _self);    
+                            _handlers[innerEventIn].push({"proxyHandler":proxyHandler, "originalHandler":handler.events[innerEventIn]});
+                            handler.registerTo.on(innerEventIn, proxyHandler);
+                            
                         }else
                         {
                             console.log("Event handler registration on '"+_self.id+"' failed because the target is undefined");

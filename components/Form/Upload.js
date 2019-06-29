@@ -93,11 +93,11 @@ var Upload = function (_props, overrided = false) {
 
     _props.change = function () {
         if (typeof _change == 'function')
-            _change.apply(this, arguments);
+            _change.apply(_self, arguments);
 
         var e = arguments[0];
         if (!e.isDefaultPrevented()) {
-            _changeHandler();
+            _changeHandler.apply(_self, arguments);
         }
     };
 
