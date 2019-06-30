@@ -1,4 +1,4 @@
-var Component = function(_props, overrided=false)
+var Component = function(_props, overrided=false, _isSurrogate=false)
 {
     var _defaultParams = {
         id: "Component_"+Component.instanceCnt,
@@ -19,7 +19,8 @@ var Component = function(_props, overrided=false)
     var _keydown = _props.keydown;
     var _keyup = _props.keyup;
     var _creationComplete = _props.creationComplete;
-    
+    var _change = _props.change;
+
     var _watchers = [];
     var _bindings = [];
     var _attached = false;
@@ -47,6 +48,13 @@ var Component = function(_props, overrided=false)
     {
         get: function () {
             return _id;
+        }
+    });
+     //domID property
+    Object.defineProperty(this, 'isSurrogate',
+    {
+        get: function () {
+            return _isSurrogate;
         }
     });
 
@@ -257,8 +265,8 @@ var Component = function(_props, overrided=false)
                 'dblclick': _dblclick && typeof _dblclick == 'function' ? _dblclick.bind(this) : undefined,
                 'keydown': _keydown && typeof _keydown == 'function' ? _keydown.bind(this) : undefined,
                 'keyup': _keyup && typeof _keyup == 'function' ? _keyup.bind(this) : undefined,
-                'creationComplete': _creationComplete && typeof _creationComplete == 'function' ? _creationComplete.bind(this) : undefined
-
+                'creationComplete': _creationComplete && typeof _creationComplete == 'function' ? _creationComplete.bind(this) : undefined,
+                'change': _change && typeof _change == 'function' ? _change.bind(this) : undefined
             }
         }
     ];
@@ -305,7 +313,7 @@ var Component = function(_props, overrided=false)
         return customEvents;
     };
 
-    var _dataTriggerEventList = this.dataTriggerEvents();
+    var _dataTriggerEventList = _isSurrogate?_defaultHandlers:this.dataTriggerEvents();
    
     this.registerEvents = function ()
     {

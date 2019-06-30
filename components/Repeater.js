@@ -10,39 +10,7 @@ var Repeater = function(_props)
     this.currentIndex = 1;
     this.currentItem = {};
     this.rowItems = [];
-    this.dataProviderKeys = [];
     var _self = this;
-
-    this.initModel = function () 
-    {
-        console.log("Init Model func thirret sa here krijoet nje repeater i ri")
-        if(this.defaultItem!=undefined && this.defaultItem!=null){
-            this.dataProviderKeys = Object.keys(this.defaultItem);
-        }else if(this.dataProvider.length>0){
-            this.dataProviderKeys = Object.keys(this.dataProvider[0]);
-            this.defaultItem = this.buildDefaultItem(this.dataProvider);
-        }
-    };
-
-    this.buildDefaultItem = function (dp) {
-        var dI = {};
-        for (var key in dp[0]) {
-            if (typeof dp[0][key] == "object")
-                dI[key] = null;
-            else if (typeof dp[0][key] == "array")
-                dI[key] = [];   
-            else if (typeof dp[0][key] == "boolean")
-                dI[key] = false;   
-            else
-                dI[key] = "";
-        }
-        console.log("Default Item is created here",dI)
-        return dI;
-    };
-
-
-
-    
 
     this.containerKeyDown = function(e)
     {
@@ -314,20 +282,19 @@ var Repeater = function(_props)
                     _self.focusedComponent = Object.keys(repeaterEventArgs.currentRow).indexOf(this.id);
                     console.log("focused repeated component", _self.focusedRow , _self.focusedComponent);
                 });
-                el.on('change', function (e) {
+                el.on('change', function (e, rargs) {
                     var currentItem = _self.dataProvider[index - 1];
                     if (component.props.value && isString(component.props.value) && component.props.value[0] == '{' && component.props.value[component.props.value.length - 1] == '}') {
-                        var bindedValue = component.props.value.slice(1, -1);
-                        var path = bindedValue.split(".");
-                        if (path.length > 1) {
-                            var bindedValue = data;
-                            path.forEach(function (key) {
-                                bindedValue = bindedValue[key];
-                            });
+                        var bindingExp = component.props.value.slice(1, -1);
+                        if(bindingExp=="currentItem"){
+                            _self.dataProvider[rargs.currentIndex] = data = this.value;
+                        }else{
+                            setChainValue(_self.dataProvider[rargs.currentIndex], bindingExp, this.value);
+                            data = _self.dataProvider[rargs.currentIndex];
                         }
-                        data[bindedValue] = this.value;
+                            
+                        
                     }
-
                     _self.$el.trigger('onRowEdit', [_self, new RepeaterEventArgs(rowItems, data, index)]);
                 });
 
@@ -511,7 +478,6 @@ var Repeater = function(_props)
 
     Component.call(this, _props, true);
     var base = this.base;
-    // this.initModel();
 /*
     var click =  props.click;
     _props.click = function(e)

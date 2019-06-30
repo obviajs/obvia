@@ -99,16 +99,16 @@ var Container = function(_props)
         this.$container = this.$el;
         this.addComponents(this.components);
     };
-/*
+
     this.afterAttach = function (e) 
     {
-        if (e.target.id == this.domID) 
-        {
+        //if (e.target.id == this.domID) 
+       // {
             if (typeof _afterAttach == 'function')
                 _afterAttach.apply(this, arguments);
-            e.preventDefault();
-        }
-    };*/
+            //e.preventDefault();
+        //}
+    };
 
     var _defaultParams = {
         type: ContainerType.CONTAINER,

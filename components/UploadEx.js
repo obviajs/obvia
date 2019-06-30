@@ -11,8 +11,9 @@ var UploadEx = function (_props, overrided = false) {
     var _lastFileTypeIcon;
 
     var upload_change = function(e){
+        e.stopPropagation();
+        e.stopImmediatePropagation();
         _self.value = e.target.files;
-        _self.$el.trigger(e);
     }
 
     var init = function(files){
@@ -72,7 +73,7 @@ var UploadEx = function (_props, overrided = false) {
         console.log("selectBtn_click");
     }
     
-    this.ajaxUpload = function(){
+    this.ajaxUpload = function(queuee = false){
         if(_form && _form.ctor && _form.ctor == 'Form'){
             _form.removeFormData(_upload.id+"[]");
             _form.off(FormEventType.POST_ERROR, _ajaxUpload_error);
@@ -88,9 +89,12 @@ var UploadEx = function (_props, overrided = false) {
             _form.on(FormEventType.POST_STARTED, _ajaxUpload_started);
 
             for(var i=0;i<_upload.files.length;i++){
-                 _form.addFormData(_upload.id+"[]", _upload.files[i]);
+                if("size" in _upload.files[i] && !("url" in _upload.files[i])){
+                    _form.addFormData(_upload.id+"[]", _upload.files[i]);
+                }
             }
-            _form.post();
+            if(!queuee)
+                _form.post();
         }
     }
 
@@ -108,23 +112,28 @@ var UploadEx = function (_props, overrided = false) {
     var _ajaxUpload_success = function(e, data, textStatus, jqXHR){
         setTimeout(_ajaxUpload_complete, 500);
         for(var i=0;i<_value.length;i++){
-            _value[i].url = data[_upload.id][i].url;
+            if(data[_upload.id]){
+                _value[i].url = data[_upload.id][i].url;
+            }
         }
     }
     var _ajaxUpload_progress = function(e, xhrProgressEvt){
         _progressBar.valueNow = xhrProgressEvt.percentage;
     }
     var _ajaxUpload_started = function(e){
-        var classes = _progressRow.classes.slice(0);
-        classes.splice(classes.indexOf("d-none"),1);
-        _progressBar.valueNow = 0;
-        _progressRow.classes = classes; 
-        
+        if(_showProgress){
+             var classes = _progressRow.classes.slice(0);
+            classes.splice(classes.indexOf("d-none"),1);
+            _progressBar.valueNow = 0;
+            _progressRow.classes = classes; 
+        } 
     }
     var _ajaxUpload_complete = function(e){
-        var classes = _progressRow.classes.slice(0);
-        classes.pushUnique("d-none");
-        _progressRow.classes = classes; 
+        if(_showProgress){
+            var classes = _progressRow.classes.slice(0);
+            classes.pushUnique("d-none");
+            _progressRow.classes = classes; 
+        }
     }
 
     var downloadBtn_click = function(){
@@ -141,9 +150,10 @@ var UploadEx = function (_props, overrided = false) {
         _container = {
             constructor: Container,
             props: {
-                id: _self.id,
+                id: "main_"+_self.guid,
                 guid: _self.guid,
                 type: ContainerType.NONE,
+                afterAttach: _registerSurrogate,
                 //width:,
                 components:[
                     {
@@ -470,6 +480,26 @@ var UploadEx = function (_props, overrided = false) {
         }
     });
 
+    Object.defineProperty(this, "showProgress", 
+    {
+        get: function showProgress() 
+        {
+            return _showProgress;
+        },
+        set: function showProgress(v) 
+        {
+            if(_showProgress != v)
+            {  
+                _showProgress = v;
+                if(!_showProgress){
+                    var classes = _progressRow.classes.slice(0);
+                    classes.pushUnique("d-none");
+                    _progressRow.classes = classes; 
+                }
+            }
+        }
+    });
+
     Object.defineProperty(this, "upload", 
     {
         get: function upload() 
@@ -485,26 +515,35 @@ var UploadEx = function (_props, overrided = false) {
         },
         set: function value(v) {
             if (_value != v) {
-                _value = v;
-                if (_value) {
-                    if(!Array.isArray(_value) && !BinUtils.isFileList(_value))
-                    _value = _upload.files = [_value];
-                    init(_value);
-                } else {
-                    init([{url:"", name:"", size:"", type:""}]);
-                    _upload.reset();
-                }
+                _setValue(v);
+                _self.$el.trigger("change");
             }
         }
     });
+    var _setValue = function(v){
+        if (v) {
+            if(!Array.isArray(v) && !BinUtils.isFileList(v))
+                _value = _upload.files = [v];
+            else{
+                if(BinUtils.isFileList(v)){
+                    v = Array.fromIterator(v);
+                }
+                _value = _upload.files = v;
+            }
+            init(_value);
+        } else {
+            init([{url:"", name:"", size:"", type:""}]);
+            _upload.reset();
+        }
+    }
 
     this.template = function () { 
         fnContainerDelayInit();
         _cmp = Component.fromLiteral(_container);
         _upload = _cmp.children[this.my("mainRow")].children[this.my("fileNameColumn")].children[this.my("uploadInput")];
         _iconLbl = _cmp.children[this.my("mainRow")].children[this.my("iconColumn")].children[this.my("iconLbl")];
-        _progressRow =  _cmp.children[this.my("progressRow")];
-        _progressBar =  _cmp.children[this.my("progressRow")].children[this.my("progressColumn")].children[this.my("progressbar")];  
+        _progressRow = _cmp.children[this.my("progressRow")];
+        _progressBar = _cmp.children[this.my("progressRow")].children[this.my("progressColumn")].children[this.my("progressbar")];  
 
         _lblFileName = _cmp.children[this.my("mainRow")].children[this.my("fileNameColumn")].children[this.my("fileName")];
         _lblFileSize = _cmp.children[this.my("mainRow")].children[this.my("fileSizeColumn")].children[this.my("fileSize")];
@@ -517,23 +556,24 @@ var UploadEx = function (_props, overrided = false) {
         return null;
     };
 
+    var _registerSurrogate = function(e){
+         //init events for this surrogate component.
+        _self.initEvents(this.$el, 0);
+    }
+
     var _defaultParams = {
         multiple: true,
         value: [],
-        form: null
-
+        form: null,
+        showProgress: true
     };
 
-    var _multiple, _accept, _showBtnRemove, _form, _value;
+    var _multiple, _accept, _showBtnRemove, _form, _value, _showProgress;
 
     _props = extend(false, false, _defaultParams, _props);
+    _showProgress = _props.showProgress;
 
-    this.beforeAttach = function() {
-        //init events for this surrogate component.
-        this.initEvents(this.$el, 0);
-    }
-
-    Component.call(this, _props);
+    Component.call(this, _props, false, true);
 
     if(_props.multiple!=null)
         this.multiple = _props.multiple;
@@ -542,7 +582,7 @@ var UploadEx = function (_props, overrided = false) {
     if(_props.showBtnRemove!=null)
         this.showBtnRemove = _props.showBtnRemove;
     if(_props.value!=null)
-        this.value = _props.value;
+        _setValue(_props.value);
         
     _form = _props.form;
 };

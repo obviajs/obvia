@@ -6,17 +6,33 @@
 
 var MultiUpload = function (_props, overrided = false) {
     var _self = this;
-    var _cmp, _lblDrop, _dropContainer, _listRepeater;
-    var _dataProvider = new ArrayEx([]);
+    var _cmp, _lblDrop, _dropContainer, _listRepeater, _progressRow, _progressBar;
+    var _dataProvider;
     var _container;
+
+    Object.defineProperty(this, "dataProvider", 
+    {
+        get: function dataProvider() 
+        {
+            return _dataProvider;
+        },
+        set: function dataProvider(v) 
+        {
+            if(_dataProvider != v)
+            {
+                _dataProvider = v;
+            }
+        }
+    });
 
     var fnContainerDelayInit = whenDefined(this, "guid", function(){
         _container = { 
             constructor: Container,
             props: {
                 type: ContainerType.NONE,
-                id: _self.id,
+                id: "main_"+_self.guid,
                 guid: _self.guid,
+                afterAttach: _registerSurrogate,
                 components: [
                     {
                         constructor: Repeater,
@@ -34,7 +50,9 @@ var MultiUpload = function (_props, overrided = false) {
                                         id: "upload_"+_self.guid,
                                         change: _upload_change,
                                         form: _form,
-                                        value: "{currentItem}"
+                                        value: "{currentItem}",
+                                        multiple: false,
+                                        showProgress: false
                                     }
                                 }
                             ]
@@ -60,6 +78,29 @@ var MultiUpload = function (_props, overrided = false) {
                                 }
                             ]
                         }
+                    },
+                    {
+                        constructor: Container,
+                        props: {
+                            id: "progressRow_"+_self.guid,
+                            type: ContainerType.NONE,
+                            classes:["d-none", "progress"],
+                            height: 5,
+                            components:[
+                                {
+                                    constructor: ProgressBar,
+                                    props: {
+                                        id:"progressbar_"+_self.guid,
+                                        valueNow: 0,
+                                        valueMin: 0,
+                                        valueMax: 100,
+                                        width: "100%",
+                                        height: "100%",
+                                        classes: [BgStyle.BG_INFO, ProgressBarStyle.PROGRESS, ProgressBarStyle.PROGRESS_ANIMATED, ProgressBarStyle.PROGRESS_STRIPED]
+                                    }
+                                }
+                            ]
+                        }
                     }
                 ]
             }
@@ -73,6 +114,10 @@ var MultiUpload = function (_props, overrided = false) {
         _lblDrop = _cmp.children[this.my("dropContainer")].children[this.my("label")];
         _dropContainer = _cmp.children[this.my("dropContainer")];
         _listRepeater = _cmp.children[this.my("listRepeater")];
+
+        _progressRow = _cmp.children[this.my("progressRow")];
+        _progressBar = _cmp.children[this.my("progressRow")].children[this.my("progressbar")];  
+
 
         _cmp.on("creationComplete", function(){
             $("html").on("dragover", _htmlDragOverHandler); 
@@ -117,27 +162,29 @@ var MultiUpload = function (_props, overrided = false) {
         e.stopPropagation();
         _lblDrop.label = "Drop";
     }
-    var _files = [];
-
+    
     var _dropHandler = function(e){
         e.preventDefault();
         e.stopPropagation();
         _lblDrop.label = "Drag and Drop File or Click Me";
-        _files.splicea(_files.length, 0, Array.fromIterator(e.originalEvent.dataTransfer.files));
-
+        
         for(var n=0;n<e.originalEvent.dataTransfer.files.length;n++)
         {
             var len = _listRepeater[_self.my("upload")] ? _listRepeater[_self.my("upload")].length : 0;
             var allUsed = true;
-            for(var i=0;i<len && allUsed;i++){
-                var rowUpl = _listRepeater[_self.my("upload")][i];
-                if(rowUpl.upload.files.length==0){
+            var i, rowUpl;
+            for(i=0;i<len && allUsed;i++){
+                rowUpl = _listRepeater[_self.my("upload")][i];
+                if(rowUpl.upload.files.length==0 || !("size" in rowUpl.upload.files[0])){
                     allUsed = false;
-                    rowUpl.upload.fileDialog();
+                    break;
                 }
             }
             if(allUsed){
-                _listRepeater.dataProvider.push(e.originalEvent.dataTransfer.files[n]);
+                _dataProvider.push([e.originalEvent.dataTransfer.files[n]]);
+            }else{
+                //_dataProvider[i] 
+                rowUpl.value = e.originalEvent.dataTransfer.files[n];
             }
         }
         /*
@@ -170,9 +217,10 @@ var MultiUpload = function (_props, overrided = false) {
         var allUsed = true;
         for(var i=0;i<len && allUsed;i++){
             var rowUpl = _listRepeater[_self.my("upload")][i];
-            if(rowUpl.upload.files.length==0){
+            if(rowUpl.upload.files.length==0 || !("size" in rowUpl.upload.files[0])){
                 allUsed = false;
                 rowUpl.upload.fileDialog();
+                break;
             }
         }
         if(allUsed){
@@ -183,28 +231,67 @@ var MultiUpload = function (_props, overrided = false) {
     
     var _upload_change = function(e){
         console.log("UPL CHANGE: ", arguments);
-        _files.splicea(_files.length, 0, Array.fromIterator(e.target.files));
+        var last = _listRepeater.dataProvider.last();
+        //last = Array.fromIterator(this.value);
     }
 
+    this.ajaxUpload = function(){
+        _form.off(FormEventType.POST_ERROR, _ajaxUpload_error);
+        _form.off(FormEventType.POST_SUCCESS, _ajaxUpload_success);
+        _form.off(FormEventType.POST_PROGRESS, _ajaxUpload_progress);
+        _form.off(FormEventType.POST_COMPLETE, _ajaxUpload_complete);
+        _form.off(FormEventType.POST_STARTED, _ajaxUpload_started);
+        
+        _form.on(FormEventType.POST_ERROR, _ajaxUpload_error);
+        _form.on(FormEventType.POST_SUCCESS, _ajaxUpload_success);
+        _form.on(FormEventType.POST_PROGRESS, _ajaxUpload_progress);
+        _form.on(FormEventType.POST_COMPLETE, _ajaxUpload_complete);
+        _form.on(FormEventType.POST_STARTED, _ajaxUpload_started);
+        var len = _listRepeater[_self.my("upload")] ? _listRepeater[_self.my("upload")].length : 0;
+        for(var i=0;i<len;i++){
+            var rowUpl = _listRepeater[_self.my("upload")][i];
+            rowUpl.ajaxUpload(i==len-1?false:true);
+        }
+    }
+
+    var _ajaxUpload_error = function(e, jqXHR,  textStatus, errorThrown){
+        setTimeout(_ajaxUpload_complete, 500);
+    }
+    var _ajaxUpload_success = function(e, data, textStatus, jqXHR){
+        setTimeout(_ajaxUpload_complete, 500);
+    }
+    var _ajaxUpload_progress = function(e, xhrProgressEvt){
+        _progressBar.valueNow = xhrProgressEvt.percentage;
+    }
+    var _ajaxUpload_started = function(e){
+        var classes = _progressRow.classes.slice(0);
+        classes.splice(classes.indexOf("d-none"),1);
+        _progressBar.valueNow = 0;
+        _progressRow.classes = classes; 
+    }
+    var _ajaxUpload_complete = function(e){
+        var classes = _progressRow.classes.slice(0);
+        classes.pushUnique("d-none");
+        _progressRow.classes = classes; 
+    }
+
+    var _registerSurrogate = function(e){
+        //init events for this surrogate component.
+       _self.initEvents(this.$el, 0);
+    }
     var _defaultParams = {
-        multiple: false,
         showBtnRemove: false,
         dataProvider: [],
         form: null
     };
-
-    var _multiple, _accept, _showBtnRemove, _form;
+    var _isSurrogate = true;
+    var _accept, _showBtnRemove, _form;
 
     _props = extend(false, false, _defaultParams, _props);
-    
-    this.beforeAttach = function() {
-        this.initEvents(this.$el, 0);
-    }
+    this.dataProvider = new ArrayEx(_props.dataProvider);
     _form = _props.form;
-    Component.call(this, _props, true);
+    Component.call(this, _props, true, true);
 
-    if(_props.multiple)
-        this.multiple = _props.multiple;
     if(_props.accept)
         this.accept = _props.accept;  
     if(_props.showBtnRemove!=null)
@@ -225,21 +312,6 @@ var MultiUpload = function (_props, overrided = false) {
         _lblDrop.off('click', _clickHandler);
         base.destruct(mode);
     }
-
-    Object.defineProperty(this, "dataProvider", 
-    {
-        get: function dataProvider() 
-        {
-            return _files;
-        },
-        set: function dataProvider(v) 
-        {
-            if(_dataProvider != v)
-            {
-                _dataProvider = v;
-            }
-        }
-    });
 };
 
 MultiUpload.prototype.ctor = 'MultiUpload';
