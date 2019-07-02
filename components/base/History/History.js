@@ -78,7 +78,11 @@ var History = function(_props)
                 _steps.push(step);
                 ++_currentIndex;
 
-                var eventObject = $.Event(HistoryEventType.HISTORY_CAN_UNDO);
+                var eventObject = $.Event(HistoryEventType.HISTORY_STEP_ADDED);
+                eventObject.current = step;
+                this.trigger(eventObject);
+
+                eventObject = $.Event(HistoryEventType.HISTORY_CAN_UNDO);
                 this.trigger(eventObject);
             }
         }else{

@@ -135,16 +135,16 @@ var zeroCool = {
                                                                                     multiselect: false,
                                                                                     dataProvider: oxana.history.steps,
                                                                                     valueField: "id",
-                                                                                    classesField: "buttonClass",
-                                                                                    defaultClasses: ["label", "label-default"],
-                                                                                    selectedClasses: ["label", "label-primary"],    
+                                                                                    classesField: "listItemClass",
+                                                                                    defaultClasses: [],
+                                                                                    selectedClasses: ["active"],    
                                                                                     component: {
                                                                                         constructor: Label,
                                                                                         props: {
                                                                                             id: 'labelHistoryStep',
                                                                                             value: "{id}",
                                                                                             label: "{description}",
-                                                                                            //classes: "{buttonClass}"
+                                                                                            classes: "{?listItemClass}"
                                                                                         }
                                                                                     }
                                                                                 }
@@ -247,6 +247,11 @@ oxana.behaviorimplementations["HISTORY_STEP_DETAILS"] = function(e){
     console.log("called HISTORY_STEP_DETAILS.");
 };
 
+oxana.behaviorimplementations["HISTORY_STEP_ADDED"] = function(e){
+    console.log("called HISTORY_STEP_ADDED.", e.current);
+    Component.instances["listHistorySteps"].value = e.current;
+
+};
 oxana.behaviorimplementations["HISTORY_UNDONE"] = function(e){
     console.log("called HISTORY_UNDONE.");
     Component.instances["listHistorySteps"].value = e.previous;

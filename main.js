@@ -2,6 +2,16 @@ var flowerCM = window.flowerCM || {};
 rjs.init({debug:false});
 //base Components
 rjs.define("lib/EventDispatcher.js", "EventDispatcher");
+rjs.define("lib/ArrayUtils.js", "ArrayUtils");
+rjs.define("lib/ObjectUtils.js", "ObjectUtils");
+rjs.define("lib/StringUtils.js", "StringUtils");
+rjs.define("lib/DecoratorUtils.js", "DecoratorUtils");
+rjs.define("lib/BinUtils.js", "BinUtils");
+rjs.define("lib/my.js", "my");
+rjs.define("lib/Tokenizer.js", "Tokenizer");
+rjs.define("lib/binding/BindingUtils.js", "BindingUtils");
+rjs.define("lib/binding/PropertyChangeEvent.js", "PropertyChangeEvent");
+rjs.define("lib/binding/ChangeWatcher.js", "ChangeWatcher");
 rjs.define("lib/rca/RemoteCursorEvent.js", "RemoteCursorEvent");
 rjs.define("lib/rca/RemoteObject.js", "RemoteObject");
 rjs.define("./components/base/BgStyle.js", "BgStyle");
@@ -129,6 +139,15 @@ rjs.define("./components/ProgressBar/ProgressBarStyle.js", "ProgressBarStyle");
 rjs.require([
         "DOMContentLoaded",
         "EventDispatcher",
+        "ArrayUtils",
+        "ObjectUtils",
+        "StringUtils",
+        "DecoratorUtils",
+        "my",
+        "Tokenizer",
+        "BindingUtils",
+        "PropertyChangeEvent",
+        "ChangeWatcher",
         "RemoteCursorEvent",
         "BgStyle",
         "HistoryStep",
@@ -247,10 +266,10 @@ rjs.require([
         //rjs.define("./examples/Toggle/example.js", "ToggleExample");
          // rjs.define("./examples/Generic/example.js","GenericExample");
         //rjs.define("./oxana/accounting/invoice.js", "Invoice");
-       //rjs.define("./oxana/layoutBuilder.js", "layoutBuilder");
+       rjs.define("./oxana/layoutBuilder.js", "layoutBuilder");
        // rjs.define("./oxana/magnetLayout.js", "magnetLayout");
       
-       rjs.define("./examples/Upload/singleUploadExample.js", "singleUploadExample");
+       //rjs.define("./examples/Upload/singleUploadExample.js", "singleUploadExample");
       //rjs.define("./examples/ProgressBar/example.js", "example");
 
        //rjs.define("./examples/Upload/example.js", "UploadExample");

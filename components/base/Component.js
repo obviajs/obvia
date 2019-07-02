@@ -474,19 +474,22 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
             _watchers[i].reset();        
         }
     };
-
+    var _bindedTo;
     this.refreshBindings = function(data)
     {
-        this.resetBindings();
-        this.applyBindings(_bindings, data);
+        if(_bindedTo!=data){
+            this.resetBindings();
+            this.applyBindings(_bindings, data);
+        }
     };
 
     this.applyBindings = function(bindings, data)
     {
+        _bindedTo = data;
         _bindings = bindings;
         var _self = this;
         for(var bi=0;bi<bindings.length;bi++){
-            (function(currentItem, bindingExp, site, site_chain){
+            (function(currentItem, bindingExp, site, site_chain, nullable){
                 return (function(e) { // a closure is created
                     //this here refers to window context
                     var defaultBindTo = "currentItem_"+_self.guid;
@@ -495,9 +498,18 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
                         this[defaultBindTo]["currentItem"] = this[defaultBindTo];
                     }
                    // var context = extend(false, true, this, obj);
-                   _watchers.splicea(_watchers.length, 0, BindingUtils.getValue(this, bindingExp, site, site_chain, defaultBindTo));
+                    var fn = function(){
+                        _watchers.splicea(_watchers.length, 0, BindingUtils.getValue(this, bindingExp, site, site_chain, defaultBindTo));
+                    };
+                    if(nullable){
+                        var fnDelayed = whenDefined(this[defaultBindTo], bindingExp, fn);
+                        fnDelayed();
+                    }else{
+                        fn();
+                    }
+                    
                 })();	
-            })(data, bindings[bi].expression, this, [bindings[bi].property]);
+            })(data, bindings[bi].expression, this, [bindings[bi].property], bindings[bi].nullable);
         }
     };
 
@@ -594,8 +606,13 @@ Component.fromLiteral = function(_literal, bindingDefaultContext=null)
         if (typeof prop == 'string') {
             //check for binding
             if (props[prop] && props[prop][0] == '{' && props[prop][props[prop].length - 1] == '}') {
-                var expression = props[prop].slice(1, -1);
-                _bindings.push({"expression":expression, "property":prop});
+                var nullable = false, s = 1;
+                if(props[prop][1] == '?'){
+                    s = 2;
+                    nullable = true;
+                }
+                var expression = props[prop].slice(s, -1);
+                _bindings.push({"expression":expression, "property":prop, "nullable":nullable});
             } else {
                 //no binding
                 _processedProps[prop] = props[prop];
