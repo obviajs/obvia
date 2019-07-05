@@ -227,8 +227,9 @@ var waBehaviors = {
     "mouseover": "WA_HOVER",
     "mouseout": "WA_HOVER",
     "mousemove": {
-        "WA_RESIZE_NS": isMouseMoveNS
+        "IS_WA_RESIZE_NS": isMouseMoveNS
     },
+    "resize": "WA_RESIZE",
     "contextmenu": "WA_REMOVE"
 };
 
@@ -493,17 +494,32 @@ oxana.behaviorimplementations["WA_HOVER"] = {
         stopPropagation:true
     };
 
-oxana.behaviorimplementations["WA_RESIZE_NS"] = {
+oxana.behaviorimplementations["IS_WA_RESIZE_NS"] = {
     do:function(e) {
         console.log("Container Resize NS");
       
     },
     stopPropagation:true
 };
-oxana.behaviorimplementations["WA_RESIZE_EW"] = {
+oxana.behaviorimplementations["WA_RESIZE"] = {
     do:function(e) {
-        console.log("Container Resize EW");
-      
+        var retFromRedoMaybe = arguments[arguments.length-1];
+        if(retFromRedoMaybe.container){
+            console.log("called WA_RESIZE from History(REDO).");
+        }else
+             console.log("WA_RESIZE");
+        var ret = {track:false};
+       
+        var manifestor = this, dy = e.dy, dx=e.dx;
+        containerResize(manifestor, dx, dy);
+        ret.description = "Container resize"+(dx?" dx:"+dx:"")+(dy?" dy:"+dy:""); 
+        ret.track = true;
+        return ret;
+    },
+    undo:function(e){
+        console.log("Undo WA_RESIZE ", arguments);
+        var manifestor = this, dy = e.dy, dx=e.dx;
+        containerResize(manifestor, -1*dx, -1*dy);
     },
     stopPropagation:true
 };
@@ -538,7 +554,7 @@ oxana.behaviorimplementations["WA_REMOVE"] = {
             }else{
                 if(this.parent.parent.components.length>2){
                     var container = this.parent.parent;
-                    container.removeChild(this.parent);
+                    container.removeChild(this.parent, 0);
                     childrenAutoHeight(container);
                     ret.track = true;
                     ret.container = container;
@@ -640,42 +656,17 @@ function isMouseMoveNS(e){
                 console.log(p1);
                 var dy = p1.y - p0.y;
                 var dx = p1.x - p0.x;
+                var evt = new jQuery.Event("resize");
                 if(dy!=0 && manifestor.parent.parent.components.length>=2){
                     dy = -dy;
-                    var mpi = indexOfObject(manifestor.parent.parent.components, "props.id",  manifestor.parent.id);
-                    if(mpi==manifestor.parent.parent.components.length-1)
-                    {
-                        dy = -dy;
-                        --mpi;
-                    }
-                    else
-                        ++mpi; 
-                    
-                    var ha = manifestor.parent.$el.height();
-                    var ha_rel = Math.floor(manifestor.parent.spacing.h * dy / ha);
-                    manifestor.parent.spacing.h = manifestor.parent.spacing.h - ha_rel;
-                    
-                    var sibling_id = manifestor.parent.parent.components[mpi].props.id;
-                    manifestor.parent.parent.children[sibling_id].spacing.h += ha_rel;
+                    evt.dy = dy;
                 }
                 if(dx!=0 && manifestor.parent.components.length>=2){
                     dx = -dx;
-                    var mpi = indexOfObject(manifestor.parent.components, "props.id",  manifestor.id);
-                    if(mpi==manifestor.parent.components.length-1)
-                    {
-                        dx = -dx;
-                        --mpi;
-                    }
-                    else
-                        ++mpi; 
-
-                    var wa = manifestor.$el.width();
-                    var wa_rel = Math.floor(manifestor.spacing.colSpan * dx / wa);
-                    manifestor.spacing.colSpan = manifestor.spacing.colSpan - wa_rel;
-                    
-                    var sibling_id = manifestor.parent.components[mpi].props.id;
-                    manifestor.parent.children[sibling_id].spacing.colSpan += wa_rel;
+                    evt.dx = dx;
                 }
+                if(dx !=0 || dy!=0)
+                    manifestor.trigger(evt);
                 console.log("Vertical drag of :", dy, manifestor.$el.height());
                 
                 debouncedDragNS = null;
@@ -749,4 +740,41 @@ function childrenAutoHeight(container){
         else
             container.children[childID].spacing.h = height;
     } 
+}
+
+function containerResize(container, dx, dy){
+    if(dy && !isNaN(dy) && dy!=0 && container.parent.parent.components.length>=2){
+        var mpi = indexOfObject(container.parent.parent.components, "props.id",  container.parent.id);
+        if(mpi==container.parent.parent.components.length-1)
+        {
+            dy = -dy;
+            --mpi;
+        }
+        else
+            ++mpi; 
+        
+        var ha = container.parent.$el.height();
+        var ha_rel = Math.floor(container.parent.spacing.h * dy / ha);
+        container.parent.spacing.h = container.parent.spacing.h - ha_rel;
+        
+        var sibling_id = container.parent.parent.components[mpi].props.id;
+        container.parent.parent.children[sibling_id].spacing.h += ha_rel;
+    }
+    if(dx && !isNaN(dx) && dx!=0 && container.parent.components.length>=2){
+        var mpi = indexOfObject(container.parent.components, "props.id",  container.id);
+        if(mpi==container.parent.components.length-1)
+        {
+            dx = -dx;
+            --mpi;
+        }
+        else
+            ++mpi; 
+
+        var wa = container.$el.width();
+        var wa_rel = Math.floor(container.spacing.colSpan * dx / wa);
+        container.spacing.colSpan = container.spacing.colSpan - wa_rel;
+        
+        var sibling_id = container.parent.components[mpi].props.id;
+        container.parent.children[sibling_id].spacing.colSpan += wa_rel;
+    }
 }
