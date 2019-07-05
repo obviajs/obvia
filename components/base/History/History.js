@@ -59,7 +59,7 @@ var History = function(_props)
         if(_behaviors)
         {
             var behavior = _behaviors[behaviorName];
-            if(behavior.undo && typeof behavior.undo == 'function' && ((isObject(ret) && ret.track) || ret)){
+            if(behavior.undo && typeof behavior.undo == 'function' && ((isObject(ret) && ret.track) || ret===true)){
                 var step = new HistoryStep();
                 step.behaviorName = behaviorName; 
                 
@@ -97,7 +97,7 @@ var History = function(_props)
             var step = _steps[_currentIndex];
             var behavior = _behaviors[step.behaviorName];
             if(behavior.do && typeof behavior.do == 'function'){
-                behavior.do.apply(step.thisObj, step.args.concat(step.retObj));
+                _steps[_currentIndex].retObj = behavior.do.apply(step.thisObj, step.args.concat(step.retObj));
 
                 var redoEventObject = $.Event(HistoryEventType.HISTORY_REDONE);
                 redoEventObject.redone = step;

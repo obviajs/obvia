@@ -38,23 +38,35 @@ var Parent = function(_props, overrided=false)
             }
         }
     }
-
-    this.removeChild = function(child)
+    this.indexOfChild = function(child)
+    {
+        var ind = -1;
+        if(child){
+            ind = indexOfObject(_components, "props.id",  child.id);
+        }
+        return ind;
+    }
+    this.removeChild = function(child, mode=1)
     {
         if(child)
         {
             //TODO: kur fshijme child, beji resize siblings; kur fshijme row/col dhe jane 2 gjithsej hiq container prind 
-            _components.splice(indexOfObject(_components, "props.id",  child.id), 1);
-            delete _children[child.id];
-            child.destruct();
+            var ind = indexOfObject(_components, "props.id",  child.id);
+            if(ind >-1){
+                _components.splice(ind, 1);
+                delete _children[child.id];
+                child.destruct(mode);
+            }else{
+                console.log("Failed to remove Component: "+child.id+". It was not found in child list.");
+            }
         }
     }
 
-    this.removeChildAtIndex = function(index)
+    this.removeChildAtIndex = function(index, mode=1)
     {
         if(index>=0 && index < _components.length)
         {
-            this.removeChild(_children[_components[index].props.id]);
+            this.removeChild(_children[_components[index].props.id], mode);
         }
     }
 

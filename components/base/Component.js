@@ -20,7 +20,8 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
     var _keyup = _props.keyup;
     var _creationComplete = _props.creationComplete;
     var _change = _props.change;
-
+    var _DOMMutation = _props.DOMMutation;
+    
     var _watchers = [];
     var _bindings = [];
     var _attached = false;
@@ -266,7 +267,8 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
                 'keydown': _keydown && typeof _keydown == 'function' ? _keydown.bind(this) : undefined,
                 'keyup': _keyup && typeof _keyup == 'function' ? _keyup.bind(this) : undefined,
                 'creationComplete': _creationComplete && typeof _creationComplete == 'function' ? _creationComplete.bind(this) : undefined,
-                'change': _change && typeof _change == 'function' ? _change.bind(this) : undefined
+                'change': _change && typeof _change == 'function' ? _change.bind(this) : undefined,
+                'DOMMutation': _DOMMutation && typeof _DOMMutation == 'function' ? _DOMMutation.bind(this) : undefined,
             }
         }
     ];
@@ -669,6 +671,13 @@ Component.check = function(mutations)
     {
         for(var g=0;g<mutations.length;g++)
         {
+            if(Component.domID2ID[mutations[g].target.id]){
+                if(Component.instances[Component.domID2ID[mutations[g].target.id]]){
+                    var evt = new jQuery.Event("DOMMutation");
+                    evt.mutation = mutations[g];
+                    Component.instances[Component.domID2ID[mutations[g].target.id]].trigger(evt);
+                }
+            }
             for(var h=0;h<mutations[g].addedNodes.length;h++)
             {
                 var DOMNode = mutations[g].addedNodes[h];

@@ -21,6 +21,13 @@ var oxana = new App({
     style:appStyle
 }); 
 
+var _DOMMutationHandler = function (e) {
+    //Google translate will add font/font/text nodes to the translated label
+    if(e.mutation.addedNodes.length>0 && e.mutation.addedNodes[0].childNodes.length>0 && e.mutation.addedNodes[0].childNodes[0].childNodes.length>0){
+        this.label = e.mutation.addedNodes[0].childNodes[0].childNodes[0].data;
+    }
+};
+
 var zeroCool = {
         constructor: Container,
         props: {
@@ -144,7 +151,8 @@ var zeroCool = {
                                                                                             id: 'labelHistoryStep',
                                                                                             value: "{id}",
                                                                                             label: "{description}",
-                                                                                            classes: "{?listItemClass}"
+                                                                                            classes: "{?listItemClass}",
+                                                                                            DOMMutation: _DOMMutationHandler
                                                                                         }
                                                                                     }
                                                                                 }
@@ -224,6 +232,8 @@ var waBehaviors = {
     "contextmenu": "WA_REMOVE"
 };
 
+
+
 oxana.behaviors["splitHorizontal"] = {};
 oxana.behaviors["splitHorizontal"]["click"] = "SPLIT_HOR";
 
@@ -260,11 +270,12 @@ oxana.behaviorimplementations["HISTORY_UNDONE"] = function(e){
 
 oxana.behaviorimplementations["HISTORY_REDONE"] = function(e){
     console.log("called HISTORY_REDONE.");
-    Component.instances["listHistorySteps"].value = e.next;
+    Component.instances["listHistorySteps"].value = e.redone;
 };
 
 oxana.behaviorimplementations["SPLIT_HOR"] = {
-    description: "Split selected container horizontally",
+    //description: "Split selected container horizontally",
+    description: "Ndaje horizontalisht",
     do:function(e) {
         var retFromRedoMaybe = arguments[arguments.length-1];
         if(retFromRedoMaybe.container){
@@ -297,7 +308,12 @@ oxana.behaviorimplementations["SPLIT_HOR"] = {
         {
             newRow2 = extend(true, newRow);
         }
-        var newRowInstance = activeContainer.addComponent(newRow);
+        var newRowInstance;
+        if(retFromRedoMaybe.child){
+            newRowInstance = retFromRedoMaybe.child;
+            activeContainer.addChild(newRowInstance);
+        }else
+            newRowInstance = activeContainer.addComponent(newRow);
         var newWorkArea = newRowInstance.children[newRowInstance.components[0].props.id];
         oxana.behaviors[newWorkArea.id] = waBehaviors;
     // oxana.behaviors[newWorkArea.id]["mousemove"]["WA_RESIZE_EW"] = isMouseMoveEW;
@@ -305,7 +321,13 @@ oxana.behaviorimplementations["SPLIT_HOR"] = {
 
         if(activeContainer.components.length==1)
         {
-            var newRowInstance2 = activeContainer.addComponent(newRow2);
+            var newRowInstance2;
+            if(retFromRedoMaybe.child2){
+                newRowInstance2 = retFromRedoMaybe.child2;
+                activeContainer.addChild(newRowInstance2);
+            }else
+                newRowInstance2 = activeContainer.addComponent(newRow2);
+                
             var newWorkArea2 = newRowInstance2.children[newRowInstance2.components[0].props.id];
             oxana.behaviors[newWorkArea2.id] = waBehaviors;
             ret.child2 = newRowInstance2;
@@ -314,6 +336,7 @@ oxana.behaviorimplementations["SPLIT_HOR"] = {
         ret.child = newRowInstance;
         ret.parent = activeContainer;
         ret.container = activeContainer;
+        ret.track = true;
         childrenAutoHeight(activeContainer);
         return ret;
     },
@@ -332,9 +355,9 @@ oxana.behaviorimplementations["SPLIT_HOR"] = {
          * ret.container = container;
                     ret.child = this.parent; */
         var ret = arguments[arguments.length-1];
-        ret.parent.removeChild(ret.child);
+        ret.parent.removeChild(ret.child, 0);
         if(ret.child2){
-            ret.parent.removeChild(ret.child2);
+            ret.parent.removeChild(ret.child2, 0);
         }
         childrenAutoHeight(ret.parent);
     }
@@ -369,7 +392,7 @@ oxana.behaviorimplementations["SPLIT_VERT"] = {
             var newCell2 = extend(true, newCell);
             
             //.spacing.colSpan count children and distribute 12 units of space to them. the last child gets the reminder
-            var toAdd = {
+            toAdd = {
                 constructor: Container,
                 props: {
                     id: '',
@@ -386,7 +409,12 @@ oxana.behaviorimplementations["SPLIT_VERT"] = {
         } 
         if(children_len<12)
         {    
-            var newInstance = parent.addComponent(toAdd);
+            var newInstance;
+            if(retFromRedoMaybe.child){
+                newInstance = retFromRedoMaybe.child;
+                activeContainer.addChild(newInstance);
+            }else
+                newInstance = parent.addComponent(toAdd);
             var row =  activeContainer.children[activeContainer.components[0].props.id];
             children_len = row.components.length;
 
@@ -428,7 +456,7 @@ oxana.behaviorimplementations["SPLIT_VERT"] = {
          * ret.container = container;
                     ret.child = this.parent; */
         var ret = arguments[arguments.length-1];
-        ret.parent.removeChild(ret.child);
+        ret.parent.removeChild(ret.child, 0);
         childrenAutoWidth(ret.parent);
     }
 };

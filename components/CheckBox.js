@@ -87,7 +87,7 @@ var CheckBox = function (_props, overrided = false) {
 
         var e = arguments[0];
         if (!e.isDefaultPrevented()) {
-            _changeHandler();
+            _changeHandler.apply(this, arguments);
         }
     };
 
