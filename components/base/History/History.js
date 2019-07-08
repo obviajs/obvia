@@ -72,7 +72,7 @@ var History = function(_props)
                 if(_steps.length>0 && _currentIndex<_steps.length-1)
                 {
                     //ketu ne currentIndex < length beji splice nga currentIndex e deri ne length
-                    _steps.splice(Math.max(_currentIndex,0), _steps.length - Math.max(_currentIndex,0)- 1 );
+                    _steps.splice(Math.max(_currentIndex+1,0), _steps.length - Math.max(_currentIndex,0)- 1 );
                 }
                 step.retObj = ret;
                 _steps.push(step);

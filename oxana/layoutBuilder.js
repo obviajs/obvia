@@ -144,7 +144,7 @@ var zeroCool = {
                                                                                     valueField: "id",
                                                                                     classesField: "listItemClass",
                                                                                     defaultClasses: [],
-                                                                                    selectedClasses: ["active"],    
+                                                                                    selectedClasses: ["active"],   
                                                                                     component: {
                                                                                         constructor: Label,
                                                                                         props: {
@@ -152,7 +152,8 @@ var zeroCool = {
                                                                                             value: "{id}",
                                                                                             label: "{description}",
                                                                                             classes: "{?listItemClass}",
-                                                                                            DOMMutation: _DOMMutationHandler
+                                                                                            DOMMutation: _DOMMutationHandler,
+                                                                                            click: function(e){e.preventDefault();}
                                                                                         }
                                                                                     }
                                                                                 }
@@ -524,6 +525,7 @@ oxana.behaviorimplementations["WA_RESIZE"] = {
     stopPropagation:true
 };
 oxana.behaviorimplementations["WA_REMOVE"] = {
+    description:"Container Removed",
     do:function(e) {
         var retFromRedoMaybe = arguments[arguments.length-1];
         if(retFromRedoMaybe.container){
@@ -753,8 +755,9 @@ function containerResize(container, dx, dy){
         else
             ++mpi; 
         
-        var ha = container.parent.$el.height();
-        var ha_rel = Math.floor(container.parent.spacing.h * dy / ha);
+        var ha = container.parent.parent.$el.height();
+        var s = dy/Math.abs(dy);
+        var ha_rel = Math.floor(Math.abs(dy*100/ha))*s;
         container.parent.spacing.h = container.parent.spacing.h - ha_rel;
         
         var sibling_id = container.parent.parent.components[mpi].props.id;
@@ -770,8 +773,9 @@ function containerResize(container, dx, dy){
         else
             ++mpi; 
 
-        var wa = container.$el.width();
-        var wa_rel = Math.floor(container.spacing.colSpan * dx / wa);
+        var wa = container.parent.$el.width();
+        var s = dx/Math.abs(dx);
+        var wa_rel = Math.floor(Math.abs(dx*12/wa)) * s;
         container.spacing.colSpan = container.spacing.colSpan - wa_rel;
         
         var sibling_id = container.parent.components[mpi].props.id;
