@@ -309,7 +309,8 @@ var DataGrid = function(_props)
                 {
                     column.itemEditor.props["value"] = "{"+column.dataField+"}";
                 }
-                itemEditor = Component.fromLiteral(column.itemEditor, data);
+                column.itemEditor.props.bindingDefaultContext = data;
+                itemEditor = Component.fromLiteral(column.itemEditor);
                 column.itemEditor.props.label = column.headerText; 
                 //var props = extend(true, true, column.itemEditor.props);
                 //delete props["value"];

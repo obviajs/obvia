@@ -20,7 +20,6 @@ rjs.define("./components/base/History/HistoryStep.js", "HistoryStep");
 rjs.define("./components/base/History/HistoryEventType.js", "HistoryEventType");
 rjs.define("./components/base/Component.js", "Component");
 rjs.define("./components/base/Spacing.js", "Spacing");
-rjs.define("./components/base/Selectable.js", "Selectable");
 rjs.define("./components/base/Parent.js", "Parent");
 rjs.define("./components/base/NavParent.js", "NavParent");
 rjs.define("./components/base/ContainerType.js","ContainerType");
@@ -99,10 +98,6 @@ rjs.define("./components/AutoComplete/AutoCompleteEx.css", "AutoCompleteExCSS");
 rjs.define("./components/AutoComplete/TokenRenderer.js", "TokenRenderer");
 rjs.define("./components/AutoComplete/SuggestionRenderer.js", "SuggestionRenderer");
  
-//ComboBox
-rjs.define("lib/dependencies/styles/bootstrap.multiselect.css", "ComboCSS");
-rjs.define("lib/dependencies/scripts/bootstrap.multiselect.js", "ComboScript");
-rjs.define("./components/ComboBox.js", "ComboBox");
 //Map
 //rjs.define("https://maps.googleapis.com/maps/api/js?key=AIzaSyD04Q93F3BcHhGl483rfMC_MD1Y8y7K0lo", "GoogleMapScript");
 //rjs.define("./components/Map.js", "GoogleMap");
@@ -116,9 +111,6 @@ rjs.define("./components/TrippleSwitch.js", "TrippleSwitch");
 rjs.define("./components/MultiSwitch.js", "MultiSwitch");
 //Upload
 rjs.define("lib/dependencies/scripts/jquery.slimscroll.js", "SlimScroll");
-rjs.define("lib/dependencies/styles/kx-upload.css", "KxUploadCSS");
-
-rjs.define("./components/FormUpload.js", "FormUpload");
 
 rjs.define("./components/Form/Upload.js", "Upload");
 rjs.define("./components/UploadEx.js", "UploadEx");
@@ -156,7 +148,6 @@ rjs.require([
         "RemoteObject", 
         "Component",
         "Spacing",
-        "Selectable",
         "Parent",
         "ContainerType",
         "NavParent",
@@ -203,9 +194,6 @@ rjs.require([
         "AutoCompleteExCSS",
         "ModalSize",
         "Modal",
-        "ComboBox",
-        "ComboScript",
-        "ComboCSS",
         //"GoogleMapScript",
         //"GoogleMap",
         "ToggleCSS",
@@ -213,10 +201,8 @@ rjs.require([
         "Toggle",
         "TrippleSwitch",
         "MultiSwitch",
-        "KxUploadCSS",
         "Upload",
         "SlimScroll",
-        "FormUpload",
         "UploadEx",
         "DataGridCellRenderer",
         "DataGridColumn",

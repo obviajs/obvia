@@ -3,9 +3,13 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
     var _defaultParams = {
         id: "Component_"+Component.instanceCnt,
         classes: [],
-        guid: guid()
+        guid: guid(),
+        bindingDefaultContext:Component.defaultContext
     };
     shallowCopy(extend(false, false, _defaultParams, _props), _props);
+    var ppb =  Component.processPropertyBindings(_props);
+    _props = ppb.processedProps;
+    var bindingDefaultContext = _props.bindingDefaultContext;
     var _guid = _props.guid;
     var _id = _props.id =="" ? _defaultParams.id : _props.id;
     var _enabled;
@@ -21,9 +25,9 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
     var _creationComplete = _props.creationComplete;
     var _change = _props.change;
     var _DOMMutation = _props.DOMMutation;
-    
+
     var _watchers = [];
-    var _bindings = [];
+    var _bindings = ppb.bindings;
     var _attached = false;
     if(Component.usedComponentIDS[_id]==1) {
         _id += "_" +Component.instanceCnt;
@@ -481,16 +485,16 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
     {
         if(_bindedTo!=data){
             this.resetBindings();
-            this.applyBindings(_bindings, data);
+            _watchers = [];
+            this.applyBindings(data);
         }
     };
 
-    this.applyBindings = function(bindings, data)
+    this.applyBindings = function(data)
     {
         _bindedTo = data;
-        _bindings = bindings;
-        var _self = this;
-        for(var bi=0;bi<bindings.length;bi++){
+        var _self = this, w = [];
+        for(var bi=0;bi<_bindings.length;bi++){
             (function(currentItem, bindingExp, site, site_chain, nullable){
                 return (function(e) { // a closure is created
                     //this here refers to window context
@@ -501,7 +505,7 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
                     }
                    // var context = extend(false, true, this, obj);
                     var fn = function(){
-                        _watchers.splicea(_watchers.length, 0, BindingUtils.getValue(this, bindingExp, site, site_chain, defaultBindTo));
+                        w.splicea(w.length, 0, BindingUtils.getValue(this, bindingExp, site, site_chain, defaultBindTo));
                     };
                     if(nullable){
                         var fnDelayed = whenDefined(this[defaultBindTo], bindingExp, fn);
@@ -511,8 +515,9 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
                     }
                     
                 })();	
-            })(data, bindings[bi].expression, this, [bindings[bi].property], bindings[bi].nullable);
+            })(data, _bindings[bi].expression, this, [_bindings[bi].property], _bindings[bi].nullable);
         }
+        return w;
     };
 
     this.keepBase = function()
@@ -593,13 +598,12 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
     Component.ready(this, function(element){
         _self.initEvents(element);
     });
+    if(_props.applyBindings==null || _props.applyBindings==true)
+    _watchers = this.applyBindings(bindingDefaultContext);
 }
 
-Component.instanceCnt = 0;
-Component.fromLiteral = function(_literal, bindingDefaultContext=null)
+Component.processPropertyBindings = function(props)
 {
-    var _literal = Object.assign({}, _literal);
-    var props = Object.assign({}, _literal.props);
     var _bindings = [];
     //build components properties, check bindings
     var _processedProps = {};
@@ -621,16 +625,25 @@ Component.fromLiteral = function(_literal, bindingDefaultContext=null)
             }
         }
     }
+    return {"bindings":_bindings, "processedProps":_processedProps};
+}
 
-   
+Component.instanceCnt = 0;
+Component.fromLiteral = function(_literal)
+{
+    var _literal = Object.assign({}, _literal);
+    var props = Object.assign({}, _literal.props);
+    //var ppb =  Component.processPropertyBindings(props);
+    //var _bindings = ppb.bindings;
+    //build components properties, check bindings
+    //var _processedProps = ppb.processedProps;
     //construct the component
     if(_literal.constructor)
     {
         if (typeof _literal.constructor == "string") {
             _literal.constructor = eval(_literal.constructor);
         }
-        var el = new _literal.constructor(_processedProps);
-        el.applyBindings(_bindings, bindingDefaultContext);
+        var el = new _literal.constructor(props);
         return el;
     }
 }

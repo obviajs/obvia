@@ -78,22 +78,9 @@ var DateTimeCb = function (_props, overrided = false) {
 
     this.renderMonthSelect = function (value = 1) {
         var dp = [];
-        var monthMapper = {
-            "1": "Janar",
-            "2": "Shkurt",
-            "3": "Mars",
-            "4": "Prill",
-            "5": "Maj",
-            "6": "Qershor",
-            "7": "Korrik",
-            "8": "Gusht",
-            "9": "Shtator",
-            "10": "Tetor",
-            "11": "Nentor",
-            "12": "Dhjetor"
-        };
+        
         for (var i = 1; i < 13; i++) {
-            dp.push({"value": i, "text": monthMapper[i]})
+            dp.push({"value": i, "text": _monthMapper[i]})
         }
         this.monthSelect = new Select({
             id: 'monthSelect-' + this.id,
@@ -313,6 +300,20 @@ var DateTimeCb = function (_props, overrided = false) {
         inputFormat: 'DD/MM/YYYY',
         outputFormat: 'DD-MM-YYYY',
         value: '06/06/2006',
+        monthMapper: {
+            "1": "January",
+            "2": "February",
+            "3": "March",
+            "4": "April",
+            "5": "May",
+            "6": "June",
+            "7": "July",
+            "8": "August",
+            "9": "September",
+            "10": "October",
+            "11": "November",
+            "12": "December"
+        },
         afterAttach: this.afterAttach,
         change: this.changeHandler.bind(this)
     };
@@ -322,7 +323,8 @@ var DateTimeCb = function (_props, overrided = false) {
     var _inputFormat = _props.inputFormat;
     var _mode = _props.mode;
     var _value = _props.value;
-
+    var _monthMapper = _props.monthMapper;
+    
     Component.call(this, _props);
 
     if (overrided) {

@@ -7,6 +7,20 @@
 //component definition
 var Select = function (_props, overrided = false) {
     var _self = this;
+    Object.defineProperty(this, "dataProvider", 
+    {
+        get: function dataProvider() 
+        {
+            return _dataProvider;
+        },
+        set: function dataProvider(v) 
+        {
+            if(_dataProvider != v)
+            {
+                _dataProvider = v;
+            }
+        }
+    });
 
     Object.defineProperty(this, "value",
         {
@@ -33,16 +47,7 @@ var Select = function (_props, overrided = false) {
     };
 
     this.template = function () {
-        return "<select data-triggers='change' " + (!this.enabled ? "disabled" : "") + " class='" + this.cssClass + "' id='" + this.domID + "'>" + "</select>";
-    };
-
-    this.selectByText = function (text) {
-        this.$el.find('option').each(function () {
-            if ($(this).html() == text) {
-                this.value = $(this).attr('value');
-            }
-        });
-
+        return "<select data-triggers='change' id='" + this.domID + "'>" + "</select>";
     };
 
     this.renderOptions = function () {
@@ -50,9 +55,9 @@ var Select = function (_props, overrided = false) {
 
         _dataProvider.forEach(function (option, index) {
             if (option[_valueField] == _value) {
-                opts += "<option value=" + option[_valueField] + " selected>" + option[_textField] + "</option>";
+                opts += "<option value=" + option[_valueField] + " selected>" + option[_labelField] + "</option>";
             } else {
-                opts += "<option value=" + option[_valueField] + ">" + option[_textField] + "</option>";
+                opts += "<option value=" + option[_valueField] + ">" + option[_labelField] + "</option>";
             }
         }.bind(this));
 
@@ -61,16 +66,15 @@ var Select = function (_props, overrided = false) {
 
     var _defaultParams = {
         dataProvider: null,
-        textField: "",
+        labelField: "",
         valueField: "",
         value: "",
-        class: "form-control",
         afterAttach: this.afterAttach
     };
     _props = extend(false, false, _defaultParams, _props);
-
+    _props.applyBindings = false;
     var _dataProvider = _props.dataProvider;
-    var _textField = _props.textField;
+    var _labelField = _props.labelField;
     var _valueField = _props.valueField;
     var _value = _props.value;
     var _change = _props.change;
@@ -81,7 +85,7 @@ var Select = function (_props, overrided = false) {
 
         var e = arguments[0];
         if (!e.isDefaultPrevented()) {
-            _self.changeHandler();
+            _self.changeHandler.apply(this, arguments);
         }
     };
 

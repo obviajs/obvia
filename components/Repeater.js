@@ -208,6 +208,7 @@ var Repeater = function(_props)
             var rowItems = {};
             _self.components.forEach(function (component, vcolIndex) {
                 //clone objects
+                component.props.bindingDefaultContext = data;
                 var el = Component.fromLiteral(component, data);
                 var cmpId = component.props.id;
 
