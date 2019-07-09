@@ -66,8 +66,6 @@ rjs.define("./components/CheckBoxGroup.js", "CheckBoxGroup");
 rjs.define("./components/RadioButton.js", "RadioButton");
 //RadioGroup
 rjs.define("./components/RadioGroup.js", "RadioGroup");
-//HierarchicalTree
-rjs.define("./components/HierarchicalTree.js", "HierarchicalTree");
 //Amount
 rjs.define("./components/Amount.js", "Amount");
 //Image
@@ -83,6 +81,10 @@ rjs.define("lib/dependencies/summernote/summernote.min.js", "SummerNoteScript");
 //Select
 rjs.define("./components/Select/Option.js", "Option");
 rjs.define("./components/Select/Select.js", "Select");
+//Tree
+rjs.define("./components/Tree/css/tree-default.css", "tree_default_css");
+rjs.define("./components/Tree/Li.js", "Li");
+rjs.define("./components/Tree/Tree.js", "Tree");
 //DateTime
 rjs.define("./components/DateTime.js", "DateTime");
 rjs.define("lib/dependencies/scripts/moment.js", "MomentJS");
@@ -164,7 +166,6 @@ rjs.require([
         "FormFieldSize",
         "FormEventType",
         "Hidden",
-        "HierarchicalTree",
         "BootBox",
         "Repeater",
         "List",
@@ -215,7 +216,10 @@ rjs.require([
         "ProgressBarStyle",
         "ProgressBar",
         //
-        "CurrencyExRate"
+        "CurrencyExRate",
+        "tree_default_css",
+        "Li",
+        "Tree"
         //"TabExample",
         //"LabelExample"
         //"Button",
@@ -256,7 +260,8 @@ rjs.require([
         //rjs.define("./oxana/accounting/invoice.js", "Invoice");
        //rjs.define("./oxana/layoutBuilder.js", "layoutBuilder");
 
-       rjs.define("./examples/Select/example.js", "SelectExample");
+       //rjs.define("./examples/Select/example.js", "SelectExample");
+       rjs.define("./examples/Tree/example.js", "TreeExample");
        // rjs.define("./oxana/magnetLayout.js", "magnetLayout");
       
        //rjs.define("./examples/Upload/singleUploadExample.js", "singleUploadExample");
@@ -265,7 +270,6 @@ rjs.require([
        //rjs.define("./examples/Upload/example.js", "UploadExample");
       //  rjs.define("./examples/Form/example.js", "FormExample");
       //   rjs.define("./examples/Form/ajaxExample.js", "FormExample");
-       // rjs.define("./examples/HierarchicalTree/example.js", "HierarchicalTreeExample");
         // rjs.define("./examples/Form/example.js", "FormExample");
         // rjs.define("./examples/Form/ajaxExample.js", "FormExample");
         //rjs.define("./examples/Form/myexample.js","FormExample");

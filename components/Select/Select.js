@@ -53,8 +53,6 @@ var Select = function (_props, overrided = false) {
         this.addComponents(this.components);
     };
 
-    
-
     var _defaultParams = {
         dataProvider: null,
         optionLabel: "",
@@ -93,33 +91,7 @@ var Select = function (_props, overrided = false) {
     };
 
     Parent.call(this, _props);
-   
-    
-    this.addRow = function (data, index, isPreventable = false, focusOnRowAdd = true) 
-    {
-        var cmp = extend(true, _component);
-        cmp.props.bindingDefaultContext = data;
-        var el = Component.fromLiteral(cmp, data);
-        var cmpId = cmp.props.id;
 
-        el.on('creationComplete', (function (ci) { 
-                return (function(e) { // a closure is created
-                    e.stopImmediatePropagation();
-                    e.stopPropagation();
-                    ccComponents.push(el.id);
-                });
-        })());
-    }
-    this.render = function () 
-    {
-        if(_dataProvider && _dataProvider.forEach)
-        {
-            this.dataProvider.forEach(function (data, index) {  
-                _self.addRow(data, index + 1);
-            });
-        }
-        return this.$el;
-    }
     if (overrided) {
         this.keepBase();
     }
