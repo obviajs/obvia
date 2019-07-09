@@ -81,7 +81,8 @@ rjs.define("./components/TextEditor.js", "TextEditor");
 rjs.define("lib/dependencies/summernote/summernote.css", "SummerNoteCSS");
 rjs.define("lib/dependencies/summernote/summernote.min.js", "SummerNoteScript");
 //Select
-rjs.define("./components/Select.js", "Select");
+rjs.define("./components/Select/Option.js", "Option");
+rjs.define("./components/Select/Select.js", "Select");
 //DateTime
 rjs.define("./components/DateTime.js", "DateTime");
 rjs.define("lib/dependencies/scripts/moment.js", "MomentJS");
@@ -175,6 +176,7 @@ rjs.require([
         "TextInput", 
         "TextArea",
         "SpellCheckJS",
+        "Option",
         "Select",
         "SummerNoteCSS",
         "SummerNoteScript",
@@ -252,7 +254,9 @@ rjs.require([
         //rjs.define("./examples/Toggle/example.js", "ToggleExample");
          // rjs.define("./examples/Generic/example.js","GenericExample");
         //rjs.define("./oxana/accounting/invoice.js", "Invoice");
-       rjs.define("./oxana/layoutBuilder.js", "layoutBuilder");
+       //rjs.define("./oxana/layoutBuilder.js", "layoutBuilder");
+
+       rjs.define("./examples/Select/example.js", "SelectExample");
        // rjs.define("./oxana/magnetLayout.js", "magnetLayout");
       
        //rjs.define("./examples/Upload/singleUploadExample.js", "singleUploadExample");

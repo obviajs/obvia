@@ -1,5 +1,6 @@
 var Component = function(_props, overrided=false, _isSurrogate=false)
 {
+    var _self = this;
     var _defaultParams = {
         id: "Component_"+Component.instanceCnt,
         classes: [],
@@ -263,16 +264,16 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
     [
         {
             registerTo: this.$el, events: {
-                'mousedown': _mousedown && typeof _mousedown == 'function' ? _mousedown.bind(this) : undefined,
-                'mouseover': _mouseover && typeof _mouseover == 'function' ? _mouseover.bind(this) : undefined,
-                'mouseup': _mouseup && typeof _mouseup == 'function' ? _mouseup.bind(this) : undefined,
-                'click': _click && typeof _click == 'function' ? _click.bind(this) : undefined,
-                'dblclick': _dblclick && typeof _dblclick == 'function' ? _dblclick.bind(this) : undefined,
-                'keydown': _keydown && typeof _keydown == 'function' ? _keydown.bind(this) : undefined,
-                'keyup': _keyup && typeof _keyup == 'function' ? _keyup.bind(this) : undefined,
-                'creationComplete': _creationComplete && typeof _creationComplete == 'function' ? _creationComplete.bind(this) : undefined,
-                'change': _change && typeof _change == 'function' ? _change.bind(this) : undefined,
-                'DOMMutation': _DOMMutation && typeof _DOMMutation == 'function' ? _DOMMutation.bind(this) : undefined,
+                'mousedown': _mousedown && typeof _mousedown == 'function' ? _mousedown.bind(_self) : undefined,
+                'mouseover': _mouseover && typeof _mouseover == 'function' ? _mouseover.bind(_self) : undefined,
+                'mouseup': _mouseup && typeof _mouseup == 'function' ? _mouseup.bind(_self) : undefined,
+                'click': _click && typeof _click == 'function' ? _click.bind(_self) : undefined,
+                'dblclick': _dblclick && typeof _dblclick == 'function' ? _dblclick.bind(_self) : undefined,
+                'keydown': _keydown && typeof _keydown == 'function' ? _keydown.bind(_self) : undefined,
+                'keyup': _keyup && typeof _keyup == 'function' ? _keyup.bind(_self) : undefined,
+                'creationComplete': _creationComplete && typeof _creationComplete == 'function' ? _creationComplete.bind(_self) : undefined,
+                'change': _change && typeof _change == 'function' ? _change.bind(_self) : undefined,
+                'DOMMutation': _DOMMutation && typeof _DOMMutation == 'function' ? _DOMMutation.bind(_self) : undefined,
             }
         }
     ];
@@ -294,7 +295,7 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
                     delete customEvents[0].events[eventType];
                 }
                 var privateEvent = _props[eventType];
-                eventsObj[eventsArr[i]] = privateEvent && typeof privateEvent == 'function' ? privateEvent.bind(this) : undefined;
+                eventsObj[eventsArr[i]] = privateEvent && typeof privateEvent == 'function' ? privateEvent.bind(_self) : undefined;
             }
             var found = false;
             for(var i=0;i<customEvents.length;i++)
@@ -326,7 +327,7 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
         return [
             {
                 registerTo: this.$el, events: {
-                    'afterAttach': this.afterAttach && typeof this.afterAttach == 'function' ? this.afterAttach.bind(this) : undefined,
+                    'afterAttach': this.afterAttach && typeof this.afterAttach == 'function' ? this.afterAttach.bind(_self) : undefined,
                 }
             }
         ].concat(_dataTriggerEventList);
@@ -536,7 +537,6 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
         this.keepBase();
     }
 
-    var _self = this;
    //"#" + this.$el.attr('id'), 
     this.initEvents = function (element, mode=1) //1:real component, 0:surrogate i.e no real DOM element 
     {
@@ -573,6 +573,7 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
                                             ]
                                         );
                                     }
+                                    args[0].originalContext = this;
                                     handler.events[innerEventIn].apply(component, args);
                                 }
                             })(innerEventIn, _self);    
