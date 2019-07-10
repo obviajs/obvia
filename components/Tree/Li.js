@@ -12,13 +12,14 @@ var Li = function (_props, overrided = false) {
             if(_label != v)
             {
                 _label = v;
-                if(this.$el){
-                    if(this.$el[0].nextSibling)
-                        this.$el[0].nextSibling.textContent = v;
-                    else
-                        this.$el.prependText(v);
+                if(this.components.length==0){
+                    if(this.$el){
+                        if(this.$el[0].nextSibling)
+                            this.$el[0].nextSibling.textContent = v;
+                        else
+                            this.$el.prependText(v);
+                    }
                 }
-                    
             }
         }
     });
