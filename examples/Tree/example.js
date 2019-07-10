@@ -14,7 +14,8 @@ var myTree = new Tree({
           {title: "Node 2.2", key: "4"}
         ]}
       ],
-      
+    expandIcon: "fa-chevron-circle-right",
+    collapseIcon: "fa-chevron-circle-down",
     click : function(e){console.log("From ClickAction");}
 });
 
