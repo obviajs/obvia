@@ -175,7 +175,7 @@ var Tree = function (_props, overrided = false) {
         var components = [];
         for(var i=0;i<dp.length;i++)
         {
-            var cmpLi = extend(true,_componentLi);
+            var cmpLi = extend(true, _componentLi);
             cmpLi.props.bindingDefaultContext = dp[i];
             if(dp[i][_childrenField] && dp[i][_childrenField].length>0)
             {
