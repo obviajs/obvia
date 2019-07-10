@@ -7,7 +7,7 @@
 //component definition
 var Tree = function (_props, overrided = false) {
     //inner component data
-    
+    var _self = this;
     Object.defineProperty(this,"dataProvider",
     {
         get:function dataProvider()
@@ -58,13 +58,27 @@ var Tree = function (_props, overrided = false) {
     var _childrenField=_props.childrenField;
 
     var _click = _props.click;
-    
+    var _toggleTree = function(){
+        if(this.components.length>0){
+            var tree = this.children[this.components[0].props.id];
+            var classes = tree.classes.slice(0);
+            var ind = classes.indexOf("d-none");
+            if(ind>-1){
+                classes.splice(ind, 1);
+            }else{
+                classes.pushUnique("d-none");
+            }
+            tree.classes = classes; 
+        }
+    }   
+
     _componentLi = _component = {
         constructor: Li,
         props:{
             id:"li",
             "value": '{'+_valueField+'}',
-            "label": '{'+_labelField+'}'
+            "label": '{'+_labelField+'}',
+            "click":_toggleTree
         }
     };
     
@@ -76,7 +90,7 @@ var Tree = function (_props, overrided = false) {
             "labelField": _labelField
         }
     };
-       
+   
     this.buildTree = function(dp)
     {
         var components = [];
@@ -100,7 +114,7 @@ var Tree = function (_props, overrided = false) {
         //toggleChildren
         if(typeof _click=='function')
         _click.apply(this,arguments);
-        var e=arguments[0];
+        var e = arguments[0];
         if(!e.isDefaultPrevented()){
             _self.clickHandler();
         }
