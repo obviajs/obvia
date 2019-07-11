@@ -71,7 +71,6 @@ var AutoCompleteEx = function(_props)
                     id: 'tokenInput',
                     label: 'Type something...',
                     versionStyle: '',
-                    embedded:true,
                     keydown:_tokenInputKeyDown,
                     keyup: _tokenInputKeyUp
                 }).on('creationComplete', function(e){
@@ -234,7 +233,7 @@ var AutoCompleteEx = function(_props)
     var _querySuggestions = function(toMatch){
         console.log("querySuggestions for: ", toMatch);
         var ac = differenceOnKeyMatch (_dataProvider, _value, _valueField);
-        _suggestions = sortBestMatch(ac, toMatch, _self.matchType, _labelField);
+        _suggestions = new ArrayEx(sortBestMatch(ac, toMatch, _self.matchType, _labelField));
         _openSuggestionsList();
     };
     /*
@@ -332,14 +331,13 @@ var AutoCompleteEx = function(_props)
         for(var j=0;j<itemsToAdd.length;j++)
         {
             _value.push(itemsToAdd[j]);
-            _self.tokensRepeater.addRow(itemsToAdd[j]);
         }
         
     };
     this.removeSuggestionItemAt = function(index){
         //TODO: If we are going to keep item ordering in the view the save as in value
         if(index>=0 && index<_suggestions.length){
-            this.suggestionsRepeater.removeRow(index+1, false, false); 
+            _suggestions.splice(index, 1);
             //this._value.splice(index, 1);
         }else
             console.log("Index out of range. No item will be removed.");
@@ -348,8 +346,7 @@ var AutoCompleteEx = function(_props)
     {
         //TODO: If we are going to keep item ordering in the view the save as in value
         if(index>=0 && index<_value.length){
-            this.tokensRepeater.removeRow(index+1, false, false); 
-            //this._value.splice(index, 1);
+            _value.splice(index, 1);
         }else
             console.log("Index out of range. No item will be removed.");
     };
@@ -362,8 +359,7 @@ var AutoCompleteEx = function(_props)
             //TODO: Add Validation of the item from the Selectable base behavior
             var matches = getMatching(_value, _valueField,  items[i][_valueField]);
             for(var j=0;j<matches.indices.length;j++){
-                this.tokensRepeater.removeRow(matches.indices[j]+1, false, false);     
-                //this._value.splice(matches.indices[j], 1);   
+                _value.splice(matches.indices[j], 1);   
             }
         }    
         
@@ -371,8 +367,8 @@ var AutoCompleteEx = function(_props)
     
     this.removeAllTokenItems = function()
     {
-        this.tokensRepeater.removeAllRows();
-        _value = [];
+        //this.tokensRepeater.removeAllRows();
+        _value.splice(0, _value.length);
     };
     Object.defineProperty(this, "multiSelect", 
     {
@@ -503,7 +499,7 @@ var AutoCompleteEx = function(_props)
     var _defaultParams = {
         closeIconSide:"left",
         dataProvider:[],
-        value:[],
+        value: new ArrayEx([]),
         allowNewItem: false,
         multiSelect: false
     };
@@ -512,22 +508,20 @@ var AutoCompleteEx = function(_props)
     var _labelField = _props.labelField;
     var _dataProvider = _props.dataProvider;
     
-    var _value = _props.value;
-    _value = intersectOnKeyMatch(_dataProvider, _value, _valueField); 
-
-    var_allowNewItem = _props.allowNewItem;
+    var _allowNewItem = _props.allowNewItem;
     var _label = _props.label;  
     var _closeIconSide = _props.closeIconSide;
-    var  _suggestions = [];
+    var  _suggestions = new ArrayEx([]);
     var _enabled = true;
     
     var _delayQuerySuggestions = debounce(_querySuggestions, 400);
     var _delayRemoveTokenItemAt = debounce.call(this, this.removeTokenItemAt, 200);
     var _multiSelect = _props.multiSelect;
     var _self = this;
+    var _value = getBindingExp(_props.value)?new ArrayEx([]):_props.value;
 
     Component.call(this, _props, true);
-    
+ 
     this.render = function () 
     {
         if(this.tokensRepeater.$container == undefined)

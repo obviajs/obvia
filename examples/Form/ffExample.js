@@ -3,7 +3,7 @@ $('#root').append(loader.render());
 loader.show();
 
 window.textValue = "Hello :)";
-window.autocompleteValue = [{ "id": "1", "text": "Ministria e Puneve te Jashtme" }];
+window.autocompleteValue = new ArrayEx([{ "id": "1", "text": "Ministria e Puneve te Jashtme" }]);
 //windows its the default context, putting below just for reminding DEVs
 Component.defaultContext = window;
 
@@ -63,7 +63,7 @@ var myForm = new Form({
                         id: 'autocompleteR',
                         valueField: "id",
                         labelField: "text",
-                        dataProvider: [{ "id": "1", "text": "Ministria e Puneve te Jashtme" }, { "id": "2", "text": "Ministria e Drejtesise" }, { "id": "3", "text": "Ministria e Brendshme" }],
+                        dataProvider: new ArrayEx([{ "id": "1", "text": "Ministria e Puneve te Jashtme" }, { "id": "2", "text": "Ministria e Drejtesise" }, { "id": "3", "text": "Ministria e Brendshme" }]),
                         value: '{autocompleteValue}'
                     }
                 }

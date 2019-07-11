@@ -106,7 +106,7 @@ var Button = function(_props, overrided=false)
     shallowCopy(extend(false, false, _defaultParams, _props), _props);
     var _label;
     var _type = _props.type;
-    var _value = _props.value;
+    var _value; 
     var _afterAttach = _props.afterAttach;
 
     _props.afterAttach = function () {
@@ -115,7 +115,8 @@ var Button = function(_props, overrided=false)
 
         var e = arguments[0];
         if (!e.isDefaultPrevented()) {
-            this.label = _props.label;
+            if(_props.label)
+                this.label = _props.label;
         }
     };
 

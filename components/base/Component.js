@@ -9,7 +9,11 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
     };
     shallowCopy(extend(false, false, _defaultParams, _props), _props);
     var ppb =  Component.processPropertyBindings(_props);
-    _props = ppb.processedProps;
+    for(var prop in _props){
+        if(!ppb.processedProps[prop])
+            delete _props[prop];
+    }
+    
     var bindingDefaultContext = _props.bindingDefaultContext;
     var _guid = _props.guid;
     var _id = _props.id =="" ? _defaultParams.id : _props.id;
@@ -600,7 +604,7 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
         _self.initEvents(element);
     });
     if(_props.applyBindings==null || _props.applyBindings==true)
-    _watchers = this.applyBindings(bindingDefaultContext);
+        _watchers = this.applyBindings(bindingDefaultContext);
 }
 
 Component.processPropertyBindings = function(props)
@@ -612,14 +616,9 @@ Component.processPropertyBindings = function(props)
     for (var prop in props) {
         if (typeof prop == 'string') {
             //check for binding
-            if (props[prop] && props[prop][0] == '{' && props[prop][props[prop].length - 1] == '}') {
-                var nullable = false, s = 1;
-                if(props[prop][1] == '?'){
-                    s = 2;
-                    nullable = true;
-                }
-                var expression = props[prop].slice(s, -1);
-                _bindings.push({"expression":expression, "property":prop, "nullable":nullable});
+            var b = getBindingExp(props[prop])
+            if (b) {
+                _bindings.push({"expression":b.expression, "property":prop, "nullable":b.nullable});
             } else {
                 //no binding
                 _processedProps[prop] = props[prop];

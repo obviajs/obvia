@@ -11,6 +11,7 @@ var Repeater = function(_props)
     this.currentItem = {};
     this.rowItems = [];
     var _self = this;
+    var _creationFinished = false;
 
     this.containerKeyDown = function(e)
     {
@@ -136,9 +137,10 @@ var Repeater = function(_props)
                 this.addRow(this.dataProvider[ind], ind+1); 
             }
         }else{
-            for(var i=0;i>deltaRows;i--){
-                var ind = this.rowItems.length + i;
-                this.removeRow(ind, false, true, dpRemove = false); 
+            var toRemove = differenceOnKeyMatch(_oldDataProvider, _dataProvider, "guid", false, true);
+            for(var i=0;i<toRemove.a1_indices.length;i++){
+                //var ind = this.rowItems.length + i;
+                this.removeRow(toRemove.a1_indices[i]+1, false, true, dpRemove = false); 
             }
         }
         //for the rows that we just added there is no need to refreshBindings
@@ -150,7 +152,7 @@ var Repeater = function(_props)
             }
         }
     };
-
+    var _oldDataProvider;
     Object.defineProperty(this, "dataProvider", 
     {
         get: function dataProvider() 
@@ -165,6 +167,7 @@ var Repeater = function(_props)
                     _dpWatcher.reset();
                 }
                 _dataProvider = v;
+                _oldDataProvider = extend(true, v);
                 _dpWatcher = ChangeWatcher.getInstance(_dataProvider);
                 _dpWatcher.watch(_dataProvider, "length", _dpLengthChanged);
             }
@@ -174,7 +177,8 @@ var Repeater = function(_props)
     var _dpWatcher;
     var _dpLengthChanged = function(e)
     {
-        _self.dataProviderChanged();
+        if(_creationFinished)
+            _self.dataProviderChanged();
     }
 
     Object.defineProperty(this, "value", {
@@ -261,6 +265,7 @@ var Repeater = function(_props)
                             }
                             
                             if (_self.currentIndex == _self.dataProvider.length && !addRowFlag) {
+                                _creationFinished = true;
                                 _self.trigger('creationComplete');
                                 _self.focusComponent(0, 0);
                             }
@@ -419,7 +424,7 @@ var Repeater = function(_props)
             this.rowItems.splice(index - 1, 1);
             this.rows.splice(index - 1, 1);
             //animate
-            if (focusOnRowDelete)
+            if (focusOnRowDelete && (index-2)>=0)
                 this.rowItems[index - 2][this.components[0].props.id].scrollTo();
 
             return removedItem;
@@ -504,10 +509,17 @@ var Repeater = function(_props)
         // this.rowItems = {}; we need this if we create Repeater instances via Object.assign
         if(_dataProvider && _dataProvider.forEach)
         {
-            this.dataProvider.forEach(function (data, index) {  
-                _self.addRow(data, index + 1);
-            });
-        }
+            if(_dataProvider.length>0){
+                this.dataProvider.forEach(function (data, index) {  
+                    if(!_dataProvider[index]["guid"])
+                        _dataProvider[index]["guid"] = guid();;
+                    _self.addRow(data, index + 1);
+                });
+            }else
+                _creationFinished = true;
+            _oldDataProvider = extend(true, _dataProvider);
+        }else
+            _creationFinished = true;
        
         this.$el.trigger('onEndDraw');
      //   if(parent.length>0)

@@ -52,8 +52,7 @@ var TextInput = function (_props, overrided = false) {
     };
  
     this.template = function () {
-        return  "<input data-triggers='change' type='text' id='" + this.domID + "' " +
-            (!this.enabled ? "disabled" : "") + " value='" + this.value + "' >";
+        return  "<input data-triggers='change' type='text' id='" + this.domID + "' value='" + this.value + "' >";
     };
  
     var _defaultParams = {

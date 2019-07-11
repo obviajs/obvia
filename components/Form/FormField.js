@@ -116,14 +116,6 @@ var FormField = function(_props)
         }
     });
 
-    Object.defineProperty(this, "spacing", 
-    {
-        get: function spacing() 
-        {
-            return _spacing;
-        }
-    });
-
     Object.defineProperty(this, "cmp", 
     {
         get: function cmp() 
@@ -179,9 +171,7 @@ var FormField = function(_props)
     this.label = _props.label;
     this.required = _props.required;
     this.placeholder = _props.placeholder;
-
-    var _spacing = new Spacing(_props.spacing, this.$el);
-
+    
     _self.$el.append(_cmp.render());
     _cmp.on('creationComplete', function(e){
         e.stopPropagation();
