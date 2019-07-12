@@ -1,6 +1,11 @@
 var flowerCM = window.flowerCM || {};
-rjs.init({debug:false});
 //base Components
+rjs.define("lib/JTemplate.js", "JTemplate");
+rjs.define("lib/DataStore.js", "DataStore");
+rjs.define("lib/cache/Cache.js", "Cache");
+rjs.define("lib/cache/CachedVariable.js", "CachedVariable");
+rjs.define("components/Loader.js", "Loader");
+
 rjs.define("lib/EventDispatcher.js", "EventDispatcher");
 rjs.define("lib/ArrayUtils.js", "ArrayUtils");
 rjs.define("lib/ObjectUtils.js", "ObjectUtils");
@@ -14,6 +19,7 @@ rjs.define("lib/binding/PropertyChangeEvent.js", "PropertyChangeEvent");
 rjs.define("lib/binding/ChangeWatcher.js", "ChangeWatcher");
 rjs.define("lib/rca/RemoteCursorEvent.js", "RemoteCursorEvent");
 rjs.define("lib/rca/RemoteObject.js", "RemoteObject");
+rjs.define("./components/base/RepeaterEventArgs.js", "RepeaterEventArgs");
 rjs.define("./components/base/BgStyle.js", "BgStyle");
 rjs.define("./components/base/History/History.js", "History");
 rjs.define("./components/base/History/HistoryStep.js", "HistoryStep");
@@ -132,6 +138,11 @@ rjs.define("./components/ProgressBar/ProgressBar.js", "ProgressBar");
 rjs.define("./components/ProgressBar/ProgressBarStyle.js", "ProgressBarStyle");
 
 rjs.require([
+        "JTemplate",
+        "DataStore",
+        "Cache",
+        "CachedVariable",
+        "Loader",
         "DOMContentLoaded",
         "EventDispatcher",
         "ArrayUtils",
@@ -144,6 +155,7 @@ rjs.require([
         "PropertyChangeEvent",
         "ChangeWatcher",
         "RemoteCursorEvent",
+        "RepeaterEventArgs",
         "BgStyle",
         "HistoryStep",
         "History",
@@ -234,7 +246,7 @@ rjs.require([
        
     ], function () {
          
-        rjs.define("./examples/Form/ffExample.js", "FormFieldExample");
+        window.main();
         //rjs.define("./examples/Label/example.js", "LabelExample");
         // rjs.define("./examples/RadioButton/example.js", "RadioButtonExample");
         //rjs.define("./examples/AutoComplete/example.js", "AutoComplete");

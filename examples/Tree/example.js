@@ -3,7 +3,6 @@ var myTree = new Tree({
     type: "button",
     value: "Clicked Me",
     style: '',
-    class: "btn btn-success",
     valueField: "key",
     labelField: "title",
     childrenField: "children",

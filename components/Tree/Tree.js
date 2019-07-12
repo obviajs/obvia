@@ -186,7 +186,6 @@ var Tree = function (_props, overrided = false) {
 
                 tree.props.dataProvider = dp[i][_childrenField];
                 cmpLi.props.components = [cmpIcon, cmpLbl, tree];
-                cmpIcon.props.classes.push(_collapseIcon);
             }	
             components.push(cmpLi);
         }
