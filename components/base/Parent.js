@@ -1,4 +1,4 @@
-var Parent = function(_props, overrided=false)
+var Parent = function(_props, overrided=false, _isSurrogate=false)
 {
     Object.defineProperty(this, "children", 
     {
@@ -80,6 +80,7 @@ var Parent = function(_props, overrided=false)
     {
         if(container)
         {
+            component.props.ownerDocument = this.ownerDocument;
             var cmp = Component.fromLiteral(component);
             component.props.id = cmp.id;
             _children[cmp.id] = cmp;
@@ -184,13 +185,21 @@ var Parent = function(_props, overrided=false)
             _creationFinished = true;
     }
 
-    Component.call(this, _props, true);
+    Component.call(this, _props, true, _isSurrogate);
     var base = this.base;
     if(overrided)
     {
         this.keepBase();
     }
-    
+/*
+    this.destruct = function (mode=1)
+    {
+        for(var id in _children){
+            _children[id].destruct(mode);
+        }
+        base.destruct(mode);
+    }
+*/
     var _enabled = _props.enabled;
     Object.defineProperty(this, "enabled", 
     {

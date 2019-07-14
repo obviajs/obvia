@@ -5,7 +5,8 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
         id: "Component_"+Component.instanceCnt,
         classes: [],
         guid: guid(),
-        bindingDefaultContext:Component.defaultContext
+        bindingDefaultContext:Component.defaultContext,
+        ownerDocument:document
     };
     shallowCopy(extend(false, false, _defaultParams, _props), _props);
     var ppb =  Component.processPropertyBindings(_props);
@@ -16,7 +17,7 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
     
     var bindingDefaultContext = _props.bindingDefaultContext;
     var _guid = _props.guid;
-    var _id = _props.id =="" ? _defaultParams.id : _props.id;
+    var _id = _props.id = ((!_props.id) || (_props.id =="")) ? _defaultParams.id : _props.id;
     var _enabled;
     var _classes = [];
     var _parent = _props.parent;
@@ -30,7 +31,7 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
     var _creationComplete = _props.creationComplete;
     var _change = _props.change;
     var _DOMMutation = _props.DOMMutation;
-
+    var _ownerDocument = _props.ownerDocument;
     var _watchers = [];
     var _bindings = ppb.bindings;
     var _attached = false;
@@ -60,7 +61,24 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
             return _id;
         }
     });
-     //domID property
+
+    Object.defineProperty(this, 'ownerDocument',
+    {
+        get: function () {
+            return _ownerDocument;
+        }, 
+        set: function ownerDocument(v)
+        {
+            if(!_ownerDocument)
+            {
+                _ownerDocument = v;
+                Component.ready(this, function(element){
+                    _self.initEvents(element);
+                }, _ownerDocument);
+            }
+        }
+    });
+
     Object.defineProperty(this, 'isSurrogate',
     {
         get: function () {
@@ -426,7 +444,7 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
                     this.$el.on(eventType, proxyHandler);
                 }
                 else
-                    throw Error("$el in not defined");
+                    console.log("$el in not defined");
             }
         }
         return this;
@@ -600,9 +618,12 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
     if (this['beforeAttach'] && (typeof this.beforeAttach == 'function'))
         this.beforeAttach();
 
-    Component.ready(this, function(element){
-        _self.initEvents(element);
-    });
+    if(_ownerDocument){
+        Component.ready(this, function(element){
+            _self.initEvents(element);
+        }, _ownerDocument);
+    }   
+    
     if(_props.applyBindings==null || _props.applyBindings==true)
         _watchers = this.applyBindings(bindingDefaultContext);
 }
@@ -647,16 +668,22 @@ Component.fromLiteral = function(_literal)
         return el;
     }
 }
-Component.listeners = [];
+Component.listeners = {};
 Component.objListeners = {};
 Component.MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
 
-Component.ready = function(cmp, fn) 
+Component.ready = function(cmp, fn, ownerDocument=document) 
 {
     // Store the selector and callback to be monitored
+    if(!ownerDocument["id"]){
+        ownerDocument["id"] = guid();
+    }
     if(cmp.$el)
     {
-        Component.listeners.push({
+        if(Component.listeners[ownerDocument["id"]]==null){
+            Component.listeners[ownerDocument["id"]] = [];
+        }
+        Component.listeners[ownerDocument["id"]].push({
             element: cmp,
             fn: fn
         });
@@ -665,11 +692,11 @@ Component.ready = function(cmp, fn)
         }
         Component.objListeners[cmp.domID].push({"element":cmp, "fn":fn});
     }
-    if (!Component.observer) 
+    if (!Component.observer[ownerDocument["id"]]) 
     {
-        Component.observer = new MutationObserver(Component.check);
+        Component.observer[ownerDocument["id"]] = new MutationObserver(Component.check);
         // Watch for changes in the document window.document.documentElement
-        Component.observer.observe(document, {
+        Component.observer[ownerDocument["id"]].observe(ownerDocument, {
             childList: true,
             subtree: true
         });
@@ -697,23 +724,26 @@ Component.check = function(mutations)
                 if(DOMNode.querySelectorAll)
                 {
                     // Check the DOM for elements matching a stored selector
-                    for (var i = 0, len = Component.listeners.length, listener, elements; i < len; i++) 
+                    if(Component.listeners[DOMNode.ownerDocument.id])
                     {
-                        listener = Component.listeners[i];
-                        var $el = listener.element.$el;
-                        var id = $el.attr('id');
-                        //console.log(DOMNode.id);
-                        var resultNodes = DOMNode.id==id?[DOMNode]:DOMNode.querySelectorAll("#"+id);
-
-                        // Make sure the callback isn't invoked with the 
-                        // same element more than once
-                    // if (mutations.addedNodes[h]==element && !element.ready) 
-                        if(resultNodes.length>0 && !resultNodes[0].ready)
+                        for (var i = 0, len = Component.listeners[DOMNode.ownerDocument.id].length, listener, elements; i < len; i++) 
                         {
-                            resultNodes[0].ready = true;
-                            // Invoke the callback with the element
-                            //listener.element.addedOnDOM();
-                            listener.fn.call(listener.element, $el);
+                            listener = Component.listeners[DOMNode.ownerDocument.id][i];
+                            var $el = listener.element.$el;
+                            var id = $el[0].id;
+                            //console.log(DOMNode.id);
+                            var resultNodes = DOMNode.id==id?[DOMNode]:DOMNode.querySelectorAll("#"+id);
+
+                            // Make sure the callback isn't invoked with the 
+                            // same element more than once
+                        // if (mutations.addedNodes[h]==element && !element.ready) 
+                            if(resultNodes.length>0 && !resultNodes[0].ready)
+                            {
+                                resultNodes[0].ready = true;
+                                // Invoke the callback with the element
+                                //listener.element.addedOnDOM();
+                                listener.fn.call(listener.element, $el);
+                            }
                         }
                     }
                 }
@@ -726,3 +756,4 @@ Component.registered = {};
 Component.usedComponentIDS = {};
 Component.domID2ID = {};
 Component.instances = {};
+Component.observer = {};

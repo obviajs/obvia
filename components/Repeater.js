@@ -130,10 +130,11 @@ var Repeater = function(_props)
     this.dataProviderChanged = function () 
     {
         //add or remove rows 
-        var deltaRows = this.dataProvider.length - this.rowItems.length;
+        var deltaRows = this.dataProvider.length - _oldDataProvider.length;
         if(deltaRows>0){
-            for(var i=0;i<deltaRows;i++){
-                var ind = this.rowItems.length + i;
+            var toAdd = differenceOnKeyMatch(_dataProvider, _oldDataProvider, "guid", false, true);
+            for(var i=0;i<toAdd.a1_indices.length;i++){
+                var ind = toAdd.a1_indices[i];
                 this.addRow(this.dataProvider[ind], ind+1); 
             }
         }else{
@@ -144,13 +145,14 @@ var Repeater = function(_props)
             }
         }
         //for the rows that we just added there is no need to refreshBindings
-        var maxInd = deltaRows>0?this.rowItems.length-deltaRows:this.rowItems.length;
+        var maxInd = deltaRows>0?_oldDataProvider.length:_oldDataProvider.length + deltaRows;
         for(var i = 0; i<maxInd;i++){
             for(var cmpID in this.rowItems[i]){
                 var cmp = this.rowItems[i][cmpID];
                 cmp.refreshBindings(this.dataProvider[i]);
             }
         }
+        _oldDataProvider = extend(true, this.dataProvider);
     };
     var _oldDataProvider;
     Object.defineProperty(this, "dataProvider", 
@@ -167,7 +169,6 @@ var Repeater = function(_props)
                     _dpWatcher.reset();
                 }
                 _dataProvider = v;
-                _oldDataProvider = extend(true, v);
                 _dpWatcher = ChangeWatcher.getInstance(_dataProvider);
                 _dpWatcher.watch(_dataProvider, "length", _dpLengthChanged);
             }

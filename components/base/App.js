@@ -119,12 +119,99 @@ var App = function(_props){
     var _eventTypeArr = ["mousedown", "mouseover", "mouseup", "click", "dblclick", "keydown", "keyup", "mousemove"];
     var _eventTypeArrJoined;
     var _loader = new Loader({ id: 'loader' });
+    var _event2behavior = function(e) {
+        if(e.type != "InactivityDetected" && e.type != "ActivityDetected" && e.type != "WindowHide" && e.type != "WindowShow"){
+            if(_idleTime >= _inactivityInterval){
+                var idleCount = Math.floor(_idleTime/_inactivityInterval);
+                _root.trigger("ActivityDetected", [_idleTime, idleCount]);
+            }
+            _idleTime = 0;
+        }
+        var _domIDCurrentTarget = $(this).attr('id');
+        var _domIDTarget = $(e.target).attr('id'); 
+        
+        var _idCurrentTarget = Component.domID2ID[_domIDCurrentTarget]?Component.domID2ID[_domIDCurrentTarget]:_domIDCurrentTarget;
+        var _idTarget = Component.domID2ID[_domIDTarget]?Component.domID2ID[_domIDTarget]:_domIDTarget;
 
-    this.registerBehaviors = function()
+        var cmpBehaviors;
+        var _idBehaviorManifestor;
+        if(_self.behaviors[_idTarget])
+        {
+            cmpBehaviors = _self.behaviors[_idTarget];
+            _idBehaviorManifestor = _idTarget;
+        }else
+        {
+            cmpBehaviors = _self.behaviors[_idCurrentTarget];
+            _idBehaviorManifestor = _idCurrentTarget;
+        }
+        
+        //console.log(e.type+" "+_idCurrentTarget+ " "+_idTarget)
+        
+        if(cmpBehaviors && cmpBehaviors[e.type]) {
+            var behaviorNameArr = [], behaviorFilterArr = [];
+            var behaviorName, behaviorFilter;
+            var behaviorObj = cmpBehaviors[e.type];
+
+            if(isObject(behaviorObj))
+            {
+                for(var prop in behaviorObj){
+                    behaviorNameArr.push(prop);
+                    behaviorFilterArr.push(behaviorObj[prop]);
+                }
+
+            }else{
+                behaviorNameArr = [behaviorObj];
+                behaviorFilterArr = [null];
+            }
+            
+            for(var b=0;b<behaviorNameArr.length;b++)
+            {
+                behaviorName = behaviorNameArr[b];
+                behaviorFilter = behaviorFilterArr[b];
+
+                var behavior = _self.behaviorimplementations[behaviorName];
+                var qualifies = true, extraArgs = [];
+                if(behavior && typeof behaviorFilter == 'function') {
+                    qualifies = behaviorFilter.apply(Component.instances[_idBehaviorManifestor], arguments);
+                    if(isObject(qualifies)){
+                        extraArgs = qualifies.extraArgs
+                        qualifies = qualifies.qualifies;
+                    }
+                }
+                if(behavior && qualifies) {
+                    var args = [];
+                    for (var i = 0; i < arguments.length; i++) {
+                        args.push(arguments[i]);
+                    }
+                    if(extraArgs.length>0){
+                        args = args.concat(extraArgs);
+                    }
+
+                    if(typeof behavior == 'function') {
+                        behavior.apply(Component.instances[_idBehaviorManifestor], args);
+                    }else{
+                        if(isObject(behavior)){
+                            var ret = behavior.do.apply(Component.instances[_idBehaviorManifestor], args);
+                            if(_historyProps.enabled){
+                                _history.track(behaviorName, ret, Component.instances[_idBehaviorManifestor], args);
+                            }
+                            if(behavior.stopPropagation){
+                                e.stopPropagation();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    };
+    
+    this.registerBehaviors = function(win=window)
     {
         //TODO: te bejme difference e oldBehaviors me newBehaviors dhe te shtojme vetem ato si evente per te evituar off dhe on
-        if(_eventTypeArrJoined)
-            $(window).off(_eventTypeArrJoined);
+        if(_eventTypeArrJoined){
+            $(win).off(_eventTypeArrJoined);
+        }
+            
         for(var cmpId in this.behaviors)
         {
             for(var eventType in this.behaviors[cmpId])
@@ -133,93 +220,17 @@ var App = function(_props){
             }
         }
         _eventTypeArrJoined = _eventTypeArr.join(" ");
-        $(window).on(_eventTypeArrJoined, function(e) {
-            if(e.type != "InactivityDetected" && e.type != "ActivityDetected" && e.type != "WindowHide" && e.type != "WindowShow"){
-                if(_idleTime >= _inactivityInterval){
-                    var idleCount = Math.floor(_idleTime/_inactivityInterval);
-                    _root.trigger("ActivityDetected", [_idleTime, idleCount]);
-                }
-                _idleTime = 0;
-            }
-            var _domIDCurrentTarget = $(this).attr('id');
-            var _domIDTarget = $(e.target).attr('id'); 
-            
-            var _idCurrentTarget = Component.domID2ID[_domIDCurrentTarget]?Component.domID2ID[_domIDCurrentTarget]:_domIDCurrentTarget;
-            var _idTarget = Component.domID2ID[_domIDTarget]?Component.domID2ID[_domIDTarget]:_domIDTarget;
-
-            var cmpBehaviors;
-            var _idBehaviorManifestor;
-            if(_self.behaviors[_idTarget])
-            {
-                cmpBehaviors = _self.behaviors[_idTarget];
-                _idBehaviorManifestor = _idTarget;
-            }else
-            {
-                cmpBehaviors = _self.behaviors[_idCurrentTarget];
-                _idBehaviorManifestor = _idCurrentTarget;
-            }
-            
-            //console.log(e.type+" "+_idCurrentTarget+ " "+_idTarget)
-            
-            if(cmpBehaviors && cmpBehaviors[e.type]) {
-                var behaviorNameArr = [], behaviorFilterArr = [];
-                var behaviorName, behaviorFilter;
-                var behaviorObj = cmpBehaviors[e.type];
-
-                if(isObject(behaviorObj))
-                {
-                    for(var prop in behaviorObj){
-                        behaviorNameArr.push(prop);
-                        behaviorFilterArr.push(behaviorObj[prop]);
-                    }
-
-                }else{
-                    behaviorNameArr = [behaviorObj];
-                    behaviorFilterArr = [null];
-                }
-                
-                for(var b=0;b<behaviorNameArr.length;b++)
-                {
-                    behaviorName = behaviorNameArr[b];
-                    behaviorFilter = behaviorFilterArr[b];
-
-                    var behavior = _self.behaviorimplementations[behaviorName];
-                    var qualifies = true, extraArgs = [];
-                    if(behavior && typeof behaviorFilter == 'function') {
-                        qualifies = behaviorFilter.apply(Component.instances[_idBehaviorManifestor], arguments);
-                        if(isObject(qualifies)){
-                            extraArgs = qualifies.extraArgs
-                            qualifies = qualifies.qualifies;
-                        }
-                    }
-                    if(behavior && qualifies) {
-                        var args = [];
-                        for (var i = 0; i < arguments.length; i++) {
-                            args.push(arguments[i]);
-                        }
-                        if(extraArgs.length>0){
-                            args = args.concat(extraArgs);
-                        }
-
-                        if(typeof behavior == 'function') {
-                            behavior.apply(Component.instances[_idBehaviorManifestor], args);
-                        }else{
-                            if(isObject(behavior)){
-                                var ret = behavior.do.apply(Component.instances[_idBehaviorManifestor], args);
-                                if(_historyProps.enabled){
-                                    _history.track(behaviorName, ret, Component.instances[_idBehaviorManifestor], args);
-                                }
-                                if(behavior.stopPropagation){
-                                    e.stopPropagation();
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        });
+        $(win).on(_eventTypeArrJoined, _event2behavior);
     };
-    this.registerBehaviors();   
+
+    var _winWatcher = ChangeWatcher.getInstance(BrowserWindow.all);
+    _winWatcher.watch(BrowserWindow.all, "length", function(e){
+        if(e.oldValue < e.newValue){
+            _self.registerBehaviors(BrowserWindow.all[BrowserWindow.all.length-1]);
+            
+        }
+        //
+    });
 
     this.init = function()
     {
@@ -238,6 +249,7 @@ var App = function(_props){
             }
         }
     }
+    this.registerBehaviors();   
 
     Object.defineProperty(this, "children", 
     {

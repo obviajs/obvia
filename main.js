@@ -19,6 +19,7 @@ rjs.define("lib/binding/PropertyChangeEvent.js", "PropertyChangeEvent");
 rjs.define("lib/binding/ChangeWatcher.js", "ChangeWatcher");
 rjs.define("lib/rca/RemoteCursorEvent.js", "RemoteCursorEvent");
 rjs.define("lib/rca/RemoteObject.js", "RemoteObject");
+rjs.define("./components/base/BrowserWindow.js", "BrowserWindow");
 rjs.define("./components/base/RepeaterEventArgs.js", "RepeaterEventArgs");
 rjs.define("./components/base/BgStyle.js", "BgStyle");
 rjs.define("./components/base/History/History.js", "History");
@@ -155,6 +156,7 @@ rjs.require([
         "PropertyChangeEvent",
         "ChangeWatcher",
         "RemoteCursorEvent",
+        "BrowserWindow",
         "RepeaterEventArgs",
         "BgStyle",
         "HistoryStep",
@@ -232,64 +234,6 @@ rjs.require([
         "tree_default_css",
         "Li",
         "Tree"
-        //"TabExample",
-        //"LabelExample"
-        //"Button",
-        //"ButtonExample"
-        //"ImageExample"
-        //"RepeaterExample"
-        //"LinkExample"
-        //"AutoCompleteExample"
-        //"DataGridExample",
-       // "FormFieldExample"
-
-       
     ], function () {
-         
         window.main();
-        //rjs.define("./examples/Label/example.js", "LabelExample");
-        // rjs.define("./examples/RadioButton/example.js", "RadioButtonExample");
-        //rjs.define("./examples/AutoComplete/example.js", "AutoComplete");
- 
- 
-        //rjs.define("./examples/Container/example.js", "ContainerExample");
-        //rjs.define("./examples/Tab/example.js", "TabExample");
-        // 
- 
-//rjs.define("./examples/DataGrid/example.js", "DataGridExample");
-         
-//rjs.define("./examples/Image/example.js", "ImageExample");
-        //rjs.define("./examples/Text/example.js", "Text");
-        //rjs.define("./examples/Label/example.js", "Label");
-        //rjs.define("./examples/HRule/example.js", "HRuleExample");
-        //rjs.define("./examples/Color/example.js", "ColorExample");
-        // rjs.define("./examples/CheckBox/example.js", "CheckBoxExample");
-        // rjs.define("./examples/RadioButton/example.js", "RadioButtonExample");
-        // rjs.define("./examples/CheckBoxGroup/example.js", "CheckBoxGroupExample");
-        // rjs.define("./examples/RadioGroup/example.js", "RadioGroupExample");
-        //rjs.define("./examples/Toggle/example.js", "ToggleExample");
-         // rjs.define("./examples/Generic/example.js","GenericExample");
-        //rjs.define("./oxana/accounting/invoice.js", "Invoice");
-       //rjs.define("./oxana/layoutBuilder.js", "layoutBuilder");
-
-       //rjs.define("./examples/Select/example.js", "SelectExample");
-       //rjs.define("./examples/Tree/example.js", "TreeExample");
-       // rjs.define("./oxana/magnetLayout.js", "magnetLayout");
-      
-       //rjs.define("./examples/Upload/singleUploadExample.js", "singleUploadExample");
-      //rjs.define("./examples/ProgressBar/example.js", "example");
-
-       //rjs.define("./examples/Upload/example.js", "UploadExample");
-      //  rjs.define("./examples/Form/example.js", "FormExample");
-      //   rjs.define("./examples/Form/ajaxExample.js", "FormExample");
-        // rjs.define("./examples/Form/ajaxExample.js", "FormExample");
-        //rjs.define("./examples/Form/myexample.js","FormExample");
-        //rjs.define("./examples/List/example.js", "ListExample");
-        //rjs.define("./examples/Button/example.js", "ButtonExample");
-        //rjs.define("./examples/Repeater/example.js", "RepeaterExample");
-        //rjs.define("./examples/Link/example.js", "LinkExample");
-        //rjs.define("./examples/Modal/example.js", "ModalExample");
-        //rjs.define("./examples/AutoComplete/example.js", "AutoCompleteExample");
-    //   rjs.define("./examples/DataGrid/example.js", "DataGridExample");
- 
 }, flowerCM);
