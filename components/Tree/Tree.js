@@ -90,6 +90,14 @@ var Tree = function (_props, overrided = false) {
         return "<ul id='" + this.domID + "'></ul>";
     };
 
+    this.afterAttach = function (e) {
+        if (typeof _afterAttach == 'function')
+            _afterAttach.apply(this, arguments);
+        if(_selectedItem){
+            this.select(_selectedItem);
+        }
+    }
+
     var _defaultParams = {
         dataProvider:[],
         labelField: "label",
@@ -97,7 +105,9 @@ var Tree = function (_props, overrided = false) {
         childrenField: "children",
         expandIcon: 'fas fa-chevron-circle-right',
         collapseIcon: 'fas fa-chevron-circle-down',
-        classes:["list-group"]
+        selectedClasses: ["active-node"],
+        classes:["list-group"],
+        guidField:"guid"
     };
         
     _props = extend(false, false, _defaultParams, _props);
@@ -108,10 +118,15 @@ var Tree = function (_props, overrided = false) {
     var _labelField = _props.labelField;
     var _valueField = _props.valueField;
     var _childrenField = _props.childrenField;
+    var _selectedClasses = _props.selectedClasses;
+    var _guidField = _props.guidField;
+    var _selectedItem = _props.selectedItem;
+    var _afterAttach = _props.afterAttach;
+    _props.afterAttach = this.afterAttach;
 
     var _click = _props.click;
-    var _toggleTree = function(){
-        if(this.components.length>0){
+    var _toggleTree = function(e){
+        if(this.components.length>0 && e.target == this.children[this.components[0].props.id].$el[0]){
             var liIcon = this.children[this.components[0].props.id];
             var liIconClasses = liIcon.classes.slice(0);
             var tree = this.children[this.components[2].props.id];
@@ -129,7 +144,45 @@ var Tree = function (_props, overrided = false) {
             tree.classes = classes; 
             liIcon.classes = liIconClasses;
         }
+        var liObj = {};
+        liObj[_guidField] = this.id.split("_")[1];
+        _self.selectedItem = arrayHierarchyGetMatching(_dataProvider, _guidField, liObj[_guidField], _childrenField);
+        //_self.select(liObj);
+        e.stopPropagation();
     }   
+    //to unselect all call with liObj null
+    this.select = function(liObj, visited){
+        var cLi;
+        if(liObj && liObj[_guidField])
+        {
+            cLi = this.children["id_"+liObj.guid];
+            if(cLi)
+            {
+                var liClasses = cLi.classes.slice(0);
+                var diff = _selectedClasses.difference(liClasses);
+                if(diff.length>0){
+                    liClasses.splicea(liClasses.length, 0, diff);
+                }
+                cLi.classes = liClasses;
+            }
+        }
+        for(var cid in this.children){
+            var cc = this.children[cid];
+            if(cc != cLi){
+                liClasses = cc.classes.slice(0);
+                var diff = liClasses.difference(_selectedClasses);
+                cc.classes = diff;
+            } 
+            if(cc.components.length>0){
+                var tree = cc.children[cc.components[2].props.id];
+                if(tree!=visited)
+                    tree.select(liObj);
+            }
+        }
+        if(this["parent"] && this.parent["parent"]){
+            this.parent.parent.select(liObj, this);
+        }
+    }
 
     var _componentLi = {
         constructor: Li,
@@ -137,7 +190,8 @@ var Tree = function (_props, overrided = false) {
             id: "li",
             "value": '{'+_valueField+'}',
             "label": '{'+_labelField+'}',
-            "click": _toggleTree
+            "click": _toggleTree,
+            "classes":["list-group-item"]
         }
     };
     
@@ -149,6 +203,8 @@ var Tree = function (_props, overrided = false) {
             "labelField": _labelField,
             "expandIcon": _expandIcon,
             "collapseIcon": _collapseIcon,
+            "selectedClasses": _selectedClasses,
+            "guidField":_guidField
         }
     };
     
@@ -173,21 +229,27 @@ var Tree = function (_props, overrided = false) {
     this.buildTree = function(dp)
     {
         var components = [];
-        for(var i=0;i<dp.length;i++)
+        if(dp && dp.forEach)
         {
-            var cmpLi = extend(true, _componentLi);
-            cmpLi.props.bindingDefaultContext = dp[i];
-            if(dp[i][_childrenField] && dp[i][_childrenField].length>0)
+            for(var i=0;i<dp.length;i++)
             {
-                var tree = extend(true, _componentTree);
-                var cmpIcon = extend(true, _componentIconLbl);
-                var cmpLbl = extend(true, _componentLbl);
-                cmpLbl.props.bindingDefaultContext = dp[i];
+                if(!dp[i][_guidField])
+                    dp[i][_guidField] = guid();
+                var cmpLi = extend(true, _componentLi);
+                cmpLi.props.bindingDefaultContext = dp[i];
+                cmpLi.props.id = "id_"+dp[i][_guidField];
+                if(dp[i][_childrenField] && dp[i][_childrenField].length>0)
+                {
+                    var tree = extend(true, _componentTree);
+                    var cmpIcon = extend(true, _componentIconLbl);
+                    var cmpLbl = extend(true, _componentLbl);
+                    cmpLbl.props.bindingDefaultContext = dp[i];
 
-                tree.props.dataProvider = dp[i][_childrenField];
-                cmpLi.props.components = [cmpIcon, cmpLbl, tree];
-            }	
-            components.push(cmpLi);
+                    tree.props.dataProvider = dp[i][_childrenField];
+                    cmpLi.props.components = [cmpIcon, cmpLbl, tree];
+                }	
+                components.push(cmpLi);
+            }
         }
         return components;
     }
@@ -204,11 +266,24 @@ var Tree = function (_props, overrided = false) {
 
     Parent.call(this, _props);
 
-    
     if (overrided) {
         this.keepBase();
     }
     
+    Object.defineProperty(this, "selectedItem", {
+        get: function selectedItem() {
+            return _selectedItem;
+        },
+        set: function selectedItem(v) {
+            if (_selectedItem!=v) {
+                _selectedItem = v;
+                if(!this.parent || (this.parent && this.parent.ctor !="Li"))
+                    this.select(_selectedItem);
+                else if(this.parent && this.parent.ctor =="Li")
+                    this.parent.parent.selectedItem = _selectedItem;
+            }
+        }
+    });
 };
 
 //component prototype

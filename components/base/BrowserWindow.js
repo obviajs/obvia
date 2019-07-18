@@ -50,11 +50,11 @@ var BrowserWindow = function(_props)
     this.show = function(){
         if(!_win){
             _win = window.open(_url, _name, "width="+_width+",height="+_height+",top="+_top+",left="+_left+",status="+_status+",location="+_location+",toolbar="+_toolbar+",resizable"+_resizable);     
-            this.ownerDocument = _win.document;
-            BrowserWindow.all.push(_win);
+             BrowserWindow.all.push(_win);
             BrowserWindow.copyStyles(document, _win.document);
             this.$el = $("<div/>");
             this.$el.attr('id', this.domID);
+            this.ownerDocument = _win.document;
             this.$container = this.$el;       
             this.addComponents(this.components);
             $(_win.document.body).append(this.$el);

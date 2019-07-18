@@ -135,6 +135,8 @@ var Repeater = function(_props)
             var toAdd = differenceOnKeyMatch(_dataProvider, _oldDataProvider, "guid", false, true);
             for(var i=0;i<toAdd.a1_indices.length;i++){
                 var ind = toAdd.a1_indices[i];
+                if(!this.dataProvider[ind]["guid"])
+                    this.dataProvider[ind]["guid"] = guid();
                 this.addRow(this.dataProvider[ind], ind+1); 
             }
         }else{
@@ -513,7 +515,7 @@ var Repeater = function(_props)
             if(_dataProvider.length>0){
                 this.dataProvider.forEach(function (data, index) {  
                     if(!_dataProvider[index]["guid"])
-                        _dataProvider[index]["guid"] = guid();;
+                        _dataProvider[index]["guid"] = guid();
                     _self.addRow(data, index + 1);
                 });
             }else

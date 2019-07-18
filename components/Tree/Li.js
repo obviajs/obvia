@@ -50,8 +50,7 @@ var Li = function (_props, overrided = false) {
 
     var _defaultParams = {
         label: "",
-        value: "",
-        classes:["list-group-item"]
+        value: ""
     };
 
     _props = extend(false, false, _defaultParams, _props);

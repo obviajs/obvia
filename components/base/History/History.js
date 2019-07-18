@@ -13,7 +13,7 @@ var History = function(_props)
 	{
         _cache = Cache.getInstance();
     }
-    var _behaviors;
+    
     var _steps = new ArrayEx();
     var _currentIndex = -1;
     var _id = guid();
@@ -30,17 +30,6 @@ var History = function(_props)
         console.log("qweeqweqw");
     });
 
-    Object.defineProperty(this, "behaviors", {
-        get: function behaviors()
-        {
-            return _behaviors;
-        },
-        set: function behaviors(b)
-        {
-            _behaviors = b;
-        }
-    });
-
     Object.defineProperty(this, "currentIndex", {
         get: function currentIndex()
         {
@@ -55,38 +44,32 @@ var History = function(_props)
         }
     });
 
-    this.track = function(behaviorName, ret, thisObj, args){
-        if(_behaviors)
-        {
-            var behavior = _behaviors[behaviorName];
-            if(behavior.undo && typeof behavior.undo == 'function' && ((isObject(ret) && ret.track) || ret===true)){
-                var step = new HistoryStep();
-                step.behaviorName = behaviorName; 
-                
-                if(isObject(ret)){
-                    step.description = ret.description || behavior.description;
-                    step.stepType = ret.stepType || behavior.stepType;
-                }
-                step.thisObj = thisObj;
-                step.args = args;
-                if(_steps.length>0 && _currentIndex<_steps.length-1)
-                {
-                    //ketu ne currentIndex < length beji splice nga currentIndex e deri ne length
-                    _steps.splice(Math.max(_currentIndex+1,0), _steps.length - Math.max(_currentIndex,0)- 1 );
-                }
-                step.retObj = ret;
-                _steps.push(step);
-                ++_currentIndex;
-
-                var eventObject = $.Event(HistoryEventType.HISTORY_STEP_ADDED);
-                eventObject.current = step;
-                this.trigger(eventObject);
-
-                eventObject = $.Event(HistoryEventType.HISTORY_CAN_UNDO);
-                this.trigger(eventObject);
+    this.track = function(behavior, behaviorName, ret, thisObj, args){
+        if(behavior.undo && typeof behavior.undo == 'function' && ((isObject(ret) && ret.track) || ret===true)){
+            var step = new HistoryStep();
+            step.behaviorName = behaviorName; 
+            step.behavior = behavior;
+            if(isObject(ret)){
+                step.description = ret.description || behavior.description;
+                step.stepType = ret.stepType || behavior.stepType;
             }
-        }else{
-            console.log("You need to initialize behaviors first.");
+            step.thisObj = thisObj;
+            step.args = args;
+            if(_steps.length>0 && _currentIndex<_steps.length-1)
+            {
+                //ketu ne currentIndex < length beji splice nga currentIndex e deri ne length
+                _steps.splice(Math.max(_currentIndex+1,0), _steps.length - Math.max(_currentIndex,0)- 1 );
+            }
+            step.retObj = ret;
+            _steps.push(step);
+            ++_currentIndex;
+
+            var eventObject = $.Event(HistoryEventType.HISTORY_STEP_ADDED);
+            eventObject.current = step;
+            this.trigger(eventObject);
+
+            eventObject = $.Event(HistoryEventType.HISTORY_CAN_UNDO);
+            this.trigger(eventObject);
         }
     }
 
@@ -95,7 +78,7 @@ var History = function(_props)
         {
             ++_currentIndex;
             var step = _steps[_currentIndex];
-            var behavior = _behaviors[step.behaviorName];
+            var behavior = step.behavior;
             if(behavior.do && typeof behavior.do == 'function'){
                 _steps[_currentIndex].retObj = behavior.do.apply(step.thisObj, step.args.concat(step.retObj));
 
@@ -118,7 +101,7 @@ var History = function(_props)
         if(_steps.length > 0 && _currentIndex>=0 && _currentIndex <= _steps.length-1)
         {
             var step = _steps[_currentIndex];
-            var behavior = _behaviors[step.behaviorName];
+            var behavior = step.behavior;
             if(behavior.undo && typeof behavior.undo == 'function'){
                 behavior.undo.apply(step.thisObj, step.args.concat(step.retObj));
             }

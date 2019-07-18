@@ -78,7 +78,6 @@ var App = function(_props){
    
     if(_historyProps.enabled){
         _history = History.getInstance(".history_"+_rootID);
-        _history.behaviors = this.behaviorimplementations;
         _history.on(HistoryEventType.HISTORY_UNDONE + " " + HistoryEventType.HISTORY_REDONE + " " + HistoryEventType.HISTORY_STEP_ADDED, function(e){
             _root.trigger(e);
         });
@@ -190,15 +189,23 @@ var App = function(_props){
                     if(typeof behavior == 'function') {
                         behavior.apply(Component.instances[_idBehaviorManifestor], args);
                     }else{
-                        if(isObject(behavior)){
-                            var ret = behavior.do.apply(Component.instances[_idBehaviorManifestor], args);
-                            if(_historyProps.enabled){
-                                _history.track(behaviorName, ret, Component.instances[_idBehaviorManifestor], args);
-                            }
-                            if(behavior.stopPropagation){
-                                e.stopPropagation();
+                        var behavior_implementations = isObject(behavior) && !behavior.forEach?[behavior]:behavior;
+                        for(var bi=0;bi<behavior_implementations.length;bi++)
+                        {
+                            behavior = behavior_implementations[bi];
+                            if(isObject(behavior)){
+                                var ret = behavior.do.apply(Component.instances[_idBehaviorManifestor], args);
+                                if(_historyProps.enabled){
+                                    _history.track(behavior, behaviorName, ret, Component.instances[_idBehaviorManifestor], args);
+                                }
+                                if(behavior.stopPropagation){
+                                    e.stopPropagation();
+                                }
+                            }else if(typeof behavior == 'function') {
+                                behavior.apply(Component.instances[_idBehaviorManifestor], args);
                             }
                         }
+                        
                     }
                 }
             }
@@ -227,7 +234,7 @@ var App = function(_props){
     _winWatcher.watch(BrowserWindow.all, "length", function(e){
         if(e.oldValue < e.newValue){
             _self.registerBehaviors(BrowserWindow.all[BrowserWindow.all.length-1]);
-            
+
         }
         //
     });
