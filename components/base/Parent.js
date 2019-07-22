@@ -13,6 +13,10 @@ var Parent = function(_props, overrided=false, _isSurrogate=false)
         get: function components() 
         {
             return _components;
+        },
+        set: function components(v) 
+        {
+            _components = v;
         }
     });
 
@@ -45,6 +49,13 @@ var Parent = function(_props, overrided=false, _isSurrogate=false)
             ind = indexOfObject(_components, "props.id",  child.id);
         }
         return ind;
+    }
+    this.removeAllChildren = function(mode=1)
+    {
+        for(var cid in this.children)
+        {
+            this.removeChild(this.children[cid], mode);
+        }
     }
     this.removeChild = function(child, mode=1)
     {

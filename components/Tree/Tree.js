@@ -8,19 +8,66 @@
 var Tree = function (_props, overrided = false) {
     //inner component data
     var _self = this;
-    Object.defineProperty(this,"dataProvider",
+    var _creationFinished;
+    var _oldDataProvider;
+    Object.defineProperty(this, "dataProvider", 
     {
-        get:function dataProvider()
+        get: function dataProvider() 
         {
             return _dataProvider;
         },
-        set:function dataProvider(v){
-            if(_dataProvider !=v)
+        set: function dataProvider(v) 
+        {
+            if(_dataProvider != v)
             {
-                _dataProvider=v;
+                if(_dpWatcher){
+                    _dpWatcher.reset();
+                }
+                _dataProvider = !ArrayEx.isArrayEx(v)?new ArrayEx(v):v;
+                _dpWatcher = ChangeWatcher.getInstance(_dataProvider);
+                _dpWatcher.watch(_dataProvider, "length", _dpLengthChanged);
+                this.removeAllChildren();
+                _self.components = _self.buildTree();
+                _self.addComponents(_self.components);
             }
         }
     });
+
+    var _dpWatcher;
+    var _dpLengthChanged = function(e)
+    {
+        if(_creationFinished)
+            _self.dataProviderChanged();
+    }
+
+    this.dataProviderChanged = function () 
+    {
+        //add or remove rows 
+        var deltaRows = this.dataProvider.length - _oldDataProvider.length;
+        if(deltaRows>0){
+            var toAdd = differenceOnKeyMatch(_dataProvider, _oldDataProvider, "guid", false, true);
+            for(var i=0;i<toAdd.a1_indices.length;i++){
+                var ind = toAdd.a1_indices[i];
+                if(!this.dataProvider[ind]["guid"])
+                    this.dataProvider[ind]["guid"] = guid();
+                var cmp = this.buildTree([this.dataProvider[ind]]);
+                this.addComponent(cmp[0]);
+            }
+        }else{
+            var toRemove = differenceOnKeyMatch(_oldDataProvider, _dataProvider, "guid", false, true);
+            for(var i=0;i<toRemove.a1_indices.length;i++){
+                //var ind = this.rowItems.length + i;
+                this.removeChildAtIndex(toRemove.a1_indices[i]);
+            }
+        }
+        //for the rows that we just added there is no need to refreshBindings
+        var maxInd = deltaRows>0?_oldDataProvider.length:_oldDataProvider.length + deltaRows;
+        for(var i = 0; i<maxInd;i++){
+            var cmp = this.children[this.components[i].props.id];
+            cmp.refreshBindings(this.dataProvider[i]);
+        }
+        _oldDataProvider = extend(true, this.dataProvider);
+    };
 
     Object.defineProperty(this, "expandIcon", 
     {
@@ -76,8 +123,9 @@ var Tree = function (_props, overrided = false) {
 
     this.beforeAttach = function () {
         this.$container = this.$el;
-        var cmp = this.buildTree(_dataProvider);
-        this.addComponents(cmp);
+        this.dataProvider = _props.dataProvider;
+        //this.components = this.buildTree();
+        //this.addComponents(this.components);
     };
          
     this.clickHandler=function(e){
@@ -96,6 +144,7 @@ var Tree = function (_props, overrided = false) {
         if(_selectedItem){
             this.select(_selectedItem);
         }
+        _creationFinished = true;
     }
 
     var _defaultParams = {
@@ -111,8 +160,8 @@ var Tree = function (_props, overrided = false) {
     };
         
     _props = extend(false, false, _defaultParams, _props);
-
-    var _dataProvider = _props.dataProvider;
+    var _dataProvider;
+    //var _dataProvider = _props.dataProvider;
     var _expandIcon = _props.expandIcon;
     var _collapseIcon = _props.collapseIcon;
     var _labelField = _props.labelField;
@@ -228,28 +277,35 @@ var Tree = function (_props, overrided = false) {
 
     this.buildTree = function(dp)
     {
+        var dp = dp || _dataProvider;
         var components = [];
         if(dp && dp.forEach)
         {
-            for(var i=0;i<dp.length;i++)
+            if(dp.length>0)
             {
-                if(!dp[i][_guidField])
-                    dp[i][_guidField] = guid();
-                var cmpLi = extend(true, _componentLi);
-                cmpLi.props.bindingDefaultContext = dp[i];
-                cmpLi.props.id = "id_"+dp[i][_guidField];
-                if(dp[i][_childrenField] && dp[i][_childrenField].length>0)
+                for(var i=0;i<dp.length;i++)
                 {
-                    var tree = extend(true, _componentTree);
-                    var cmpIcon = extend(true, _componentIconLbl);
-                    var cmpLbl = extend(true, _componentLbl);
-                    cmpLbl.props.bindingDefaultContext = dp[i];
+                    if(!dp[i][_guidField])
+                    dp[i][_guidField] = guid();
+                    var cmpLi = extend(true, _componentLi);
+                    cmpLi.props.bindingDefaultContext = dp[i];
+                    cmpLi.props.id = "id_"+dp[i][_guidField];
+                    if(dp[i][_childrenField] && dp[i][_childrenField].length>0)
+                    {
+                        var tree = extend(true, _componentTree);
+                        var cmpIcon = extend(true, _componentIconLbl);
+                        var cmpLbl = extend(true, _componentLbl);
+                        cmpLbl.props.bindingDefaultContext = dp[i];
 
-                    tree.props.dataProvider = dp[i][_childrenField];
-                    cmpLi.props.components = [cmpIcon, cmpLbl, tree];
-                }	
-                components.push(cmpLi);
+                        tree.props.dataProvider = dp[i][_childrenField];
+                        cmpLi.props.components = [cmpIcon, cmpLbl, tree];
+                    }	
+                    components.push(cmpLi);
+                }
+            }else{
+                _creationFinished = true;
             }
+            _oldDataProvider = extend(true, _dataProvider);
         }
         return components;
     }
