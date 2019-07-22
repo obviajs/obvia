@@ -40,86 +40,11 @@ var Label = function(_props)
             }
         }
     });
-
-    Object.defineProperty(this, "hyperlink", 
-    {
-        get: function hyperlink() 
-        {
-            return _hyperlink;
-        },
-        set: function hyperlink(v) 
-        {
-            if(_hyperlink != v)
-            {
-                _hyperlink = v;
-                if(_hyperlink)
-                {
-                    _labelHtml = "<a id='" + this.domID + "_anchor' href='" + _hyperlink + "' target='" + _target + "'>" + _label + "</a>";
-                    if(this.$el)
-                    {
-                        if(this.$anchor && this.$anchor.length>0)
-                        {
-                            this.$anchor.attr('href', _hyperlink);
-                        }else
-                            this.$el.html(_labelHtml);
-                    }
-                }else
-                {
-                    _labelHtml = _label;
-                    if(this.$el)
-                    {
-                        if(this.$anchor && this.$anchor.length>0)
-                        {
-                            this.$anchor.removeAttr('href');
-                        }else
-                            this.$el.html(_labelHtml);
-                    }
-                }                    
-            }
-        }
-    });
-    Object.defineProperty(this, "target", 
-    {
-        get: function target() 
-        {
-            return _target;
-        },
-        set: function target(v) 
-        {
-            if(_target != v)
-            {
-                _target = v;
-                if(_target)
-                {
-                    _labelHtml = "<a id='" + this.domID + "_anchor' href='" + _hyperlink + "' target='" + _target + "'>" + _label + "</a>";
-                    if(this.$el)
-                    {
-                        if(this.$anchor && this.$anchor.length>0)
-                        {
-                            this.$anchor.attr('target', _target);
-                        }else
-                            this.$el.html(_labelHtml);
-                    }
-                }else
-                {
-                    _labelHtml = "<a id='" + this.domID + "_anchor' href='" + _hyperlink + "'>" + _label + "</a>";
-                    if(this.$el)
-                    {
-                        if(this.$anchor && this.$anchor.length>0)
-                        {
-                            this.$anchor.removeAttr('target');
-                        }else
-                            this.$el.html(_labelHtml);
-                    }
-                }
-                    
-            }
-        }
-    });
-    
+ 
     this.beforeAttach = function () 
     {
-        this.$anchor = this.$el.find("#" + this.domID + "_anchor");
+        this.$container = this.$el;
+        this.addComponents(this.components);
     };
 
     this.template = function () 
@@ -129,7 +54,6 @@ var Label = function(_props)
 
     var _defaultParams = {
         label:"",
-        hyperlink:"",
         target:"",
         labelType: LabelType.label
     };
@@ -137,10 +61,8 @@ var Label = function(_props)
     
     var _label = _props.label;
     var _labelHtml = _label;
-    var _hyperlink = _props.hyperlink;
-    var _target = _props.target;
     var _labelType = _props.labelType;
 
-    Component.call(this, _props);
+    Parent.call(this, _props);
 };
 Label.prototype.ctor = 'Label';

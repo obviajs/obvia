@@ -54,7 +54,7 @@ var SuggestionRenderer = function(_props)
     };
     _props = extend(false, false, _defaultParams, _props);
     var _value = _props.value;
-    _props.hyperlink = "#";
+    _props.href = "#";
     var _closeIconSide = _props.closeIconSide;
     
     Link.call(this, _props, true);

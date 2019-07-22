@@ -7,7 +7,7 @@ var myButton = new Button({
     type: "button",
     value: "",
     label:"Click Me",
-    class: "btn btn-success",
+    classes: ["btn", "btn-success"],
     click : function(e){console.log("From ClickAction");}
 });
 myButton.on('creationComplete', function(e){

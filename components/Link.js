@@ -7,22 +7,22 @@
 //component definition
 var Link = function(_props)
 {
-    Object.defineProperty(this, "hyperlink", 
+    Object.defineProperty(this, "href", 
     {
-        get: function hyperlink() 
+        get: function href() 
         {
-            return _hyperlink;
+            return _href;
         },
-        set: function hyperlink(v) 
+        set: function href(v) 
         {
-            if(hyperlink != v)
+            if(href != v)
             {
-                _hyperlink = v;
-                if(_hyperlink)
+                _href = v;
+                if(_href)
                 {
                     if(this.$el)
                     {
-                        this.$el.attr('href', _hyperlink);
+                        this.$el.attr('href', _href);
                     }
                 }else
                 {
@@ -79,19 +79,27 @@ var Link = function(_props)
             }
         }
     });
+    
+    this.beforeAttach = function () 
+    {
+        this.$container = this.$el;
+        this.addComponents(this.components);
+    };
 
     this.template = function () 
     {         
-        return "<a id='" + this.domID + "' href='" + _hyperlink + "' "+(_target?"target='" +_target+"'":"")+ ">" + _label + "</a>";
+        return "<a id='" + this.domID + "' href='" + _href + "' "+(_target?"target='" +_target+"'":"")+ ">" + _label + "</a>";
     };
+
     var _defaultParams = {
     };
+    
     _props = extend(false, false, _defaultParams, _props);
     
     var _label = _props.label;
-    var _hyperlink = _props.hyperlink;
+    var _href = _props.href;
     var _target = _props.target;
 
-    Component.call(this, _props);
+    Parent.call(this, _props);
 };
 Link.prototype.ctor = 'Link';

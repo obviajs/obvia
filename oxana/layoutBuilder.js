@@ -19,6 +19,7 @@ var zeroCool = {
         constructor: Container,
         props: {
             id: 'zeroCool',
+            type: ContainerType.NONE,
             components:[
                 {
                     constructor: BrowserWindow,
@@ -137,7 +138,7 @@ var zeroCool = {
                                                                                                 valueField: "id",
                                                                                                 classesField: "listItemClass",
                                                                                                 defaultClasses: [],
-                                                                                                selectedClasses: ["active"],   
+                                                                                                selectedClasses: ["active-node"],   
                                                                                                 component: {
                                                                                                     constructor: Label,
                                                                                                     props: {
@@ -180,13 +181,14 @@ var zeroCool = {
                                 constructor: Container,
                                 props: {
                                     type: ContainerType.COLUMN,
-                                    spacing: {colSpan:9},    
+                                    spacing: {colSpan:12},    
                                     id: "snowCrash",
                                     components:[
                                         {
                                             constructor: Container,
                                             props: {
                                                 spacing: {h:100},
+                                                type: ContainerType.NONE,
                                                 components:[
                                                     {
                                                         constructor: Container,
@@ -474,15 +476,15 @@ oxana.behaviorimplementations["BECOME_ACTIVE"] = {
     do:function(e) {
             console.log("Container Became active");
             //this will holde the instance of the component who manifested this behavior (the manifestor)
-            if(activeContainer && activeContainer!=this && activeContainer.classes.indexOf("active")>-1){
+            if(activeContainer && activeContainer!=this && activeContainer.classes.indexOf("active-node")>-1){
                 activeContainer.toggle = false;
                 var classes = activeContainer.classes.slice(0);
-                classes.toggle("active");
+                classes.toggle("active-node");
                 activeContainer.classes = classes;
             }
             this.toggle = false;
             var classes = this.classes.slice(0);
-            classes.pushUnique("active");
+            classes.pushUnique("active-node");
             this.classes = classes;
             activeContainer = this;
         },

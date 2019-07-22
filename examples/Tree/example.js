@@ -1,8 +1,5 @@
 var myTree = new Tree({
     id: 'tree',
-    type: "button",
-    value: "Clicked Me",
-    style: '',
     valueField: "key",
     labelField: "title",
     childrenField: "children",

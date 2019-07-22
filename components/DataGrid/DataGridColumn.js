@@ -12,7 +12,7 @@ var DataGridColumn = function(p)
             props: {
                 id: 'cell_',
                 label: '{'+p.dataField+'}',
-                hyperlink: false,
+                href: false,
                 target:null
             }
         },
