@@ -121,9 +121,14 @@ var Tree = function (_props, overrided = false) {
         }
     }
 
-    this.beforeAttach = function () {
-        this.$container = this.$el;
-        this.dataProvider = _props.dataProvider;
+    this.beforeAttach = function (e) {
+        if (e.target.id == this.domID) 
+        {
+            if(!e.isDefaultPrevented()){
+                this.$container = this.$el;
+                this.dataProvider = _props.dataProvider;
+            }
+        }
         //this.components = this.buildTree();
         //this.addComponents(this.components);
     };

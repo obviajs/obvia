@@ -63,9 +63,6 @@ var List = function (_props, overrided = false) {
     });
 
     this.beforeAttach = function () {
-        this.$container = this.$el;
-        
-
         _states = _states == null ?
             [
                 {dataProviderField: _classesField, states: {on: _selectedClasses, off: _defaultClasses}}
@@ -148,15 +145,14 @@ var List = function (_props, overrided = false) {
             dataProvider: _dataProvider,
             components: [_component]
         }).on('creationComplete', function (e) {
-          
-            if(this.repeater.$el != this.$el){
-                e.stopImmediatePropagation();
-                this.trigger('creationComplete');
-            }
+            e.stopImmediatePropagation();
+            _self.$container.append(_self.repeater.render());
+           // _self.trigger('creationComplete');
+                
         }.bind(this));
         this.repeater.$el.data("triggers", "change itemClick itemDblClick");
         this.$el = this.repeater.$el;
-
+        this.$container = this.$el;
         return null; /*"<div data-triggers='change itemClick itemDblClick' id='" + this.domID + "' role='group'>" +
             "</div>";*/
     };
@@ -192,6 +188,8 @@ var List = function (_props, overrided = false) {
     var _defaultClasses = _props.defaultClasses;
     var _change = _props.change;
     var _container = _props.container;
+    _container.props.beforeAttach = this.beforeAttach.bind(this);
+
     var _cmpClick = _component.props.click;
     var _cmpDblClick = _component.props.dblclick;
 
@@ -233,7 +231,6 @@ var List = function (_props, overrided = false) {
     Component.call(this, _props);
 
     this.render = function () {
-        this.$container.append(this.repeater.render());
         return this.$el;
     };
 

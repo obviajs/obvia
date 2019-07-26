@@ -73,7 +73,8 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
             {
                 _ownerDocument = v;
                 Component.ready(this, function(element){
-                    _self.initEvents(element);
+                    if(!_isSurrogate)
+                        _self.trigger('afterAttach');
                 }, _ownerDocument);
             }
         }
@@ -286,6 +287,33 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
     {
         this.classes = _props.classes;
     }
+    var _beforeAttach = this.beforeAttach;
+    this.beforeAttach = function (e)
+    {
+        if (e.target.id == this.domID) 
+        {
+            if (typeof _props.beforeAttach == 'function')
+                _props.beforeAttach.apply(this, arguments);
+            if(!e.isDefaultPrevented()){
+                if (typeof _beforeAttach == 'function')
+                    _beforeAttach.apply(this, arguments);
+            }
+        }
+    }
+    
+    this.afterAttach = function (e)
+    {
+        if (e.target.id == this.domID) 
+        {
+            if (typeof _props.afterAttach == 'function')
+                _props.afterAttach.apply(this, arguments);
+            if(!e.isDefaultPrevented()){
+                this.trigger('creationComplete');
+            }
+            console.log("AfterAttach : Type:",this.ctor+" id:"+ this.$el.attr("id"));
+        }
+    };
+
     var _defaultHandlers =
     [
         {
@@ -300,6 +328,8 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
                 'creationComplete': _creationComplete && typeof _creationComplete == 'function' ? _creationComplete.bind(_self) : undefined,
                 'change': _change && typeof _change == 'function' ? _change.bind(_self) : undefined,
                 'DOMMutation': _DOMMutation && typeof _DOMMutation == 'function' ? _DOMMutation.bind(_self) : undefined,
+                'afterAttach': this.afterAttach && typeof this.afterAttach == 'function' ? this.afterAttach.bind(_self) : undefined,
+                'beforeAttach': this.beforeAttach && typeof this.beforeAttach == 'function' ? this.beforeAttach.bind(_self) : undefined,
             }
         }
     ];
@@ -350,31 +380,12 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
    
     this.registerEvents = function ()
     {
-        return [
-            {
-                registerTo: this.$el, events: {
-                    'afterAttach': this.afterAttach && typeof this.afterAttach == 'function' ? this.afterAttach.bind(_self) : undefined,
-                }
-            }
-        ].concat(_dataTriggerEventList);
+        return _dataTriggerEventList;
     };//
 
     this.render = function ()
     {
         return this.$el;
-    };
-
-    this.afterAttach = function (e)
-    {
-        if (e.target.id == this.domID) 
-        {
-            if (typeof _props.afterAttach == 'function')
-                _props.afterAttach.apply(this, arguments);
-            if(!e.isDefaultPrevented()){
-                this.trigger('creationComplete');
-            }
-            console.log("AfterAttach : Type:",this.ctor+" id:"+ this.$el.attr("id"));
-        }
     };
 
     //action methods on component
@@ -564,7 +575,7 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
     }
 
    //"#" + this.$el.attr('id'), 
-    this.initEvents = function (element, mode=1) //1:real component, 0:surrogate i.e no real DOM element 
+    this.initEvents = function (element) //1:real component, 0:surrogate i.e no real DOM element 
     {
         //execute inner handlers if theres any registered
         var handlers = [];
@@ -614,17 +625,15 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
                 }
             });
         }
-        if(mode==1)
-            _self.trigger('afterAttach');
     }
-
+    _self.initEvents(this.$el);
+    if(!_isSurrogate)
+        _self.trigger('beforeAttach');
     //execute functions before component attached on dom
-    if (this['beforeAttach'] && (typeof this.beforeAttach == 'function'))
-        this.beforeAttach();
-
     if(_ownerDocument){
         Component.ready(this, function(element){
-            _self.initEvents(element);
+            if(!_isSurrogate)
+                _self.trigger('afterAttach');
         }, _ownerDocument);
     }   
     

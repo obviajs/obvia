@@ -72,7 +72,7 @@ var Hidden = function (_props, overrided = false) {
     var _name; 
     var _change = _props.change;
  
-    _props.change = function () {
+    _props.change = function (e) {
         if (typeof _change == 'function')
             _change.apply(this, arguments);
         _self.changeHandler(e);

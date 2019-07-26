@@ -89,15 +89,21 @@ var Container = function(_props)
             }
         }
     });
-    
-    this.template = function ()
+    //is template overrided ?
+    this.template = this.template || function ()
     { 
         return  '<div id="' + this.domID + '"></div>'; 
     };
-    this.beforeAttach = function() 
+
+    this.beforeAttach = function(e) 
     {
-        this.$container = this.$el;
-        this.addComponents(this.components);
+        if (e.target.id == this.domID) 
+        {
+            if(!e.isDefaultPrevented()){
+                this.$container = this.$el;
+                this.addComponents(this.components);
+            }
+        }
     };
 
     this.afterAttach = function (e) 
@@ -121,7 +127,7 @@ var Container = function(_props)
     var _type, _role;
     var _afterAttach = _props.afterAttach;
     _props.afterAttach = this.afterAttach;
-   
+
     Parent.call(this, _props);
     
     if(_props.width)

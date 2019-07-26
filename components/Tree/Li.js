@@ -38,25 +38,20 @@ var Li = function (_props, overrided = false) {
         }
     });
 
-    this.beforeAttach = function() 
-    {
-        this.$container = this.$el;
-        this.addComponents(this.components);
-    };
-
     this.template = function () {
         return "<li id='" + this.domID + "' value='"+_value+"'></li>";
     };
 
     var _defaultParams = {
         label: "",
-        value: ""
+        value: "",
+        type: ContainerType.NONE
     };
 
     _props = extend(false, false, _defaultParams, _props);
     //_props.applyBindings = false;
    
-    Parent.call(this, _props); 
+    Container.call(this, _props); 
    
     var _label = _props.label;
     var _value = _props.value;

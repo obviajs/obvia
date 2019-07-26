@@ -157,8 +157,9 @@ var Form = function(_props)
     var _action = _props.action;
     var _method = _props.method;
     
-    this.beforeAttach = function() 
+    this.beforeAttach = function(e) 
     {
+        
         this.$container = this.$form = this.$el;
         if(this.components && Array.isArray(this.components) && this.components.length>0)
         {

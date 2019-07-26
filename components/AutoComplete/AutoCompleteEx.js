@@ -24,7 +24,6 @@ var AutoCompleteEx = function(_props)
     
     this.beforeAttach = function () 
     {
-        
         this.cComponents = [];
         this.countChildren = 2;
 
