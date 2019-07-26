@@ -1,11 +1,11 @@
 /**
- * This is a Label Element
+ * This is a Heading Element
  * 
  * Kreatx 2018
  */
 
 //component definition
-var Label = function(_props)
+var Heading = function(_props)
 {   
     Object.defineProperty(this, "label", 
     {
@@ -23,7 +23,24 @@ var Label = function(_props)
             }
         }
     });
- 
+    
+    Object.defineProperty(this, "align", 
+    {
+        get: function align() 
+        {
+            return _align;
+        },
+        set: function align(v) 
+        {
+            if(_align != v)
+            {
+                _align = v;
+                if(this.$el)
+                    this.$el.attr('align', _align);
+            }
+        }
+    });
+
     this.beforeAttach = function () 
     {
         this.$container = this.$el;
@@ -32,18 +49,20 @@ var Label = function(_props)
 
     this.template = function () 
     {         
-        return "<"+_labelType+" id='" + this.domID + "'>"+_label+"</"+_labelType+">"; 
+        return "<"+_headingType+" id='" + this.domID + "'>"+_label+"</"+_headingType+">"; 
     };
 
     var _defaultParams = {
         label:"",
-        labelType: LabelType.label
+        headingType: HeadingType.h1,
+        align: Align.left
     };
     _props = extend(false, false, _defaultParams, _props);
     
     var _label = _props.label;
-    var _labelType = _props.labelType;
+    var _headingType = _props.headingType;
+    var _align = _props.align;
 
     Parent.call(this, _props);
 };
-Label.prototype.ctor = 'Label';
+Heading.prototype.ctor = 'Heading';

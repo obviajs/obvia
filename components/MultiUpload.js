@@ -109,6 +109,7 @@ var MultiUpload = function (_props, overrided = false) {
 
     this.template = function () { 
         fnContainerDelayInit();
+        _container.props.ownerDocument = this.ownerDocument;
         _cmp = Component.fromLiteral(_container);
         
         _lblDrop = _cmp.children[this.my("dropContainer")].children[this.my("label")];

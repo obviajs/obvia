@@ -105,7 +105,7 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
         get: function props() {
             var obj = {};
             for(var prop in _props){
-                if(this.hasOwnProperty(prop) && (typeof _props[prop] != 'function'))
+                if(this.hasOwnProperty(prop) && (typeof _props[prop] != 'function') && (prop != "ownerDocument"))
                     obj[prop] = this[prop];
             }
             return obj;
@@ -273,6 +273,10 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
     else if(tpl && tpl!="")
         this.$el = $(tpl);
     
+    if(_isSurrogate && this.$el){
+        Component.surrogates[this.$el.attr('id')] = this.domID;
+    }
+
     if(_props.enabled!=null)
         this.enabled = _props.enabled;
 
@@ -752,6 +756,7 @@ Component.check = function(mutations)
     }
 }
 Component.defaultContext = window;
+Component.surrogates = {};
 Component.registered = {};
 Component.usedComponentIDS = {};
 Component.domID2ID = {};

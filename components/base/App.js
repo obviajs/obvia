@@ -131,16 +131,19 @@ var App = function(_props){
         
         var _idCurrentTarget = Component.domID2ID[_domIDCurrentTarget]?Component.domID2ID[_domIDCurrentTarget]:_domIDCurrentTarget;
         var _idTarget = Component.domID2ID[_domIDTarget]?Component.domID2ID[_domIDTarget]:_domIDTarget;
+        
+        var _idCurrentTargetSurrogate = Component.surrogates[_domIDCurrentTarget] && Component.domID2ID[Component.surrogates[_domIDCurrentTarget]]?Component.domID2ID[Component.surrogates[_domIDCurrentTarget]]:null;
+        var _idTargetSurrogate = Component.surrogates[_domIDTarget] && Component.domID2ID[Component.surrogates[_domIDTarget]]?Component.domID2ID[Component.surrogates[_domIDTarget]]:null;
 
         var cmpBehaviors;
         var _idBehaviorManifestor;
-        if(_self.behaviors[_idTarget])
+        if(_self.behaviors[_idTarget] || _self.behaviors[_idTargetSurrogate])
         {
-            cmpBehaviors = _self.behaviors[_idTarget];
+            cmpBehaviors = _self.behaviors[_idTarget] || _self.behaviors[_idTargetSurrogate];
             _idBehaviorManifestor = _idTarget;
         }else
         {
-            cmpBehaviors = _self.behaviors[_idCurrentTarget];
+            cmpBehaviors = _self.behaviors[_idCurrentTarget] || _self.behaviors[_idCurrentTargetSurrogate];
             _idBehaviorManifestor = _idCurrentTarget;
         }
         
@@ -322,6 +325,8 @@ var App = function(_props){
                                 components.push(component);
                             }
                             obj[prop] = components;
+                            break;
+                        case "ownerDocument":
                             break;
                         default:
                             if(this.hasOwnProperty(prop))

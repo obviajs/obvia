@@ -83,7 +83,7 @@ var myForm = new Form({
                         type: "button",
                         value: "{textValue}",
                         label:"{textValue}",
-                        class: "btn btn-success",
+                        classes: ["btn btn-success"],
                         click : function(e){console.log("From ClickAction");}
                     }
                 }

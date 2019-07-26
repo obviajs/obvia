@@ -19,6 +19,7 @@ rjs.define("lib/binding/PropertyChangeEvent.js", "PropertyChangeEvent");
 rjs.define("lib/binding/ChangeWatcher.js", "ChangeWatcher");
 rjs.define("lib/rca/RemoteCursorEvent.js", "RemoteCursorEvent");
 rjs.define("lib/rca/RemoteObject.js", "RemoteObject");
+rjs.define("./components/base/Align.js", "Align");
 rjs.define("./components/base/BrowserWindow.js", "BrowserWindow");
 rjs.define("./components/base/RepeaterEventArgs.js", "RepeaterEventArgs");
 rjs.define("./components/base/BgStyle.js", "BgStyle");
@@ -46,10 +47,12 @@ rjs.define("./components/Form/FormFieldSize.js", "FormFieldSize");
 rjs.define("./components/Form/Hidden.js", "Hidden");
 //Button
 rjs.define("./components/Button.js", "Button");
+//Heading
+rjs.define("./components/HeadingType.js", "HeadingType");
+rjs.define("./components/Heading.js", "Heading");
 //Label
 rjs.define("./components/LabelType.js", "LabelType");
-rjs.define("./components/Label.js", "Label");
- 
+rjs.define("./components/Label.js", "Label"); 
 //HRule
 rjs.define("./components/HRule.js", "HRule");
 // Color Picker
@@ -156,6 +159,7 @@ rjs.require([
         "PropertyChangeEvent",
         "ChangeWatcher",
         "RemoteCursorEvent",
+        "Align",
         "BrowserWindow",
         "RepeaterEventArgs",
         "BgStyle",
@@ -184,6 +188,8 @@ rjs.require([
         "Repeater",
         "List",
         "Amount",
+        "HeadingType",
+        "Heading",
         "LabelType",
         "Label",
         "Link",

@@ -253,6 +253,8 @@ var Parent = function(_props, overrided=false, _isSurrogate=false)
                             }
                             obj[prop] = components;
                             break;
+                        case "ownerDocument":
+                            break;
                         default:
                             if(this.hasOwnProperty(prop))
                                 obj[prop] = this[prop];

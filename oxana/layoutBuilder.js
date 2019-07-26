@@ -106,6 +106,39 @@ var zeroCool = {
                                                                                                     }
                                                                                                 }]
                                                                                             }
+                                                                                        },
+                                                                                        {
+                                                                                            constructor: Button,
+                                                                                            props: {
+                                                                                                id: 'selectBtn',
+                                                                                                type: "button",
+                                                                                                components: [{
+                                                                                                    constructor: Label,
+                                                                                                    props: {
+                                                                                                        id: 'fa',
+                                                                                                        labelType: LabelType.i,
+                                                                                                        classes: ["fas","fa-folder-open"]
+                                                                                                    }
+                                                                                                }]
+                                                                                            }
+                                                                                        },
+                                                                                        {
+                                                                                            constructor: Modal,
+                                                                                            props: {
+                                                                                                id: 'fileSelectModal',
+                                                                                                size: ModalSize.LARGE,
+                                                                                                title: 'Select File',
+                                                                                                components: [
+                                                                                                    {
+                                                                                                        constructor: UploadEx,
+                                                                                                        props: {
+                                                                                                            id: "browseFile",
+                                                                                                            multiple: false,
+                                                                                                            showProgress: false
+                                                                                                        }
+                                                                                                    }
+                                                                                                ]
+                                                                                            }
                                                                                         }
                                                                                     ]
                                                                                 }
@@ -253,6 +286,12 @@ oxana.behaviors["splitVertical"]["click"] = "SPLIT_VERT";
 oxana.behaviors["saveLayout"] = {};
 oxana.behaviors["saveLayout"]["click"] = "SAVE_LAYOUT";
 
+oxana.behaviors["selectBtn"] = {};
+oxana.behaviors["selectBtn"]["click"] = "FILE_SELECT_MODAL";
+
+oxana.behaviors["browseFile"] = {};
+oxana.behaviors["browseFile"]["change"] = "FILE_SELECTED";
+
 oxana.behaviors["listHistorySteps"] = {};
 oxana.behaviors["listHistorySteps"]["change"] = "HISTORY_STEP_DETAILS";
 
@@ -266,7 +305,46 @@ oxana.behaviors[oxana.rootID]["keydown"] = {
 oxana.behaviorimplementations["HISTORY_STEP_DETAILS"] = function(e){
     console.log("called HISTORY_STEP_DETAILS.");
 };
-
+oxana.behaviorimplementations["FILE_SELECT_MODAL"] = function(e){
+    console.log("called FILE_SELECT_MODAL.");
+    Component.instances["fileSelectModal"].show();
+};
+oxana.behaviorimplementations["FILE_SELECTED"] = function(e){
+    console.log("called FILE_SELECTED.");
+    if(Component.instances["browseFile"].value.length>0){
+        readFile(Component.instances["browseFile"].value[0]).then(function(resp){
+            Component.instances["fileSelectModal"].hide();
+            var evt = new jQuery.Event("loadLayout");
+            evt.content = resp.content;
+            oxana.root.trigger(evt);
+        })
+        .catch(function(resp){
+            alert(resp.description);
+        });
+    }
+};
+oxana.behaviors[oxana.rootID]["loadLayout"] = "LOAD_LAYOUT";
+oxana.behaviorimplementations["LOAD_LAYOUT"] = function(e){
+    var _cmp = JSON.parse(e.content);
+    Component.instances["workArea"].removeAllChildren(0);
+    if(_cmp.props.id == "workArea"){
+        for(var i=0;i<_cmp.props.components.length;i++){
+            var inst = Component.instances["workArea"].addComponent(_cmp.props.components[i]);
+            addBehaviors(inst, waBehaviors);
+        }
+    }else{
+        var inst = Component.instances["workArea"].addComponent(_cmp);
+        addBehaviors(inst, waBehaviors);
+    }
+    
+};
+function addBehaviors(cmp, behaviors)
+{
+    oxana.behaviors[cmp.id] = behaviors;
+    for(var cid in cmp.children){
+        addBehaviors(cmp.children[cid], behaviors);
+    }
+}
 oxana.behaviorimplementations["HISTORY_STEP_ADDED"] = function(e){
     console.log("called HISTORY_STEP_ADDED.", e.current);
     Component.instances["listHistorySteps"].value = e.current;
@@ -607,8 +685,8 @@ oxana.behaviorimplementations["WA_REMOVE"] = {
 
 oxana.behaviorimplementations["SAVE_LAYOUT"] = {
     do:function(e) {
-        var snowCrash = Component.instances["snowCrash"];
-        var jsonLayout = JSON.stringify(snowCrash.literal, null, "\t");
+        var workArea = Component.instances["workArea"];
+        var jsonLayout = JSON.stringify(workArea.literal, null, "\t");
         download("snowCrash.json.txt", jsonLayout); 
     },
     stopPropagation:true

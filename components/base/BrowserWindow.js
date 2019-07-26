@@ -21,6 +21,8 @@ var BrowserWindow = function(_props)
     };
     
     this.template = function () {
+        this.$el = $("<div/>");
+        this.$el.attr('id', this.domID);
         return null;
     };
 
@@ -52,8 +54,6 @@ var BrowserWindow = function(_props)
             _win = window.open(_url, _name, "width="+_width+",height="+_height+",top="+_top+",left="+_left+",status="+_status+",location="+_location+",toolbar="+_toolbar+",resizable"+_resizable);     
              BrowserWindow.all.push(_win);
             BrowserWindow.copyStyles(document, _win.document);
-            this.$el = $("<div/>");
-            this.$el.attr('id', this.domID);
             this.ownerDocument = _win.document;
             this.$container = this.$el;       
             this.addComponents(this.components);

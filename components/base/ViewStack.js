@@ -240,6 +240,8 @@ var ViewStack = function(_props)
                             }
                             obj[prop] = components;
                             break;
+                        case "ownerDocument":
+                            break;
                         default:
                             if(this.hasOwnProperty(prop))
                                 obj[prop] = this[prop];

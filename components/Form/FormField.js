@@ -227,6 +227,8 @@ var FormField = function(_props)
                             component.props = _cmp.props;
                             obj[prop] = component;
                             break;
+                        case "ownerDocument":
+                            break;
                         default:
                             if(this.hasOwnProperty(prop))
                                 obj[prop] = this[prop];

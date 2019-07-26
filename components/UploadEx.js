@@ -539,6 +539,7 @@ var UploadEx = function (_props, overrided = false) {
 
     this.template = function () { 
         fnContainerDelayInit();
+        _container.props.ownerDocument = this.ownerDocument;
         _cmp = Component.fromLiteral(_container);
         _upload = _cmp.children[this.my("mainRow")].children[this.my("fileNameColumn")].children[this.my("uploadInput")];
         _iconLbl = _cmp.children[this.my("mainRow")].children[this.my("iconColumn")].children[this.my("iconLbl")];

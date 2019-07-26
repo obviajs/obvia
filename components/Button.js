@@ -117,6 +117,8 @@ var Button = function(_props, overrided=false)
         if (!e.isDefaultPrevented()) {
             if(_props.label)
                 this.label = _props.label;
+            if(_props.value)
+                this.value = _props.value;
         }
     };
 

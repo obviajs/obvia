@@ -73,6 +73,14 @@ var History = function(_props)
         }
     }
 
+    this.clear = function(){
+        _steps.splice(0, _steps.length);
+        var eventObject = $.Event(HistoryEventType.HISTORY_NO_MORE_UNDO);
+        this.trigger(eventObject);
+        eventObject = $.Event(HistoryEventType.HISTORY_NO_MORE_REDO);
+        this.trigger(eventObject);
+    }
+    
     this.redo = function(){
         if(_steps.length > 0 && _currentIndex+1 >= 0 && _currentIndex < _steps.length-1)
         {
