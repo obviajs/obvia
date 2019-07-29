@@ -45,16 +45,16 @@ var Tree = function (_props, overrided = false) {
         //add or remove rows 
         var deltaRows = this.dataProvider.length - _oldDataProvider.length;
         if(deltaRows>0){
-            var toAdd = differenceOnKeyMatch(_dataProvider, _oldDataProvider, "guid", false, true);
+            var toAdd = differenceOnKeyMatch(_dataProvider, _oldDataProvider, _guidField, false, true);
             for(var i=0;i<toAdd.a1_indices.length;i++){
                 var ind = toAdd.a1_indices[i];
-                if(!this.dataProvider[ind]["guid"])
-                    this.dataProvider[ind]["guid"] = guid();
+                if(!this.dataProvider[ind][_guidField])
+                    this.dataProvider[ind][_guidField] = guid();
                 var cmp = this.buildTree([this.dataProvider[ind]]);
                 this.addComponent(cmp[0]);
             }
         }else{
-            var toRemove = differenceOnKeyMatch(_oldDataProvider, _dataProvider, "guid", false, true);
+            var toRemove = differenceOnKeyMatch(_oldDataProvider, _dataProvider, _guidField, false, true);
             for(var i=0;i<toRemove.a1_indices.length;i++){
                 //var ind = this.rowItems.length + i;
                 this.removeChildAtIndex(toRemove.a1_indices[i]);
