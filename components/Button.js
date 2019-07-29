@@ -20,11 +20,14 @@ var Button = function(_props, overrided=false)
                 _label = v;
                 if(this.$el){
                     var last = this.$el.children().last();
-                    if(last && last.length>0 && last[0].nextSibling)
-                        this.$el.last()[0].nextSibling.textContent = v;
+                    if(last && last.length>0)
+                        if(last[0].nextSibling)
+                            last[0].nextSibling.textContent = v;
+                        else
+                            this.$el.appendText(v);
                     else
-                        this.$el.appendText(v);
-                        //this.$el.html(v);
+                        //this.$el.appendText(v);
+                        this.$el.text(v);
                 }
             }
         }
