@@ -32,10 +32,10 @@ var Parent = function(_props, overrided=false, _isSurrogate=false)
     {
         if(child)
         {
-            index = index || _components.length;
+            index = index > -1? index : _components.length;
             if(index>=0 && index <= _components.length)
             {
-                index = index || _components.length;
+                index = index > -1? index : _components.length;
                 this.$el.insertAt(child.$el, index);
                 _components.splice(_components.length, 0, {constructor:child.type, props:child.props});
                 _children[child.id] = child; 
@@ -83,7 +83,8 @@ var Parent = function(_props, overrided=false, _isSurrogate=false)
 
     this.addComponent = function (component, index)
     {
-        _components.push(component);
+        index = index > -1? index : _components.length;
+        _components.splice(index, 0, component);
         return this.addComponentInContainer(this.$container, component, index);
     }
 
@@ -124,7 +125,7 @@ var Parent = function(_props, overrided=false, _isSurrogate=false)
                 }
 
             }.bind(_self));
-            index = index || _components.length;
+            index = index > -1? index : _components.length;
             container.insertAt(cmp.render(), index);
             //container.append(cmp.render());
             //expose component model
