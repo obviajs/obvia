@@ -16,7 +16,7 @@ var History = function(_props)
     
     var _steps = new ArrayEx();
     var _currentIndex = -1;
-    var _id = guid();
+    var _id = StringUtils.guid();
     Object.defineProperty(this, "id", {
         get: function id()
         {

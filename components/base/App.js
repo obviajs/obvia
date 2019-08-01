@@ -22,7 +22,7 @@ var App = function(_props){
     if(!('jquery' in Object(_root)))
         _root = $(_root);
     
-    var _rootID = _props.id = _props.id || _root.attr('id') || guid();
+    var _rootID = _props.id = _props.id || _root.attr('id') || StringUtils.guid();
     _root.attr('id', _rootID);
     window.id = _rootID;
 

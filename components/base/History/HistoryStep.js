@@ -1,6 +1,6 @@
 var HistoryStep = function(_props)
 { 
-    var _id = guid();
+    var _id = StringUtils.guid();
     this.behaviorName = "";
     this.description = "";
     this.stepType = 1; //2 type of change Minor/Major

@@ -56,7 +56,7 @@ var Tree = function (_props, overrided = false) {
         //add or remove rows 
         for(var i=0;i<_dataProvider.length;i++){
             if(!this.dataProvider[i][_guidField])
-                this.dataProvider[i][_guidField] = guid();
+                this.dataProvider[i][_guidField] = StringUtils.guid();
         }
         
         var toAdd = differenceOnKeyMatch(_dataProvider, _oldDataProvider, _guidField, false, true);
@@ -80,6 +80,8 @@ var Tree = function (_props, overrided = false) {
         for(var i = 0; i<toRefresh.length;i++){
             var cmp = this.children[this.components[toRefresh[i]].props.id];
             cmp.refreshBindings(this.dataProvider[toRefresh[i]]);
+            cmp.$el.attr(_guidField, this.dataProvider[toRefresh[i]][_guidField]);
+            cmp.props.attr[_guidField] = this.dataProvider[toRefresh[i]][_guidField];
         }
         _oldDataProvider = extend(true, false, this.dataProvider);
     };
@@ -214,7 +216,7 @@ var Tree = function (_props, overrided = false) {
             liIcon.classes = liIconClasses;
         }
         var liObj = {};
-        liObj[_guidField] = this.id.split("_")[1];
+        liObj[_guidField] = this.$el.attr(_guidField);
         _self.selectedItem = arrayHierarchyGetMatching(_dataProvider, _guidField, liObj[_guidField], _childrenField);
         //_self.select(liObj);
         e.stopPropagation();
@@ -224,9 +226,10 @@ var Tree = function (_props, overrided = false) {
         var cLi;
         if(liObj && liObj[_guidField])
         {
-            cLi = this.children["id_"+liObj.guid];
-            if(cLi)
+            var match = getMatching(this.components, "props.attr."+_guidField,  liObj.guid, true);
+            if(match.objects.length>0)
             {
+                cLi = this.children[match.objects[0].props.id];
                 var liClasses = cLi.classes.slice(0);
                 var diff = _selectedClasses.difference(liClasses);
                 if(diff.length>0){
@@ -306,10 +309,12 @@ var Tree = function (_props, overrided = false) {
                 for(var i=0;i<dp.length;i++)
                 {
                     if(!dp[i][_guidField])
-                    dp[i][_guidField] = guid();
+                    dp[i][_guidField] = StringUtils.guid();
                     var cmpLi = extend(true, _componentLi);
                     cmpLi.props.bindingDefaultContext = dp[i];
-                    cmpLi.props.id = "id_"+dp[i][_guidField];
+                    cmpLi.props.id = "li";
+                    cmpLi.props.attr = {};
+                    cmpLi.props.attr[_guidField] = dp[i][_guidField];
                     if(dp[i][_childrenField] && dp[i][_childrenField].length>0)
                     {
                         var tree = extend(true, _componentTree);

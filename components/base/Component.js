@@ -4,9 +4,9 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
     var _defaultParams = {
         id: "Component_"+Component.instanceCnt,
         classes: [],
-        guid: guid(),
+        guid: StringUtils.guid(),
         bindingDefaultContext:Component.defaultContext,
-        ownerDocument:document
+        ownerDocument:document,
     };
     shallowCopy(extend(false, false, _defaultParams, _props), _props);
     var ppb =  Component.processPropertyBindings(_props);
@@ -17,6 +17,7 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
     
     var bindingDefaultContext = _props.bindingDefaultContext;
     var _guid = _props.guid;
+    var _attr = _props.attr;
     var _id = _props.id = ((!_props.id) || (_props.id =="")) ? _defaultParams.id : _props.id;
     var _enabled;
     var _classes = [];
@@ -101,7 +102,13 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
             return _spacing;
         }
     });
-
+    Object.defineProperty(this, "attr", 
+    {
+        get: function attr() 
+        {
+            return _attr;
+        }
+    });
     Object.defineProperty(this, "props", {
         get: function props() {
             var obj = {};
@@ -292,6 +299,11 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
     {
         if (e.target.id == this.domID) 
         {
+            if(_attr){
+                for(var prop in _attr){
+                    this.$el.attr(prop, _attr[prop]);
+                }
+            }
             if (typeof _props.beforeAttach == 'function')
                 _props.beforeAttach.apply(this, arguments);
             if(!e.isDefaultPrevented()){
@@ -689,7 +701,7 @@ Component.ready = function(cmp, fn, ownerDocument=document)
 {
     // Store the selector and callback to be monitored
     if(!ownerDocument["id"]){
-        ownerDocument["id"] = guid();
+        ownerDocument["id"] = StringUtils.guid();
     }
     if(cmp.$el)
     {
