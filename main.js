@@ -141,6 +141,12 @@ rjs.define("./oxana/accounting/components/CurrencyExRate.js", "CurrencyExRate");
 rjs.define("./components/ProgressBar/ProgressBar.js", "ProgressBar");
 rjs.define("./components/ProgressBar/ProgressBarStyle.js", "ProgressBarStyle");
 
+//DropDown
+rjs.define("./components/DropDown/DropDown.js", "DropDown");
+rjs.define("./components/DropDown/ButtonSize.js", "ButtonSize");
+rjs.define("./components/DropDown/DropMenuDirection.js", "DropMenuDirection");
+rjs.define("./components/DropDown/DropSplitType.js", "DropSplitType");
+
 rjs.require([
         "JTemplate",
         "DataStore",
@@ -239,7 +245,11 @@ rjs.require([
         "CurrencyExRate",
         "tree_default_css",
         "Li",
-        "Tree"
+        "Tree",
+        "DropDown",
+         "ButtonSize",
+        "DropMenuDirection",
+        "DropSplitType",
     ], function () {
         window.main();
 }, flowerCM);
