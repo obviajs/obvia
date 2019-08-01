@@ -59,9 +59,9 @@ var Scrap = function(){
         } else if(["li"].indexOf($(n).prop("tagName").toLowerCase()) > -1){
             lit = {}; var title;
             if($(n).children().length>0)
-                title = $(n).last().text();
+                title = $(n).last().mytext();
             else
-                title = $(n).text();
+                title = $(n).mytext();
             lit.title = title;
             lit.key = ++Scrap.liInc;
         } else if(["button"].indexOf($(n).prop("tagName").toLowerCase()) > -1){
@@ -71,7 +71,7 @@ var Scrap = function(){
                     id: nid,
                     type: "button",
                     value: $(n).attr('value'),
-                    label: $(n).text(),
+                    label: $(n).mytext(),
                     classes: cls,
                     components: cmp
                 }
@@ -92,7 +92,7 @@ var Scrap = function(){
                 constructor: "Label",
                 props: {
                     id: nid,
-                    label: $(n).text(),
+                    label: $(n).mytext(),
                     labelType: $(n).prop("tagName").toLowerCase(),
                     classes: cls,
                     components: cmp
@@ -104,7 +104,7 @@ var Scrap = function(){
                 props: {
                     id: nid,
                     href: $(n).attr('href'),
-                    label: $(n).text(),
+                    label: $(n).mytext(),
                     target: $(n).attr('target'),
                     classes: cls,
                     components: cmp
@@ -119,7 +119,7 @@ var Scrap = function(){
                     _sLit = {
                         constructor:"Button",
                         props: {
-                            label: $(n).text(),
+                            label: $(n).mytext(),
                             type:$(n).attr("type").toLowerCase(),
                             value:$(n).attr("value"),
                             components: cmp
@@ -188,7 +188,7 @@ var Scrap = function(){
                 constructor: "Heading",
                 props: {
                     id: nid,
-                    label: $(n).text(),
+                    label: $(n).mytext(),
                     headingType: HeadingType[$(n).prop("tagName").toLowerCase()],
                     align: a,
                     classes: cls,

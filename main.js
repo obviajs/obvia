@@ -12,6 +12,7 @@ rjs.define("lib/ObjectUtils.js", "ObjectUtils");
 rjs.define("lib/StringUtils.js", "StringUtils");
 rjs.define("lib/DecoratorUtils.js", "DecoratorUtils");
 rjs.define("lib/BinUtils.js", "BinUtils");
+rjs.define("lib/CSSUtils.js", "CSSUtils");
 rjs.define("lib/my.js", "my");
 rjs.define("lib/Tokenizer.js", "Tokenizer");
 rjs.define("lib/binding/BindingUtils.js", "BindingUtils");
@@ -153,6 +154,8 @@ rjs.require([
         "ObjectUtils",
         "StringUtils",
         "DecoratorUtils",
+        "BinUtils",
+        "CSSUtils",
         "my",
         "Tokenizer",
         "BindingUtils",

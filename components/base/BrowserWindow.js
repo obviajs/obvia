@@ -52,8 +52,8 @@ var BrowserWindow = function(_props)
     this.show = function(){
         if(!_win){
             _win = window.open(_url, _name, "width="+_width+",height="+_height+",top="+_top+",left="+_left+",status="+_status+",location="+_location+",toolbar="+_toolbar+",resizable"+_resizable);     
-             BrowserWindow.all.push(_win);
-            BrowserWindow.copyStyles(document, _win.document);
+            BrowserWindow.all.push(_win);
+            CSSUtils.copyStyles(document, _win.document);
             this.ownerDocument = _win.document;
             this.$container = this.$el;       
             this.addComponents(this.components);
@@ -74,22 +74,4 @@ var BrowserWindow = function(_props)
     }
 };
 BrowserWindow.prototype.ctor = 'BrowserWindow';
-BrowserWindow.copyStyles = function(originDoc, destDoc)
-{
-    var childHead = destDoc.getElementsByTagName("head")[0];
-    $(originDoc).find("link").each(
-        function(index,element){
-            var childLink = destDoc.createElement("link");
-            childLink.rel  = "stylesheet";
-            childLink.href = element.href;
-            childHead.appendChild(childLink);
-    });
-    $(originDoc).find("style").each(
-        function(index,element){
-            var childStyle = destDoc.createElement("style");
-            childStyle.type = 'text/css';
-            childStyle.innerHTML = $(this).html();
-            childHead.appendChild(childStyle);
-    });
-};
 BrowserWindow.all = new ArrayEx();
