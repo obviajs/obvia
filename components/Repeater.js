@@ -129,33 +129,43 @@ var Repeater = function(_props)
 
     this.dataProviderChanged = function () 
     {
-        //add or remove rows 
-        var deltaRows = this.dataProvider.length - _oldDataProvider.length;
-        if(deltaRows>0){
-            var toAdd = differenceOnKeyMatch(_dataProvider, _oldDataProvider, "guid", false, true);
-            for(var i=0;i<toAdd.a1_indices.length;i++){
-                var ind = toAdd.a1_indices[i];
-                if(!this.dataProvider[ind]["guid"])
-                    this.dataProvider[ind]["guid"] = StringUtils.guid();
-                this.addRow(this.dataProvider[ind], ind+1); 
-            }
-        }else{
-            var toRemove = differenceOnKeyMatch(_oldDataProvider, _dataProvider, "guid", false, true);
-            for(var i=0;i<toRemove.a1_indices.length;i++){
-                //var ind = this.rowItems.length + i;
+        for(var i=0;i<_dataProvider.length;i++){
+            if(!this.dataProvider[i][_guidField])
+                this.dataProvider[i][_guidField] = StringUtils.guid();
+        }
+        
+        var toAdd = differenceOnKeyMatch(_dataProvider, _oldDataProvider, _guidField, false, true);
+        var toRemove = differenceOnKeyMatch(_oldDataProvider, _dataProvider, _guidField, false, true);
+        var toRefresh = intersect(toAdd.a1_indices, toRemove.a1_indices);
+        for(var i=0;i<toRemove.a1_indices.length;i++){
+            //var ind = this.rowItems.length + i;
+            if(toRefresh.indexOf(toRemove.a1_indices[i])==-1)
                 this.removeRow(toRemove.a1_indices[i]+1, false, true, dpRemove = false); 
+                //this.removeChildAtIndex(toRemove.a1_indices[i]);
+        }
+        
+        for(var i=0;i<toAdd.a1_indices.length;i++){
+            if(toRefresh.indexOf(toAdd.a1_indices[i])==-1)
+            {
+                var ind = toAdd.a1_indices[i];
+                this.addRow(this.dataProvider[ind], ind+1); 
+                //this.addComponent(cmp[0], ind);
             }
         }
-        //for the rows that we just added there is no need to refreshBindings
-        var maxInd = deltaRows>0?_oldDataProvider.length:_oldDataProvider.length + deltaRows;
-        for(var i = 0; i<maxInd;i++){
-            for(var cmpID in this.rowItems[i]){
-                var cmp = this.rowItems[i][cmpID];
-                cmp.refreshBindings(this.dataProvider[i]);
+        
+        for(var i = 0; i<toRefresh.length;i++){
+            var ri = toRefresh[i];
+            for(var cmpID in this.rowItems[ri]){
+                var cmp = this.rowItems[ri][cmpID];
+                cmp.refreshBindings(this.dataProvider[ri]);
+                cmp.$el.attr(_guidField, this.dataProvider[ri][_guidField]);
+                cmp.props.attr[_guidField] = this.dataProvider[ri][_guidField];
             }
+
         }
-        _oldDataProvider = extend(true, this.dataProvider);
+        _oldDataProvider = extend(true, false, this.dataProvider);
     };
+
     var _oldDataProvider;
     Object.defineProperty(this, "dataProvider", 
     {
@@ -169,10 +179,12 @@ var Repeater = function(_props)
             {
                 if(_dpWatcher){
                     _dpWatcher.reset();
+                    _dataProvider.off("propertyChange", _dpMemberChanged);
                 }
-                _dataProvider = v;
+                _dataProvider = !ArrayEx.isArrayEx(v)?new ArrayEx(v):v;
                 _dpWatcher = ChangeWatcher.getInstance(_dataProvider);
                 _dpWatcher.watch(_dataProvider, "length", _dpLengthChanged);
+                _dataProvider.on("propertyChange", _dpMemberChanged);
             }
         }
     });
@@ -180,10 +192,18 @@ var Repeater = function(_props)
     var _dpWatcher;
     var _dpLengthChanged = function(e)
     {
+        e.stopPropagation();
+        e.stopImmediatePropagation();
         if(_creationFinished)
             _self.dataProviderChanged();
     }
-
+    var _dpMemberChanged = function(e)
+    {
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+        if(_creationFinished && ["length","guid"].indexOf(e.property)==-1)
+            _self.dataProviderChanged();
+    }
     Object.defineProperty(this, "value", {
         get: function value() {
             var value = {};
@@ -476,13 +496,15 @@ var Repeater = function(_props)
                 id: _props.id,
                 type: ContainerType.NONE
             }
-        }
+        },
+        guidField:"guid"
     };
     _props = extend(false, false, _defaultParams, _props);
     var _dataProvider;
     var _rendering = _props.rendering;
     var _enabled = _props.enabled;
     var _container = _props.container;
+    var _guidField = _props.guidField;
     this.components = _props.components;
 
     Component.call(this, _props, true);
@@ -514,8 +536,8 @@ var Repeater = function(_props)
         {
             if(_dataProvider.length>0){
                 this.dataProvider.forEach(function (data, index) {  
-                    if(!_dataProvider[index]["guid"])
-                        _dataProvider[index]["guid"] = StringUtils.guid();
+                    if(!_dataProvider[index][_guidField])
+                        _dataProvider[index][_guidField] = StringUtils.guid();
                     _self.addRow(data, index + 1);
                 });
             }else
