@@ -6,5 +6,6 @@ var LabelType =
     "span":"span",
     "label":"label",
     "paragraph":"p",
-    "sup":"sup"
+    "sup":"sup",
+    "small":"small"
 }

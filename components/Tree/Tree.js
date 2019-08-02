@@ -251,7 +251,7 @@ var Tree = function (_props, overrided = false) {
                     tree.select(liObj);
             }
         }
-        if(this["parent"] && this.parent["parent"]){
+        if(this["parent"] && this.parent["parent"] && this.parent["parent"].ctor == "Tree"){
             this.parent.parent.select(liObj, this);
         }
     }

@@ -33,7 +33,7 @@ var Scrap = function(){
             cmp.push(cLit);
         };
         
-        if (["div", "header"].indexOf($(n).prop("tagName").toLowerCase()) > -1) {       
+        if (["div", "header","footer"].indexOf($(n).prop("tagName").toLowerCase()) > -1) {       
             lit = {
                 constructor: "Container",
                 props: {
@@ -43,6 +43,10 @@ var Scrap = function(){
                     type: ContainerType.NONE
                 }
             };
+            var txt = $(n).mytext();
+            if(txt.trim().length>0){
+                lit.props.label = txt;
+            }
         } else if(["ul"].indexOf($(n).prop("tagName").toLowerCase()) > -1){
             lit = {
                 constructor: "Tree",
@@ -55,13 +59,17 @@ var Scrap = function(){
                     classes: cls
                 }
             };
+            var txt = $(n).mytext();
+            if(txt.trim().length>0){
+                lit.props.label = txt;
+            }
             Scrap.liInc = 0;
         } else if(["li"].indexOf($(n).prop("tagName").toLowerCase()) > -1){
             lit = {}; var title;
             if($(n).children().length>0)
-                title = $(n).last().mytext();
+                title = $(n).last().text();
             else
-                title = $(n).mytext();
+                title = $(n).text();
             lit.title = title;
             lit.key = ++Scrap.liInc;
         } else if(["button"].indexOf($(n).prop("tagName").toLowerCase()) > -1){
@@ -87,7 +95,7 @@ var Scrap = function(){
                     width: $(n).attr('width')
                 }
             };
-        } else if(["i", "b", "u", "span", "label", "p", "sup"].indexOf($(n).prop("tagName").toLowerCase()) > -1){
+        } else if(["i", "b", "u", "span", "label", "p", "sup", "small"].indexOf($(n).prop("tagName").toLowerCase()) > -1){
             lit = {
                 constructor: "Label",
                 props: {
@@ -135,6 +143,7 @@ var Scrap = function(){
                         }
                     };
                     break;
+                case "email":
                 case "text":
                     _sLit = {
                         constructor:"TextInput",

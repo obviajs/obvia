@@ -7,6 +7,35 @@
 //component definition
 var Container = function(_props)
 {
+    if(!this.hasOwnProperty("label")){
+        Object.defineProperty(this, "label", 
+        {
+            get: function label() 
+            {
+                return _label;
+            },
+            set: function label(v) 
+            {
+                if(_label != v)
+                {
+                    _label = v;
+                    if(this.$el){
+                        var last = this.$el.children().last();
+                        if(last && last.length>0)
+                            if(last[0].nextSibling)
+                                last[0].nextSibling.textContent = v;
+                            else
+                                this.$el.appendText(v);
+                        else
+                            //this.$el.appendText(v);
+                            this.$el.text(v);
+                    }
+                }
+            },
+            configurable: true
+        });
+    }
+    
     Object.defineProperty(this, "width", 
     {
         get: function width() 
@@ -112,6 +141,11 @@ var Container = function(_props)
        // {
             if (typeof _afterAttach == 'function')
                 _afterAttach.apply(this, arguments);
+            var e = arguments[0];
+            if (!e.isDefaultPrevented()) {
+                if(_props.label)
+                    this.label = _props.label;
+            }
             //e.preventDefault();
         //}
     };
@@ -127,7 +161,7 @@ var Container = function(_props)
     var _type, _role;
     var _afterAttach = _props.afterAttach;
     _props.afterAttach = this.afterAttach;
-
+    var _label;
     Parent.call(this, _props);
     
     if(_props.width)
