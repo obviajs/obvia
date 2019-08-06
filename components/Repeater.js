@@ -536,9 +536,11 @@ var Repeater = function(_props)
         {
             if(_dataProvider.length>0){
                 this.dataProvider.forEach(function (data, index) {  
-                    if(!_dataProvider[index][_guidField])
-                        _dataProvider[index][_guidField] = StringUtils.guid();
-                    _self.addRow(data, index + 1);
+                    if(_dataProvider[index]!=null){
+                        if(!_dataProvider[index][_guidField])
+                            _dataProvider[index][_guidField] = StringUtils.guid();
+                        _self.addRow(data, index + 1);
+                    }
                 });
             }else
                 _creationFinished = true;
