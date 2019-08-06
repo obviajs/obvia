@@ -120,7 +120,23 @@ var Repeater = function(_props)
     //     return valid;
     // },
 
-
+    var _createRows = function(){
+        if(_dataProvider && _dataProvider.forEach)
+        {
+            if(_dataProvider.length>0){
+                _self.dataProvider.forEach(function (data, index) {  
+                    if(_dataProvider[index]!=null){
+                        if(!_dataProvider[index][_guidField])
+                            _dataProvider[index][_guidField] = StringUtils.guid();
+                        _self.addRow(data, index + 1);
+                    }
+                });
+            }else
+                _creationFinished = true;
+            _oldDataProvider = extend(true, _dataProvider);
+        }else
+            _creationFinished = true;
+    }
     //handle row add click
     var _addRowHandler = function () 
     {
@@ -521,40 +537,20 @@ var Repeater = function(_props)
 
         alert("overrided")
     };*/
-    var _createRows = function(){
-        if(_dataProvider && _dataProvider.forEach)
-        {
-            if(_dataProvider.length>0){
-                _self.dataProvider.forEach(function (data, index) {  
-                    if(_dataProvider[index]!=null){
-                        if(!_dataProvider[index][_guidField])
-                            _dataProvider[index][_guidField] = StringUtils.guid();
-                        _self.addRow(data, index + 1);
-                    }
-                });
-            }else
-                _creationFinished = true;
-            _oldDataProvider = extend(true, _dataProvider);
-        }else
-            _creationFinished = true;
-    }
-
-    this.dataProvider = _props.dataProvider;
-
+    
     this.render = function () 
     {
         var parent = this.$el.parent();
        // if(parent.length>0)
        //     this.$el.remove();
         this.$el.trigger('onBeginDraw');
-        this.$container.empty();
+        //this.$container.empty();
         this.rows = [];
         this.focusedRow = 0,
         this.focusedComponent = 0;
-
-        // this.rowItems = {}; we need this if we create Repeater instances via Object.assign
-        _createRows();
-       
+        if(_props.dataProvider || _dataProvider)
+            this.dataProvider = _props.dataProvider;
+        
         this.$el.trigger('onEndDraw');
      //   if(parent.length>0)
      //       parent.append(this.$el);

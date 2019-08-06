@@ -1,6 +1,30 @@
+var dp = new ArrayEx([{label:"test"}, {label:"anonimous", children:[{label:"hulk"}]}]);
 var myRepeater = new Repeater({
     id: 'repeater',
-    label: 'Example Repeater',
+    dataProvider:dp,
+    components: [
+        {
+            constructor: Repeater,
+            props:{
+                id: 'repeater',
+                dataProvider:"{currentItem.children}",
+                components:[
+                    {
+                        constructor: Button,
+                        props: {
+                            id: 'component',
+                            label: "{label}",
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+});
+
+/*
+var myRepeater = new Repeater({
+    id: 'repeater',
 	rendering: {
 				direction: 'vertical',
 				separator: true,
@@ -53,7 +77,7 @@ var myRepeater = new Repeater({
             }
         ],
     components: [
-       /* {
+         {
             constructor: AutoComplete,
             props: {
                 id: 'autocomplete',
@@ -134,7 +158,7 @@ var myRepeater = new Repeater({
                 valueField: 'id',
                 value: '{radioValue}' 
             }
-        }*/
+        }
         {
             constructor: Button,
             props: {
@@ -151,17 +175,5 @@ var myRepeater = new Repeater({
         }
     ]
 });
-
+*/
 $('#root').append(myRepeater.render());
-
-/**
- *   (_rendering.actions?("<div id='actions_" + this.domID  + "' class='col-sm-offset-10 col-sm-2 px-0 float-right' style='overflow:hidden;'>" +
-                        "<button id='" + this.domID  + "_btnAddRow' type='button' class='float-right btn btn-sm btn-secondary'>" +
-                            "<i class='fas fa-plus'></i> Add" +
-                        "</button>" +
-                        "<button id='" + this.domID  + "_btnRemoveRow' type='button' class='mx-1 float-right btn btn-sm btn-danger'>" +
-                            "<i class='fas fa-minus'></i> Remove" + 
-                        "</button>" +
- *  
- * 
- * */
