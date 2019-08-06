@@ -14,7 +14,7 @@ var _DOMMutationHandler = function (e) {
         this.label = e.mutation.addedNodes[0].childNodes[0].childNodes[0].data;
     }
 };
-
+var dpComponentList = [{"label":"Button"}];
 var zeroCool = {
         constructor: Container,
         props: {
@@ -196,6 +196,45 @@ var zeroCool = {
                                                     }
                                                 ]    
                                             }
+                                        },
+                                        {
+                                            constructor: Container,
+                                            props: {
+                                                id: '',
+                                                type: ContainerType.COLUMN,
+                                                spacing: {colSpan:9},
+                                                classes:["border"],
+                                                components:[
+                                                    {
+                                                        constructor: Container,
+                                                        props: {
+                                                            spacing: {h:100},
+                                                            components:[
+                                                                {
+                                                                    constructor: Repeater,
+                                                                    props: {
+                                                                        id:"componentList",
+                                                                        dataProvider:dpComponentList,
+                                                                        components:[
+                                                                            {
+                                                                                constructor: Button,
+                                                                                props: {
+                                                                                    id: 'component',
+                                                                                    label: "{label}",
+                                                                                    draggable: true,
+                                                                                    dragstart: function(e){
+                                                                                        e.originalEvent.dataTransfer.setData("domID", e.target.id);
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        ]
+                                                                    }
+                                                                }
+                                                            ]
+                                                        }
+                                                    }
+                                                ]
+                                            }
                                         }
                                     ]
                                 }
@@ -272,7 +311,9 @@ var waBehaviors = {
         "IS_WA_RESIZE_NS": isMouseMoveNS
     },
     "resize": "WA_RESIZE",
-    "contextmenu": "WA_REMOVE"
+    "contextmenu": "WA_REMOVE",
+    "drop": "ADD_COMPONENT",
+    "dragover": "ALLOW_DROP"
 };
 
 
@@ -301,7 +342,30 @@ oxana.behaviors[oxana.rootID]["keydown"] = {
     "WA_UNDO":isKeyCombUndo,
     "WA_REDO":isKeyCombRedo,
 };
+oxana.behaviorimplementations["ALLOW_DROP"] = function(e){
+    e.preventDefault();
+}
+oxana.behaviorimplementations["ADD_COMPONENT"] = {
+    description: "Ndaje horizontalisht",
+    do:function(e) {
+        e.preventDefault();
+        var domID = e.originalEvent.dataTransfer.getData("domID");
+        console.log("called ADD_COMPONENT."+domID);
+        Component.in
 
+        var _id = Component.domID2ID[domID]?Component.domID2ID[domID]:domID;
+        var _idSurrogate = Component.surrogates[domID] && Component.domID2ID[Component.surrogates[domID]]?Component.domID2ID[Component.surrogates[domID]]:null;
+        _id = _idSurrogate?_idSurrogate:_id;
+        var lit = Component.instances[_id].literal;
+        //Component.fromLiteral(Component.instances[_id].literal)
+        
+        var workArea = Component.instances[Component.domID2ID[e.target.id]];
+        workArea.addComponent(lit);
+        //e.target.appendChild(document.getElementById(data));
+    },
+    undo:function(){
+    }
+};
 oxana.behaviorimplementations["HISTORY_STEP_DETAILS"] = function(e){
     console.log("called HISTORY_STEP_DETAILS.");
 };

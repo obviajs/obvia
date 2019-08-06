@@ -93,6 +93,7 @@ var Parent = function(_props, overrided=false, _isSurrogate=false)
         if(container)
         {
             component.props.ownerDocument = this.ownerDocument;
+            component.props.bindingDefaultContext = this.bindingDefaultContext;
             var cmp = Component.fromLiteral(component);
             component.props.id = cmp.id;
             _children[cmp.id] = cmp;

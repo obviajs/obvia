@@ -15,11 +15,11 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
             delete _props[prop];
     }
     
-    var bindingDefaultContext = _props.bindingDefaultContext;
+    var _bindingDefaultContext = _props.bindingDefaultContext;
     var _guid = _props.guid;
     var _attr = _props.attr;
     var _id = _props.id = ((!_props.id) || (_props.id =="")) ? _defaultParams.id : _props.id;
-    var _enabled;
+    var _enabled, _draggable;
     var _classes = [];
     var _parent = _props.parent;
     var _mousedown = _props.mousedown;
@@ -31,6 +31,11 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
     var _keyup = _props.keyup;
     var _creationComplete = _props.creationComplete;
     var _change = _props.change;
+    var _drop = _props.drop;
+    var _dragover = _props.dragover;
+    var _dragstart = _props.dragstart;
+    var _dragenter = _props.dragenter;
+    var _dragleave = _props.dragleave;
     var _DOMMutation = _props.DOMMutation;
     var _ownerDocument = _props.ownerDocument;
     var _watchers = [];
@@ -55,6 +60,14 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
         }
     });
 
+    Object.defineProperty(this, "bindingDefaultContext",
+    {
+        get: function bindingDefaultContext() 
+        {
+            return _bindingDefaultContext;
+        }
+    });
+    
     //domID property
     Object.defineProperty(this, 'id',
     {
@@ -213,6 +226,23 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
         configurable: true
     });
 
+    Object.defineProperty(this, "draggable",
+    {
+        get: function draggable()
+        {
+            return _draggable;
+        },
+        set: function draggable(v)
+        {
+            if(_draggable!=v){
+                _draggable = v;
+                if(!v)
+                    this.$el.prop('draggable', 'false');
+                else
+                    this.$el.prop('draggable', 'true');
+            }
+        }
+    });
     Object.defineProperty(this, "classes",
     {
         get: function classes()
@@ -287,7 +317,8 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
 
     if(_props.enabled!=null)
         this.enabled = _props.enabled;
-
+    if(_props.draggable!=null)
+        this.draggable = _props.draggable;
     var _spacing = new Spacing(_props.spacing, this.$el);
 
     if(_props.classes)
@@ -339,6 +370,11 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
                 'keyup': _keyup && typeof _keyup == 'function' ? _keyup.bind(_self) : undefined,
                 'creationComplete': _creationComplete && typeof _creationComplete == 'function' ? _creationComplete.bind(_self) : undefined,
                 'change': _change && typeof _change == 'function' ? _change.bind(_self) : undefined,
+                'drop': _drop && typeof _drop == 'function' ? _drop.bind(_self) : undefined,
+                'dragover': _dragover && typeof _dragover == 'function' ? _dragover.bind(_self) : undefined,
+                'dragstart': _dragstart && typeof _dragstart == 'function' ? _dragstart.bind(_self) : undefined,
+                'dragenter': _dragenter && typeof _dragenter == 'function' ? _dragenter.bind(_self) : undefined,
+                'dragleave': _dragleave && typeof _dragleave == 'function' ? _dragleave.bind(_self) : undefined,
                 'DOMMutation': _DOMMutation && typeof _DOMMutation == 'function' ? _DOMMutation.bind(_self) : undefined,
                 'afterAttach': this.afterAttach && typeof this.afterAttach == 'function' ? this.afterAttach.bind(_self) : undefined,
                 'beforeAttach': this.beforeAttach && typeof this.beforeAttach == 'function' ? this.beforeAttach.bind(_self) : undefined,
@@ -650,7 +686,7 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
     }   
     
     if(_props.applyBindings==null || _props.applyBindings==true)
-        _watchers = this.applyBindings(bindingDefaultContext);
+        _watchers = this.applyBindings(_bindingDefaultContext);
 }
 
 Component.processPropertyBindings = function(props)
