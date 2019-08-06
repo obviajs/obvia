@@ -185,6 +185,8 @@ var Repeater = function(_props)
                 _dpWatcher = ChangeWatcher.getInstance(_dataProvider);
                 _dpWatcher.watch(_dataProvider, "length", _dpLengthChanged);
                 _dataProvider.on("propertyChange", _dpMemberChanged);
+                this.removeAllRows();
+                _createRows();
             }
         }
     });
@@ -479,6 +481,7 @@ var Repeater = function(_props)
                 _container.props.guid = this.guid;
                 this.$el = Component.fromLiteral(_container).$el;
             }
+        this.$container = this.$el;
         return null;
     };
 
@@ -518,24 +521,11 @@ var Repeater = function(_props)
 
         alert("overrided")
     };*/
-    this.dataProvider = _props.dataProvider;
-    this.render = function () 
-    {
-        var parent = this.$el.parent();
-       // if(parent.length>0)
-       //     this.$el.remove();
-        this.$el.trigger('onBeginDraw');
-        this.$container = this.$el;
-        this.$container.empty();
-        this.rows = [];
-        this.focusedRow = 0,
-        this.focusedComponent = 0;
-
-        // this.rowItems = {}; we need this if we create Repeater instances via Object.assign
+    var _createRows = function(){
         if(_dataProvider && _dataProvider.forEach)
         {
             if(_dataProvider.length>0){
-                this.dataProvider.forEach(function (data, index) {  
+                _self.dataProvider.forEach(function (data, index) {  
                     if(_dataProvider[index]!=null){
                         if(!_dataProvider[index][_guidField])
                             _dataProvider[index][_guidField] = StringUtils.guid();
@@ -547,6 +537,23 @@ var Repeater = function(_props)
             _oldDataProvider = extend(true, _dataProvider);
         }else
             _creationFinished = true;
+    }
+
+    this.dataProvider = _props.dataProvider;
+
+    this.render = function () 
+    {
+        var parent = this.$el.parent();
+       // if(parent.length>0)
+       //     this.$el.remove();
+        this.$el.trigger('onBeginDraw');
+        this.$container.empty();
+        this.rows = [];
+        this.focusedRow = 0,
+        this.focusedComponent = 0;
+
+        // this.rowItems = {}; we need this if we create Repeater instances via Object.assign
+        _createRows();
        
         this.$el.trigger('onEndDraw');
      //   if(parent.length>0)
