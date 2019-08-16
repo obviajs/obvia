@@ -175,7 +175,7 @@ var Repeater = function(_props)
                 var cmp = this.rowItems[ri][cmpID];
                 cmp.refreshBindings(this.dataProvider[ri]);
                 cmp.$el.attr(_guidField, this.dataProvider[ri][_guidField]);
-                cmp.props.attr[_guidField] = this.dataProvider[ri][_guidField];
+                cmp.attr[_guidField] = this.dataProvider[ri][_guidField];
             }
 
         }

@@ -93,7 +93,7 @@ var DropDown = function (_props, overrided = false) {
                 var cmp = this.children["divContent"].children[this.children["divContent"].components[toRefresh[i]].props.id];
                 cmp.refreshBindings(this.dataProvider[toRefresh[i]]);
                 cmp.$el.attr(_guidField, this.dataProvider[toRefresh[i]][_guidField]);
-                cmp.props.attr[_guidField] = this.dataProvider[toRefresh[i]][_guidField];
+                cmp.attr[_guidField] = this.dataProvider[toRefresh[i]][_guidField];
             }
             _oldDataProvider = extend(true,false,this.dataProvider);
     };
