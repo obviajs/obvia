@@ -19,13 +19,15 @@ var TextInput = function (_props, overrided = false) {
                 if (_value) {
                     if (this.$el) {
                         this.$el.attr('value', _value);
-                        this.trigger('change');
+                        this.$el.val(_value);
                     }
                 } else {
                     if (this.$el) {
                         this.$el.removeAttr('value');
+                        this.$el.val("");
                     }
                 }
+                this.trigger('change');
             }
         }
     });

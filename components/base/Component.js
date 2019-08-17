@@ -7,6 +7,7 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
         guid: StringUtils.guid(),
         bindingDefaultContext:Component.defaultContext,
         ownerDocument:document,
+        attr:{}
     };
     shallowCopy(extend(false, false, _defaultParams, _props), _props);
     var ppb =  Component.processPropertyBindings(_props);

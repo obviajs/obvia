@@ -70,9 +70,9 @@ var TokenRenderer = function(_props)
                 _value = v;
                 if(this.$label)
                     if(v || v===false)
-                        this.$label.data('value', v);
+                        this.$label.attr('value', v);
                     else
-                        this.$label.removeData('value');
+                        this.$label.removeAttr('value');
             }
         }
     });
@@ -100,7 +100,7 @@ var TokenRenderer = function(_props)
         var html = 
             '<div id="'+ this.domID + '" class="badge badge-info" style="font-size: 14px; margin:2px">'+
                 (_closeIconSide=="left"?xHtml:"")+    
-                '<span id="'+ this.domID + '_label" data-value="'+(_value!=null && _value!=undefined ? _value:'')+'">'+                      
+                '<span id="'+ this.domID + '_label" value="'+(_value!=null && _value!=undefined ? _value:'')+'">'+                      
                 (_label!=null ? _label:'')+
                 '</span>'+
                 (_closeIconSide=="right"?xHtml:"")+      

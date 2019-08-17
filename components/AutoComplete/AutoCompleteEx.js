@@ -43,11 +43,36 @@ var AutoCompleteEx = function(_props)
                 }
             };
         }
+        _self.tokenInput = new TextInput({
+            id: 'tokenInput',
+            attr: {"placeholder": 'Type something...'},
+            versionStyle: '',
+            keydown:_tokenInputKeyDown,
+            keyup: _tokenInputKeyUp
+        }).on('creationComplete', function(e){
+            e.stopPropagation();
+
+            _self.tokenInput.$el.addClass('border-0');
+            _self.tokenInput.$el.addClass('ellipsis');
+            //TODO: te konsiderojme qe form-control si klse te mos i shtohet fare elementeve nese embededd=true
+            _self.tokenInput.$el.css({"outline":"none", "font-size":"14px"});
+        
+            _self.cComponents.push(1);
+            if (_self.cComponents.length > _self.countChildren-1) {
+                _self.trigger('creationComplete');  
+            }
+            //_self.tokenInput.$el.on('keydown', _tokenInputKeyDown.bind(_self));
+            //_self.tokenInput.$el.on('keyup', _tokenInputKeyUp.bind(_self));
+                
+        });
+
+        _self.$input = _self.tokenInput.$el;
+
         //TODO: we are overriding those handlers, we should exec them after our internal handlers
         this.tokenRenderer.props.click = this.tokenRendererClickHandler;
         this.tokenRenderer.props.dblclick = this.tokenRendererDoubleClickHandler;
         this.tokenRenderer.props.mousedown = this.tokenRendererMouseDownHandler;
-
+        
         this.tokensRepeater = new Repeater({
             id: 'listRepeater',
             defaultItem: this.defaultItem,
@@ -63,47 +88,18 @@ var AutoCompleteEx = function(_props)
         }).on('creationComplete', function (e) {
             e.stopPropagation();
             //creation complete will be triggered also on "all rows removed, add a new row" case
-            if(!_self.tokenInput){
-                _self.cComponents.push(1);
-                _self.tokensRepeater.$el.removeClass('form-group');
-                _self.tokenInput = new TextInput({
-                    id: 'tokenInput',
-                    label: 'Type something...',
-                    versionStyle: '',
-                    keydown:_tokenInputKeyDown,
-                    keyup: _tokenInputKeyUp
-                }).on('creationComplete', function(e){
-                    e.stopPropagation();
-
-                    _self.tokenInput.$el.addClass('border-0');
-                    _self.tokenInput.$el.addClass('ellipsis');
-                    //TODO: te konsiderojme qe form-control si klse te mos i shtohet fare elementeve nese embededd=true
-                    _self.tokenInput.$el.removeClass('form-control');
-                    _self.tokenInput.$el.css({"outline":"none", "font-size":"14px"});
-                
-                    _self.cComponents.push(1);
-                    if (_self.cComponents.length > _self.countChildren-1) {
-                        _self.trigger('creationComplete');  
-                    }
-                    //_self.tokenInput.$el.on('keydown', _tokenInputKeyDown.bind(_self));
-                    //_self.tokenInput.$el.on('keyup', _tokenInputKeyUp.bind(_self));
-                        
-                });
-                _self.$input = _self.tokenInput.$el;
-                _self.tokensRepeater.$container.append( _self.tokenInput.render());  
-                
-                if (_self.cComponents.length > this.countChildren-1) {
-                    this.trigger('creationComplete');  
-                }
-                tokenInputReSize();
-                this.tokensRepeater.on('onRowAdd', function(){
-                    tokenInputReSize();
-                });
-                this.tokensRepeater.on('onRowDelete', function(){
-                    tokenInputReSize();
-                });
+            _self.cComponents.push(1);
+            _self.tokensRepeater.$container.css('float', 'left')
+            if (_self.cComponents.length > this.countChildren-1) {
+                this.trigger('creationComplete');  
             }
-           
+            tokenInputReSize();
+            this.tokensRepeater.on('onRowAdd', function(){
+                tokenInputReSize();
+            });
+            this.tokensRepeater.on('onRowDelete', function(){
+                tokenInputReSize();
+            });
         }.bind(this));
 
         var tokenInputReSize = function(){
@@ -245,9 +241,7 @@ var AutoCompleteEx = function(_props)
         {
             _self.suggestionsRepeater.dataProvider = _suggestions;
 
-            if(_self.suggestionsRepeater.$el!=undefined)
-                _self.suggestionsRepeater.$el.detach();
-            _self.$suggestionsDropDown.append(_self.suggestionsRepeater.render());
+            _self.$suggestionsDropDown.append(_self.suggestionsRepeater.$el);
             _self.$suggestionsDropDown.addClass('show');
             _self.$suggestionsDropDown.attr('aria-expanded', true);
         }else
@@ -346,6 +340,7 @@ var AutoCompleteEx = function(_props)
         //TODO: If we are going to keep item ordering in the view the save as in value
         if(index>=0 && index<_value.length){
             _value.splice(index, 1);
+            this.tokensRepeater.dataProvider.splice(index, 1);
         }else
             console.log("Index out of range. No item will be removed.");
     };
@@ -399,11 +394,9 @@ var AutoCompleteEx = function(_props)
                     //is the tokenRepeater rendered yet ? 
                     if(this.tokensRepeater && this.tokensRepeater.$container)
                     {
-                        var itemsToRemove = differenceOnKeyMatch(_value, v, _valueField) //value;
-                        this.removeTokenItems(itemsToRemove);  
-                        _addTokenItems(v);
-                        //this._value = v;
-    
+                        this.tokensRepeater.dataProvider = v;
+                        _value = v;
+                        _self.tokenInput.value = ""; 
                         this.trigger('change');
                     }else
                         _value.splicea(0, _value.length, v);
@@ -469,18 +462,7 @@ var AutoCompleteEx = function(_props)
         var index = repeaterEventArgs.currentIndex;
         
         var v = repeaterEventArgs.currentItem;
-    },
-
-    removeItem: function(){
-        console.log(arguments);
-    },
-    afterAttach: function (e) {
-        if (e.target.id == this.$el.attr('id')) {
-            //this.renderSelect2();
-        }
-    },
-
-    
+    },    
 */
     this.template = function () 
     {
@@ -523,10 +505,8 @@ var AutoCompleteEx = function(_props)
  
     this.render = function () 
     {
-        if(this.tokensRepeater.$container == undefined)
-        {
-            this.$tokenContainer.append(this.tokensRepeater.render());
-        }
+        this.$tokenContainer.append(this.tokenInput.render()); 
+        this.$tokenContainer.append(this.tokensRepeater.$el);
         return this.$el;
     };
 

@@ -121,6 +121,11 @@ var Repeater = function(_props)
     // },
 
     var _createRows = function(){
+        _self.$el.trigger('onBeginDraw');
+         //this.$container.empty();
+        _self.focusedRow = 0,
+        _self.focusedComponent = 0;
+
         if(_dataProvider && _dataProvider.forEach)
         {
             if(_dataProvider.length>0){
@@ -193,16 +198,51 @@ var Repeater = function(_props)
         {
             if(_dataProvider != v)
             {
-                if(_dpWatcher){
+                if(_dpWatcher && _dataProvider){
                     _dpWatcher.reset();
                     _dataProvider.off("propertyChange", _dpMemberChanged);
+                } 
+                if(v==null || v.length==0){
+                    this.removeAllRows(false);
+                    _dataProvider = null;
+                }else if(_dataProvider && _dataProvider.length>0)
+                {
+                    for(var i=0;i<v.length;i++){
+                        if(v[i]!=null){
+                            if(!v[i][_guidField])
+                                v[i][_guidField] = StringUtils.guid();
+                        }
+                    }
+                    var delta = (v.length?v.length:0) - (_dataProvider.length?_dataProvider.length:0);
+                    for(var ri=0;ri<Math.min(v.length, _dataProvider.length);ri++){
+                        for(var cmpID in this.rowItems[ri]){
+                            var cmp = this.rowItems[ri][cmpID];
+                            cmp.refreshBindings(v[ri]);
+                            cmp.$el.attr(_guidField, v[ri][_guidField]);
+                            cmp.attr[_guidField] = v[ri][_guidField];
+                        }
+            
+                    }
+                    if(delta>0){
+                        for(var i=_dataProvider.length;i<v.length;i++){
+                            this.addRow(v[i], i+1); 
+                        }
+                    }else if(delta<0){
+                        for(var i=_dataProvider.length;i>v.length;i--){
+                            this.removeRow(i, false, true, dpRemove = false); 
+                        }
+                    }
+                    _dataProvider = !ArrayEx.isArrayEx(v)?new ArrayEx(v):v;
+                }else if(_dataProvider==null || _dataProvider.length==0){
+                    _dataProvider = !ArrayEx.isArrayEx(v)?new ArrayEx(v):v;
+                    _createRows();
                 }
-                _dataProvider = !ArrayEx.isArrayEx(v)?new ArrayEx(v):v;
-                _dpWatcher = ChangeWatcher.getInstance(_dataProvider);
-                _dpWatcher.watch(_dataProvider, "length", _dpLengthChanged);
-                _dataProvider.on("propertyChange", _dpMemberChanged);
-                this.removeAllRows();
-                _createRows();
+                if(_dataProvider){
+                    _dpWatcher = ChangeWatcher.getInstance(_dataProvider);
+                    _dpWatcher.watch(_dataProvider, "length", _dpLengthChanged);
+                    _dataProvider.on("propertyChange", _dpMemberChanged);
+                }
+               
             }
         }
     });
@@ -306,9 +346,12 @@ var Repeater = function(_props)
                             }
                             
                             if (_self.currentIndex == _self.dataProvider.length && !addRowFlag) {
-                                _creationFinished = true;
-                                _self.trigger('creationComplete');
+                                if(!_creationFinished){
+                                    _creationFinished = true;
+                                    _self.trigger('creationComplete');
+                                }
                                 _self.focusComponent(0, 0);
+                                _self.$el.trigger('onEndDraw');
                             }
 
                             //animate
@@ -366,12 +409,13 @@ var Repeater = function(_props)
            
             if(_self.mode =="append")
             {
-                if(_self.rows.length>0)
+                /*if(_self.rows.length>0)
                 {
                     _self.rows[_self.rows.length-1].after(renderedRow);
                 }
                 else
-                    _self.$container.prepend(renderedRow);
+                */
+                    _self.$container.append(renderedRow);
             }else{
                 _self.$container.prepend(renderedRow);
             }
@@ -410,11 +454,13 @@ var Repeater = function(_props)
     this.watchers = [];
     this.rows = [];
     this.mode = "append"; //TODO: prepend will add rows to the beginning, but if we are about to iterate the rows or use rowIndex we need to take this into consideration (using reverse of array is the easiest solution)
-    this.removeAllRows = function()
+    this.removeAllRows = function(dpRemove = true)
     {
-        for(var i=this.rows.length;i>0;i--)
+        var i=this.rows.length;
+        while(i>0)
         {
-            this.removeRow(i, false, false);
+            this.removeRow(i, false, false, dpRemove);
+            i--;
         }
         this.rows = [];
     };
@@ -434,7 +480,8 @@ var Repeater = function(_props)
             } 
 
             //delete component instances on that row
-            this.components.forEach(function (component, cI) {  
+            for(var cI=0;cI<this.components.length;cI++){  
+                var component = this.components[cI];
                 //remove repeated block from dom
                 if (cI == 0) {
                     this[component.props.id][index - 1].$el.closest('.repeated-block').remove();
@@ -442,16 +489,17 @@ var Repeater = function(_props)
                 }
             
                 //modify new cmp repeater indexes
-                this[component.props.id].forEach(function (item, i) {
+                for(var i=0;i<this[component.props.id].length;i++){
+                    var item = this[component.props.id][i];
                     if (i < index)
                         return false;
                     item.repeaterIndex -= 1;
-                });
+                }
 
                 rowItems[component.props.id] = [this[component.props.id][index - 1]];
                 this[component.props.id].splice(index - 1, 1);
                 
-            }.bind(this));
+            }
 
             //manage dp
             this.currentIndex--;
@@ -500,9 +548,21 @@ var Repeater = function(_props)
         this.$container = this.$el;
         return null;
     };
-
+    this.afterAttach = function (e) 
+    {
+        if (e.target.id == this.domID) 
+        {
+            if (typeof _props.afterAttach == 'function')
+                _props.afterAttach.apply(this, arguments);
+            e.preventDefault();
+            _registerSurrogate();
+        }
+    };
     this.userCanManageItems = true;
-
+    var _registerSurrogate = function(e){
+        //init events for this surrogate component.
+       _self.initEvents(this.$el, 0);
+    }
     var _defaultParams = {
         rendering: {
 			direction: 'vertical',
@@ -513,7 +573,8 @@ var Repeater = function(_props)
             constructor: Container,
             props: {
                 id: _props.id,
-                type: ContainerType.NONE
+                type: ContainerType.NONE,
+                afterAttach: this.afterAttach
             }
         },
         guidField:"guid"
@@ -526,7 +587,7 @@ var Repeater = function(_props)
     var _guidField = _props.guidField;
     this.components = _props.components;
 
-    Component.call(this, _props, true);
+    Component.call(this, _props, true, true);
     var base = this.base;
 /*
     var click =  props.click;
@@ -539,21 +600,9 @@ var Repeater = function(_props)
     };*/
     
     this.render = function () 
-    {
-        var parent = this.$el.parent();
-       // if(parent.length>0)
-       //     this.$el.remove();
-        this.$el.trigger('onBeginDraw');
-        //this.$container.empty();
-        this.rows = [];
-        this.focusedRow = 0,
-        this.focusedComponent = 0;
-        if(_props.dataProvider || _dataProvider)
+    {  
+        if(_props.dataProvider)
             this.dataProvider = _props.dataProvider;
-        
-        this.$el.trigger('onEndDraw');
-     //   if(parent.length>0)
-     //       parent.append(this.$el);
         return this.$el;
     };
 
