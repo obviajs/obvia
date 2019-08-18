@@ -204,7 +204,8 @@ var Repeater = function(_props)
                 } 
                 if(v==null || v.length==0){
                     this.removeAllRows(false);
-                    _dataProvider = null;
+                    _dataProvider = v;
+                    _creationFinished = true;
                 }else if(_dataProvider && _dataProvider.length>0)
                 {
                     for(var i=0;i<v.length;i++){

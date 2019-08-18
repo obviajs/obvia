@@ -35,27 +35,26 @@ var DropDown = function (_props, overrided = false) {
             }
         }
     });
+    
     Object.defineProperty(this,"selectedItem",{
         get: function selectedItem() {
     
            return _selectedItem;
         },
         set: function selectedItem(v) {
-    
             if (_selectedItem != v) {
                 _selectedItem = v;
-                }  
-            }
+            }  
+        }
     });
 
     var _btnDD,_linkContainer;
     var _dpWatcher;
     var _dpLengthChanged = function (e) {
-
-    e.stopPropagation();
-    e.stopImmediatePropagation();
-    if(_creationFinished)
-    _self.dataProviderChanged();
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+        if(_creationFinished)
+            _self.dataProviderChanged();
     }
 
     var _dpMemberChanged = function(e)
@@ -63,8 +62,9 @@ var DropDown = function (_props, overrided = false) {
         e.stopPropagation();
         e.stopImmediatePropagation();
         if(_creationFinished && ["length","guid"].indexOf(e.property)==-1)
-        _self.dataProviderChanged();
+            _self.dataProviderChanged();
     }
+
     this.dataProviderChanged = function ()
     {
         //add or remove rows
@@ -72,36 +72,36 @@ var DropDown = function (_props, overrided = false) {
             if(!this.dataProvider[i][_guidField])
                 this.dataProvider[i][_guidField] = StringUtils.guid();
         }
-            var toAdd = differenceOnKeyMatch(_dataProvider,_oldDataProvider,_guidField,false,true);
-            var toRemove = differenceOnKeyMatch(_oldDataProvider, _dataProvider,_guidField,false,true);
-            var toRefresh = intersect(toAdd.a1_indices, toRemove.a1_indices);
-            
-            for(var i=toRemove.a1_indices.length;i>=0;i--) {
-                if(toRefresh.indexOf(toRemove.a1_indices[i])==-1)
-                this.children["divContent"].removeChildAtIndex(toRemove.a1_indices[i]);
+        var toAdd = differenceOnKeyMatch(_dataProvider,_oldDataProvider,_guidField,false,true);
+        var toRemove = differenceOnKeyMatch(_oldDataProvider, _dataProvider,_guidField,false,true);
+        var toRefresh = intersect(toAdd.a1_indices, toRemove.a1_indices);
+        
+        for(var i=toRemove.a1_indices.length;i>=0;i--) {
+            if(toRefresh.indexOf(toRemove.a1_indices[i])==-1)
+            this.children["divContent"].removeChildAtIndex(toRemove.a1_indices[i]);
+        }
+        for(var i=0;i<toAdd.a1_indices.length;i++){
+            if(toRefresh.indexOf(toAdd.a1_indices[i])==-1){
+                var ind = toAdd.a1_indices[i]; 
+                var cmp = this.buildLink([this.dataProvider[ind]]);
+                this.children["divContent"].addComponent(cmp[0],ind);
             }
-            for(var i=0;i<toAdd.a1_indices.length;i++){
-                if(toRefresh.indexOf(toAdd.a1_indices[i])==-1){
-                    var ind = toAdd.a1_indices[i]; 
-                    var cmp = this.buildLink([this.dataProvider[ind]]);
-                    this.children["divContent"].addComponent(cmp[0],ind);
-                }
-            }    
+        }    
         //for the rows that we just added there is no need to refreshBindings
         for(var i=0; i<toRefresh.length;i++)
         {
-                var cmp = this.children["divContent"].children[this.children["divContent"].components[toRefresh[i]].props.id];
-                cmp.refreshBindings(this.dataProvider[toRefresh[i]]);
-                cmp.$el.attr(_guidField, this.dataProvider[toRefresh[i]][_guidField]);
-                cmp.attr[_guidField] = this.dataProvider[toRefresh[i]][_guidField];
-            }
-            _oldDataProvider = extend(true,false,this.dataProvider);
+            var cmp = this.children["divContent"].children[this.children["divContent"].components[toRefresh[i]].props.id];
+            cmp.refreshBindings(this.dataProvider[toRefresh[i]]);
+            cmp.$el.attr(_guidField, this.dataProvider[toRefresh[i]][_guidField]);
+            cmp.attr[_guidField] = this.dataProvider[toRefresh[i]][_guidField];
+        }
+        _oldDataProvider = extend(true,false,this.dataProvider);
     };
 
     this.afterAttach = function (e) {
         if (typeof _afterAttach == 'function')
             _afterAttach.apply(this, arguments);
-            _creationFinished = true;
+        _creationFinished = true;
     }
 
     var _defaultParams = {
@@ -122,13 +122,12 @@ var DropDown = function (_props, overrided = false) {
     var _clickHandler = function (e) 
     {
             _btnDD.label = this.label;
-            
             var linkObj={};
             linkObj[_guidField] = this.$el.attr(_guidField);
             _self.selectedItem = getMatching(_dataProvider, _guidField, linkObj[_guidField]);
             console.log("SelectedItem",_selectedItem);
             e.stopPropagation();
-        };
+    };
 
     _props = extend(false, false,_defaultParams, _props);
 
@@ -179,7 +178,7 @@ var DropDown = function (_props, overrided = false) {
         }
     }
 
-    var _componentLink ={
+    var _componentLink = {
         constructor:Link,
         props: {
             id:"link",
@@ -200,7 +199,7 @@ var DropDown = function (_props, overrided = false) {
                 for(var i=0 ; i< dp.length;i++)
                 {
                     if(!dp[i][_guidField]) {
-                    dp[i][_guidField] = StringUtils.guid();
+                        dp[i][_guidField] = StringUtils.guid();
                     }
                     
                     if(dp[i]) {
@@ -214,18 +213,16 @@ var DropDown = function (_props, overrided = false) {
                 }
                 
             }else {
-            _creationFinished = true;
-        }
+                _creationFinished = true;
+            }
             _oldDataProvider = extend(true,_dataProvider);
         }  
         return components;
     }
 
-    Container.call(this,_props);
-    
-    }
-
-    DropDown.prototype.ctor = 'DropDown' ;
+    Container.call(this, _props);
+}
+DropDown.prototype.ctor = 'DropDown' ;
 
 
 

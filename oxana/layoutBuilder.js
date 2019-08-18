@@ -14,7 +14,246 @@ var _DOMMutationHandler = function (e) {
         this.label = e.mutation.addedNodes[0].childNodes[0].childNodes[0].data;
     }
 };
-var dpComponentList = [{"label":"Button"}];
+var dpComponentList = [ 
+    {
+        "label":"Label", "icon":"", "constructor": "Label"
+    },
+    {
+        "label":"Heading", "icon":"", "constructor": "Heading"
+    },
+    {
+        "label":"Link", "icon":"", "constructor": "Link"
+    },
+    {
+        "label":"HRule", "icon":"", "constructor": "HRule"
+    },
+    {
+        "label":"Button", "icon":"", "constructor": "Button"
+    },
+    {
+        "label":"TextInput", "icon":"", "constructor": "TextInput"
+    },
+    {
+        "label":"Image", "icon":"", "constructor": "Image"
+    },
+    {
+        "label":"Select", "icon":"", "constructor": "Select"
+    },
+    {
+        "label":"DropDown", "icon":"", "constructor": "DropDown"
+    },
+    {
+        "label":"Amount", "icon":"", "constructor": "Amount"
+    },
+    {
+        "label":"Tree", "icon":"", "constructor": "Tree"
+    },
+    {
+        "label":"AutoComplete", "icon":"", "constructor": "AutoCompleteEx"
+    },
+    {
+        "label":"RadioGroup", "icon":"", "constructor": "RadioGroup"
+    },
+    {
+        "label":"CheckBox", "icon":"", "constructor": "CheckBox"
+    },
+    {
+        "label":"CheckBoxGroup", "icon":"", "constructor": "CheckBoxGroup"
+    },
+];
+var dpComponentLiterals = {
+     "Label":{
+        "constructor": Label,
+        "props":{
+            id: 'label',
+            label:"Click Me"
+        }
+    },
+    "Heading":{
+        "constructor": Heading,
+        "props": {
+            id: 'heading',
+            label: 'Heading',
+            headingType: HeadingType.h1,
+            align: Align.left,
+            classes: [],
+            components: []
+        }
+    },
+    "Link":{
+        "constructor": Link,
+        "props":{
+            id: 'label',
+            label:"Click Me",
+            href:"#",
+            target:""
+        }
+    },
+    "HRule":{
+        "constructor": HRule,
+        "props":{
+            id: 'hrule',
+            align: "center",
+            size: 5,
+            width: 1000,
+        }
+    },
+    "Button": {
+        "constructor": Button,
+        "props":{
+            id: 'button',
+            type: "button",
+            value: "",
+            label:"Click Me",
+            classes: ["btn", "btn-success"]
+        }
+    },
+    "TextInput":{
+        "constructor": TextInput,
+        "props":{
+            id: 'textField',
+            mask: 'currency',
+            value: '34,444.00'
+        }
+    },
+    "Image":{
+        "constructor": Image,
+        "props":{
+            id: 'image',
+            src: 'https://d28hgpri8am2if.cloudfront.net/book_images/cvr9781451648539_9781451648539_hr.jpg',
+            alt: "Steve Jobs",
+            height: 100,
+            width: 100        
+        }
+    },
+    "Select":{
+        "constructor": Select,
+        "props":{
+            id: 'select',
+            dataProvider: [{ "value": "1", "text": "Shqiperi" }, { "value": "2", "text": "Greqi" }, { "value": "3", "text": "SHBA" }],
+            optionLabel: "text",
+            optionValue: "value",
+            value: "2",
+        }
+    },
+    "DropDown":{
+        "constructor": DropDown,
+        "props":{
+            id: 'dropdown',
+            hrefField:"key",
+            labelField:"title",
+            label:"Click me",
+            dataProvider: new ArrayEx([
+                { key: "#",title: "Folder 1"},        
+                { key: "#",title: "Folder 2"},
+                { key: "#",title: "Folder 3"}
+            ])
+        }
+    },
+    "Amount":{
+        "constructor": Amount,
+        "props":{
+            id: 'amount',
+            currencyList: [{ "id": "1", "text": "EUR" }, { "id": "2", "text": "ALL" }, { "id": "3", "text": "GBP" }],
+            value: {
+                "amount": "132323",
+                "currency": "2"
+            }
+        }
+    },
+    "Tree":{
+        "constructor": Tree,
+        "props":{
+            id: 'tree',
+            valueField: "key",
+            labelField: "title",
+            childrenField: "children",
+            dataProvider:new ArrayEx([
+                {title: "Node 1", key: "1"},
+                {title: "Folder 2", key: "2", children: new ArrayEx([
+                  {title: "Node 2.1", key: "3", myOwnAttr: "abc"},
+                  {title: "Node 2.2", key: "4"}
+                ])}
+              ]),
+            expandIcon: "fa-chevron-circle-right",
+            collapseIcon: "fa-chevron-circle-down",
+        }
+    },
+    "AutoCompleteEx":{
+        "constructor": AutoCompleteEx,
+        "props":{
+            id: 'autocomplete',
+            valueField: "value",
+            labelField: "ministri",
+            allowNewItem: false, //allow the user to add items that are not included in the specified dataProvider
+            dataProvider: [{
+                "value": "1",
+                "ministri": "Ministria e Puneve te Jashtme"
+            }, {
+                "value": "2",
+                "ministri": "Ministria e Drejtesise"
+            }, {
+                "value": "3",
+                "ministri": "Ministria e Brendshme"
+            }],
+            value: [{ "value": "1", "ministri": "Ministria e Puneve te Jashtme" }],
+            remote:{
+                getData_Action: "http://139.162.158.49/rca/index.php",
+                recordsPerPage: 5
+            },
+            multiSelect: false,
+            matchType:StringMatchType.STARTS_WITH
+        }
+    },
+    "RadioGroup": {
+        "constructor": RadioGroup,
+        "props":{
+            id: 'radiogroup',
+            dataProvider: [
+                { "id": "1", "text": "Ministria e Puneve te Jashtme", "enabled":true, "buttonClass": []}, 
+                { "id": "2", "text": "Ministria e Drejtesise", "enabled":true, "buttonClass": []},
+                { "id": "3", "text": "Ministria e Brendshme", "enabled":false, "buttonClass": []}
+            ],
+            valueField: 'id',
+            labelField: 'text',
+            classesField: "buttonClass",
+            defaultClasses: ['btn btn-xs btn-default'],
+            selectedClasses: ['btn btn-xs btn-success'],
+            enabledField: "enabled",
+            checkedField: "checked",
+            value: [{ "id": "2", "text": "Ministria e Drejtesise", "enabled":true}]
+        }
+    },
+    "CheckBox": {
+        "constructor": CheckBox,
+        "props":{
+            id: 'checkBoxField',
+            label: 'CheckBox Label',
+            value: "1",
+            checked:false
+        }
+    },
+    "CheckBoxGroup":{
+        "constructor": CheckBoxGroup,
+        "props":{
+            id: 'checkBoxGroupLonely1',
+            dataProvider: [
+                { "id": "1", "text": "Ministria e Puneve te Jashtme 1", "buttonClass": ['btn btn-xs btn-default'], "enabled":true, "checked":false},
+                { "id": "2", "text": "Ministria e Drejtesise 1", "buttonClass": ['btn btn-xs btn-default'], "enabled":true, "checked":false},
+                { "id": "3", "text": "Ministria e Brendshme 1", "buttonClass": ['btn btn-xs btn-success'], "enabled":true, "checked":true},
+                { "id": "4", "text": "Ministria e Mbrojtjes 1", "buttonClass": ['btn btn-xs btn-default'], "enabled":true, "checked":false}
+            ],
+            valueField: "id",
+            labelField: "text",
+            classesField: "buttonClass",
+            defaultClasses: ['btn btn-xs btn-default'],
+            selectedClasses: ['btn btn-xs btn-success'],
+            enabledField: "enabled",
+            checkedField: "checked",
+            value: [{ "id": "3", "text": "Ministria e Brendshme", "buttonClass": ['btn btn-xs btn-success'], "enabled":true}]
+        }
+    }
+};
 var zeroCool = {
         constructor: Container,
         props: {
@@ -215,16 +454,25 @@ var zeroCool = {
                                                                     props: {
                                                                         id:"componentList",
                                                                         dataProvider:dpComponentList,
+                                                                        rendering: {
+                                                                            direction: 'horizontal'
+                                                                        },
                                                                         components:[
                                                                             {
-                                                                                constructor: Button,
+                                                                                constructor: Container,
                                                                                 props: {
                                                                                     id: 'component',
                                                                                     label: "{label}",
                                                                                     draggable: true,
-                                                                                    dragstart: function(e){
+                                                                                    dragstart: function(e, ra){
+                                                                                        console.log(arguments);
                                                                                         e.originalEvent.dataTransfer.setData("domID", e.target.id);
-                                                                                    }
+                                                                                        e.originalEvent.dataTransfer.setData("constructor", ra.currentItem.constructor);
+                                                                                    },
+                                                                                    classes:["border"],
+                                                                                    width:80,
+                                                                                    height:50,
+                                                                                    type: ContainerType.NONE
                                                                                 }
                                                                             }
                                                                         ]
@@ -350,15 +598,18 @@ oxana.behaviorimplementations["ADD_COMPONENT"] = {
     do:function(e) {
         e.preventDefault();
         var domID = e.originalEvent.dataTransfer.getData("domID");
+        var constructor = e.originalEvent.dataTransfer.getData("constructor");
+        
         console.log("called ADD_COMPONENT."+domID);
-        Component.in
-
+        console.log("called ADD_COMPONENT.", constructor);
+        /*
         var _id = Component.domID2ID[domID]?Component.domID2ID[domID]:domID;
         var _idSurrogate = Component.surrogates[domID] && Component.domID2ID[Component.surrogates[domID]]?Component.domID2ID[Component.surrogates[domID]]:null;
         _id = _idSurrogate?_idSurrogate:_id;
         var lit = Component.instances[_id].literal;
         //Component.fromLiteral(Component.instances[_id].literal)
-        
+        */
+        var lit = dpComponentLiterals[constructor];
         var workArea = Component.instances[Component.domID2ID[e.target.id]];
         workArea.addComponent(lit);
         //e.target.appendChild(document.getElementById(data));
