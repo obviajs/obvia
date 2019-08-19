@@ -92,15 +92,21 @@ var Parent = function(_props, overrided=false, _isSurrogate=false)
     {
         if(container)
         {
+            let resetBindingContext = false;
             component.props.ownerDocument = this.ownerDocument;
-            component.props.bindingDefaultContext = component.props.bindingDefaultContext  || this.bindingDefaultContext;
+            if(component.props.bindingDefaultContext==null){
+                component.props.bindingDefaultContext = this.bindingDefaultContext;
+                resetBindingContext = true;
+            }
             var cmp = Component.fromLiteral(component);
             component.props.id = cmp.id;
             _children[cmp.id] = cmp;
             cmp.parent = _self;
             cmp.parentType = _self.type;
             cmp.parentForm = _self;
-
+            if(resetBindingContext){
+                component.props.bindingDefaultContext = null;
+            }
             cmp.on('creationComplete', function (e) {
                 e.stopImmediatePropagation();
                 e.stopPropagation();

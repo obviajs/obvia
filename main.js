@@ -148,6 +148,9 @@ rjs.define("./components/DropDown/ButtonSize.js", "ButtonSize");
 rjs.define("./components/DropDown/DropMenuDirection.js", "DropMenuDirection");
 rjs.define("./components/DropDown/DropSplitType.js", "DropSplitType");
 
+rjs.define("./components/Calendar/Calendar.js", "Calendar");
+rjs.define("./components/Calendar/css/calendar-default.css", "calendar_default_css");
+
 rjs.require([
         "JTemplate",
         "DataStore",
@@ -253,6 +256,8 @@ rjs.require([
          "ButtonSize",
         "DropMenuDirection",
         "DropSplitType",
+        "Calendar",
+        "calendar_default_css"
     ], function () {
         window.main();
 }, flowerCM);

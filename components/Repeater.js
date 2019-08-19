@@ -295,7 +295,7 @@ var Repeater = function(_props)
 
             for(var cIndex=0;cIndex<_self.components.length;cIndex++)
             {
-                var comp = _self.components[cIndex];
+                let comp = _self.components[cIndex];
 
                 (function (component, vcolIndex) {
                     return function(){
@@ -397,8 +397,8 @@ var Repeater = function(_props)
 
                         //render component in row
                         renderedRow.append(el.render());
-                    }();
-                })(comp, cIndex);   
+                    };
+                })(comp, cIndex)();   
         }
 
             //render row in dom
