@@ -310,7 +310,7 @@ var Tree = function (_props, overrided = false) {
                 {
                     if(!dp[i][_guidField])
                     dp[i][_guidField] = StringUtils.guid();
-                    var cmpLi = extend(true, _componentLi);
+                    let cmpLi = extend(true, _componentLi);
                     cmpLi.props.bindingDefaultContext = dp[i];
                     cmpLi.props.id = "li";
                     cmpLi.props.attr = {};
