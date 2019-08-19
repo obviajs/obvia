@@ -292,106 +292,114 @@ var Repeater = function(_props)
         var ccComponents = [];
         var buildRow = function () {
             var rowItems = {};
-            _self.components.forEach(function (component, vcolIndex) {
-                //clone objects
-                component.props.bindingDefaultContext = data;
-                var el = Component.fromLiteral(component, data);
-                var cmpId = component.props.id;
 
-                //build components properties, check bindings
-                if (_self[cmpId] == undefined)
-                    _self[cmpId] = [];
+            for(var cIndex=0;cIndex<_self.components.length;cIndex++)
+            {
+                var comp = _self.components[cIndex];
 
-                var cmp = _self[cmpId];
-                if (cmp[index - 1] == undefined)
-                    cmp[index - 1] = {};
-                
-                el.parent = _self;
-                el.parentType = 'repeater';
-                el.parentForm = _self.parentForm;
-                el.repeaterIndex = index - 1;
+                (function (component, vcolIndex) {
+                    return function(){
+                        //clone objects
+                        component.props.bindingDefaultContext = data;
+                        var el = Component.fromLiteral(component, data);
+                        var cmpId = component.props.id;
 
-                cmp[index - 1] = el;
-                rowItems[cmpId] = el;
-                _self.rowItems[index - 1] = rowItems;
+                        //build components properties, check bindings
+                        if (_self[cmpId] == undefined)
+                            _self[cmpId] = [];
 
-                //handle component change event and delegate it to repeater
-                el.on('creationComplete', (function (ci) { 
-                    return (function(e) { // a closure is created
-                        e.stopImmediatePropagation();
-                        e.stopPropagation();
-                        ccComponents.push(el.id);
+                        var cmp = _self[cmpId];
+                        if (cmp[index - 1] == undefined)
+                            cmp[index - 1] = {};
                         
-                        if (ccComponents.length == _self.components.length) {
-                            //trigger row add event
-                            _self.$el.trigger('onRowAdd', [_self, new RepeaterEventArgs(_self.rowItems, data, ci)]);
-                            //duhet te shtojme nje flag qe ne rast se metoda addRow eshte thirrur nga addRowHangler te mos e exec kodin meposhte
-                            
-                            //manage dp
-                            _self.currentItem = data;
+                        el.parent = _self;
+                        el.parentType = 'repeater';
+                        el.parentForm = _self.parentForm;
+                        el.repeaterIndex = index - 1;
 
-                            _self.currentIndex <= ci ? _self.currentIndex = ci : _self.currentIndex = _self.currentIndex;
-                            /* model check
-                            if (_self.currentIndex > 1 && _self.rendering.actions) {
-                                model.displayRemoveButton = true;
-                            }
-                            if (_self.currentIndex == 1) {
-                                model.displayRemoveButton = false;
-                            }*/
+                        cmp[index - 1] = el;
+                        rowItems[cmpId] = el;
+                        _self.rowItems[index - 1] = rowItems;
 
-                            //skip dp if it already exist
-                            var addRowFlag = false;
-                            if (ci > _self.dataProvider.length) {
-                                _self.dataProvider.push(_self.currentItem);
-                                addRowFlag = true;
-                            }
-                            
-                            if (_self.currentIndex == _self.dataProvider.length && !addRowFlag) {
-                                if(!_creationFinished){
-                                    _creationFinished = true;
-                                    _self.trigger('creationComplete');
+                        //handle component change event and delegate it to repeater
+                        el.on('creationComplete', (function (ci) { 
+                            return (function(e) { // a closure is created
+                                e.stopImmediatePropagation();
+                                e.stopPropagation();
+                                ccComponents.push(el.id);
+                                
+                                if (ccComponents.length == _self.components.length) {
+                                    //trigger row add event
+                                    _self.$el.trigger('onRowAdd', [_self, new RepeaterEventArgs(_self.rowItems, data, ci)]);
+                                    //duhet te shtojme nje flag qe ne rast se metoda addRow eshte thirrur nga addRowHangler te mos e exec kodin meposhte
+                                    
+                                    //manage dp
+                                    _self.currentItem = data;
+
+                                    _self.currentIndex <= ci ? _self.currentIndex = ci : _self.currentIndex = _self.currentIndex;
+                                    /* model check
+                                    if (_self.currentIndex > 1 && _self.rendering.actions) {
+                                        model.displayRemoveButton = true;
+                                    }
+                                    if (_self.currentIndex == 1) {
+                                        model.displayRemoveButton = false;
+                                    }*/
+
+                                    //skip dp if it already exist
+                                    var addRowFlag = false;
+                                    if (ci > _self.dataProvider.length) {
+                                        _self.dataProvider.push(_self.currentItem);
+                                        addRowFlag = true;
+                                    }
+                                    
+                                    if (_self.currentIndex == _self.dataProvider.length && !addRowFlag) {
+                                        if(!_creationFinished){
+                                            _creationFinished = true;
+                                            _self.trigger('creationComplete');
+                                        }
+                                        _self.focusComponent(0, 0);
+                                        _self.$el.trigger('onEndDraw');
+                                    }
+
+                                    //animate
+                                    if (addRowFlag && focusOnRowAdd) {
+                                        _self.rowItems[_self.rowItems.length - 1][_self.components[0].props.id].scrollTo();
+                                    }         
+                                
                                 }
-                                _self.focusComponent(0, 0);
-                                _self.$el.trigger('onEndDraw');
+                            });	
+                        })(index));
+
+
+                        if (_rendering.direction == 'horizontal') {
+                        // el.$el.addClass('float-left');
+                        }
+                        el.on('focus', function (e, repeaterEventArgs) {
+                            _self.focusedRow = repeaterEventArgs.currentIndex;
+                            _self.focusedComponent = Object.keys(repeaterEventArgs.currentRow).indexOf(this.id);
+                            console.log("focused repeated component", _self.focusedRow , _self.focusedComponent);
+                        });
+                        el.on('change', function (e, rargs) {
+                            var currentItem = _self.dataProvider[index - 1];
+                            if (component.props.value && isString(component.props.value) && component.props.value[0] == '{' && component.props.value[component.props.value.length - 1] == '}') {
+                                var bindingExp = component.props.value.slice(1, -1);
+                                if(bindingExp=="currentItem"){
+                                    _self.dataProvider[rargs.currentIndex] = data = this.value;
+                                }else{
+                                    setChainValue(_self.dataProvider[rargs.currentIndex], bindingExp, this.value);
+                                    data = _self.dataProvider[rargs.currentIndex];
+                                }
+                                    
+                                
                             }
+                            _self.$el.trigger('onRowEdit', [_self, new RepeaterEventArgs(rowItems, data, index)]);
+                        });
 
-                            //animate
-                            if (addRowFlag && focusOnRowAdd) {
-                                _self.rowItems[_self.rowItems.length - 1][_self.components[0].props.id].scrollTo();
-                            }         
-                        
-                        }
-                    });	
-                })(index));
-
-
-                if (_rendering.direction == 'horizontal') {
-                   // el.$el.addClass('float-left');
-                }
-                el.on('focus', function (e, repeaterEventArgs) {
-                    _self.focusedRow = repeaterEventArgs.currentIndex;
-                    _self.focusedComponent = Object.keys(repeaterEventArgs.currentRow).indexOf(this.id);
-                    console.log("focused repeated component", _self.focusedRow , _self.focusedComponent);
-                });
-                el.on('change', function (e, rargs) {
-                    var currentItem = _self.dataProvider[index - 1];
-                    if (component.props.value && isString(component.props.value) && component.props.value[0] == '{' && component.props.value[component.props.value.length - 1] == '}') {
-                        var bindingExp = component.props.value.slice(1, -1);
-                        if(bindingExp=="currentItem"){
-                            _self.dataProvider[rargs.currentIndex] = data = this.value;
-                        }else{
-                            setChainValue(_self.dataProvider[rargs.currentIndex], bindingExp, this.value);
-                            data = _self.dataProvider[rargs.currentIndex];
-                        }
-                            
-                        
-                    }
-                    _self.$el.trigger('onRowEdit', [_self, new RepeaterEventArgs(rowItems, data, index)]);
-                });
-
-                //render component in row
-                renderedRow.append(el.render());
-            });   
+                        //render component in row
+                        renderedRow.append(el.render());
+                    }();
+                })(comp, cIndex);   
+        }
 
             //render row in dom
            /*_self.$container

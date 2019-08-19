@@ -563,6 +563,9 @@ var waBehaviors = {
     "drop": "ADD_COMPONENT",
     "dragover": "ALLOW_DROP"
 };
+var cmpBehaviors = {
+    "click": "SELECT_COMPONENT",
+};
 
 
 
