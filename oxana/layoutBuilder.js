@@ -565,6 +565,7 @@ var waBehaviors = {
 };
 var cmpBehaviors = {
     "click": "SELECT_COMPONENT",
+    "dragstart": "DRAGSTART_COMPONENT"
 };
 
 
@@ -602,7 +603,14 @@ oxana.behaviorimplementations["ADD_COMPONENT"] = {
         e.preventDefault();
         var domID = e.originalEvent.dataTransfer.getData("domID");
         var constructor = e.originalEvent.dataTransfer.getData("constructor");
-        
+        var move = e.originalEvent.dataTransfer.getData("move");
+        if(move==""){
+            let lit = dpComponentLiterals[constructor];
+            lit.props.draggable = true;
+            var workArea = Component.instances[Component.domID2ID[e.target.id]];
+            var inst = workArea.addComponent(lit);
+            addBehaviors(inst, cmpBehaviors);
+        }
         console.log("called ADD_COMPONENT."+domID);
         console.log("called ADD_COMPONENT.", constructor);
         /*
@@ -612,14 +620,38 @@ oxana.behaviorimplementations["ADD_COMPONENT"] = {
         var lit = Component.instances[_id].literal;
         //Component.fromLiteral(Component.instances[_id].literal)
         */
-        var lit = dpComponentLiterals[constructor];
-        var workArea = Component.instances[Component.domID2ID[e.target.id]];
-        workArea.addComponent(lit);
+       
         //e.target.appendChild(document.getElementById(data));
     },
     undo:function(){
     }
 };
+var activeComponent;
+oxana.behaviorimplementations["SELECT_COMPONENT"] = {
+    description: "Select Component",
+    do:function(e) {
+        console.log("Container Became active");
+        //this will holde the instance of the component who manifested this behavior (the manifestor)
+        if(activeComponent && activeComponent!=this && activeComponent.classes.indexOf("border")>-1){
+            activeComponent.toggle = false;
+            var classes = activeComponent.classes.slice(0);
+            classes.toggle("border");
+            activeComponent.classes = classes;
+        }
+        this.toggle = false;
+        var classes = this.classes.slice(0);
+        classes.pushUnique("border");
+        this.classes = classes;
+        activeComponent = this;
+    },
+    stopPropagation:true
+}
+oxana.behaviorimplementations["DRAGSTART_COMPONENT"] = {
+    description: "Drag Component",
+    do:function(e) {
+        console.log("DRAGSTART_COMPONENT");
+    }
+}
 oxana.behaviorimplementations["HISTORY_STEP_DETAILS"] = function(e){
     console.log("called HISTORY_STEP_DETAILS.");
 };
@@ -870,22 +902,22 @@ oxana.behaviorimplementations["SPLIT_VERT"] = {
 var activeContainer;
 oxana.behaviorimplementations["BECOME_ACTIVE"] = {
     do:function(e) {
-            console.log("Container Became active");
-            //this will holde the instance of the component who manifested this behavior (the manifestor)
-            if(activeContainer && activeContainer!=this && activeContainer.classes.indexOf("active-node")>-1){
-                activeContainer.toggle = false;
-                var classes = activeContainer.classes.slice(0);
-                classes.toggle("active-node");
-                activeContainer.classes = classes;
-            }
-            this.toggle = false;
-            var classes = this.classes.slice(0);
-            classes.pushUnique("active-node");
-            this.classes = classes;
-            activeContainer = this;
-        },
-        stopPropagation:true
-    };
+        console.log("Container Became active");
+        //this will holde the instance of the component who manifested this behavior (the manifestor)
+        if(activeContainer && activeContainer!=this && activeContainer.classes.indexOf("active-node")>-1){
+            activeContainer.toggle = false;
+            var classes = activeContainer.classes.slice(0);
+            classes.toggle("active-node");
+            activeContainer.classes = classes;
+        }
+        this.toggle = false;
+        var classes = this.classes.slice(0);
+        classes.pushUnique("active-node");
+        this.classes = classes;
+        activeContainer = this;
+    },
+    stopPropagation:true
+};
 
 oxana.behaviorimplementations["WA_HOVER"] = {
     do:function(e) {

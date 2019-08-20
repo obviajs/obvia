@@ -184,7 +184,7 @@ var Repeater = function(_props)
             }
 
         }
-        _oldDataProvider = extend(true, false, this.dataProvider);
+        _oldDataProvider = extend(true, false, _dataProvider);
     };
 
     var _oldDataProvider;
@@ -237,6 +237,8 @@ var Repeater = function(_props)
                 }else if(_dataProvider==null || _dataProvider.length==0){
                     _dataProvider = !ArrayEx.isArrayEx(v)?new ArrayEx(v):v;
                     _createRows();
+                    //temp hack
+                    _creationFinished = true;
                 }
                 if(_dataProvider){
                     _dpWatcher = ChangeWatcher.getInstance(_dataProvider);
@@ -277,7 +279,7 @@ var Repeater = function(_props)
             return value;
         }
     });
-
+    var _createdRows = 0;
     //renders a new row, adds components in stack
     this.addRow = function (data, index, isPreventable = false, focusOnRowAdd = true) 
     {
@@ -327,7 +329,7 @@ var Repeater = function(_props)
                                 e.stopImmediatePropagation();
                                 e.stopPropagation();
                                 ccComponents.push(el.id);
-                                
+                                _createdRows++;
                                 if (ccComponents.length == _self.components.length) {
                                     //trigger row add event
                                     _self.$el.trigger('onRowAdd', [_self, new RepeaterEventArgs(_self.rowItems, data, ci)]);
@@ -352,7 +354,7 @@ var Repeater = function(_props)
                                         addRowFlag = true;
                                     }
                                     
-                                    if (_self.currentIndex == _self.dataProvider.length && !addRowFlag) {
+                                    if (_createdRows == _self.dataProvider.length && !addRowFlag) {
                                         if(!_creationFinished){
                                             _creationFinished = true;
                                             _self.trigger('creationComplete');
@@ -411,6 +413,7 @@ var Repeater = function(_props)
                         .append(renderedRow)
                 );   
                */
+            _self["rows"].push(renderedRow); 
             renderedRow
               .addClass("repeated-block")
               .css((_rendering.direction == 'horizontal' ? {display: 'inline-block'} : {}))
@@ -428,7 +431,7 @@ var Repeater = function(_props)
             }else{
                 _self.$container.prepend(renderedRow);
             }
-            _self["rows"].push(renderedRow); 
+            
             return rowItems;
         }
 

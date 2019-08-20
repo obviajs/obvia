@@ -574,6 +574,12 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
             this.resetBindings();
             _watchers = [];
             this.applyBindings(data);
+            if(this.children){
+                for(var cid in this.children){
+                    this.children[cid].refreshBindings(data);
+                }
+            }
+            
         }
     };
 

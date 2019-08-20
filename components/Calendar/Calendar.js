@@ -159,7 +159,7 @@ var Calendar = function(_props)
             var dp1={
                 "value":j,
                 "selected":selected,
-                "classField":"fc-past-days",
+                "classField":["fc-past-days"],
                 "dateContent":j+'/'+m+'/'+currentYear,
             }
             dataProvider.pushUnique(dp1);
@@ -176,7 +176,7 @@ var Calendar = function(_props)
                 var dp1={
                     "value":i,
                     "selected" :true,
-                    "classField":"fc-state-highlight",
+                    "classField":["fc-state-highlight"],
                     "dateContent":new Date().toJSON().slice(0,10).split('-').reverse().join('/'),
                     "children":new ArrayEx([
                         {"value":"Event 1"}
@@ -188,7 +188,7 @@ var Calendar = function(_props)
                 var dp1={
                     "value":i,
                     "selected" :false,
-                    "classField":"fc-past-days",
+                    "classField":["fc-past-days"],
                     "dateContent":i+'/'+mm+'/'+currentYear,
                     "children":new ArrayEx([
                         {"value":"Event 2"}
@@ -200,7 +200,7 @@ var Calendar = function(_props)
                         "value":i,
                         "selected":false,
                         "dateContent":i+'/'+mm+'/'+currentYear,
-                        "classField":"fc-border-weekdays",
+                        "classField":["fc-border-weekdays"],
                         
                     }
             }
@@ -214,7 +214,7 @@ var Calendar = function(_props)
                 var dp1={
                             "value":nextMonthfirstDay,
                             "selected":selected,
-                            "classField":'fc-past-days',
+                            "classField":['fc-past-days'],
                         }
                 dataProvider.pushUnique(dp1);
                 nextMonthfirstDay++;
@@ -381,9 +381,9 @@ this.openModalEvents = function() {
         }
         
         console.log(" old dataProvider1",_dataProvider);
-        _self.children.OutcontainerForWeekDays_169.children.listRepeater_185.dataProvider.toArray().splicea(0,_self.children.OutcontainerForWeekDays_169.children.listRepeater_185.dataProvider.toArray().length,new_dp);
+        //_self.children.OutcontainerForWeekDays_169.children.listRepeater_185.dataProvider.toArray().splicea(0,_self.children.OutcontainerForWeekDays_169.children.listRepeater_185.dataProvider.toArray().length,new_dp);
        // _self.children.OutcontainerForWeekDays_169.children.listRepeater_185.dataProvider.toArray().splicea(0,_self.children.OutcontainerForWeekDays_169.children.listRepeater_185.dataProvider.length);
-      
+       _self.children.OutcontainerForWeekDays_169.children.listRepeater_185.dataProvider.splicea(0,_self.children.OutcontainerForWeekDays_169.children.listRepeater_185.dataProvider.length,new_dp);
         // _dataProvider = _createData(_nowDate);
         // _cmpCalendar = this.addComponent(_componentCalendar);
         // console.log("Cmp Calendar",_cmpCalendar);
