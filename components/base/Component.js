@@ -25,7 +25,8 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
     var _parent = _props.parent;
     var _mousedown = _props.mousedown;
     var _mouseover = _props.mouseover;
-    var _mouseup = _props.mouseup;
+    var _mouseout = _props.mouseout;
+    var _mouseup = _props.mouseout;
     var _click = _props.click;
     var _dblclick = _props.dblclick;
     var _keydown = _props.keydown;
@@ -66,7 +67,8 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
         get: function bindingDefaultContext() 
         {
             return _bindingDefaultContext;
-        }
+        },
+        enumerable:false
     });
     
     //domID property
@@ -74,7 +76,8 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
     {
         get: function () {
             return _id;
-        }
+        },
+        enumerable:true
     });
 
     Object.defineProperty(this, 'ownerDocument',
@@ -121,14 +124,16 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
         get: function attr() 
         {
             return _attr;
-        }
+        },
+        enumerable:true
     });
     Object.defineProperty(this, "props", {
         get: function props() {
             var obj = {};
             for(var prop in _props){
-                if(this.hasOwnProperty(prop) && (typeof _props[prop] != 'function') && (prop != "ownerDocument"))
-                    obj[prop] = this[prop];
+                if(this.hasOwnProperty(prop) && this.propertyIsEnumerable(prop) && (typeof _props[prop] != 'function') && (prop != "ownerDocument"))
+                    if(!isObject(this[prop]) || !Object.isEmpty(this[prop]))
+                        obj[prop] = this[prop];
             }
             return obj;
         },
@@ -156,7 +161,10 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
                 {
                     if(_self.$el)
                     {
-                        _parent.detach(_self.$el);
+                        if(_parent)
+                            _parent.$el.detach(_self.$el);
+                        if(v)
+                            v.$el.append(_self.$el);
                     }
                 }
                 _parent = v;
@@ -364,6 +372,7 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
             registerTo: this.$el, events: {
                 'mousedown': _mousedown && typeof _mousedown == 'function' ? _mousedown.bind(_self) : undefined,
                 'mouseover': _mouseover && typeof _mouseover == 'function' ? _mouseover.bind(_self) : undefined,
+                'mouseout': _mouseout && typeof _mouseout == 'function' ? _mouseout.bind(_self) : undefined,
                 'mouseup': _mouseup && typeof _mouseup == 'function' ? _mouseup.bind(_self) : undefined,
                 'click': _click && typeof _click == 'function' ? _click.bind(_self) : undefined,
                 'dblclick': _dblclick && typeof _dblclick == 'function' ? _dblclick.bind(_self) : undefined,
@@ -451,7 +460,12 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
             this.$el.hide();
         return this;
     }
-   
+    this.blur = function ()
+    {
+        if(this.$el)
+            this.$el.blur();
+        return this;
+    }
     this.scrollTo = function () 
     {
         if(this.$el)

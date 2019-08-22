@@ -3,6 +3,17 @@
 const appStyle = `
 .ew-resize {cursor: ew-resize !important;}
 .ns-resize {cursor: ns-resize !important;}
+.selected-component {
+    border: 1px black solid !important;
+    border-right: 10px black solid !important;
+}
+.default-component {
+    border: 1px grey solid;
+    border-right: 10px grey solid;
+}
+.default-cnt{
+    min-height:50px
+}
 `;
 var oxana = new App({
     style:appStyle
@@ -59,6 +70,12 @@ var dpComponentList = [
     },
     {
         "label":"CheckBoxGroup", "icon":"", "constructor": "CheckBoxGroup"
+    },
+    {
+        "label":"Form", "icon":"", "constructor": "Form"
+    },
+    {
+        "label":"Container", "icon":"", "constructor": "Container"
     },
 ];
 var dpComponentLiterals = {
@@ -134,6 +151,19 @@ var dpComponentLiterals = {
             optionLabel: "text",
             optionValue: "value",
             value: "2",
+            mouseover:function(e){
+                real = this;
+                let parent = this.parent;
+                let width = this.$el.width();
+                let height = this.$el.height();
+                this.parent.removeChild(this, 0);
+                var hnd = extend(true, shadow);
+                hnd.props.placeholder = "Select";
+                var inst = parent.addComponent(hnd);
+                inst.width = width;
+                inst.height = height;
+                addBehaviors(inst, cmpBehaviors, false);
+            }
         }
     },
     "DropDown":{
@@ -252,8 +282,72 @@ var dpComponentLiterals = {
             checkedField: "checked",
             value: [{ "id": "3", "text": "Ministria e Brendshme", "buttonClass": ['btn btn-xs btn-success'], "enabled":true}]
         }
+    },
+    "Form":{
+        "constructor": Form,
+        "props":{
+            id: 'form',
+            formName: 'My Form',
+            action:"",
+            components: [],
+            classes:["default-cnt"]
+        }
+    },
+    "Container":{
+        constructor: Container,
+        props: {
+            id: 'container',
+            type: ContainerType.NONE,
+            classes:["default-component"],
+            classes:["default-cnt"]
+        }
     }
 };
+var handle = {
+    constructor: Container,
+    props: {
+        id: 'handle',
+        type: ContainerType.NONE,
+        draggable: true,
+        attr:{handle:true},
+        classes:["default-component"]
+    }
+};
+var real;
+var shadow = {
+    constructor: Container,
+    props: {
+        id: 'handle',
+        type: ContainerType.NONE,
+        draggable: true,
+        attr:{handle:true},
+        classes:["default-component", "placeholder"],
+        mouseout:function(e){
+            let parent = this.parent;
+            let width = this.$el.width();
+            let height = this.$el.height();
+            let index = this.$el.index() ;
+            this.parent.removeChild(this, 0);
+            parent.addChild(real, index);
+        }
+    }
+};
+
+var formField = {
+    constructor: FormField,
+    props: {
+        id: 'formField',
+        label: 'Label',
+        placeholder: 'Plceholder',
+        name: 'formField',
+        size: FormFieldSize.SMALL,
+        spacing:{colSpan:2},
+        component: {}
+    }
+};
+
+var parents = ["Container", "Form"];
+
 var zeroCool = {
         constructor: Container,
         props: {
@@ -462,14 +556,14 @@ var zeroCool = {
                                                                                 constructor: Container,
                                                                                 props: {
                                                                                     id: 'component',
-                                                                                    label: "{label}",
+                                                                                    placeholder: "{label}",
                                                                                     draggable: true,
                                                                                     dragstart: function(e, ra){
                                                                                         console.log(arguments);
                                                                                         e.originalEvent.dataTransfer.setData("domID", e.target.id);
                                                                                         e.originalEvent.dataTransfer.setData("constructor", ra.currentItem.constructor);
                                                                                     },
-                                                                                    classes:["border"],
+                                                                                    classes:["border", "placeholder"],
                                                                                     width:80,
                                                                                     height:50,
                                                                                     type: ContainerType.NONE
@@ -563,6 +657,10 @@ var waBehaviors = {
     "drop": "ADD_COMPONENT",
     "dragover": "ALLOW_DROP"
 };
+var cntBehaviors = {
+    "drop": "ADD_COMPONENT",
+    "dragover": "ALLOW_DROP"
+};
 var cmpBehaviors = {
     "click": "SELECT_COMPONENT",
     "dragstart": "DRAGSTART_COMPONENT"
@@ -595,62 +693,86 @@ oxana.behaviors[oxana.rootID]["keydown"] = {
     "WA_REDO":isKeyCombRedo,
 };
 oxana.behaviorimplementations["ALLOW_DROP"] = function(e){
+    console.log("ALLOW_DROP ",this.domID);
     e.preventDefault();
 }
 oxana.behaviorimplementations["ADD_COMPONENT"] = {
     description: "Ndaje horizontalisht",
     do:function(e) {
         e.preventDefault();
+        var workArea = Component.instances[Component.domID2ID[e.target.id]];
         var domID = e.originalEvent.dataTransfer.getData("domID");
         var constructor = e.originalEvent.dataTransfer.getData("constructor");
         var move = e.originalEvent.dataTransfer.getData("move");
         if(move==""){
+            console.log("ADD_COMPONENT_"+domID);
             let lit = dpComponentLiterals[constructor];
             lit.props.draggable = true;
-            var workArea = Component.instances[Component.domID2ID[e.target.id]];
+            if(workArea.ctor == "Form"){
+                var ff = extend(true, formField);
+                ff.props.component = lit;
+                lit = ff;
+            }
+            lit = extend(true, lit);
+            lit.props.classes = ["default-component"];
+            //var hnd = extend(true, handle);
+            //hnd.props.components = [lit];
+            //var inst = workArea.addComponent(hnd);
+          //  inst.width = inst.children[lit.props.id].$el.width() + 10;
             var inst = workArea.addComponent(lit);
-            addBehaviors(inst, cmpBehaviors);
+            addBehaviors(inst, cmpBehaviors, false);
+            if(parents.indexOf(constructor)>-1){
+               addBehaviors(inst.children[lit.props.id], cntBehaviors, false);
+            }
+        }else{
+            console.log("MOVED_", domID);
+            var _id = Component.domID2ID[domID]?Component.domID2ID[domID]:domID;
+            var _idSurrogate = Component.surrogates[domID] && Component.domID2ID[Component.surrogates[domID]]?Component.domID2ID[Component.surrogates[domID]]:null;
+            _id = _idSurrogate?_idSurrogate:_id;
+            let moveComponent = Component.instances[_id];
+            if(moveComponent.parent!=workArea){
+                moveComponent.parent.removeChild(moveComponent, 0);
+                workArea.addChild(moveComponent);
+            }
+            
         }
-        console.log("called ADD_COMPONENT."+domID);
-        console.log("called ADD_COMPONENT.", constructor);
-        /*
-        var _id = Component.domID2ID[domID]?Component.domID2ID[domID]:domID;
-        var _idSurrogate = Component.surrogates[domID] && Component.domID2ID[Component.surrogates[domID]]?Component.domID2ID[Component.surrogates[domID]]:null;
-        _id = _idSurrogate?_idSurrogate:_id;
-        var lit = Component.instances[_id].literal;
-        //Component.fromLiteral(Component.instances[_id].literal)
-        */
-       
-        //e.target.appendChild(document.getElementById(data));
     },
     undo:function(){
-    }
+    },
+    stopPropagation:true,
 };
 var activeComponent;
 oxana.behaviorimplementations["SELECT_COMPONENT"] = {
     description: "Select Component",
     do:function(e) {
-        console.log("Container Became active");
-        //this will holde the instance of the component who manifested this behavior (the manifestor)
-        if(activeComponent && activeComponent!=this && activeComponent.classes.indexOf("border")>-1){
-            activeComponent.toggle = false;
-            var classes = activeComponent.classes.slice(0);
-            classes.toggle("border");
-            activeComponent.classes = classes;
+
+        if(((e.which && e.which==1) || (e.buttons && e.buttons==1)))
+        { //this will holde the instance of the component who manifested this behavior (the manifestor)
+            if(activeComponent && activeComponent!=this && activeComponent.classes.indexOf("selected-component")>-1){
+                activeComponent.toggle = false;
+                var classes = activeComponent.classes.slice(0);
+                classes.toggle("selected-component");
+                activeComponent.classes = classes;
+            }
+            this.toggle = false;
+            var classes = this.classes.slice(0);
+            classes.pushUnique("selected-component");
+            this.classes = classes;
+            activeComponent = this;
         }
-        this.toggle = false;
-        var classes = this.classes.slice(0);
-        classes.pushUnique("border");
-        this.classes = classes;
-        activeComponent = this;
     },
-    stopPropagation:true
+    stopPropagation:true,
+    preventDefault:true
 }
 oxana.behaviorimplementations["DRAGSTART_COMPONENT"] = {
     description: "Drag Component",
     do:function(e) {
         console.log("DRAGSTART_COMPONENT");
-    }
+        e.originalEvent.dataTransfer.setData("domID", this.domID);
+        e.originalEvent.dataTransfer.setData("constructor", this.ctor);
+        e.originalEvent.dataTransfer.setData("move", 1);
+    },
+    stopPropagation:true
 }
 oxana.behaviorimplementations["HISTORY_STEP_DETAILS"] = function(e){
     console.log("called HISTORY_STEP_DETAILS.");
@@ -688,11 +810,17 @@ oxana.behaviorimplementations["LOAD_LAYOUT"] = function(e){
     }
     
 };
-function addBehaviors(cmp, behaviors)
+function addBehaviors(cmp, behaviors, recurse=true)
 {
-    oxana.behaviors[cmp.id] = behaviors;
-    for(var cid in cmp.children){
-        addBehaviors(cmp.children[cid], behaviors);
+    if(oxana.behaviors[cmp.id]==null)
+        oxana.behaviors[cmp.id] = {};
+        for(var b in behaviors){
+            oxana.behaviors[cmp.id][b] = behaviors[b];
+        }
+    if(recurse){
+        for(var cid in cmp.children){
+            addBehaviors(cmp.children[cid], behaviors);
+        }
     }
 }
 oxana.behaviorimplementations["HISTORY_STEP_ADDED"] = function(e){
@@ -1036,7 +1164,9 @@ oxana.behaviorimplementations["WA_REMOVE"] = {
 oxana.behaviorimplementations["SAVE_LAYOUT"] = {
     do:function(e) {
         var workArea = Component.instances["workArea"];
-        var jsonLayout = JSON.stringify(workArea.literal, null, "\t");
+        var lit = workArea.literal;
+        stripHandle(lit)
+        var jsonLayout = JSON.stringify(lit, null, "\t");
         download("snowCrash.json.txt", jsonLayout); 
     },
     stopPropagation:true
@@ -1221,5 +1351,15 @@ function containerResize(container, dx, dy){
         
         var sibling_id = container.parent.components[mpi].props.id;
         container.parent.children[sibling_id].spacing.colSpan += wa_rel;
+    }
+}
+function stripHandle(lit){
+    if(lit.props["components"] && Array.isArray(lit.props["components"]))
+    for(var i=0;i<lit.props.components.length;i++){
+        if(lit.props.components[i].props["attr"] && lit.props.components[i].props.attr["handle"]){
+            lit.props.components[i] = lit.props.components[i].props.components[0];
+        }
+        if(lit.props.components[i].props["components"] && Array.isArray(lit.props.components[i].props["components"]))
+            stripHandle(lit.props.components[i]);
     }
 }

@@ -115,7 +115,7 @@ var App = function(_props){
         console.log("App Window was maximized, you may want to greet the user.");
     };
 
-    var _eventTypeArr = ["mousedown", "mouseover", "mouseup", "click", "dblclick", "keydown", "keyup", "mousemove", "drop"];
+    var _eventTypeArr = ["mousedown", "mouseover", "mouseup", "click", "dblclick", "keydown", "keyup", "mousemove", "drop", "dragstart", "dragover"];
     var _eventTypeArrJoined;
     var _loader = new Loader({ id: 'loader' });
     var _event2behavior = function(e) {
@@ -147,7 +147,7 @@ var App = function(_props){
             _idBehaviorManifestor = _idCurrentTarget;
         }
         
-        //console.log(e.type+" "+_idCurrentTarget+ " "+_idTarget)
+        console.log(e.type+" "+_idCurrentTarget+ " "+_idTarget)
         
         if(cmpBehaviors && cmpBehaviors[e.type]) {
             var behaviorNameArr = [], behaviorFilterArr = [];
@@ -203,6 +203,9 @@ var App = function(_props){
                                 }
                                 if(behavior.stopPropagation){
                                     e.stopPropagation();
+                                }
+                                if(behavior.preventDefault){
+                                    e.preventDefault();
                                 }
                             }else if(typeof behavior == 'function') {
                                 behavior.apply(Component.instances[_idBehaviorManifestor], args);
@@ -317,11 +320,9 @@ var App = function(_props){
                     {
                         case "components":
                             var components = [];
-                            for(var i=0;i<_components.length;i++)
+                            for(var cid in _children)
                             {
-                                var component = {};
-                                component.constructor = _children[_components[i].props.id].ctor;//_components[i].constructor;
-                                component.props = _children[_components[i].props.id].props;
+                                var component = _children[cid].literal;
                                 components.push(component);
                             }
                             obj[prop] = components;
@@ -329,8 +330,9 @@ var App = function(_props){
                         case "ownerDocument":
                             break;
                         default:
-                            if(this.hasOwnProperty(prop))
-                                obj[prop] = this[prop];
+                            if(this.hasOwnProperty(prop) && this.propertyIsEnumerable(prop))
+                                if(!isObject(this[prop]) || !Object.isEmpty(this[prop]))
+                                    obj[prop] = this[prop];
                     }
                 }
             }

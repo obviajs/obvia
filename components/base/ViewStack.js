@@ -231,11 +231,9 @@ var ViewStack = function(_props)
                     {
                         case "components":
                             var components = [];
-                            for(var i=0;i<_components.length;i++)
+                            for(var cid in _children)
                             {
-                                var component = {};
-                                component.constructor = _children[_components[i].props.id].ctor;//_components[i].constructor;
-                                component.props = _children[_components[i].props.id].props;
+                                var component = _children[cid].literal;
                                 components.push(component);
                             }
                             obj[prop] = components;
@@ -243,8 +241,9 @@ var ViewStack = function(_props)
                         case "ownerDocument":
                             break;
                         default:
-                            if(this.hasOwnProperty(prop))
-                                obj[prop] = this[prop];
+                            if(this.hasOwnProperty(prop) && this.propertyIsEnumerable(prop))
+                                if(!isObject(this[prop]) || !Object.isEmpty(this[prop]))
+                                    obj[prop] = this[prop];
                     }
                 }
             }

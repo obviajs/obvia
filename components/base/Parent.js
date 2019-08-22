@@ -37,8 +37,11 @@ var Parent = function(_props, overrided=false, _isSurrogate=false)
             {
                 index = index > -1? index : _components.length;
                 this.$el.insertAt(child.$el, index);
-                _components.splice(_components.length, 0, {constructor:child.type, props:child.props});
+                _components.splice(index, 0, {constructor:child.ctor, props:child.props});
                 _children[child.id] = child; 
+                child.parent = this;
+                child.parentType = this.type;
+                child.parentForm = this;
             }
         }
     }
@@ -67,6 +70,7 @@ var Parent = function(_props, overrided=false, _isSurrogate=false)
                 _components.splice(ind, 1);
                 delete _children[child.id];
                 child.destruct(mode);
+                child.parent = null;
             }else{
                 console.log("Failed to remove Component: "+child.id+". It was not found in child list.");
             }
@@ -252,11 +256,9 @@ var Parent = function(_props, overrided=false, _isSurrogate=false)
                     {
                         case "components":
                             var components = [];
-                            for(var i=0;i<_components.length;i++)
+                            for(var cid in _children)
                             {
-                                var component = {};
-                                component.constructor = _children[_components[i].props.id].ctor;//_components[i].constructor;
-                                component.props = _children[_components[i].props.id].props;
+                                var component = _children[cid].literal;
                                 components.push(component);
                             }
                             obj[prop] = components;
@@ -264,8 +266,9 @@ var Parent = function(_props, overrided=false, _isSurrogate=false)
                         case "ownerDocument":
                             break;
                         default:
-                            if(this.hasOwnProperty(prop))
-                                obj[prop] = this[prop];
+                            if(this.hasOwnProperty(prop) && this.propertyIsEnumerable(prop))
+                                if(!isObject(this[prop]) || !Object.isEmpty(this[prop]))
+                                    obj[prop] = this[prop];
                     }
                 }
             }

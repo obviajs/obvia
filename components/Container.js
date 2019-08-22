@@ -7,32 +7,29 @@
 //component definition
 var Container = function(_props)
 {
-    if(!this.hasOwnProperty("label")){
-        Object.defineProperty(this, "label", 
+    if(!this.hasOwnProperty("placeholder")){
+        Object.defineProperty(this, "placeholder", 
         {
-            get: function label() 
+            get: function placeholder() 
             {
-                return _label;
+                return _placeholder;
             },
-            set: function label(v) 
+            set: function placeholder(v) 
             {
-                if(_label != v)
-                {
-                    _label = v;
-                    if(this.$el){
-                        var last = this.$el.children().last();
-                        if(last && last.length>0)
-                            if(last[0].nextSibling)
-                                last[0].nextSibling.textContent = v;
-                            else
-                                this.$el.appendText(v);
-                        else
-                            //this.$el.appendText(v);
-                            this.$el.text(v);
+                if(_placeholder != v)
+                {  
+                    _placeholder = v;
+                    if(_placeholder)
+                    {
+                        if(this.$el)
+                            this.$el.attr("placeholder", _placeholder);
+                    }else
+                    {
+                        if(this.$el)
+                            this.$el.removeAttr('placeholder');
                     }
                 }
-            },
-            configurable: true
+            }
         });
     }
     
@@ -143,8 +140,8 @@ var Container = function(_props)
                 _afterAttach.apply(this, arguments);
             var e = arguments[0];
             if (!e.isDefaultPrevented()) {
-                if(_props.label)
-                    this.label = _props.label;
+                if(_props.placeholder)
+                    this.placeholder = _props.placeholder;
             }
             //e.preventDefault();
         //}
@@ -161,7 +158,7 @@ var Container = function(_props)
     var _type, _role;
     var _afterAttach = _props.afterAttach;
     _props.afterAttach = this.afterAttach;
-    var _label;
+    var _placeholder;
     Parent.call(this, _props);
     
     if(_props.width)
