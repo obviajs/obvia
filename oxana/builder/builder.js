@@ -10,6 +10,7 @@ const appStyle = `
 .default-component {
     border: 1px grey solid;
     border-right: 10px grey solid;
+    padding-bottom: 10px;
 }
 .default-cnt{
     min-height:50px
@@ -27,7 +28,7 @@ var _DOMMutationHandler = function (e) {
 };
 var dpComponentList = [ 
     {
-        "label":"Label", "icon":"", "constructor": "Label"
+        "label":"Label", "icon":"horizontal-line.png", "constructor": "Label"
     },
     {
         "label":"Heading", "icon":"", "constructor": "Heading"
@@ -48,10 +49,10 @@ var dpComponentList = [
         "label":"Image", "icon":"", "constructor": "Image"
     },
     {
-        "label":"Select", "icon":"", "constructor": "Select"
+        "label":"Select", "icon":"drop-down-list.png", "constructor": "Select"
     },
     {
-        "label":"DropDown", "icon":"", "constructor": "DropDown"
+        "label":"DropDown", "icon":"drop-down-list.png", "constructor": "DropDown"
     },
     {
         "label":"Amount", "icon":"", "constructor": "Amount"
@@ -152,17 +153,19 @@ var dpComponentLiterals = {
             optionValue: "value",
             value: "2",
             mouseover:function(e){
-                real = this;
-                let parent = this.parent;
-                let width = this.$el.width();
-                let height = this.$el.height();
-                this.parent.removeChild(this, 0);
-                var hnd = extend(true, shadow);
-                hnd.props.placeholder = "Select";
-                var inst = parent.addComponent(hnd);
-                inst.width = width;
-                inst.height = height;
-                addBehaviors(inst, cmpBehaviors, false);
+                if(this.parent.ctor!="FormField"){
+                    real = this;
+                    let parent = this.parent;
+                    let width = this.$el.width();
+                    let height = this.$el.height();
+                    this.parent.removeChild(this, 0);
+                    var hnd = extend(true, shadow);
+                    hnd.props.placeholder = "Select";
+                    var inst = parent.addComponent(hnd);
+                    inst.width = width;
+                    inst.height = height;
+                    addBehaviors(inst, cmpBehaviors, false);
+                }
             }
         }
     },
@@ -298,8 +301,7 @@ var dpComponentLiterals = {
         props: {
             id: 'container',
             type: ContainerType.NONE,
-            classes:["default-component"],
-            classes:["default-cnt"]
+            classes:["default-component","default-cnt"]
         }
     }
 };
@@ -323,12 +325,14 @@ var shadow = {
         attr:{handle:true},
         classes:["default-component", "placeholder"],
         mouseout:function(e){
-            let parent = this.parent;
-            let width = this.$el.width();
-            let height = this.$el.height();
-            let index = this.$el.index() ;
-            this.parent.removeChild(this, 0);
-            parent.addChild(real, index);
+            if(this.parent.ctor!="FormField"){
+                let parent = this.parent;
+                let width = this.$el.width();
+                let height = this.$el.height();
+                let index = this.$el.index() ;
+                this.parent.removeChild(this, 0);
+                parent.addChild(real, index);
+            }
         }
     }
 };
@@ -341,13 +345,38 @@ var formField = {
         placeholder: 'Plceholder',
         name: 'formField',
         size: FormFieldSize.SMALL,
-        spacing:{colSpan:2},
+        //spacing:{colSpan:2},
         component: {}
     }
 };
+var metaProps = {
+    id: {
+        label: "Component Id",
+        itemEditor: {
+            "constructor": TextInput,
+            "props":{
+                id: 'textField'
+            }
+        },
+        set:null,
+        get:null
+    },
+    name: {
+        label: "Component Id",
+        itemEditor: {
+            "constructor": TextInput,
+            "props":{
+                id: 'textField'
+            }
+        },
+        set:null,
+        get:null,
+        valueField:null
+    }
 
+};
 var parents = ["Container", "Form"];
-
+var noNeedFF = ["Button", "Label"];
 var zeroCool = {
         constructor: Container,
         props: {
@@ -357,7 +386,17 @@ var zeroCool = {
                 {
                     constructor: BrowserWindow,
                     props: {
-                        id:"testWindow",
+                        id:"propertiesWindow",
+                        //afterAttach:function(){},
+                        components:[
+                            {}
+                        ]
+                    }
+                },
+                {
+                    constructor: BrowserWindow,
+                    props: {
+                        id:"controlsWindow",
                         //afterAttach:function(){},
                         components:[
                             {
@@ -662,6 +701,7 @@ var cntBehaviors = {
     "dragover": "ALLOW_DROP"
 };
 var cmpBehaviors = {
+    "mousedown": "SELECT_COMPONENT",
     "click": "SELECT_COMPONENT",
     "dragstart": "DRAGSTART_COMPONENT"
 };
@@ -707,14 +747,15 @@ oxana.behaviorimplementations["ADD_COMPONENT"] = {
         if(move==""){
             console.log("ADD_COMPONENT_"+domID);
             let lit = dpComponentLiterals[constructor];
-            lit.props.draggable = true;
-            if(workArea.ctor == "Form"){
+            if(workArea.ctor == "Form" && noNeedFF.indexOf(constructor)==-1){
                 var ff = extend(true, formField);
                 ff.props.component = lit;
                 lit = ff;
             }
             lit = extend(true, lit);
-            lit.props.classes = ["default-component"];
+            lit.props.draggable = true;
+            lit.props.classes = !Array.isArray(lit.props.classes)?[]:lit.props.classes;
+            lit.props.classes.push("default-component");
             //var hnd = extend(true, handle);
             //hnd.props.components = [lit];
             //var inst = workArea.addComponent(hnd);
@@ -722,19 +763,45 @@ oxana.behaviorimplementations["ADD_COMPONENT"] = {
             var inst = workArea.addComponent(lit);
             addBehaviors(inst, cmpBehaviors, false);
             if(parents.indexOf(constructor)>-1){
-               addBehaviors(inst.children[lit.props.id], cntBehaviors, false);
+               addBehaviors(inst, cntBehaviors, false);
             }
         }else{
-            console.log("MOVED_", domID);
+            console.log("MOVED_", domID, workArea.domID);
             var _id = Component.domID2ID[domID]?Component.domID2ID[domID]:domID;
             var _idSurrogate = Component.surrogates[domID] && Component.domID2ID[Component.surrogates[domID]]?Component.domID2ID[Component.surrogates[domID]]:null;
             _id = _idSurrogate?_idSurrogate:_id;
             let moveComponent = Component.instances[_id];
-            if(moveComponent.parent!=workArea){
+            if(moveComponent.parent && (moveComponent.parent!=workArea) && (domID != workArea.domID)){
                 moveComponent.parent.removeChild(moveComponent, 0);
+                if(moveComponent.ctor=="FormField" && workArea.ctor != "Form"){
+                    moveComponent = moveComponent.children[moveComponent.component.props.id];
+                    moveComponent.draggable = true;
+                    addBehaviors(moveComponent, cmpBehaviors, false);
+                    var classes = moveComponent.classes.slice(0);
+                    classes.pushUnique("default-component");
+                    classes.pushUnique("selected-component");
+                    moveComponent.classes = classes;
+                }else if(workArea.ctor == "Form" && noNeedFF.indexOf(moveComponent.ctor)==-1){
+                    removeBehaviors(moveComponent, cmpBehaviors, false);
+                    moveComponent.toggle = false;
+                    var classes = moveComponent.classes.slice(0);
+                    classes.toggle("default-component");
+                    let ind = classes.indexOf("selected-component");
+                    if(ind>-1)
+                        classes.splice(ind, 1);
+                    moveComponent.classes = classes;
+                    moveComponent.draggable = false;
+                    var ff = extend(true, formField);
+                    ff.props.draggable = true;
+                    ff.props.classes = !Array.isArray(ff.props.classes)?[]:ff.props.classes;
+                    ff.props.classes.push("default-component");
+                    ff.props.classes.push("selected-component");
+                    var inst = workArea.addComponent(ff);
+                    addBehaviors(inst, cmpBehaviors, false);
+                    workArea = inst;
+                }
                 workArea.addChild(moveComponent);
             }
-            
         }
     },
     undo:function(){
@@ -747,7 +814,7 @@ oxana.behaviorimplementations["SELECT_COMPONENT"] = {
     do:function(e) {
 
         if(((e.which && e.which==1) || (e.buttons && e.buttons==1)))
-        { //this will holde the instance of the component who manifested this behavior (the manifestor)
+        { //this will hold the instance of the component who manifested this behavior (the manifestor)
             if(activeComponent && activeComponent!=this && activeComponent.classes.indexOf("selected-component")>-1){
                 activeComponent.toggle = false;
                 var classes = activeComponent.classes.slice(0);
@@ -761,18 +828,17 @@ oxana.behaviorimplementations["SELECT_COMPONENT"] = {
             activeComponent = this;
         }
     },
-    stopPropagation:true,
-    preventDefault:true
+    stopPropagation:true
 }
+
 oxana.behaviorimplementations["DRAGSTART_COMPONENT"] = {
     description: "Drag Component",
     do:function(e) {
-        console.log("DRAGSTART_COMPONENT");
+        console.log("DRAGSTART_COMPONENT",this.domID);
         e.originalEvent.dataTransfer.setData("domID", this.domID);
         e.originalEvent.dataTransfer.setData("constructor", this.ctor);
         e.originalEvent.dataTransfer.setData("move", 1);
-    },
-    stopPropagation:true
+    }
 }
 oxana.behaviorimplementations["HISTORY_STEP_DETAILS"] = function(e){
     console.log("called HISTORY_STEP_DETAILS.");
@@ -820,6 +886,18 @@ function addBehaviors(cmp, behaviors, recurse=true)
     if(recurse){
         for(var cid in cmp.children){
             addBehaviors(cmp.children[cid], behaviors);
+        }
+    }
+}
+function removeBehaviors(cmp, behaviors, recurse=true)
+{
+    if(oxana.behaviors[cmp.id]!=null)
+        for(var b in behaviors){
+            delete oxana.behaviors[cmp.id][b];
+        }
+    if(recurse){
+        for(var cid in cmp.children){
+            removeBehaviors(cmp.children[cid], behaviors);
         }
     }
 }
@@ -1188,7 +1266,7 @@ oxana.behaviorimplementations["WA_REDO"] = {
 };
 
 oxana.behaviorimplementations["APP_LOADED"] = new ArrayEx(oxana.behaviorimplementations["APP_LOADED"], function(e) {
-    Component.instances["testWindow"].show();
+    Component.instances["controlsWindow"].show();
 });
 
 oxana.registerBehaviors();

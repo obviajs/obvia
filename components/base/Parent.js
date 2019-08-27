@@ -42,6 +42,9 @@ var Parent = function(_props, overrided=false, _isSurrogate=false)
                 child.parent = this;
                 child.parentType = this.type;
                 child.parentForm = this;
+                var event = jQuery.Event("childAdded");
+                event.child = child;
+                this.trigger(event);
             }
         }
     }
@@ -91,6 +94,25 @@ var Parent = function(_props, overrided=false, _isSurrogate=false)
         _components.splice(index, 0, component);
         return this.addComponentInContainer(this.$container, component, index);
     }
+    
+    Object.defineProperty(this, "childrenIDR",
+    {
+        get:function childrenIDR(){
+            return _childrenIDR;
+        },
+        enumerable:false
+    });
+
+    Object.defineProperty(this, "childrenRID",
+    {
+        get:function childrenRID(){
+            return _childrenRID;
+        },
+        enumerable:false
+    });
+
+    let _childrenIDR = {};
+    let _childrenRID = {};
 
     this.addComponentInContainer = function (container, component, index) 
     {
@@ -103,6 +125,11 @@ var Parent = function(_props, overrided=false, _isSurrogate=false)
                 resetBindingContext = true;
             }
             var cmp = Component.fromLiteral(component);
+            if(!_childrenIDR[component.props.id]){
+                _childrenIDR[component.props.id] = [];
+            }
+            _childrenRID[cmp.id] = component.props.id;
+            _childrenIDR[component.props.id].push(cmp.id);
             component.props.id = cmp.id;
             _children[cmp.id] = cmp;
             cmp.parent = _self;
@@ -115,7 +142,9 @@ var Parent = function(_props, overrided=false, _isSurrogate=false)
                 e.stopImmediatePropagation();
                 e.stopPropagation();
                 _ccComponents.push(component.props.id);
-            
+                var event = jQuery.Event("childCreated");
+                event.child = this;
+                _self.trigger(event);
                 if ((_ccComponents.length == _self.components.length - Object.keys(_magnetizedIndexes).length) && !_creationFinished) {
                     
                      //TODO:solve magnet dependencies, i.e: component is magnetized to a component that is magnetized to another component  
@@ -123,7 +152,7 @@ var Parent = function(_props, overrided=false, _isSurrogate=false)
                     {
                         var magnetCmp = Component.instances[_magnetizedIndexes[i]];
 
-                        var magnetizedCmp = this.addComponentInContainer(magnetCmp.$container, _components[i], i);
+                        var magnetizedCmp = _self.addComponentInContainer(magnetCmp.$container, _components[i], i);
                         delete _magnetizedIndexes[i];
                     }
                     if (_ccComponents.length == _self.components.length && !_creationFinished) {
@@ -135,7 +164,7 @@ var Parent = function(_props, overrided=false, _isSurrogate=false)
                     
                 }
 
-            }.bind(_self));
+            });
             index = index > -1? index : _components.length;
             container.insertAt(cmp.render(), index);
             //container.append(cmp.render());

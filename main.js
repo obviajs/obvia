@@ -29,6 +29,7 @@ rjs.define("./components/base/History/HistoryStep.js", "HistoryStep");
 rjs.define("./components/base/History/HistoryEventType.js", "HistoryEventType");
 rjs.define("./components/base/Component.js", "Component");
 rjs.define("./components/base/Spacing.js", "Spacing");
+rjs.define("./components/base/Attr.js", "Attr");
 rjs.define("./components/base/Parent.js", "Parent");
 rjs.define("./components/base/css/parent-default.css", "parent_default_css");
 rjs.define("./components/base/NavParent.js", "NavParent");
@@ -182,6 +183,7 @@ rjs.require([
         "RemoteObject", 
         "Component",
         "Spacing",
+        "Attr",
         "Parent",
         "parent_default_css",
         "ContainerType",

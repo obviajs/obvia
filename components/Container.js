@@ -5,7 +5,7 @@
  */
 
 //component definition
-var Container = function(_props)
+var Container = function(_props, overrided=false)
 {
     if(!this.hasOwnProperty("placeholder")){
         Object.defineProperty(this, "placeholder", 
@@ -29,7 +29,8 @@ var Container = function(_props)
                             this.$el.removeAttr('placeholder');
                     }
                 }
-            }
+            },
+            configurable: true
         });
     }
     
@@ -159,7 +160,12 @@ var Container = function(_props)
     var _afterAttach = _props.afterAttach;
     _props.afterAttach = this.afterAttach;
     var _placeholder;
-    Parent.call(this, _props);
+    Parent.call(this, _props, overrided);
+    var base = this.base;
+    if(overrided)
+    {
+        this.keepBase();
+    }
     
     if(_props.width)
         this.width = _props.width;

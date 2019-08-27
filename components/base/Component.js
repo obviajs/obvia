@@ -18,7 +18,7 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
     
     var _bindingDefaultContext = _props.bindingDefaultContext;
     var _guid = _props.guid;
-    var _attr = _props.attr;
+    var _attr;
     var _id = _props.id = ((!_props.id) || (_props.id =="")) ? _defaultParams.id : _props.id;
     var _enabled, _draggable;
     var _classes = [];
@@ -256,7 +256,22 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
     {
         get: function classes()
         {
-            return _classes;
+            let r = _classes;
+            if(this.children){
+                let p;
+                for(var _cid in this.children){
+                    if(this[this.childrenRID[_cid]] && this[this.childrenRID[_cid]]["ctor"]){
+                        if(!p)
+                            r = {};
+                        r[this.childrenRID[_cid]] = this[this.childrenRID[_cid]].classes;
+                        p = true;
+                    }
+                }
+                if(p){
+                    r["self"] = _classes;
+                }
+            }
+            return r;
         },
         set: function classes(v)
         {
@@ -266,28 +281,39 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
             {
                 if(this.$el)
                 {
-                    if(_toggle)
-                    { 
-                        _classes = v;
-                        for(var i =0;i<_classes.length;i++)
-                        {
-                            var _class = _classes[i];
-                            if(this.$el.hasClass(_class))
-                                this.$el.removeClass(_class);
-                            else
-                                this.$el.addClass(_class);
-                        }
+                    if(Array.isArray(v))
+                    {
+                        if(_toggle)
+                        { 
+                            _classes = v;
+                            for(var i =0;i<_classes.length;i++)
+                            {
+                                var _class = _classes[i];
+                                if(this.$el.hasClass(_class))
+                                    this.$el.removeClass(_class);
+                                else
+                                    this.$el.addClass(_class);
+                            }
+                        }else{
+                            _classes = _classes.difference(v);
+                            for(var i =0;i<_classes.length;i++)
+                            {
+                                var _class = _classes[i];
+                                if(this.$el.hasClass(_class))
+                                    this.$el.removeClass(_class);
+                            }
+                            _classes = v;
+                            this.$el.addClass(_classes);
+                        } 
                     }else{
-                        _classes = _classes.difference(v);
-                        for(var i =0;i<_classes.length;i++)
-                        {
-                            var _class = _classes[i];
-                            if(this.$el.hasClass(_class))
-                                this.$el.removeClass(_class);
+                        for(var _cid in v){
+                            if(_cid=="self")
+                                this.classes = v[_cid];
+                            else if(this[_cid] && this[_cid]["ctor"]){
+                                this[_cid].classes = v[_cid];
+                            }
                         }
-                        _classes = v;
-                        this.$el.addClass(_classes);
-                    } 
+                    }
                 }
                     
             }
@@ -330,25 +356,23 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
         this.draggable = _props.draggable;
     var _spacing = new Spacing(_props.spacing, this.$el);
 
-    if(_props.classes)
-    {
-        this.classes = _props.classes;
-    }
     var _beforeAttach = this.beforeAttach;
     this.beforeAttach = function (e)
     {
         if (e.target.id == this.domID) 
         {
-            if(_attr){
-                for(var prop in _attr){
-                    this.$el.attr(prop, _attr[prop]);
-                }
-            }
+            _attr = new Attr(_props.attr, this.$el);
+
             if (typeof _props.beforeAttach == 'function')
                 _props.beforeAttach.apply(this, arguments);
+            //TODO: not neccessary ? 
             if(!e.isDefaultPrevented()){
                 if (typeof _beforeAttach == 'function')
                     _beforeAttach.apply(this, arguments);
+            }
+            if(_props.classes)
+            {
+                this.classes = _props.classes;
             }
         }
     }

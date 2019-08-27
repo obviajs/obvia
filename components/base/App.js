@@ -28,7 +28,7 @@ var App = function(_props){
 
     if(_style)
     {
-        $("<style id='"+_rootID+"' type='text/css'>"+_style+"</style>").appendTo("head");
+        $("<style id='"+_rootID+"_style' type='text/css'>"+_style+"</style>").appendTo("head");
     }
 
     Object.defineProperty(this, "rootID", {
@@ -203,6 +203,9 @@ var App = function(_props){
                                 }
                                 if(behavior.stopPropagation){
                                     e.stopPropagation();
+                                }
+                                if(behavior.stopImmediatePropagation){
+                                    e.stopImmediatePropagation();
                                 }
                                 if(behavior.preventDefault){
                                     e.preventDefault();
