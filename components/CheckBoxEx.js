@@ -4,7 +4,7 @@
  * Kreatx 2019
  */
 
-var CheckBox = function (_props, overrided = false) {
+var CheckBoxEx = function (_props, overrided = false) {
     var _self = this;
 
     Object.defineProperty(this, "label",
@@ -15,8 +15,8 @@ var CheckBox = function (_props, overrided = false) {
             set: function label(v) {
                 if (_label != v) {
                     _label = v;
-                    if (this.$el)
-                        this.$el[0].nextSibling.textContent = v;
+                    if (this.$input)
+                        this.$input[0].nextSibling.textContent = v;
                 }
             }
         });
@@ -31,36 +31,42 @@ var CheckBox = function (_props, overrided = false) {
             } else {
                 _checked = true;
             }
-            if (this.$el !== undefined)
-                this.$el.val(v);
+            if (this.$input !== undefined)
+                this.$input.val(v);
         }
     });
 
     Object.defineProperty(this, "checked",
-    {
-        get: function checked() {
-            return _checked;
-        },
-        set: function checked(v) {
-            if (_checked != v) {
-                _checked = !!v;
-                if (this.$el)
-                    this.$el.prop('checked', v)
+        {
+            get: function checked() {
+                return _checked;
+            },
+            set: function checked(v) {
+                if (_checked != v) {
+                    _checked = !!v;
+                    if (this.$input)
+                        this.$input.prop('checked', v)
+                }
             }
-        }
-    });
+        });
+
+    this.beforeAttach = function () {
+        this.$input = this.$el.find("#" + this.domID + "-checkbox");
+    };
 
     var _changeHandler = function () {
         _checked = !_checked;
     };
 
     this.template = function () {
-        return "<input " + (_checked ? "checked='checked'" : '') + " id='" + this.domID + "'  value='" + _value + "' " +
-            " type='checkbox'/>" + _label;
+        return "<label  id='" + this.domID + "'>" +
+            "<input data-triggers='click change' " + (_checked ? "checked='checked'" : '') + " id='" + this.domID + "-checkbox'  value='" + _value + "' " +
+            " type='checkbox'/>" + _label + "</label>";
     };
 
     var _defaultParams = {
-        label: '',
+        label: 'CheckBox Label',
+        blockProcessAttr: false,
         value: null,
         enabled: true,
         checked: false,
@@ -71,6 +77,7 @@ var CheckBox = function (_props, overrided = false) {
 
     var _label = _props.label;
     var _value = _props.value;
+    var _enabled = _props.enabled;
     var _checked = _props.checked;
     var _change = _props.change;
 
@@ -91,4 +98,4 @@ var CheckBox = function (_props, overrided = false) {
     }
 };
 
-CheckBox.prototype.ctor = "CheckBox";
+CheckBoxEx.prototype.ctor = "CheckBoxEx";

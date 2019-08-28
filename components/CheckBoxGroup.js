@@ -36,7 +36,7 @@ var CheckBoxGroup = function (_props, overrided = false) {
             selectedClasses: _selectedClasses,
             value: _value,
             component: {
-                constructor: CheckBox,
+                constructor: CheckBoxEx,
                 props: {
                     id: 'checkBox',
                     label: "{" + _labelField + "}",

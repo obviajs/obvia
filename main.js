@@ -72,7 +72,8 @@ rjs.define("./components/Repeater.js", "Repeater");
 //List
 rjs.define("./components/List.js", "List");
 //CheckBox
-rjs.define("./components/CheckBox.js", "CheckBox")
+rjs.define("./components/CheckBox.js", "CheckBox");
+rjs.define("./components/CheckBoxEx.js", "CheckBoxEx");
 //CheckBoxGroup
 rjs.define("./components/CheckBoxGroup.js", "CheckBoxGroup");
 //RadioButton
@@ -118,9 +119,9 @@ rjs.define("./components/AutoComplete/SuggestionRenderer.js", "SuggestionRendere
 //rjs.define("https://maps.googleapis.com/maps/api/js?key=AIzaSyD04Q93F3BcHhGl483rfMC_MD1Y8y7K0lo", "GoogleMapScript");
 //rjs.define("./components/Map.js", "GoogleMap");
 //Toggle
-rjs.define("lib/dependencies/styles/bootstrap-toggle.min.css", "ToggleCSS");
-rjs.define("lib/dependencies/scripts/bootstrap-toggle.js", "ToggleScript");
-rjs.define("./components/Toggle.js", "Toggle");
+rjs.define("./components/Toggle/ToggleBgStyle.js", "ToggleBgStyle");
+rjs.define("./components/Toggle/Toggle.js", "Toggle");
+rjs.define("./components/Toggle/toggle-default.css", "toggle_default_css");
 //TrippleSwitch
 rjs.define("./components/TrippleSwitch.js", "TrippleSwitch");
 //MultiSwitch
@@ -223,6 +224,7 @@ rjs.require([
         "DatePickerScript",
         "DatePickerCSS",
         "CheckBox",
+        "CheckBoxEx",
         "CheckBoxGroup",
         "RadioButton",
         "RadioGroup",
@@ -235,9 +237,9 @@ rjs.require([
         "Modal",
         //"GoogleMapScript",
         //"GoogleMap",
-        "ToggleCSS",
-        "ToggleScript",
+        "ToggleBgStyle",
         "Toggle",
+        "toggle_default_css",
         "TrippleSwitch",
         "MultiSwitch",
         "Upload",

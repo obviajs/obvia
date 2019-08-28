@@ -21,7 +21,8 @@ var Label = function(_props)
                 if(this.$el)
                     this.$el.html(v);
             }
-        }
+        },
+        configurable: true
     });
  
     this.beforeAttach = function () 

@@ -359,14 +359,30 @@ var metaProps = {
             }
         },
         set:null,
-        get:null
+        get:null,
+        valueField:null
     },
     name: {
-        label: "Component Id",
+        label: "Form Field Id",
         itemEditor: {
             "constructor": TextInput,
             "props":{
                 id: 'textField'
+            }
+        },
+        set:null,
+        get:null,
+        valueField:null
+    },
+    visible: {
+        label: "Visible",
+        itemEditor: {
+            "constructor": Toggle,
+            "props":{
+                id: 'checkbox',
+                value: true,
+                offLabel: "Jo",
+                onLabel: "Po"
             }
         },
         set:null,
