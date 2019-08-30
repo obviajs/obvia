@@ -5,7 +5,7 @@ var myToggle = new Toggle({
     change: changeTest,
     classes:{
         "checkBox":[ToggleBgStyle.BG_INFO],
-        "span":["slider", "round"]
+        "span":["round"]
     }
 });
 function changeTest(){

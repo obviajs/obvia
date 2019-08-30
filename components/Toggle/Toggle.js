@@ -81,7 +81,8 @@ var Toggle = function (_props, overrided = false) {
     };
     
     _props = extend(false, false, _defaultParams, _props);
-
+    _props.classes["span"].pushUnique("slider");
+    _props.classes["self"].pushUnique("switch");
     var _change = _props.change;
     _props.components[0].props.change = function () {
         if (typeof _change == 'function')

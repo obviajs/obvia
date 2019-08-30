@@ -149,8 +149,8 @@ var dpComponentLiterals = {
         "props":{
             id: 'select',
             dataProvider: [{ "value": "1", "text": "Shqiperi" }, { "value": "2", "text": "Greqi" }, { "value": "3", "text": "SHBA" }],
-            optionLabel: "text",
-            optionValue: "value",
+            labelField: "text",
+            valueField: "value",
             value: "2",
             mouseover:function(e){
                 if(this.parent.ctor!="FormField"){
@@ -349,9 +349,14 @@ var formField = {
         component: {}
     }
 };
-var metaProps = {
-    id: {
-        label: "Component Id",
+var providers = [];
+var providerValueField = "id";
+var providerLabelField = "formName";
+var masks;
+var maskValueField = "";
+
+var propEditors = {
+    "TextInput": {
         itemEditor: {
             "constructor": TextInput,
             "props":{
@@ -362,34 +367,64 @@ var metaProps = {
         get:null,
         valueField:null
     },
-    name: {
-        label: "Form Field Id",
-        itemEditor: {
-            "constructor": TextInput,
-            "props":{
-                id: 'textField'
-            }
-        },
-        set:null,
-        get:null,
-        valueField:null
-    },
-    visible: {
-        label: "Visible",
+    "Toggle": {
         itemEditor: {
             "constructor": Toggle,
             "props":{
-                id: 'checkbox',
-                value: true,
-                offLabel: "Jo",
-                onLabel: "Po"
+                id: 'toggle',
+                value: true
+            }
+        },
+        set:null,
+        get:null,
+        valueField:null
+    },
+    "AutoCompleteEx": {
+        itemEditor: {
+            "constructor": Toggle,
+            "props":{
+                id: 'AutoCompleteEx',
+                allowNewItem: false,
+                value: [],
+                multiSelect: false,
+                matchType:StringMatchType.STARTS_WITH
             }
         },
         set:null,
         get:null,
         valueField:null
     }
+};
 
+var metaProps = {
+    id: {constructor:"TextInput", label: "Component ID"},
+    name: {constructor:"TextInput", label: "Component ID"},
+    visible: {constructor:"Toggle", label: "Component ID"},
+    enabled: {constructor:"Toggle", label: "Component ID"}, 
+    required: {constructor:"Toggle", label: "Component ID"},
+    dataProvider: {constructor:"AutoCompleteEx", label: "Data Provider", props:{
+        valueField: providerValueField,
+        labelField: providerLabelField,
+        dataProvider: providers,
+        change: function(){
+            //propsForm.children["dataProvider"].value
+            //get the fields for the selected datProvider and 
+            //assign them to the labelField and valueField editor`s dataProvider property
+        }
+    }},
+    labelField: {constructor:"AutoCompleteEx", label: "Label Field", props:{
+        valueField: "prop",
+        labelField: "description"
+    }},
+    valueField: {constructor:"AutoCompleteEx", label: "Value Field", props:{
+        valueField: "prop",
+        labelField: "description"
+    }},
+    mask: {constructor:"AutoCompleteEx", label: "Data Provider", props:{
+        valueField: maskValueField,
+        labelField: maskLabelField,
+        dataProvider: masks
+    }}
 };
 var parents = ["Container", "Form"];
 var noNeedFF = ["Button", "Label"];
@@ -1042,40 +1077,20 @@ oxana.behaviorimplementations["SPLIT_VERT"] = {
                 classes:["border"]
             }
         };
-        var row_len = activeContainer.components.length;
-        var toAdd = newCell;
-        var parent;
-        var children_len = 2;
+        var toAdd = [newCell];
+        var parent = activeContainer.parent;
+        var children_len = parent.components.length;
         
-        if(row_len == 0)
-        {
-            var newCell2 = extend(true, newCell);
-            
-            //.spacing.colSpan count children and distribute 12 units of space to them. the last child gets the reminder
-            toAdd = {
-                constructor: Container,
-                props: {
-                    id: '',
-                    type: ContainerType.ROW,
-                    spacing: {h:100, m:"auto"},
-                    components:[newCell, newCell2]
-                }
-            };
-            parent =  activeContainer;
-        }else
-        {
-            parent =  activeContainer.children[activeContainer.components[0].props.id];
-            children_len = parent.components.length;
-        } 
+        
         if(children_len<12)
         {    
             var newInstance;
             if(retFromRedoMaybe.child){
                 newInstance = retFromRedoMaybe.child;
-                activeContainer.addChild(newInstance);
+                parent.addChild(newInstance);
             }else
-                newInstance = parent.addComponent(toAdd);
-            var row =  activeContainer.children[activeContainer.components[0].props.id];
+                newInstance = parent.addComponents(toAdd);
+            var row =  activeContainer.parent;
             children_len = row.components.length;
 
             var colSpan = Math.floor(12/children_len);  
@@ -1093,7 +1108,7 @@ oxana.behaviorimplementations["SPLIT_VERT"] = {
             } 
             ret.parent = parent;
             ret.child = newInstance;
-            ret.container = activeContainer;
+            ret.container = activeContainer.parent;
             ret.track = true;
         }else
         {

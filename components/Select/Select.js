@@ -19,7 +19,8 @@ var Select = function (_props, overrided = false) {
             {
                 _dataProvider = v;
             }
-        }
+        },
+        enumerable:true
     });
 
     Object.defineProperty(this, "value",
@@ -50,27 +51,27 @@ var Select = function (_props, overrided = false) {
     this.beforeAttach = function() 
     {
         this.$container = this.$el;
-        this.addComponents(this.components);
+        this.addComponents();
     };
 
     var _defaultParams = {
         dataProvider: null,
-        optionLabel: "",
-        optionValue: "",
+        labelField: "",
+        valueField: "",
         value: null
     };
     shallowCopy(extend(false, false, _defaultParams, _props), _props);
     _props.applyBindings = false;
     var _dataProvider = _props.dataProvider;
-    var _optionLabel = _props.optionLabel;
-    var _optionValue = _props.optionValue;
+    var _labelField = _props.labelField;
+    var _valueField = _props.valueField;
 
     var _component = {
         constructor: Option,
         props:{
             id:"opt",
-            value: '{'+_optionValue+'}',
-            label: '{'+_optionLabel+'}'
+            value: '{'+_valueField+'}',
+            label: '{'+_labelField+'}'
         }
     };
     _props.components = [].pad(_component, _dataProvider.length);
@@ -95,6 +96,31 @@ var Select = function (_props, overrided = false) {
     if (overrided) {
         this.keepBase();
     }
+
+    Object.defineProperty(this, "props", {
+        get: function props() {
+            var obj = {};
+            for(var prop in _props)
+            {
+                if(typeof _props[prop] != 'function')
+                {
+                    switch(prop)
+                    {
+                        case "components":
+                            break;
+                        case "ownerDocument":
+                            break;
+                        default:
+                            if(this.hasOwnProperty(prop) && this.propertyIsEnumerable(prop))
+                                if(!isObject(this[prop]) || !Object.isEmpty(this[prop]))
+                                    obj[prop] = this[prop];
+                    }
+                }
+            }
+            return obj;
+        },
+        configurable: true
+    });  
 };
 
 //component prototype

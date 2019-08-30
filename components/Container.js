@@ -114,7 +114,8 @@ var Container = function(_props, overrided=false)
                     _type = v;
                 }
             }
-        }
+        },
+        enumerable:true
     });
     //is template overrided ?
     this.template = this.template || function ()
@@ -128,7 +129,7 @@ var Container = function(_props, overrided=false)
         {
             if(!e.isDefaultPrevented()){
                 this.$container = this.$el;
-                this.addComponents(this.components);
+                this.addComponents();
             }
         }
     };
@@ -166,7 +167,7 @@ var Container = function(_props, overrided=false)
     {
         this.keepBase();
     }
-    
+
     if(_props.width)
         this.width = _props.width;
     if(_props.height)

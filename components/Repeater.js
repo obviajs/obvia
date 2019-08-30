@@ -578,7 +578,7 @@ var Repeater = function(_props)
     var _defaultParams = {
         rendering: {
 			direction: 'vertical',
-			separator: true
+			separator: false
         },
         dataProvider:[],
         container:{

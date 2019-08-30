@@ -97,7 +97,7 @@ var Button = function(_props, overrided=false)
     this.beforeAttach = function() 
     {
         this.$container = this.$el;
-        this.addComponents(this.components);
+        this.addComponents();
     };
 
     var _defaultParams = {

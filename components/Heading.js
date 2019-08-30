@@ -44,7 +44,7 @@ var Heading = function(_props)
     this.beforeAttach = function () 
     {
         this.$container = this.$el;
-        this.addComponents(this.components);
+        this.addComponents();
     };
 
     this.template = function () 

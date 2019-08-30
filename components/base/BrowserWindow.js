@@ -56,7 +56,7 @@ var BrowserWindow = function(_props)
             CSSUtils.copyStyles(document, _win.document);
             this.ownerDocument = _win.document;
             this.$container = this.$el;       
-            this.addComponents(this.components);
+            this.addComponents();
             $(_win.document.body).append(this.$el);
         }
     } 

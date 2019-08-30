@@ -28,6 +28,15 @@ var Parent = function(_props, overrided=false, _isSurrogate=false)
         }
     });
 
+    this.add = function(childOrLiteral, index){
+        if(childOrLiteral){
+            if(childOrLiteral.$el)
+                this.addChild(childOrLiteral, index);
+            else
+                this.addComponent(childOrLiteral, index);
+        }
+    }
+
     this.addChild = function(child, index)
     {
         if(child)
@@ -94,7 +103,7 @@ var Parent = function(_props, overrided=false, _isSurrogate=false)
         _components.splice(index, 0, component);
         return this.addComponentInContainer(this.$container, component, index);
     }
-    
+
     Object.defineProperty(this, "childrenIDR",
     {
         get:function childrenIDR(){
@@ -209,8 +218,10 @@ var Parent = function(_props, overrided=false, _isSurrogate=false)
     //override because creationComplete will be thrown when all children components are created
     // this.afterAttach = undefined;
     var _magnetizedIndexes = {};
-    this.addComponents = function(components)
+    this.addComponents = function(cmps)
     {
+        let arrInst = [];
+        let components = cmps || this.components;
         if(components && Array.isArray(components) && components.length>0)
         {
             for(var i=0;i<components.length;i++)
@@ -231,10 +242,14 @@ var Parent = function(_props, overrided=false, _isSurrogate=false)
                     }   
                 }
                 if(!isMagnetized)
-                    this.addComponentInContainer(this.$container, components[i], i);
+                    arrInst.push(this.addComponentInContainer(this.$container, components[i], i));
+                if(cmps){
+                    _components.splice(i, 0, components[i]);
+                }
             }
         }else   
             _creationFinished = true;
+        return arrInst;
     }
 
     Component.call(this, _props, true, _isSurrogate);

@@ -63,7 +63,7 @@ var Modal = function(_props)
         this.$title = this.$el.find('#' + this.domID + '-modal-title');
         this.$container = this.$body;
         this.$modal = this.$el;
-        this.addComponents(this.components);
+        this.addComponents();
     };
 
     Parent.call(this, _props, true);
