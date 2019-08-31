@@ -22,6 +22,7 @@ var Label = function(_props)
                     this.$el.html(v);
             }
         },
+        enumerable:true,
         configurable: true
     });
  

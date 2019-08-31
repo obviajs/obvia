@@ -21,7 +21,8 @@ var Heading = function(_props)
                 if(this.$el)
                     this.$el.html(v);
             }
-        }
+        },
+        enumerable:true
     });
     
     Object.defineProperty(this, "align", 
@@ -38,7 +39,8 @@ var Heading = function(_props)
                 if(this.$el)
                     this.$el.attr('align', _align);
             }
-        }
+        },
+        enumerable:true
     });
 
     this.beforeAttach = function () 

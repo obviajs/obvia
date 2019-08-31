@@ -21,7 +21,8 @@ var Image = function(_props)
                 if(this.$el)
                     this.$el.attr('src', v);
             }
-        }
+        },
+        enumerable:true
     });
     
     Object.defineProperty(this, "alt", 
@@ -38,7 +39,8 @@ var Image = function(_props)
                 if(this.$el)
                     this.$el.attr('alt', v);
             }
-        }
+        },
+        enumerable:true
     });
 
     Object.defineProperty(this, "height", 
@@ -55,7 +57,8 @@ var Image = function(_props)
                 if(this.$el)
                     this.$el.attr('height', v);
             }
-        }
+        },
+        enumerable:true
     });
 
     Object.defineProperty(this, "width", 
@@ -72,7 +75,8 @@ var Image = function(_props)
                 if(this.$el)
                     this.$el.attr('width', v);
             }
-        }
+        },
+        enumerable:true
     });
 
     this.template = function () 

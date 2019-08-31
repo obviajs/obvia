@@ -115,8 +115,8 @@ var App = function(_props){
         console.log("App Window was maximized, you may want to greet the user.");
     };
 
-    var _eventTypeArr = ["mousedown", "mouseover", "mouseup", "click", "dblclick", "keydown", "keyup", "mousemove", "drop", "dragstart", "dragover"];
-    var _eventTypeArrJoined;
+    var _eventTypes = ["mousedown", "mouseover", "mouseup", "click", "dblclick", "keydown", "keyup", "mousemove", "drop", "dragstart", "dragover"];
+    var _eventTypesJoined;
     var _loader = new Loader({ id: 'loader' });
     var _event2behavior = function(e) {
         if(e.type != "InactivityDetected" && e.type != "ActivityDetected" && e.type != "WindowHide" && e.type != "WindowShow"){
@@ -224,19 +224,19 @@ var App = function(_props){
     this.registerBehaviors = function(win=window)
     {
         //TODO: te bejme difference e oldBehaviors me newBehaviors dhe te shtojme vetem ato si evente per te evituar off dhe on
-        if(_eventTypeArrJoined){
-            $(win).off(_eventTypeArrJoined);
+        if(_eventTypesJoined){
+            $(win).off(_eventTypesJoined);
         }
             
         for(var cmpId in this.behaviors)
         {
             for(var eventType in this.behaviors[cmpId])
             {
-                _eventTypeArr.pushUnique(eventType);
+                _eventTypes.pushUnique(eventType);
             }
         }
-        _eventTypeArrJoined = _eventTypeArr.join(" ");
-        $(win).on(_eventTypeArrJoined, _event2behavior);
+        _eventTypesJoined = _eventTypes.join(" ");
+        $(win).on(_eventTypesJoined, _event2behavior);
     };
 
     var _winWatcher = ChangeWatcher.getInstance(BrowserWindow.all);
@@ -274,7 +274,13 @@ var App = function(_props){
             return _children;
         }
     });
-
+    Object.defineProperty(this, "eventTypes", 
+    {
+        get: function eventTypes() 
+        {
+            return _eventTypes;
+        }
+    });
     Object.defineProperty(this, "components", 
     {
         get: function components() 

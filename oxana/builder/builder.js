@@ -354,6 +354,7 @@ var providerValueField = "id";
 var providerLabelField = "formName";
 var masks;
 var maskValueField = "";
+var maskLabelField = "";
 
 var propEditors = {
     "TextInput": {
@@ -397,12 +398,13 @@ var propEditors = {
 };
 
 var metaProps = {
-    id: {constructor:"TextInput", label: "Component ID"},
-    name: {constructor:"TextInput", label: "Component ID"},
-    visible: {constructor:"Toggle", label: "Component ID"},
-    enabled: {constructor:"Toggle", label: "Component ID"}, 
-    required: {constructor:"Toggle", label: "Component ID"},
-    dataProvider: {constructor:"AutoCompleteEx", label: "Data Provider", props:{
+    id: {constructor:"TextInput", label: "Component ID", required:true},
+    name: {constructor:"TextInput", label: "Component Name", required:true},
+    label: {constructor:"TextInput", label: "Label", required:true},
+    visible: {constructor:"Toggle", label: "Visible"},
+    enabled: {constructor:"Toggle", label: "Enabled"}, 
+    required: {constructor:"Toggle", label: "Required"},
+    dataProvider: {constructor:"AutoCompleteEx", label: "Data Provider", required:true, props:{
         valueField: providerValueField,
         labelField: providerLabelField,
         dataProvider: providers,
@@ -412,22 +414,70 @@ var metaProps = {
             //assign them to the labelField and valueField editor`s dataProvider property
         }
     }},
-    labelField: {constructor:"AutoCompleteEx", label: "Label Field", props:{
+    labelField: {constructor:"AutoCompleteEx", label: "Label Field", required:true, props:{
         valueField: "prop",
         labelField: "description"
     }},
-    valueField: {constructor:"AutoCompleteEx", label: "Value Field", props:{
+    valueField: {constructor:"AutoCompleteEx", label: "Value Field", required:true, props:{
         valueField: "prop",
         labelField: "description"
     }},
-    mask: {constructor:"AutoCompleteEx", label: "Data Provider", props:{
+    mask: {constructor:"AutoCompleteEx", label: "Data Provider", required:true, props:{
         valueField: maskValueField,
         labelField: maskLabelField,
         dataProvider: masks
-    }}
+    }},
+    inputFormat: {constructor:"TextInput", label: "Input Format", required:true, props:{
+        value:'DD/MM/YYYY'
+    }},
+    outputFormat: {constructor:"TextInput", label: "Output Format", required:true, props:{
+        value:'DD-MM-YYYY'
+    }},
+    displayFormat: {constructor:"TextInput", label: "Display Format", required:true, props:{
+        value:'DD/MM/YYYY'
+    }},
+    multiple: {constructor:"Toggle", label: "Multiple Files"},
+    accept:{constructor:"Toggle", label: "Allowed Files"},
 };
 var parents = ["Container", "Form"];
 var noNeedFF = ["Button", "Label"];
+var dpCmpSelect = [];
+var propertyEditorRow = {
+    "constructor": "Container",
+    "props": {
+        "type": "row",
+        "components": [
+            {
+                "constructor": "Container",
+                "props": {
+                    "id": "workArea_80",
+                    spacing: {colSpan:6},
+                    type: ContainerType.NONE,
+                    "components": [
+                        {
+                            "constructor": "Label",
+                            "props": {
+                                "id": "propertyName"
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "constructor": "Container",
+                "props": {
+                    "id": "workArea_84",
+                    spacing: {colSpan:6},
+                    type: ContainerType.NONE,
+                    "components": [
+                    ]
+                }
+            }
+        ],
+        "id": "Component_79"
+    }
+};
+
 var zeroCool = {
         constructor: Container,
         props: {
@@ -437,10 +487,68 @@ var zeroCool = {
                 {
                     constructor: BrowserWindow,
                     props: {
-                        id:"propertiesWindow",
+                        id:"propertyEditorWindow",
                         //afterAttach:function(){},
                         components:[
-                            {}
+                            {
+                                "constructor": "Container",
+                                "props": {
+                                    "type": "row",
+                                    "components": [
+                                        {
+                                            "constructor": "Container",
+                                            "props": {
+                                                "id": "workArea_80",
+                                                "components": [
+                                                    {
+                                                        "constructor": "Container",
+                                                        "props": {
+                                                            "type": "row",
+                                                            "components": [
+                                                                {
+                                                                    "constructor": "Container",
+                                                                    "props": {
+                                                                        "id": "",
+                                                                        spacing: {colSpan:12},
+                                                                        type: ContainerType.NONE,
+                                                                        "components": [
+                                                                            {
+                                                                                constructor:AutoCompleteEx,
+                                                                                props:{
+                                                                                    id:"cmpSelectAc",
+                                                                                    dataProvider: dpCmpSelect,
+                                                                                    valueField: providerValueField,
+                                                                                    labelField: providerLabelField,
+                                                                                }
+                                                                            }
+                                                                        ]
+                                                                    }
+                                                                }
+                                                            ]
+                                                        }
+                                                    },
+                                                    {
+                                                        "constructor": "Container",
+                                                        "props": {
+                                                            "type": "row",
+                                                            "components": [
+                                                                {
+                                                                    "constructor": "Container",
+                                                                    "props": {
+                                                                        "id": "propertyListContainer",
+                                                                        "components": [
+                                                                        ]
+                                                                    }
+                                                                }
+                                                            ]
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
                         ]
                     }
                 },
@@ -745,16 +853,18 @@ var waBehaviors = {
     "resize": "WA_RESIZE",
     "contextmenu": "WA_REMOVE",
     "drop": "ADD_COMPONENT",
-    "dragover": "ALLOW_DROP"
+    "dragover": "ALLOW_DROP",
 };
 var cntBehaviors = {
     "drop": "ADD_COMPONENT",
     "dragover": "ALLOW_DROP"
 };
 var cmpBehaviors = {
-    "mousedown": "SELECT_COMPONENT",
-    "click": "SELECT_COMPONENT",
-    "dragstart": "DRAGSTART_COMPONENT"
+    "mousedown": {
+        "SELECT_COMPONENT":isSelectComponent
+    },
+    "dragstart": "DRAGSTART_COMPONENT",
+    "dropped": "SELECT_COMPONENT"
 };
 
 
@@ -795,6 +905,7 @@ oxana.behaviorimplementations["ADD_COMPONENT"] = {
         var domID = e.originalEvent.dataTransfer.getData("domID");
         var constructor = e.originalEvent.dataTransfer.getData("constructor");
         var move = e.originalEvent.dataTransfer.getData("move");
+        let inst;
         if(move==""){
             console.log("ADD_COMPONENT_"+domID);
             let lit = dpComponentLiterals[constructor];
@@ -811,7 +922,7 @@ oxana.behaviorimplementations["ADD_COMPONENT"] = {
             //hnd.props.components = [lit];
             //var inst = workArea.addComponent(hnd);
           //  inst.width = inst.children[lit.props.id].$el.width() + 10;
-            var inst = workArea.addComponent(lit);
+            inst = workArea.addComponent(lit);
             addBehaviors(inst, cmpBehaviors, false);
             if(parents.indexOf(constructor)>-1){
                addBehaviors(inst, cntBehaviors, false);
@@ -821,63 +932,109 @@ oxana.behaviorimplementations["ADD_COMPONENT"] = {
             var _id = Component.domID2ID[domID]?Component.domID2ID[domID]:domID;
             var _idSurrogate = Component.surrogates[domID] && Component.domID2ID[Component.surrogates[domID]]?Component.domID2ID[Component.surrogates[domID]]:null;
             _id = _idSurrogate?_idSurrogate:_id;
-            let moveComponent = Component.instances[_id];
-            if(moveComponent.parent && (moveComponent.parent!=workArea) && (domID != workArea.domID)){
-                moveComponent.parent.removeChild(moveComponent, 0);
-                if(moveComponent.ctor=="FormField" && workArea.ctor != "Form"){
-                    moveComponent = moveComponent.children[moveComponent.component.props.id];
-                    moveComponent.draggable = true;
-                    addBehaviors(moveComponent, cmpBehaviors, false);
-                    var classes = moveComponent.classes.slice(0);
+            inst = Component.instances[_id];
+            if(inst.parent && (inst.parent!=workArea) && (domID != workArea.domID)){
+                inst.parent.removeChild(inst, 0);
+                if(inst.ctor=="FormField" && workArea.ctor != "Form"){
+                    inst = inst.children[inst.component.props.id];
+                    inst.draggable = true;
+                    addBehaviors(inst, cmpBehaviors, false);
+                    var classes = inst.classes.slice(0);
                     classes.pushUnique("default-component");
                     classes.pushUnique("selected-component");
-                    moveComponent.classes = classes;
-                }else if(workArea.ctor == "Form" && noNeedFF.indexOf(moveComponent.ctor)==-1){
-                    removeBehaviors(moveComponent, cmpBehaviors, false);
-                    moveComponent.toggle = false;
-                    var classes = moveComponent.classes.slice(0);
+                    inst.classes = classes;
+                }else if(workArea.ctor == "Form" && noNeedFF.indexOf(inst.ctor)==-1){
+                    removeBehaviors(inst, cmpBehaviors, false);
+                    inst.toggle = false;
+                    var classes = inst.classes.slice(0);
                     classes.toggle("default-component");
                     let ind = classes.indexOf("selected-component");
                     if(ind>-1)
                         classes.splice(ind, 1);
-                    moveComponent.classes = classes;
-                    moveComponent.draggable = false;
+                    inst.classes = classes;
+                    inst.draggable = false;
                     var ff = extend(true, formField);
                     ff.props.draggable = true;
                     ff.props.classes = !Array.isArray(ff.props.classes)?[]:ff.props.classes;
                     ff.props.classes.push("default-component");
                     ff.props.classes.push("selected-component");
-                    var inst = workArea.addComponent(ff);
-                    addBehaviors(inst, cmpBehaviors, false);
-                    workArea = inst;
+                    workArea = workArea.addComponent(ff);
+                    addBehaviors(workArea, cmpBehaviors, false);
                 }
-                workArea.addChild(moveComponent);
+                workArea.addChild(inst);
             }
         }
+        var evt = new jQuery.Event("dropped");
+        inst.trigger(evt);
     },
     undo:function(){
     },
     stopPropagation:true,
 };
 var activeComponent;
+function isSelectComponent(e){
+    if(((e.which && e.which==1) || (e.buttons && e.buttons==1)))
+    {
+        return true;
+    }
+}
 oxana.behaviorimplementations["SELECT_COMPONENT"] = {
     description: "Select Component",
     do:function(e) {
-
-        if(((e.which && e.which==1) || (e.buttons && e.buttons==1)))
-        { //this will hold the instance of the component who manifested this behavior (the manifestor)
-            if(activeComponent && activeComponent!=this && activeComponent.classes.indexOf("selected-component")>-1){
-                activeComponent.toggle = false;
-                var classes = activeComponent.classes.slice(0);
-                classes.toggle("selected-component");
-                activeComponent.classes = classes;
-            }
-            this.toggle = false;
-            var classes = this.classes.slice(0);
-            classes.pushUnique("selected-component");
-            this.classes = classes;
-            activeComponent = this;
+        console.log("SELECT_COMPONENT");
+         //this will hold the instance of the component who manifested this behavior (the manifestor)
+        if(activeComponent && activeComponent!=this && activeComponent.classes.indexOf("selected-component")>-1){
+            activeComponent.toggle = false;
+            var classes = activeComponent.classes.slice(0);
+            classes.toggle("selected-component");
+            activeComponent.classes = classes;
         }
+        this.toggle = false;
+        var classes = this.classes.slice(0);
+        classes.pushUnique("selected-component");
+        this.classes = classes;
+        activeComponent = this;
+        let pew = Component.instances["propertyEditorWindow"];
+        let props = this.props;
+        let rows = [];
+        for(let prop in props){
+            if(metaProps[prop]){
+                let propEditor = propEditors[metaProps[prop].constructor];
+                if(propEditor){
+                    var itemEditorLit = propEditor.itemEditor;
+                    if(metaProps[prop].props)
+                        itemEditorLit.props = extend(false, false, itemEditorLit.props, metaProps[prop].props);
+                    
+                    /*    
+                    let oneRow = extend(true, propertyEditorRow);
+                    oneRow.props.components[0].props.components[0].props.label = metaProps[prop].label;
+                    oneRow.props.components[1].props.components = [itemEditorLit];
+                    */
+                    let ff = extend(true, formField);
+                    ff.props.label = metaProps[prop].label;
+                    ff.props.placeholder = metaProps[prop].label;
+                    ff.props.required = metaProps[prop].required;
+                    ff.props.component = itemEditorLit;
+                    rows.push(ff);
+                    
+                }else{
+                    console.log("Couldnt find and itemEditor for " + prop + "property");
+                }
+            }else{
+                console.log("Couldnt find metaProps info for " + prop + "property");
+            }
+            
+            
+        }
+        let plistCnt = Component.instances["propertyListContainer"]; 
+        if(plistCnt){
+            plistCnt.removeAllChildren();
+            plistCnt.addComponents(rows);
+        }else{
+            pew.components["0"].props.components["0"].props.components[1].props.components[0].props.components = rows;            
+        }
+        pew.show();
+        
     },
     stopPropagation:true
 }
@@ -1299,7 +1456,7 @@ oxana.behaviorimplementations["WA_REDO"] = {
 oxana.behaviorimplementations["APP_LOADED"] = new ArrayEx(oxana.behaviorimplementations["APP_LOADED"], function(e) {
     Component.instances["controlsWindow"].show();
 });
-
+oxana.eventTypes.splicea(oxana.eventTypes.length, 0, ["resize", "dropped"])
 oxana.registerBehaviors();
 oxana.init();
 

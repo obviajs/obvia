@@ -58,6 +58,8 @@ var BrowserWindow = function(_props)
             this.$container = this.$el;       
             this.addComponents();
             $(_win.document.body).append(this.$el);
+        }else{
+            _win.focus();
         }
     } 
 

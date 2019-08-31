@@ -12,7 +12,8 @@ var Toggle = function (_props, overrided = false) {
         },
         set: function value(v) {
             _checkBox.value = v;
-        }
+        },
+        enumerable:true
     });
 
     Object.defineProperty(this, "checked",
@@ -22,7 +23,8 @@ var Toggle = function (_props, overrided = false) {
         },
         set: function checked(v) {
             _checkBox.checked = !!v;
-        }
+        },
+        enumerable:true
     });
 
     this.beforeAttach = function () {

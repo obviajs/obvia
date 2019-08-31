@@ -30,7 +30,8 @@ var Button = function(_props, overrided=false)
                         this.$el.text(v);
                 }
             }
-        }
+        },
+        enumerable:true
     });
 
     Object.defineProperty(this, "type", 
@@ -58,7 +59,8 @@ var Button = function(_props, overrided=false)
                     }
                 }                    
             }
-        }
+        },
+        enumerable:true
     });
 
     Object.defineProperty(this, "value", 
@@ -86,7 +88,8 @@ var Button = function(_props, overrided=false)
                     }
                 }                    
             }
-        }
+        },
+        enumerable:true
     });
 
     this.template = function () 
