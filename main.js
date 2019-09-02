@@ -158,12 +158,12 @@ rjs.define("./components/DropDown/DropSplitType.js", "DropSplitType");
 rjs.define("./components/Calendar/Calendar.js", "Calendar");
 rjs.define("./components/Calendar/css/calendar-default.css", "calendar_default_css");
 //CalendarDay
-rjs.define("./components/CalendarDay/CalendarDay.js", "CalendarDay");
-rjs.define("./components/CalendarDay/css/calendarDay-default.css", "calendarDay_default_css");
-rjs.define("./components/CalendarDay/CalendarConstants.js", "CalendarConstants");
+rjs.define("./components/Calendar/CalendarDay.js", "CalendarDay");
+rjs.define("./components/Calendar/css/calendarDay-default.css", "calendarDay_default_css");
+rjs.define("./components/Calendar/CalendarConstants.js", "CalendarConstants");
 //CalendarWeek
-rjs.define("./components/CalendarWeek/CalendarWeek.js", "CalendarWeek");
-rjs.define("./components/CalendarWeek/css/calendarWeek-default.css", "calendarWeek_default_css");
+//rjs.define("./components/Calendar/CalendarWeek.js", "CalendarWeek");
+//rjs.define("./components/Calendar/css/calendarWeek-default.css", "calendarWeek_default_css");
 
 rjs.require([
         "JTemplate",
@@ -282,8 +282,8 @@ rjs.require([
         "CalendarDay",
         "CalendarConstants",
         "calendarDay_default_css",
-        "CalendarWeek",
-        "calendarWeek_default_css",
+       // "CalendarWeek",
+        //"calendarWeek_default_css",
     ], function () {
         window.main();
 }, flowerCM);

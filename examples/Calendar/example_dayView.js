@@ -89,9 +89,6 @@ myModal.addComponent(mySaveEventButton, 4);
 
 
 $('#root').append(myModal.render());
-
-
-myCalendarDay.addChild(myModal);
 myCalendarDay.on('creationComplete',function(){
     this.on("cellClick",function(e){
         

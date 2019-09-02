@@ -302,6 +302,7 @@ var Repeater = function(_props)
                 (function (component, vcolIndex) {
                     return function(){
                         //clone objects
+                        component = extend(true, component);
                         component.props.bindingDefaultContext = data;
                         var el = Component.fromLiteral(component, data);
                         var cmpId = component.props.id;

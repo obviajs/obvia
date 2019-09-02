@@ -368,7 +368,7 @@ _componentCalendarPerDay = {
                             props:{
                                 id:'label_month_'+_self.guid,
                                 label:CalendarConstantsMonths[_nowDate.getMonth()],
-                                labelType:LabelType.p,
+                                labelType:LabelType.label,
                                 classes:["fc-label-month"],
             
                             }
@@ -378,7 +378,7 @@ _componentCalendarPerDay = {
                             props:{
                                 id:'label_year_'+_self.guid,
                                 label:_nowDate.getFullYear(),
-                                labelType:LabelType.p,
+                                labelType:LabelType.label,
                                 classes:["fc-label-year"],
                             }
                         },
@@ -465,92 +465,80 @@ _componentCalendarPerDay = {
                 classes:["fc-float"],
                 components:[
                     {
-                constructor : Repeater,
-                props :{
-                    id:'repeaterForHours_'+_self.guid,
-                    rendering:{
-                        direction:"horizontal",
-                        separator:false
-                    },
-                    classes:["fc-float"],
-                    dataProvider: _dataProvider,
-                    components:[
-                    
-                        {
-                            constructor:Container,
-                            props:{
-                                type:ContainerType.NONE,
-                                id:"InContainerForHours_"+_self.guid,
-                                label:'{'+_labelField+'}',
-                                classes:["fc-container-label-hour"],
-                                height:20,
-                                width:20,
-                            }
-                        },
-                    
-                        {
-                            constructor:Container,
-                            props:{
-                                type:ContainerType.NONE,
-                                id:"container_for_both_"+_self.guid,
-                                components:[
-                                
-                                    {
-                                        constructor: Container,
-                                        props:{
-                                            type:ContainerType.NONE,
-                                            id:"container_half_1_"+_self.guid,
-                                            label:'{'+_interval+'}',
-                                            classes:["fc-hour"],
-                                            height:10,
-                                            width:1050,
-                                        }
-                                    },
-                                    {
-                                        constructor: Hidden,
-                                        props:{
-                                            type:ContainerType.NONE,
-                                            id:"container_am_pm_"+_self.guid,
-                                            value:'{'+_timing+'}',
-                                        }
-                                    },
-                                    {
-                                        constructor: Container,
-                                        props:{
-                                            type:ContainerType.NONE,
-                                            id:"container_Repeater_"+_self.guid,
-                                            components:[
-                                                {
-                                                    constructor:Repeater,
-                                                    props:{
-                                                        id:"event_Repeater_"+_self.guid,
-                                                        dataProvider:"{currentItem.children}",
-                                                        rendering:{
-                                                            direction:"horizontal",
-                                                            separator:false
-                                                        },
-                                                        components:[
-                                                            {
-                                                                constructor:Container,
-                                                                props:{
-                                                                    type:ContainerType.NONE,
-                                                                    id:"event_Container_"+_self.guid,
-                                                                    label:"{value}",
-                                                                    classes:["fc-event"],
-                                                                }
+                        constructor: Repeater,
+                        props: {
+                            id:'repeaterForHours_'+_self.guid,
+                            rendering:{
+                                direction:"horizontal",
+                                separator:false
+                            },
+                            classes:["fc-float"],
+                            dataProvider: _dataProvider,
+                            components:[
+                                {
+                                    constructor:Container,
+                                    props:{
+                                        type:ContainerType.NONE,
+                                        id:"InContainerForHours_"+_self.guid,
+                                        placeholder:'{'+_labelField+'}',
+                                        classes:["fc-container-label-hour", "placeholder"],
+                                        height:20,
+                                        width:20,
+                                    }
+                                },
+                                {
+                                    constructor:Container,
+                                    props:{
+                                        type:ContainerType.NONE,
+                                        id:"container_for_both_"+_self.guid,
+                                        components:[
+                                            {
+                                                constructor: Container,
+                                                props:{
+                                                    type:ContainerType.NONE,
+                                                    id:"container_half_1_"+_self.guid,
+                                                    placeholder:'{'+_interval+'}',
+                                                    classes:["fc-hour", "placeholder-top-left"],
+                                                    height:10,
+                                                    width:1050,
+                                                }
+                                            },
+                                            {
+                                                constructor: Container,
+                                                props:{
+                                                    type:ContainerType.NONE,
+                                                    id:"container_Repeater_"+_self.guid,
+                                                    components:[
+                                                        {
+                                                            constructor:Repeater,
+                                                            props:{
+                                                                id:"event_Repeater_"+_self.guid,
+                                                                dataProvider:"{currentItem.children}",
+                                                                rendering:{
+                                                                    direction:"horizontal",
+                                                                    separator:false
+                                                                },
+                                                                components:[
+                                                                    {
+                                                                        constructor:Container,
+                                                                        props:{
+                                                                            type:ContainerType.NONE,
+                                                                            id:"event_Container_"+_self.guid,
+                                                                            placeholder:"{value}",
+                                                                            classes:["fc-event", "placeholder-top-left"],
+                                                                        }
+                                                                    }
+                                                                ]
                                                             }
-                                                        ]
-                                                    }
-                                                },
-                                            ]
-                                        }
-                                    },
-                                
-                                ],
-                                "click":_cellClick,
-                            }
-                        }
-                        
+                                                        },
+                                                    ]
+                                                }
+                                            },
+                                        
+                                        ],
+                                        "click":_cellClick,
+                                    }
+                                }
                                 ]   
                             } 
                         },
