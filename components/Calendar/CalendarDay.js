@@ -93,18 +93,18 @@ this.afterAttach = function (e){
 }
 
 var _defaultParams = {
-dataProvider: [],
-nowDate : new Date(),
-labelField:'label',
-labelField1:'label',
-startHour:" ",
-endHour:" ",
-descriptionField:" ",
-interval:'',
-childrenField:"children",
-//guidField:"guid",
-dateContent:"",
-timing :" ",
+    dataProvider: [],
+    nowDate : new Date(),
+    labelField:'label',
+    labelField1:'label',
+    startHour:" ",
+    endHour:" ",
+    descriptionField:" ",
+    interval:'',
+    childrenField:"children",
+    dateContent:"",
+    timing :" ",
+    guidField:"guid"
 }
 
 var _createHours = function (currentDate,event){
@@ -141,51 +141,51 @@ var _createHours = function (currentDate,event){
         "dateContent":today+'-'+ myActualMonth +'-'+currentYear,
         "children": new ArrayEx([]),
     }
+    dp1[_guidField] = StringUtils.guid();
     var hourInterval_2 =  dp1.interval +" "+ dp1.timing + " " + dp1.dateContent;
-    if(hourInterval_2 in dayEvents){
-        var children_3 = [];
-        for(var rs=0;rs<dayEvents[hourInterval_2].length;rs++){
-            children_3[rs] = {
-                "value":dayEvents[hourInterval_2][rs].descriptionField,
-                "classes":["fc-event"],
+        if(hourInterval_2 in dayEvents){
+            var children_3 = [];
+            for(var rs=0;rs<dayEvents[hourInterval_2].length;rs++){
+                children_3[rs] = {
+                    "value":dayEvents[hourInterval_2][rs].descriptionField,
+                    "classes":["fc-event"],
+                }
             }
-        
+            dp1.children = new ArrayEx(children_3);      
         }
-        dp1.children = new ArrayEx(children_3);      
-        }
-    dataProvider.push(dp1);
+        dataProvider.push(dp1);
     
     
-    var dp2 = {
-        "value":" ",
-        "startHour":hours+":30",
-        "endHour":(hours+1)+':00',
-        "interval":(hours+":30") + "-" + ((hours == 12 ) ? ((i%12)+1) : (hours+1))+':00' + ampm,
-        "timing":ampm,
-        "dateContent":today+'-'+ myActualMonth +'-'+currentYear,
-        "children":new ArrayEx([]),
-    }
-
-    var hourInterval_3 = dp2.interval +" "+ dp2.timing + " " +dp2.dateContent; 
-    if(hourInterval_3 in dayEvents){
-        var children_4=[];
-        for(var ks=0;ks<dayEvents[hourInterval_3].length;ks++){
-            children_4[ks] = {
-            "value":dayEvents[hourInterval_3][ks].descriptionField,
-            "classes":["fc-event"],
+        var dp2 = {
+            "value":" ",
+            "startHour":hours+":30",
+            "endHour":(hours+1)+':00',
+            "interval":(hours+":30") + "-" + ((hours == 12 ) ? ((i%12)+1) : (hours+1))+':00' + ampm,
+            "timing":ampm,
+            "dateContent":today+'-'+ myActualMonth +'-'+currentYear,
+            "children":new ArrayEx([])
         }
-    }
-    dp2.children = new ArrayEx(children_4);
+        dp2[_guidField] = StringUtils.guid();
+        var hourInterval_3 = dp2.interval +" "+ dp2.timing + " " +dp2.dateContent; 
+        if(hourInterval_3 in dayEvents){
+            var children_4=[];
+            for(var ks=0;ks<dayEvents[hourInterval_3].length;ks++){
+                    children_4[ks] = {
+                    "value":dayEvents[hourInterval_3][ks].descriptionField,
+                    "classes":["fc-event"],
+                }
+            }
+            dp2.children = new ArrayEx(children_4);
         }   
-    dataProvider.push(dp2);
+        dataProvider.push(dp2);
     }
-return dataProvider;
+    return dataProvider;
 }
 
 
 _props = extend(false,false,_defaultParams,_props);
 var _beforeAttach = _props.beforeAttach;
-//var _guidField = _props.guidField;
+var _guidField = _props.guidField;
 var _labelField = _props.labelField;
 var _labelField1 = _props.labelField1;
 var _nowDate = _props.nowDate;
@@ -260,14 +260,16 @@ this.clickHandler = function(e){
  
 
 _props.beforeAttach = function(e) {
+    _dataProvider = _createHours(_nowDate,eve);
+    fnContainerDelayInit();
+    
     this.$container = this.$el;
     // fnContainerDelayInit();
     // _componentCalendarPerDay.props.ownerDocument = this.ownerDocument;
     // _cmp = Component.fromLiteral(_componentCalendarPerDay);
     _component_Cday = this.addComponent(_componentCalendarPerDay);
     this.dataProvider = _props.dataProvider;
-    _dataProvider = _createHours(_nowDate,eve);
-        e.preventDefault();
+    e.preventDefault();
 }
 
 
@@ -309,15 +311,10 @@ var _next_day = function(eve){
     var new_day = CalendarConstantsDays[_nowDate.getDay()];
     var update_date = _nowDate.getDate();
     var new_dp_next = _createHours(_nowDate,eve);
-    if(new_dp_next>0){
-        for(var i=0;i<new_dp_next.length;i++){
-            if(!new_dp_next[i][_guidField]){
-                new_dp_next[i][_guidField] = StringUtils.guid();
-            }
-        }
-    }
     
-    _self.literal.props.components[0].props.components[2].props.components[0].props.dataProvider.splicea(0,_self.literal.props.components[0].props.components[2].props.components[0].props.dataProvider.length,new_dp_next);
+    //_self.literal.props.components[0].props.components[2].props.components[0].props.dataProvider.splicea(0,_self.literal.props.components[0].props.components[2].props.components[0].props.dataProvider.length,new_dp_next);
+    var dp = _self.children[_self.my("OutContainer")].children[_self.my("Container_Repeater")].children[_self.my("repeaterForHours")].dataProvider;
+    dp.splicea(0, dp.length, new_dp_next);
     // fnContainerDelayInit();
     // _componentCalendarPerDay.props.ownerDocument = _self.ownerDocument;
     // _cmp = Component.fromLiteral(_componentCalendarPerDay);
@@ -347,8 +344,7 @@ var _cellClick = function(e, ra) {
 }
 
 var  _componentCalendarPerDay;
-var fnContainerDelayInit  = whenDefined(this,"guid",function(){
-
+var fnContainerDelayInit  = function(){
 _componentCalendarPerDay = {
     constructor: Container,
     props: {
@@ -548,13 +544,9 @@ _componentCalendarPerDay = {
         ]
     }
 }
-});
-fnContainerDelayInit();
-_componentCalendarPerDay.props.ownerDocument = this.ownerDocument;
-_cmp = Component.fromLiteral(_componentCalendarPerDay);
-console.log("cmp",_cmp);
-Container.call(this,_props);
+_componentCalendarPerDay.props.ownerDocument = _self.ownerDocument;
+};
 
-
+    Container.call(this,_props);
 }
 CalendarDay.prototype.ctor = 'CalendarDay';
