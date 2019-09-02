@@ -3,6 +3,19 @@
 const appStyle = `
 .ew-resize {cursor: ew-resize !important;}
 .ns-resize {cursor: ns-resize !important;}
+.selected-component {
+    border: 1px black solid !important;
+    border-right: 10px black solid !important;
+    padding-bottom: 10px;
+}
+.default-component {
+    border: 1px grey solid;
+    border-right: 10px grey solid;
+    padding-bottom: 10px;
+}
+.default-cnt{
+    min-height:50px
+}
 `;
 var oxana = new App({
     style:appStyle
@@ -16,7 +29,7 @@ var _DOMMutationHandler = function (e) {
 };
 var dpComponentList = [ 
     {
-        "label":"Label", "icon":"", "constructor": "Label"
+        "label":"Label", "icon":"horizontal-line.png", "constructor": "Label"
     },
     {
         "label":"Heading", "icon":"", "constructor": "Heading"
@@ -37,10 +50,10 @@ var dpComponentList = [
         "label":"Image", "icon":"", "constructor": "Image"
     },
     {
-        "label":"Select", "icon":"", "constructor": "Select"
+        "label":"Select", "icon":"drop-down-list.png", "constructor": "Select"
     },
     {
-        "label":"DropDown", "icon":"", "constructor": "DropDown"
+        "label":"DropDown", "icon":"drop-down-list.png", "constructor": "DropDown"
     },
     {
         "label":"Amount", "icon":"", "constructor": "Amount"
@@ -55,10 +68,19 @@ var dpComponentList = [
         "label":"RadioGroup", "icon":"", "constructor": "RadioGroup"
     },
     {
+        "label":"Toggle", "icon":"", "constructor": "Toggle"
+    },
+    {
         "label":"CheckBox", "icon":"", "constructor": "CheckBox"
     },
     {
         "label":"CheckBoxGroup", "icon":"", "constructor": "CheckBoxGroup"
+    },
+    {
+        "label":"Form", "icon":"", "constructor": "Form"
+    },
+    {
+        "label":"Container", "icon":"", "constructor": "Container"
     },
 ];
 var dpComponentLiterals = {
@@ -131,9 +153,24 @@ var dpComponentLiterals = {
         "props":{
             id: 'select',
             dataProvider: [{ "value": "1", "text": "Shqiperi" }, { "value": "2", "text": "Greqi" }, { "value": "3", "text": "SHBA" }],
-            optionLabel: "text",
-            optionValue: "value",
+            labelField: "text",
+            valueField: "value",
             value: "2",
+            mouseover:function(e){
+                if(this.parent.ctor!="FormField"){
+                    real = this;
+                    let parent = this.parent;
+                    let width = this.$el.width();
+                    let height = this.$el.height();
+                    this.parent.removeChild(this, 0);
+                    var hnd = extend(true, shadow);
+                    hnd.props.placeholder = "Select";
+                    var inst = parent.addComponent(hnd);
+                    inst.width = width;
+                    inst.height = height;
+                    addBehaviors(inst, cmpBehaviors, false);
+                }
+            }
         }
     },
     "DropDown":{
@@ -233,6 +270,18 @@ var dpComponentLiterals = {
             checked:false
         }
     },
+    "Toggle": {
+        "constructor": Toggle,
+        "props":{
+            id: 'toggle',
+            value: "1",
+            checked:false,
+            classes:{
+                "self":["switch"],
+                "span":["slider"]
+            }
+        }
+    },
     "CheckBoxGroup":{
         "constructor": CheckBoxGroup,
         "props":{
@@ -252,8 +301,203 @@ var dpComponentLiterals = {
             checkedField: "checked",
             value: [{ "id": "3", "text": "Ministria e Brendshme", "buttonClass": ['btn btn-xs btn-success'], "enabled":true}]
         }
+    },
+    "Form":{
+        "constructor": Form,
+        "props":{
+            id: 'form',
+            formName: 'My Form',
+            action:"",
+            components: [],
+            classes:["default-cnt"]
+        }
+    },
+    "Container":{
+        constructor: Container,
+        props: {
+            id: 'container',
+            type: ContainerType.NONE,
+            classes:["default-component","default-cnt"]
+        }
     }
 };
+var handle = {
+    constructor: Container,
+    props: {
+        id: 'handle',
+        type: ContainerType.NONE,
+        draggable: true,
+        attr:{handle:true},
+        classes:["default-component"]
+    }
+};
+var real;
+var shadow = {
+    constructor: Container,
+    props: {
+        id: 'handle',
+        type: ContainerType.NONE,
+        draggable: true,
+        attr:{handle:true},
+        classes:["default-component", "placeholder"],
+        mouseout:function(e){
+            if(this.parent.ctor!="FormField"){
+                let parent = this.parent;
+                let width = this.$el.width();
+                let height = this.$el.height();
+                let index = this.$el.index() ;
+                this.parent.removeChild(this, 0);
+                parent.addChild(real, index);
+            }
+        }
+    }
+};
+
+var formField = {
+    constructor: FormField,
+    props: {
+        id: 'formField',
+        label: 'Label',
+        placeholder: 'Plceholder',
+        name: 'formField',
+        size: FormFieldSize.SMALL,
+        //spacing:{colSpan:2},
+        component: {}
+    }
+};
+var providers = [];
+var providerValueField = "id";
+var providerLabelField = "formName";
+var masks;
+var maskValueField = "";
+var maskLabelField = "";
+
+var propEditors = {
+    "TextInput": {
+        itemEditor: {
+            "constructor": TextInput,
+            "props":{
+                id: 'textField'
+            }
+        },
+        set:null,
+        get:null,
+        valueField:null
+    },
+    "Toggle": {
+        itemEditor: {
+            "constructor": Toggle,
+            "props":{
+                id: 'toggle',
+                value: true,
+                classes:{
+                    "self":["switch", "block"]
+                }
+            }
+        },
+        set:null,
+        get:null,
+        valueField:null
+    },
+    "AutoCompleteEx": {
+        itemEditor: {
+            "constructor": Toggle,
+            "props":{
+                id: 'AutoCompleteEx',
+                allowNewItem: false,
+                value: [],
+                multiSelect: false,
+                matchType:StringMatchType.STARTS_WITH
+            }
+        },
+        set:null,
+        get:null,
+        valueField:null
+    }
+};
+
+var metaProps = {
+    id: {constructor:"TextInput", label: "Component ID", required:true},
+    name: {constructor:"TextInput", label: "Component Name", required:true},
+    label: {constructor:"TextInput", label: "Label", required:true},
+    visible: {constructor:"Toggle", label: "Visible"},
+    enabled: {constructor:"Toggle", label: "Enabled"}, 
+    required: {constructor:"Toggle", label: "Required"},
+    checked: {constructor:"Toggle", label: "Checked"},
+    dataProvider: {constructor:"AutoCompleteEx", label: "Data Provider", required:true, props:{
+        valueField: providerValueField,
+        labelField: providerLabelField,
+        dataProvider: providers,
+        change: function(){
+            //propsForm.children["dataProvider"].value
+            //get the fields for the selected datProvider and 
+            //assign them to the labelField and valueField editor`s dataProvider property
+        }
+    }},
+    labelField: {constructor:"AutoCompleteEx", label: "Label Field", required:true, props:{
+        valueField: "prop",
+        labelField: "description"
+    }},
+    valueField: {constructor:"AutoCompleteEx", label: "Value Field", required:true, props:{
+        valueField: "prop",
+        labelField: "description"
+    }},
+    mask: {constructor:"AutoCompleteEx", label: "Data Provider", required:true, props:{
+        valueField: maskValueField,
+        labelField: maskLabelField,
+        dataProvider: masks
+    }},
+    inputFormat: {constructor:"TextInput", label: "Input Format", required:true, props:{
+        value:'DD/MM/YYYY'
+    }},
+    outputFormat: {constructor:"TextInput", label: "Output Format", required:true, props:{
+        value:'DD-MM-YYYY'
+    }},
+    displayFormat: {constructor:"TextInput", label: "Display Format", required:true, props:{
+        value:'DD/MM/YYYY'
+    }},
+    multiple: {constructor:"Toggle", label: "Multiple Files"},
+    accept:{constructor:"Toggle", label: "Allowed Files"},
+};
+var parents = ["Container", "Form"];
+var noNeedFF = ["Button", "Label"];
+var dpCmpSelect = [];
+var propertyEditorRow = {
+    "constructor": "Container",
+    "props": {
+        "type": "row",
+        "components": [
+            {
+                "constructor": "Container",
+                "props": {
+                    "id": "workArea_80",
+                    spacing: {colSpan:6},
+                    type: ContainerType.NONE,
+                    "components": [
+                        {
+                            "constructor": "Label",
+                            "props": {
+                                "id": "propertyName"
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "constructor": "Container",
+                "props": {
+                    "id": "workArea_84",
+                    spacing: {colSpan:6},
+                    type: ContainerType.NONE,
+                    "components": [
+                    ]
+                }
+            }
+        ],
+        "id": "Component_79"
+    }
+};
+
 var zeroCool = {
         constructor: Container,
         props: {
@@ -263,7 +507,75 @@ var zeroCool = {
                 {
                     constructor: BrowserWindow,
                     props: {
-                        id:"testWindow",
+                        id:"propertyEditorWindow",
+                        //afterAttach:function(){},
+                        components:[
+                            {
+                                "constructor": "Container",
+                                "props": {
+                                    "type": "row",
+                                    "components": [
+                                        {
+                                            "constructor": "Container",
+                                            "props": {
+                                                "id": "workArea_80",
+                                                "components": [
+                                                    {
+                                                        "constructor": "Container",
+                                                        "props": {
+                                                            "type": "row",
+                                                            "components": [
+                                                                {
+                                                                    "constructor": "Container",
+                                                                    "props": {
+                                                                        "id": "",
+                                                                        spacing: {colSpan:12},
+                                                                        type: ContainerType.NONE,
+                                                                        "components": [
+                                                                            {
+                                                                                constructor:AutoCompleteEx,
+                                                                                props:{
+                                                                                    id:"cmpSelectAc",
+                                                                                    dataProvider: dpCmpSelect,
+                                                                                    valueField: providerValueField,
+                                                                                    labelField: providerLabelField,
+                                                                                }
+                                                                            }
+                                                                        ]
+                                                                    }
+                                                                }
+                                                            ]
+                                                        }
+                                                    },
+                                                    {
+                                                        "constructor": "Container",
+                                                        "props": {
+                                                            "type": "row",
+                                                            "components": [
+                                                                {
+                                                                    "constructor": "Container",
+                                                                    "props": {
+                                                                        "id": "propertyListContainer",
+                                                                        "components": [
+                                                                        ]
+                                                                    }
+                                                                }
+                                                            ]
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                },
+                {
+                    constructor: BrowserWindow,
+                    props: {
+                        id:"controlsWindow",
                         //afterAttach:function(){},
                         components:[
                             {
@@ -462,14 +774,14 @@ var zeroCool = {
                                                                                 constructor: Container,
                                                                                 props: {
                                                                                     id: 'component',
-                                                                                    label: "{label}",
+                                                                                    placeholder: "{label}",
                                                                                     draggable: true,
                                                                                     dragstart: function(e, ra){
                                                                                         console.log(arguments);
                                                                                         e.originalEvent.dataTransfer.setData("domID", e.target.id);
                                                                                         e.originalEvent.dataTransfer.setData("constructor", ra.currentItem.constructor);
                                                                                     },
-                                                                                    classes:["border"],
+                                                                                    classes:["border", "placeholder"],
                                                                                     width:80,
                                                                                     height:50,
                                                                                     type: ContainerType.NONE
@@ -561,11 +873,18 @@ var waBehaviors = {
     "resize": "WA_RESIZE",
     "contextmenu": "WA_REMOVE",
     "drop": "ADD_COMPONENT",
+    "dragover": "ALLOW_DROP",
+};
+var cntBehaviors = {
+    "drop": "ADD_COMPONENT",
     "dragover": "ALLOW_DROP"
 };
 var cmpBehaviors = {
-    "click": "SELECT_COMPONENT",
-    "dragstart": "DRAGSTART_COMPONENT"
+    "mousedown": {
+        "SELECT_COMPONENT":isSelectComponent
+    },
+    "dragstart": "DRAGSTART_COMPONENT",
+    "dropped": "SELECT_COMPONENT"
 };
 
 
@@ -595,61 +914,168 @@ oxana.behaviors[oxana.rootID]["keydown"] = {
     "WA_REDO":isKeyCombRedo,
 };
 oxana.behaviorimplementations["ALLOW_DROP"] = function(e){
+    console.log("ALLOW_DROP ",this.domID);
     e.preventDefault();
 }
 oxana.behaviorimplementations["ADD_COMPONENT"] = {
     description: "Ndaje horizontalisht",
     do:function(e) {
         e.preventDefault();
+        var workArea = Component.instances[Component.domID2ID[e.target.id]];
         var domID = e.originalEvent.dataTransfer.getData("domID");
         var constructor = e.originalEvent.dataTransfer.getData("constructor");
         var move = e.originalEvent.dataTransfer.getData("move");
+        let inst;
         if(move==""){
+            console.log("ADD_COMPONENT_"+domID);
             let lit = dpComponentLiterals[constructor];
+            if(workArea.ctor == "Form" && noNeedFF.indexOf(constructor)==-1){
+                var ff = extend(true, formField);
+                ff.props.component = lit;
+                lit = ff;
+            }
+            lit = extend(true, lit);
             lit.props.draggable = true;
-            var workArea = Component.instances[Component.domID2ID[e.target.id]];
-            var inst = workArea.addComponent(lit);
-            addBehaviors(inst, cmpBehaviors);
+            if(isObject(lit.props.classes))
+                lit.props.classes["self"].push("selected-component");
+            else{
+                lit.props.classes = !Array.isArray(lit.props.classes)?[]:lit.props.classes;
+                lit.props.classes.push("selected-component");
+            }
+            //var hnd = extend(true, handle);
+            //hnd.props.components = [lit];
+            //var inst = workArea.addComponent(hnd);
+          //  inst.width = inst.children[lit.props.id].$el.width() + 10;
+            inst = workArea.addComponent(lit);
+            addBehaviors(inst, cmpBehaviors, false);
+            if(parents.indexOf(constructor)>-1){
+               addBehaviors(inst, cntBehaviors, false);
+            }
+        }else{
+            console.log("MOVED_", domID, workArea.domID);
+            var _id = Component.domID2ID[domID]?Component.domID2ID[domID]:domID;
+            var _idSurrogate = Component.surrogates[domID] && Component.domID2ID[Component.surrogates[domID]]?Component.domID2ID[Component.surrogates[domID]]:null;
+            _id = _idSurrogate?_idSurrogate:_id;
+            inst = Component.instances[_id];
+            if(inst.parent && (inst.parent!=workArea) && (domID != workArea.domID)){
+                inst.parent.removeChild(inst, 0);
+                if(inst.ctor=="FormField" && workArea.ctor != "Form"){
+                    inst = inst.children[inst.component.props.id];
+                    inst.draggable = true;
+                    addBehaviors(inst, cmpBehaviors, false);
+                    var classes = inst.classes.slice(0);
+                    classes.pushUnique("selected-component");
+                    inst.classes = classes;
+                }else if(workArea.ctor == "Form" && noNeedFF.indexOf(inst.ctor)==-1){
+                    removeBehaviors(inst, cmpBehaviors, false);
+                    inst.toggle = false;
+                    var classes = inst.classes.slice(0);
+                    classes.toggle("default-component");
+                    let ind = classes.indexOf("selected-component");
+                    if(ind>-1)
+                        classes.splice(ind, 1);
+                    inst.classes = classes;
+                    inst.draggable = false;
+                    var ff = extend(true, formField);
+                    ff.props.draggable = true;
+                    ff.props.classes = !Array.isArray(ff.props.classes)?[]:ff.props.classes;
+                    ff.props.classes.push("selected-component");
+                    workArea = workArea.addComponent(ff);
+                    addBehaviors(workArea, cmpBehaviors, false);
+                }
+                workArea.addChild(inst);
+            }
         }
-        console.log("called ADD_COMPONENT."+domID);
-        console.log("called ADD_COMPONENT.", constructor);
-        /*
-        var _id = Component.domID2ID[domID]?Component.domID2ID[domID]:domID;
-        var _idSurrogate = Component.surrogates[domID] && Component.domID2ID[Component.surrogates[domID]]?Component.domID2ID[Component.surrogates[domID]]:null;
-        _id = _idSurrogate?_idSurrogate:_id;
-        var lit = Component.instances[_id].literal;
-        //Component.fromLiteral(Component.instances[_id].literal)
-        */
-       
-        //e.target.appendChild(document.getElementById(data));
+        var evt = new jQuery.Event("dropped");
+        inst.trigger(evt);
     },
     undo:function(){
-    }
+    },
+    stopPropagation:true,
 };
 var activeComponent;
+function isSelectComponent(e){
+    if(((e.which && e.which==1) || (e.buttons && e.buttons==1)))
+    {
+        return true;
+    }
+}
 oxana.behaviorimplementations["SELECT_COMPONENT"] = {
     description: "Select Component",
     do:function(e) {
-        console.log("Container Became active");
-        //this will holde the instance of the component who manifested this behavior (the manifestor)
-        if(activeComponent && activeComponent!=this && activeComponent.classes.indexOf("border")>-1){
+        console.log("SELECT_COMPONENT");
+         //this will hold the instance of the component who manifested this behavior (the manifestor)
+        if(activeComponent && activeComponent!=this && ((isObject(activeComponent.classes) && activeComponent.classes["self"].indexOf("selected-component")) || activeComponent.classes.indexOf("selected-component")>-1)){
             activeComponent.toggle = false;
-            var classes = activeComponent.classes.slice(0);
-            classes.toggle("border");
-            activeComponent.classes = classes;
+            var classes = isObject(activeComponent.classes)?activeComponent.classes["self"].slice(0):activeComponent.classes.slice(0);
+            let ind = classes.indexOf("selected-component");
+            if(ind>-1)
+                classes.splice(ind, 1);
+            classes.pushUnique("default-component");
+            if(isObject(activeComponent.classes))
+                activeComponent.classes["self"] = classes;
+            else
+                activeComponent.classes = classes;
         }
-        this.toggle = false;
-        var classes = this.classes.slice(0);
-        classes.pushUnique("border");
-        this.classes = classes;
+        var classes = isObject(this.classes)?this.classes["self"].slice(0):this.classes.slice(0);
+        classes.pushUnique("selected-component");
+        if(isObject(this.classes))
+            this.classes["self"] = classes;
+        else
+            this.classes = classes;
         activeComponent = this;
+        let pew = Component.instances["propertyEditorWindow"];
+        let props = this.props;
+        let rows = [];
+        for(let prop in props){
+            if(metaProps[prop]){
+                let propEditor = propEditors[metaProps[prop].constructor];
+                if(propEditor){
+                    var itemEditorLit = propEditor.itemEditor;
+                    if(metaProps[prop].props)
+                        itemEditorLit.props = extend(false, false, itemEditorLit.props, metaProps[prop].props);
+                    
+                    /*    
+                    let oneRow = extend(true, propertyEditorRow);
+                    oneRow.props.components[0].props.components[0].props.label = metaProps[prop].label;
+                    oneRow.props.components[1].props.components = [itemEditorLit];
+                    */
+                    let ff = extend(true, formField);
+                    ff.props.label = metaProps[prop].label;
+                    ff.props.placeholder = metaProps[prop].label;
+                    ff.props.required = metaProps[prop].required;
+                    ff.props.component = itemEditorLit;
+                    rows.push(ff);
+                    
+                }else{
+                    console.log("Couldnt find and itemEditor for " + prop + "property");
+                }
+            }else{
+                console.log("Couldnt find metaProps info for " + prop + "property");
+            }
+            
+            
+        }
+        let plistCnt = Component.instances["propertyListContainer"]; 
+        if(plistCnt){
+            plistCnt.removeAllChildren();
+            plistCnt.addComponents(rows);
+        }else{
+            pew.components["0"].props.components["0"].props.components[1].props.components[0].props.components = rows;            
+        }
+        pew.show();
+        
     },
     stopPropagation:true
 }
+
 oxana.behaviorimplementations["DRAGSTART_COMPONENT"] = {
     description: "Drag Component",
     do:function(e) {
-        console.log("DRAGSTART_COMPONENT");
+        console.log("DRAGSTART_COMPONENT",this.domID);
+        e.originalEvent.dataTransfer.setData("domID", this.domID);
+        e.originalEvent.dataTransfer.setData("constructor", this.ctor);
+        e.originalEvent.dataTransfer.setData("move", 1);
     }
 }
 oxana.behaviorimplementations["HISTORY_STEP_DETAILS"] = function(e){
@@ -688,11 +1114,29 @@ oxana.behaviorimplementations["LOAD_LAYOUT"] = function(e){
     }
     
 };
-function addBehaviors(cmp, behaviors)
+function addBehaviors(cmp, behaviors, recurse=true)
 {
-    oxana.behaviors[cmp.id] = behaviors;
-    for(var cid in cmp.children){
-        addBehaviors(cmp.children[cid], behaviors);
+    if(oxana.behaviors[cmp.id]==null)
+        oxana.behaviors[cmp.id] = {};
+        for(var b in behaviors){
+            oxana.behaviors[cmp.id][b] = behaviors[b];
+        }
+    if(recurse){
+        for(var cid in cmp.children){
+            addBehaviors(cmp.children[cid], behaviors);
+        }
+    }
+}
+function removeBehaviors(cmp, behaviors, recurse=true)
+{
+    if(oxana.behaviors[cmp.id]!=null)
+        for(var b in behaviors){
+            delete oxana.behaviors[cmp.id][b];
+        }
+    if(recurse){
+        for(var cid in cmp.children){
+            removeBehaviors(cmp.children[cid], behaviors);
+        }
     }
 }
 oxana.behaviorimplementations["HISTORY_STEP_ADDED"] = function(e){
@@ -820,40 +1264,20 @@ oxana.behaviorimplementations["SPLIT_VERT"] = {
                 classes:["border"]
             }
         };
-        var row_len = activeContainer.components.length;
-        var toAdd = newCell;
-        var parent;
-        var children_len = 2;
+        var toAdd = [newCell];
+        var parent = activeContainer.parent;
+        var children_len = parent.components.length;
         
-        if(row_len == 0)
-        {
-            var newCell2 = extend(true, newCell);
-            
-            //.spacing.colSpan count children and distribute 12 units of space to them. the last child gets the reminder
-            toAdd = {
-                constructor: Container,
-                props: {
-                    id: '',
-                    type: ContainerType.ROW,
-                    spacing: {h:100, m:"auto"},
-                    components:[newCell, newCell2]
-                }
-            };
-            parent =  activeContainer;
-        }else
-        {
-            parent =  activeContainer.children[activeContainer.components[0].props.id];
-            children_len = parent.components.length;
-        } 
+        
         if(children_len<12)
         {    
             var newInstance;
             if(retFromRedoMaybe.child){
                 newInstance = retFromRedoMaybe.child;
-                activeContainer.addChild(newInstance);
+                parent.addChild(newInstance);
             }else
-                newInstance = parent.addComponent(toAdd);
-            var row =  activeContainer.children[activeContainer.components[0].props.id];
+                newInstance = parent.addComponents(toAdd);
+            var row =  activeContainer.parent;
             children_len = row.components.length;
 
             var colSpan = Math.floor(12/children_len);  
@@ -871,7 +1295,7 @@ oxana.behaviorimplementations["SPLIT_VERT"] = {
             } 
             ret.parent = parent;
             ret.child = newInstance;
-            ret.container = activeContainer;
+            ret.container = activeContainer.parent;
             ret.track = true;
         }else
         {
@@ -1036,7 +1460,9 @@ oxana.behaviorimplementations["WA_REMOVE"] = {
 oxana.behaviorimplementations["SAVE_LAYOUT"] = {
     do:function(e) {
         var workArea = Component.instances["workArea"];
-        var jsonLayout = JSON.stringify(workArea.literal, null, "\t");
+        var lit = workArea.literal;
+        stripHandle(lit)
+        var jsonLayout = JSON.stringify(lit, null, "\t");
         download("snowCrash.json.txt", jsonLayout); 
     },
     stopPropagation:true
@@ -1058,9 +1484,9 @@ oxana.behaviorimplementations["WA_REDO"] = {
 };
 
 oxana.behaviorimplementations["APP_LOADED"] = new ArrayEx(oxana.behaviorimplementations["APP_LOADED"], function(e) {
-    Component.instances["testWindow"].show();
+    Component.instances["controlsWindow"].show();
 });
-
+oxana.eventTypes.splicea(oxana.eventTypes.length, 0, ["resize", "dropped"])
 oxana.registerBehaviors();
 oxana.init();
 
@@ -1221,5 +1647,15 @@ function containerResize(container, dx, dy){
         
         var sibling_id = container.parent.components[mpi].props.id;
         container.parent.children[sibling_id].spacing.colSpan += wa_rel;
+    }
+}
+function stripHandle(lit){
+    if(lit.props["components"] && Array.isArray(lit.props["components"]))
+    for(var i=0;i<lit.props.components.length;i++){
+        if(lit.props.components[i].props["attr"] && lit.props.components[i].props.attr["handle"]){
+            lit.props.components[i] = lit.props.components[i].props.components[0];
+        }
+        if(lit.props.components[i].props["components"] && Array.isArray(lit.props.components[i].props["components"]))
+            stripHandle(lit.props.components[i]);
     }
 }

@@ -7,7 +7,9 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
         guid: StringUtils.guid(),
         bindingDefaultContext:Component.defaultContext,
         ownerDocument:document,
-        attr:{}
+        attr:{},
+        visible:true,
+        enabled:true
     };
     shallowCopy(extend(false, false, _defaultParams, _props), _props);
     var ppb =  Component.processPropertyBindings(_props);
@@ -18,14 +20,15 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
     
     var _bindingDefaultContext = _props.bindingDefaultContext;
     var _guid = _props.guid;
-    var _attr = _props.attr;
+    var _attr;
     var _id = _props.id = ((!_props.id) || (_props.id =="")) ? _defaultParams.id : _props.id;
-    var _enabled, _draggable;
+    var _enabled, _draggable, _visible;
     var _classes = [];
     var _parent = _props.parent;
     var _mousedown = _props.mousedown;
     var _mouseover = _props.mouseover;
-    var _mouseup = _props.mouseup;
+    var _mouseout = _props.mouseout;
+    var _mouseup = _props.mouseout;
     var _click = _props.click;
     var _dblclick = _props.dblclick;
     var _keydown = _props.keydown;
@@ -66,7 +69,8 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
         get: function bindingDefaultContext() 
         {
             return _bindingDefaultContext;
-        }
+        },
+        enumerable:false
     });
     
     //domID property
@@ -74,7 +78,8 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
     {
         get: function () {
             return _id;
-        }
+        },
+        enumerable:true
     });
 
     Object.defineProperty(this, 'ownerDocument',
@@ -114,21 +119,24 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
         get: function spacing() 
         {
             return _spacing;
-        }
+        },
+        enumerable:true
     });
     Object.defineProperty(this, "attr", 
     {
         get: function attr() 
         {
             return _attr;
-        }
+        },
+        enumerable:true
     });
     Object.defineProperty(this, "props", {
         get: function props() {
             var obj = {};
             for(var prop in _props){
-                if(this.hasOwnProperty(prop) && (typeof _props[prop] != 'function') && (prop != "ownerDocument"))
-                    obj[prop] = this[prop];
+                if(this.hasOwnProperty(prop) && this.propertyIsEnumerable(prop) && (typeof _props[prop] != 'function') && (prop != "ownerDocument"))
+                    if(!isObject(this[prop]) || !Object.isEmpty(this[prop]))
+                        obj[prop] = this[prop];
             }
             return obj;
         },
@@ -156,7 +164,10 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
                 {
                     if(_self.$el)
                     {
-                        _parent.detach(_self.$el);
+                        if(_parent)
+                            _parent.$el.detach(_self.$el);
+                        if(v)
+                            v.$el.append(_self.$el);
                     }
                 }
                 _parent = v;
@@ -178,6 +189,29 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
         {
             return _bindings;
         }
+    });
+
+    Object.defineProperty(this, "visible",
+    {
+        get: function visible()
+        {
+            return _visible;
+        },
+        set: function visible(v)
+        {
+            if(_visible != v)
+            {
+                _visible = v;
+                if(this.$el){
+                    if(_visible)
+                        this.show();
+                    else    
+                        this.hide();
+                }
+            }
+        },
+        configurable: true,
+        enumerable:true
     });
     
     Object.defineProperty(this, "enabled",
@@ -248,7 +282,22 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
     {
         get: function classes()
         {
-            return _classes;
+            let r = _classes;
+            if(this.children){
+                let p;
+                for(var _cid in this.children){
+                    if(this[this.childrenRID[_cid]] && this[this.childrenRID[_cid]]["ctor"]){
+                        if(!p)
+                            r = {};
+                        r[this.childrenRID[_cid]] = this[this.childrenRID[_cid]].classes;
+                        p = true;
+                    }
+                }
+                if(p){
+                    r["self"] = _classes;
+                }
+            }
+            return r;
         },
         set: function classes(v)
         {
@@ -258,28 +307,39 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
             {
                 if(this.$el)
                 {
-                    if(_toggle)
-                    { 
-                        _classes = v;
-                        for(var i =0;i<_classes.length;i++)
-                        {
-                            var _class = _classes[i];
-                            if(this.$el.hasClass(_class))
-                                this.$el.removeClass(_class);
-                            else
-                                this.$el.addClass(_class);
-                        }
+                    if(Array.isArray(v))
+                    {
+                        if(_toggle)
+                        { 
+                            _classes = v;
+                            for(var i =0;i<_classes.length;i++)
+                            {
+                                var _class = _classes[i];
+                                if(this.$el.hasClass(_class))
+                                    this.$el.removeClass(_class);
+                                else
+                                    this.$el.addClass(_class);
+                            }
+                        }else{
+                            _classes = _classes.difference(v);
+                            for(var i =0;i<_classes.length;i++)
+                            {
+                                var _class = _classes[i];
+                                if(this.$el.hasClass(_class))
+                                    this.$el.removeClass(_class);
+                            }
+                            _classes = v;
+                            this.$el.addClass(_classes);
+                        } 
                     }else{
-                        _classes = _classes.difference(v);
-                        for(var i =0;i<_classes.length;i++)
-                        {
-                            var _class = _classes[i];
-                            if(this.$el.hasClass(_class))
-                                this.$el.removeClass(_class);
+                        for(var _cid in v){
+                            if(_cid=="self")
+                                this.classes = v[_cid];
+                            else if(this[_cid] && this[_cid]["ctor"]){
+                                this[_cid].classes = v[_cid];
+                            }
                         }
-                        _classes = v;
-                        this.$el.addClass(_classes);
-                    } 
+                    }
                 }
                     
             }
@@ -316,31 +376,23 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
         Component.surrogates[this.$el.attr('id')] = this.domID;
     }
 
-    if(_props.enabled!=null)
-        this.enabled = _props.enabled;
-    if(_props.draggable!=null)
-        this.draggable = _props.draggable;
-    var _spacing = new Spacing(_props.spacing, this.$el);
-
-    if(_props.classes)
-    {
-        this.classes = _props.classes;
-    }
     var _beforeAttach = this.beforeAttach;
     this.beforeAttach = function (e)
     {
         if (e.target.id == this.domID) 
         {
-            if(_attr){
-                for(var prop in _attr){
-                    this.$el.attr(prop, _attr[prop]);
-                }
-            }
+            _attr = new Attr(_props.attr, this.$el);
+
             if (typeof _props.beforeAttach == 'function')
                 _props.beforeAttach.apply(this, arguments);
+            //TODO: not neccessary ? 
             if(!e.isDefaultPrevented()){
                 if (typeof _beforeAttach == 'function')
                     _beforeAttach.apply(this, arguments);
+            }
+            if(_props.classes)
+            {
+                this.classes = _props.classes;
             }
         }
     }
@@ -364,6 +416,7 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
             registerTo: this.$el, events: {
                 'mousedown': _mousedown && typeof _mousedown == 'function' ? _mousedown.bind(_self) : undefined,
                 'mouseover': _mouseover && typeof _mouseover == 'function' ? _mouseover.bind(_self) : undefined,
+                'mouseout': _mouseout && typeof _mouseout == 'function' ? _mouseout.bind(_self) : undefined,
                 'mouseup': _mouseup && typeof _mouseup == 'function' ? _mouseup.bind(_self) : undefined,
                 'click': _click && typeof _click == 'function' ? _click.bind(_self) : undefined,
                 'dblclick': _dblclick && typeof _dblclick == 'function' ? _dblclick.bind(_self) : undefined,
@@ -451,7 +504,12 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
             this.$el.hide();
         return this;
     }
-   
+    this.blur = function ()
+    {
+        if(this.$el)
+            this.$el.blur();
+        return this;
+    }
     this.scrollTo = function () 
     {
         if(this.$el)
@@ -681,6 +739,15 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
             });
         }
     }
+
+    if(_props.enabled!=null)
+        this.enabled = _props.enabled;
+    if(_props.visible!=null)
+        this.visible = _props.visible;
+    if(_props.draggable!=null)
+        this.draggable = _props.draggable;
+    var _spacing = new Spacing(_props.spacing, this.$el);
+    
     _self.initEvents(this.$el);
     if(!_isSurrogate)
         _self.trigger('beforeAttach');

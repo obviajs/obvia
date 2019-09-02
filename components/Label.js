@@ -21,13 +21,15 @@ var Label = function(_props)
                 if(this.$el)
                     this.$el.html(v);
             }
-        }
+        },
+        enumerable:true,
+        configurable: true
     });
  
     this.beforeAttach = function () 
     {
         this.$container = this.$el;
-        this.addComponents(this.components);
+        this.addComponents();
     };
 
     this.template = function () 

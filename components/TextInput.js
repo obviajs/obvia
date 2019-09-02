@@ -29,7 +29,8 @@ var TextInput = function (_props, overrided = false) {
                 }
                 this.trigger('change');
             }
-        }
+        },
+        enumerable:true
     });
  
     this.attached = false;

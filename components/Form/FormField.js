@@ -7,16 +7,11 @@
 //component definition
 var FormField = function(_props)
 {   
-    this.template = function () 
-    { 
-        return '<div id="' + this.domID + '">'+
-            "<label id='" + this.domID + "_label'  for='"+_cmp.domID+"'></label>"+
-        '</div>';
-    }
-
-    this.beforeAttach = function () 
+    this.beforeAttach = function() 
     {
-        this.$label = this.$el.find("#" + this.domID + "_label");
+        this.$container = this.$el;
+        this.addComponents();
+        e.preventDefault();
     };
 
     Object.defineProperty(this, "component", 
@@ -24,30 +19,6 @@ var FormField = function(_props)
         get: function component() 
         {
             return _component;
-        }
-    });
-
-    Object.defineProperty(this, "placeholder", 
-    {
-        get: function placeholder() 
-        {
-            return _placeholder;
-        },
-        set: function placeholder(v) 
-        {
-            if(_placeholder != v)
-            {  
-                _placeholder = v;
-                if(_placeholder)
-                {
-                    if(_cmp.$el)
-                        _cmp.$el.attr("placeholder", _placeholder);
-                }else
-                {
-                    if(_cmp.$el)
-                        _cmp.$el.removeAttr('placeholder');
-                }
-            }
         }
     });
 
@@ -110,8 +81,8 @@ var FormField = function(_props)
             if(_label != v)
             {
                 _label = v;
-                if(this.$label)
-                    this.$label.html(v);
+                if(_lbl)
+                    _lbl.label = v;
             }
         }
     });
@@ -146,51 +117,78 @@ var FormField = function(_props)
     {
 
     }
+    let _lblBeforeAttach = function(e){
+        _lbl = this;
+        if(_cmp)
+            _lbl.$el.prop("for", _cmp.domID);
+    }
 
     var _defaultParams = {
         enabled: true,
         required: false,
-        size: FormFieldSize.SMALL                     
+        size: FormFieldSize.SMALL,
+        type:ContainerType.NONE                     
     };
-   
+    
     _props = extend(false, false, _defaultParams, _props);
     var _placeholder;
     var _name;
     var _required;
     var _label;
     var _component = _props.component;
-        
+    var _lblCmp = {
+        "constructor": Label,
+        "props":{
+            id: 'label',
+            beforeAttach: _lblBeforeAttach
+        }
+    };    
     var _size = _props.size;
-  
-    var _cmp = Component.fromLiteral(_component);
-    _component.props.id = _cmp.id;
+    _props.components = [_lblCmp];
+    if(_component && !Object.isEmpty(_component)){
+        _props.components.push(_component);
+    }
+
 
     var _self = this;
-    Component.call(this, _props);
+    Container.call(this, _props);
 
-    this.label = _props.label;
-    this.required = _props.required;
-    this.placeholder = _props.placeholder;
+    var _cmp, _lbl;
     
-    _self.$el.append(_cmp.render());
-    _cmp.on('creationComplete', function(e){
-        e.stopPropagation();
-        var _cmpObj;
-        if(["input", "select", "textarea"].indexOf(_cmp.$el[0].tagName.toLowerCase())>-1){
-            _cmpObj = _cmp.$el;
-        }else{
-            _cmpObj = _cmp.$el.find("input, select, textarea").filter(function(){ 
-                return ($(this).closest(".no-form-control").length == 0);
-            });
-        }
-        _cmpObj.addClass("form-control");
-        if(_size)
-            _cmpObj.addClass(_size); 
+    this.on('childCreated childAdded', function(e){
+        if(e.child.ctor != 'Label'){
+            _cmp = e.child;
+            if(_component ==null || Object.isEmpty(_component)){
+                _component = _cmp.literal;
+            }
+            if(_lbl)
+                _lbl.$el.prop("for", _cmp.domID);
+            if(_props.required)
+                _self.required = _props.required;
+            if(_props.placeholder)
+                _self.placeholder = _props.placeholder;
+            e.stopPropagation();
+            var _cmpObj;
+            if(["input", "select", "textarea"].indexOf(_cmp.$el[0].tagName.toLowerCase())>-1){
+                _cmpObj = _cmp.$el;
+            }else{
+                _cmpObj = _cmp.$el.find("input, select, textarea").filter(function(){ 
+                    return ($(this).closest(".no-form-control").length == 0);
+                });
+            }
+            _cmpObj.addClass("form-control");
+            if(_size)
+                _cmpObj.addClass(_size); 
 
-        _self.placeholder = _props.placeholder;
-        _self.name = _props.name;
-        _self.required = _props.required;
-        _self.trigger('creationComplete');
+            _self.placeholder = _props.placeholder;
+            _self.name = _props.name;
+            _self.required = _props.required;
+            _self.label = _props.label;
+            _self.trigger('creationComplete');
+        }else{
+            if(_cmp)
+                _lbl.$el.prop("for", _cmp.domID);
+        }
     });
 
     var _enabled = _props.enabled;
@@ -230,8 +228,9 @@ var FormField = function(_props)
                         case "ownerDocument":
                             break;
                         default:
-                            if(this.hasOwnProperty(prop))
-                                obj[prop] = this[prop];
+                            if(this.hasOwnProperty(prop) && this.propertyIsEnumerable(prop))
+                                if(!isObject(this[prop]) || !Object.isEmpty(this[prop]))
+                                    obj[prop] = this[prop];
                     }
                 }
             }
@@ -239,6 +238,30 @@ var FormField = function(_props)
         },
         configurable: true
     }); 
+
+    Object.defineProperty(this, "placeholder", 
+    {
+        get: function placeholder() 
+        {
+            return _placeholder;
+        },
+        set: function placeholder(v) 
+        {
+            if(_placeholder != v)
+            {  
+                _placeholder = v;
+                if(_placeholder)
+                {
+                    if(_cmp && _cmp.$el)
+                        _cmp.$el.attr("placeholder", _placeholder);
+                }else
+                {
+                    if(_cmp && _cmp.$el)
+                        _cmp.$el.removeAttr('placeholder');
+                }
+            }
+        }
+    });
 }
 //component prototype
 FormField.prototype.ctor = 'FormField';

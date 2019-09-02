@@ -28,6 +28,15 @@ var Parent = function(_props, overrided=false, _isSurrogate=false)
         }
     });
 
+    this.add = function(childOrLiteral, index){
+        if(childOrLiteral){
+            if(childOrLiteral.$el)
+                this.addChild(childOrLiteral, index);
+            else
+                this.addComponent(childOrLiteral, index);
+        }
+    }
+
     this.addChild = function(child, index)
     {
         if(child)
@@ -37,8 +46,14 @@ var Parent = function(_props, overrided=false, _isSurrogate=false)
             {
                 index = index > -1? index : _components.length;
                 this.$el.insertAt(child.$el, index);
-                _components.splice(_components.length, 0, {constructor:child.type, props:child.props});
+                _components.splice(index, 0, {constructor:child.ctor, props:child.props});
                 _children[child.id] = child; 
+                child.parent = this;
+                child.parentType = this.type;
+                child.parentForm = this;
+                var event = jQuery.Event("childAdded");
+                event.child = child;
+                this.trigger(event);
             }
         }
     }
@@ -67,6 +82,7 @@ var Parent = function(_props, overrided=false, _isSurrogate=false)
                 _components.splice(ind, 1);
                 delete _children[child.id];
                 child.destruct(mode);
+                child.parent = null;
             }else{
                 console.log("Failed to remove Component: "+child.id+". It was not found in child list.");
             }
@@ -88,6 +104,25 @@ var Parent = function(_props, overrided=false, _isSurrogate=false)
         return this.addComponentInContainer(this.$container, component, index);
     }
 
+    Object.defineProperty(this, "childrenIDR",
+    {
+        get:function childrenIDR(){
+            return _childrenIDR;
+        },
+        enumerable:false
+    });
+
+    Object.defineProperty(this, "childrenRID",
+    {
+        get:function childrenRID(){
+            return _childrenRID;
+        },
+        enumerable:false
+    });
+
+    let _childrenIDR = {};
+    let _childrenRID = {};
+
     this.addComponentInContainer = function (container, component, index) 
     {
         if(container)
@@ -99,6 +134,11 @@ var Parent = function(_props, overrided=false, _isSurrogate=false)
                 resetBindingContext = true;
             }
             var cmp = Component.fromLiteral(component);
+            if(!_childrenIDR[component.props.id]){
+                _childrenIDR[component.props.id] = [];
+            }
+            _childrenRID[cmp.id] = component.props.id;
+            _childrenIDR[component.props.id].push(cmp.id);
             component.props.id = cmp.id;
             _children[cmp.id] = cmp;
             cmp.parent = _self;
@@ -111,7 +151,9 @@ var Parent = function(_props, overrided=false, _isSurrogate=false)
                 e.stopImmediatePropagation();
                 e.stopPropagation();
                 _ccComponents.push(component.props.id);
-            
+                var event = jQuery.Event("childCreated");
+                event.child = this;
+                _self.trigger(event);
                 if ((_ccComponents.length == _self.components.length - Object.keys(_magnetizedIndexes).length) && !_creationFinished) {
                     
                      //TODO:solve magnet dependencies, i.e: component is magnetized to a component that is magnetized to another component  
@@ -119,7 +161,7 @@ var Parent = function(_props, overrided=false, _isSurrogate=false)
                     {
                         var magnetCmp = Component.instances[_magnetizedIndexes[i]];
 
-                        var magnetizedCmp = this.addComponentInContainer(magnetCmp.$container, _components[i], i);
+                        var magnetizedCmp = _self.addComponentInContainer(magnetCmp.$container, _components[i], i);
                         delete _magnetizedIndexes[i];
                     }
                     if (_ccComponents.length == _self.components.length && !_creationFinished) {
@@ -131,7 +173,7 @@ var Parent = function(_props, overrided=false, _isSurrogate=false)
                     
                 }
 
-            }.bind(_self));
+            });
             index = index > -1? index : _components.length;
             container.insertAt(cmp.render(), index);
             //container.append(cmp.render());
@@ -154,7 +196,8 @@ var Parent = function(_props, overrided=false, _isSurrogate=false)
 
     var _defaultParams = {
         components:[],
-        magnets:{}
+        magnets:{},
+        enabled:true
     };
     //_props = extend(false, false, _defaultParams, _props);
     shallowCopy(extend(false, false, _defaultParams, _props), _props);
@@ -176,8 +219,10 @@ var Parent = function(_props, overrided=false, _isSurrogate=false)
     //override because creationComplete will be thrown when all children components are created
     // this.afterAttach = undefined;
     var _magnetizedIndexes = {};
-    this.addComponents = function(components)
+    this.addComponents = function(cmps)
     {
+        let arrInst = [];
+        let components = cmps || this.components;
         if(components && Array.isArray(components) && components.length>0)
         {
             for(var i=0;i<components.length;i++)
@@ -198,10 +243,14 @@ var Parent = function(_props, overrided=false, _isSurrogate=false)
                     }   
                 }
                 if(!isMagnetized)
-                    this.addComponentInContainer(this.$container, components[i], i);
+                    arrInst.push(this.addComponentInContainer(this.$container, components[i], i));
+                if(cmps){
+                    _components.splice(i, 0, components[i]);
+                }
             }
         }else   
             _creationFinished = true;
+        return arrInst;
     }
 
     Component.call(this, _props, true, _isSurrogate);
@@ -238,6 +287,7 @@ var Parent = function(_props, overrided=false, _isSurrogate=false)
                 }
             }
         },
+        enumerable:true,
         configurable: true
     });
 
@@ -252,11 +302,9 @@ var Parent = function(_props, overrided=false, _isSurrogate=false)
                     {
                         case "components":
                             var components = [];
-                            for(var i=0;i<_components.length;i++)
+                            for(var cid in _children)
                             {
-                                var component = {};
-                                component.constructor = _children[_components[i].props.id].ctor;//_components[i].constructor;
-                                component.props = _children[_components[i].props.id].props;
+                                var component = _children[cid].literal;
                                 components.push(component);
                             }
                             obj[prop] = components;
@@ -264,8 +312,9 @@ var Parent = function(_props, overrided=false, _isSurrogate=false)
                         case "ownerDocument":
                             break;
                         default:
-                            if(this.hasOwnProperty(prop))
-                                obj[prop] = this[prop];
+                            if(this.hasOwnProperty(prop) && this.propertyIsEnumerable(prop))
+                                if(!isObject(this[prop]) || !Object.isEmpty(this[prop]))
+                                    obj[prop] = this[prop];
                     }
                 }
             }
