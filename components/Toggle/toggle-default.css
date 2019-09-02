@@ -5,6 +5,9 @@
     width: 60px;
     height: 34px;
 }
+.block {
+    display: block !important;
+}
 
 /* Hide default HTML checkbox */
 .switch input {

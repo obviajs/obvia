@@ -63,6 +63,9 @@ rjs.define("./components/HRule.js", "HRule");
 rjs.define("./components/Color.js", "Color");
 //Container
 rjs.define("./components/Container.js", "Container");
+rjs.define("./components/Nav.js", "Nav");
+rjs.define("./components/Header.js", "Header");
+rjs.define("./components/Footer.js", "Footer");
 //Tab
 rjs.define("./components/Tab/TabNavigator.js", "TabNavigator");
 rjs.define("./components/Tab/Tab.js", "Tab");
@@ -192,6 +195,9 @@ rjs.require([
         "ContainerType",
         "NavParent",
         "Container",
+        "Nav",
+        "Header",
+        "Footer",
         "TabNavigator",
         "Tab",
         "ViewStack",

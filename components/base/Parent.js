@@ -196,7 +196,8 @@ var Parent = function(_props, overrided=false, _isSurrogate=false)
 
     var _defaultParams = {
         components:[],
-        magnets:{}
+        magnets:{},
+        enabled:true
     };
     //_props = extend(false, false, _defaultParams, _props);
     shallowCopy(extend(false, false, _defaultParams, _props), _props);
@@ -286,6 +287,7 @@ var Parent = function(_props, overrided=false, _isSurrogate=false)
                 }
             }
         },
+        enumerable:true,
         configurable: true
     });
 

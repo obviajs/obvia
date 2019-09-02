@@ -6,6 +6,7 @@ const appStyle = `
 .selected-component {
     border: 1px black solid !important;
     border-right: 10px black solid !important;
+    padding-bottom: 10px;
 }
 .default-component {
     border: 1px grey solid;
@@ -65,6 +66,9 @@ var dpComponentList = [
     },
     {
         "label":"RadioGroup", "icon":"", "constructor": "RadioGroup"
+    },
+    {
+        "label":"Toggle", "icon":"", "constructor": "Toggle"
     },
     {
         "label":"CheckBox", "icon":"", "constructor": "CheckBox"
@@ -266,6 +270,18 @@ var dpComponentLiterals = {
             checked:false
         }
     },
+    "Toggle": {
+        "constructor": Toggle,
+        "props":{
+            id: 'toggle',
+            value: "1",
+            checked:false,
+            classes:{
+                "self":["switch"],
+                "span":["slider"]
+            }
+        }
+    },
     "CheckBoxGroup":{
         "constructor": CheckBoxGroup,
         "props":{
@@ -373,7 +389,10 @@ var propEditors = {
             "constructor": Toggle,
             "props":{
                 id: 'toggle',
-                value: true
+                value: true,
+                classes:{
+                    "self":["switch", "block"]
+                }
             }
         },
         set:null,
@@ -404,6 +423,7 @@ var metaProps = {
     visible: {constructor:"Toggle", label: "Visible"},
     enabled: {constructor:"Toggle", label: "Enabled"}, 
     required: {constructor:"Toggle", label: "Required"},
+    checked: {constructor:"Toggle", label: "Checked"},
     dataProvider: {constructor:"AutoCompleteEx", label: "Data Provider", required:true, props:{
         valueField: providerValueField,
         labelField: providerLabelField,
@@ -916,8 +936,12 @@ oxana.behaviorimplementations["ADD_COMPONENT"] = {
             }
             lit = extend(true, lit);
             lit.props.draggable = true;
-            lit.props.classes = !Array.isArray(lit.props.classes)?[]:lit.props.classes;
-            lit.props.classes.push("default-component");
+            if(isObject(lit.props.classes))
+                lit.props.classes["self"].push("selected-component");
+            else{
+                lit.props.classes = !Array.isArray(lit.props.classes)?[]:lit.props.classes;
+                lit.props.classes.push("selected-component");
+            }
             //var hnd = extend(true, handle);
             //hnd.props.components = [lit];
             //var inst = workArea.addComponent(hnd);
@@ -940,7 +964,6 @@ oxana.behaviorimplementations["ADD_COMPONENT"] = {
                     inst.draggable = true;
                     addBehaviors(inst, cmpBehaviors, false);
                     var classes = inst.classes.slice(0);
-                    classes.pushUnique("default-component");
                     classes.pushUnique("selected-component");
                     inst.classes = classes;
                 }else if(workArea.ctor == "Form" && noNeedFF.indexOf(inst.ctor)==-1){
@@ -956,7 +979,6 @@ oxana.behaviorimplementations["ADD_COMPONENT"] = {
                     var ff = extend(true, formField);
                     ff.props.draggable = true;
                     ff.props.classes = !Array.isArray(ff.props.classes)?[]:ff.props.classes;
-                    ff.props.classes.push("default-component");
                     ff.props.classes.push("selected-component");
                     workArea = workArea.addComponent(ff);
                     addBehaviors(workArea, cmpBehaviors, false);
@@ -983,16 +1005,24 @@ oxana.behaviorimplementations["SELECT_COMPONENT"] = {
     do:function(e) {
         console.log("SELECT_COMPONENT");
          //this will hold the instance of the component who manifested this behavior (the manifestor)
-        if(activeComponent && activeComponent!=this && activeComponent.classes.indexOf("selected-component")>-1){
+        if(activeComponent && activeComponent!=this && ((isObject(activeComponent.classes) && activeComponent.classes["self"].indexOf("selected-component")) || activeComponent.classes.indexOf("selected-component")>-1)){
             activeComponent.toggle = false;
-            var classes = activeComponent.classes.slice(0);
-            classes.toggle("selected-component");
-            activeComponent.classes = classes;
+            var classes = isObject(activeComponent.classes)?activeComponent.classes["self"].slice(0):activeComponent.classes.slice(0);
+            let ind = classes.indexOf("selected-component");
+            if(ind>-1)
+                classes.splice(ind, 1);
+            classes.pushUnique("default-component");
+            if(isObject(activeComponent.classes))
+                activeComponent.classes["self"] = classes;
+            else
+                activeComponent.classes = classes;
         }
-        this.toggle = false;
-        var classes = this.classes.slice(0);
+        var classes = isObject(this.classes)?this.classes["self"].slice(0):this.classes.slice(0);
         classes.pushUnique("selected-component");
-        this.classes = classes;
+        if(isObject(this.classes))
+            this.classes["self"] = classes;
+        else
+            this.classes = classes;
         activeComponent = this;
         let pew = Component.instances["propertyEditorWindow"];
         let props = this.props;

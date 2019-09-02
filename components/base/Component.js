@@ -7,7 +7,9 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
         guid: StringUtils.guid(),
         bindingDefaultContext:Component.defaultContext,
         ownerDocument:document,
-        attr:{}
+        attr:{},
+        visible:true,
+        enabled:true
     };
     shallowCopy(extend(false, false, _defaultParams, _props), _props);
     var ppb =  Component.processPropertyBindings(_props);
@@ -20,7 +22,7 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
     var _guid = _props.guid;
     var _attr;
     var _id = _props.id = ((!_props.id) || (_props.id =="")) ? _defaultParams.id : _props.id;
-    var _enabled, _draggable;
+    var _enabled, _draggable, _visible;
     var _classes = [];
     var _parent = _props.parent;
     var _mousedown = _props.mousedown;
@@ -117,7 +119,8 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
         get: function spacing() 
         {
             return _spacing;
-        }
+        },
+        enumerable:true
     });
     Object.defineProperty(this, "attr", 
     {
@@ -186,6 +189,29 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
         {
             return _bindings;
         }
+    });
+
+    Object.defineProperty(this, "visible",
+    {
+        get: function visible()
+        {
+            return _visible;
+        },
+        set: function visible(v)
+        {
+            if(_visible != v)
+            {
+                _visible = v;
+                if(this.$el){
+                    if(_visible)
+                        this.show();
+                    else    
+                        this.hide();
+                }
+            }
+        },
+        configurable: true,
+        enumerable:true
     });
     
     Object.defineProperty(this, "enabled",
@@ -349,12 +375,6 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
     if(_isSurrogate && this.$el){
         Component.surrogates[this.$el.attr('id')] = this.domID;
     }
-
-    if(_props.enabled!=null)
-        this.enabled = _props.enabled;
-    if(_props.draggable!=null)
-        this.draggable = _props.draggable;
-    var _spacing = new Spacing(_props.spacing, this.$el);
 
     var _beforeAttach = this.beforeAttach;
     this.beforeAttach = function (e)
@@ -719,6 +739,15 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
             });
         }
     }
+
+    if(_props.enabled!=null)
+        this.enabled = _props.enabled;
+    if(_props.visible!=null)
+        this.visible = _props.visible;
+    if(_props.draggable!=null)
+        this.draggable = _props.draggable;
+    var _spacing = new Spacing(_props.spacing, this.$el);
+    
     _self.initEvents(this.$el);
     if(!_isSurrogate)
         _self.trigger('beforeAttach');
