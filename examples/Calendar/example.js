@@ -1,11 +1,4 @@
 
-this.replaceAll = function(find, replace, str) {
-    var tempStr = str.replace(find, replace);
-    if (tempStr.contains(find)) {
-        return replaceAll(find, replace, tempStr);
-    }
-    return tempStr;
-}
 
 //var  dp = createData();
 
@@ -18,7 +11,9 @@ var myCalendar = new Calendar({
     selectedClasses:"selectedClasses",
     classField:"classField",
     classField1:"classField1",
-    dataContent:"dataContent",
+    startField:"startField",
+    descriptionField:"descriptionField",
+    dateContent:"dateContent",
     //dataProvider: [],//new ArrayEx(dp),
     click : function(e){console.log("From ClickAction");}
     // dataProvider: new ArrayEx([		
@@ -30,6 +25,7 @@ var myCalendar = new Calendar({
     // ]),
     
 });
+
 myCalendar.on('creationComplete', function () {
     
 });

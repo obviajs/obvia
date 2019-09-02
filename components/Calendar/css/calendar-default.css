@@ -13,7 +13,7 @@ div .fc-day-number {
     text-align: center;
     float: right; 
 }
-.border{
+/* .border{
     border-width: 1px 0 0 1px;
     padding: 0;
     vertical-align: top;
@@ -23,7 +23,7 @@ div .fc-day-number {
     font-family: "Helvetica Neue",Helvetica;
     
 
-}
+} */
 .fc{
     text-align: center;
     font-family: "Helvetica Neue",Helvetica;
@@ -146,9 +146,22 @@ margin-bottom:1.5%;
     }
 
 .fc-event-inner{
-    float: right;
-    padding-top: 20%;
-    padding-right: 60px;
+
+    background-color: lightblue;
+    /* padding: 0 1px; */
+    /* text-align: left; */
+    /* margin-right: 10px; */
+    
+    /* padding-bottom: 0px; */
+    font-size: 14px;
+    font-weight: 800;
+    float: left;
+    margin-top: 13px;
+    margin-left: 1.2%;
+    padding-left: 2px;
+
+
+    border-right-width: 1px;
 }
 
 .fc-event-date{
@@ -157,21 +170,65 @@ margin-bottom:1.5%;
     font-size:50px;
     font-size: 1em;
     font-family: "Helvetica Neue",Helvetica;
+    border-bottom-width: 1px;
+    font-size: 16px;
+    font-weight: 900;
+    line-height: 30px;
+    text-align:center;
 }
 .fc-event-date-end{
     margin-right:18px;
     padding-right:100px; 
     margin-bottom:2%;
+
+    margin-right:100%;
+    border-bottom-width: 1px;
+    font-size: 16px;
+    font-weight: 300;
+    line-height: 30px;
+    text-align:center;
+
 }
 .fc-event-label-title{
     /* padding-right:100px;  */
-    margin-right:100%;
+    /* margin-right:100%; */
     font-size:32px;
     font-size: 1em;
     font-family: "Helvetica Neue",Helvetica;
+    font-size: 16px;
+    font-weight: 900;
+    line-height: 30px;
+    padding-bottom: 1.5%;
+    
 }
 .fc-event-input{
     padding-right:500px; 
+    font-size: 16px;
+    font-weight: 300;
+    line-height: 30px;
+    margin-bottom: 12px;
     /* margin-left:100%; */
 }
     /* "fc-event-time","fc-event-title" */
+.border-c {
+
+    border-top-width: 0;
+    border-width: 1px 0 0 1px;
+    padding: 0;
+    vertical-align: top;
+    border: 1px solid #e5e5e5;
+    border-collapse: separate;
+    font-size: 1em;
+    font-family: "Helvetica Neue",Helvetica;
+    /* padding-left:1px; */
+    padding-right:2px;
+    padding-bottom:1px;
+    padding-top:2%;
+    padding-left:2%;
+    box-sizing: border-box;  
+}
+
+.fc-hour{
+    float:left;
+    margin-left:50px;
+}

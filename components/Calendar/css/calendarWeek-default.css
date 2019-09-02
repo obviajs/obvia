@@ -1,0 +1,83 @@
+.fc-label-month-w{
+    margin-top: 0;
+    white-space: nowrap;
+    font-size: 32px;
+    font-weight: 100;
+    margin-bottom: 10px;
+    padding-right:8px;
+    margin-bottom:1.5%;
+    font-weight:600;
+}
+
+.fc-label-year-w{
+    margin-top: 0;
+    white-space: nowrap;
+    font-size: 32px;
+    font-weight: 100;
+    margin-bottom: 10px;
+    margin-bottom:1.5%;
+    margin-right:17%;
+    font-weight:600;
+}
+
+.fc-button-left-w{
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+    margin-right: -1px;
+    min-width: 67px;
+    text-align: center;
+    background-color: gray ;
+    color: #FFFFFF;
+}
+
+.fc-button-center-w{
+    min-width: 67px;
+    text-align: center;
+    background-color: gray ;
+    color: #FFFFFF;
+}
+
+.fc-button-right-w{
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+    margin-right: 0px;
+    min-width: 67px;
+    text-align: center;
+    background-color: gray ;
+    color: #FFFFFF;
+}
+
+.fc-button-prev-w {
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+    background-color: white;
+    margin-right: -1px;
+    padding-left:4%;
+    margin-top:5%;
+    color: black;
+    border-color:black;
+    border: 1px solid;
+    text-align:center;
+    margin-left:25%;
+    margin-bottom:1.5%;
+}
+
+.fc-button-next-w {
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+    background-color: white;
+    text-align:center;
+    color: black;
+    border-color:black;
+    border: 1px solid;
+    padding-left:5%;
+    margin-bottom:1.5%
+}
+
+.fc-week-display {
+    font-weight:600;
+    font-size:16px;
+    background-color:rgb(39, 38, 38);
+    color:white;
+    margin-top:1.5%;
+}
