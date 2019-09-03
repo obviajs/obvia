@@ -283,7 +283,7 @@ var Repeater = function(_props)
     //renders a new row, adds components in stack
     this.addRow = function (data, index, isPreventable = false, focusOnRowAdd = true) 
     {
-        console.log("addRow func")
+        console.log("addRow func "+this.id);
         
         index = index || this.rows.length+1;
         /* model check
@@ -567,7 +567,8 @@ var Repeater = function(_props)
         {
             if (typeof _props.afterAttach == 'function')
                 _props.afterAttach.apply(this, arguments);
-            e.preventDefault();
+            if((!_creationFinished && (_dataProvider && _dataProvider.forEach && _dataProvider.length>0)) || e.isDefaultPrevented())    
+                e.preventDefault();
             _registerSurrogate();
         }
     };

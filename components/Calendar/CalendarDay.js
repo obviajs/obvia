@@ -267,36 +267,22 @@ _props.beforeAttach = function(e) {
     // fnContainerDelayInit();
     // _componentCalendarPerDay.props.ownerDocument = this.ownerDocument;
     // _cmp = Component.fromLiteral(_componentCalendarPerDay);
-    _component_Cday = this.addComponent(_componentCalendarPerDay);
+   // _component_Cday = this.addComponent(_componentCalendarPerDay);
+    this.components = [_componentCalendarPerDay]
     this.dataProvider = _props.dataProvider;
-    e.preventDefault();
+    //e.preventDefault();
 }
 
 
 var _prev_day = function(eve){
-
     _nowDate.setDate(_nowDate.getDate()-1);
     var new_prev = CalendarConstantsDays[_nowDate.getDay()];
     var update_prev_date = _nowDate.getDate();
-
-    var update_prev_date = _nowDate.getDate();
-
-    var new_dp_prev = _createHours(_nowDate,eve);
-    if(new_dp_prev>0){
-        for(var i=0;i<new_dp_prev.length;i++){
-            if(!new_dp_prev[i][_guidField]){
-                new_dp_prev[i][_guidField] = StringUtils.guid();
-            }
-        }
-    }
-
-    _self.literal.props.components[0].props.components[2].props.components[0].props.dataProvider.splicea(0,_self.literal.props.components[0].props.components[2].props.components[0].props.dataProvider.length,new_dp_prev);
-    fnContainerDelayInit();
-    _componentCalendarPerDay.props.ownerDocument = _self.ownerDocument;
-    _cmp = Component.fromLiteral(_componentCalendarPerDay);
-    _cmp.children[_self.my("Label_Displaying_WeekDay")].label  = new_prev + " "+ update_prev_date; 
-    _cmp.children[_self.my("Container_Month_Year_Button")].children[_self.my("label_month")].label = CalendarConstantsMonths[_nowDate.getMonth()];
-    _cmp.children[_self.my("Container_Month_Year_Button")].children[_self.my("label_year")].label =_nowDate.getFullYear();
+    var dataProvider = _self.children[_self.my("OutContainer")].children[_self.my("Container_Repeater")].children[_self.my("repeaterForHours")].dataProvider;
+    dataProvider.splicea(0, dataProvider.length, new_dp_prev);
+    _self.children[_self.my("OutContainer")].children[_self.my("Label_Displaying_WeekDay")].label =  new_prev + " "+ update_prev_date;
+    _self.children[_self.my("OutContainer")].children[_self.my("Container_Month_Year_Button")].children[_self.my("label_month")].label = CalendarConstantsMonths[_nowDate.getMonth()];
+    _self.children[_self.my("OutContainer")].children[_self.my("Container_Month_Year_Button")].children[_self.my("label_year")].label = _nowDate.getFullYear();
 }
 
 var _clickHandler = function(){
