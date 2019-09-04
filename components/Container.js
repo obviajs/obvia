@@ -122,11 +122,13 @@ var Container = function(_props, overrided=false)
     { 
         return  '<div id="' + this.domID + '"></div>'; 
     };
-
+    var _beforeAttach = this.beforeAttach;
     this.beforeAttach = function(e) 
     {
         if (e.target.id == this.domID) 
         {
+            if (typeof _beforeAttach == 'function')
+                _beforeAttach.apply(this, arguments);
             if(!e.isDefaultPrevented()){
                 this.$container = this.$el;
                 this.addComponents();
