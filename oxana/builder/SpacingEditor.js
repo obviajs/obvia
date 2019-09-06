@@ -8,16 +8,21 @@
 var SpacingEditor = function (_props, overrided = false) {
     var _self = this;
  
-    var dpColSpan;
-    var dpOffset;
-
-
-
-
-   
-
+    var _dpColSpan = new Array(12);
+    var _dpOffset = new Array(12);
+    var _dpMt = new Array(6);
+    var _dpMb = new Array(6);
+    
+    for(let i=0;i<12;i++){
+        _dpColSpan[i] = {value:i+1};
+        _dpOffset[i] = {value:i};
+        if(i<6){
+            _dpMb[i] = _dpMt[i] = {value:i};
+        } 
+    }
 
     var _defaultParams = {
+        type: ContainerType.NONE,
         "components": [
             {
                 "constructor": "Container",
@@ -28,12 +33,25 @@ var SpacingEditor = function (_props, overrided = false) {
                             "constructor": "Container",
                             "props": {
                                 "id": "workArea_80",
+                                type: ContainerType.COLUMN,
+                                spacing:{colSpan:3},
+                                placeholder:"Col Span"
+                            }
+                        },
+                        {
+                            "constructor": "Container",
+                            "props": {
+                                "id": "workArea_80",
+                                type: ContainerType.COLUMN,
+                                spacing:{colSpan:3},
                                 "components": [
                                     {
                                         "constructor": "Select",
                                         "props": {
                                             "id": "colSpan",
-                                            "dataProvider": dpColSpan
+                                            "dataProvider": _dpColSpan,
+                                            labelField:"value",
+                                            valueField:"value"
                                         }
                                     }
                                 ]
@@ -43,12 +61,16 @@ var SpacingEditor = function (_props, overrided = false) {
                             "constructor": "Container",
                             "props": {
                                 "id": "workArea_84",
+                                type: ContainerType.COLUMN,
+                                spacing:{colSpan:6},
                                 "components": [
                                     {
                                         "constructor": "Select",
                                         "props": {
                                             "id": "offset",
-                                            "dataProvider": dpOffset
+                                            "dataProvider": _dpOffset,
+                                            labelField:"value",
+                                            valueField:"value"
                                         }
                                     }
                                 ]
@@ -67,25 +89,16 @@ var SpacingEditor = function (_props, overrided = false) {
                             "constructor": "Container",
                             "props": {
                                 "id": "workArea_82",
+                                type: ContainerType.COLUMN,
+                                spacing:{colSpan:6},
                                 "components": [
                                     {
                                         "constructor": "Select",
                                         "props": {
-                                            "id": "select_101",
-                                            "dataProvider": [
-                                                {
-                                                    "value": "1",
-                                                    "text": "Shqiperi"
-                                                },
-                                                {
-                                                    "value": "2",
-                                                    "text": "Greqi"
-                                                },
-                                                {
-                                                    "value": "3",
-                                                    "text": "SHBA"
-                                                }
-                                            ]
+                                            "id": "mb",
+                                            "dataProvider": _dpMb,
+                                            labelField:"value",
+                                            valueField:"value"
                                         }
                                     }
                                 ]
@@ -95,25 +108,16 @@ var SpacingEditor = function (_props, overrided = false) {
                             "constructor": "Container",
                             "props": {
                                 "id": "workArea_86",
+                                type: ContainerType.COLUMN,
+                                spacing:{colSpan:6},
                                 "components": [
                                     {
                                         "constructor": "Select",
                                         "props": {
-                                            "id": "select_96",
-                                            "dataProvider": [
-                                                {
-                                                    "value": "1",
-                                                    "text": "Shqiperi"
-                                                },
-                                                {
-                                                    "value": "2",
-                                                    "text": "Greqi"
-                                                },
-                                                {
-                                                    "value": "3",
-                                                    "text": "SHBA"
-                                                }
-                                            ]
+                                            "id": "mt",
+                                            "dataProvider": _dpMt,
+                                            labelField:"value",
+                                            valueField:"value"
                                         }
                                     }
                                 ]
@@ -127,8 +131,6 @@ var SpacingEditor = function (_props, overrided = false) {
     };
     _props = extend(false, false, _defaultParams, _props);
     Container.call(this, _props);
-
-
 };
 
 //component prototype

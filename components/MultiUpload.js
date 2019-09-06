@@ -73,7 +73,7 @@ var MultiUpload = function (_props, overrided = false) {
                                         id: "label_"+_self.guid,
                                         label: 'Drag and Drop File or Click Me',
                                         classes: ["text-center"],
-                                        labelType: LabelType.paragraph
+                                        labelType: LabelType.p
                                     }
                                 }
                             ]

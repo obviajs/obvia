@@ -146,7 +146,7 @@ var UploadEx = function (_props, overrided = false) {
 
     var _container;
     
-    var fnContainerDelayInit = whenDefined(this, "guid", function(){
+    var fnContainerDelayInit = function(){
         _container = {
             constructor: Container,
             props: {
@@ -408,7 +408,7 @@ var UploadEx = function (_props, overrided = false) {
                 ]                                   
             }
         };
-    });
+    };
 
     Object.defineProperty(this, "multiple", 
     {

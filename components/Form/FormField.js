@@ -7,11 +7,17 @@
 //component definition
 var FormField = function(_props)
 {   
-    this.beforeAttach = function() 
+    this.beforeAttach = function(e) 
     {
-        this.$container = this.$el;
-        this.addComponents();
-        e.preventDefault();
+        if (e.target.id == this.domID) 
+        {
+            console.log("beforeAttach domID: ", this.domID);
+            this.$container = this.$el;
+            _lbl = this.addComponent(this.components[0]);
+            _cmp = this.addComponent(this.components[1]);
+            _lbl.$el.prop("for", _cmp.domID);
+            e.preventDefault();
+        }
     };
 
     Object.defineProperty(this, "component", 
@@ -117,11 +123,6 @@ var FormField = function(_props)
     {
 
     }
-    let _lblBeforeAttach = function(e){
-        _lbl = this;
-        if(_cmp)
-            _lbl.$el.prop("for", _cmp.domID);
-    }
 
     var _defaultParams = {
         enabled: true,
@@ -139,8 +140,7 @@ var FormField = function(_props)
     var _lblCmp = {
         "constructor": Label,
         "props":{
-            id: 'label',
-            beforeAttach: _lblBeforeAttach
+            id: 'label'
         }
     };    
     var _size = _props.size;
@@ -157,7 +157,6 @@ var FormField = function(_props)
     
     this.on('childCreated childAdded', function(e){
         if(e.child.ctor != 'Label'){
-            _cmp = e.child;
             if(_component ==null || Object.isEmpty(_component)){
                 _component = _cmp.literal;
             }
@@ -185,9 +184,6 @@ var FormField = function(_props)
             _self.required = _props.required;
             _self.label = _props.label;
             _self.trigger('creationComplete');
-        }else{
-            if(_cmp)
-                _lbl.$el.prop("for", _cmp.domID);
         }
     });
 
