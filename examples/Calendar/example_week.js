@@ -1,19 +1,22 @@
-var myCalendarDay = new CalendarDay({
-    id:'calendarDay',
+var myCalendarWeek = new CalendarWeek({
+    id:'calendarWeek',
+    nowDate:new Date(),
     labelField:"value",
-    labelField1:"value",
+    //labelFieldHour:"startHour",
     startHour:"startHour",
+    valueHour:"valueHour",
     interval:"interval",
     endHour:"endHour",
     childrenField:"children",
     descriptionField:"descriptionField",
     timing:"timing",
-    nowDate:new Date(),
     dateContent:"dateContent",
+    dataProvider_week:"dataProvider_week",
+    classField1:"classField1",
+    time:"time",
     click:function(e){
-        console.log("From Click Action");
-    },
-
+    console.log("From Click Action");
+    }
 });
 
 var myTextInput = {
@@ -21,8 +24,18 @@ var myTextInput = {
     props:{
         id: 'TextInput',
         value: " " ,
-        classes:["fc-event-input","form-control"]
-    },
+        classes:["fc-event-input-w","form-control"]
+        },
+    
+}
+var myTextInput_Day = {
+    constructor:"TextInput",
+    props:{
+        id: 'TextInput',
+        value: " " ,
+        classes:["fc-event-input-w","form-control"]
+        },
+    
 }
 var myLabel = {
     constructor: "Label",
@@ -30,7 +43,7 @@ var myLabel = {
         id: 'label',
         label: 'Enter Title for Your Event ',
         classes:['fc-event-label-title']
-    },
+        },
 }
 
 var myTextInputEvent = {
@@ -50,41 +63,37 @@ var mySaveEventButton = {
         classes:[ButtonSize.LARGE,"btn","btn-secondary","btn-dark"],
     }
 }
-
 var myModal = new Modal({
     id: 'autocomplete-modal',
     size: ModalSize.LARGE,
     title: 'Add Events',
 });
-
 myModal.addComponent(myTextInput);
+myModal.addComponent(myTextInput_Day);
 myModal.addComponent(myLabel);
 myModal.addComponent(myTextInputEvent);
-var inst = myModal.addComponent(mySaveEventButton);
-myModal.on('creationComplete', function() {      
-});
 
+var inst = myModal.addComponent(mySaveEventButton);
+myModal.on('creationComplete',function(){
+
+});
 inst.on('click',function(){
-    var event = {};
+    console.log("Instance");
     event.interval = myModal.children[myModal.components[0].props.id].value;
-    event.descriptionField = myModal.children[myModal.components[2].props.id].value;
-    var today = myCalendarDay.nowDate.getDate();
-    var currentMonth = myCalendarDay.nowDate.getMonth();
-    var currentYear = myCalendarDay.nowDate.getFullYear();
-    var myActualMonth = CalendarConstantsMonths[currentMonth];
-    event.dateContent = today+'-'+ myActualMonth +'-'+currentYear;
-    event.date = myCalendarDay.nowDate;
-    myCalendarDay.addEvent(event); 
+    event.descriptionField = myModal.children[myModal.components[3].props.id].value;
+    event.time = event.interval +" "+ myModal.children[myModal.components[1].props.id].value;
+    myCalendarWeek.addEvent(event); 
     myModal.hide();
-    myModal.children[myModal.components[2].props.id].value = " ";
+    myModal.children[myModal.components[3].props.id].value = " ";
+
 })
 $('#root').append(myModal.render());
-myCalendarDay.on('creationComplete',function(){
+myCalendarWeek.on('creationComplete',function(){
     this.on("cellClick",function(e){
     myModal.children[myModal.components[0].props.id].value = e.interval;
+    myModal.children[myModal.components[1].props.id].value = e.dateContent;
     myModal.show();
-        
-})  
+})
 });
-console.log("Modal after adding a new component",myModal);
-$('#root').append(myCalendarDay.render());
+
+$('#root').append(myCalendarWeek.render());

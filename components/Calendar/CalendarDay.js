@@ -24,12 +24,7 @@ var CalendarDay = function(_props)
                _dpWatcher = ChangeWatcher.getInstance(_dataProvider);
                _dpWatcher.watch(_dataProvider, "length", _dpLengthChanged);
                _dataProvider.on("propertyChange", _dpMemberChanged);
-               //_self.removeAllChildren();
-                var datanow = new Date();
-                //_dataProvider = _createHours(datanow,event);
-                //this.addComponent(_componentCalendarPerDay);
-                // _component_Mday = this.addComponent(_component_Modal_Event_Day);
-                //_component_Cday = this.addComponent(_componentCalendarPerDay);
+               //_self.removeAllChildren();               
         }
    }
 }); 
@@ -85,6 +80,12 @@ this.dataProviderChanged = function ()
     };
 
 }
+Object.defineProperty(this, "nowDate",
+{
+    get: function nowDate() {
+        return  _nowDate;
+    }
+});
 
 this.afterAttach = function (e){
     if(typeof _afterAttach == 'function')
@@ -93,18 +94,17 @@ this.afterAttach = function (e){
 }
 
 var _defaultParams = {
-dataProvider: [],
-nowDate : new Date(),
-labelField:'label',
-labelField1:'label',
-startHour:" ",
-endHour:" ",
-descriptionField:" ",
-interval:'',
-childrenField:"children",
-//guidField:"guid",
-dateContent:"",
-timing :" ",
+    dataProvider: [],
+    nowDate : new Date(),
+    labelField:'label',
+    labelField1:'label',
+    startHour:" ",
+    endHour:" ",
+    descriptionField:" ",
+    interval:'',
+    childrenField:"children",
+    dateContent:"",
+    guidField:"guid"
 }
 
 var _createHours = function (currentDate,event){
@@ -125,7 +125,7 @@ var _createHours = function (currentDate,event){
     var currentMonth = currentDate.getMonth();
     var currentYear = currentDate.getFullYear();
     var myActualMonth = CalendarConstantsMonths[currentMonth];
-    var dataProvider = [];
+    var _dataProvider = [];
         
     for(var i = 0; i < 24; i++){
     var hours = i;
@@ -137,55 +137,54 @@ var _createHours = function (currentDate,event){
         "startHour":hours+":00",
         "endHour":hours+':30',
         "interval":(hours+":00") + "-" + (hours+':30') + ampm,
-        "timing": ampm,
         "dateContent":today+'-'+ myActualMonth +'-'+currentYear,
         "children": new ArrayEx([]),
     }
-    var hourInterval_2 =  dp1.interval +" "+ dp1.timing + " " + dp1.dateContent;
-    if(hourInterval_2 in dayEvents){
-        var children_3 = [];
-        for(var rs=0;rs<dayEvents[hourInterval_2].length;rs++){
-            children_3[rs] = {
-                "value":dayEvents[hourInterval_2][rs].descriptionField,
-                "classes":["fc-event"],
+    dp1[_guidField] = StringUtils.guid();
+    var hourInterval_2 =  dp1.interval +" " + dp1.dateContent;
+        if(hourInterval_2 in dayEvents){
+            var children_3 = [];
+            for(var rs=0;rs<dayEvents[hourInterval_2].length;rs++){
+                children_3[rs] = {
+                    "value":dayEvents[hourInterval_2][rs].descriptionField,
+                    "classes":["fc-event"],
+                }
             }
-        
+            dp1.children = new ArrayEx(children_3);      
         }
-        dp1.children = new ArrayEx(children_3);      
-        }
-    dataProvider.push(dp1);
+        _dataProvider.push(dp1);
     
     
-    var dp2 = {
-        "value":" ",
-        "startHour":hours+":30",
-        "endHour":(hours+1)+':00',
-        "interval":(hours+":30") + "-" + ((hours == 12 ) ? ((i%12)+1) : (hours+1))+':00' + ampm,
-        "timing":ampm,
-        "dateContent":today+'-'+ myActualMonth +'-'+currentYear,
-        "children":new ArrayEx([]),
-    }
-
-    var hourInterval_3 = dp2.interval +" "+ dp2.timing + " " +dp2.dateContent; 
-    if(hourInterval_3 in dayEvents){
-        var children_4=[];
-        for(var ks=0;ks<dayEvents[hourInterval_3].length;ks++){
-            children_4[ks] = {
-            "value":dayEvents[hourInterval_3][ks].descriptionField,
-            "classes":["fc-event"],
+        var dp2 = {
+            "value":" ",
+            "startHour":hours+":30",
+            "endHour":(hours+1)+':00',
+            "interval":(hours+":30") + "-" + ((hours == 12 ) ? ((i%12)+1) : (hours+1))+':00' + ampm,
+            "timing":ampm,
+            "dateContent":today + '-' +  myActualMonth + '-' + currentYear,
+            "children":new ArrayEx([])
         }
-    }
-    dp2.children = new ArrayEx(children_4);
+        dp2[_guidField] = StringUtils.guid();
+        var hourInterval_3 = dp2.interval +" " + dp2.dateContent; 
+        if(hourInterval_3 in dayEvents){
+            var children_4 = [];
+            for(var ks=0;ks<dayEvents[hourInterval_3].length;ks++){
+                    children_4[ks] = {
+                    "value":dayEvents[hourInterval_3][ks].descriptionField,
+                    "classes":["fc-event"],
+                }
+            }
+            dp2.children = new ArrayEx(children_4);
         }   
-    dataProvider.push(dp2);
+        _dataProvider.push(dp2);
     }
-return dataProvider;
+    return _dataProvider;
 }
 
 
 _props = extend(false,false,_defaultParams,_props);
 var _beforeAttach = _props.beforeAttach;
-//var _guidField = _props.guidField;
+var _guidField = _props.guidField;
 var _labelField = _props.labelField;
 var _labelField1 = _props.labelField1;
 var _nowDate = _props.nowDate;
@@ -197,165 +196,71 @@ var _component_Cday;
 var _childrenField = _props.childrenField;
 var _descriptionField = _props.descriptionField;
 var _dateContent = _props.dateContent;
-var  _timing = _props.timing;
 var _component_Mday;
 var eve = [];
-var _click = _props.click;
 
-    
-// var a =_self.dataProvider;
-// var b= [] ;
-// var c= new Proxy(a,b);
-//     console.log("c",c);
-//     _self.dataProvider = c;
-    
-
-this.saveEvent  =  function(e){
-//var startHour_Global = _self.$container[0].children[0].children[2].children[0].children[0].children[0].innerText ;
-//this.$el.click();
-// var timing = myModal.$container[0].children[0].value;
-
-// _cmp.children[_cmp.my("Label_Displaying_WeekDay")].label  
-//var currentDate = _cmp.children[_cmp.my("Label_Displaying_WeekDay")].label ; 
-// var myActualDate = currentDate.substr(currentDate.indexOf(" ")+1);
-// var currentMonth = _self.children["OutContainer"].children["Container_Month_Year_Button"].children["label_month"].label;
-// var currentYear = _self.children["OutContainer"].children["Container_Month_Year_Button"].children["label_year"].label ;
-console.log("nowDate",_nowDate);
-// var dateContent = current.getDate()+'-'+current.getMonth()+'-'+current.getFullYear();
-//var dateContent = myActualDate  + "-" + currentMonth + "-" + currentYear;
-var dateContent = _nowDate.getDate() +'-'+ nowDate.getMonth() + '-' + _nowDate.getFullYear();
-// var interval = _component_Mday.children.TextInput = ;
-var interval = myModal.$container[0].children[1].value + " "+ timing +" "+ dateContent;
-
-console.log("this",interval);
-var event_Text = myModal.children["TextInput_356"].value;
-var array_events = [{"interval":interval,"descriptionField":event_Text,"timing":timing}]
-var new_dp_event = _createHours(_nowDate,array_events);
-    
-if(new_dp_event.length>0)
-    {
-        for(var i=0 ; i< new_dp_event.length;i++)
-        {
-            if(new_dp_event[i].children) {
-            if(!new_dp_event[i].children[_guidField]) {
-                new_dp_event[i].children[_guidField] = StringUtils.guid();
-                }
-            }
-        }
+this.addEvent  =  function(event){
+    if(event.date.getTime() == _nowDate.getTime()){
+        var ind = indexOfObject(_dataProvider,"interval",event.interval);
+        _dataProvider[ind].children.splice(_dataProvider[ind].children.length,0,event);
     }
-
-
-
-_self.components[0].props.components[2].props.components[0].props.dataProvider.splicea(0,_self.components[0].props.components[2].props.components[0].props.dataProvider.length,new_dp_event);
-//e.stopPropagation();
-
-myModal.children["TextInput_356"].value = " ";
-myModal.hide();  
-
+    var key  =  event.interval + " " + event.dateContent;
+    if(dayEvents[key] == null){
+        dayEvents[key] = [];
+    }
+    dayEvents[key].push(event);
 };
    
-this.clickHandler = function(e){
-// saveEvent;
-}
- 
-
 _props.beforeAttach = function(e) {
-    this.$container = this.$el;
-    // fnContainerDelayInit();
-    // _componentCalendarPerDay.props.ownerDocument = this.ownerDocument;
-    // _cmp = Component.fromLiteral(_componentCalendarPerDay);
-    _component_Cday = this.addComponent(_componentCalendarPerDay);
-    this.dataProvider = _props.dataProvider;
     _dataProvider = _createHours(_nowDate,eve);
-        e.preventDefault();
+    fnContainerDelayInit();
+    this.$container = this.$el;
+    this.components = [_componentCalendarPerDay];
 }
 
 
 var _prev_day = function(eve){
-
     _nowDate.setDate(_nowDate.getDate()-1);
     var new_prev = CalendarConstantsDays[_nowDate.getDay()];
     var update_prev_date = _nowDate.getDate();
-
-    var update_prev_date = _nowDate.getDate();
-
     var new_dp_prev = _createHours(_nowDate,eve);
-    if(new_dp_prev>0){
-        for(var i=0;i<new_dp_prev.length;i++){
-            if(!new_dp_prev[i][_guidField]){
-                new_dp_prev[i][_guidField] = StringUtils.guid();
-            }
-        }
-    }
-
-    _self.literal.props.components[0].props.components[2].props.components[0].props.dataProvider.splicea(0,_self.literal.props.components[0].props.components[2].props.components[0].props.dataProvider.length,new_dp_prev);
-    fnContainerDelayInit();
-    _componentCalendarPerDay.props.ownerDocument = _self.ownerDocument;
-    _cmp = Component.fromLiteral(_componentCalendarPerDay);
-    _cmp.children[_self.my("Label_Displaying_WeekDay")].label  = new_prev + " "+ update_prev_date; 
-    _cmp.children[_self.my("Container_Month_Year_Button")].children[_self.my("label_month")].label = CalendarConstantsMonths[_nowDate.getMonth()];
-    _cmp.children[_self.my("Container_Month_Year_Button")].children[_self.my("label_year")].label =_nowDate.getFullYear();
+    var dataProvider = _self.children[_self.my("OutContainer")].children[_self.my("Container_Repeater")].children[_self.my("repeaterForHours")].dataProvider;
+    dataProvider.splicea(0, dataProvider.length, new_dp_prev);
+    _self.children[_self.my("OutContainer")].children[_self.my("Label_Displaying_WeekDay")].label =  new_prev + " "+ update_prev_date;
+    _self.children[_self.my("OutContainer")].children[_self.my("Container_Month_Year_Button")].children[_self.my("label_month")].label = CalendarConstantsMonths[_nowDate.getMonth()];
+    _self.children[_self.my("OutContainer")].children[_self.my("Container_Month_Year_Button")].children[_self.my("label_year")].label = _nowDate.getFullYear();
 }
 
-var _clickHandler = function(){
-
-}
 
 var _next_day = function(eve){
-
     _nowDate.setDate(_nowDate.getDate() + 1);
-    _nowDate.setMonth(10)  ;
-    
     var new_day = CalendarConstantsDays[_nowDate.getDay()];
     var update_date = _nowDate.getDate();
     var new_dp_next = _createHours(_nowDate,eve);
-    if(new_dp_next>0){
-        for(var i=0;i<new_dp_next.length;i++){
-            if(!new_dp_next[i][_guidField]){
-                new_dp_next[i][_guidField] = StringUtils.guid();
-            }
-        }
-    }
-    
-    _self.literal.props.components[0].props.components[2].props.components[0].props.dataProvider.splicea(0,_self.literal.props.components[0].props.components[2].props.components[0].props.dataProvider.length,new_dp_next);
-    // fnContainerDelayInit();
-    // _componentCalendarPerDay.props.ownerDocument = _self.ownerDocument;
-    // _cmp = Component.fromLiteral(_componentCalendarPerDay);
-    
-    // _cmp.children[_self.my("Label_Displaying_WeekDay")].props.label;// = new_day + " "+ update_date;
-    // _cmp.children[_self.my("Container_Month_Year_Button")].children[_self.my("label_month")].label;//= CalendarConstantsMonths[_nowDate.getMonth()];
-    // _cmp.children[_self.my("Container_Month_Year_Button")].children[_self.my("label_year")].label;// =_nowDate.getFullYear();
-
-    // _self.children["OutContainer"].children["Container_Month_Year_Button"].children["label_month"].label = months[_nowDate.getMonth()];
-    // _self.children["OutContainer"].children["Container_Month_Year_Button"].children["label_year"].label =_nowDate.getFullYear();
-
+    var dp = _self.children[_self.my("OutContainer")].children[_self.my("Container_Repeater")].children[_self.my("repeaterForHours")].dataProvider;
+    //var dp = _self.dataProvider;
+    dp.splicea(0, dp.length, new_dp_next);
+    _self.children[_self.my("OutContainer")].children[_self.my("Label_Displaying_WeekDay")].label =  new_day + " "+ update_date;
+    _self.children[_self.my("OutContainer")].children[_self.my("Container_Month_Year_Button")].children[_self.my("label_month")].label = CalendarConstantsMonths[_nowDate.getMonth()];
+    _self.children[_self.my("OutContainer")].children[_self.my("Container_Month_Year_Button")].children[_self.my("label_year")].label = _nowDate.getFullYear();
 }
 
-var _cellClick = function(e, ra) {
-        // myModal.show();
-        // var interval = this.children["container_half_1"].label;
-        // var hidden = this.$el[0].children[1].value;
-        // myModal.$container[0].children[0].value  = hidden; 
-        // myModal.$container[0].children[1].value = interval;
-       
+var _cellClick = function(e, ra) {   
+
     var event = jQuery.Event("cellClick");
-    // event.child = this;
     event.interval = ra.currentItem.interval;
     event.cell = this;
-    _self.trigger(event);
-    
+    _self.trigger(event); 
 }
 
 var  _componentCalendarPerDay;
-var fnContainerDelayInit  = whenDefined(this,"guid",function(){
-
+var fnContainerDelayInit  = function(){
 _componentCalendarPerDay = {
     constructor: Container,
     props: {
         type: ContainerType.NONE,
         id:"OutContainer_"+_self.guid,
         guid: _self.guid,
-        //afterAttach: _registerSurrogate,
         components:[
             {
                 constructor:Container,
@@ -368,7 +273,7 @@ _componentCalendarPerDay = {
                             props:{
                                 id:'label_month_'+_self.guid,
                                 label:CalendarConstantsMonths[_nowDate.getMonth()],
-                                labelType:LabelType.p,
+                                labelType:LabelType.label,
                                 classes:["fc-label-month"],
             
                             }
@@ -378,11 +283,10 @@ _componentCalendarPerDay = {
                             props:{
                                 id:'label_year_'+_self.guid,
                                 label:_nowDate.getFullYear(),
-                                labelType:LabelType.p,
+                                labelType:LabelType.label,
                                 classes:["fc-label-year"],
                             }
                         },
-        
                         {
                             constructor:Button,
                             props:{
@@ -394,7 +298,6 @@ _componentCalendarPerDay = {
                         },
                         {
                             constructor:Button,
-
                             props:{
                                 id:'buttonWeek_'+_self.guid,
                                 label:'week',
@@ -411,7 +314,6 @@ _componentCalendarPerDay = {
                                 classes:[ButtonSize.SMALL,"fc-button-right"]
                             }
                         },
-
                         {
                             constructor:Button,
                             props:{
@@ -426,7 +328,7 @@ _componentCalendarPerDay = {
                                         classes:["fas","fa-arrow-left"],
                                     }
                                 }],
-                                    "click": _prev_day,
+                                "click": _prev_day,
                             }
                         },
                         {
@@ -460,97 +362,85 @@ _componentCalendarPerDay = {
             {
                 constructor:Container,
                 props:{
-                type: ContainerType.NONE,
-                id:"Container_Repeater_"+_self.guid,
-                classes:["fc-float"],
-                components:[
-                    {
-                constructor : Repeater,
-                props :{
-                    id:'repeaterForHours_'+_self.guid,
-                    rendering:{
-                        direction:"horizontal",
-                        separator:false
-                    },
+                    type: ContainerType.NONE,
+                    id:"Container_Repeater_"+_self.guid,
                     classes:["fc-float"],
-                    dataProvider: _dataProvider,
                     components:[
-                    
                         {
-                            constructor:Container,
-                            props:{
-                                type:ContainerType.NONE,
-                                id:"InContainerForHours_"+_self.guid,
-                                label:'{'+_labelField+'}',
-                                classes:["fc-container-label-hour"],
-                                height:20,
-                                width:20,
-                            }
-                        },
-                    
-                        {
-                            constructor:Container,
-                            props:{
-                                type:ContainerType.NONE,
-                                id:"container_for_both_"+_self.guid,
+                            constructor: Repeater,
+                            props: {
+                                id:'repeaterForHours_'+_self.guid,
+                                rendering:{
+                                    direction:"horizontal",
+                                    separator:false
+                                },
+                                classes:["fc-float"],
+                                dataProvider: _dataProvider,
                                 components:[
-                                
-                                    {
-                                        constructor: Container,
+                                    { 
+                                        constructor:Container,
                                         props:{
                                             type:ContainerType.NONE,
-                                            id:"container_half_1_"+_self.guid,
-                                            label:'{'+_interval+'}',
-                                            classes:["fc-hour"],
-                                            height:10,
-                                            width:1050,
+                                            id:"InContainerForHours_"+_self.guid,
+                                            placeholder:'{'+_labelField+'}',
+                                            classes:["fc-container-label-hour", "placeholder"],
+                                            height:20,
+                                            width:20,
                                         }
                                     },
                                     {
-                                        constructor: Hidden,
+                                        constructor:Container,
                                         props:{
                                             type:ContainerType.NONE,
-                                            id:"container_am_pm_"+_self.guid,
-                                            value:'{'+_timing+'}',
-                                        }
-                                    },
-                                    {
-                                        constructor: Container,
-                                        props:{
-                                            type:ContainerType.NONE,
-                                            id:"container_Repeater_"+_self.guid,
+                                            id:"container_for_both_"+_self.guid,
                                             components:[
                                                 {
-                                                    constructor:Repeater,
+                                                    constructor: Container,
                                                     props:{
-                                                        id:"event_Repeater_"+_self.guid,
-                                                        dataProvider:"{currentItem.children}",
-                                                        rendering:{
-                                                            direction:"horizontal",
-                                                            separator:false
-                                                        },
+                                                        type:ContainerType.NONE,
+                                                        id:"container_half_1_"+_self.guid,
+                                                        placeholder:'{'+_interval+'}',
+                                                        classes:["fc-hour", "placeholder-top-left"],
+                                                        height:10,
+                                                        width:1050,
+                                                    }
+                                                },
+                                                {
+                                                    constructor: Container,
+                                                    props:{
+                                                        type:ContainerType.NONE,
+                                                        id:"container_Repeater_"+_self.guid,
                                                         components:[
                                                             {
-                                                                constructor:Container,
+                                                                constructor:Repeater,
                                                                 props:{
-                                                                    type:ContainerType.NONE,
-                                                                    id:"event_Container_"+_self.guid,
-                                                                    label:"{value}",
-                                                                    classes:["fc-event"],
+                                                                    id:"event_Repeater_"+_self.guid,
+                                                                    dataProvider:"{children}",
+                                                                    rendering:{
+                                                                        direction:"horizontal",
+                                                                        separator:false
+                                                                    },
+                                                                    components:[
+                                                                        {
+                                                                            constructor:Container,
+                                                                            props:{
+                                                                                type:ContainerType.NONE,
+                                                                                id:"event_Container_"+_self.guid,
+                                                                                placeholder:'{descriptionField}',
+                                                                                classes:["fc-event", "placeholder"],
+                                                                            }
+                                                                        }
+                                                                    ]
                                                                 }
-                                                            }
+                                                            },
                                                         ]
                                                     }
                                                 },
-                                            ]
+                                            
+                                            ],
+                                            "click":_cellClick,
                                         }
-                                    },
-                                
-                                ],
-                                "click":_cellClick,
-                            }
-                        }
-                        
+                                    }
                                 ]   
                             } 
                         },
@@ -560,13 +450,9 @@ _componentCalendarPerDay = {
         ]
     }
 }
-});
-fnContainerDelayInit();
-_componentCalendarPerDay.props.ownerDocument = this.ownerDocument;
-_cmp = Component.fromLiteral(_componentCalendarPerDay);
-console.log("cmp",_cmp);
-Container.call(this,_props);
+_componentCalendarPerDay.props.ownerDocument = _self.ownerDocument;
+};
 
-
+    Container.call(this,_props);
 }
 CalendarDay.prototype.ctor = 'CalendarDay';

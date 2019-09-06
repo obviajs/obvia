@@ -5,7 +5,7 @@ var LabelType =
     "u":"u",
     "span":"span",
     "label":"label",
-    "paragraph":"p",
+    "p":"p",
     "sup":"sup",
     "small":"small"
 }

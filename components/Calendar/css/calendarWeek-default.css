@@ -80,4 +80,36 @@
     background-color:rgb(39, 38, 38);
     color:white;
     margin-top:1.5%;
+    
+}
+.fc-float{
+    float:left;
+}
+.fc-float-week{
+    margin-left:65px;
+}
+/* border-right: 1px solid rgb(218, 214, 214); */
+.fc-hour{
+    float:left;
+    margin-left:6%;
+    padding-bottom:2%;
+    border-bottom:1px solid rgb(218, 214, 214);
+    border-right: 1px solid rgb(218, 214, 214);
+    margin-bottom:1.2%;
+    color:white;
+}
+.fc-container-label-hour{
+    font-weight:800;
+    font-size:20px;
+    margin-right:5%;
+    padding-bottom:1.2%;
+}
+
+.fc-event{
+    font-weight:800;
+    margin-right:50px;
+    margin-left:60px;
+    color:rgb(41, 43, 44);
+    font-size:16px;
+    color:rgb(41, 43, 44);
 }
