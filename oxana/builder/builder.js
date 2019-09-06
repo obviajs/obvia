@@ -16,6 +16,9 @@ const appStyle = `
 .default-cnt{
     min-height:50px
 }
+.active-container{
+    border: 1px dashed #3987d9 !important;
+}
 `;
 var oxana = new App({
     style:appStyle
@@ -413,6 +416,13 @@ var propEditors = {
         set:null,
         get:null,
         valueField:null
+    },
+    "SpacingEditor": {
+        itemEditor: {
+            "constructor": SpacingEditor,
+            "props":{
+            }
+        }
     }
 };
 
@@ -458,6 +468,7 @@ var metaProps = {
     }},
     multiple: {constructor:"Toggle", label: "Multiple Files"},
     accept:{constructor:"Toggle", label: "Allowed Files"},
+    spacing:{constructor:"SpacingEditor", label: "Adjust Spacing"}
 };
 var parents = ["Container", "Form"];
 var noNeedFF = ["Button", "Label"];
@@ -722,7 +733,7 @@ var zeroCool = {
                                                                                                 valueField: "id",
                                                                                                 classesField: "listItemClass",
                                                                                                 defaultClasses: [],
-                                                                                                selectedClasses: ["active-node"],   
+                                                                                                selectedClasses: ["active-container"],   
                                                                                                 component: {
                                                                                                     constructor: Label,
                                                                                                     props: {
@@ -1328,15 +1339,15 @@ oxana.behaviorimplementations["BECOME_ACTIVE"] = {
     do:function(e) {
         console.log("Container Became active");
         //this will holde the instance of the component who manifested this behavior (the manifestor)
-        if(activeContainer && activeContainer!=this && activeContainer.classes.indexOf("active-node")>-1){
+        if(activeContainer && activeContainer!=this && activeContainer.classes.indexOf("active-container")>-1){
             activeContainer.toggle = false;
             var classes = activeContainer.classes.slice(0);
-            classes.toggle("active-node");
+            classes.toggle("active-container");
             activeContainer.classes = classes;
         }
         this.toggle = false;
         var classes = this.classes.slice(0);
-        classes.pushUnique("active-node");
+        classes.pushUnique("active-container");
         this.classes = classes;
         activeContainer = this;
     },

@@ -42,6 +42,7 @@ var RadioGroup = function (_props, overrided = false) {
                     checked: "{" + _checkedField + "}",
                     class: "{" + _classesField + "}",
                     enabled: "{" + _enabledField + "}",
+                    name:this.id
                 }
             },
         }).on('creationComplete', function (e) {

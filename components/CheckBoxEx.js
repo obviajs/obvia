@@ -8,18 +8,18 @@ var CheckBoxEx = function (_props, overrided = false) {
     var _self = this;
 
     Object.defineProperty(this, "label",
-        {
-            get: function label() {
-                return _label;
-            },
-            set: function label(v) {
-                if (_label != v) {
-                    _label = v;
-                    if (this.$input)
-                        this.$input[0].nextSibling.textContent = v;
-                }
+    {
+        get: function label() {
+            return _label;
+        },
+        set: function label(v) {
+            if (_label != v) {
+                _label = v;
+                if (this.$input)
+                    this.$input[0].nextSibling.textContent = v;
             }
-        });
+        }
+    });
 
     Object.defineProperty(this, "value", {
         get: function value() {
@@ -61,7 +61,7 @@ var CheckBoxEx = function (_props, overrided = false) {
     this.template = function () {
         return "<label  id='" + this.domID + "'>" +
             "<input data-triggers='click change' " + (_checked ? "checked='checked'" : '') + " id='" + this.domID + "-checkbox'  value='" + _value + "' " +
-            " type='checkbox'/>" + _label + "</label>";
+            " type='checkbox' class='no-form-control'/>" + _label + "</label>";
     };
 
     var _defaultParams = {

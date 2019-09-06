@@ -153,7 +153,8 @@ var Container = function(_props, overrided=false)
 
     var _defaultParams = {
         type: ContainerType.CONTAINER,
-        components:[]
+        components:[],
+        spacing:{}
     };
     //_props = extend(false, false, _defaultParams, _props);
     shallowCopy(extend(false, false, _defaultParams, _props), _props);
