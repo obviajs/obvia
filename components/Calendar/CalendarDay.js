@@ -202,7 +202,9 @@ var eve = [];
 this.addEvent  =  function(event){
     if(event.date.getTime() == _nowDate.getTime()){
         var ind = indexOfObject(_dataProvider,"interval",event.interval);
-        _dataProvider[ind].children.splice(_dataProvider[ind].children.length,0,event);
+        if(ind>-1){
+            _dataProvider[ind].children.splice(_dataProvider[ind].children.length,0,event);
+        }
     }
     var key  =  event.interval + " " + event.dateContent;
     if(dayEvents[key] == null){

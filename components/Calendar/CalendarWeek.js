@@ -143,7 +143,7 @@
             dp1[_guidField] = StringUtils.guid();
             dataProvider_first.push(dp1);   
         }
-
+/*
         if(event && event[0])
         {
             if(event[0].dateContent in dayEvents){
@@ -153,7 +153,7 @@
                 dayEvents[event[0].dateContent].push(event[0]);
             }
         }
-        
+        */
         for(var j=0;j<24;j++){
             var hours = j;
                 hours = hours % 12;
@@ -298,8 +298,9 @@
         var dp_first = _self.children[_self.my("Out_Week_Container")].children[_self.my("Container_Month_Year_Prev_Next_Button")].children[_self.my("repeater_For_WeekDays_AND_Dates")].dataProvider;
         dp_first.splicea(0,dp_first.length,new_dp_next_1);
         var dp_new_for_hours_next = new_dp_next[1];
-        var dp_second = _self.children[_self.my("Out_Week_Container")].children[_self.my("Container_Month_Year_Prev_Next_Button")].children[_self.my("Container_Repeater")].children[_self.my("repeater_for_weekDays_and_dates")].dataProvider;
-        dp_second.splicea(0,dp_second.length,dp_new_for_hours_next);
+        //var dp_second = _self.children[_self.my("Out_Week_Container")].children[_self.my("Container_Month_Year_Prev_Next_Button")].children[_self.my("Container_Repeater")].children[_self.my("repeater_for_weekDays_and_dates")].dataProvider;
+        //dp_second.splicea(0,dp_second.length,dp_new_for_hours_next);
+        _self.children[_self.my("Out_Week_Container")].children[_self.my("Container_Month_Year_Prev_Next_Button")].children[_self.my("Container_Repeater")].children[_self.my("repeater_for_weekDays_and_dates")].dataProvider = dp_new_for_hours_next;
         _self.children[_self.my("Out_Week_Container")].children[_self.my("Container_Month_Year_Prev_Next_Button")].children[_self.my("label_for_month")].label = CalendarConstantsMonths[_nowDate.getMonth()];
         _self.children[_self.my("Out_Week_Container")].children[_self.my("Container_Month_Year_Prev_Next_Button")].children[_self.my("label_for_year")].label = _nowDate.getFullYear();
     }

@@ -14,10 +14,11 @@ var SpacingEditor = function (_props, overrided = false) {
     var _dpMb = new Array(6);
     
     for(let i=0;i<12;i++){
-        _dpColSpan[i] = {value:i+1};
-        _dpOffset[i] = {value:i};
+        _dpColSpan[i] = {value:i+1, label:"col-"+(i+1)};
+        _dpOffset[i] = {value:i, label:"offset-"+i};
         if(i<6){
-            _dpMb[i] = _dpMt[i] = {value:i};
+            _dpMt[i] = {value:i, label:"mt-"+i};
+            _dpMb[i] = {value:i, label:"mb-"+i};
         } 
     }
 
@@ -28,29 +29,21 @@ var SpacingEditor = function (_props, overrided = false) {
                 "constructor": "Container",
                 "props": {
                     "type": "row",
+                    spacing:{mb:1},
                     "components": [
                         {
                             "constructor": "Container",
                             "props": {
                                 "id": "workArea_80",
                                 type: ContainerType.COLUMN,
-                                spacing:{colSpan:3},
-                                placeholder:"Col Span"
-                            }
-                        },
-                        {
-                            "constructor": "Container",
-                            "props": {
-                                "id": "workArea_80",
-                                type: ContainerType.COLUMN,
-                                spacing:{colSpan:3},
+                                spacing:{colSpan:6},
                                 "components": [
                                     {
                                         "constructor": "Select",
                                         "props": {
                                             "id": "colSpan",
                                             "dataProvider": _dpColSpan,
-                                            labelField:"value",
+                                            labelField:"label",
                                             valueField:"value"
                                         }
                                     }
@@ -69,7 +62,7 @@ var SpacingEditor = function (_props, overrided = false) {
                                         "props": {
                                             "id": "offset",
                                             "dataProvider": _dpOffset,
-                                            labelField:"value",
+                                            labelField:"label",
                                             valueField:"value"
                                         }
                                     }
@@ -97,7 +90,7 @@ var SpacingEditor = function (_props, overrided = false) {
                                         "props": {
                                             "id": "mb",
                                             "dataProvider": _dpMb,
-                                            labelField:"value",
+                                            labelField:"label",
                                             valueField:"value"
                                         }
                                     }
@@ -116,7 +109,7 @@ var SpacingEditor = function (_props, overrided = false) {
                                         "props": {
                                             "id": "mt",
                                             "dataProvider": _dpMt,
-                                            labelField:"value",
+                                            labelField:"label",
                                             valueField:"value"
                                         }
                                     }

@@ -282,7 +282,7 @@ rjs.require([
         "CalendarDay",
         "CalendarConstants",
         "calendarDay_default_css",
-       "CalendarWeek",
+        "CalendarWeek",
         "calendarWeek_default_css",
     ], function () {
         window.main();
