@@ -85,6 +85,12 @@ var dpComponentList = [
     {
         "label":"Container", "icon":"", "constructor": "Container"
     },
+    {
+        "label":"Upload", "icon":"", "constructor": "UploadEx"
+    },
+    {
+        "label":"MultiUpload", "icon":"", "constructor": "MultiUpload"
+    }
 ];
 var dpComponentLiterals = {
      "Label":{
@@ -322,6 +328,19 @@ var dpComponentLiterals = {
             type: ContainerType.NONE,
             classes:["default-component","default-cnt"]
         }
+    },
+    "UploadEx":{
+        constructor: UploadEx,
+        props: {
+            id: 'upload',
+            multiple: true
+        }
+    },
+    "MultiUpload":{
+        constructor: MultiUpload,
+        props: {
+            id: 'multiUpload',
+        }
     }
 };
 var handle = {
@@ -400,7 +419,7 @@ var propEditors = {
         },
         set:null,
         get:null,
-        valueField:null
+        valueField:"checked"
     },
     "AutoCompleteEx": {
         itemEditor: {
@@ -422,18 +441,19 @@ var propEditors = {
             "constructor": SpacingEditor,
             "props":{
             }
-        }
+        },
+        valueField:null
     }
 };
 
 var metaProps = {
-    id: {constructor:"TextInput", label: "Component ID", required:true},
-    name: {constructor:"TextInput", label: "Component Name", required:true},
-    label: {constructor:"TextInput", label: "Label", required:true},
-    visible: {constructor:"Toggle", label: "Visible"},
-    enabled: {constructor:"Toggle", label: "Enabled"}, 
-    required: {constructor:"Toggle", label: "Required"},
-    checked: {constructor:"Toggle", label: "Checked"},
+    id: {constructor:"TextInput", label: "Component ID", required:true, index:1},
+    name: {constructor:"TextInput", label: "Component Name", required:true, index:2},
+    label: {constructor:"TextInput", label: "Label", required:true, index:3},
+    visible: {constructor:"Toggle", label: "Visible", index:4},
+    enabled: {constructor:"Toggle", label: "Enabled", index:5}, 
+    required: {constructor:"Toggle", label: "Required", index:6},
+    checked: {constructor:"Toggle", label: "Checked", index:7},
     dataProvider: {constructor:"AutoCompleteEx", label: "Data Provider", required:true, props:{
         valueField: providerValueField,
         labelField: providerLabelField,
@@ -443,32 +463,32 @@ var metaProps = {
             //get the fields for the selected datProvider and 
             //assign them to the labelField and valueField editor`s dataProvider property
         }
-    }},
+    }, index:8},
     labelField: {constructor:"AutoCompleteEx", label: "Label Field", required:true, props:{
         valueField: "prop",
         labelField: "description"
-    }},
+    }, index:9},
     valueField: {constructor:"AutoCompleteEx", label: "Value Field", required:true, props:{
         valueField: "prop",
         labelField: "description"
-    }},
+    }, index:10},
     mask: {constructor:"AutoCompleteEx", label: "Data Provider", required:true, props:{
         valueField: maskValueField,
         labelField: maskLabelField,
         dataProvider: masks
-    }},
+    }, index:11},
     inputFormat: {constructor:"TextInput", label: "Input Format", required:true, props:{
         value:'DD/MM/YYYY'
-    }},
+    }, index:12},
     outputFormat: {constructor:"TextInput", label: "Output Format", required:true, props:{
         value:'DD-MM-YYYY'
-    }},
+    }, index:13},
     displayFormat: {constructor:"TextInput", label: "Display Format", required:true, props:{
         value:'DD/MM/YYYY'
-    }},
-    multiple: {constructor:"Toggle", label: "Multiple Files"},
-    accept:{constructor:"Toggle", label: "Allowed Files"},
-    spacing:{constructor:"SpacingEditor", label: "Adjust Spacing"}
+    }, index:14},
+    multiple: {constructor:"Toggle", label: "Multiple Files", index:15},
+    accept:{constructor:"Toggle", label: "Allowed Files", index:16},
+    spacing:{constructor:"SpacingEditor", label: "Adjust Spacing", index:17}
 };
 var parents = ["Container", "Form"];
 var noNeedFF = ["Button", "Label"];
@@ -567,6 +587,7 @@ var zeroCool = {
                                                                     "constructor": "Container",
                                                                     "props": {
                                                                         "id": "propertyListContainer",
+                                                                        sortChildren: true,
                                                                         "components": [
                                                                         ]
                                                                     }
@@ -1051,11 +1072,14 @@ oxana.behaviorimplementations["SELECT_COMPONENT"] = {
                     oneRow.props.components[0].props.components[0].props.label = metaProps[prop].label;
                     oneRow.props.components[1].props.components = [itemEditorLit];
                     */
+                    itemEditorLit.props.bindingDefaultContext = this;
+                    itemEditorLit.props[(propEditor.valueField || "value")] = "{"+prop+"}";
                     let ff = extend(true, formField);
                     ff.props.label = metaProps[prop].label;
                     ff.props.placeholder = metaProps[prop].label;
                     ff.props.required = metaProps[prop].required;
                     ff.props.component = itemEditorLit;
+                    ff.props.index = metaProps[prop].index;
                     rows.push(ff);
                     
                 }else{

@@ -51,7 +51,7 @@ var FormField = function(_props)
             }
         }
     });
-
+    
     Object.defineProperty(this, "required",
     {
         get: function required()
@@ -73,7 +73,8 @@ var FormField = function(_props)
                         _cmp.$el.removeAttr('required');
                 }
             }
-        }
+        },
+        enumerable:true
     });
 
     Object.defineProperty(this, "label", 
@@ -128,7 +129,7 @@ var FormField = function(_props)
         enabled: true,
         required: false,
         size: FormFieldSize.SMALL,
-        type:ContainerType.NONE                     
+        type:ContainerType.NONE                 
     };
     
     _props = extend(false, false, _defaultParams, _props);
@@ -144,6 +145,7 @@ var FormField = function(_props)
         }
     };    
     var _size = _props.size;
+    
     _props.components = [_lblCmp];
     if(_component && !Object.isEmpty(_component)){
         _props.components.push(_component);

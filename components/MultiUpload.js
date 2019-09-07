@@ -6,9 +6,8 @@
 
 var MultiUpload = function (_props, overrided = false) {
     var _self = this;
-    var _cmp, _lblDrop, _dropContainer, _listRepeater, _progressRow, _progressBar;
+    let _cmps, _lblDrop, _dropContainer, _listRepeater, _progressRow, _progressBar;
     var _dataProvider;
-    var _container;
 
     Object.defineProperty(this, "dataProvider", 
     {
@@ -25,15 +24,8 @@ var MultiUpload = function (_props, overrided = false) {
         }
     });
 
-    var fnContainerDelayInit = whenDefined(this, "guid", function(){
-        _container = { 
-            constructor: Container,
-            props: {
-                type: ContainerType.NONE,
-                id: "main_"+_self.guid,
-                guid: _self.guid,
-                afterAttach: _registerSurrogate,
-                components: [
+    var fnContainerDelayInit = function(){
+        _cmps = [
                     {
                         constructor: Repeater,
                         props: {
@@ -102,54 +94,62 @@ var MultiUpload = function (_props, overrided = false) {
                             ]
                         }
                     }
-                ]
-            }
-        };
-    });
-
-    this.template = function () { 
-        fnContainerDelayInit();
-        _container.props.ownerDocument = this.ownerDocument;
-        _cmp = Component.fromLiteral(_container);
-        
-        _lblDrop = _cmp.children[this.my("dropContainer")].children[this.my("label")];
-        _dropContainer = _cmp.children[this.my("dropContainer")];
-        _listRepeater = _cmp.children[this.my("listRepeater")];
-
-        _progressRow = _cmp.children[this.my("progressRow")];
-        _progressBar = _cmp.children[this.my("progressRow")].children[this.my("progressbar")];  
-
-
-        _cmp.on("creationComplete", function(){
-            $("html").on("dragover", _htmlDragOverHandler); 
-            $("html").on("drop", _htmlDropHandler);
-            $("html").on("dragleave", _htmlDragLeaveHandler);
-            _dropContainer.on('dragenter', _dragEnterHandler);
-            _dropContainer.on('dragover', _dragOverHandler);
-            _dropContainer.on('drop', _dropHandler);
-            _dropContainer.on('dragleave', _dragLeaveHandler);
-            _lblDrop.on('click', _clickHandler);
-                
-        });
-       
-        this.$el = _cmp.$el;
-        return null;
+                ];
     };
+
+    this.beforeAttach = function(e) 
+    {
+        if (e.target.id == this.domID) 
+        {
+            this.$container = this.$el;
+            fnContainerDelayInit();
+            this.components = _cmps;
+            this.addComponents();
+            _lblDrop = this.children[this.my("dropContainer")].children[this.my("label")];
+            _dropContainer = this.children[this.my("dropContainer")];
+            _listRepeater = this.children[this.my("listRepeater")];
+            _progressRow = this.children[this.my("progressRow")];
+            _progressBar = this.children[this.my("progressRow")].children[this.my("progressbar")];  
+            
+            this.on("creationComplete", function(){
+                $("html").on("dragover", _htmlDragOverHandler); 
+                $("html").on("drop", _htmlDropHandler);
+                $("html").on("dragleave", _htmlDragLeaveHandler);
+                _dropContainer.on('dragenter', _dragEnterHandler);
+                _dropContainer.on('dragover', _dragOverHandler);
+                _dropContainer.on('drop', _dropHandler);
+                _dropContainer.on('dragleave', _dragLeaveHandler);
+            });
+
+            _lblDrop.on('click', _clickHandler);
+            e.preventDefault();
+        }
+    }
+        
     //TODO: on dp change set binding for show/hide trash icon
 
     var _htmlDragOverHandler = function(e){
-        e.preventDefault();
-        e.stopPropagation();
-        _lblDrop.label = "Drag here";
+        let t = e.originalEvent.dataTransfer.types;
+        if (t.includes("Files")){
+            e.preventDefault();
+            e.stopPropagation();
+            _lblDrop.label = "Drag here";
+        }
     }
 
     var _htmlDropHandler = function(e){
-        e.preventDefault();
-        e.stopPropagation();
-        _lblDrop.label = "Drag and Drop File or Click Me";
+        let t = e.originalEvent.dataTransfer.types;
+        if (t.includes("Files")){
+            e.preventDefault();
+            e.stopPropagation();
+            _lblDrop.label = "Drag and Drop File or Click Me";
+        }
     }
     var _htmlDragLeaveHandler = function(e){
-        _lblDrop.label = "Drag and Drop File or Click Me";
+        let t = e.originalEvent.dataTransfer.types;
+        if (t.includes("Files")){
+            _lblDrop.label = "Drag and Drop File or Click Me";
+        }
     }
 
     var _dragEnterHandler = function(e){
@@ -291,7 +291,7 @@ var MultiUpload = function (_props, overrided = false) {
     _props = extend(false, false, _defaultParams, _props);
     this.dataProvider = new ArrayEx(_props.dataProvider);
     _form = _props.form;
-    Component.call(this, _props, true, true);
+    Container.call(this, _props, true, true);
 
     if(_props.accept)
         this.accept = _props.accept;  

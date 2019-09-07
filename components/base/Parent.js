@@ -104,6 +104,15 @@ var Parent = function(_props, overrided=false, _isSurrogate=false)
         return this.addComponentInContainer(this.$container, component, index);
     }
 
+    Object.defineProperty(this, "sortChildren",
+    {
+        get: function sortChildren()
+        {
+            return _sortChildren;
+        },
+        enumerable:true
+    });
+
     Object.defineProperty(this, "childrenIDR",
     {
         get:function childrenIDR(){
@@ -197,7 +206,8 @@ var Parent = function(_props, overrided=false, _isSurrogate=false)
     var _defaultParams = {
         components:[],
         magnets:{},
-        enabled:true
+        enabled:true,
+        sortChildren: false
     };
     //_props = extend(false, false, _defaultParams, _props);
     shallowCopy(extend(false, false, _defaultParams, _props), _props);
@@ -214,6 +224,7 @@ var Parent = function(_props, overrided=false, _isSurrogate=false)
     var _afterAttach = _props.afterAttach;
     _props.afterAttach = this.afterAttach;
     var _children = {};
+    let _sortChildren = _props.sortChildren;
    
     
     //override because creationComplete will be thrown when all children components are created
@@ -222,7 +233,18 @@ var Parent = function(_props, overrided=false, _isSurrogate=false)
     this.addComponents = function(cmps)
     {
         let arrInst = [];
-        let components = cmps || this.components;
+        let components;
+        if(cmps){
+            if(this.components.length == 0 && _sortChildren){
+                acSort(cmps, "props.index");
+            }
+            components = cmps;
+        }else{
+            if(_sortChildren){
+                acSort(this.components, "props.index");
+            }
+            components = this.components;
+        }
         if(components && Array.isArray(components) && components.length>0)
         {
             for(var i=0;i<components.length;i++)

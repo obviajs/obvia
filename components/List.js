@@ -147,6 +147,9 @@ var List = function (_props, overrided = false) {
         }).on('creationComplete', function (e) {
             e.stopImmediatePropagation();
             _self.$container.append(_self.repeater.render());
+            if(_props.enabled === false){
+                _self.enabled = _props.enabled;
+            }
            // _self.trigger('creationComplete');
                 
         }.bind(this));
@@ -192,6 +195,7 @@ var List = function (_props, overrided = false) {
 
     var _cmpClick = _component.props.click;
     var _cmpDblClick = _component.props.dblclick;
+    let _enabled;
 
     var _click = function (e) {
         if (typeof _cmpClick == 'function')

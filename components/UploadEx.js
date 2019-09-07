@@ -6,7 +6,6 @@
 
 var UploadEx = function (_props, overrided = false) {
     var _self = this;
-    var _cmp;
     var _upload, _lblFileName, _btnRemove, _removeColumn, _iconLbl, _lblFileSize, _progressBar, _progressRow, _btnUpload, _btnDownload, _btnSelect;
     var _lastFileTypeIcon;
 
@@ -144,270 +143,195 @@ var UploadEx = function (_props, overrided = false) {
         this.value = null;
     }
 
-    var _container;
+    var _cmps;
     
     var fnContainerDelayInit = function(){
-        _container = {
-            constructor: Container,
-            props: {
-                id: "main_"+_self.guid,
-                guid: _self.guid,
-                type: ContainerType.NONE,
-                afterAttach: _registerSurrogate,
-                //width:,
-                components:[
-                    {
-                        constructor: Container,
-                        props: {
-                            id: "mainRow_"+_self.guid,
-                            type: ContainerType.ROW,
-                            height: 30,
-                            components:[
-                                {
-                                    constructor: Container,
-                                    props: {
-                                        id: "iconColumn_"+_self.guid,
-                                        type: ContainerType.COLUMN,
-                                        spacing: {colSpan:1,pr:0, pl:5},
-                                        classes:["border"],
-                                        components:[
-                                            {
+        _cmps = [
+            {
+                constructor: Container,
+                props: {
+                    id: "mainRow_"+_self.guid,
+                    type: ContainerType.ROW,
+                    height: 30,
+                    components:[
+                        {
+                            constructor: Container,
+                            props: {
+                                id: "iconColumn_"+_self.guid,
+                                type: ContainerType.COLUMN,
+                                spacing: {colSpan:1},
+                                classes:["border"],
+                                components:[
+                                    {
+                                        constructor: Label,
+                                        props: {
+                                            id: "iconLbl_"+_self.guid,
+                                            labelType: LabelType.i
+                                        }
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            constructor: Container,
+                            props: {
+                                id: "fileNameColumn_"+_self.guid,
+                                type: ContainerType.COLUMN,
+                                spacing: {colSpan:7},
+                                classes:["border"],
+                                components:[
+                                    {
+                                        constructor: Label,
+                                        props: {
+                                            id: "fileName_"+_self.guid,
+                                            label:"No file selected."
+                                        }
+                                    },
+                                    {
+                                        constructor: Upload,
+                                        props: {
+                                            id: "uploadInput_"+_self.guid,
+                                            classes:["d-none"],
+                                            change: upload_change
+                                        }
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            constructor: Container,
+                            props: {
+                                id: "fileSizeColumn_"+_self.guid,
+                                type: ContainerType.COLUMN,
+                                spacing: {colSpan:1},
+                                classes:["border"],
+                                components:[
+                                    {
+                                        constructor: Label,
+                                        props: {
+                                            id: "fileSize_"+_self.guid,
+                                        }
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            constructor: Container,
+                            props: {
+                                id: "controlsColumn_"+_self.guid,
+                                type: ContainerType.BTN_GROUP,
+                                role:"group",
+                                spacing: {colSpan:3, pr:0, pl:0},
+                                components:[
+                                    {
+                                        constructor: Button,
+                                        props: {
+                                            id: "selectBtn_"+_self.guid,
+                                            type: "button",
+                                            components: [{
                                                 constructor: Label,
                                                 props: {
-                                                    id: "iconLbl_"+_self.guid,
-                                                    labelType: LabelType.i
+                                                    id: 'fa',
+                                                    labelType: LabelType.i,
+                                                    classes: ["fas","fa-folder-open"]
                                                 }
-                                            }
-                                        ]
-                                    }
-                                },
-                                {
-                                    constructor: Container,
-                                    props: {
-                                        id: "fileNameColumn_"+_self.guid,
-                                        type: ContainerType.COLUMN,
-                                        spacing: {colSpan:7},
-                                        classes:["border"],
-                                        components:[
-                                            {
+                                            }],
+                                            click: selectBtn_click
+                                        }
+                                    },
+                                    {
+                                        constructor: Button,
+                                        props: {
+                                            id: "uploadBtn_"+_self.guid,
+                                            type: "button",
+                                            enabled:false,
+                                            components: [{
                                                 constructor: Label,
                                                 props: {
-                                                    id: "fileName_"+_self.guid,
-                                                    label:"No file selected."
+                                                    id: 'fa',
+                                                    labelType: LabelType.i,
+                                                    classes: ["fas","fa-cloud-upload-alt"]
                                                 }
-                                            },
-                                            {
-                                                constructor: Upload,
-                                                props: {
-                                                    id: "uploadInput_"+_self.guid,
-                                                    classes:["d-none"],
-                                                    change: upload_change
-                                                }
-                                            }
-                                        ]
-                                    }
-                                },
-                                {
-                                    constructor: Container,
-                                    props: {
-                                        id: "fileSizeColumn_"+_self.guid,
-                                        type: ContainerType.COLUMN,
-                                        spacing: {colSpan:1},
-                                        classes:["border"],
-                                        components:[
-                                            {
+                                            }],
+                                            click: uploadBtn_click
+                                        }
+                                    },
+                                    {
+                                        constructor: Button,
+                                        props: {
+                                            id: "downloadBtn_"+_self.guid,
+                                            type: "button",
+                                            enabled:false,
+                                            components: [{
                                                 constructor: Label,
                                                 props: {
-                                                    id: "fileSize_"+_self.guid,
+                                                    id: 'fa',
+                                                    labelType: LabelType.i,
+                                                    classes: ["fas","fa-cloud-download-alt"]
                                                 }
-                                            }
-                                        ]
-                                    }
-                                },
-                                {
-                                    constructor: Container,
-                                    props: {
-                                        id: "controlsColumn_"+_self.guid,
-                                        type: ContainerType.COLUMN,
-                                        spacing: {colSpan:3,pl:0},
-                                        classes:["border"],
-                                        components:[
-                                            {
-                                            constructor: Container,
+                                            }],
+                                            click: downloadBtn_click
+                                        }
+                                    },
+                                    {
+                                        constructor: Button,
+                                        props: {
+                                            id: "removeBtn_"+_self.guid,
+                                            type: "button",
+                                            enabled:false,
+                                            components: [{
+                                                constructor: Label,
                                                 props: {
-                                                    spacing: {h:100, ml:0},
-                                                    id: "controlsCont_"+_self.guid,
-                                                    width:150,
-                                                    classes:["border"],
-                                                    components:[
-                                                        {
-                                                            constructor: Container,
-                                                            props: {
-                                                                id: "controlsRow_"+_self.guid,
-                                                                type: ContainerType.ROW,
-                                                                spacing: {h:10},
-                                                                components:[
-                                                                    {
-                                                                        constructor: Container,
-                                                                        props: {
-                                                                            id: "selectColumn_"+_self.guid,
-                                                                            type: ContainerType.COLUMN,
-                                                                            spacing: {colSpan:3,pl:0},
-                                                                            classes:["border"],
-                                                                            components:[
-                                                                                {
-                                                                                    constructor: Button,
-                                                                                    props: {
-                                                                                        id: "selectBtn_"+_self.guid,
-                                                                                        type: "button",
-                                                                                        components: [{
-                                                                                            constructor: Label,
-                                                                                            props: {
-                                                                                                id: 'fa',
-                                                                                                labelType: LabelType.i,
-                                                                                                classes: ["fas","fa-folder-open"]
-                                                                                            }
-                                                                                        }],
-                                                                                        click: selectBtn_click
-                                                                                    }
-                                                                                }
-                                                                            ]
-                                                                        }
-                                                                    },
-                                                                    {
-                                                                        constructor: Container,
-                                                                        props: {
-                                                                            id: "uploadColumn_"+_self.guid,
-                                                                            type: ContainerType.COLUMN,
-                                                                            spacing: {colSpan:3,pl:0},
-                                                                            classes:["border"],
-                                                                            components:[
-                                                                                {
-                                                                                    constructor: Button,
-                                                                                    props: {
-                                                                                        id: "uploadBtn_"+_self.guid,
-                                                                                        type: "button",
-                                                                                        enabled:false,
-                                                                                        components: [{
-                                                                                            constructor: Label,
-                                                                                            props: {
-                                                                                                id: 'fa',
-                                                                                                labelType: LabelType.i,
-                                                                                                classes: ["fas","fa-cloud-upload-alt"]
-                                                                                            }
-                                                                                        }],
-                                                                                        click: uploadBtn_click
-                                                                                    }
-                                                                                }
-                                                                            ]
-                                                                        }
-                                                                    },
-                                                                    {
-                                                                        constructor: Container,
-                                                                        props: {
-                                                                            id: "downloadColumn_"+_self.guid,
-                                                                            type: ContainerType.COLUMN,
-                                                                            spacing: {colSpan:3,pl:0},
-                                                                            classes:["border"],
-                                                                            components:[
-                                                                                {
-                                                                                    constructor: Button,
-                                                                                    props: {
-                                                                                        id: "downloadBtn_"+_self.guid,
-                                                                                        type: "button",
-                                                                                        enabled:false,
-                                                                                        components: [{
-                                                                                            constructor: Label,
-                                                                                            props: {
-                                                                                                id: 'fa',
-                                                                                                labelType: LabelType.i,
-                                                                                                classes: ["fas","fa-cloud-download-alt"]
-                                                                                            }
-                                                                                        }],
-                                                                                        click: downloadBtn_click
-                                                                                    }
-                                                                                }
-                                                                            ]
-                                                                        }
-                                                                    },
-                                                                    {
-                                                                        constructor: Container,
-                                                                        props: {
-                                                                            id: "removeColumn_"+_self.guid,
-                                                                            type: ContainerType.COLUMN,
-                                                                            spacing: {colSpan:3,pl:0},
-                                                                            classes:["border"],
-                                                                            components:[
-                                                                                {
-                                                                                    constructor: Button,
-                                                                                    props: {
-                                                                                        id: "removeBtn_"+_self.guid,
-                                                                                        type: "button",
-                                                                                        enabled:false,
-                                                                                        components: [{
-                                                                                            constructor: Label,
-                                                                                            props: {
-                                                                                                id: 'fa',
-                                                                                                labelType: LabelType.i,
-                                                                                                classes: ["fas","fa-trash"]
-                                                                                            }
-                                                                                        }],
-                                                                                        click: removeBtn_click
-                                                                                    }
-                                                                                }
-                                                                            ]
-                                                                        }
-                                                                    }
-                                                                ]
-                                                            }
-                                                        }
-                                                    ]
+                                                    id: 'fa',
+                                                    labelType: LabelType.i,
+                                                    classes: ["fas","fa-trash"]
                                                 }
-                                            }
-                                        ]
-                                    }
-                                }
-                            ]
+                                            }],
+                                            click: removeBtn_click
+                                        }
+                                    }                 
+                                ]
+                            }
                         }
-                    },
-                    {
-                        constructor: Container,
-                        props: {
-                            id: "progressRow_"+_self.guid,
-                            type: ContainerType.ROW,
-                            height: 5,
-                            classes:["d-none"],
-                            components:[
-                                {
-                                    constructor: Container,
-                                    props: {
-                                        id: "progressColumn_"+_self.guid,
-                                        type: ContainerType.COLUMN,
-                                        spacing: {colSpan:12,pl:0},
-                                        classes:["border", "progress"],
-                                        height: 5,
-                                        components:[
-                                            {
-                                                constructor: ProgressBar,
-                                                props: {
-                                                    id:"progressbar_"+_self.guid,
-                                                    valueNow: 0,
-                                                    valueMin: 0,
-                                                    valueMax: 100,
-                                                    width: "100%",
-                                                    height: "100%",
-                                                    classes: [BgStyle.BG_INFO, ProgressBarStyle.PROGRESS, ProgressBarStyle.PROGRESS_ANIMATED, ProgressBarStyle.PROGRESS_STRIPED]
-                                                }
-                                            }
-                                        ]
+                    ]
+                }
+            },
+            {
+                constructor: Container,
+                props: {
+                    id: "progressRow_"+_self.guid,
+                    type: ContainerType.ROW,
+                    height: 5,
+                    classes:["d-none"],
+                    components:[
+                        {
+                            constructor: Container,
+                            props: {
+                                id: "progressColumn_"+_self.guid,
+                                type: ContainerType.COLUMN,
+                                spacing: {colSpan:12,pl:0},
+                                classes:["border", "progress"],
+                                height: 5,
+                                components:[
+                                    {
+                                        constructor: ProgressBar,
+                                        props: {
+                                            id:"progressbar_"+_self.guid,
+                                            valueNow: 0,
+                                            valueMin: 0,
+                                            valueMax: 100,
+                                            width: "100%",
+                                            height: "100%",
+                                            classes: [BgStyle.BG_INFO, ProgressBarStyle.PROGRESS, ProgressBarStyle.PROGRESS_ANIMATED, ProgressBarStyle.PROGRESS_STRIPED]
+                                        }
                                     }
-                                }
-                            ]
+                                ]
+                            }
                         }
-                    }
-                ]                                   
+                    ]
+                }
             }
-        };
+        ];       
     };
 
     Object.defineProperty(this, "multiple", 
@@ -536,30 +460,37 @@ var UploadEx = function (_props, overrided = false) {
             _upload.reset();
         }
     }
-
-    this.template = function () { 
-        fnContainerDelayInit();
-        _container.props.ownerDocument = this.ownerDocument;
-        _cmp = Component.fromLiteral(_container);
-        _upload = _cmp.children[this.my("mainRow")].children[this.my("fileNameColumn")].children[this.my("uploadInput")];
-        _iconLbl = _cmp.children[this.my("mainRow")].children[this.my("iconColumn")].children[this.my("iconLbl")];
-        _progressRow = _cmp.children[this.my("progressRow")];
-        _progressBar = _cmp.children[this.my("progressRow")].children[this.my("progressColumn")].children[this.my("progressbar")];  
-
-        _lblFileName = _cmp.children[this.my("mainRow")].children[this.my("fileNameColumn")].children[this.my("fileName")];
-        _lblFileSize = _cmp.children[this.my("mainRow")].children[this.my("fileSizeColumn")].children[this.my("fileSize")];
-        _btnSelect = _cmp.children[this.my("mainRow")].children[this.my("controlsColumn")].children[this.my("controlsCont")].children[this.my("controlsRow")].children[this.my("selectColumn")].children[this.my("selectBtn")];
-        _btnUpload = _cmp.children[this.my("mainRow")].children[this.my("controlsColumn")].children[this.my("controlsCont")].children[this.my("controlsRow")].children[this.my("uploadColumn")].children[this.my("uploadBtn")];
-        _btnDownload = _cmp.children[this.my("mainRow")].children[this.my("controlsColumn")].children[this.my("controlsCont")].children[this.my("controlsRow")].children[this.my("downloadColumn")].children[this.my("downloadBtn")];
-        _btnRemove = _cmp.children[this.my("mainRow")].children[this.my("controlsColumn")].children[this.my("controlsCont")].children[this.my("controlsRow")].children[this.my("removeColumn")].children[this.my("removeBtn")];
-        _removeColumn = _cmp.children[this.my("mainRow")].children[this.my("controlsColumn")].children[this.my("controlsCont")].children[this.my("controlsRow")].children[this.my("removeColumn")];
-        this.$el = _cmp.$el;
-        return null;
-    };
-
-    var _registerSurrogate = function(e){
-         //init events for this surrogate component.
-        _self.initEvents(this.$el, 0);
+    this.beforeAttach = function(e) 
+    {
+        if (e.target.id == this.domID) 
+        {
+            this.$container = this.$el;
+            fnContainerDelayInit();
+            this.components = _cmps;
+            this.addComponents();
+            _upload = this.children[this.my("mainRow")].children[this.my("fileNameColumn")].children[this.my("uploadInput")];
+            _iconLbl = this.children[this.my("mainRow")].children[this.my("iconColumn")].children[this.my("iconLbl")];
+            _progressRow = this.children[this.my("progressRow")];
+            _progressBar = this.children[this.my("progressRow")].children[this.my("progressColumn")].children[this.my("progressbar")];  
+    
+            _lblFileName = this.children[this.my("mainRow")].children[this.my("fileNameColumn")].children[this.my("fileName")];
+            _lblFileSize = this.children[this.my("mainRow")].children[this.my("fileSizeColumn")].children[this.my("fileSize")];
+            _btnSelect = this.children[this.my("mainRow")].children[this.my("controlsColumn")].children[this.my("selectBtn")];
+            _btnUpload = this.children[this.my("mainRow")].children[this.my("controlsColumn")].children[this.my("uploadBtn")];
+            _btnDownload = this.children[this.my("mainRow")].children[this.my("controlsColumn")].children[this.my("downloadBtn")];
+            _btnRemove = this.children[this.my("mainRow")].children[this.my("controlsColumn")].children[this.my("removeBtn")];
+            _removeColumn = this.children[this.my("mainRow")].children[this.my("controlsColumn")].children[this.my("removeColumn")];         
+            
+            if(_props.multiple!=null)
+                this.multiple = _props.multiple;
+            if(_props.accept)
+                this.accept = _props.accept;  
+            if(_props.showBtnRemove!=null)
+                this.showBtnRemove = _props.showBtnRemove;
+            if(_props.value!=null)
+                _setValue(_props.value);
+            e.preventDefault();
+        }
     }
 
     var _defaultParams = {
@@ -573,18 +504,7 @@ var UploadEx = function (_props, overrided = false) {
 
     _props = extend(false, false, _defaultParams, _props);
     _showProgress = _props.showProgress;
-
-    Component.call(this, _props, false, true);
-
-    if(_props.multiple!=null)
-        this.multiple = _props.multiple;
-    if(_props.accept)
-        this.accept = _props.accept;  
-    if(_props.showBtnRemove!=null)
-        this.showBtnRemove = _props.showBtnRemove;
-    if(_props.value!=null)
-        _setValue(_props.value);
-        
+    Container.call(this, _props, false, true);
     _form = _props.form;
 };
 UploadEx.prototype.ctor = 'UploadEx';

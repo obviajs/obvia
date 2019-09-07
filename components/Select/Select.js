@@ -24,21 +24,20 @@ var Select = function (_props, overrided = false) {
     });
 
     Object.defineProperty(this, "value",
-        {
-            get: function value() {
-                return _value;
-            },
-            set: function value(v) {
-                if (_value != v) {
-                    _value = v;
-                    if (this.$el) {
-                        this.$el.val(v);
-                        this.trigger('change');
-                    }
+    {
+        get: function value() {
+            return _value;
+        },
+        set: function value(v) {
+            if (_value != v) {
+                _value = v;
+                if (this.$el) {
+                    this.$el.val(v);
+                    this.trigger('change');
                 }
             }
-        });
-
+        }
+    });
     
     this.changeHandler = function (e) {
         _value = this.$el.val();

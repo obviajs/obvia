@@ -161,6 +161,10 @@ var Form = function(_props)
     {
         
         this.$container = this.$form = this.$el;
+        if(this.sortChildren){
+            acSort(this.components, "props.index");
+        }
+        this.components
         if(this.components && Array.isArray(this.components) && this.components.length>0)
         {
             var $form_group;

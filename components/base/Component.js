@@ -1,20 +1,27 @@
 var Component = function(_props, overrided=false, _isSurrogate=false)
 {
     var _self = this;
+    if(!Component[this.ctor]){
+        Component[this.ctor] = {};
+        Component[this.ctor].instanceCnt = 0;
+    }
+    ++Component[this.ctor].instanceCnt;
+
     var _defaultParams = {
-        id: "Component_"+Component.instanceCnt,
+        id: this.ctor+"_"+Component[this.ctor].instanceCnt,
         classes: [],
         guid: StringUtils.guid(),
         bindingDefaultContext:Component.defaultContext,
         ownerDocument:document,
         attr:{},
         visible:true,
-        enabled:true
+        enabled:true,
+        index:0    
     };
     shallowCopy(extend(false, false, _defaultParams, _props), _props);
     var ppb =  Component.processPropertyBindings(_props);
     for(var prop in _props){
-        if(!ppb.processedProps[prop])
+        if(!ppb.processedProps.hasOwnProperty(prop))
             delete _props[prop];
     }
     
@@ -31,6 +38,7 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
     var _mouseup = _props.mouseout;
     var _click = _props.click;
     var _dblclick = _props.dblclick;
+    var _blur = _props.blur;    
     var _keydown = _props.keydown;
     var _keyup = _props.keyup;
     var _creationComplete = _props.creationComplete;
@@ -45,8 +53,10 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
     var _watchers = [];
     var _bindings = ppb.bindings;
     var _attached = false;
+    let _index = _props.index;
+
     if(Component.usedComponentIDS[_id]==1) {
-        _id += "_" +Component.instanceCnt;
+        _id += "_" +Component[this.ctor].instanceCnt;
     }
     var _domID = _id + '_' + _guid;
 
@@ -78,6 +88,45 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
     {
         get: function () {
             return _id;
+        },
+        set: function(v){
+            if(v && v.trim() && (_id != v)){
+                let oldId = _id;
+                delete Component.usedComponentIDS[_id];
+                delete Component.domID2ID[_domID];
+                delete Component.instances[_id];
+                
+                _id = v;
+                if(Component.usedComponentIDS[_id]==1) {
+                    _id += "_" +Component[this.ctor].instanceCnt;
+                }
+                _domID = _id + '_' + _guid;
+            
+                Component.usedComponentIDS[_id] = 1;
+                Component.domID2ID[_domID] = _id;
+                Component.instances[_id] = this;
+
+                if(this.parent){
+                    if(this.parent.ctor=="Repeater"){
+                        this.parent[_id] = this.parent[oldId];
+                        delete this.parent[oldId];
+                    }else{
+                        this.parent.children[_id] = this.parent.children[oldId];
+                        delete this.parent.children[oldId];
+                    }
+                }
+                this.$el.attr("id", _domID);
+                _props.id = _id;
+            }
+        },
+        enumerable:true
+    });
+
+    Object.defineProperty(this, "index",
+    {
+        get: function index()
+        {
+            return _index;
         },
         enumerable:true
     });
@@ -420,6 +469,7 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
                 'mouseup': _mouseup && typeof _mouseup == 'function' ? _mouseup.bind(_self) : undefined,
                 'click': _click && typeof _click == 'function' ? _click.bind(_self) : undefined,
                 'dblclick': _dblclick && typeof _dblclick == 'function' ? _dblclick.bind(_self) : undefined,
+                'blur': _blur && typeof _blur == 'function' ? _blur.bind(_self) : undefined,
                 'keydown': _keydown && typeof _keydown == 'function' ? _keydown.bind(_self) : undefined,
                 'keyup': _keyup && typeof _keyup == 'function' ? _keyup.bind(_self) : undefined,
                 'creationComplete': _creationComplete && typeof _creationComplete == 'function' ? _creationComplete.bind(_self) : undefined,
@@ -606,7 +656,6 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
             }
         }            
     }
-    ++Component.instanceCnt;
     
     this.getBindingExpression = function(property)
     {

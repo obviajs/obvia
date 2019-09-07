@@ -21,10 +21,28 @@ var SpacingEditor = function (_props, overrided = false) {
             _dpMb[i] = {value:i, label:"mb-"+i};
         } 
     }
-
-    var _defaultParams = {
-        type: ContainerType.NONE,
-        "components": [
+    this.beforeAttach = function(e) 
+    {
+        if (e.target.id == this.domID) 
+        {
+            this.$container = this.$el;
+            fnContainerDelayInit();
+            this.components = _cmps;
+            this.addComponents();
+            _colSpan = this.children[this.components[0].props.id].children[this.components[0].props.components[0].props.id].children[this.my("colSpan")];
+            _offset = this.children[this.components[0].props.id].children[this.components[0].props.components[1].props.id].children[this.my("offset")];
+            _mb = this.children[this.components[1].props.id].children[this.components[1].props.components[0].props.id].children[this.my("mb")];
+            _mt = this.children[this.components[1].props.id].children[this.components[1].props.components[1].props.id].children[this.my("mt")];
+            if(_props.value){
+                this.value = _props.value;
+            }
+            e.preventDefault();
+        }
+    }
+    let _cmps, _colSpan, _offset, _mb, _mt;
+    var fnContainerDelayInit = function(){
+        _cmps = 
+        [
             {
                 "constructor": "Container",
                 "props": {
@@ -41,7 +59,7 @@ var SpacingEditor = function (_props, overrided = false) {
                                     {
                                         "constructor": "Select",
                                         "props": {
-                                            "id": "colSpan",
+                                            "id": "colSpan_"+_self.guid,
                                             "dataProvider": _dpColSpan,
                                             labelField:"label",
                                             valueField:"value"
@@ -60,7 +78,7 @@ var SpacingEditor = function (_props, overrided = false) {
                                     {
                                         "constructor": "Select",
                                         "props": {
-                                            "id": "offset",
+                                            "id": "offset_"+_self.guid,
                                             "dataProvider": _dpOffset,
                                             labelField:"label",
                                             valueField:"value"
@@ -88,7 +106,7 @@ var SpacingEditor = function (_props, overrided = false) {
                                     {
                                         "constructor": "Select",
                                         "props": {
-                                            "id": "mb",
+                                            "id": "mb_"+_self.guid,
                                             "dataProvider": _dpMb,
                                             labelField:"label",
                                             valueField:"value"
@@ -107,7 +125,7 @@ var SpacingEditor = function (_props, overrided = false) {
                                     {
                                         "constructor": "Select",
                                         "props": {
-                                            "id": "mt",
+                                            "id": "mt_"+_self.guid,
                                             "dataProvider": _dpMt,
                                             labelField:"label",
                                             valueField:"value"
@@ -120,10 +138,37 @@ var SpacingEditor = function (_props, overrided = false) {
                     "id": "Component_81"
                 }
             }
-        ]
+        ];
+    };
+    var _defaultParams = {
+        type: ContainerType.NONE,
+        "components": []
     };
     _props = extend(false, false, _defaultParams, _props);
     Container.call(this, _props);
+    let _value;
+
+    Object.defineProperty(this, "value",
+    {
+        get: function value() {
+            return _value;
+        },
+        set: function value(v) {
+            if (_value != v) {
+                _value = v;
+                if(v.colSpan)
+                    _colSpan.value = v.colSpan;
+                if(v.offset)
+                    _offset.value = v.offset;
+                if(v.mb)
+                    _mb.value = v.mb;
+                if(v.mt)
+                    _mt.value = v.mt;
+                this.trigger('change');
+            }
+        },
+        enumerable:true
+    });
 };
 
 //component prototype
