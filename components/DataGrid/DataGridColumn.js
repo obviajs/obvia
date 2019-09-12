@@ -1,9 +1,9 @@
 var DataGridColumn = function(p)
 {
     var _defaultParams = {
-        dataField: "",
-        dataFieldToFilter: "",   
-        headerText: "",
+        field: "",
+        fieldToFilter: "",   
+        description: "",
         sortOrder: 0,
         sortDirection: "ASC",//DESC
         sortable: true,
@@ -11,7 +11,7 @@ var DataGridColumn = function(p)
             constructor: DataGridCellRenderer,
             props: {
                 id: 'cell_',
-                label: '{'+p.dataField+'}',
+                label: '{'+p.field+'}',
                 href: false,
                 target:null
             }
@@ -24,9 +24,9 @@ var DataGridColumn = function(p)
     var props = extend(false, false, [],[],["itemRenderer", "itemEditor"], _defaultParams, p);
     this.width = props["width"];
     this.calculatedWidth = undefined;
-    this.dataField = props.dataField;
-    this.dataFieldToFilter = props.dataFieldToFilter;   
-	this.headerText = props.headerText;
+    this.field = props.field;
+    this.fieldToFilter = props.fieldToFilter;   
+	this.description = props.description;
 	this.sortOrder = props.sortOrder;
     this.sortDirection = props.sortDirection;//DESC
     this.sortable = props.sortable;

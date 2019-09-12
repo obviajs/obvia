@@ -138,7 +138,7 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
         }, 
         set: function ownerDocument(v)
         {
-            if(!_ownerDocument)
+            if(!_ownerDocument || _ownerDocument!=v)
             {
                 _ownerDocument = v;
                 Component.ready(this, function(element){
@@ -713,7 +713,6 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
                     }else{
                         fn();
                     }
-                    
                 })();	
             })(data, _bindings[bi].expression, this, [_bindings[bi].property], _bindings[bi].nullable);
         }

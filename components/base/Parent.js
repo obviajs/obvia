@@ -249,25 +249,28 @@ var Parent = function(_props, overrided=false, _isSurrogate=false)
         {
             for(var i=0;i<components.length;i++)
             {
-                var magnet, isMagnetized = false;
-                if(_magnets && !Object.isEmpty(_magnets))
+                if(isObject(components[i]))
                 {
-                    for(var magnet in _magnets)
+                    var magnet, isMagnetized = false;
+                    if(_magnets && !Object.isEmpty(_magnets))
                     {
-                        if(_magnets[magnet] && _magnets[magnet].length>0)
+                        for(var magnet in _magnets)
                         {
-                            if(_magnets[magnet].indexOf(_components[i].props.id)>-1)
+                            if(_magnets[magnet] && _magnets[magnet].length>0)
                             {
-                                isMagnetized = true;
-                                _magnetizedIndexes[i] = magnet;
-                            }
-                        }                    
-                    }   
-                }
-                if(!isMagnetized)
-                    arrInst.push(this.addComponentInContainer(this.$container, components[i], i));
-                if(cmps){
-                    _components.splice(i, 0, components[i]);
+                                if(_magnets[magnet].indexOf(components[i].props.id)>-1)
+                                {
+                                    isMagnetized = true;
+                                    _magnetizedIndexes[i] = magnet;
+                                }
+                            }                    
+                        }   
+                    }
+                    if(!isMagnetized)
+                        arrInst.push(this.addComponentInContainer(this.$container, components[i], i));
+                    if(cmps){
+                        _components.splice(i, 0, components[i]);
+                    }
                 }
             }
         }else   

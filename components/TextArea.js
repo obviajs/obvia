@@ -33,10 +33,6 @@ var TextArea = function (_props, overrided = false) {
         this.validate();
     };
 
-    _spellCheckClickHandler = function (e) {
-        _self.$input.spellCheckInDialog({defaultDictionary: _spellCheck.defaultDictionary});
-    };
-
     this.template = function () {
         return "<textarea data-triggers='change' id='" + this.domID + "' " + (!this.enabled ? "disabled" : "") + ">" + _value + "</textarea>";
     };
@@ -59,7 +55,6 @@ var TextArea = function (_props, overrided = false) {
 
         var e = arguments[0];
         if(!e.isDefaultPrevented()) {
-            _spellCheckClickHandler();
         }
     };
 

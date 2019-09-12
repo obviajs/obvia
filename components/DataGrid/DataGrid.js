@@ -165,7 +165,7 @@ var DataGrid = function(_props)
 
     this.addEmptyRow = function()
     {
-        var emptyObj = this.defaultItem = createEmptyObject(this.columns, "dataField", "headerText");
+        var emptyObj = this.defaultItem = createEmptyObject(this.columns, "field", "description");
         _dataProvider.pad(emptyObj, 1);
         this.addRow(extend(false, false, _dataProvider[i]), i + 1);
     };
@@ -219,7 +219,7 @@ var DataGrid = function(_props)
         for (var columnIndex=0;columnIndex<this.columns.length;columnIndex++) {
             var column = this.columns[columnIndex] = new DataGridColumn(this.columns[columnIndex]);
             
-            $th = $("<th id='head_"+hi+"'>"+column.headerText+(column.sortable ? "<span class='fa fa-caret-"+(sortDirFADic[column.sortDirection.toLowerCase()])+"'></span></a>":"")+"</th>");    
+            $th = $("<th id='head_"+hi+"'>"+column.description+(column.sortable ? "<span class='fa fa-caret-"+(sortDirFADic[column.sortDirection.toLowerCase()])+"'></span></a>":"")+"</th>");    
             $th.bind('click', 
             (function(hIndex, column){
                 return (function(e) { // a closure is created
@@ -307,11 +307,11 @@ var DataGrid = function(_props)
             {
                 if(column.itemEditor.props["value"]==null)
                 {
-                    column.itemEditor.props["value"] = "{"+column.dataField+"}";
+                    column.itemEditor.props["value"] = "{?"+column.field+"}";
                 }
                 column.itemEditor.props.bindingDefaultContext = data;
                 itemEditor = Component.fromLiteral(column.itemEditor);
-                column.itemEditor.props.label = column.headerText; 
+                column.itemEditor.props.label = column.description; 
                 //var props = extend(true, true, column.itemEditor.props);
                 //delete props["value"];
 
@@ -398,7 +398,7 @@ var DataGrid = function(_props)
                 this.cellItemEditors[columnIndex]["dataProviderValueField"] = dataProviderField;
                 itemEditor.value = data[dataProviderField];
             }else
-                itemEditor.value = column.itemEditor.props["value"] || data[column.dataField];
+                itemEditor.value = column.itemEditor.props["value"] || data[column.field];
             */
             
             this.cells[rowIndex][columnIndex].append(itemEditor.render());
@@ -451,7 +451,7 @@ var DataGrid = function(_props)
                     }
                 }
                 //TODO:dataProviderChanged or integrate Binding ? 
-                _dataProvider[rowIndex+_virtualIndex][column.dataField] = value;
+                _dataProvider[rowIndex+_virtualIndex][column.field] = value;
             }
             this.editPosition.event = 2;
         }
@@ -488,11 +488,11 @@ var DataGrid = function(_props)
                 if (_self.cellItemRenderers[index-1] == undefined)
                     _self.cellItemRenderers[index-1] = [];
 
-                var dataProviderField = column.dataField;
+                var dataProviderField = column.field;
                 //
-                component.props["label"] = "{"+dataProviderField+"}";
+                component.props["label"] = "{?"+dataProviderField+"}";
                 //might not be wanted
-                component.props.id = column.dataField;
+                component.props.id = column.field;
 
 
                 var cmp = _self["cellItemRenderers"][index-1];
@@ -512,14 +512,15 @@ var DataGrid = function(_props)
                 }
                 */
                 //construct the component
-                var el = Component.fromLiteral(component, data);
+                component.props.bindingDefaultContext = data;
+                var el = Component.fromLiteral(component);
                 el.parent = _self;
                 el.parentType = 'repeater';
                 el.parentForm = _self.parentForm;
                 el.repeaterIndex = index - 1;
 
                 _self.cellItemRenderers[index-1][columnIndex] = el; 
-                rowItems[column.dataField] = el;
+                rowItems[column.field] = el;
                 _rowItems[index - 1] = rowItems;
                 
                 //

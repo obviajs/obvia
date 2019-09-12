@@ -29,12 +29,15 @@ var Label = function(_props)
     this.beforeAttach = function () 
     {
         this.$container = this.$el;
+        if(_props.label){
+            this.label = _props.label;
+        }
         this.addComponents();
     };
 
     this.template = function () 
     {         
-        return "<"+_labelType+" id='" + this.domID + "'>"+_label+"</"+_labelType+">"; 
+        return "<"+_labelType+" id='" + this.domID + "'></"+_labelType+">"; 
     };
 
     var _defaultParams = {
@@ -43,7 +46,7 @@ var Label = function(_props)
     };
     _props = extend(false, false, _defaultParams, _props);
     
-    var _label = _props.label;
+    var _label;
     var _labelType = _props.labelType;
 
     Parent.call(this, _props);

@@ -30,6 +30,13 @@ var _DOMMutationHandler = function (e) {
         this.label = e.mutation.addedNodes[0].childNodes[0].childNodes[0].data;
     }
 };
+var remoteSources = new ArrayEx([{name:"test", description:"Test Remote Source", props:{url:"http://139.162.158.49/rca/index.php", post:{"testKey":"testValue"}, recordsPerPage:5}}]);
+var remoteData = {};
+for(let i=0;i<remoteSources.length;i++){
+    let r = new RemoteArray(remoteSources[i].props);
+    remoteData[remoteSources[i].name] = r;
+}
+
 var dpComponentList = [ 
     {
         "label":"Label", "icon":"horizontal-line.png", "constructor": "Label"
@@ -50,6 +57,15 @@ var dpComponentList = [
         "label":"TextInput", "icon":"", "constructor": "TextInput"
     },
     {
+        "label":"TextArea", "icon":"", "constructor": "TextArea"
+    },
+    {
+        "label":"DateTime", "icon":"", "constructor": "DateTime"
+    },
+    {
+        "label":"DateTimeCb", "icon":"", "constructor": "DateTimeCb"
+    },
+    {
         "label":"Image", "icon":"", "constructor": "Image"
     },
     {
@@ -66,6 +82,9 @@ var dpComponentList = [
     },
     {
         "label":"AutoComplete", "icon":"", "constructor": "AutoCompleteEx"
+    },
+    {
+        "label":"AutoBrowse", "icon":"", "constructor": "AutoBrowse"
     },
     {
         "label":"RadioGroup", "icon":"", "constructor": "RadioGroup"
@@ -86,12 +105,28 @@ var dpComponentList = [
         "label":"Container", "icon":"", "constructor": "Container"
     },
     {
+        "label":"ViewStack", "icon":"", "constructor": "ViewStack"
+    },
+    {
         "label":"Upload", "icon":"", "constructor": "UploadEx"
     },
     {
         "label":"MultiUpload", "icon":"", "constructor": "MultiUpload"
+    },
+    {
+        "label":"Repeater", "icon":"", "constructor": "Repeater"
+    },
+    {
+        "label":"DataGrid", "icon":"", "constructor": "DataGrid"
+    },
+    {
+        "label":"CalendarDay", "icon":"", "constructor": "CalendarDay"
+    },
+    {
+        "label":"CalendarWeek", "icon":"", "constructor": "CalendarWeek"
     }
 ];
+
 var dpComponentLiterals = {
      "Label":{
         "constructor": Label,
@@ -145,6 +180,38 @@ var dpComponentLiterals = {
             id: 'textField',
             mask: 'currency',
             value: '34,444.00'
+        }
+    },
+    "TextArea":{
+        "constructor": TextArea,
+        "props":{
+            id: 'textarea',
+            spellCheck: {
+                defaultDictionary: 'English',//Albanian
+            },
+            value: ''
+        }
+    },
+    "DateTime":{
+        "constructor": DateTime,
+        "props":{
+            id: 'datetime',
+            inputFormat: 'DD/MM/YYYY',
+            outputFormat: 'DD-MM-YYYY',
+            displayFormat: 'MM/DD/YYYY',
+            value: '2022/02/04'
+        }
+    },
+    "DateTimeCb":{
+        "constructor": DateTimeCb,
+        props: {
+            id: 'dateTimeCb',
+            mode: DateTimeMode.DATE_TIME_SECOND,
+            versionStyle: '',
+            inputFormat: 'DD/MM/YYYY',
+            outputFormat: 'DD-MM-YYYY',
+            value: '06/06/2019',
+            classes:["ml-0"]
         }
     },
     "Image":{
@@ -251,6 +318,13 @@ var dpComponentLiterals = {
             matchType:StringMatchType.STARTS_WITH
         }
     },
+    "AutoBrowse":{
+        "constructor": AutoBrowse,
+        "props":{
+            id: "autoBrowse",
+            classes:["ml-0"]
+        }
+    },
     "RadioGroup": {
         "constructor": RadioGroup,
         "props":{
@@ -329,6 +403,13 @@ var dpComponentLiterals = {
             classes:["default-component","default-cnt"]
         }
     },
+    "ViewStack":{
+        constructor: ViewStack,
+        props: {
+            id: 'viewStack',
+            classes:["default-component","default-cnt"]
+        }
+    },
     "UploadEx":{
         constructor: UploadEx,
         props: {
@@ -341,7 +422,31 @@ var dpComponentLiterals = {
         props: {
             id: 'multiUpload',
         }
-    }
+    },
+    "Repeater":{
+        constructor: Repeater,
+        props: {
+            id: 'repeater',
+        }
+    },
+    "DataGrid":{
+        constructor: DataGrid,
+        props: {
+            id: 'dataGrid',
+        }
+    },
+    "CalendarDay":{
+        constructor: CalendarDay,
+        props: {
+            id: 'calendarDay',
+        }
+    },
+    "CalendarWeek":{
+        constructor: CalendarWeek,
+        props: {
+            id: 'calendarWeek',
+        }
+    },
 };
 var handle = {
     constructor: Container,
@@ -387,9 +492,8 @@ var formField = {
         component: {}
     }
 };
-var providers = [];
-var providerValueField = "id";
-var providerLabelField = "formName";
+var providerValueField = "name";
+var providerLabelField = "description";
 var masks;
 var maskValueField = "";
 var maskLabelField = "";
@@ -436,6 +540,19 @@ var propEditors = {
         get:null,
         valueField:null
     },
+    "AutoBrowse": {
+        itemEditor: {
+            "constructor": AutoBrowse,
+            "props":{
+                id: "AutoBrowse",
+                labelField: providerLabelField,
+                valueField: providerValueField,
+                dataProvider: remoteSources,
+                classes:["ml-0"],
+                fields:[{"field":providerValueField, "description":providerValueField, "visible":false}, {"field":providerLabelField, "description":providerLabelField}]
+            }
+        }
+    },
     "SpacingEditor": {
         itemEditor: {
             "constructor": SpacingEditor,
@@ -454,10 +571,10 @@ var metaProps = {
     enabled: {constructor:"Toggle", label: "Enabled", index:5}, 
     required: {constructor:"Toggle", label: "Required", index:6},
     checked: {constructor:"Toggle", label: "Checked", index:7},
-    dataProvider: {constructor:"AutoCompleteEx", label: "Data Provider", required:true, props:{
+    dataProvider: {constructor:"AutoBrowse", label: "Data Provider", required:true, props:{
         valueField: providerValueField,
         labelField: providerLabelField,
-        dataProvider: providers,
+        dataProvider: remoteSources,
         change: function(){
             //propsForm.children["dataProvider"].value
             //get the fields for the selected datProvider and 
@@ -528,6 +645,68 @@ var propertyEditorRow = {
         "id": "Component_79"
     }
 };
+var _pewCmps = [
+    {
+        "constructor": "Container",
+        "props": {
+            "type": "row",
+            "components": [
+                {
+                    "constructor": "Container",
+                    "props": {
+                        "id": "workArea_80",
+                        "components": [
+                            {
+                                "constructor": "Container",
+                                "props": {
+                                    "type": "row",
+                                    "components": [
+                                        {
+                                            "constructor": "Container",
+                                            "props": {
+                                                "id": "",
+                                                spacing: {colSpan:12},
+                                                type: ContainerType.NONE,
+                                                "components": [
+                                                    {
+                                                        constructor:AutoCompleteEx,
+                                                        props:{
+                                                            id:"cmpSelectAc",
+                                                            dataProvider: dpCmpSelect,
+                                                            valueField: providerValueField,
+                                                            labelField: providerLabelField,
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                }
+                            },
+                            {
+                                "constructor": "Container",
+                                "props": {
+                                    "type": "row",
+                                    "components": [
+                                        {
+                                            "constructor": "Container",
+                                            "props": {
+                                                "id": "propertyListContainer",
+                                                sortChildren: true,
+                                                "components": [
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
+    }
+];
 
 var zeroCool = {
         constructor: Container,
@@ -540,68 +719,7 @@ var zeroCool = {
                     props: {
                         id:"propertyEditorWindow",
                         //afterAttach:function(){},
-                        components:[
-                            {
-                                "constructor": "Container",
-                                "props": {
-                                    "type": "row",
-                                    "components": [
-                                        {
-                                            "constructor": "Container",
-                                            "props": {
-                                                "id": "workArea_80",
-                                                "components": [
-                                                    {
-                                                        "constructor": "Container",
-                                                        "props": {
-                                                            "type": "row",
-                                                            "components": [
-                                                                {
-                                                                    "constructor": "Container",
-                                                                    "props": {
-                                                                        "id": "",
-                                                                        spacing: {colSpan:12},
-                                                                        type: ContainerType.NONE,
-                                                                        "components": [
-                                                                            {
-                                                                                constructor:AutoCompleteEx,
-                                                                                props:{
-                                                                                    id:"cmpSelectAc",
-                                                                                    dataProvider: dpCmpSelect,
-                                                                                    valueField: providerValueField,
-                                                                                    labelField: providerLabelField,
-                                                                                }
-                                                                            }
-                                                                        ]
-                                                                    }
-                                                                }
-                                                            ]
-                                                        }
-                                                    },
-                                                    {
-                                                        "constructor": "Container",
-                                                        "props": {
-                                                            "type": "row",
-                                                            "components": [
-                                                                {
-                                                                    "constructor": "Container",
-                                                                    "props": {
-                                                                        "id": "propertyListContainer",
-                                                                        sortChildren: true,
-                                                                        "components": [
-                                                                        ]
-                                                                    }
-                                                                }
-                                                            ]
-                                                        }
-                                                    }
-                                                ]
-                                            }
-                                        }
-                                    ]
-                                }
-                            }
-                        ]
+                        components: acExtend(true, _pewCmps)
                     }
                 },
                 {
@@ -686,6 +804,21 @@ var zeroCool = {
                                                                                                         id: 'fa',
                                                                                                         labelType: LabelType.i,
                                                                                                         classes: ["fas","fa-save"]
+                                                                                                    }
+                                                                                                }]
+                                                                                            }
+                                                                                        },
+                                                                                        {
+                                                                                            constructor: Button,
+                                                                                            props: {
+                                                                                                id: 'previewBtn',
+                                                                                                type: "button",
+                                                                                                components: [{
+                                                                                                    constructor: Label,
+                                                                                                    props: {
+                                                                                                        id: 'fa',
+                                                                                                        labelType: LabelType.i,
+                                                                                                        classes: ["fas","fa-desktop"]
                                                                                                     }
                                                                                                 }]
                                                                                             }
@@ -933,6 +1066,9 @@ oxana.behaviors["saveLayout"]["click"] = "SAVE_LAYOUT";
 oxana.behaviors["selectBtn"] = {};
 oxana.behaviors["selectBtn"]["click"] = "FILE_SELECT_MODAL";
 
+oxana.behaviors["previewBtn"] = {};
+oxana.behaviors["previewBtn"]["click"] = "PREVIEW";
+
 oxana.behaviors["browseFile"] = {};
 oxana.behaviors["browseFile"]["change"] = "FILE_SELECTED";
 
@@ -1091,12 +1227,16 @@ oxana.behaviorimplementations["SELECT_COMPONENT"] = {
             
             
         }
-        let plistCnt = Component.instances["propertyListContainer"]; 
-        if(plistCnt){
+        if(pew.window)
+        {
+            let plistCnt = Component.instances[pew.components["0"].props.components["0"].props.components[1].props.components[0].props.id];
             plistCnt.removeAllChildren();
             plistCnt.addComponents(rows);
-        }else{
-            pew.components["0"].props.components["0"].props.components[1].props.components[0].props.components = rows;            
+
+        } else{
+            pew.removeAllChildren();
+            pew.components = acExtend(true, _pewCmps); 
+            pew.components["0"].props.components["0"].props.components[1].props.components[0].props.components = rows; 
         }
         pew.show();
         
@@ -1492,9 +1632,20 @@ oxana.behaviorimplementations["WA_REMOVE"] = {
     stopPropagation:true
 };
 
+oxana.behaviorimplementations["PREVIEW"] = {
+    do:function(e) {
+        var workArea = Component.instances["snowCrash"];
+        var lit = workArea.literal;
+        stripHandle(lit)
+        var jsonLayout = JSON.stringify(lit, null, "\t");
+        download("snowCrash.json.txt", jsonLayout); 
+    },
+    stopPropagation:true
+};
+
 oxana.behaviorimplementations["SAVE_LAYOUT"] = {
     do:function(e) {
-        var workArea = Component.instances["workArea"];
+        var workArea = Component.instances["snowCrash"];
         var lit = workArea.literal;
         stripHandle(lit)
         var jsonLayout = JSON.stringify(lit, null, "\t");

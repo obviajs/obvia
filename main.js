@@ -18,7 +18,9 @@ rjs.define("lib/Tokenizer.js", "Tokenizer");
 rjs.define("lib/binding/BindingUtils.js", "BindingUtils");
 rjs.define("lib/binding/PropertyChangeEvent.js", "PropertyChangeEvent");
 rjs.define("lib/binding/ChangeWatcher.js", "ChangeWatcher");
-rjs.define("lib/rca/RemoteCursorEvent.js", "RemoteCursorEvent");
+rjs.define("lib/rca/RemoteDataEvent.js", "RemoteDataEvent");
+rjs.define("lib/rca/DataField.js", "DataField");
+rjs.define("lib/rca/RemoteArray.js", "RemoteArray");
 rjs.define("lib/rca/RemoteObject.js", "RemoteObject");
 rjs.define("./components/base/Align.js", "Align");
 rjs.define("./components/base/BrowserWindow.js", "BrowserWindow");
@@ -30,6 +32,7 @@ rjs.define("./components/base/History/HistoryEventType.js", "HistoryEventType");
 rjs.define("./components/base/Component.js", "Component");
 rjs.define("./components/base/Spacing.js", "Spacing");
 rjs.define("./oxana/builder/SpacingEditor.js", "SpacingEditor");
+rjs.define("./oxana/AutoBrowse.js", "AutoBrowse");
 rjs.define("./components/base/Attr.js", "Attr");
 rjs.define("./components/base/Parent.js", "Parent");
 rjs.define("./components/base/css/parent-default.css", "parent_default_css");
@@ -89,8 +92,6 @@ rjs.define("./components/Amount.js", "Amount");
 //Image
 rjs.define("./components/Image.js", "Image");
 //TextArea
-livespell___installPath = window.location.origin + "/resources/inner_resources/scripts/plugins/SpellCheck/";
-rjs.define("lib/dependencies/scripts/plugins/SpellCheck/include.js", "SpellCheckJS");
 rjs.define("./components/TextArea.js", "TextArea");
 //TextEditor
 rjs.define("./components/TextEditor.js", "TextEditor");
@@ -104,12 +105,13 @@ rjs.define("./components/Tree/css/tree-default.css", "tree_default_css");
 rjs.define("./components/Tree/Li.js", "Li");
 rjs.define("./components/Tree/Tree.js", "Tree");
 //DateTime
-rjs.define("./components/DateTime.js", "DateTime");
+rjs.define("./components/DateTime/DateTime.js", "DateTime");
 rjs.define("lib/dependencies/scripts/moment.js", "MomentJS");
 rjs.define("https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/js/bootstrap-datepicker.min.js", "DatePickerScript");
 rjs.define("https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/css/bootstrap-datepicker.min.css", "DatePickerCSS");
 //DateTimeCb
-rjs.define("./components/DateTimeCb.js", "DateTimeCb");
+rjs.define("./components/DateTime/DateTimeMode.js", "DateTimeMode");
+rjs.define("./components/DateTime/DateTimeCb.js", "DateTimeCb");
 //Modal
 rjs.define("./components/Modal/ModalSize.js", "ModalSize");
 rjs.define("./components/Modal/Modal.js", "Modal");
@@ -184,7 +186,10 @@ rjs.require([
         "BindingUtils",
         "PropertyChangeEvent",
         "ChangeWatcher",
-        "RemoteCursorEvent",
+        "DataField",
+        "RemoteDataEvent",
+        "RemoteObject", 
+        "RemoteArray", 
         "Align",
         "BrowserWindow",
         "RepeaterEventArgs",
@@ -192,10 +197,10 @@ rjs.require([
         "HistoryStep",
         "History",
         "HistoryEventType",
-        "RemoteObject", 
         "Component",
         "Spacing",
         "SpacingEditor",
+        "AutoBrowse",
         "Attr",
         "Parent",
         "parent_default_css",
@@ -228,7 +233,6 @@ rjs.require([
         "InputMaskBundle",
         "TextInput", 
         "TextArea",
-        "SpellCheckJS",
         "Option",
         "Select",
         "SummerNoteCSS",
@@ -243,6 +247,7 @@ rjs.require([
         "CheckBoxGroup",
         "RadioButton",
         "RadioGroup",
+        "DateTimeMode",
         "DateTimeCb",
         "TokenRenderer",
         "SuggestionRenderer",

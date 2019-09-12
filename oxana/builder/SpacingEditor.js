@@ -1,5 +1,5 @@
 /**
- * This is a Spacing Definition Element
+ * This is a SpacingEditor Definition Element
  * 
  * Kreatx 2018
  */
@@ -8,23 +8,30 @@
 var SpacingEditor = function (_props, overrided = false) {
     var _self = this;
  
-    var _dpColSpan = new Array(12);
-    var _dpOffset = new Array(12);
-    var _dpMt = new Array(6);
-    var _dpMb = new Array(6);
-    
-    for(let i=0;i<12;i++){
-        _dpColSpan[i] = {value:i+1, label:"col-"+(i+1)};
-        _dpOffset[i] = {value:i, label:"offset-"+i};
-        if(i<6){
-            _dpMt[i] = {value:i, label:"mt-"+i};
-            _dpMb[i] = {value:i, label:"mb-"+i};
-        } 
+    var _dpColSpan = SpacingEditor.dpColSpan;
+    var _dpOffset = SpacingEditor.dpOffset;
+    var _dpMt = SpacingEditor.dpMt;
+    var _dpMb = SpacingEditor.dpMb;
+    var _initDP = function()
+    {
+        if(!SpacingEditor.init){
+            for(let i=0;i<12;i++){
+                _dpColSpan[i] = {value:i+1, label:"col-"+(i+1)};
+                _dpOffset[i] = {value:i, label:"offset-"+i};
+                if(i<6){
+                    _dpMt[i] = {value:i, label:"mt-"+i};
+                    _dpMb[i] = {value:i, label:"mb-"+i};
+                } 
+            }
+            SpacingEditor.init = true;
+        }
     }
+    
     this.beforeAttach = function(e) 
     {
         if (e.target.id == this.domID) 
         {
+            _initDP();
             this.$container = this.$el;
             fnContainerDelayInit();
             this.components = _cmps;
@@ -173,4 +180,9 @@ var SpacingEditor = function (_props, overrided = false) {
 
 //component prototype
 SpacingEditor.prototype.ctor = 'SpacingEditor';
+SpacingEditor.init = false;
+SpacingEditor.dpColSpan = new Array(12);
+SpacingEditor.dpOffset = new Array(12);
+SpacingEditor.dpMt = new Array(6);
+SpacingEditor.dpMb = new Array(6);
 

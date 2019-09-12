@@ -81,6 +81,7 @@ var AutoCompleteEx = function(_props)
                 separator: this.separator || false,
                 actions: false
             },
+            ownerDocument: this.ownerDocument,
             embedded:true,
             dataProvider: _value,
             components: [this.tokenRenderer],
@@ -272,18 +273,17 @@ var AutoCompleteEx = function(_props)
     {
         console.log(repeaterEventArgs);
         //this.parent.parent.addTokenItems(repeaterEventArgs.currentItem);
-        var acEx = this.parent.parent;
-        if(acEx.multiSelect){
+        if(_self.multiSelect){
             //TODO:check because concat will return a new value
-            acEx.value = acEx.value.concat([repeaterEventArgs.currentItem]);
+            _self.value = _self.value.concat([repeaterEventArgs.currentItem]);
         }else{
-            acEx.value = repeaterEventArgs.currentItem;
+            _self.value = repeaterEventArgs.currentItem;
         }
 
-        acEx.removeSuggestionItemAt(repeaterEventArgs.currentIndex);
+        _self.removeSuggestionItemAt(repeaterEventArgs.currentIndex);
        // acEx.closeSuggestionsList();
         _closeSuggestionsList();
-        acEx.tokenInput.$el.focus();
+        _self.tokenInput.$el.focus();
     };
     var _suggestionRendererDoubleClickHandler = function(e, repeaterEventArgs)
     {
@@ -506,7 +506,7 @@ var AutoCompleteEx = function(_props)
     this.render = function () 
     {
         this.$tokenContainer.append(this.tokenInput.render()); 
-        this.$tokenContainer.append(this.tokensRepeater.$el);
+        this.$tokenContainer.append(this.tokensRepeater.render());
         return this.$el;
     };
 

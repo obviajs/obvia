@@ -588,7 +588,8 @@ var Repeater = function(_props)
             props: {
                 id: _props.id,
                 type: ContainerType.NONE,
-                afterAttach: this.afterAttach
+                afterAttach: this.afterAttach,
+                ownerDocument: _props.ownerDocument
             }
         },
         guidField:"guid"

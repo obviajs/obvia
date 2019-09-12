@@ -50,15 +50,25 @@ var BrowserWindow = function(_props)
     Parent.call(this, _props, false, true); 
 
     this.show = function(){
-        if(!_win){
+        if(!_win || _win.closed){
+            let c = _win && _win.closed;
             _win = window.open(_url, _name, "width="+_width+",height="+_height+",top="+_top+",left="+_left+",status="+_status+",location="+_location+",toolbar="+_toolbar+",resizable"+_resizable);     
+            _win.addEventListener('beforeunload', function(e){
+                _self.removeAllChildren();
+                _win = null;
+                BrowserWindow.all.splice(BrowserWindow.all.indexOf(_win), 1);
+                _self.$el.remove();
+                delete e['returnValue'];
+                _self.trigger("beforeunload");
+            });
             BrowserWindow.all.push(_win);
             CSSUtils.copyStyles(document, _win.document);
             this.ownerDocument = _win.document;
-            this.$container = this.$el;       
+            this.$container = this.$el;  
             this.addComponents();
             $(_win.document.body).append(this.$el);
-        }else{
+        }
+        else{
             _win.focus();
         }
     } 
