@@ -38,7 +38,7 @@ var AutoCompleteEx = function(_props)
                     id: 'token',
                     label: '{'+_labelField+'}',
                     value: '{'+_valueField+'}',
-                    closeiconclick: _tokenRendererCloseIconClickHandler,
+                    closeiconclick: _tokenRendererCloseIconClickHandler.bind(this),
                     closeIconSide: _closeIconSide
                 }
             };
@@ -48,12 +48,10 @@ var AutoCompleteEx = function(_props)
             attr: {"placeholder": 'Type something...'},
             versionStyle: '',
             keydown:_tokenInputKeyDown,
-            keyup: _tokenInputKeyUp
+            keyup: _tokenInputKeyUp,
+            classes:['border-0', 'ellipsis']
         }).on('creationComplete', function(e){
             e.stopPropagation();
-
-            _self.tokenInput.$el.addClass('border-0');
-            _self.tokenInput.$el.addClass('ellipsis');
             //TODO: te konsiderojme qe form-control si klse te mos i shtohet fare elementeve nese embededd=true
             _self.tokenInput.$el.css({"outline":"none", "font-size":"14px"});
         
@@ -264,9 +262,8 @@ var AutoCompleteEx = function(_props)
         {
             console.log(repeaterEventArgs);
             //"this" refers to the components in the repeater
-            var acEx = this.parent.parent;
-            acEx.removeTokenItemAt(repeaterEventArgs.currentIndex);
-            acEx.tokenInput.$el.focus();
+            this.removeTokenItemAt(repeaterEventArgs.currentIndex);
+            this.tokenInput.$el.focus();
         }
     };
     var _suggestionRendererClickHandler = function(e, repeaterEventArgs)
@@ -301,7 +298,7 @@ var AutoCompleteEx = function(_props)
         var itemsToAdd = [];
         for(var i=0;i<items.length;i++){
             var item = items[i];
-            if(item != undefined && item != null && item[_valueField] != undefined && item[_labelField]!= undefined)
+            if(item != null && item[_valueField] != undefined && item[_labelField]!= undefined)
             {
                 var itemToAdd = [item];
                 if(!this.allowNewItem)

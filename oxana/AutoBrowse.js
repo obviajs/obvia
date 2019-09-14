@@ -27,20 +27,19 @@ var AutoBrowse = function (_props, overrided = false) {
 
     this.beforeAttach = function(e) 
     {
-        for(let i=0;i<_fields.length;i++)
-        {
-            _columns.push({
-                width:400,
-                field: _fields[i].field,
-                description: _fields[i].description,
-                visible: _fields[i].visible?_fields[i].visible:true,
-                sortable: true,
-                sortInfo: {sortOrder:0, sortDirection:"ASC"}
-            });
-        };
-
         if (e.target.id == this.domID) 
         {
+            for(let i=0;i<_fields.length;i++)
+            {
+                _columns.push({
+                    width:400,
+                    field: _fields[i].field,
+                    description: _fields[i].description,
+                    visible: _fields[i].visible?_fields[i].visible:true,
+                    sortable: true,
+                    sortInfo: {sortOrder:0, sortDirection:"ASC"}
+                });
+            };
             if(_props.dataProvider){
                 this.dataProvider = _props.dataProvider;
             }
@@ -122,7 +121,8 @@ var AutoBrowse = function (_props, overrided = false) {
                                 allowNewItem: true, //allow the user to add items that are not included in the specified dataProvider
                                 rowCount:5, //visible rows count - virtual scrolling wil be applied on scroll
                                 dataProvider: _dataProvider,
-                                columns: _columns
+                                columns: _columns,
+                                rowDblClick: _selectItem.bind(_self)
                             }
                         }
                     ]
@@ -134,7 +134,10 @@ var AutoBrowse = function (_props, overrided = false) {
     var _showModal = function(e){
         _modal.show();
     }
-
+    var _selectItem = function(e, odg, ra){
+        _ac.value = ra.currentItem;
+        _modal.hide();
+    }
     var _defaultParams = {
         type: ContainerType.ROW,
         "components": [],

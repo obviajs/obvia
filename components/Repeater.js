@@ -138,7 +138,7 @@ var Repeater = function(_props)
                 });
             }else
                 _creationFinished = true;
-            _oldDataProvider = extend(true, _dataProvider);
+            _oldDataProvider = acExtend(_dataProvider);
         }else
             _creationFinished = true;
     }
@@ -148,17 +148,9 @@ var Repeater = function(_props)
         this.addRow(this.defaultItem, this.currentIndex + 1, true)
     };
 
-    this.dataProviderChanged = function () 
+    this.dataProviderChanged = function (toAdd, toRemove, toRefresh) 
     {
-        for(var i=0;i<_dataProvider.length;i++){
-            if(!this.dataProvider[i][_guidField])
-                this.dataProvider[i][_guidField] = StringUtils.guid();
-        }
-        
-        var toAdd = differenceOnKeyMatch(_dataProvider, _oldDataProvider, _guidField, false, true);
-        var toRemove = differenceOnKeyMatch(_oldDataProvider, _dataProvider, _guidField, false, true);
-        var toRefresh = intersect(toAdd.a1_indices, toRemove.a1_indices);
-        for(var i=0;i<toRemove.a1_indices.length;i++){
+       for(var i=0;i<toRemove.a1_indices.length;i++){
             //var ind = this.rowItems.length + i;
             if(toRefresh.indexOf(toRemove.a1_indices[i])==-1)
                 this.removeRow(toRemove.a1_indices[i]+1, false, true, dpRemove = false); 
@@ -184,7 +176,7 @@ var Repeater = function(_props)
             }
 
         }
-        _oldDataProvider = extend(true, false, _dataProvider);
+        _oldDataProvider = acExtend(_dataProvider);
     };
 
     var _oldDataProvider;
@@ -208,14 +200,10 @@ var Repeater = function(_props)
                     _creationFinished = true;
                 }else if(_dataProvider && _dataProvider.length>0)
                 {
-                    for(var i=0;i<v.length;i++){
-                        if(v[i]!=null){
-                            if(!v[i][_guidField])
-                                v[i][_guidField] = StringUtils.guid();
-                        }
-                    }
                     var delta = (v.length?v.length:0) - (_dataProvider.length?_dataProvider.length:0);
                     for(var ri=0;ri<Math.min(v.length, _dataProvider.length);ri++){
+                        if(v[ri]!=null && !v[ri][_guidField])
+                            v[ri][_guidField] = StringUtils.guid();
                         for(var cmpID in this.rowItems[ri]){
                             var cmp = this.rowItems[ri][cmpID];
                             cmp.refreshBindings(v[ri]);
@@ -226,6 +214,8 @@ var Repeater = function(_props)
                     }
                     if(delta>0){
                         for(var i=_dataProvider.length;i<v.length;i++){
+                            if(v[i]!=null && !v[i][_guidField])
+                                v[i][_guidField] = StringUtils.guid();
                             this.addRow(v[i], i+1); 
                         }
                     }else if(delta<0){
@@ -255,15 +245,56 @@ var Repeater = function(_props)
     {
         e.stopPropagation();
         e.stopImmediatePropagation();
-        if(_creationFinished)
-            _self.dataProviderChanged();
+        let len = _dataProvider.length;
+        for(var i = 0;i<len;i++){
+            if(!_dataProvider[i][_guidField])
+                _dataProvider[i][_guidField] = StringUtils.guid();
+        }
+        if(_creationFinished){
+            var probablyAdded;
+            var toAdd;
+            if(e.newValue > e.oldValue){
+                probablyAdded = _dataProvider.slice(e.oldValue, e.newValue);
+                toAdd = differenceOnKeyMatch(probablyAdded, _oldDataProvider, _guidField, false, true);
+            }
+            if(e.newValue>e.oldValue && toAdd.result.length!=e.newValue-e.oldValue){
+                toAdd = differenceOnKeyMatch(_dataProvider, _oldDataProvider, _guidField, false, true);
+            }
+            
+            var toRemove = {result:[],a1_indices:[]};
+            if(e.newValue < e.oldValue){
+                probablyRemoved = _oldDataProvider.slice(Math.max(e.newValue-1, 0), e.oldValue);
+                toRemove = differenceOnKeyMatch(probablyRemoved, _dataProvider, _guidField, false, true);
+            }
+            if(e.newValue < e.oldValue && toRemove.result.length!=e.oldValue-e.newValue){
+                toRemove = differenceOnKeyMatch(_oldDataProvider, _dataProvider, _guidField, false, true);
+            }
+            var toRefresh = intersect(toAdd.a1_indices, toRemove.a1_indices);
+            _self.dataProviderChanged(toAdd, toRemove, toRefresh);
+        }
     }
     var _dpMemberChanged = function(e)
     {
         e.stopPropagation();
         e.stopImmediatePropagation();
-        if(_creationFinished && ["length","guid"].indexOf(e.property)==-1)
-            _self.dataProviderChanged();
+        if(_creationFinished && ["length","guid"].indexOf(e.property)==-1){
+            if(!_dataProvider[parseInt(e.property)][_guidField])
+                _dataProvider[parseInt(e.property)][_guidField] = StringUtils.guid();
+            var toAdd = {a1_indices:[], result:[]};
+            var toRemove = {a1_indices:[], result:[]};
+            var toRefresh = [];
+
+            if(e.oldValue==null && e.newValue!=null){
+                toAdd.a1_indices[0] = parseInt(e.property);
+                toAdd.result[0] = e.newValue;
+            }else if(e.oldValue!=null && e.newValue==null){
+                toRemove.a1_indices[0] = parseInt(e.property);
+                toRemove.result[0] = e.newValue;
+            }else{
+                toRefresh = [parseInt(e.property)];
+            }
+            _self.dataProviderChanged(toAdd, toRemove, toRefresh);
+        } 
     }
     Object.defineProperty(this, "value", {
         get: function value() {

@@ -226,8 +226,7 @@ var List = function (_props, overrided = false) {
         if (e.target.id == this.domID) 
         {
             if (typeof _containerAfterAttach == 'function')
-                _containerAfterAttach.apply(this, arguments);       
-            _self.attached = true;
+                _containerAfterAttach.apply(this, arguments);     
         }
     };
     _container.props.afterAttach = _afterAttach;

@@ -33,13 +33,11 @@ var TextInput = function (_props, overrided = false) {
         enumerable:true
     });
  
-    this.attached = false;
     this.afterAttach = function (e) {
         if (e.target.id == this.$el.attr('id') && !this.attached) {
             //init input mask
             if (_mask) {
                 this.$el.inputmask(_mask);
-                this.attached = true;
             }
         }
     };

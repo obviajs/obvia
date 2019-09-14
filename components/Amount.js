@@ -37,7 +37,6 @@ var Amount = function (_props, overrided = false) {
     this.afterAttach = function (e) {
         this.cComponents = [];
         if (e.target.id == this.domID && !this.attached) {
-            this.attached = true;
             if (typeof _afterAttach == 'function')
                 _afterAttach.apply(this, arguments);
             e.preventDefault();

@@ -51,11 +51,19 @@ var TokenRenderer = function(_props)
     afterAttach: function (e) {        
         this.trigger('creationComplete');
     }*/
-    this.beforeAttach = function () 
+    this.beforeAttach = function(e) 
     {
-        this.$label = this.$el.find("#"+ this.domID + "_label");
-        this.$closeIcon = this.$el.find("#"+ this.domID + "_closeIcon");
-    };
+        if (e.target.id == this.domID) 
+        {
+            this.$label = this.$el.find("#"+ this.domID + "_label");
+            this.$closeIcon = this.$el.find("#"+ this.domID + "_closeIcon");
+            
+            this.$closeIcon.click(function(evt)
+            {
+                _self.trigger("closeiconclick");
+            });
+        }
+    }
 
     Object.defineProperty(this, "value", 
     {
@@ -96,9 +104,9 @@ var TokenRenderer = function(_props)
 
     this.template = function () 
     {         
-        var xHtml = '<a data-triggers="closeiconclick" class="badge badge-info" id="'+ this.domID + '_closeIcon" href="#" tabindex="-1">×</a>';
+        var xHtml = '<a class="badge badge-info" id="'+ this.domID + '_closeIcon" href="#" tabindex="-1">×</a>';
         var html = 
-            '<div id="'+ this.domID + '" class="badge badge-info" style="font-size: 14px; margin:2px">'+
+            '<div id="'+ this.domID + '" data-triggers="closeiconclick" class="badge badge-info" style="font-size: 14px; margin:2px">'+
                 (_closeIconSide=="left"?xHtml:"")+    
                 '<span id="'+ this.domID + '_label" value="'+(_value!=null && _value!=undefined ? _value:'')+'">'+                      
                 (_label!=null ? _label:'')+
@@ -117,27 +125,6 @@ var TokenRenderer = function(_props)
     var _self = this;
     var _closeIconSide = _props.closeIconSide;
 
-    var _closeiconclick = _props.closeiconclick;
-    _props.closeiconclick = function()
-    {
-        if (typeof _closeiconclick == 'function')
-            _closeiconclick.apply(_self, arguments);
-        var e = arguments[0];
-        if(!e.isDefaultPrevented()){
-        //
-        }
-    };
-
-    Component.call(this, _props, true);
-    var base = this.base;
-    this.afterAttach = function(e)
-    {
-        this.$closeIcon.click(function(evt)
-        {
-            evt.stopImmediatePropagation();
-            $(this).trigger("closeiconclick");
-        });
-        base.afterAttach.call(this, e);
-    }
+    Component.call(this, _props);
 };
 TokenRenderer.prototype.ctor = 'TokenRenderer';

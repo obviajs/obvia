@@ -114,8 +114,8 @@ var DataGrid = function(_props)
     this.template = function () 
     {
         var html = 
-            "<div id='" + this.domID + "-wrapper' style='overflow-y: scroll'>" +
-                "<table class='table' id='" + this.domID + "'>"+
+            "<div id='" + this.domID + "' data-triggers='cellEditFinished cellEdit rowClick rowDblClick cellStyling rowStyling'  style='overflow-y: scroll'>" +
+                "<table class='table' id='" + this.domID + "-table'>"+
                     "<thead id='" + this.domID + "-header'>"+
                     "</thead>"+
                 "</table>"+
@@ -338,11 +338,11 @@ var DataGrid = function(_props)
                             case 13: // ENTER - apply value
                                 console.log("finished editing");
                                 e.preventDefault();
-                                _self.trigger('cellEditFinished', [_self.editPosition.rowIndex, _self.editPosition.columnIndex, true]);
+                                _self.cellEditFinished(_self.editPosition.rowIndex, _self.editPosition.columnIndex, true);
                                 break;
                             case 27: // ESC - get back to old value
                                 e.preventDefault();
-                                _self.trigger('cellEditFinished', [_self.editPosition.rowIndex, _self.editPosition.columnIndex, false]);
+                                _self.cellEditFinished(_self.editPosition.rowIndex, _self.editPosition.columnIndex, false);
                                 break;
                             case 9: // TAB - apply and move to next column on the same row 
                                 //_self.trigger('cellEditFinished', [rowIndex, columnIndex, column, data, true]);
@@ -403,7 +403,7 @@ var DataGrid = function(_props)
             
             this.cells[rowIndex][columnIndex].append(itemEditor.render());
             itemEditor.show();
-            if(itemEditorInfo != undefined)
+            if(itemEditorInfo != null)
             {
                 if (typeof itemEditor['focus'] === "function") { 
                     // safe to use the function
@@ -413,47 +413,47 @@ var DataGrid = function(_props)
        // }       
     };
 
-    this.cellEditFinished = function(e, rowIndex, columnIndex, applyEdit)
+    this.cellEditFinished = function(rowIndex, columnIndex, applyEdit)
     {
-      /*  if (typeof _cellEditFinished == 'function')
-            _cellEditFinished.apply(this, arguments);
-        var e = arguments[0];
+        var e = jQuery.Event('cellEditFinished');
+        _self.trigger(e, [rowIndex, columnIndex, applyEdit]);
         if(!e.isDefaultPrevented())
-        {*/
-        //console.trace();
-        console.log("cellEditFinished:", rowIndex, " ", columnIndex);
-        var column = this.columns[columnIndex];
-        var data = _dataProvider[rowIndex+_virtualIndex];
-        var value = null, calledHandler = false;
-        var itemEditorInfo = this.cellItemEditors[columnIndex];
-        var itemEditor = itemEditorInfo.itemEditor;
-      
-
-        if((typeof column.oncelleditfinished == 'function') && applyEdit){
-            var args = [];
-            for (var i = 0; i < arguments.length-1; i++) {
-                args.push(arguments[i]);
-            }
-            //we dont need applyEdit argument any more
-            args.push(itemEditorInfo);
-            value = column.oncelleditfinished.apply(this, args);
-            calledHandler = true;
-        }
+        {
+            //console.trace();
+            console.log("cellEditFinished:", rowIndex, " ", columnIndex);
+            var column = this.columns[columnIndex];
+            var data = _dataProvider[rowIndex+_virtualIndex];
+            var value = null, calledHandler = false;
+            var itemEditorInfo = this.cellItemEditors[columnIndex];
+            var itemEditor = itemEditorInfo.itemEditor;
         
-        if(!applyEdit || !e.isDefaultPrevented()){           
-            itemEditor.hide();
-            this.cellItemRenderers[rowIndex][columnIndex].show();
-            if(applyEdit){
-                if(!calledHandler){
-                    value = itemEditor.value;
-                    if(itemEditor["labelField"] && isObject(value) && value[itemEditor.labelField]){
-                        value = value[itemEditor.labelField];
-                    }
+
+            if((typeof column.oncelleditfinished == 'function') && applyEdit){
+                var args = [];
+                for (var i = 0; i < arguments.length-1; i++) {
+                    args.push(arguments[i]);
                 }
-                //TODO:dataProviderChanged or integrate Binding ? 
-                _dataProvider[rowIndex+_virtualIndex][column.field] = value;
+                //we dont need applyEdit argument any more
+                args.push(itemEditorInfo);
+                value = column.oncelleditfinished.apply(this, args);
+                calledHandler = true;
             }
-            this.editPosition.event = 2;
+            
+            if(!applyEdit || !e.isDefaultPrevented()){           
+                itemEditor.hide();
+                this.cellItemRenderers[rowIndex][columnIndex].show();
+                if(applyEdit){
+                    if(!calledHandler){
+                        value = itemEditor.value;
+                        if(itemEditor["labelField"] && isObject(value) && value[itemEditor.labelField]){
+                            value = value[itemEditor.labelField];
+                        }
+                    }
+                    //TODO:dataProviderChanged or integrate Binding ? 
+                    _dataProvider[rowIndex+_virtualIndex][column.field] = value;
+                }
+                this.editPosition.event = 2;
+            }
         }
     };
     
@@ -464,6 +464,7 @@ var DataGrid = function(_props)
         
         var renderedRow = $('<tr>')
         
+        
         var ccComponents = [];
         var buildRow = function () {
             var rowItems = {};
@@ -472,6 +473,16 @@ var DataGrid = function(_props)
                 renderedRow.append('<th scope="row">'+index+'</th>')
             }
             var columnIndex = 0;
+            renderedRow.click(function(evt)
+            {
+                _self.trigger("rowClick",  [_self, new RepeaterEventArgs(_rowItems, data, index)]);
+            });
+
+            renderedRow.dblclick(function(evt)
+            {
+                _self.trigger("rowDblClick", [_self, new RepeaterEventArgs(_rowItems, data, index)]);
+            });
+            let rsEvt = jQuery.Event('rowStyling', [_self, new RepeaterEventArgs(_rowItems, data, index)]);
 
             var rowBindingFunctions = [], bIndex = 0;
             for (var columnIndex=0;columnIndex<_self.columns.length;columnIndex++) 
@@ -524,6 +535,9 @@ var DataGrid = function(_props)
                 _rowItems[index - 1] = rowItems;
                 
                 //
+                
+                let csEvt = jQuery.Event('cellStyling', [_self, index, columnIndex, _rowItems, column, data]);
+                
                 if(column.editable){
                     el.on('dblclick', (function(rowIndex, columnIndex, column, data){
                         return (function(e) { // a closure is created
@@ -760,7 +774,7 @@ var DataGrid = function(_props)
         this.$el.trigger('onBeginDraw');
       
 
-        this.$table = this.$el.attr('id') == this.domID?this.$el:this.$el.find("#" + this.domID);
+        this.$table = this.$el.find("#" + this.domID + '-table');
         this.$header = this.$el.find('#' + this.domID + '-header'); 
         
         this.createHeader();
@@ -775,19 +789,5 @@ var DataGrid = function(_props)
 
         return this.$el;
     };
-    
-    this.registerEvents = function () 
-    {
-        return base.registerEvents.call(this).concat(
-        [
-            {
-                registerTo: this.$el, events: {
-                    'cellEditFinished': this.cellEditFinished.bind(this),
-                    'cellEdit': this.cellEdit.bind(this)
-                }
-            }
-        ]);
-    };
-
 };
 DataGrid.prototype.ctor = 'DataGrid';

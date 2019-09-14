@@ -1,3 +1,19 @@
+var ra =new RemoteArray({url:"http://192.168.64.2/rca/index.php", post:{"testKey":"testValue"}, recordsPerPage:5})
+var dp = new ArrayEx(ra);
+var myRepeater = new Repeater({
+    id: 'repeater',
+    dataProvider:dp,
+    components: [
+        {
+            constructor: Button,
+            props: {
+                id: 'component',
+                label: "{first_name+' '+last_name}",
+            }
+        }
+    ]
+});
+/*
 var dp = new ArrayEx([{label:"test"}, {label:"anonimous", children:[{label:"hulk"}]}]);
 var myRepeater = new Repeater({
     id: 'repeater',
@@ -22,7 +38,9 @@ var myRepeater = new Repeater({
     ]
 });
 
-/*
+
+
+
 var myRepeater = new Repeater({
     id: 'repeater',
 	rendering: {

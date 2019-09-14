@@ -73,7 +73,13 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
             return _guid;
         }
     });
-
+    Object.defineProperty(this, "_attached",
+    {
+        get: function attached() 
+        {
+            return _attached;
+        }
+    });
     Object.defineProperty(this, "bindingDefaultContext",
     {
         get: function bindingDefaultContext() 
@@ -450,6 +456,7 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
     {
         if (e.target.id == this.domID) 
         {
+            _attached = true;
             if (typeof _props.afterAttach == 'function')
                 _props.afterAttach.apply(this, arguments);
             if(!e.isDefaultPrevented()){
@@ -575,6 +582,7 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
     {
         if(this.$el)
             mode==1?this.$el.remove():this.$el.detach();
+        _attached = false;
     }
 
     //register outside handlers
@@ -748,7 +756,7 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
             handlers.forEach(function (handler, i) {
                 for (var innerEventIn in handler.events) {
                     if (typeof handler.events[innerEventIn] == 'function') {
-                        if(handler.registerTo != undefined && handler.registerTo != null){
+                        if(handler.registerTo != null){
                             if(_handlers[innerEventIn]==null)
                                 _handlers[innerEventIn] = [];
                             
@@ -912,20 +920,23 @@ Component.check = function(mutations)
                         for (var i = 0, len = Component.listeners[DOMNode.ownerDocument.id].length, listener, elements; i < len; i++) 
                         {
                             listener = Component.listeners[DOMNode.ownerDocument.id][i];
-                            var $el = listener.element.$el;
-                            var id = $el[0].id;
-                            //console.log(DOMNode.id);
-                            var resultNodes = DOMNode.id==id?[DOMNode]:DOMNode.querySelectorAll("#"+id);
-
-                            // Make sure the callback isn't invoked with the 
-                            // same element more than once
-                        // if (mutations.addedNodes[h]==element && !element.ready) 
-                            if(resultNodes.length>0 && !resultNodes[0].ready)
+                            if(!listener.element.attached)
                             {
-                                resultNodes[0].ready = true;
-                                // Invoke the callback with the element
-                                //listener.element.addedOnDOM();
-                                listener.fn.call(listener.element, $el);
+                                var $el = listener.element.$el;
+                                var id = $el[0].id;
+                                //console.log(DOMNode.id);
+                                var resultNodes = DOMNode.id==id?[DOMNode]:DOMNode.querySelectorAll("#"+id);
+
+                                // Make sure the callback isn't invoked with the 
+                                // same element more than once
+                            // if (mutations.addedNodes[h]==element && !element.ready) 
+                                if(resultNodes.length>0 && !resultNodes[0].ready)
+                                {
+                                    resultNodes[0].ready = true;
+                                    // Invoke the callback with the element
+                                    //listener.element.addedOnDOM();
+                                    listener.fn.call(listener.element, $el);
+                                }
                             }
                         }
                     }

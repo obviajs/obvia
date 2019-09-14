@@ -8,6 +8,7 @@ rjs.define("components/Loader.js", "Loader");
 
 rjs.define("lib/EventDispatcher.js", "EventDispatcher");
 rjs.define("lib/ArrayUtils.js", "ArrayUtils");
+rjs.define("lib/ArrayEx.js", "ArrayEx");
 rjs.define("lib/ObjectUtils.js", "ObjectUtils");
 rjs.define("lib/StringUtils.js", "StringUtils");
 rjs.define("lib/DecoratorUtils.js", "DecoratorUtils");
@@ -176,6 +177,7 @@ rjs.require([
         "DOMContentLoaded",
         "EventDispatcher",
         "ArrayUtils",
+        "ArrayEx",
         "ObjectUtils",
         "StringUtils",
         "DecoratorUtils",
