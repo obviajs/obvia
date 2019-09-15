@@ -33,7 +33,7 @@ var _DOMMutationHandler = function (e) {
 var remoteSources = new ArrayEx([{name:"test", description:"Test Remote Source", props:{url:"http://139.162.158.49/rca/index.php", post:{"testKey":"testValue"}, recordsPerPage:5}}]);
 var remoteData = {};
 for(let i=0;i<remoteSources.length;i++){
-    let r = new RemoteArray(remoteSources[i].props);
+    let r = new ArrayEx(new RemoteArray(remoteSources[i].props));
     remoteData[remoteSources[i].name] = r;
 }
 
@@ -492,221 +492,10 @@ var formField = {
         component: {}
     }
 };
-var providerValueField = "name";
-var providerLabelField = "description";
-var masks;
-var maskValueField = "";
-var maskLabelField = "";
 
-var propEditors = {
-    "TextInput": {
-        itemEditor: {
-            "constructor": TextInput,
-            "props":{
-                id: 'textField'
-            }
-        },
-        set:null,
-        get:null,
-        valueField:null
-    },
-    "Toggle": {
-        itemEditor: {
-            "constructor": Toggle,
-            "props":{
-                id: 'toggle',
-                value: true,
-                classes:{
-                    "self":["switch", "block"]
-                }
-            }
-        },
-        set:null,
-        get:null,
-        valueField:"checked"
-    },
-    "AutoCompleteEx": {
-        itemEditor: {
-            "constructor": Toggle,
-            "props":{
-                id: 'AutoCompleteEx',
-                allowNewItem: false,
-                value: [],
-                multiSelect: false,
-                matchType:StringMatchType.STARTS_WITH
-            }
-        },
-        set:null,
-        get:null,
-        valueField:null
-    },
-    "AutoBrowse": {
-        itemEditor: {
-            "constructor": AutoBrowse,
-            "props":{
-                id: "AutoBrowse",
-                labelField: providerLabelField,
-                valueField: providerValueField,
-                dataProvider: remoteSources,
-                classes:["ml-0"],
-                fields:[{"field":providerValueField, "description":providerValueField, "visible":false}, {"field":providerLabelField, "description":providerLabelField}]
-            }
-        }
-    },
-    "SpacingEditor": {
-        itemEditor: {
-            "constructor": SpacingEditor,
-            "props":{
-            }
-        },
-        valueField:null
-    }
-};
-
-var metaProps = {
-    id: {constructor:"TextInput", label: "Component ID", required:true, index:1},
-    name: {constructor:"TextInput", label: "Component Name", required:true, index:2},
-    label: {constructor:"TextInput", label: "Label", required:true, index:3},
-    visible: {constructor:"Toggle", label: "Visible", index:4},
-    enabled: {constructor:"Toggle", label: "Enabled", index:5}, 
-    required: {constructor:"Toggle", label: "Required", index:6},
-    checked: {constructor:"Toggle", label: "Checked", index:7},
-    dataProvider: {constructor:"AutoBrowse", label: "Data Provider", required:true, props:{
-        valueField: providerValueField,
-        labelField: providerLabelField,
-        dataProvider: remoteSources,
-        change: function(){
-            //propsForm.children["dataProvider"].value
-            //get the fields for the selected datProvider and 
-            //assign them to the labelField and valueField editor`s dataProvider property
-        }
-    }, index:8},
-    labelField: {constructor:"AutoCompleteEx", label: "Label Field", required:true, props:{
-        valueField: "prop",
-        labelField: "description"
-    }, index:9},
-    valueField: {constructor:"AutoCompleteEx", label: "Value Field", required:true, props:{
-        valueField: "prop",
-        labelField: "description"
-    }, index:10},
-    mask: {constructor:"AutoCompleteEx", label: "Data Provider", required:true, props:{
-        valueField: maskValueField,
-        labelField: maskLabelField,
-        dataProvider: masks
-    }, index:11},
-    inputFormat: {constructor:"TextInput", label: "Input Format", required:true, props:{
-        value:'DD/MM/YYYY'
-    }, index:12},
-    outputFormat: {constructor:"TextInput", label: "Output Format", required:true, props:{
-        value:'DD-MM-YYYY'
-    }, index:13},
-    displayFormat: {constructor:"TextInput", label: "Display Format", required:true, props:{
-        value:'DD/MM/YYYY'
-    }, index:14},
-    multiple: {constructor:"Toggle", label: "Multiple Files", index:15},
-    accept:{constructor:"Toggle", label: "Allowed Files", index:16},
-    spacing:{constructor:"SpacingEditor", label: "Adjust Spacing", index:17}
-};
 var parents = ["Container", "Form"];
 var noNeedFF = ["Button", "Label"];
 var dpCmpSelect = [];
-var propertyEditorRow = {
-    "constructor": "Container",
-    "props": {
-        "type": "row",
-        "components": [
-            {
-                "constructor": "Container",
-                "props": {
-                    "id": "workArea_80",
-                    spacing: {colSpan:6},
-                    type: ContainerType.NONE,
-                    "components": [
-                        {
-                            "constructor": "Label",
-                            "props": {
-                                "id": "propertyName"
-                            }
-                        }
-                    ]
-                }
-            },
-            {
-                "constructor": "Container",
-                "props": {
-                    "id": "workArea_84",
-                    spacing: {colSpan:6},
-                    type: ContainerType.NONE,
-                    "components": [
-                    ]
-                }
-            }
-        ],
-        "id": "Component_79"
-    }
-};
-var _pewCmps = [
-    {
-        "constructor": "Container",
-        "props": {
-            "type": "row",
-            "components": [
-                {
-                    "constructor": "Container",
-                    "props": {
-                        "id": "workArea_80",
-                        "components": [
-                            {
-                                "constructor": "Container",
-                                "props": {
-                                    "type": "row",
-                                    "components": [
-                                        {
-                                            "constructor": "Container",
-                                            "props": {
-                                                "id": "",
-                                                spacing: {colSpan:12},
-                                                type: ContainerType.NONE,
-                                                "components": [
-                                                    {
-                                                        constructor:AutoCompleteEx,
-                                                        props:{
-                                                            id:"cmpSelectAc",
-                                                            dataProvider: dpCmpSelect,
-                                                            valueField: providerValueField,
-                                                            labelField: providerLabelField,
-                                                        }
-                                                    }
-                                                ]
-                                            }
-                                        }
-                                    ]
-                                }
-                            },
-                            {
-                                "constructor": "Container",
-                                "props": {
-                                    "type": "row",
-                                    "components": [
-                                        {
-                                            "constructor": "Container",
-                                            "props": {
-                                                "id": "propertyListContainer",
-                                                sortChildren: true,
-                                                "components": [
-                                                ]
-                                            }
-                                        }
-                                    ]
-                                }
-                            }
-                        ]
-                    }
-                }
-            ]
-        }
-    }
-];
 
 var zeroCool = {
         constructor: Container,
@@ -718,8 +507,7 @@ var zeroCool = {
                     constructor: BrowserWindow,
                     props: {
                         id:"propertyEditorWindow",
-                        //afterAttach:function(){},
-                        components: acExtend(true, _pewCmps)
+                        components: []
                     }
                 },
                 {
@@ -1193,50 +981,22 @@ oxana.behaviorimplementations["SELECT_COMPONENT"] = {
             this.classes = classes;
         activeComponent = this;
         let pew = Component.instances["propertyEditorWindow"];
-        let props = this.props;
-        let rows = [];
-        for(let prop in props){
-            if(metaProps[prop]){
-                let propEditor = propEditors[metaProps[prop].constructor];
-                if(propEditor){
-                    var itemEditorLit = propEditor.itemEditor;
-                    if(metaProps[prop].props)
-                        itemEditorLit.props = extend(false, false, itemEditorLit.props, metaProps[prop].props);
-                    
-                    /*    
-                    let oneRow = extend(true, propertyEditorRow);
-                    oneRow.props.components[0].props.components[0].props.label = metaProps[prop].label;
-                    oneRow.props.components[1].props.components = [itemEditorLit];
-                    */
-                    itemEditorLit.props.bindingDefaultContext = this;
-                    itemEditorLit.props[(propEditor.valueField || "value")] = "{"+prop+"}";
-                    let ff = extend(true, formField);
-                    ff.props.label = metaProps[prop].label;
-                    ff.props.placeholder = metaProps[prop].label;
-                    ff.props.required = metaProps[prop].required;
-                    ff.props.component = itemEditorLit;
-                    ff.props.index = metaProps[prop].index;
-                    rows.push(ff);
-                    
-                }else{
-                    console.log("Couldnt find and itemEditor for " + prop + "property");
-                }
-            }else{
-                console.log("Couldnt find metaProps info for " + prop + "property");
+        let oeLit = {
+            constructor: ObjectEditor,
+            "props":{
+                id:"objectEditor",
+                instance: this,
+                field:"props"
             }
-            
-            
-        }
+        };
         if(pew.window)
         {
-            let plistCnt = Component.instances[pew.components["0"].props.components["0"].props.components[1].props.components[0].props.id];
-            plistCnt.removeAllChildren();
-            plistCnt.addComponents(rows);
+            let objectEditor = Component.instances[pew.components["0"].props.id];
+            objectEditor.initFields(this, "props");
 
         } else{
             pew.removeAllChildren();
-            pew.components = acExtend(true, _pewCmps); 
-            pew.components["0"].props.components["0"].props.components[1].props.components[0].props.components = rows; 
+            pew.components = [oeLit]; 
         }
         pew.show();
         

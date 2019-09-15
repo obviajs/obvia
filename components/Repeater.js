@@ -251,11 +251,9 @@ var Repeater = function(_props)
                 _dataProvider[i][_guidField] = StringUtils.guid();
         }
         if(_creationFinished){
-            var probablyAdded;
-            var toAdd;
+            var toAdd = {result:[],a1_indices:[]};
             if(e.newValue > e.oldValue){
-                probablyAdded = _dataProvider.slice(e.oldValue, e.newValue);
-                toAdd = differenceOnKeyMatch(probablyAdded, _oldDataProvider, _guidField, false, true);
+                toAdd = differenceOnKeyMatch(_dataProvider, _oldDataProvider, _guidField, false, true, e.oldValue);
             }
             if(e.newValue>e.oldValue && toAdd.result.length!=e.newValue-e.oldValue){
                 toAdd = differenceOnKeyMatch(_dataProvider, _oldDataProvider, _guidField, false, true);
@@ -263,8 +261,7 @@ var Repeater = function(_props)
             
             var toRemove = {result:[],a1_indices:[]};
             if(e.newValue < e.oldValue){
-                probablyRemoved = _oldDataProvider.slice(Math.max(e.newValue-1, 0), e.oldValue);
-                toRemove = differenceOnKeyMatch(probablyRemoved, _dataProvider, _guidField, false, true);
+                toRemove = differenceOnKeyMatch(_oldDataProvider, _dataProvider, _guidField, false, true, e.newValue);
             }
             if(e.newValue < e.oldValue && toRemove.result.length!=e.oldValue-e.newValue){
                 toRemove = differenceOnKeyMatch(_oldDataProvider, _dataProvider, _guidField, false, true);

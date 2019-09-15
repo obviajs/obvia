@@ -49,7 +49,8 @@ var FormField = function(_props)
                         _cmp.$el.removeAttr('name');
                 }
             }
-        }
+        },
+        enumerable:true
     });
     
     Object.defineProperty(this, "required",
@@ -129,7 +130,8 @@ var FormField = function(_props)
         enabled: true,
         required: false,
         size: FormFieldSize.SMALL,
-        type:ContainerType.NONE                 
+        type:ContainerType.NONE,
+        name:""                 
     };
     
     _props = extend(false, false, _defaultParams, _props);
