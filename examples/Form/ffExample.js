@@ -13,7 +13,7 @@ var myForm = new Form({
     action:"",
     components: [
         {
-            constructor: FormField,
+            ctor: FormField,
             props: {
                 id: 'formFieldEx2',
                 label: 'Example  Input',
@@ -22,7 +22,7 @@ var myForm = new Form({
                 size: FormFieldSize.SMALL,
                 spacing:{colSpan:2},
                 component: {
-                    constructor: TextInput,
+                    ctor: TextInput,
                     props: {
                         id: 'textField',
                         mask: 'currency',
@@ -32,7 +32,7 @@ var myForm = new Form({
             }
         },
         {
-            constructor: FormField,
+            ctor: FormField,
             props: {
                 id: 'formFieldEx3',
                 label: 'Example Input 3',
@@ -41,7 +41,7 @@ var myForm = new Form({
                 size: FormFieldSize.SMALL,
                 spacing:{colSpan:3},
                 component: {
-                    constructor: TextInput,
+                    ctor: TextInput,
                     props: {
                         id: 'textField3',
                         value: 'Bebop'
@@ -50,7 +50,7 @@ var myForm = new Form({
             }
         },
         {
-            constructor: FormField,
+            ctor: FormField,
             props: {
                 id: 'formFieldEx4',
                 label: 'Example Autocomplete',
@@ -58,7 +58,7 @@ var myForm = new Form({
                 name: 'autocomplete',
                 size: FormFieldSize.SMALL,
                 component: {
-                    constructor: AutoCompleteEx,
+                    ctor: AutoCompleteEx,
                     props: {
                         id: 'autocompleteR',
                         valueField: "id",
@@ -70,14 +70,14 @@ var myForm = new Form({
             }
         },
         {
-            constructor: FormField,
+            ctor: FormField,
             props: {
                 id: 'formFieldEx',
                 label: 'Example formField',
                 name: 'formFieldEx',
                 size: FormFieldSize.SMALL,
                 component: {
-                    constructor: Button,
+                    ctor: Button,
                     props: {
                         id: 'button',
                         type: "button",
@@ -90,7 +90,7 @@ var myForm = new Form({
             }
         },
         {
-            constructor: Hidden,
+            ctor: Hidden,
             props: {
                 id: 'hiddenField4',
                 name: 'hiddenField4',

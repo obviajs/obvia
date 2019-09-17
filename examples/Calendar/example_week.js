@@ -20,7 +20,7 @@ var myCalendarWeek = new CalendarWeek({
 });
 
 var myTextInput = {
-    constructor:"TextInput",
+    ctor:"TextInput",
     props:{
         id: 'TextInput',
         value: " " ,
@@ -29,7 +29,7 @@ var myTextInput = {
     
 }
 var myTextInput_Day = {
-    constructor:"TextInput",
+    ctor:"TextInput",
     props:{
         id: 'TextInput',
         value: " " ,
@@ -38,7 +38,7 @@ var myTextInput_Day = {
     
 }
 var myLabel = {
-    constructor: "Label",
+    ctor: "Label",
     props:{
         id: 'label',
         label: 'Enter Title for Your Event ',
@@ -47,7 +47,7 @@ var myLabel = {
 }
 
 var myTextInputEvent = {
-    constructor: "TextInput",
+    ctor: "TextInput",
     props:{
         id: 'TextInput',
         value: '',
@@ -55,7 +55,7 @@ var myTextInputEvent = {
     },
 }
 var mySaveEventButton = {
-    constructor: "Button",
+    ctor: "Button",
     props:{
         id: 'button',
         type: "button",

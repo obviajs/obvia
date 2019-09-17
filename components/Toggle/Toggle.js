@@ -61,14 +61,14 @@ var Toggle = function (_props, overrided = false) {
         checked:false,
         components: [
             {
-                constructor: CheckBox,
+                ctor: CheckBox,
                 props:{
                     id: 'checkBox',
                     beforeAttach:_cbBeforeAttach
                 }
             },
             {
-                constructor: Label,
+                ctor: Label,
                 props:{
                     id: 'span',
                     labelType: LabelType.span,

@@ -7,6 +7,9 @@
 //component definition
 var FormField = function(_props)
 {   
+    var _self = this;
+    var _cmp, _lbl;
+
     this.beforeAttach = function(e) 
     {
         if (e.target.id == this.domID) 
@@ -16,6 +19,14 @@ var FormField = function(_props)
             _lbl = this.addComponent(this.components[0]);
             _cmp = this.addComponent(this.components[1]);
             _lbl.$el.prop("for", _cmp.domID);
+            if(_props.required)
+                _self.required = _props.required;
+            if(_props.placeholder)
+                _self.placeholder = _props.placeholder;
+            if(_props.name)   
+                _self.name = _props.name;
+            if(_props.label)       
+                _self.label = _props.label;
             e.preventDefault();
         }
     };
@@ -141,7 +152,7 @@ var FormField = function(_props)
     var _label;
     var _component = _props.component;
     var _lblCmp = {
-        "constructor": Label,
+        "ctor": Label,
         "props":{
             id: 'label'
         }
@@ -152,44 +163,8 @@ var FormField = function(_props)
     if(_component && !Object.isEmpty(_component)){
         _props.components.push(_component);
     }
-
-
-    var _self = this;
-    Container.call(this, _props);
-
-    var _cmp, _lbl;
     
-    this.on('childCreated childAdded', function(e){
-        if(e.child.ctor != 'Label'){
-            if(_component ==null || Object.isEmpty(_component)){
-                _component = _cmp.literal;
-            }
-            if(_lbl)
-                _lbl.$el.prop("for", _cmp.domID);
-            if(_props.required)
-                _self.required = _props.required;
-            if(_props.placeholder)
-                _self.placeholder = _props.placeholder;
-            e.stopPropagation();
-            var _cmpObj;
-            if(["input", "select", "textarea"].indexOf(_cmp.$el[0].tagName.toLowerCase())>-1){
-                _cmpObj = _cmp.$el;
-            }else{
-                _cmpObj = _cmp.$el.find("input, select, textarea").filter(function(){ 
-                    return ($(this).closest(".no-form-control").length == 0);
-                });
-            }
-            _cmpObj.addClass("form-control");
-            if(_size)
-                _cmpObj.addClass(_size); 
-
-            _self.placeholder = _props.placeholder;
-            _self.name = _props.name;
-            _self.required = _props.required;
-            _self.label = _props.label;
-            _self.trigger('creationComplete');
-        }
-    });
+    Container.call(this, _props); 
 
     var _enabled = _props.enabled;
     Object.defineProperty(this, "enabled",
@@ -221,7 +196,7 @@ var FormField = function(_props)
                     {
                         case "component":
                             var component = {};
-                            component.constructor = _cmp.ctor; //_component.constructor;
+                            component.ctor = _cmp.ctor; //_component.ctor;
                             component.props = _cmp.props;
                             obj[prop] = component;
                             break;
@@ -260,6 +235,28 @@ var FormField = function(_props)
                         _cmp.$el.removeAttr('placeholder');
                 }
             }
+        }
+    });
+
+    this.on('childCreated childAdded', function(e){
+        if(e.child.ctor != 'Label'){
+            if(_component ==null || Object.isEmpty(_component)){
+                _component = _cmp.literal;
+            }
+            
+            e.stopPropagation();
+            var _cmpObj;
+            if(["input", "select", "textarea"].indexOf(_cmp.$el[0].tagName.toLowerCase())>-1){
+                _cmpObj = _cmp.$el;
+            }else{
+                _cmpObj = _cmp.$el.find("input, select, textarea").filter(function(){ 
+                    return ($(this).closest(".no-form-control").length == 0);
+                });
+            }
+            _cmpObj.addClass("form-control");
+            if(_size)
+                _cmpObj.addClass(_size); 
+            _self.trigger('creationComplete');
         }
     });
 }

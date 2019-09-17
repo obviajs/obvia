@@ -61,13 +61,13 @@ var AutoBrowse = function (_props, overrided = false) {
         _cmps = 
         [
             {
-                "constructor": "Container",
+                "ctor": "Container",
                 "props": {
                     type: ContainerType.NONE,
                     "id": "workArea",
                     "components": [
                         {
-                            "constructor": AutoCompleteEx,
+                            "ctor": AutoCompleteEx,
                             "props":{
                                 id: 'autocomplete',
                                 valueField: _valueField,
@@ -83,18 +83,18 @@ var AutoBrowse = function (_props, overrided = false) {
                 }
             },
             {
-                "constructor": "Container",
+                "ctor": "Container",
                 "props": {
                     type: ContainerType.NONE,
                     "id": "workArea_53",
                     "components": [
                         {
-                            constructor: Button,
+                            ctor: Button,
                             props: {
                                 id: 'selectBtn',
                                 type: "button",
                                 components: [{
-                                    constructor: Label,
+                                    ctor: Label,
                                     props: {
                                         id: 'fa',
                                         labelType: LabelType.i,
@@ -108,14 +108,14 @@ var AutoBrowse = function (_props, overrided = false) {
                 }
             },
             {
-                constructor: Modal,
+                ctor: Modal,
                 props: {
                     id: 'recordSelectModal',
                     size: ModalSize.LARGE,
                     title: 'Select an Item',
                     components: [
                             {
-                                constructor:DataGrid,
+                                ctor:DataGrid,
                                 props:{
                                 id: 'dataGrid',
                                 allowNewItem: true, //allow the user to add items that are not included in the specified dataProvider

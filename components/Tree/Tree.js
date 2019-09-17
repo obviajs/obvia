@@ -257,7 +257,7 @@ var Tree = function (_props, overrided = false) {
     }
 
     var _componentLi = {
-        constructor: Li,
+        ctor: Li,
         props:{
             id: "li",
             "value": '{'+_valueField+'}',
@@ -268,7 +268,7 @@ var Tree = function (_props, overrided = false) {
     };
     
     var _componentTree = {
-        constructor: Tree,
+        ctor: Tree,
         props:{
             id: "tree",
             "valueField": _valueField,
@@ -281,7 +281,7 @@ var Tree = function (_props, overrided = false) {
     };
     
     var _componentIconLbl = {
-        constructor: Label,
+        ctor: Label,
         props: {
             id: 'fa',
             labelType: LabelType.i,
@@ -290,7 +290,7 @@ var Tree = function (_props, overrided = false) {
     };
 
     var _componentLbl = {
-        constructor: Label,
+        ctor: Label,
         props: {
             id: 'label',
             labelType: LabelType.label,

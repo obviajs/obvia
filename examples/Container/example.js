@@ -6,32 +6,32 @@ var myContainer = new Container({
     id: 'nestedLayout',
     components:[
         {
-            constructor: Container,
+            ctor: Container,
             props: {
                 id: '',
                 type: ContainerType.ROW,
                 components:[
                     {
-                        constructor: Container,
+                        ctor: Container,
                         props: {
                             id: '',
                             type: ContainerType.COLUMN,
                             spacing: {colSpan:6},
                             components:[
                                 {
-                                    constructor: Container,
+                                    ctor: Container,
                                     props: {
                                         id: '',
                                         type: ContainerType.ROW,
                                         components:[
                                             {
-                                                constructor: Container,
+                                                ctor: Container,
                                                 props: {
                                                     id: '', 
                                                     classes:["border"],
                                                     components:[
                                                         {
-                                                            constructor: Label,
+                                                            ctor: Label,
                                                             props: {
                                                                 id: 'label',
                                                                 label: '1st Row'
@@ -44,19 +44,19 @@ var myContainer = new Container({
                                     }
                                 },
                                 {
-                                    constructor: Container,
+                                    ctor: Container,
                                     props: {
                                         id: '',
                                         type: ContainerType.ROW,
                                         components:[
                                             {
-                                                constructor: Container,
+                                                ctor: Container,
                                                 props: {
                                                     id: '',
                                                     classes:["border"],
                                                     components:[
                                                         {
-                                                            constructor: Label,
+                                                            ctor: Label,
                                                             props: {
                                                                 id: 'label',
                                                                 label: '2nd Row'
@@ -72,7 +72,7 @@ var myContainer = new Container({
                         }
                     },
                     {
-                        constructor: Container,
+                        ctor: Container,
                         props: {
                             id: '',
                             type: ContainerType.COLUMN,
@@ -80,7 +80,7 @@ var myContainer = new Container({
                             classes:["border"],
                             components:[
                                 {
-                                    constructor: Label,
+                                    ctor: Label,
                                     props: {
                                         id: 'label',
                                         label: 'Spans 2 Rows'

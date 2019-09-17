@@ -247,7 +247,7 @@ var App = function(_props){
         }
         //
     });
-
+    var _ccComponents = [];
     this.init = function()
     {
         _root.append(_loader.render());
@@ -256,12 +256,24 @@ var App = function(_props){
         {
             for(var i=0;i<_components.length;i++)
             {
-                var cmp = Component.fromLiteral(_components[i]);
+                let cmp = Component.fromLiteral(_components[i]);
                 _children[cmp.id] = cmp;   
                 _components[i].props.id = cmp.id;
-                _root.append(cmp.render());
                 cmp.parent = this;
                 cmp.parentType = this.type;
+
+                cmp.on('creationComplete', function (e) {
+                    e.stopImmediatePropagation();
+                    e.stopPropagation();
+                    _ccComponents.push(cmp.props.id);
+                    var event = jQuery.Event("childCreated");
+                    event.child = this;
+                    _root.trigger(event);
+                    if (_ccComponents.length == _self.components.length) {
+                        _root.trigger("creationComplete");
+                    }
+                });    
+                _root.append(cmp.render());
             }
         }
     }
@@ -352,7 +364,7 @@ var App = function(_props){
     
     Object.defineProperty(this, "literal", {
         get: function literal() {
-            return {constructor:this.ctor, props:this.props};
+            return {ctor:this.ctor, props:this.props};
         },
         configurable: true
     });  

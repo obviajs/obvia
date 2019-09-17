@@ -27,7 +27,7 @@ var MultiUpload = function (_props, overrided = false) {
     var fnContainerDelayInit = function(){
         _cmps = [
                     {
-                        constructor: Repeater,
+                        ctor: Repeater,
                         props: {
                             id: "listRepeater_"+_self.guid,
                             rendering: {
@@ -37,7 +37,7 @@ var MultiUpload = function (_props, overrided = false) {
                             dataProvider: _dataProvider,
                             components: [
                                 {
-                                    constructor: UploadEx,
+                                    ctor: UploadEx,
                                     props: {
                                         id: "upload_"+_self.guid,
                                         change: _upload_change,
@@ -51,7 +51,7 @@ var MultiUpload = function (_props, overrided = false) {
                         }
                     },
                     {
-                        constructor: Container,
+                        ctor: Container,
                         props: {
                             id: "dropContainer_"+_self.guid,
                             type: ContainerType.NONE,
@@ -60,7 +60,7 @@ var MultiUpload = function (_props, overrided = false) {
                             classes: ["rounded-lg", "border"],
                             components:[
                                 {
-                                    constructor: Label,
+                                    ctor: Label,
                                     props: {
                                         id: "label_"+_self.guid,
                                         label: 'Drag and Drop File or Click Me',
@@ -72,7 +72,7 @@ var MultiUpload = function (_props, overrided = false) {
                         }
                     },
                     {
-                        constructor: Container,
+                        ctor: Container,
                         props: {
                             id: "progressRow_"+_self.guid,
                             type: ContainerType.NONE,
@@ -80,7 +80,7 @@ var MultiUpload = function (_props, overrided = false) {
                             height: 5,
                             components:[
                                 {
-                                    constructor: ProgressBar,
+                                    ctor: ProgressBar,
                                     props: {
                                         id:"progressbar_"+_self.guid,
                                         valueNow: 0,

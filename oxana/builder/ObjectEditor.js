@@ -16,6 +16,7 @@ var ObjectEditor = function (_props, overrided = false) {
         set: function instance(v) {
             if (_instance != v) {
                 _instance = v;
+                this.initFields(_instance);
             }
         },
         enumerable:true
@@ -45,12 +46,13 @@ var ObjectEditor = function (_props, overrided = false) {
     }
 
     this.initFields = function(inst, fld){
-        props = inst[fld];
+
+        props = fld!=null && fld!=""?inst[fld]:inst;
         let rows = [];
         _self.removeAllChildren();
         for(let prop in props){
             if(ObjectEditor.metaProps[prop]){
-                let propEditor = ObjectEditor.propEditors[ObjectEditor.metaProps[prop].constructor];
+                let propEditor = ObjectEditor.propEditors[ObjectEditor.metaProps[prop].ctor];
                 if(propEditor){
                     var itemEditorLit = propEditor.itemEditor;
                     if(ObjectEditor.metaProps[prop].props)
@@ -58,14 +60,41 @@ var ObjectEditor = function (_props, overrided = false) {
                     
                     itemEditorLit.props.bindingDefaultContext = inst;
                     itemEditorLit.props[(propEditor.valueField || "value")] = "{"+prop+"}";
+                    if(ObjectEditor.metaProps[prop].ctor == "CollectionEditor"){
+                        itemEditorLit.props.instance = props[prop];
+                    }
                     let ff = extend(true, formField);
                     ff.props.label = ObjectEditor.metaProps[prop].label;
                     ff.props.placeholder = ObjectEditor.metaProps[prop].label;
                     ff.props.required = ObjectEditor.metaProps[prop].required;
-                    ff.props.component = itemEditorLit;
+
+                    if(ObjectEditor.metaProps[prop].targetProps != undefined)
+                    {
+                        
+                        let winLit = {
+                            ctor: BrowserWindow,
+                            props: {
+                                id:"propertyEditorWindow",
+                                components: [itemEditorLit],
+                                height:ObjectEditor.metaProps[prop].targetProps.height,
+                                width:ObjectEditor.metaProps[prop].targetProps.width,
+                                left:ObjectEditor.metaProps[prop].targetProps.left,
+                                top:ObjectEditor.metaProps[prop].targetProps.top
+                            }
+                        };
+                        ObjectEditor.metaProps[prop].targetProps.anchorComponent.props.click = function(e){
+                            let wl = extend(true, winLit);
+                            let win = _self.addComponent(wl);
+                            win.show();
+                        }
+
+                        ff.props.component = ObjectEditor.metaProps[prop].targetProps.anchorComponent;
+                    }else
+                    {
+                        ff.props.component = itemEditorLit;
+                    }
                     ff.props.index = ObjectEditor.metaProps[prop].index;
                     rows.push(ff);
-                    
                 }else{
                     console.log("Couldnt find and itemEditor for " + prop + "property");
                 }
@@ -114,15 +143,106 @@ ObjectEditor.maskLabelField = "";
 ObjectEditor.remoteSources = new ArrayEx([{name:"test", description:"Test Remote Source", props:{url:"http://139.162.158.49/rca/index.php", post:{"testKey":"testValue"}, recordsPerPage:5}}]);
 ObjectEditor.remoteData = {};
 
+ObjectEditor.componentValueField = "label";
+ObjectEditor.componentLabelField = "ctor";
+ObjectEditor.remoteData.componentList = [ 
+    {
+        "label":"Label", "icon":"horizontal-line.png", "ctor": "Label"
+    },
+    {
+        "label":"Heading", "icon":"", "ctor": "Heading"
+    },
+    {
+        "label":"Link", "icon":"", "ctor": "Link"
+    },
+    {
+        "label":"HRule", "icon":"", "ctor": "HRule"
+    },
+    {
+        "label":"Button", "icon":"", "ctor": "Button"
+    },
+    {
+        "label":"TextInput", "icon":"", "ctor": "TextInput"
+    },
+    {
+        "label":"TextArea", "icon":"", "ctor": "TextArea"
+    },
+    {
+        "label":"DateTime", "icon":"", "ctor": "DateTime"
+    },
+    {
+        "label":"DateTimeCb", "icon":"", "ctor": "DateTimeCb"
+    },
+    {
+        "label":"Image", "icon":"", "ctor": "Image"
+    },
+    {
+        "label":"Select", "icon":"drop-down-list.png", "ctor": "Select"
+    },
+    {
+        "label":"DropDown", "icon":"drop-down-list.png", "ctor": "DropDown"
+    },
+    {
+        "label":"Amount", "icon":"", "ctor": "Amount"
+    },
+    {
+        "label":"Tree", "icon":"", "ctor": "Tree"
+    },
+    {
+        "label":"AutoComplete", "icon":"", "ctor": "AutoCompleteEx"
+    },
+    {
+        "label":"AutoBrowse", "icon":"", "ctor": "AutoBrowse"
+    },
+    {
+        "label":"RadioGroup", "icon":"", "ctor": "RadioGroup"
+    },
+    {
+        "label":"Toggle", "icon":"", "ctor": "Toggle"
+    },
+    {
+        "label":"CheckBox", "icon":"", "ctor": "CheckBox"
+    },
+    {
+        "label":"CheckBoxGroup", "icon":"", "ctor": "CheckBoxGroup"
+    },
+    {
+        "label":"Form", "icon":"", "ctor": "Form"
+    },
+    {
+        "label":"Container", "icon":"", "ctor": "Container"
+    },
+    {
+        "label":"ViewStack", "icon":"", "ctor": "ViewStack"
+    },
+    {
+        "label":"Upload", "icon":"", "ctor": "UploadEx"
+    },
+    {
+        "label":"MultiUpload", "icon":"", "ctor": "MultiUpload"
+    },
+    {
+        "label":"Repeater", "icon":"", "ctor": "Repeater"
+    },
+    {
+        "label":"DataGrid", "icon":"", "ctor": "DataGrid"
+    },
+    {
+        "label":"CalendarDay", "icon":"", "ctor": "CalendarDay"
+    },
+    {
+        "label":"CalendarWeek", "icon":"", "ctor": "CalendarWeek"
+    }
+];
 ObjectEditor.metaProps = {
-    id: {constructor:"TextInput", label: "Component ID", required:true, index:1},
-    name: {constructor:"TextInput", label: "Component Name", required:true, index:2},
-    label: {constructor:"TextInput", label: "Label", required:true, index:3},
-    visible: {constructor:"Toggle", label: "Visible", index:4},
-    enabled: {constructor:"Toggle", label: "Enabled", index:5}, 
-    required: {constructor:"Toggle", label: "Required", index:6},
-    checked: {constructor:"Toggle", label: "Checked", index:7},
-    dataProvider: {constructor:"AutoBrowse", label: "Data Provider", required:true, props:{
+    id: {ctor:"TextInput", label: "Component ID", required:true, index:1},
+    name: {ctor:"TextInput", label: "Component Name", required:true, index:2},
+    label: {ctor:"TextInput", label: "Label", required:true, index:3},
+    visible: {ctor:"Toggle", label: "Visible", index:4},
+    enabled: {ctor:"Toggle", label: "Enabled", index:5}, 
+    required: {ctor:"Toggle", label: "Required", index:6},
+    checked: {ctor:"Toggle", label: "Checked", index:7},
+    dataProvider: {ctor:"AutoBrowse", label: "Data Provider", required:true, props:{
         valueField: ObjectEditor.providerValueField,
         labelField: ObjectEditor.providerLabelField,
         dataProvider: ObjectEditor.remoteSources,
@@ -132,35 +252,93 @@ ObjectEditor.metaProps = {
             //assign them to the labelField and valueField editor`s dataProvider property
         }
     }, index:8},
-    labelField: {constructor:"AutoCompleteEx", label: "Label Field", required:true, props:{
+    labelField: {ctor:"AutoCompleteEx", label: "Label Field", required:true, props:{
         valueField: "prop",
         labelField: "description"
     }, index:9},
-    valueField: {constructor:"AutoCompleteEx", label: "Value Field", required:true, props:{
+    valueField: {ctor:"AutoCompleteEx", label: "Value Field", required:true, props:{
         valueField: "prop",
         labelField: "description"
     }, index:10},
-    mask: {constructor:"AutoCompleteEx", label: "Data Provider", required:true, props:{
+    mask: {ctor:"AutoCompleteEx", label: "Data Provider", required:true, props:{
         valueField: ObjectEditor.maskValueField,
         labelField: ObjectEditor.maskLabelField,
         dataProvider: ObjectEditor.masks
     }, index:11},
-    inputFormat: {constructor:"TextInput", label: "Input Format", required:true, props:{
+    inputFormat: {ctor:"TextInput", label: "Input Format", required:true, props:{
         value:'DD/MM/YYYY'
     }, index:12},
-    outputFormat: {constructor:"TextInput", label: "Output Format", required:true, props:{
+    outputFormat: {ctor:"TextInput", label: "Output Format", required:true, props:{
         value:'DD-MM-YYYY'
     }, index:13},
-    displayFormat: {constructor:"TextInput", label: "Display Format", required:true, props:{
+    displayFormat: {ctor:"TextInput", label: "Display Format", required:true, props:{
         value:'DD/MM/YYYY'
     }, index:14},
-    multiple: {constructor:"Toggle", label: "Multiple Files", index:15},
-    accept:{constructor:"Toggle", label: "Allowed Files", index:16},
-    spacing:{constructor:"SpacingEditor", label: "Adjust Spacing", index:17}
+    multiple: {ctor:"Toggle", label: "Multiple Files", index:15},
+    accept:{ctor:"Toggle", label: "Allowed Files", index:16},
+    spacing:{ctor:"SpacingEditor", label: "Adjust Spacing", index:17},
+    columns:{ctor:"CollectionEditor", label: "Columns", index:18, props:{
+            memberType:"DataGridColumn"
+        },
+        targetProps:{
+            target:"_blank", anchorComponent:{
+                ctor: Button,
+                props: {
+                    id: 'anchorBtn',
+                    type: "button",
+                    components: [{
+                        ctor: Label,
+                        props: {
+                            id: 'fa',
+                            labelType: LabelType.i,
+                            classes: ["fas","fa-list"]
+                        }
+                    }]
+                }
+            },
+            height:500,
+            width:600,
+            left:800,
+            top:200,
+        }
+    },
+    dataField: "textLabel",
+    headerText: "Pija Preferuar",
+    sortInfo:{sortOrder:0, sortDirection:"ASC"},
+    sortable:{ctor:"Toggle", label: "Sortable", index:20, props:{
+        change: function(){
+        }
+    }},
+    editable:{ctor:"Toggle", label: "Editable", index:21, props:{
+        change: function(){
+        }
+    }},
+    itemRenderer:{ctor:"AutoBrowse", label: "Item Renderer", required:false, props:{
+        valueField: ObjectEditor.providerValueField,
+        labelField: ObjectEditor.providerLabelField,
+        dataProvider: ObjectEditor.remoteSources,
+        change: function(){
+            //propsForm.children["dataProvider"].value
+            //get the fields for the selected datProvider and 
+            //assign them to the labelField and valueField editor`s dataProvider property
+        }
+    }, index:18},
+    itemEditor:{ctor:"AutoBrowse", label: "Item Editor", required:false, props:{
+        valueField: ObjectEditor.componentValueField,
+        labelField: ObjectEditor.componentLabelField,
+        dataProvider: ObjectEditor.remoteData.componentList,
+        fields:[{"field":ObjectEditor.componentValueField, "description":ObjectEditor.componentValueField, "visible":false}, {"field":ObjectEditor.componentLabelField, "description":ObjectEditor.componentLabelField}],
+        change: function(){
+            //propsForm.children["dataProvider"].value
+            //get the fields for the selected datProvider and 
+            //assign them to the labelField and valueField editor`s dataProvider property
+            console.log(arguments);
+        }
+    }, index:19}
 };
 
 ObjectEditor.formField = {
-    constructor: FormField,
+    ctor: FormField,
     props: {
         id: 'formField',
         label: 'Label',
@@ -175,7 +353,7 @@ ObjectEditor.formField = {
 ObjectEditor.propEditors = {
     "TextInput": {
         itemEditor: {
-            "constructor": TextInput,
+            "ctor": TextInput,
             "props":{
                 id: 'textField'
             }
@@ -186,7 +364,7 @@ ObjectEditor.propEditors = {
     },
     "Toggle": {
         itemEditor: {
-            "constructor": Toggle,
+            "ctor": Toggle,
             "props":{
                 id: 'toggle',
                 value: true,
@@ -201,7 +379,7 @@ ObjectEditor.propEditors = {
     },
     "AutoCompleteEx": {
         itemEditor: {
-            "constructor": Toggle,
+            "ctor": Toggle,
             "props":{
                 id: 'AutoCompleteEx',
                 allowNewItem: false,
@@ -216,7 +394,7 @@ ObjectEditor.propEditors = {
     },
     "AutoBrowse": {
         itemEditor: {
-            "constructor": AutoBrowse,
+            "ctor": AutoBrowse,
             "props":{
                 id: "AutoBrowse",
                 labelField: ObjectEditor.providerLabelField,
@@ -229,10 +407,19 @@ ObjectEditor.propEditors = {
     },
     "SpacingEditor": {
         itemEditor: {
-            "constructor": SpacingEditor,
+            "ctor": SpacingEditor,
+            "props":{
+            }
+        },
+        valueField:null
+    },
+    "CollectionEditor":{
+        itemEditor: {
+            "ctor": CollectionEditor,
             "props":{
             }
         },
         valueField:null
     }
 };
+

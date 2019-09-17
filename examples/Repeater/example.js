@@ -5,7 +5,7 @@ var myRepeater = new Repeater({
     dataProvider:dp,
     components: [
         {
-            constructor: Button,
+            ctor: Button,
             props: {
                 id: 'component',
                 label: "{first_name+' '+last_name}",
@@ -20,13 +20,13 @@ var myRepeater = new Repeater({
     dataProvider:dp,
     components: [
         {
-            constructor: Repeater,
+            ctor: Repeater,
             props:{
                 id: 'repeater',
                 dataProvider:"{currentItem.children}",
                 components:[
                     {
-                        constructor: Button,
+                        ctor: Button,
                         props: {
                             id: 'component',
                             label: "{label}",
@@ -96,7 +96,7 @@ var myRepeater = new Repeater({
         ],
     components: [
          {
-            constructor: AutoComplete,
+            ctor: AutoComplete,
             props: {
                 id: 'autocomplete',
                 colspan: '6',
@@ -111,7 +111,7 @@ var myRepeater = new Repeater({
             }
         },
         {
-            constructor: ComboBox,
+            ctor: ComboBox,
             props: {
                 id: 'combo',
                 colspan: '6',
@@ -124,7 +124,7 @@ var myRepeater = new Repeater({
             }
         },
         {
-            constructor: TextInput,
+            ctor: TextInput,
             props: {
                 id: 'text',
                 colspan: '6',
@@ -136,7 +136,7 @@ var myRepeater = new Repeater({
             }
         },
         {
-            constructor: CheckBox,
+            ctor: CheckBox,
             props: {
                 id: 'checkbox',
                 colspan: '6',
@@ -150,7 +150,7 @@ var myRepeater = new Repeater({
             }
         },
         {
-            constructor: GoogleMap,
+            ctor: GoogleMap,
             props: {
                 id: 'map3',
                 colspan: '6',
@@ -163,7 +163,7 @@ var myRepeater = new Repeater({
             }
         },
         {
-            constructor: RadioGroup,
+            ctor: RadioGroup,
             props: {
                 id: 'radiogroup',
                 colspan: '6',
@@ -178,7 +178,7 @@ var myRepeater = new Repeater({
             }
         }
         {
-            constructor: Button,
+            ctor: Button,
             props: {
                 id: 'button',
                 type: "button",

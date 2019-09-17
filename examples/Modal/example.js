@@ -1,4 +1,4 @@
-var myLabel = {constructor: "Label",
+var myLabel = {ctor: "Label",
     props:{
         id: 'label',
         label: 'Label'

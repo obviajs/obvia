@@ -46,7 +46,7 @@ var Parent = function(_props, overrided=false, _isSurrogate=false)
             {
                 index = index > -1? index : _components.length;
                 this.$el.insertAt(child.$el, index);
-                _components.splice(index, 0, {constructor:child.ctor, props:child.props});
+                _components.splice(index, 0, {ctor:child.ctor, props:child.props});
                 _children[child.id] = child; 
                 child.parent = this;
                 child.parentType = this.type;

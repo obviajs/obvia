@@ -168,6 +168,7 @@ rjs.define("./components/Calendar/CalendarConstants.js", "CalendarConstants");
 rjs.define("./components/Calendar/CalendarWeek.js", "CalendarWeek");
 rjs.define("./components/Calendar/css/calendarWeek-default.css", "calendarWeek_default_css");
 
+rjs.define("./oxana/builder/CollectionEditor.js", "CollectionEditor");
 rjs.define("./oxana/builder/ObjectEditor.js", "ObjectEditor");
 rjs.require([
         "JTemplate",
@@ -203,6 +204,7 @@ rjs.require([
         "Component",
         "Spacing",
         "SpacingEditor",
+        "CollectionEditor",
         "ObjectEditor",
         "AutoBrowse",
         "Attr",

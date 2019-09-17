@@ -37,106 +37,17 @@ for(let i=0;i<remoteSources.length;i++){
     remoteData[remoteSources[i].name] = r;
 }
 
-var dpComponentList = [ 
-    {
-        "label":"Label", "icon":"horizontal-line.png", "constructor": "Label"
-    },
-    {
-        "label":"Heading", "icon":"", "constructor": "Heading"
-    },
-    {
-        "label":"Link", "icon":"", "constructor": "Link"
-    },
-    {
-        "label":"HRule", "icon":"", "constructor": "HRule"
-    },
-    {
-        "label":"Button", "icon":"", "constructor": "Button"
-    },
-    {
-        "label":"TextInput", "icon":"", "constructor": "TextInput"
-    },
-    {
-        "label":"TextArea", "icon":"", "constructor": "TextArea"
-    },
-    {
-        "label":"DateTime", "icon":"", "constructor": "DateTime"
-    },
-    {
-        "label":"DateTimeCb", "icon":"", "constructor": "DateTimeCb"
-    },
-    {
-        "label":"Image", "icon":"", "constructor": "Image"
-    },
-    {
-        "label":"Select", "icon":"drop-down-list.png", "constructor": "Select"
-    },
-    {
-        "label":"DropDown", "icon":"drop-down-list.png", "constructor": "DropDown"
-    },
-    {
-        "label":"Amount", "icon":"", "constructor": "Amount"
-    },
-    {
-        "label":"Tree", "icon":"", "constructor": "Tree"
-    },
-    {
-        "label":"AutoComplete", "icon":"", "constructor": "AutoCompleteEx"
-    },
-    {
-        "label":"AutoBrowse", "icon":"", "constructor": "AutoBrowse"
-    },
-    {
-        "label":"RadioGroup", "icon":"", "constructor": "RadioGroup"
-    },
-    {
-        "label":"Toggle", "icon":"", "constructor": "Toggle"
-    },
-    {
-        "label":"CheckBox", "icon":"", "constructor": "CheckBox"
-    },
-    {
-        "label":"CheckBoxGroup", "icon":"", "constructor": "CheckBoxGroup"
-    },
-    {
-        "label":"Form", "icon":"", "constructor": "Form"
-    },
-    {
-        "label":"Container", "icon":"", "constructor": "Container"
-    },
-    {
-        "label":"ViewStack", "icon":"", "constructor": "ViewStack"
-    },
-    {
-        "label":"Upload", "icon":"", "constructor": "UploadEx"
-    },
-    {
-        "label":"MultiUpload", "icon":"", "constructor": "MultiUpload"
-    },
-    {
-        "label":"Repeater", "icon":"", "constructor": "Repeater"
-    },
-    {
-        "label":"DataGrid", "icon":"", "constructor": "DataGrid"
-    },
-    {
-        "label":"CalendarDay", "icon":"", "constructor": "CalendarDay"
-    },
-    {
-        "label":"CalendarWeek", "icon":"", "constructor": "CalendarWeek"
-    }
-];
 
 var dpComponentLiterals = {
      "Label":{
-        "constructor": Label,
+        "ctor": Label,
         "props":{
             id: 'label',
             label:"Click Me"
         }
     },
     "Heading":{
-        "constructor": Heading,
+        "ctor": Heading,
         "props": {
             id: 'heading',
             label: 'Heading',
@@ -147,7 +58,7 @@ var dpComponentLiterals = {
         }
     },
     "Link":{
-        "constructor": Link,
+        "ctor": Link,
         "props":{
             id: 'label',
             label:"Click Me",
@@ -156,7 +67,7 @@ var dpComponentLiterals = {
         }
     },
     "HRule":{
-        "constructor": HRule,
+        "ctor": HRule,
         "props":{
             id: 'hrule',
             align: "center",
@@ -165,7 +76,7 @@ var dpComponentLiterals = {
         }
     },
     "Button": {
-        "constructor": Button,
+        "ctor": Button,
         "props":{
             id: 'button',
             type: "button",
@@ -175,7 +86,7 @@ var dpComponentLiterals = {
         }
     },
     "TextInput":{
-        "constructor": TextInput,
+        "ctor": TextInput,
         "props":{
             id: 'textField',
             mask: 'currency',
@@ -183,7 +94,7 @@ var dpComponentLiterals = {
         }
     },
     "TextArea":{
-        "constructor": TextArea,
+        "ctor": TextArea,
         "props":{
             id: 'textarea',
             spellCheck: {
@@ -193,7 +104,7 @@ var dpComponentLiterals = {
         }
     },
     "DateTime":{
-        "constructor": DateTime,
+        "ctor": DateTime,
         "props":{
             id: 'datetime',
             inputFormat: 'DD/MM/YYYY',
@@ -203,7 +114,7 @@ var dpComponentLiterals = {
         }
     },
     "DateTimeCb":{
-        "constructor": DateTimeCb,
+        "ctor": DateTimeCb,
         props: {
             id: 'dateTimeCb',
             mode: DateTimeMode.DATE_TIME_SECOND,
@@ -215,7 +126,7 @@ var dpComponentLiterals = {
         }
     },
     "Image":{
-        "constructor": Image,
+        "ctor": Image,
         "props":{
             id: 'image',
             src: 'https://d28hgpri8am2if.cloudfront.net/book_images/cvr9781451648539_9781451648539_hr.jpg',
@@ -225,7 +136,7 @@ var dpComponentLiterals = {
         }
     },
     "Select":{
-        "constructor": Select,
+        "ctor": Select,
         "props":{
             id: 'select',
             dataProvider: [{ "value": "1", "text": "Shqiperi" }, { "value": "2", "text": "Greqi" }, { "value": "3", "text": "SHBA" }],
@@ -250,7 +161,7 @@ var dpComponentLiterals = {
         }
     },
     "DropDown":{
-        "constructor": DropDown,
+        "ctor": DropDown,
         "props":{
             id: 'dropdown',
             hrefField:"key",
@@ -264,7 +175,7 @@ var dpComponentLiterals = {
         }
     },
     "Amount":{
-        "constructor": Amount,
+        "ctor": Amount,
         "props":{
             id: 'amount',
             currencyList: [{ "id": "1", "text": "EUR" }, { "id": "2", "text": "ALL" }, { "id": "3", "text": "GBP" }],
@@ -275,7 +186,7 @@ var dpComponentLiterals = {
         }
     },
     "Tree":{
-        "constructor": Tree,
+        "ctor": Tree,
         "props":{
             id: 'tree',
             valueField: "key",
@@ -293,7 +204,7 @@ var dpComponentLiterals = {
         }
     },
     "AutoCompleteEx":{
-        "constructor": AutoCompleteEx,
+        "ctor": AutoCompleteEx,
         "props":{
             id: 'autocomplete',
             valueField: "value",
@@ -319,14 +230,14 @@ var dpComponentLiterals = {
         }
     },
     "AutoBrowse":{
-        "constructor": AutoBrowse,
+        "ctor": AutoBrowse,
         "props":{
             id: "autoBrowse",
             classes:["ml-0"]
         }
     },
     "RadioGroup": {
-        "constructor": RadioGroup,
+        "ctor": RadioGroup,
         "props":{
             id: 'radiogroup',
             dataProvider: [
@@ -345,7 +256,7 @@ var dpComponentLiterals = {
         }
     },
     "CheckBox": {
-        "constructor": CheckBox,
+        "ctor": CheckBox,
         "props":{
             id: 'checkBoxField',
             label: 'CheckBox Label',
@@ -354,7 +265,7 @@ var dpComponentLiterals = {
         }
     },
     "Toggle": {
-        "constructor": Toggle,
+        "ctor": Toggle,
         "props":{
             id: 'toggle',
             value: "1",
@@ -366,7 +277,7 @@ var dpComponentLiterals = {
         }
     },
     "CheckBoxGroup":{
-        "constructor": CheckBoxGroup,
+        "ctor": CheckBoxGroup,
         "props":{
             id: 'checkBoxGroupLonely1',
             dataProvider: [
@@ -386,7 +297,7 @@ var dpComponentLiterals = {
         }
     },
     "Form":{
-        "constructor": Form,
+        "ctor": Form,
         "props":{
             id: 'form',
             formName: 'My Form',
@@ -396,7 +307,7 @@ var dpComponentLiterals = {
         }
     },
     "Container":{
-        constructor: Container,
+        ctor: Container,
         props: {
             id: 'container',
             type: ContainerType.NONE,
@@ -404,52 +315,53 @@ var dpComponentLiterals = {
         }
     },
     "ViewStack":{
-        constructor: ViewStack,
+        ctor: ViewStack,
         props: {
             id: 'viewStack',
             classes:["default-component","default-cnt"]
         }
     },
     "UploadEx":{
-        constructor: UploadEx,
+        ctor: UploadEx,
         props: {
             id: 'upload',
             multiple: true
         }
     },
     "MultiUpload":{
-        constructor: MultiUpload,
+        ctor: MultiUpload,
         props: {
             id: 'multiUpload',
         }
     },
     "Repeater":{
-        constructor: Repeater,
+        ctor: Repeater,
         props: {
             id: 'repeater',
         }
     },
     "DataGrid":{
-        constructor: DataGrid,
+        ctor: DataGrid,
         props: {
             id: 'dataGrid',
+            columns:new ArrayEx([])
         }
     },
     "CalendarDay":{
-        constructor: CalendarDay,
+        ctor: CalendarDay,
         props: {
             id: 'calendarDay',
         }
     },
     "CalendarWeek":{
-        constructor: CalendarWeek,
+        ctor: CalendarWeek,
         props: {
             id: 'calendarWeek',
         }
     },
 };
 var handle = {
-    constructor: Container,
+    ctor: Container,
     props: {
         id: 'handle',
         type: ContainerType.NONE,
@@ -460,7 +372,7 @@ var handle = {
 };
 var real;
 var shadow = {
-    constructor: Container,
+    ctor: Container,
     props: {
         id: 'handle',
         type: ContainerType.NONE,
@@ -481,7 +393,7 @@ var shadow = {
 };
 
 var formField = {
-    constructor: FormField,
+    ctor: FormField,
     props: {
         id: 'formField',
         label: 'Label',
@@ -498,33 +410,33 @@ var noNeedFF = ["Button", "Label"];
 var dpCmpSelect = [];
 
 var zeroCool = {
-        constructor: Container,
+        ctor: Container,
         props: {
             id: 'zeroCool',
             type: ContainerType.NONE,
             components:[
                 {
-                    constructor: BrowserWindow,
+                    ctor: BrowserWindow,
                     props: {
                         id:"propertyEditorWindow",
                         components: []
                     }
                 },
                 {
-                    constructor: BrowserWindow,
+                    ctor: BrowserWindow,
                     props: {
                         id:"controlsWindow",
                         //afterAttach:function(){},
                         components:[
                             {
-                                constructor: Container,
+                                ctor: Container,
                                 props: {
                                     id: '',
                                     type: ContainerType.ROW,
                                     height: 800,
                                     components:[
                                         {
-                                            constructor: Container,
+                                            ctor: Container,
                                             props: {
                                                 id: '',
                                                 type: ContainerType.COLUMN,
@@ -532,19 +444,19 @@ var zeroCool = {
                                                 classes:["border"],
                                                 components:[
                                                     {
-                                                        constructor: Container,
+                                                        ctor: Container,
                                                         props: {
                                                             spacing: {h:100},
                                                             components:[
                                                                 {
-                                                                    constructor: Container,
+                                                                    ctor: Container,
                                                                     props: {
                                                                         id: '',
                                                                         type: ContainerType.ROW,
                                                                         spacing: {h:10},
                                                                         components:[
                                                                             {
-                                                                                constructor: Container,
+                                                                                ctor: Container,
                                                                                 props: {
                                                                                     type: ContainerType.COLUMN,
                                                                                     spacing: {colSpan:12, h:100},
@@ -552,12 +464,12 @@ var zeroCool = {
                                                                                     classes:["border"],
                                                                                     components:[
                                                                                         {
-                                                                                            constructor: Button,
+                                                                                            ctor: Button,
                                                                                             props: {
                                                                                                 id: 'splitHorizontal',
                                                                                                 type: "button",
                                                                                                 components: [{
-                                                                                                    constructor: Label,
+                                                                                                    ctor: Label,
                                                                                                     props: {
                                                                                                         id: 'fa',
                                                                                                         labelType: LabelType.i,
@@ -567,12 +479,12 @@ var zeroCool = {
                                                                                             }
                                                                                         },
                                                                                         {
-                                                                                            constructor: Button,
+                                                                                            ctor: Button,
                                                                                             props: {
                                                                                                 id: 'splitVertical',
                                                                                                 type: "button",
                                                                                                 components: [{
-                                                                                                    constructor: Label,
+                                                                                                    ctor: Label,
                                                                                                     props: {
                                                                                                         id: 'fa',
                                                                                                         labelType: LabelType.i,
@@ -582,12 +494,12 @@ var zeroCool = {
                                                                                             }
                                                                                         },
                                                                                         {
-                                                                                            constructor: Button,
+                                                                                            ctor: Button,
                                                                                             props: {
                                                                                                 id: 'saveLayout',
                                                                                                 type: "button",
                                                                                                 components: [{
-                                                                                                    constructor: Label,
+                                                                                                    ctor: Label,
                                                                                                     props: {
                                                                                                         id: 'fa',
                                                                                                         labelType: LabelType.i,
@@ -597,12 +509,12 @@ var zeroCool = {
                                                                                             }
                                                                                         },
                                                                                         {
-                                                                                            constructor: Button,
+                                                                                            ctor: Button,
                                                                                             props: {
                                                                                                 id: 'previewBtn',
                                                                                                 type: "button",
                                                                                                 components: [{
-                                                                                                    constructor: Label,
+                                                                                                    ctor: Label,
                                                                                                     props: {
                                                                                                         id: 'fa',
                                                                                                         labelType: LabelType.i,
@@ -612,12 +524,12 @@ var zeroCool = {
                                                                                             }
                                                                                         },
                                                                                         {
-                                                                                            constructor: Button,
+                                                                                            ctor: Button,
                                                                                             props: {
                                                                                                 id: 'selectBtn',
                                                                                                 type: "button",
                                                                                                 components: [{
-                                                                                                    constructor: Label,
+                                                                                                    ctor: Label,
                                                                                                     props: {
                                                                                                         id: 'fa',
                                                                                                         labelType: LabelType.i,
@@ -627,14 +539,14 @@ var zeroCool = {
                                                                                             }
                                                                                         },
                                                                                         {
-                                                                                            constructor: Modal,
+                                                                                            ctor: Modal,
                                                                                             props: {
                                                                                                 id: 'fileSelectModal',
                                                                                                 size: ModalSize.LARGE,
                                                                                                 title: 'Select File',
                                                                                                 components: [
                                                                                                     {
-                                                                                                        constructor: UploadEx,
+                                                                                                        ctor: UploadEx,
                                                                                                         props: {
                                                                                                             id: "browseFile",
                                                                                                             multiple: false,
@@ -651,14 +563,14 @@ var zeroCool = {
                                                                     }
                                                                 },
                                                                 {
-                                                                    constructor: Container,
+                                                                    ctor: Container,
                                                                     props: {
                                                                         id: '',
                                                                         type: ContainerType.ROW,
                                                                         spacing: {h:90},
                                                                         components:[
                                                                             {
-                                                                                constructor: Container,
+                                                                                ctor: Container,
                                                                                 props: {
                                                                                     type: ContainerType.COLUMN,
                                                                                     spacing: {colSpan:12, h:100},
@@ -666,7 +578,7 @@ var zeroCool = {
                                                                                     classes:["border"],
                                                                                     components:[
                                                                                         {
-                                                                                            constructor: List,
+                                                                                            ctor: List,
                                                                                             props: {
                                                                                                 id: 'listHistorySteps',
                                                                                                 direction: 'vertical',
@@ -677,7 +589,7 @@ var zeroCool = {
                                                                                                 defaultClasses: [],
                                                                                                 selectedClasses: ["active-container"],   
                                                                                                 component: {
-                                                                                                    constructor: Label,
+                                                                                                    ctor: Label,
                                                                                                     props: {
                                                                                                         id: 'labelHistoryStep',
                                                                                                         value: "{id}",
@@ -702,7 +614,7 @@ var zeroCool = {
                                             }
                                         },
                                         {
-                                            constructor: Container,
+                                            ctor: Container,
                                             props: {
                                                 id: '',
                                                 type: ContainerType.COLUMN,
@@ -710,21 +622,21 @@ var zeroCool = {
                                                 classes:["border"],
                                                 components:[
                                                     {
-                                                        constructor: Container,
+                                                        ctor: Container,
                                                         props: {
                                                             spacing: {h:100},
                                                             components:[
                                                                 {
-                                                                    constructor: Repeater,
+                                                                    ctor: Repeater,
                                                                     props: {
                                                                         id:"componentList",
-                                                                        dataProvider:dpComponentList,
+                                                                        dataProvider:ObjectEditor.remoteData.componentList,
                                                                         rendering: {
                                                                             direction: 'horizontal'
                                                                         },
                                                                         components:[
                                                                             {
-                                                                                constructor: Container,
+                                                                                ctor: Container,
                                                                                 props: {
                                                                                     id: 'component',
                                                                                     placeholder: "{label}",
@@ -732,7 +644,7 @@ var zeroCool = {
                                                                                     dragstart: function(e, ra){
                                                                                         console.log(arguments);
                                                                                         e.originalEvent.dataTransfer.setData("domID", e.target.id);
-                                                                                        e.originalEvent.dataTransfer.setData("constructor", ra.currentItem.constructor);
+                                                                                        e.originalEvent.dataTransfer.setData("ctor", ra.currentItem.ctor);
                                                                                     },
                                                                                     classes:["border", "placeholder"],
                                                                                     width:80,
@@ -756,34 +668,34 @@ var zeroCool = {
                     }
                 },
                 {
-                    constructor: Container,
+                    ctor: Container,
                     props: {
                         id: '',
                         type: ContainerType.ROW,
                         height: 800,
                         components:[
                             {
-                                constructor: Container,
+                                ctor: Container,
                                 props: {
                                     type: ContainerType.COLUMN,
                                     spacing: {colSpan:12},    
                                     id: "snowCrash",
                                     components:[
                                         {
-                                            constructor: Container,
+                                            ctor: Container,
                                             props: {
                                                 spacing: {h:100},
                                                 type: ContainerType.NONE,
                                                 components:[
                                                     {
-                                                        constructor: Container,
+                                                        ctor: Container,
                                                         props: {
                                                             id: '',
                                                             type: ContainerType.ROW,
                                                             spacing: {h:100},
                                                             components:[
                                                                 {
-                                                                    constructor: Container,
+                                                                    ctor: Container,
                                                                     props: {
                                                                         type: ContainerType.COLUMN,
                                                                         spacing: {colSpan:12, h:100},
@@ -809,7 +721,7 @@ var zeroCool = {
 
 oxana.components = [
         {
-            constructor: ViewStack,
+            ctor: ViewStack,
             props: {
                 components: [zeroCool]
             }
@@ -879,13 +791,13 @@ oxana.behaviorimplementations["ADD_COMPONENT"] = {
         e.preventDefault();
         var workArea = Component.instances[Component.domID2ID[e.target.id]];
         var domID = e.originalEvent.dataTransfer.getData("domID");
-        var constructor = e.originalEvent.dataTransfer.getData("constructor");
+        var ctor = e.originalEvent.dataTransfer.getData("ctor");
         var move = e.originalEvent.dataTransfer.getData("move");
         let inst;
         if(move==""){
             console.log("ADD_COMPONENT_"+domID);
-            let lit = dpComponentLiterals[constructor];
-            if(workArea.ctor == "Form" && noNeedFF.indexOf(constructor)==-1){
+            let lit = dpComponentLiterals[ctor];
+            if(workArea.ctor == "Form" && noNeedFF.indexOf(ctor)==-1){
                 var ff = extend(true, formField);
                 ff.props.component = lit;
                 lit = ff;
@@ -904,7 +816,7 @@ oxana.behaviorimplementations["ADD_COMPONENT"] = {
           //  inst.width = inst.children[lit.props.id].$el.width() + 10;
             inst = workArea.addComponent(lit);
             addBehaviors(inst, cmpBehaviors, false);
-            if(parents.indexOf(constructor)>-1){
+            if(parents.indexOf(ctor)>-1){
                addBehaviors(inst, cntBehaviors, false);
             }
         }else{
@@ -982,7 +894,7 @@ oxana.behaviorimplementations["SELECT_COMPONENT"] = {
         activeComponent = this;
         let pew = Component.instances["propertyEditorWindow"];
         let oeLit = {
-            constructor: ObjectEditor,
+            ctor: ObjectEditor,
             "props":{
                 id:"objectEditor",
                 instance: this,
@@ -992,7 +904,7 @@ oxana.behaviorimplementations["SELECT_COMPONENT"] = {
         if(pew.window)
         {
             let objectEditor = Component.instances[pew.components["0"].props.id];
-            objectEditor.initFields(this, "props");
+            objectEditor.instance = this;
 
         } else{
             pew.removeAllChildren();
@@ -1009,7 +921,7 @@ oxana.behaviorimplementations["DRAGSTART_COMPONENT"] = {
     do:function(e) {
         console.log("DRAGSTART_COMPONENT",this.domID);
         e.originalEvent.dataTransfer.setData("domID", this.domID);
-        e.originalEvent.dataTransfer.setData("constructor", this.ctor);
+        e.originalEvent.dataTransfer.setData("ctor", this.ctor);
         e.originalEvent.dataTransfer.setData("move", 1);
     }
 }
@@ -1102,14 +1014,14 @@ oxana.behaviorimplementations["SPLIT_HOR"] = {
         console.log("Split Selected Container Horizontally");
         var ret = {track:false};
         var newRow = {
-                constructor: Container,
+                ctor: Container,
                 props: {
                     id: '',
                     type: ContainerType.ROW,
                     spacing: {h:100, m:"auto"},
                     components:[
                         {
-                            constructor: Container,
+                            ctor: Container,
                             props: {
                                 type: ContainerType.COLUMN,
                                 spacing: {colSpan:12, h:100}, 
@@ -1191,7 +1103,7 @@ oxana.behaviorimplementations["SPLIT_VERT"] = {
         console.log("Split Selected Container Vertically");
         var ret = {track:false};
         var newCell = {
-            constructor: Container,
+            ctor: Container,
             props: {
                 type: ContainerType.COLUMN,
                 spacing: {colSpan:12, h:100}, 

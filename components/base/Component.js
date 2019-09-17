@@ -199,7 +199,7 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
     });  
     Object.defineProperty(this, "literal", {
         get: function literal() {
-            return {constructor:this.ctor, props:this.props};
+            return {ctor:this.ctor, props:this.props};
         },
         configurable: true
     });  
@@ -850,12 +850,12 @@ Component.fromLiteral = function(_literal)
     //build components properties, check bindings
     //var _processedProps = ppb.processedProps;
     //construct the component
-    if(_literal.constructor)
+    if(_literal.ctor)
     {
-        if (typeof _literal.constructor == "string") {
-            _literal.constructor = eval(_literal.constructor);
+        if (typeof _literal.ctor == "string") {
+            _literal.ctor = window[_literal.ctor];
         }
-        var el = new _literal.constructor(props);
+        var el = new _literal.ctor(props);
         return el;
     }
 }

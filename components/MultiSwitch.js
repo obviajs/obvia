@@ -39,7 +39,7 @@ var MultiSwitch = function (_props, overrided = false) {
             embedded: true,
             components: [
                 {
-                    constructor: Button,
+                    ctor: Button,
                     props: {
                         id: 'button',
                         type: "button",

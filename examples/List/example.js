@@ -14,7 +14,7 @@ var list = new List({
     selectedClasses: ["btn btn-sm btn-success"],    
     value:[{ "id": "1", "text": "Ministria e Puneve te Jashtme 1", "buttonClass": ['btn btn-xs btn-default']}],      
     component: {
-        constructor: Button,
+        ctor: Button,
         props: {
             id: 'button',
             type: "button",

@@ -35,7 +35,7 @@ $('#root').append(myAutoComplete.render());
 /*
 closeIconSide:"left",
 itemRenderer:{
-                constructor: CheckBox,
+                ctor: CheckBox,
                 props: {
                     id: 'checkbox',
                     colspan: '6',

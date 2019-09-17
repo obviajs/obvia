@@ -33,7 +33,7 @@ var AutoCompleteEx = function(_props)
 
         if(this.tokenRenderer==null||this.tokenRenderer==undefined){
             this.tokenRenderer = {
-                constructor: TokenRenderer,
+                ctor: TokenRenderer,
                 props: {
                     id: 'token',
                     label: '{'+_labelField+'}',
@@ -125,7 +125,7 @@ var AutoCompleteEx = function(_props)
         //Suggestions Renderer
         if(this.suggestionRenderer==null||this.suggestionRenderer==undefined){
             this.suggestionRenderer = {
-                constructor: SuggestionRenderer,
+                ctor: SuggestionRenderer,
                 props: {
                     id: 'suggestion',
                     label: '{'+_labelField+'}',

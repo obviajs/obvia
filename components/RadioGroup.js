@@ -34,7 +34,7 @@ var RadioGroup = function (_props, overrided = false) {
             selectedClasses: _selectedClasses,
             value: _value,
             component: {
-                constructor: RadioButton,
+                ctor: RadioButton,
                 props: {
                     id: 'radioButton',
                     label: "{" + _labelField + "}",

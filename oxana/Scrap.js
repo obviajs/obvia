@@ -18,7 +18,7 @@ var Scrap = function(){
             )
             {
                 cLit = {
-                    constructor: "FormField",
+                    ctor: "FormField",
                     props: {
                         id: 'ff_'+cid,
                         label: 'Example  Input',
@@ -35,7 +35,7 @@ var Scrap = function(){
         
         if (["div", "header","footer"].indexOf($(n).prop("tagName").toLowerCase()) > -1) {       
             lit = {
-                constructor: "Container",
+                ctor: "Container",
                 props: {
                     "id": nid,
                     classes: cls,
@@ -49,7 +49,7 @@ var Scrap = function(){
             }
         } else if(["ul"].indexOf($(n).prop("tagName").toLowerCase()) > -1){
             lit = {
-                constructor: "Tree",
+                ctor: "Tree",
                 props: {
                     id: nid,
                     valueField: "key",
@@ -74,7 +74,7 @@ var Scrap = function(){
             lit.key = ++Scrap.liInc;
         } else if(["button"].indexOf($(n).prop("tagName").toLowerCase()) > -1){
             lit = {
-                constructor: "Button",
+                ctor: "Button",
                 props: {
                     id: nid,
                     type: "button",
@@ -86,7 +86,7 @@ var Scrap = function(){
             };
         } else if(["img"].indexOf($(n).prop("tagName").toLowerCase()) > -1){
             lit = {
-                constructor: "Image",
+                ctor: "Image",
                 props: {
                     id: nid,
                     src: $(n).attr('src'),
@@ -97,7 +97,7 @@ var Scrap = function(){
             };
         } else if(["i", "b", "u", "span", "label", "p", "sup", "small"].indexOf($(n).prop("tagName").toLowerCase()) > -1){
             lit = {
-                constructor: "Label",
+                ctor: "Label",
                 props: {
                     id: nid,
                     label: $(n).mytext(),
@@ -108,7 +108,7 @@ var Scrap = function(){
             };
         } else if(["a"].indexOf($(n).prop("tagName").toLowerCase()) > -1){
             lit = {
-                constructor: "Link",
+                ctor: "Link",
                 props: {
                     id: nid,
                     href: $(n).attr('href'),
@@ -125,7 +125,7 @@ var Scrap = function(){
                 case "reset":
                 case "submit":
                     _sLit = {
-                        constructor:"Button",
+                        ctor:"Button",
                         props: {
                             label: $(n).mytext(),
                             type:$(n).attr("type").toLowerCase(),
@@ -136,7 +136,7 @@ var Scrap = function(){
                     break;
                 case "hidden":
                     _sLit = {
-                        constructor:"Hidden",
+                        ctor:"Hidden",
                         props: {
                             value: $(n).attr("value"), 
                             name: $(n).attr("name")
@@ -146,7 +146,7 @@ var Scrap = function(){
                 case "email":
                 case "text":
                     _sLit = {
-                        constructor:"TextInput",
+                        ctor:"TextInput",
                         props: {
                             value: $(n).attr("value"), 
                         }
@@ -156,7 +156,7 @@ var Scrap = function(){
                     break;
                 case "checkbox":
                     _sLit = {
-                        constructor:"CheckBox",
+                        ctor:"CheckBox",
                         props: {
                             value: $(n).attr("value"), 
                             label: 'CheckBox Label',
@@ -166,7 +166,7 @@ var Scrap = function(){
                     break;
                 case "radio":
                     _sLit = {
-                        constructor:"RadioButton",
+                        ctor:"RadioButton",
                         props: {
                             value: $(n).attr("value"), 
                             label: 'CheckBox Label',
@@ -184,7 +184,7 @@ var Scrap = function(){
             lit = extend(false, false, _sLit, lit);
         }else if(["form"].indexOf($(n).prop("tagName").toLowerCase()) > -1){
             lit = {
-                constructor: "Form",
+                ctor: "Form",
                 props: {
                     id: nid,
                     classes: cls,
@@ -194,7 +194,7 @@ var Scrap = function(){
         } else if(["h1", "h2", "h3", "h4", "h5", "h6"].indexOf($(n).prop("tagName").toLowerCase()) > -1){
             var a = $(n).attr("align"); a = a? Align[a.toLowerCase()]:undefined,
             lit = {
-                constructor: "Heading",
+                ctor: "Heading",
                 props: {
                     id: nid,
                     label: $(n).mytext(),

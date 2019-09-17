@@ -16,7 +16,7 @@ const appStyle = `
 .mw-1 {max-width:1% !important}.mw-2 {max-width:2% !important}.mw-3 {max-width:3% !important}.mw-4 {max-width:4% !important}.mw-5 {max-width:5% !important}.mw-6 {max-width:6% !important}.mw-7 {max-width:7% !important}.mw-8 {max-width:8% !important}.mw-9 {max-width:9% !important}.mw-10 {max-width:10% !important}.mw-11 {max-width:11% !important}.mw-12 {max-width:12% !important}.mw-13 {max-width:13% !important}.mw-14 {max-width:14% !important}.mw-15 {max-width:15% !important}.mw-16 {max-width:16% !important}.mw-17 {max-width:17% !important}.mw-18 {max-width:18% !important}.mw-19 {max-width:19% !important}.mw-20 {max-width:20% !important}.mw-21 {max-width:21% !important}.mw-22 {max-width:22% !important}.mw-23 {max-width:23% !important}.mw-24 {max-width:24% !important}.mw-25 {max-width:25% !important}.mw-26 {max-width:26% !important}.mw-27 {max-width:27% !important}.mw-28 {max-width:28% !important}.mw-29 {max-width:29% !important}.mw-30 {max-width:30% !important}.mw-31 {max-width:31% !important}.mw-32 {max-width:32% !important}.mw-33 {max-width:33% !important}.mw-34 {max-width:34% !important}.mw-35 {max-width:35% !important}.mw-36 {max-width:36% !important}.mw-37 {max-width:37% !important}.mw-38 {max-width:38% !important}.mw-39 {max-width:39% !important}.mw-40 {max-width:40% !important}.mw-41 {max-width:41% !important}.mw-42 {max-width:42% !important}.mw-43 {max-width:43% !important}.mw-44 {max-width:44% !important}.mw-45 {max-width:45% !important}.mw-46 {max-width:46% !important}.mw-47 {max-width:47% !important}.mw-48 {max-width:48% !important}.mw-49 {max-width:49% !important}.mw-50 {max-width:50% !important}.mw-51 {max-width:51% !important}.mw-52 {max-width:52% !important}.mw-53 {max-width:53% !important}.mw-54 {max-width:54% !important}.mw-55 {max-width:55% !important}.mw-56 {max-width:56% !important}.mw-57 {max-width:57% !important}.mw-58 {max-width:58% !important}.mw-59 {max-width:59% !important}.mw-60 {max-width:60% !important}.mw-61 {max-width:61% !important}.mw-62 {max-width:62% !important}.mw-63 {max-width:63% !important}.mw-64 {max-width:64% !important}.mw-65 {max-width:65% !important}.mw-66 {max-width:66% !important}.mw-67 {max-width:67% !important}.mw-68 {max-width:68% !important}.mw-69 {max-width:69% !important}.mw-70 {max-width:70% !important}.mw-71 {max-width:71% !important}.mw-72 {max-width:72% !important}.mw-73 {max-width:73% !important}.mw-74 {max-width:74% !important}.mw-75 {max-width:75% !important}.mw-76 {max-width:76% !important}.mw-77 {max-width:77% !important}.mw-78 {max-width:78% !important}.mw-79 {max-width:79% !important}.mw-80 {max-width:80% !important}.mw-81 {max-width:81% !important}.mw-82 {max-width:82% !important}.mw-83 {max-width:83% !important}.mw-84 {max-width:84% !important}.mw-85 {max-width:85% !important}.mw-86 {max-width:86% !important}.mw-87 {max-width:87% !important}.mw-88 {max-width:88% !important}.mw-89 {max-width:89% !important}.mw-90 {max-width:90% !important}.mw-91 {max-width:91% !important}.mw-92 {max-width:92% !important}.mw-93 {max-width:93% !important}.mw-94 {max-width:94% !important}.mw-95 {max-width:95% !important}.mw-96 {max-width:96% !important}.mw-97 {max-width:97% !important}.mw-98 {max-width:98% !important}.mw-99 {max-width:99% !important}.mw-100 {max-width:100% !important}
 `;
 var zeroCool = {
-	"constructor": "Container",
+	"ctor": "Container",
 	"props": {
 		"spacing": {
 			"colSpan": 9
@@ -24,13 +24,13 @@ var zeroCool = {
         height: 800,
 		"id": "snowCrash",
 		"components": [{
-			"constructor": "Container",
+			"ctor": "Container",
 			"props": {
 				"spacing": {
 					"h": 100
 				},
 				"components": [{
-					"constructor": "Container",
+					"ctor": "Container",
 					"props": {
 						"id": "Component_9",
 						"type": "row",
@@ -38,7 +38,7 @@ var zeroCool = {
 							"h": 100
 						},
 						"components": [{
-							"constructor": "Container",
+							"ctor": "Container",
 							"props": {
 								"spacing": {
 									"colSpan": 12,
@@ -47,7 +47,7 @@ var zeroCool = {
 								"id": "workArea",
 								"classes": ["border"],
 								"components": [{
-									"constructor": "Container",
+									"ctor": "Container",
 									"props": {
 										"id": "Component_11",
 										"type": "row",
@@ -56,7 +56,7 @@ var zeroCool = {
 											"h": 29
 										},
 										"components": [{
-											"constructor": "Container",
+											"ctor": "Container",
 											"props": {
 												"spacing": {
 													"colSpan": 12,
@@ -65,7 +65,7 @@ var zeroCool = {
 												"id": "workArea_12",
 												"classes": ["border"],
 												"components": [{
-													"constructor": "Container",
+													"ctor": "Container",
 													"props": {
 														"id": "Component_15",
 														"type": "row",
@@ -74,7 +74,7 @@ var zeroCool = {
 															"h": 100
 														},
 														"components": [{
-															"constructor": "Container",
+															"ctor": "Container",
 															"props": {
 																"spacing": {
 																	"colSpan": 4,
@@ -83,7 +83,7 @@ var zeroCool = {
 																"id": "workArea_16",
 																"classes": ["border"],
 																"components": [{
-																	"constructor": "Container",
+																	"ctor": "Container",
 																	"props": {
 																		"id": "Component_19",
 																		"type": "row",
@@ -92,7 +92,7 @@ var zeroCool = {
 																			"h": 33
 																		},
 																		"components": [{
-																			"constructor": "Container",
+																			"ctor": "Container",
 																			"props": {
 																				"spacing": {
 																					"colSpan": 12,
@@ -112,7 +112,7 @@ var zeroCool = {
 																		"guid": "7f50b682-999e-4fdb-89d8-25ca7ae69caf"
 																	}
 																}, {
-																	"constructor": "Container",
+																	"ctor": "Container",
 																	"props": {
 																		"id": "Component_21",
 																		"type": "row",
@@ -121,7 +121,7 @@ var zeroCool = {
 																			"h": 34
 																		},
 																		"components": [{
-																			"constructor": "Container",
+																			"ctor": "Container",
 																			"props": {
 																				"spacing": {
 																					"colSpan": 12,
@@ -141,7 +141,7 @@ var zeroCool = {
 																		"guid": "8731c8c9-2954-46cf-9d2f-c267682e7c60"
 																	}
 																}, {
-																	"constructor": "Container",
+																	"ctor": "Container",
 																	"props": {
 																		"id": "Component_23",
 																		"type": "row",
@@ -150,7 +150,7 @@ var zeroCool = {
 																			"h": 33
 																		},
 																		"components": [{
-																			"constructor": "Container",
+																			"ctor": "Container",
 																			"props": {
 																				"spacing": {
 																					"colSpan": 12,
@@ -175,7 +175,7 @@ var zeroCool = {
 																"guid": "be16356c-6ecf-490c-9bc8-39379e008771"
 															}
 														}, {
-															"constructor": "Container",
+															"ctor": "Container",
 															"props": {
 																"spacing": {
 																	"colSpan": 4,
@@ -184,7 +184,7 @@ var zeroCool = {
 																"id": "workArea_17",
 																"classes": ["border"],
 																"components": [{
-																	"constructor": "Container",
+																	"ctor": "Container",
 																	"props": {
 																		"id": "Component_25",
 																		"type": "row",
@@ -193,7 +193,7 @@ var zeroCool = {
 																			"h": 25
 																		},
 																		"components": [{
-																			"constructor": "Container",
+																			"ctor": "Container",
 																			"props": {
 																				"spacing": {
 																					"colSpan": 12,
@@ -213,7 +213,7 @@ var zeroCool = {
 																		"guid": "7bf0124f-bfec-4ae4-a554-0f872b281a58"
 																	}
 																}, {
-																	"constructor": "Container",
+																	"ctor": "Container",
 																	"props": {
 																		"id": "Component_27",
 																		"type": "row",
@@ -222,7 +222,7 @@ var zeroCool = {
 																			"h": 25
 																		},
 																		"components": [{
-																			"constructor": "Container",
+																			"ctor": "Container",
 																			"props": {
 																				"spacing": {
 																					"colSpan": 12,
@@ -242,7 +242,7 @@ var zeroCool = {
 																		"guid": "4b12e3ab-2dd5-4ad1-8827-cc1ccd2f4603"
 																	}
 																}, {
-																	"constructor": "Container",
+																	"ctor": "Container",
 																	"props": {
 																		"id": "Component_29",
 																		"type": "row",
@@ -251,7 +251,7 @@ var zeroCool = {
 																			"h": 25
 																		},
 																		"components": [{
-																			"constructor": "Container",
+																			"ctor": "Container",
 																			"props": {
 																				"spacing": {
 																					"colSpan": 12,
@@ -271,7 +271,7 @@ var zeroCool = {
 																		"guid": "45d0a38c-2cff-415f-a63f-9d32444c823c"
 																	}
 																}, {
-																	"constructor": "Container",
+																	"ctor": "Container",
 																	"props": {
 																		"id": "Component_31",
 																		"type": "row",
@@ -280,7 +280,7 @@ var zeroCool = {
 																			"h": 25
 																		},
 																		"components": [{
-																			"constructor": "Container",
+																			"ctor": "Container",
 																			"props": {
 																				"spacing": {
 																					"colSpan": 12,
@@ -305,7 +305,7 @@ var zeroCool = {
 																"guid": "8ca979ae-eb14-4283-88ed-b68a3beffe91"
 															}
 														}, {
-															"constructor": "Container",
+															"ctor": "Container",
 															"props": {
 																"spacing": {
 																	"colSpan": 4,
@@ -314,7 +314,7 @@ var zeroCool = {
 																"id": "workArea_18",
 																"classes": ["border"],
 																"components": [{
-																	"constructor": "Container",
+																	"ctor": "Container",
 																	"props": {
 																		"id": "Component_33",
 																		"type": "row",
@@ -323,7 +323,7 @@ var zeroCool = {
 																			"h": 25
 																		},
 																		"components": [{
-																			"constructor": "Container",
+																			"ctor": "Container",
 																			"props": {
 																				"spacing": {
 																					"colSpan": 12,
@@ -343,7 +343,7 @@ var zeroCool = {
 																		"guid": "3c805f2d-38af-410f-8e16-b15f63fcec7e"
 																	}
 																}, {
-																	"constructor": "Container",
+																	"ctor": "Container",
 																	"props": {
 																		"id": "Component_35",
 																		"type": "row",
@@ -352,7 +352,7 @@ var zeroCool = {
 																			"h": 25
 																		},
 																		"components": [{
-																			"constructor": "Container",
+																			"ctor": "Container",
 																			"props": {
 																				"spacing": {
 																					"colSpan": 12,
@@ -372,7 +372,7 @@ var zeroCool = {
 																		"guid": "4d20be91-7890-4631-9d59-dfc2bd030cca"
 																	}
 																}, {
-																	"constructor": "Container",
+																	"ctor": "Container",
 																	"props": {
 																		"id": "Component_37",
 																		"type": "row",
@@ -381,7 +381,7 @@ var zeroCool = {
 																			"h": 25
 																		},
 																		"components": [{
-																			"constructor": "Container",
+																			"ctor": "Container",
 																			"props": {
 																				"spacing": {
 																					"colSpan": 12,
@@ -401,7 +401,7 @@ var zeroCool = {
 																		"guid": "8eaf580f-7731-44fd-a27d-2217e8c6bdae"
 																	}
 																}, {
-																	"constructor": "Container",
+																	"ctor": "Container",
 																	"props": {
 																		"id": "Component_39",
 																		"type": "row",
@@ -410,7 +410,7 @@ var zeroCool = {
 																			"h": 25
 																		},
 																		"components": [{
-																			"constructor": "Container",
+																			"ctor": "Container",
 																			"props": {
 																				"spacing": {
 																					"colSpan": 12,
@@ -452,7 +452,7 @@ var zeroCool = {
 										"guid": "46d0094a-0198-43b8-8d47-fc7d60d320dd"
 									}
 								}, {
-									"constructor": "Container",
+									"ctor": "Container",
 									"props": {
 										"id": "Component_13",
 										"type": "row",
@@ -461,7 +461,7 @@ var zeroCool = {
 											"h": 71
 										},
 										"components": [{
-											"constructor": "Container",
+											"ctor": "Container",
 											"props": {
 												"spacing": {
 													"colSpan": 12,
@@ -501,7 +501,7 @@ var zeroCool = {
 			}
         },
         {
-            constructor: Button,
+            ctor: Button,
             props: {
                 id: 'saveLayout',
                 type: "button",
@@ -520,7 +520,7 @@ var oxana = new App({
     style:appStyle,
     components:[
         {
-            constructor: ViewStack,
+            ctor: ViewStack,
             props: {
                 components: [zeroCool]
             }

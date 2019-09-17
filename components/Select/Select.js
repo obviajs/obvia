@@ -66,7 +66,7 @@ var Select = function (_props, overrided = false) {
     var _valueField = _props.valueField;
 
     var _component = {
-        constructor: Option,
+        ctor: Option,
         props:{
             id:"opt",
             value: '{'+_valueField+'}',

@@ -25,25 +25,25 @@ var _orders = [{"order_id":1, "order_resume":"7777-Acme"}];
 var _signees = [{"employee_id":1, "employee_name":"Ryu"}];
 var myForm = 
 {
-    constructor: Form,
+    ctor: Form,
     props: {
         id: 'form',
         formName: 'My Form',
         action:"",
         components: [
             {
-                constructor: Container,
+                ctor: Container,
                 props: {
                     id: 'nestedLayout',
                     components:[
                         {
-                            constructor: Container,
+                            ctor: Container,
                             props: {
                                 id: '',
                                 type:ContainerType.ROW,
                                 components:[
                                     {
-                                        constructor: Container,
+                                        ctor: Container,
                                         props: {
                                             id: '',
                                             type:ContainerType.COLUMN,
@@ -51,14 +51,14 @@ var myForm =
                                             classes:["border"],
                                             components:[
                                                 {
-                                                    constructor: FormField,
+                                                    ctor: FormField,
                                                     props: {
                                                         id: 'formFieldEx',
                                                         label: 'Data',
                                                         name: 'document_date',
                                                         size: FormFieldSize.SMALL,
                                                         component: {
-                                                            constructor:DateTime,
+                                                            ctor:DateTime,
                                                             props:{
                                                                 id: 'document_date',
                                                                 inputFormat: 'DD/MM/YYYY',
@@ -70,14 +70,14 @@ var myForm =
                                                     }
                                                 },
                                                 {
-                                                    constructor: FormField,
+                                                    ctor: FormField,
                                                     props: {
                                                         id: 'formFieldEx',
                                                         label: 'Nr. Serial',
                                                         name: 'serial_number',
                                                         size: FormFieldSize.SMALL,
                                                         component: {
-                                                            constructor:TextInput,
+                                                            ctor:TextInput,
                                                             props:{
                                                                 id: 'serial_number',
                                                                 value: ''
@@ -86,14 +86,14 @@ var myForm =
                                                     }
                                                 },
                                                 {
-                                                    constructor: FormField,
+                                                    ctor: FormField,
                                                     props: {
                                                         id: 'formFieldEx',
                                                         label: 'Nr. Dokumenti',
                                                         name: 'document_number',
                                                         size: FormFieldSize.SMALL,
                                                         component: {
-                                                            constructor:TextInput,
+                                                            ctor:TextInput,
                                                             props:{
                                                                 id: 'document_number',
                                                                 value: ''
@@ -105,7 +105,7 @@ var myForm =
                                         }
                                     },
                                     {
-                                        constructor: Container,
+                                        ctor: Container,
                                         props: {
                                             id: '',
                                             type:ContainerType.COLUMN,
@@ -113,14 +113,14 @@ var myForm =
                                             classes:["border"],
                                             components:[
                                                 {
-                                                    constructor: FormField,
+                                                    ctor: FormField,
                                                     props: {
                                                         id: 'formFieldEx',
                                                         label: 'Example formField',
                                                         name: 'formFieldEx',
                                                         size: FormFieldSize.SMALL,
                                                         component: {
-                                                            constructor:Amount,
+                                                            ctor:Amount,
                                                             props: {
                                                                 id: 'amount',
                                                                 currencyList: _currencies,
@@ -133,14 +133,14 @@ var myForm =
                                                     }
                                                 },
                                                 {
-                                                    constructor: FormField,
+                                                    ctor: FormField,
                                                     props: {
                                                         id: 'formFieldEx',
                                                         label: 'Termat Tregtare',
                                                         name: 'id_commercialterms',
                                                         size: FormFieldSize.SMALL,
                                                         component: {
-                                                            constructor: Select,
+                                                            ctor: Select,
                                                             props: {
                                                                 id: 'id_commercialterms',
                                                                 dataProvider: _commercialterms,
@@ -152,14 +152,14 @@ var myForm =
                                                     }
                                                 },
                                                 {
-                                                    constructor: FormField,
+                                                    ctor: FormField,
                                                     props: {
                                                         id: 'formFieldEx',
                                                         label: 'Monedha/Kursi',
                                                         name: 'formFieldEx',
                                                         size: FormFieldSize.SMALL,
                                                         component: {
-                                                            constructor: CurrencyExRate,
+                                                            ctor: CurrencyExRate,
                                                             props: {
                                                                 id: 'amount',
                                                                 currencyList: _currencies,
@@ -175,7 +175,7 @@ var myForm =
                                         }
                                     },
                                     {
-                                        constructor: Container,
+                                        ctor: Container,
                                         props: {
                                             id: '',
                                             type:ContainerType.COLUMN,
@@ -183,14 +183,14 @@ var myForm =
                                             classes:["border"],
                                             components:[
                                                 {
-                                                    constructor: FormField,
+                                                    ctor: FormField,
                                                     props: {
                                                         id: 'formFieldEx',
                                                         label: 'Furnitori',
                                                         name: 'formFieldEx',
                                                         size: FormFieldSize.SMALL,
                                                         component: {
-                                                            constructor:AutoCompleteEx,
+                                                            ctor:AutoCompleteEx,
                                                             props: {
                                                                 id: 'suppliers_id_supplier',
                                                                 valueField: "supplier_id",
@@ -205,14 +205,14 @@ var myForm =
                                                     }
                                                 },
                                                 {
-                                                    constructor: FormField,
+                                                    ctor: FormField,
                                                     props: {
                                                         id: 'formFieldEx',
                                                         label: 'Magazina',
                                                         name: 'formFieldEx',
                                                         size: FormFieldSize.SMALL,
                                                         component: {
-                                                            constructor:AutoCompleteEx,
+                                                            ctor:AutoCompleteEx,
                                                             props: {
                                                                 id: 'idwarehouse_entry',
                                                                 valueField: "warehouse_id",
@@ -227,14 +227,14 @@ var myForm =
                                                     }
                                                 },
                                                 {
-                                                    constructor: FormField,
+                                                    ctor: FormField,
                                                     props: {
                                                         id: 'formFieldEx',
                                                         label: 'Urdher Blerje',
                                                         name: 'formFieldEx',
                                                         size: FormFieldSize.SMALL,
                                                         component: {
-                                                            constructor:AutoCompleteEx,
+                                                            ctor:AutoCompleteEx,
                                                             props: {
                                                                 id: 'id_order',
                                                                 valueField: "order_id",
@@ -252,7 +252,7 @@ var myForm =
                                         }
                                     },
                                     {
-                                        constructor: Container,
+                                        ctor: Container,
                                         props: {
                                             id: '',
                                             type:ContainerType.COLUMN,
@@ -260,14 +260,14 @@ var myForm =
                                             classes:["border"],
                                             components:[
                                                 {
-                                                    constructor: FormField,
+                                                    ctor: FormField,
                                                     props: {
                                                         id: 'formFieldEx',
                                                         label: 'Bleresi',
                                                         name: 'formFieldEx',
                                                         size: FormFieldSize.SMALL,
                                                         component: {
-                                                            constructor:AutoCompleteEx,
+                                                            ctor:AutoCompleteEx,
                                                             props: {
                                                                 id: 'id_order',
                                                                 valueField: "order_id",
@@ -282,14 +282,14 @@ var myForm =
                                                     }
                                                 },
                                                 {
-                                                    constructor: FormField,
+                                                    ctor: FormField,
                                                     props: {
                                                         id: 'formFieldEx',
                                                         label: 'Firmosi',
                                                         name: 'formFieldEx',
                                                         size: FormFieldSize.SMALL,
                                                         component: {
-                                                            constructor:AutoCompleteEx,
+                                                            ctor:AutoCompleteEx,
                                                             props: {
                                                                 id: 'signee',
                                                                 valueField: "employee_id",
@@ -304,14 +304,14 @@ var myForm =
                                                     }
                                                 },
                                                 {
-                                                    constructor: FormField,
+                                                    ctor: FormField,
                                                     props: {
                                                         id: 'formFieldEx',
                                                         label: 'Pershkrim',
                                                         name: 'formFieldEx',
                                                         size: FormFieldSize.SMALL,
                                                         component: {
-                                                            constructor:TextArea,
+                                                            ctor:TextArea,
                                                             props: {
                                                                 id: 'description',
                                                                 spellCheck: {
@@ -337,25 +337,25 @@ var myForm =
 
 
 var myForm2 = {
-    constructor: Container,
+    ctor: Container,
     props: {
         id: '',
         components:[{
-                constructor: Form,
+                ctor: Form,
                 props: {
                     id: '',
                     spacing: {colSpan:3},
                     classes:["border"],
                     components:[
                         {
-                            constructor: FormField,
+                            ctor: FormField,
                             props: {
                                 id: 'formFieldEx',
                                 label: 'Example formField',
                                 name: 'formFieldEx',
                                 size: FormFieldSize.SMALL,
                                 component: {
-                                    constructor:Amount,
+                                    ctor:Amount,
                                     props: {
                                         id: 'amount',
                                         currencyList: _currencies,
@@ -368,14 +368,14 @@ var myForm2 = {
                             }
                         },
                         {
-                            constructor: FormField,
+                            ctor: FormField,
                             props: {
                                 id: 'formFieldEx',
                                 label: 'Termat Tregtare',
                                 name: 'id_commercialterms',
                                 size: FormFieldSize.SMALL,
                                 component: {
-                                    constructor: Select,
+                                    ctor: Select,
                                     props: {
                                         id: 'id_commercialterms',
                                         dataProvider: _commercialterms,
@@ -387,14 +387,14 @@ var myForm2 = {
                             }
                         },
                         {
-                            constructor: FormField,
+                            ctor: FormField,
                             props: {
                                 id: 'formFieldEx',
                                 label: 'Monedha/Kursi',
                                 name: 'formFieldEx',
                                 size: FormFieldSize.SMALL,
                                 component: {
-                                    constructor: CurrencyExRate,
+                                    ctor: CurrencyExRate,
                                     props: {
                                         id: 'amount',
                                         currencyList: _currencies,
@@ -413,11 +413,11 @@ var myForm2 = {
     }
 };
 var myContainerTemplateLiteral = {
-    constructor: Container,
+    ctor: Container,
     props: {
         id: '',
         components:[{
-                constructor: Form,
+                ctor: Form,
                 props: {
                     id: '',
                     spacing: {colSpan:3},
@@ -425,14 +425,14 @@ var myContainerTemplateLiteral = {
                     components:[
                         "{{movingPart.formfield}}",
                         {
-                            constructor: FormField,
+                            ctor: FormField,
                             props: {
                                 id: 'formFieldEx',
                                 label: 'Termat Tregtare',
                                 name: 'id_commercialterms',
                                 size: FormFieldSize.SMALL,
                                 component: {
-                                    constructor: Select,
+                                    ctor: Select,
                                     props: {
                                         id: 'id_commercialterms',
                                         dataProvider: _commercialterms,
@@ -451,14 +451,14 @@ var myContainerTemplateLiteral = {
 };
 var movingPart = {};
 movingPart.formfield = {
-    constructor: FormField,
+    ctor: FormField,
     props: {
         id: 'formFieldEx',
         label: 'Example formField',
         name: 'formFieldEx',
         size: FormFieldSize.SMALL,
         component: {
-            constructor:Amount,
+            ctor:Amount,
             props: {
                 id: 'amount',
                 currencyList: _currencies,
@@ -483,7 +483,7 @@ var literalTemplate = new JTemplate("{\"obj\":{{hello.world}}}");
 var oxana = new App({
     components:[
         {
-            constructor: ViewStack,
+            ctor: ViewStack,
             props: {
                 components: [myForm, myForm2, myContainerTemplate]
             }

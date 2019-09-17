@@ -2,13 +2,13 @@ var myTabNavigator = new TabNavigator({
     id: 'tabNav',
     components: [
         {
-            constructor: Tab,
+            ctor: Tab,
             props: {
                 id: 'tab1',
                 label: 'Tab 1',
                 components: [
                     {
-                        constructor: TextInput,
+                        ctor: TextInput,
                         props: {
                             id: 'text',
                             colspan: '6',

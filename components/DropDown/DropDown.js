@@ -156,7 +156,7 @@ var DropDown = function (_props, overrided = false) {
     };
 
     var _componentContainer = {
-        constructor: Container,
+        ctor: Container,
         props:{
             id:"divContent",
             type:ContainerType.NONE,
@@ -165,7 +165,7 @@ var DropDown = function (_props, overrided = false) {
     }
 
     var _componentButton = {
-        constructor: Button,
+        ctor: Button,
         props:{
             id:"button",
             classes:[_size,_split,"btn", "btn-secondary","dropdown-toggle"],
@@ -179,7 +179,7 @@ var DropDown = function (_props, overrided = false) {
     }
 
     var _componentLink = {
-        constructor:Link,
+        ctor:Link,
         props: {
             id:"link",
             "href":'{'+_hrefField+'}',

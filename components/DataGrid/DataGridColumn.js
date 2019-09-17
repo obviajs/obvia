@@ -1,6 +1,8 @@
-var DataGridColumn = function(p)
+var DataGridColumn = function(_props)
 {
     var _defaultParams = {
+        width:null,
+        calculatedWidth:null,
         field: "",
         fieldToFilter: "",   
         description: "",
@@ -8,10 +10,10 @@ var DataGridColumn = function(p)
         sortDirection: "ASC",//DESC
         sortable: true,
         itemRenderer: {
-            constructor: DataGridCellRenderer,
+            ctor: DataGridCellRenderer,
             props: {
                 id: 'cell_',
-                label: '{'+p.field+'}',
+                label: _props && _props.field && _props.field!=""?'{'+_props.field+'}':'',
                 href: false,
                 target:null
             }
@@ -21,18 +23,30 @@ var DataGridColumn = function(p)
         oncellstyling: null,
         oncelleditfinished: null
     };
-    var props = extend(false, false, [],[],["itemRenderer", "itemEditor"], _defaultParams, p);
-    this.width = props["width"];
-    this.calculatedWidth = undefined;
-    this.field = props.field;
-    this.fieldToFilter = props.fieldToFilter;   
-	this.description = props.description;
-	this.sortOrder = props.sortOrder;
-    this.sortDirection = props.sortDirection;//DESC
-    this.sortable = props.sortable;
-    this.itemRenderer = props.itemRenderer;
-    this.itemEditor = props.itemEditor;
-    this.editable = props.editable;
-    this.oncellstyling = props.oncellstyling;
-    this.oncelleditfinished = props.oncelleditfinished;
+    var _props = extend(false, false, [],[],["itemRenderer", "itemEditor"], _defaultParams, _props);
+    this.width = _props.width;
+    this.calculatedWidth = _props.calculatedWidth;
+    this.field = _props.field;
+    this.fieldToFilter = _props.fieldToFilter;   
+	this.description = _props.description;
+	this.sortOrder = _props.sortOrder;
+    this.sortDirection = _props.sortDirection;//DESC
+    this.sortable = _props.sortable;
+    this.itemRenderer = _props.itemRenderer;
+    this.itemEditor = _props.itemEditor;
+    this.editable = _props.editable;
+    this.oncellstyling = _props.oncellstyling;
+    this.oncelleditfinished = _props.oncelleditfinished;
+
+    Object.defineProperty(this, "props", {
+        get: function props() {
+            var obj = {};
+            for(var prop in _props){
+                if(this.hasOwnProperty(prop) && this.propertyIsEnumerable(prop) && (typeof _props[prop] != 'function') && (prop != "ownerDocument"))
+                    obj[prop] = this[prop];
+            }
+            return obj;
+        },
+        configurable: true
+    });  
 }

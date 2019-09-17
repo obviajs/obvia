@@ -612,7 +612,7 @@ var Repeater = function(_props)
         },
         dataProvider:[],
         container:{
-            constructor: Container,
+            ctor: Container,
             props: {
                 id: _props.id,
                 type: ContainerType.NONE,

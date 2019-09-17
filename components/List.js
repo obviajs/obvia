@@ -169,7 +169,7 @@ var List = function (_props, overrided = false) {
         selectedClasses: ["btn btn-sm btn-success"],
         value: [],
         container:{
-            constructor: Container,
+            ctor: Container,
             props: {
                 id: _props.id,
                 type: ContainerType.NONE

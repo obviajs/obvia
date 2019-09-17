@@ -124,7 +124,7 @@ var ProgressBar=function(_props, overrided=false){
         type: ContainerType.NONE,
         components:[
             {
-                constructor: Container,
+                ctor: Container,
                 props:{
                     id:"progressBar",
                     classes:[ProgressBarStyle.PROGRESS],

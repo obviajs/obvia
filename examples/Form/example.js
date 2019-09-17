@@ -15,7 +15,7 @@ var myForm = new Form({
     viewMode: 'steps',
     components: [
         {
-            constructor: TextInput,
+            ctor: TextInput,
             props: {
                 id: 'text',
                 colspan: '6',
@@ -29,7 +29,7 @@ var myForm = new Form({
             }
         },
         {
-            constructor: TextInput,
+            ctor: TextInput,
             props: {
                 id: 'number',
                 colspan: '6',
@@ -46,7 +46,7 @@ var myForm = new Form({
             }
         },
         {
-            constructor: TextArea,
+            ctor: TextArea,
             props: {
                 id: 'textarea',
                 colspan: '6',
@@ -62,7 +62,7 @@ var myForm = new Form({
             }
         },
         {
-            constructor: TextEditor,
+            ctor: TextEditor,
             props: {
                 id: 'texteditor',
                 colspan: '6',
@@ -78,7 +78,7 @@ var myForm = new Form({
             }
         },
         {
-            constructor: DateTime,
+            ctor: DateTime,
             props: {
                 id: 'datetime',
                 colspan: '6',
@@ -94,7 +94,7 @@ var myForm = new Form({
             }
         },
         {
-            constructor: DateTimeCb,
+            ctor: DateTimeCb,
             props: {
                 id: 'dayMonthYear',
                 colspan: '6',
@@ -112,7 +112,7 @@ var myForm = new Form({
             }
         },
         {
-            constructor: Spacer,
+            ctor: Spacer,
             props: {
                 id: 'spacer',
                 colspan: '6',
@@ -123,7 +123,7 @@ var myForm = new Form({
             }
         },
         {
-            constructor: AutoCompleteEx,
+            ctor: AutoCompleteEx,
             props: {
                 id: 'autocomplete',
                 colspan: '6',
@@ -141,7 +141,7 @@ var myForm = new Form({
             }
         },
         {
-            constructor: Amount,
+            ctor: Amount,
             props: {
                 id: 'amount',
                 colspan: '6',
@@ -159,7 +159,7 @@ var myForm = new Form({
             }
         },
         {
-            constructor: ComboBox,
+            ctor: ComboBox,
             props: {
                 id: 'combo',
                 colspan: '6',
@@ -178,7 +178,7 @@ var myForm = new Form({
             }
         },
      /*   {
-            constructor: GoogleMap,
+            ctor: GoogleMap,
             props: {
                 id: 'map',
                 colspan: '6',
@@ -195,7 +195,7 @@ var myForm = new Form({
             }
         },*/
         {
-            constructor: Toggle,
+            ctor: Toggle,
             props: {
                 id: 'checkbox',
                 colspan: '6',
@@ -209,7 +209,7 @@ var myForm = new Form({
             }
         },
         {
-            constructor: TrippleSwitch,
+            ctor: TrippleSwitch,
             props: {
                 id: 'trippleswitch',
                 colspan: '6',
@@ -225,7 +225,7 @@ var myForm = new Form({
             }
         },
         {
-            constructor: MultiSwitch,
+            ctor: MultiSwitch,
             props: {
                 id: 'multiswitch',
                 colspan: '6',
@@ -253,7 +253,7 @@ var myForm = new Form({
             }
         },
         {
-            constructor: RadioGroup,
+            ctor: RadioGroup,
             props: {
                 id: 'radiogroup',
                 colspan: '6',
@@ -278,7 +278,7 @@ var myForm = new Form({
             }
         },
         {
-            constructor: CheckBoxGroup,
+            ctor: CheckBoxGroup,
             props: {
                 id: 'checkboxgroup',
                 colspan: '6',
@@ -304,7 +304,7 @@ var myForm = new Form({
             }
         },
         {
-            constructor: FormUpload,
+            ctor: FormUpload,
             props: {
                 id: 'formupload',
                 colspan: '6',
@@ -327,7 +327,7 @@ var myForm = new Form({
             }
         },
         {
-            constructor: Repeater,
+            ctor: Repeater,
             props: {
                 id: 'repeater',
                 rendering: {
@@ -422,7 +422,7 @@ var myForm = new Form({
                 ],
                 components: [
                     {
-                        constructor: AutoCompleteEx,
+                        ctor: AutoCompleteEx,
                         props: {
                             id: 'autocompleteR',
                             colspan: '6',
@@ -440,7 +440,7 @@ var myForm = new Form({
                         }
                     },
                     {
-                        constructor: ComboBox,
+                        ctor: ComboBox,
                         props: {
                             id: 'comboR',
                             colspan: '6',
@@ -455,7 +455,7 @@ var myForm = new Form({
                         }
                     },
                     {
-                        constructor: TextInput,
+                        ctor: TextInput,
                         props: {
                             id: 'textR',
                             colspan: '6',
@@ -467,7 +467,7 @@ var myForm = new Form({
                         }
                     },
                     {
-                        constructor: Amount,
+                        ctor: Amount,
                         props: {
                             id: 'amount',
                             colspan: '6',
@@ -482,7 +482,7 @@ var myForm = new Form({
                         }
                     },
                     {
-                        constructor: TextEditor,
+                        ctor: TextEditor,
                         props: {
                             id: 'texteditorR',
                             colspan: '6',
@@ -495,7 +495,7 @@ var myForm = new Form({
                         }
                     },
                     {
-                        constructor: TextArea,
+                        ctor: TextArea,
                         props: {
                             id: 'textareaR',
                             colspan: '6',
@@ -508,7 +508,7 @@ var myForm = new Form({
                         }
                     },
                     {
-                        constructor: DateTime,
+                        ctor: DateTime,
                         props: {
                             id: 'datetime',
                             colspan: '6',
@@ -524,7 +524,7 @@ var myForm = new Form({
                         }
                     },
                     {
-                        constructor: DateTimeCb,
+                        ctor: DateTimeCb,
                         props: {
                             id: 'dayMonthYear',
                             colspan: '6',
@@ -540,7 +540,7 @@ var myForm = new Form({
                         }
                     },
                     {
-                        constructor: Toggle,
+                        ctor: Toggle,
                         props: {
                             id: 'checkboxR',
                             colspan: '6',
@@ -554,7 +554,7 @@ var myForm = new Form({
                         }
                     },
                   /*  {
-                        constructor: GoogleMap,
+                        ctor: GoogleMap,
                         props: {
                             id: 'mapR',
                             colspan: '6',
@@ -568,7 +568,7 @@ var myForm = new Form({
                         }
                     },*/
                     {
-                        constructor: RadioGroup,
+                        ctor: RadioGroup,
                         props: {
                             id: 'radiogroup',
                             colspan: '6',
@@ -593,7 +593,7 @@ var myForm = new Form({
                         }
                     },
                     {
-                        constructor: CheckBoxGroup,
+                        ctor: CheckBoxGroup,
                         props: {
                             id: 'checkboxgroup',
                             colspan: '6',
@@ -619,7 +619,7 @@ var myForm = new Form({
                         }
                     },
                     {
-                        constructor: MultiSwitch,
+                        ctor: MultiSwitch,
                         props: {
                             id: 'multiswitch',
                             spacing: { mb: '5' },
@@ -647,7 +647,7 @@ var myForm = new Form({
                         }
                     },
                     {
-                        constructor: TrippleSwitch,
+                        ctor: TrippleSwitch,
                         props: {
                             id: 'trippleswitchR',
                             colspan: '6',
@@ -663,7 +663,7 @@ var myForm = new Form({
                         }
                     },
                     {
-                        constructor: FormUpload,
+                        ctor: FormUpload,
                         props: {
                             id: 'formupload',
                             colspan: '6',
@@ -694,7 +694,7 @@ var myForm2 = new Form({
     viewMode: 'steps',
     components: [
         {
-            constructor: TextInput,
+            ctor: TextInput,
             props: {
                 id: 'text',
                 colspan: '6',
@@ -708,7 +708,7 @@ var myForm2 = new Form({
             }
         },
         {
-            constructor: TextInput,
+            ctor: TextInput,
             props: {
                 id: 'number',
                 colspan: '6',
@@ -725,7 +725,7 @@ var myForm2 = new Form({
             }
         },
         {
-            constructor: Repeater,
+            ctor: Repeater,
             props: {
                 id: 'repeater',
                 rendering: {
@@ -820,7 +820,7 @@ var myForm2 = new Form({
                 ],
                 components: [
                     {
-                        constructor: AutoCompleteEx,
+                        ctor: AutoCompleteEx,
                         props: {
                             id: 'autocompleteR',
                             colspan: '6',
@@ -838,7 +838,7 @@ var myForm2 = new Form({
                         }
                     },
                     {
-                        constructor: ComboBox,
+                        ctor: ComboBox,
                         props: {
                             id: 'comboR',
                             colspan: '6',

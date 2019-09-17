@@ -148,14 +148,14 @@ var UploadEx = function (_props, overrided = false) {
     var fnContainerDelayInit = function(){
         _cmps = [
             {
-                constructor: Container,
+                ctor: Container,
                 props: {
                     id: "mainRow_"+_self.guid,
                     type: ContainerType.ROW,
                     height: 30,
                     components:[
                         {
-                            constructor: Container,
+                            ctor: Container,
                             props: {
                                 id: "iconColumn_"+_self.guid,
                                 type: ContainerType.COLUMN,
@@ -163,7 +163,7 @@ var UploadEx = function (_props, overrided = false) {
                                 classes:["border"],
                                 components:[
                                     {
-                                        constructor: Label,
+                                        ctor: Label,
                                         props: {
                                             id: "iconLbl_"+_self.guid,
                                             labelType: LabelType.i
@@ -173,7 +173,7 @@ var UploadEx = function (_props, overrided = false) {
                             }
                         },
                         {
-                            constructor: Container,
+                            ctor: Container,
                             props: {
                                 id: "fileNameColumn_"+_self.guid,
                                 type: ContainerType.COLUMN,
@@ -181,14 +181,14 @@ var UploadEx = function (_props, overrided = false) {
                                 classes:["border"],
                                 components:[
                                     {
-                                        constructor: Label,
+                                        ctor: Label,
                                         props: {
                                             id: "fileName_"+_self.guid,
                                             label:"No file selected."
                                         }
                                     },
                                     {
-                                        constructor: Upload,
+                                        ctor: Upload,
                                         props: {
                                             id: "uploadInput_"+_self.guid,
                                             classes:["d-none"],
@@ -199,7 +199,7 @@ var UploadEx = function (_props, overrided = false) {
                             }
                         },
                         {
-                            constructor: Container,
+                            ctor: Container,
                             props: {
                                 id: "fileSizeColumn_"+_self.guid,
                                 type: ContainerType.COLUMN,
@@ -207,7 +207,7 @@ var UploadEx = function (_props, overrided = false) {
                                 classes:["border"],
                                 components:[
                                     {
-                                        constructor: Label,
+                                        ctor: Label,
                                         props: {
                                             id: "fileSize_"+_self.guid,
                                         }
@@ -216,7 +216,7 @@ var UploadEx = function (_props, overrided = false) {
                             }
                         },
                         {
-                            constructor: Container,
+                            ctor: Container,
                             props: {
                                 id: "controlsColumn_"+_self.guid,
                                 type: ContainerType.BTN_GROUP,
@@ -224,12 +224,12 @@ var UploadEx = function (_props, overrided = false) {
                                 spacing: {colSpan:3, pr:0, pl:0},
                                 components:[
                                     {
-                                        constructor: Button,
+                                        ctor: Button,
                                         props: {
                                             id: "selectBtn_"+_self.guid,
                                             type: "button",
                                             components: [{
-                                                constructor: Label,
+                                                ctor: Label,
                                                 props: {
                                                     id: 'fa',
                                                     labelType: LabelType.i,
@@ -240,13 +240,13 @@ var UploadEx = function (_props, overrided = false) {
                                         }
                                     },
                                     {
-                                        constructor: Button,
+                                        ctor: Button,
                                         props: {
                                             id: "uploadBtn_"+_self.guid,
                                             type: "button",
                                             enabled:false,
                                             components: [{
-                                                constructor: Label,
+                                                ctor: Label,
                                                 props: {
                                                     id: 'fa',
                                                     labelType: LabelType.i,
@@ -257,13 +257,13 @@ var UploadEx = function (_props, overrided = false) {
                                         }
                                     },
                                     {
-                                        constructor: Button,
+                                        ctor: Button,
                                         props: {
                                             id: "downloadBtn_"+_self.guid,
                                             type: "button",
                                             enabled:false,
                                             components: [{
-                                                constructor: Label,
+                                                ctor: Label,
                                                 props: {
                                                     id: 'fa',
                                                     labelType: LabelType.i,
@@ -274,13 +274,13 @@ var UploadEx = function (_props, overrided = false) {
                                         }
                                     },
                                     {
-                                        constructor: Button,
+                                        ctor: Button,
                                         props: {
                                             id: "removeBtn_"+_self.guid,
                                             type: "button",
                                             enabled:false,
                                             components: [{
-                                                constructor: Label,
+                                                ctor: Label,
                                                 props: {
                                                     id: 'fa',
                                                     labelType: LabelType.i,
@@ -297,7 +297,7 @@ var UploadEx = function (_props, overrided = false) {
                 }
             },
             {
-                constructor: Container,
+                ctor: Container,
                 props: {
                     id: "progressRow_"+_self.guid,
                     type: ContainerType.ROW,
@@ -305,7 +305,7 @@ var UploadEx = function (_props, overrided = false) {
                     classes:["d-none"],
                     components:[
                         {
-                            constructor: Container,
+                            ctor: Container,
                             props: {
                                 id: "progressColumn_"+_self.guid,
                                 type: ContainerType.COLUMN,
@@ -314,7 +314,7 @@ var UploadEx = function (_props, overrided = false) {
                                 height: 5,
                                 components:[
                                     {
-                                        constructor: ProgressBar,
+                                        ctor: ProgressBar,
                                         props: {
                                             id:"progressbar_"+_self.guid,
                                             valueNow: 0,

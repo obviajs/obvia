@@ -31,6 +31,14 @@ var DataGrid = function(_props)
         }
     });
 
+    Object.defineProperty(this, "columns", {
+        get: function columns() {
+            return _columns;
+        },
+        configurable: true,
+        enumerable:true
+    });  
+
     var _currentItem = {};
     var _rowItems = [];
     
@@ -128,8 +136,8 @@ var DataGrid = function(_props)
         //at least one row ?
         if(this.cells.length>0){
             var definedWidth = 0; var autoWidthColumns = [];
-            for (var columnIndex=0;columnIndex<this.columns.length;columnIndex++) {
-                var column = this.columns[columnIndex];
+            for (var columnIndex=0;columnIndex<_columns.length;columnIndex++) {
+                var column = _columns[columnIndex];
                 if(column["width"]){
                     definedWidth += column.calculatedWidth = column.width;
                 }else{
@@ -142,7 +150,7 @@ var DataGrid = function(_props)
                 column.calculatedWidth = autoWidth;
             }
             for (var columnIndex=0;columnIndex<this.cells[0].length;columnIndex++) {
-                this.cells[0][columnIndex].css({"width":(this.columns[columnIndex].calculatedWidth)+"px"}); 
+                this.cells[0][columnIndex].css({"width":(_columns[columnIndex].calculatedWidth)+"px"}); 
             }
         }
     };
@@ -165,7 +173,7 @@ var DataGrid = function(_props)
 
     this.addEmptyRow = function()
     {
-        var emptyObj = this.defaultItem = createEmptyObject(this.columns, "field", "description");
+        var emptyObj = this.defaultItem = createEmptyObject(_columns, "field", "description");
         _dataProvider.pad(emptyObj, 1);
         this.addRow(extend(false, false, _dataProvider[i]), i + 1);
     };
@@ -174,7 +182,7 @@ var DataGrid = function(_props)
     {
         for(var rowIndex=0;rowIndex<_rowCount;rowIndex++)
         {
-            for(var columnIndex=0;columnIndex<this.columns.length;columnIndex++)
+            for(var columnIndex=0;columnIndex<_columns.length;columnIndex++)
             {
                 var itemRenderer = this.cellItemRenderers[rowIndex][columnIndex];
                 this.cellItemRenderers[rowIndex][columnIndex].repeaterIndex = rowIndex + virtualIndex;
@@ -215,9 +223,9 @@ var DataGrid = function(_props)
         var $header = $(headerHtml);
         var _self = this;
         var sortDirFADic = {"asc":"down", "desc":"up"};
-        var colElements = new Array(this.columns.length);
-        for (var columnIndex=0;columnIndex<this.columns.length;columnIndex++) {
-            var column = this.columns[columnIndex] = new DataGridColumn(this.columns[columnIndex]);
+        var colElements = new Array(_columns.length);
+        for (var columnIndex=0;columnIndex<_columns.length;columnIndex++) {
+            var column = _columns[columnIndex] = new DataGridColumn(_columns[columnIndex]);
             
             $th = $("<th id='head_"+hi+"'>"+column.description+(column.sortable ? "<span class='fa fa-caret-"+(sortDirFADic[column.sortDirection.toLowerCase()])+"'></span></a>":"")+"</th>");    
             $th.bind('click', 
@@ -254,16 +262,16 @@ var DataGrid = function(_props)
                 this.cellItemRenderers[this.editPosition.rowIndex][this.editPosition.columnIndex].show();
             }
 
-            if(columnIndex > this.columns.length-1)
+            if(columnIndex > _columns.length-1)
             {
                 columnIndex = 0;
                 ++rowIndex;
             }else if(columnIndex < 0)
             {
-                columnIndex = this.columns.length-1;
+                columnIndex = _columns.length-1;
                 --rowIndex;
             }
-            var column = this.columns[columnIndex];
+            var column = _columns[columnIndex];
             var data;
 
             if(rowIndex > _rowCount - 1){
@@ -421,7 +429,7 @@ var DataGrid = function(_props)
         {
             //console.trace();
             console.log("cellEditFinished:", rowIndex, " ", columnIndex);
-            var column = this.columns[columnIndex];
+            var column = _columns[columnIndex];
             var data = _dataProvider[rowIndex+_virtualIndex];
             var value = null, calledHandler = false;
             var itemEditorInfo = this.cellItemEditors[columnIndex];
@@ -698,14 +706,12 @@ var DataGrid = function(_props)
         },
         showRowIndex:true,
         dataProvider:[],
-        embedded:true,
-        rowCount:5
+        rowCount:5,
+        columns:[]
     };
     _props = extend(false, false, _defaultParams, _props);
     var _dataProvider = _props.dataProvider;
     var _rendering = _props.rendering;
-    var _label = _props.label;
-    var _embedded = _props.embedded;
     var _showRowIndex = _props.showRowIndex;
     var _rowCount = _props.rowCount;
     var _self = this;
@@ -714,7 +720,7 @@ var DataGrid = function(_props)
 
 
     this.components = _props.components;
-    this.columns = _props.columns;
+    let _columns = _props.columns;
     this.rows = [];
     this.cellItemRenderers = [[]];
     this.cellItemEditors = [];

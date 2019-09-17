@@ -336,13 +336,10 @@ var myDataGrid = new DataGrid({
             editable:true,
 
             itemEditor:{
-                constructor: AutoCompleteEx,
+                ctor: AutoCompleteEx,
                 props: {
                     id: 'autocomplete',
-                    embedded: true,
                     fieldName: 'autocomplete',
-                    blockProcessAttr: false,
-                    required: false,
                     multiSelect: false,
                     valueField: "id",
                     labelField: "text",
@@ -362,14 +359,9 @@ var myDataGrid = new DataGrid({
             editable:true,
 
             itemEditor:{
-                constructor: TextInput,
+                ctor: TextInput,
                 props: {
                     id: 'text',
-                    embedded: true,
-                    label: '{textLabel}',
-                    fieldName: 'text',
-                    blockProcessAttr: false,
-                    required: false,
                     value: '{textLabel}'
                 }
             }
@@ -382,14 +374,10 @@ var myDataGrid = new DataGrid({
             oncellstyling:oncellstyling_ex,
             //oncelleditfinished:oncelleditfinished_ex,
             itemRenderer:{
-                constructor: CheckBox,
+                ctor: CheckBox,
                 props: {
                     id: 'checkbox',
-                    embedded: true,
                     label: 'Vertete',
-                    fieldName: 'checkbox',
-                    blockProcessAttr: false,
-                    required: true,
                     value: '{id}',
                     checked: '{checkboxValue}',
                     unCheckedLabel:"Jo",
@@ -399,14 +387,10 @@ var myDataGrid = new DataGrid({
            
 
             itemEditor:{
-                constructor: CheckBox,
+                ctor: CheckBox,
                 props: {
                     id: 'checkbox',
-                    embedded: true,
                     label: 'Aktiv',
-                    fieldName: 'checkbox',
-                    blockProcessAttr: false,
-                    required: true,
                     value: '{checkboxValue}',
                     checked: '{checkboxValue}',
                     unCheckedLabel:"Jo",
