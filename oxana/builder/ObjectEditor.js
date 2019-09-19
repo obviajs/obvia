@@ -54,14 +54,13 @@ var ObjectEditor = function (_props, overrided = false) {
             if(ObjectEditor.metaProps[prop]){
                 let propEditor = ObjectEditor.propEditors[ObjectEditor.metaProps[prop].ctor];
                 if(propEditor){
-                    var itemEditorLit = propEditor.itemEditor;
+                    let itemEditorLit = propEditor.itemEditor;
                     if(ObjectEditor.metaProps[prop].props)
                         itemEditorLit.props = extend(false, false, itemEditorLit.props, ObjectEditor.metaProps[prop].props);
                     
-                    itemEditorLit.props.bindingDefaultContext = inst;
-                    itemEditorLit.props[(propEditor.valueField || "value")] = "{"+prop+"}";
-                    if(ObjectEditor.metaProps[prop].ctor == "CollectionEditor"){
+                    if(ObjectEditor.metaProps[prop].ctor in {"CollectionEditor":1, "ObjectEditor":1}){
                         itemEditorLit.props.instance = props[prop];
+                        itemEditorLit.props.field = null;
                     }
                     let ff = extend(true, formField);
                     ff.props.label = ObjectEditor.metaProps[prop].label;
@@ -70,31 +69,38 @@ var ObjectEditor = function (_props, overrided = false) {
 
                     if(ObjectEditor.metaProps[prop].targetProps != undefined)
                     {
+                        let targetLit;
+                        if(ObjectEditor.metaProps[prop].targetProps.target && ObjectEditor.metaProps[prop].targetProps.target.ctor){
+                            targetLit = ObjectEditor.propEditors[ObjectEditor.metaProps[prop].targetProps.target.ctor].itemEditor;
+                            targetLit.props = extend(false, false,targetLit.props, ObjectEditor.metaProps[prop].targetProps.target.props);
+                        }
                         
-                        let winLit = {
-                            ctor: BrowserWindow,
-                            props: {
-                                id:"propertyEditorWindow",
-                                components: [itemEditorLit],
-                                height:ObjectEditor.metaProps[prop].targetProps.height,
-                                width:ObjectEditor.metaProps[prop].targetProps.width,
-                                left:ObjectEditor.metaProps[prop].targetProps.left,
-                                top:ObjectEditor.metaProps[prop].targetProps.top
-                            }
-                        };
-                        ObjectEditor.metaProps[prop].targetProps.anchorComponent.props.click = function(e){
-                            let wl = extend(true, winLit);
-                            let win = _self.addComponent(wl);
-                            win.show();
+                        let anchor = ObjectEditor.metaProps[prop].targetProps.anchor;
+                    
+                        let events = {};
+                        for(let i=0;i<anchor.events.length;i++){
+                            let anchorHandler = anchor.events[i].handler;
+                            events[anchor.events[i].event] = function(e){
+                                anchorHandler.apply(this, [e, _self, itemEditorLit, targetLit]);
+                            };
                         }
 
-                        ff.props.component = ObjectEditor.metaProps[prop].targetProps.anchorComponent;
+                        if(anchor.component){
+                            ff.props.component = anchor.component;
+                        }else{
+                            ff.props.component = itemEditorLit;
+                        }
+                        for(let evt in events){
+                            ff.props.component.props[evt] = events[evt];
+                        }
                     }else
                     {
-                        ff.props.component = itemEditorLit;
+                        ff.props.component = itemEditorLit;                       
                     }
+                    ff.props.component.props.bindingDefaultContext = props;
+                    ff.props.component.props[(propEditor.valueField || "value")] = "{?"+prop+"}";
                     ff.props.index = ObjectEditor.metaProps[prop].index;
-                    rows.push(ff);
+                    rows.push(extend(true, ff));
                 }else{
                     console.log("Couldnt find and itemEditor for " + prop + "property");
                 }
@@ -143,8 +149,8 @@ ObjectEditor.maskLabelField = "";
 ObjectEditor.remoteSources = new ArrayEx([{name:"test", description:"Test Remote Source", props:{url:"http://139.162.158.49/rca/index.php", post:{"testKey":"testValue"}, recordsPerPage:5}}]);
 ObjectEditor.remoteData = {};
 
-ObjectEditor.componentValueField = "label";
-ObjectEditor.componentLabelField = "ctor";
+ObjectEditor.componentValueField = "ctor";
+ObjectEditor.componentLabelField = "label";
 ObjectEditor.remoteData.componentList = [ 
     {
         "label":"Label", "icon":"horizontal-line.png", "ctor": "Label"
@@ -281,25 +287,40 @@ ObjectEditor.metaProps = {
             memberType:"DataGridColumn"
         },
         targetProps:{
-            target:"_blank", anchorComponent:{
-                ctor: Button,
-                props: {
-                    id: 'anchorBtn',
-                    type: "button",
-                    components: [{
-                        ctor: Label,
-                        props: {
-                            id: 'fa',
-                            labelType: LabelType.i,
-                            classes: ["fas","fa-list"]
-                        }
-                    }]
+            target:{
+                ctor:"BrowserWindow",
+                props:{
+                    height:500,
+                    width:600,
+                    left:800,
+                    top:200,
                 }
-            },
-            height:500,
-            width:600,
-            left:800,
-            top:200,
+            },anchor:{
+                component:{
+                    ctor: Button,
+                    props: {
+                        id: 'anchorBtn',
+                        type: "button",
+                        label: "Manage Columns",
+                        components: [{
+                            ctor: Label,
+                            props: {
+                                id: 'fa',
+                                labelType: LabelType.i,
+                                classes: ["fas","fa-list"]
+                            }
+                        }]
+                    }
+                },
+                events:[{
+                    event:"click", handler: function(e, oe, itemEditorLit, targetLit){
+                        let wl = extend(true, targetLit);
+                        wl.props.components = [itemEditorLit];
+                        let win = oe.addComponent(wl);
+                        win.show();
+                    }}
+                ]
+            }
         }
     },
     dataField: "textLabel",
@@ -313,28 +334,93 @@ ObjectEditor.metaProps = {
         change: function(){
         }
     }},
-    itemRenderer:{ctor:"AutoBrowse", label: "Item Renderer", required:false, props:{
-        valueField: ObjectEditor.providerValueField,
-        labelField: ObjectEditor.providerLabelField,
-        dataProvider: ObjectEditor.remoteSources,
+    itemRenderer:{ctor:"ObjectEditor", label: "Item Renderer", required:true, props:{
         change: function(){
             //propsForm.children["dataProvider"].value
             //get the fields for the selected datProvider and 
             //assign them to the labelField and valueField editor`s dataProvider property
         }
-    }, index:18},
-    itemEditor:{ctor:"AutoBrowse", label: "Item Editor", required:false, props:{
-        valueField: ObjectEditor.componentValueField,
-        labelField: ObjectEditor.componentLabelField,
-        dataProvider: ObjectEditor.remoteData.componentList,
-        fields:[{"field":ObjectEditor.componentValueField, "description":ObjectEditor.componentValueField, "visible":false}, {"field":ObjectEditor.componentLabelField, "description":ObjectEditor.componentLabelField}],
+    },
+    targetProps:{
+        target:{
+            ctor:"BrowserWindow",
+            props:{
+                height:500,
+                width:600,
+                left:800,
+                top:200,
+            }
+        },anchor:{
+            component:{
+                ctor: AutoBrowse,
+                props: {
+                    id: 'anchorBtn',
+                    valueField: ObjectEditor.componentValueField,
+                    labelField: ObjectEditor.componentValueField,
+                    dataProvider: ObjectEditor.remoteData.componentList,
+                    fields:[{"field":ObjectEditor.componentValueField, "description":ObjectEditor.componentValueField, "visible":false}, {"field":ObjectEditor.componentLabelField, "description":ObjectEditor.componentLabelField}]        
+                }
+            },
+            events:[{
+                event:"browse", handler: function(e, oe, itemEditorLit, targetLit){
+                    if(this.value && this.value.length>0){
+                        e.preventDefault();
+                        let wl = extend(true, targetLit);
+                        itemEditorLit.props.instance = extend(true, ObjectEditor.propEditors[this.value[0][ObjectEditor.componentValueField]].itemEditor);
+                        itemEditorLit.props.field = "props";
+                        wl.props.components = [itemEditorLit];
+                        let win = oe.addComponent(wl);
+                        win.show();
+                    }
+                }}
+            ]
+        }
+    },
+    index:18},
+    itemEditor:{ctor:"ObjectEditor", label: "Item Editor", required:false, props:{
         change: function(){
             //propsForm.children["dataProvider"].value
             //get the fields for the selected datProvider and 
             //assign them to the labelField and valueField editor`s dataProvider property
             console.log(arguments);
         }
-    }, index:19}
+    }, 
+    targetProps:{
+        target:{
+            ctor:"BrowserWindow",
+            props:{
+                height:500,
+                width:600,
+                left:800,
+                top:200,
+            }
+        },anchor:{
+            component:{
+                ctor: AutoBrowse,
+                props: {
+                    id: 'anchorBtn',
+                    valueField: ObjectEditor.componentValueField,
+                    labelField: ObjectEditor.componentValueField,
+                    dataProvider: ObjectEditor.remoteData.componentList,
+                    fields:[{"field":ObjectEditor.componentValueField, "description":ObjectEditor.componentValueField, "visible":false}, {"field":ObjectEditor.componentLabelField, "description":ObjectEditor.componentLabelField}]        
+                }
+            },
+            events:[{
+                event:"browse", handler: function(e, oe, itemEditorLit, targetLit){
+                    if(this.value && this.value.length>0){
+                        e.preventDefault();
+                        let wl = extend(true, targetLit);
+                        itemEditorLit.props.instance = extend(true, ObjectEditor.propEditors[this.value[0][ObjectEditor.componentValueField]].itemEditor);
+                        itemEditorLit.props.field = "props";
+                        wl.props.components = [itemEditorLit];
+                        let win = oe.addComponent(wl);
+                        win.show();
+                    }
+                }}
+            ]
+        }
+    },
+    index:19}
 };
 
 ObjectEditor.formField = {
@@ -360,7 +446,9 @@ ObjectEditor.propEditors = {
         },
         set:null,
         get:null,
-        valueField:null
+        valueField:null,
+        label:"Text Input",
+        icon:"horizontal-line.png"
     },
     "Toggle": {
         itemEditor: {
@@ -375,7 +463,9 @@ ObjectEditor.propEditors = {
         },
         set:null,
         get:null,
-        valueField:"checked"
+        valueField:"checked",
+        label:"Toogle",
+        icon:".png"
     },
     "AutoCompleteEx": {
         itemEditor: {
@@ -390,7 +480,9 @@ ObjectEditor.propEditors = {
         },
         set:null,
         get:null,
-        valueField:null
+        valueField:null,
+        label:"AutoComplete",
+        icon:".png"
     },
     "AutoBrowse": {
         itemEditor: {
@@ -403,7 +495,9 @@ ObjectEditor.propEditors = {
                 classes:["ml-0"],
                 fields:[{"field":ObjectEditor.providerValueField, "description":ObjectEditor.providerValueField, "visible":false}, {"field":ObjectEditor.providerLabelField, "description":ObjectEditor.providerLabelField}]
             }
-        }
+        },
+        label:"AutoBrowse",
+        icon:".png"
     },
     "SpacingEditor": {
         itemEditor: {
@@ -411,7 +505,9 @@ ObjectEditor.propEditors = {
             "props":{
             }
         },
-        valueField:null
+        valueField:null,
+        label:"SpacingEditor",
+        icon:".png"
     },
     "CollectionEditor":{
         itemEditor: {
@@ -419,7 +515,51 @@ ObjectEditor.propEditors = {
             "props":{
             }
         },
-        valueField:null
+        valueField:null,
+        label:"CollectionEditor",
+        icon:".png"
+    },
+    "ObjectEditor":{
+        itemEditor: {
+            "ctor": ObjectEditor,
+            "props":{
+            }
+        },
+        valueField:null,
+        label:"ObjectEditor",
+        icon:".png"
+    },
+    "BrowserWindow":{
+        itemEditor: {
+            ctor: BrowserWindow,
+            props: {
+                id:"window"
+            }
+        },
+        label:"BrowserWindow",
+        icon:".png"
+    },
+    "Label":{
+        itemEditor: {
+            "ctor": Label,
+            "props":{
+                id: 'label',
+                label:"Click Me"
+            }
+        },
+        label:"Label",
+        icon:".png"
+    },
+    "DataGridCellRenderer":{
+        itemEditor: {
+            "ctor": DataGridCellRenderer,
+            "props":{
+                id: 'label',
+                label:"Click Me"
+            }
+        },
+        label:"DataGridCellRenderer",
+        icon:".png"
     }
 };
 

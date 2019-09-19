@@ -16,8 +16,9 @@ var FormField = function(_props)
         {
             console.log("beforeAttach domID: ", this.domID);
             this.$container = this.$el;
-            _lbl = this.addComponent(this.components[0]);
-            _cmp = this.addComponent(this.components[1]);
+            let inst = this.addComponents();
+            _lbl = inst[0];
+            _cmp = inst[1];
             _lbl.$el.prop("for", _cmp.domID);
             if(_props.required)
                 _self.required = _props.required;
@@ -246,10 +247,10 @@ var FormField = function(_props)
             
             e.stopPropagation();
             var _cmpObj;
-            if(["input", "select", "textarea"].indexOf(_cmp.$el[0].tagName.toLowerCase())>-1){
+            if(["input", "select", "textarea", "button"].indexOf(_cmp.$el[0].tagName.toLowerCase())>-1){
                 _cmpObj = _cmp.$el;
             }else{
-                _cmpObj = _cmp.$el.find("input, select, textarea").filter(function(){ 
+                _cmpObj = _cmp.$el.find("input, select, textarea, button").filter(function(){ 
                     return ($(this).closest(".no-form-control").length == 0);
                 });
             }

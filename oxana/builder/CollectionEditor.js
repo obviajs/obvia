@@ -41,12 +41,12 @@ var CollectionEditor = function (_props, overrided = false) {
         _cmps = 
         [
             {
-                ctor: Repeater,
+                ctor: RepeaterEx,
                 props:{
                     id:"repeater",
                     dataProvider: _field!=null && _field!=""?_instance[_field]:_instance,
                     rendering: {
-                        direction: 'horizontal',
+                        direction: 'vertical',
                         separator: true
                     },
                     components:[

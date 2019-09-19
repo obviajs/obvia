@@ -10,7 +10,7 @@ var DataGridColumn = function(_props)
         sortDirection: "ASC",//DESC
         sortable: true,
         itemRenderer: {
-            ctor: DataGridCellRenderer,
+            ctor: "DataGridCellRenderer",
             props: {
                 id: 'cell_',
                 label: _props && _props.field && _props.field!=""?'{'+_props.field+'}':'',

@@ -427,6 +427,8 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
     else if(tpl && tpl!="")
         this.$el = $(tpl);
     
+    _attr = new Attr(_props.attr, this.$el);
+    
     if(_isSurrogate && this.$el){
         Component.surrogates[this.$el.attr('id')] = this.domID;
     }
@@ -436,8 +438,6 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
     {
         if (e.target.id == this.domID) 
         {
-            _attr = new Attr(_props.attr, this.$el);
-
             if (typeof _props.beforeAttach == 'function')
                 _props.beforeAttach.apply(this, arguments);
             //TODO: not neccessary ? 

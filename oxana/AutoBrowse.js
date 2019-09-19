@@ -25,6 +25,19 @@ var AutoBrowse = function (_props, overrided = false) {
         enumerable:true
     });
 
+    Object.defineProperty(this, "value", 
+    {
+        get: function value() 
+        {
+            return _autocomplete.value;
+        },
+        set: function value(v) 
+        {
+            _autocomplete.value = v;
+        },
+        enumerable:true
+    });
+
     this.beforeAttach = function(e) 
     {
         if (e.target.id == this.domID) 
@@ -47,7 +60,7 @@ var AutoBrowse = function (_props, overrided = false) {
             fnContainerDelayInit();
             this.components = _cmps;
             this.addComponents();
-            _ac = this.children[this.components[0].props.id].children[this.components[0].props.components[0].props.id];
+            _autocomplete = this.children[this.components[0].props.id].children[this.components[0].props.components[0].props.id];
             _dg = this.children[this.components[2].props.id].children[this.components[2].props.components[0].props.id];
             _modal = this.children[this.components[2].props.id];
             if(_props.value){
@@ -56,7 +69,7 @@ var AutoBrowse = function (_props, overrided = false) {
             e.preventDefault();
         }
     }
-    let _cmps, _ac, _dg, _modal;
+    let _cmps, _autocomplete, _dg, _modal;
     var fnContainerDelayInit = function(){
         _cmps = 
         [
@@ -101,7 +114,7 @@ var AutoBrowse = function (_props, overrided = false) {
                                         classes: ["fas","fa-folder-open"]
                                     }
                                 }],
-                                click: _showModal
+                                click: _browse
                             }
                         }
                     ]
@@ -131,18 +144,25 @@ var AutoBrowse = function (_props, overrided = false) {
         ];
     };
 
-    var _showModal = function(e){
-        _modal.show();
+    var _browse = function(e){
+        let evt = jQuery.Event("browse");
+        _self.trigger(evt);
+        if (!evt.isDefaultPrevented()) {
+            _modal.show();
+        }
     }
     var _selectItem = function(e, odg, ra){
-        _ac.value = ra.currentItem;
+        _autocomplete.value = ra.currentItem;
         _modal.hide();
     }
     var _defaultParams = {
-        type: ContainerType.ROW,
+        type: ContainerType.NONE,
         "components": [],
         dataProvider: new ArrayEx(),
-        fields:[]
+        fields:[],
+        attr:{"data-triggers":"browse"},   
+        value:new ArrayEx([]),
+        classes:["wrap"]                           
     };
 
     _props = extend(false, false, _defaultParams, _props);

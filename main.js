@@ -25,7 +25,7 @@ rjs.define("lib/rca/RemoteArray.js", "RemoteArray");
 rjs.define("lib/rca/RemoteObject.js", "RemoteObject");
 rjs.define("./components/base/Align.js", "Align");
 rjs.define("./components/base/BrowserWindow.js", "BrowserWindow");
-rjs.define("./components/base/RepeaterEventArgs.js", "RepeaterEventArgs");
+rjs.define("./components/Repeater/RepeaterEventArgs.js", "RepeaterEventArgs");
 rjs.define("./components/base/BgStyle.js", "BgStyle");
 rjs.define("./components/base/History/History.js", "History");
 rjs.define("./components/base/History/HistoryStep.js", "HistoryStep");
@@ -76,7 +76,8 @@ rjs.define("./components/Tab/Tab.js", "Tab");
 //Link
 rjs.define("./components/Link.js", "Link");
 //Repeater
-rjs.define("./components/Repeater.js", "Repeater");
+rjs.define("./components/Repeater/Repeater.js", "Repeater");
+rjs.define("./components/Repeater/RepeaterEx.js", "RepeaterEx");
 //List
 rjs.define("./components/List.js", "List");
 //CheckBox
@@ -229,6 +230,7 @@ rjs.require([
         "Hidden",
         "BootBox",
         "Repeater",
+        "RepeaterEx",
         "List",
         "Amount",
         "HeadingType",

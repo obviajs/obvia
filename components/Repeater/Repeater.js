@@ -331,6 +331,7 @@ var Repeater = function(_props)
                     return function(){
                         //clone objects
                         component = extend(true, component);
+                        
                         component.props.bindingDefaultContext = data;
                         var el = Component.fromLiteral(component, data);
                         var cmpId = component.props.id;
@@ -368,14 +369,7 @@ var Repeater = function(_props)
                                     _self.currentItem = data;
 
                                     _self.currentIndex <= ci ? _self.currentIndex = ci : _self.currentIndex = _self.currentIndex;
-                                    /* model check
-                                    if (_self.currentIndex > 1 && _self.rendering.actions) {
-                                        model.displayRemoveButton = true;
-                                    }
-                                    if (_self.currentIndex == 1) {
-                                        model.displayRemoveButton = false;
-                                    }*/
-
+                                   
                                     //skip dp if it already exist
                                     var addRowFlag = false;
                                     if (ci > _self.dataProvider.length) {
@@ -402,8 +396,8 @@ var Repeater = function(_props)
                         })(index));
 
 
-                        if (_rendering.direction == 'horizontal') {
-                        // el.$el.addClass('float-left');
+                        if (_rendering.direction == 'vertical') {
+                            renderedRow.addClass("wrap");
                         }
                         el.on('focus', function (e, repeaterEventArgs) {
                             _self.focusedRow = repeaterEventArgs.currentIndex;
@@ -446,8 +440,10 @@ var Repeater = function(_props)
             renderedRow
               .addClass("repeated-block")
               .css((_rendering.direction == 'horizontal' ? {display: 'inline-block'} : {}))
-              .append((_rendering.separator && (index > 1) && (index < _self.dataProvider.length-1) ? '<hr id="repeated-block-hr">' : ''));            
-           
+                       
+            if(_rendering.separator && (index > 1) && (index-1 < _self.dataProvider.length)){
+                renderedRow.css('border-top', '1 px dashed grey');  
+            }        
             if(_self.mode =="append")
             {
                 /*if(_self.rows.length>0)
@@ -545,11 +541,7 @@ var Repeater = function(_props)
             //manage dp
             this.currentIndex--;
             this.currentItem = this.dataProvider[index - 1];
-            /* model check
-            if (this.currentIndex == 1 && _rendering.actions) {
-                model.displayRemoveButton = false;
-            }*/
-
+            
             this.$el.trigger('onRowDelete', [this, new RepeaterEventArgs([], this.currentItem, index, rowItems)]);
             this.rowItems.splice(index - 1, 1);
             this.rows.splice(index - 1, 1);
@@ -608,7 +600,7 @@ var Repeater = function(_props)
     var _defaultParams = {
         rendering: {
 			direction: 'vertical',
-			separator: false
+            separator: false
         },
         dataProvider:[],
         container:{
