@@ -49,7 +49,8 @@ var AutoCompleteEx = function(_props)
             versionStyle: '',
             keydown:_tokenInputKeyDown,
             keyup: _tokenInputKeyUp,
-            classes:['border-0', 'ellipsis']
+            classes:['border-0', 'ellipsis'],
+            ownerDocument: this.ownerDocument,
         }).on('creationComplete', function(e){
             e.stopPropagation();
             //TODO: te konsiderojme qe form-control si klse te mos i shtohet fare elementeve nese embededd=true
@@ -150,7 +151,8 @@ var AutoCompleteEx = function(_props)
             embedded: true,
             dataProvider: _suggestions,
             components: [this.suggestionRenderer],
-            parent: _self
+            parent: _self,
+            ownerDocument: this.ownerDocument
         })
         .on('blur', function (e) {
             alert("blur");
@@ -158,7 +160,6 @@ var AutoCompleteEx = function(_props)
         .on('creationComplete', function(e){
             e.stopPropagation();
         });
-        this.suggestionsRepeater.$el.removeClass('form-group');
     };
 
    

@@ -116,16 +116,7 @@ var RepeaterEx = function(_props)
             separator: true,
             actions:{remove:true, add:true}
         },
-        dataProvider:[],
-        container:{
-            ctor: Container,
-            props: {
-                id: _props.id,
-                type: ContainerType.NONE,
-                afterAttach: this.afterAttach,
-                ownerDocument: _props.ownerDocument
-            }
-        },
+        dataProvider:new ArrayEx([]),
         guidField:"guid"
     };
     _props = extend(false, false, _defaultParams, _props);

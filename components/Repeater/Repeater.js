@@ -15,8 +15,8 @@ var Repeater = function(_props)
 
     this.containerKeyDown = function(e)
     {
-        if (typeof this.keydown == 'function')
-            this.keydown.apply(this, arguments);
+        if (typeof _keydown == 'function')
+                _keydown.apply(this, arguments);
             console.log("containerKeyDown")
     
             // if(!e.isDefaultPrevented()){
@@ -121,7 +121,7 @@ var Repeater = function(_props)
     // },
 
     var _createRows = function(){
-        _self.$el.trigger('onBeginDraw');
+        _self.trigger('beginDraw');
          //this.$container.empty();
         _self.focusedRow = 0,
         _self.focusedComponent = 0;
@@ -331,7 +331,7 @@ var Repeater = function(_props)
                     return function(){
                         //clone objects
                         component = extend(true, component);
-                        
+                        component.props.ownerDocument = _props.ownerDocument;
                         component.props.bindingDefaultContext = data;
                         var el = Component.fromLiteral(component, data);
                         var cmpId = component.props.id;
@@ -362,7 +362,9 @@ var Repeater = function(_props)
                                 _createdRows++;
                                 if (ccComponents.length == _self.components.length) {
                                     //trigger row add event
-                                    _self.$el.trigger('onRowAdd', [_self, new RepeaterEventArgs(_self.rowItems, data, ci)]);
+                                    let era = jQuery.Event("rowAdd");
+                                    era.row = renderedRow;
+                                    _self.trigger(era, [_self, new RepeaterEventArgs(_self.rowItems[ci-1], data, ci-1)]);
                                     //duhet te shtojme nje flag qe ne rast se metoda addRow eshte thirrur nga addRowHangler te mos e exec kodin meposhte
                                     
                                     //manage dp
@@ -382,8 +384,8 @@ var Repeater = function(_props)
                                             _creationFinished = true;
                                             _self.trigger('creationComplete');
                                         }
-                                        _self.focusComponent(0, 0);
-                                        _self.$el.trigger('onEndDraw');
+                                        //_self.focusComponent(0, 0);
+                                        _self.trigger('endDraw');
                                     }
 
                                     //animate
@@ -417,7 +419,7 @@ var Repeater = function(_props)
                                     
                                 
                             }
-                            _self.$el.trigger('onRowEdit', [_self, new RepeaterEventArgs(rowItems, data, index)]);
+                            _self.trigger('rowEdit', [_self, new RepeaterEventArgs(rowItems, data, index-1)]);
                         });
 
                         //render component in row
@@ -442,7 +444,7 @@ var Repeater = function(_props)
               .css((_rendering.direction == 'horizontal' ? {display: 'inline-block'} : {}))
                        
             if(_rendering.separator && (index > 1) && (index-1 < _self.dataProvider.length)){
-                renderedRow.css('border-top', '1 px dashed grey');  
+                renderedRow.addClass("separator");  
             }        
             if(_self.mode =="append")
             {
@@ -463,8 +465,8 @@ var Repeater = function(_props)
         //trigger before row add event
         if (isPreventable) {
             //the before add event is preventable
-            var beforeRowAddEvent = jQuery.Event("onBeforeRowAdd");
-            this.trigger(beforeRowAddEvent);
+            var beforeRowAddEvent = jQuery.Event("beforeRowAdd");
+            this.trigger(beforeRowAddEvent, [_self, new RepeaterEventArgs(_self.rowItems, data, index-1)]);
          
             if (!beforeRowAddEvent.isDefaultPrevented()) {
                 //the event is not canceled outside
@@ -542,7 +544,7 @@ var Repeater = function(_props)
             this.currentIndex--;
             this.currentItem = this.dataProvider[index - 1];
             
-            this.$el.trigger('onRowDelete', [this, new RepeaterEventArgs([], this.currentItem, index, rowItems)]);
+            this.trigger('rowDelete', [this, new RepeaterEventArgs(rowItems, this.currentItem, index-1)]);
             this.rowItems.splice(index - 1, 1);
             this.rows.splice(index - 1, 1);
             //animate
@@ -555,8 +557,8 @@ var Repeater = function(_props)
         //trigger before row delete event
         if (isPreventable) {
             //trigger before row delete event
-            var beforeRowDeleteEvent = jQuery.Event("onBeforeRowDelete");
-            this.$el.trigger(beforeRowDeleteEvent);
+            var beforeRowDeleteEvent = jQuery.Event("beforeRowDelete");
+            this.trigger(beforeRowDeleteEvent, [this, new RepeaterEventArgs(_self.rowItems[index-1], data, index-1)]);
 
             if (!beforeRowDeleteEvent.isDefaultPrevented()) {
                 return removeRow.call(this, dpRemove);
@@ -589,13 +591,13 @@ var Repeater = function(_props)
                 _props.afterAttach.apply(this, arguments);
             if((!_creationFinished && (_dataProvider && _dataProvider.forEach && _dataProvider.length>0)) || e.isDefaultPrevented())    
                 e.preventDefault();
-            _registerSurrogate();
+            //_registerSurrogate();
         }
     };
     this.userCanManageItems = true;
     var _registerSurrogate = function(e){
         //init events for this surrogate component.
-       _self.initEvents(this.$el, 0);
+       _self.initEvents(_self.$el, 0);
     }
     var _defaultParams = {
         rendering: {
@@ -612,6 +614,7 @@ var Repeater = function(_props)
                 ownerDocument: _props.ownerDocument
             }
         },
+        attr:{"data-triggers":"rowAdd endDraw rowEdit beforeRowAdd rowDelete beforeRowDelete beginDraw"},   
         guidField:"guid"
     };
     _props = extend(false, false, _defaultParams, _props);
@@ -621,6 +624,8 @@ var Repeater = function(_props)
     var _container = _props.container;
     var _guidField = _props.guidField;
     this.components = _props.components;
+    var _keydown = _props.keydown;
+    _props.keydown = this.containerKeyDown;
 
     Component.call(this, _props, true, true);
     var base = this.base;
@@ -640,18 +645,6 @@ var Repeater = function(_props)
             this.dataProvider = _props.dataProvider;
         return this.$el;
     };
-
-    this.registerEvents = function () 
-    {
-        return [
-            {
-                registerTo: this.$container, events: {
-                    'keydown': this.containerKeyDown.bind(this)
-                }
-            }
-        ];        
-    };
-    
 
     Object.defineProperty(this, "enabled", 
     {

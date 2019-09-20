@@ -7,7 +7,7 @@
 //component definition
 var CollectionEditor = function (_props, overrided = false) {
     var _self = this;
-    let _value, _memberType;
+    let _value, _memberType, _repeater;
 
     this.initMembers = function(){
         let c = _field!=null && _field!=""?_instance[_field]:_instance;
@@ -31,7 +31,8 @@ var CollectionEditor = function (_props, overrided = false) {
                 this.initMembers();
                 fnContainerDelayInit();
                 this.components = _cmps;
-                this.addComponents();
+                let inst = this.addComponents();
+                _repeater = inst[0];
             }
             e.preventDefault();
         }
@@ -48,6 +49,14 @@ var CollectionEditor = function (_props, overrided = false) {
                     rendering: {
                         direction: 'vertical',
                         separator: true
+                    },
+                    rowAdd:function(e, r, ra){
+                        console.log("rowAdd", e);
+                        for(let p in ra.currentRow){
+                            ra.currentRow[p].scrollTo();
+                            break;
+                        }
+                        this.focusComponent(ra.currentIndex, 0);
                     },
                     components:[
                         {

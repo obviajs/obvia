@@ -461,6 +461,7 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
                 _props.afterAttach.apply(this, arguments);
             if(!e.isDefaultPrevented()){
                 this.trigger('creationComplete');
+                console.log("CreationComplete : Type:",this.ctor+" id:"+ this.$el.attr("id"));
             }
             console.log("AfterAttach : Type:",this.ctor+" id:"+ this.$el.attr("id"));
         }
@@ -535,8 +536,8 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
         return customEvents;
     };
 
-    var _dataTriggerEventList = _isSurrogate?_defaultHandlers:this.dataTriggerEvents();
-   
+   // var _dataTriggerEventList = _isSurrogate?_defaultHandlers:this.dataTriggerEvents();
+    var _dataTriggerEventList = this.dataTriggerEvents();
     this.registerEvents = function ()
     {
         return _dataTriggerEventList;
@@ -571,7 +572,7 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
     {
         if(this.$el)
         {
-            $("body").animate({
+            $(this.ownerDocument.body).animate({
                 scrollTop: this.$el.offset().top - 100
             }, 1200);
         }

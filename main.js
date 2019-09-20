@@ -78,6 +78,7 @@ rjs.define("./components/Link.js", "Link");
 //Repeater
 rjs.define("./components/Repeater/Repeater.js", "Repeater");
 rjs.define("./components/Repeater/RepeaterEx.js", "RepeaterEx");
+rjs.define("./components/Repeater/css/repeater-default.css", "repeater_default_css");
 //List
 rjs.define("./components/List.js", "List");
 //CheckBox
@@ -231,6 +232,7 @@ rjs.require([
         "BootBox",
         "Repeater",
         "RepeaterEx",
+        "repeater_default_css",
         "List",
         "Amount",
         "HeadingType",
