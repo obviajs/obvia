@@ -51,20 +51,20 @@ var SpacingEditor = function (_props, overrided = false) {
         _cmps = 
         [
             {
-                "constructor": "Container",
+                ctor: "Container",
                 "props": {
                     "type": "row",
                     spacing:{mb:1},
                     "components": [
                         {
-                            "constructor": "Container",
+                            ctor: "Container",
                             "props": {
                                 "id": "workArea_80",
                                 type: ContainerType.COLUMN,
                                 spacing:{colSpan:6},
                                 "components": [
                                     {
-                                        "constructor": "Select",
+                                        ctor: "Select",
                                         "props": {
                                             "id": "colSpan_"+_self.guid,
                                             "dataProvider": _dpColSpan,
@@ -76,14 +76,14 @@ var SpacingEditor = function (_props, overrided = false) {
                             }
                         },
                         {
-                            "constructor": "Container",
+                            ctor: "Container",
                             "props": {
                                 "id": "workArea_84",
                                 type: ContainerType.COLUMN,
                                 spacing:{colSpan:6},
                                 "components": [
                                     {
-                                        "constructor": "Select",
+                                        ctor: "Select",
                                         "props": {
                                             "id": "offset_"+_self.guid,
                                             "dataProvider": _dpOffset,
@@ -99,19 +99,19 @@ var SpacingEditor = function (_props, overrided = false) {
                 }
             },
             {
-                "constructor": "Container",
+                ctor: "Container",
                 "props": {
                     "type": "row",
                     "components": [
                         {
-                            "constructor": "Container",
+                            ctor: "Container",
                             "props": {
                                 "id": "workArea_82",
                                 type: ContainerType.COLUMN,
                                 spacing:{colSpan:6},
                                 "components": [
                                     {
-                                        "constructor": "Select",
+                                        ctor: "Select",
                                         "props": {
                                             "id": "mb_"+_self.guid,
                                             "dataProvider": _dpMb,
@@ -123,14 +123,14 @@ var SpacingEditor = function (_props, overrided = false) {
                             }
                         },
                         {
-                            "constructor": "Container",
+                            ctor: "Container",
                             "props": {
                                 "id": "workArea_86",
                                 type: ContainerType.COLUMN,
                                 spacing:{colSpan:6},
                                 "components": [
                                     {
-                                        "constructor": "Select",
+                                        ctor: "Select",
                                         "props": {
                                             "id": "mt_"+_self.guid,
                                             "dataProvider": _dpMt,

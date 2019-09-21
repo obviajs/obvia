@@ -52,9 +52,9 @@ var ObjectEditor = function (_props, overrided = false) {
         _self.removeAllChildren();
         for(let prop in props){
             if(ObjectEditor.metaProps[prop]){
-                let propEditor = ObjectEditor.propEditors[ObjectEditor.metaProps[prop].ctor];
+                let propEditor = ObjectEditor.components[ObjectEditor.metaProps[prop].ctor];
                 if(propEditor){
-                    let itemEditorLit = propEditor.itemEditor;
+                    let itemEditorLit = propEditor.literal;
                     if(ObjectEditor.metaProps[prop].props)
                         itemEditorLit.props = extend(false, false, itemEditorLit.props, ObjectEditor.metaProps[prop].props);
                     
@@ -71,7 +71,7 @@ var ObjectEditor = function (_props, overrided = false) {
                     {
                         let targetLit;
                         if(ObjectEditor.metaProps[prop].targetProps.target && ObjectEditor.metaProps[prop].targetProps.target.ctor){
-                            targetLit = ObjectEditor.propEditors[ObjectEditor.metaProps[prop].targetProps.target.ctor].itemEditor;
+                            targetLit = ObjectEditor.components[ObjectEditor.metaProps[prop].targetProps.target.ctor].literal;
                             targetLit.props = extend(false, false,targetLit.props, ObjectEditor.metaProps[prop].targetProps.target.props);
                         }
                         
@@ -151,36 +151,36 @@ ObjectEditor.remoteData = {};
 
 ObjectEditor.componentValueField = "ctor";
 ObjectEditor.componentLabelField = "label";
-ObjectEditor.remoteData.componentList = [ 
+ObjectEditor.componentList = [ 
     {
-        "label":"Label", "icon":"horizontal-line.png", "ctor": "Label"
+        "label":"Label", "ctor": "Label"
     },
     {
-        "label":"Heading", "icon":"", "ctor": "Heading"
+        "label":"Heading", "ctor": "Heading"
     },
     {
-        "label":"Link", "icon":"", "ctor": "Link"
+        "label":"Link", "ctor": "Link"
     },
     {
-        "label":"HRule", "icon":"", "ctor": "HRule"
+        "label":"HRule", "ctor": "HRule"
     },
     {
-        "label":"Button", "icon":"", "ctor": "Button"
+        "label":"Button", "ctor": "Button"
     },
     {
-        "label":"TextInput", "icon":"", "ctor": "TextInput"
+        "label":"TextInput", "ctor": "TextInput"
     },
     {
-        "label":"TextArea", "icon":"", "ctor": "TextArea"
+        "label":"TextArea", "ctor": "TextArea"
     },
     {
-        "label":"DateTime", "icon":"", "ctor": "DateTime"
+        "label":"DateTime", "ctor": "DateTime"
     },
     {
-        "label":"DateTimeCb", "icon":"", "ctor": "DateTimeCb"
+        "label":"DateTimeCb", "ctor": "DateTimeCb"
     },
     {
-        "label":"Image", "icon":"", "ctor": "Image"
+        "label":"Image", "ctor": "Image"
     },
     {
         "label":"Select", "icon":"drop-down-list.png", "ctor": "Select"
@@ -189,55 +189,55 @@ ObjectEditor.remoteData.componentList = [
         "label":"DropDown", "icon":"drop-down-list.png", "ctor": "DropDown"
     },
     {
-        "label":"Amount", "icon":"", "ctor": "Amount"
+        "label":"Amount", "ctor": "Amount"
     },
     {
-        "label":"Tree", "icon":"", "ctor": "Tree"
+        "label":"Tree", "ctor": "Tree"
     },
     {
-        "label":"AutoComplete", "icon":"", "ctor": "AutoCompleteEx"
+        "label":"AutoComplete", "ctor": "AutoCompleteEx"
     },
     {
-        "label":"AutoBrowse", "icon":"", "ctor": "AutoBrowse"
+        "label":"AutoBrowse", "ctor": "AutoBrowse"
     },
     {
-        "label":"RadioGroup", "icon":"", "ctor": "RadioGroup"
+        "label":"RadioGroup", "ctor": "RadioGroup"
     },
     {
-        "label":"Toggle", "icon":"", "ctor": "Toggle"
+        "label":"Toggle", "ctor": "Toggle"
     },
     {
-        "label":"CheckBox", "icon":"", "ctor": "CheckBox"
+        "label":"CheckBox", "ctor": "CheckBox"
     },
     {
-        "label":"CheckBoxGroup", "icon":"", "ctor": "CheckBoxGroup"
+        "label":"CheckBoxGroup", "ctor": "CheckBoxGroup"
     },
     {
-        "label":"Form", "icon":"", "ctor": "Form"
+        "label":"Form", "ctor": "Form"
     },
     {
-        "label":"Container", "icon":"", "ctor": "Container"
+        "label":"Container", "ctor": "Container"
     },
     {
-        "label":"ViewStack", "icon":"", "ctor": "ViewStack"
+        "label":"ViewStack", "ctor": "ViewStack"
     },
     {
-        "label":"Upload", "icon":"", "ctor": "UploadEx"
+        "label":"Upload", "ctor": "UploadEx"
     },
     {
-        "label":"MultiUpload", "icon":"", "ctor": "MultiUpload"
+        "label":"MultiUpload", "ctor": "MultiUpload"
     },
     {
-        "label":"Repeater", "icon":"", "ctor": "Repeater"
+        "label":"Repeater", "ctor": "Repeater"
     },
     {
-        "label":"DataGrid", "icon":"", "ctor": "DataGrid"
+        "label":"DataGrid", "ctor": "DataGrid"
     },
     {
-        "label":"CalendarDay", "icon":"", "ctor": "CalendarDay"
+        "label":"CalendarDay", "ctor": "CalendarDay"
     },
     {
-        "label":"CalendarWeek", "icon":"", "ctor": "CalendarWeek"
+        "label":"CalendarWeek", "ctor": "CalendarWeek"
     }
 ];
 ObjectEditor.metaProps = {
@@ -357,7 +357,7 @@ ObjectEditor.metaProps = {
                     id: 'anchorBtn',
                     valueField: ObjectEditor.componentValueField,
                     labelField: ObjectEditor.componentValueField,
-                    dataProvider: ObjectEditor.remoteData.componentList,
+                    dataProvider: ObjectEditor.componentList,
                     fields:[{"field":ObjectEditor.componentValueField, "description":ObjectEditor.componentValueField, "visible":false}, {"field":ObjectEditor.componentLabelField, "description":ObjectEditor.componentLabelField}]        
                 }
             },
@@ -366,7 +366,7 @@ ObjectEditor.metaProps = {
                     if(this.value && this.value.length>0){
                         e.preventDefault();
                         let wl = extend(true, targetLit);
-                        itemEditorLit.props.instance = extend(true, ObjectEditor.propEditors[this.value[0][ObjectEditor.componentValueField]].itemEditor);
+                        itemEditorLit.props.instance = extend(true, ObjectEditor.components[this.value[0][ObjectEditor.componentValueField]].literal);
                         itemEditorLit.props.field = "props";
                         wl.props.components = [itemEditorLit];
                         let win = oe.addComponent(wl);
@@ -401,7 +401,7 @@ ObjectEditor.metaProps = {
                     id: 'anchorBtn',
                     valueField: ObjectEditor.componentValueField,
                     labelField: ObjectEditor.componentValueField,
-                    dataProvider: ObjectEditor.remoteData.componentList,
+                    dataProvider: ObjectEditor.componentList,
                     fields:[{"field":ObjectEditor.componentValueField, "description":ObjectEditor.componentValueField, "visible":false}, {"field":ObjectEditor.componentLabelField, "description":ObjectEditor.componentLabelField}]        
                 }
             },
@@ -410,7 +410,7 @@ ObjectEditor.metaProps = {
                     if(this.value && this.value.length>0){
                         e.preventDefault();
                         let wl = extend(true, targetLit);
-                        itemEditorLit.props.instance = extend(true, ObjectEditor.propEditors[this.value[0][ObjectEditor.componentValueField]].itemEditor);
+                        itemEditorLit.props.instance = extend(true, ObjectEditor.components[this.value[0][ObjectEditor.componentValueField]].literal);
                         itemEditorLit.props.field = "props";
                         wl.props.components = [itemEditorLit];
                         let win = oe.addComponent(wl);
@@ -436,9 +436,75 @@ ObjectEditor.formField = {
     }
 };
 
-ObjectEditor.propEditors = {
+ObjectEditor.components = {
+    "Label":{
+        literal: {
+            "ctor": Label,
+            "props":{
+                id: 'label',
+                label:"Label"
+            }
+        },
+        label:"Label",
+        icon:".png"
+    },
+    "Heading":{
+        literal: {
+            "ctor": Heading,
+            "props": {
+                id: 'heading',
+                label: 'Heading',
+                headingType: HeadingType.h1,
+                align: Align.left,
+                classes: [],
+                components: []
+            }
+        },
+        label:"Heading",
+        icon:".png"
+    },
+    "Link":{
+        literal: {
+            "ctor": Link,
+            "props":{
+                id: 'label',
+                label:"Click Me",
+                href:"#",
+                target:""
+            }
+        },
+        label:"Link",
+        icon:".png"
+    },
+    "HRule":{
+        literal: {
+            "ctor": HRule,
+            "props":{
+                id: 'hrule',
+                align: "center",
+                size: 5,
+                width: 1000,
+            }
+        },
+        label:"HRule",
+        icon:".png"
+    },
+    "Button": {
+        literal: {
+            "ctor": Button,
+            "props":{
+                id: 'button',
+                type: "button",
+                value: "",
+                label:"Click Me",
+                classes: ["btn", "btn-success"]
+            }
+        },
+        label:"Button",
+        icon:".png"
+    },
     "TextInput": {
-        itemEditor: {
+        literal: {
             "ctor": TextInput,
             "props":{
                 id: 'textField'
@@ -450,25 +516,132 @@ ObjectEditor.propEditors = {
         label:"Text Input",
         icon:"horizontal-line.png"
     },
-    "Toggle": {
-        itemEditor: {
-            "ctor": Toggle,
-            "props":{
-                id: 'toggle',
-                value: true,
-                classes:{
-                    "self":["switch", "block"]
-                }
+    "TextArea":{
+        literal: {
+            "ctor": TextArea,
+            "props":{
+                id: 'textarea',
+                value: ''
+            }
+        },
+        label:"TextArea",
+        icon:"horizontal-line.png"
+    },
+    "DateTime":{
+        literal: {
+            "ctor": DateTime,
+            "props":{
+                id: 'datetime',
+                inputFormat: 'DD/MM/YYYY',
+                outputFormat: 'DD-MM-YYYY',
+                displayFormat: 'MM/DD/YYYY',
+                value: '2022/02/04'
+            }
+        },
+        label:"DateTime",
+        icon:".png"
+    },
+    "DateTimeCb":{
+        literal: {
+            "ctor": DateTimeCb,
+            props: {
+                id: 'dateTimeCb',
+                mode: DateTimeMode.DATE_TIME_SECOND,
+                versionStyle: '',
+                inputFormat: 'DD/MM/YYYY',
+                outputFormat: 'DD-MM-YYYY',
+                value: '06/06/2019',
+                classes:["ml-0"]
+            }
+        },
+        label:"DateTimeSel",
+        icon:".png"
+    },
+    "Image":{
+        literal: {
+            "ctor": Image,
+            "props":{
+                id: 'image',
+                src: 'https://d28hgpri8am2if.cloudfront.net/book_images/cvr9781451648539_9781451648539_hr.jpg',
+                alt: "Steve Jobs",
+                height: 100,
+                width: 100        
+            }
+        },
+        label:"Image",
+        icon:".png"
+    },
+    "Select":{
+        literal: {
+            "ctor": Select,
+            "props":{
+                id: 'select',
+                dataProvider: [{ "value": "1", "text": "Albania" }, { "value": "2", "text": "Greece" }, { "value": "3", "text": "Italy" }],
+                labelField: "text",
+                valueField: "value",
+                value: "2"
             }
         },
-        set:null,
-        get:null,
-        valueField:"checked",
-        label:"Toogle",
+        label:"Image",
+        icon:".png"
+    },
+    "DropDown":{
+        literal: {
+            "ctor": DropDown,
+            "props":{
+                id: 'dropdown',
+                hrefField:"key",
+                labelField:"title",
+                label:"Click me",
+                dataProvider: new ArrayEx([
+                    { key: "#",title: "Folder 1"},        
+                    { key: "#",title: "Folder 2"},
+                    { key: "#",title: "Folder 3"}
+                ])
+            }
+        },
+        label:"DropDown",
+        icon:".png"
+    },
+    "Amount":{
+        literal: {
+            "ctor": Amount,
+            "props":{
+                id: 'amount',
+                currencyList: [{ "id": "1", "text": "EUR" }, { "id": "2", "text": "ALL" }, { "id": "3", "text": "GBP" }],
+                value: {
+                    "amount": "132323",
+                    "currency": "2"
+                }
+            }
+        },
+        label:"Amount",
+        icon:".png"
+    },
+    "Tree":{
+        literal: {
+            "ctor": Tree,
+            "props":{
+                id: 'tree',
+                valueField: "key",
+                labelField: "title",
+                childrenField: "children",
+                dataProvider:new ArrayEx([
+                    {title: "Node 1", key: "1"},
+                    {title: "Folder 2", key: "2", children: new ArrayEx([
+                      {title: "Node 2.1", key: "3", myOwnAttr: "abc"},
+                      {title: "Node 2.2", key: "4"}
+                    ])}
+                  ]),
+                expandIcon: "fa-chevron-circle-right",
+                collapseIcon: "fa-chevron-circle-down",
+            }
+        },
+        label:"Tree",
         icon:".png"
     },
     "AutoCompleteEx": {
-        itemEditor: {
+        literal: {
             "ctor": Toggle,
             "props":{
                 id: 'AutoCompleteEx',
@@ -485,7 +658,7 @@ ObjectEditor.propEditors = {
         icon:".png"
     },
     "AutoBrowse": {
-        itemEditor: {
+        literal: {
             "ctor": AutoBrowse,
             "props":{
                 id: "AutoBrowse",
@@ -499,8 +672,186 @@ ObjectEditor.propEditors = {
         label:"AutoBrowse",
         icon:".png"
     },
+    "RadioGroup": {
+        literal: {
+            "ctor": RadioGroup,
+            "props":{
+                id: 'radiogroup',
+                dataProvider: [
+                    { "id": "1", "text": "Option 1", "enabled":true, "buttonClass": []}, 
+                    { "id": "2", "text": "Option 2", "enabled":true, "buttonClass": []},
+                    { "id": "3", "text": "Option 3", "enabled":false, "buttonClass": []}
+                ],
+                valueField: 'id',
+                labelField: 'text',
+                classesField: "buttonClass",
+                defaultClasses: ['btn btn-xs btn-default'],
+                selectedClasses: ['btn btn-xs btn-success'],
+                enabledField: "enabled",
+                checkedField: "checked",
+                value: [{ "id": "2", "text": "Option 2", "enabled":true}]
+            }
+        },
+        label:"RadioGroup",
+        icon:".png"
+    },
+    "CheckBox": {
+        literal: {
+            "ctor": CheckBox,
+            "props":{
+                id: 'checkBoxField',
+                label: 'CheckBox Label',
+                value: "1",
+                checked:false
+            }
+        },
+        label:"CheckBox",
+        icon:".png"
+    },
+    "Toggle": {
+        literal: {
+            "ctor": Toggle,
+            "props":{
+                id: 'toggle',
+                value: true,
+                checked:false,
+                classes:{
+                    "self":["switch", "block"],
+                    "span":["slider"]
+                }
+            }
+        },
+        set:null,
+        get:null,
+        valueField:"checked",
+        label:"Toogle",
+        icon:".png"
+    },
+    "CheckBoxGroup":{
+        literal: {
+            "ctor": CheckBoxGroup,
+            "props":{
+                id: 'checkBoxGroupLonely1',
+                dataProvider: [
+                    { "id": "1", "text": "Option 1", "buttonClass": ['btn btn-xs btn-default'], "enabled":true, "checked":false},
+                    { "id": "2", "text": "Option 2", "buttonClass": ['btn btn-xs btn-default'], "enabled":true, "checked":false},
+                    { "id": "3", "text": "Option 3", "buttonClass": ['btn btn-xs btn-success'], "enabled":true, "checked":true},
+                    { "id": "4", "text": "Option 4", "buttonClass": ['btn btn-xs btn-default'], "enabled":true, "checked":false}
+                ],
+                valueField: "id",
+                labelField: "text",
+                classesField: "buttonClass",
+                defaultClasses: ['btn btn-xs btn-default'],
+                selectedClasses: ['btn btn-xs btn-success'],
+                enabledField: "enabled",
+                checkedField: "checked",
+                value: [{ "id": "3", "text": "Option 3", "buttonClass": ['btn btn-xs btn-success'], "enabled":true}]
+            }
+        },
+        label:"CheckBoxGroup",
+        icon:".png"
+    },  
+    "Form":{
+        literal: {
+            "ctor": Form,
+            "props":{
+                id: 'form',
+                formName: 'My Form',
+                action:"",
+                components: [],
+                classes:["default-cnt"]
+            }
+        },
+        label:"Form",
+        icon:".png"
+    },
+    "Container":{
+        literal: {
+            ctor: Container,
+            props: {
+                id: 'container',
+                type: ContainerType.NONE,
+                classes:["default-component","default-cnt"]
+            }
+        },
+        label:"Container",
+        icon:".png"
+    },
+    "ViewStack":{
+        literal: {
+            ctor: ViewStack,
+            props: {
+                id: 'viewStack',
+                classes:["default-component","default-cnt"]
+            }
+        },
+        label:"ViewStack",
+        icon:".png"
+    },
+    "UploadEx":{
+        literal: {
+            ctor: UploadEx,
+            props: {
+                id: 'upload',
+                multiple: true
+            }
+        },
+        label:"UploadEx",
+        icon:".png"
+    },
+    "MultiUpload":{
+        literal: {
+            ctor: MultiUpload,
+            props: {
+                id: 'multiUpload',
+            }
+        },
+        label:"MultiUpload",
+        icon:".png"
+    },
+    "Repeater":{
+        literal: {
+            ctor: Repeater,
+            props: {
+                id: 'repeater',
+            }
+        },
+        label:"Repeater",
+        icon:".png"
+    },
+    "DataGrid":{
+        literal: {
+            ctor: DataGrid,
+            props: {
+                id: 'dataGrid',
+                columns:new ArrayEx([])
+            }
+        },
+        label:"DataGrid",
+        icon:".png"
+    },
+    "CalendarDay":{
+        literal: {
+            ctor: CalendarDay,
+            props: {
+                id: 'calendarDay',
+            }
+        },
+        label:"CalendarDay",
+        icon:".png"
+    },
+    "CalendarWeek":{
+        literal: {
+            ctor: CalendarWeek,
+            props: {
+                id: 'calendarWeek',
+            }
+        },
+        label:"CalendarWeek",
+        icon:".png"
+    },      
     "SpacingEditor": {
-        itemEditor: {
+        literal: {
             "ctor": SpacingEditor,
             "props":{
             }
@@ -510,7 +861,7 @@ ObjectEditor.propEditors = {
         icon:".png"
     },
     "CollectionEditor":{
-        itemEditor: {
+        literal: {
             "ctor": CollectionEditor,
             "props":{
             }
@@ -520,7 +871,7 @@ ObjectEditor.propEditors = {
         icon:".png"
     },
     "ObjectEditor":{
-        itemEditor: {
+        literal: {
             "ctor": ObjectEditor,
             "props":{
             }
@@ -530,7 +881,7 @@ ObjectEditor.propEditors = {
         icon:".png"
     },
     "BrowserWindow":{
-        itemEditor: {
+        literal: {
             ctor: BrowserWindow,
             props: {
                 id:"window"
@@ -538,20 +889,9 @@ ObjectEditor.propEditors = {
         },
         label:"BrowserWindow",
         icon:".png"
-    },
-    "Label":{
-        itemEditor: {
-            "ctor": Label,
-            "props":{
-                id: 'label',
-                label:"Click Me"
-            }
-        },
-        label:"Label",
-        icon:".png"
-    },
+    },   
     "DataGridCellRenderer":{
-        itemEditor: {
+        literal: {
             "ctor": DataGridCellRenderer,
             "props":{
                 id: 'label',
