@@ -23,15 +23,28 @@ var Modal = function(_props)
             }
         }
     });
-    
+    let _displayed = false;
+    this.DOMMutation = function(e)
+    {
+        if(e.mutation.type == "attributes" && e.mutation.attributeName == "style"){
+            let av = e.target.style.getPropertyValue('display');
+            if(av.trim()!="" && av!="none" && !_displayed){
+                _displayed = true;
+                let evt = jQuery.Event("displayListUpdated");
+                this.trigger(evt);
+            }
+        }
+        //
+    }
+
     this.template = function () 
     {
-        return '<div class="modal fade modal-fullscreen" id="' + this.domID + '" tabindex="-1" role="dialog">' +
+        return '<div data-triggers="displayListUpdated" class="modal fade modal-fullscreen" id="' + this.domID + '" tabindex="-1" role="dialog">' +
                 '<div class="modal-dialog '+ _size +'" role="document">' +
                     '<div class="modal-content">' +
                         '<div class="modal-header" id="' + this.domID + '-modal-header">' +
                             '<h5 class="modal-title" id="' + this.domID + '-modal-title">'+_title+'</h5>' +
-                            '<button type="button" class="close" data-dismiss="modal" aria-label="Close">' +
+                            '<button type="button" class="close no-form-control" data-dismiss="modal" aria-label="Close">' +
                                 '<span aria-hidden="true">&times;</span>' +    
                             '</button>' +
                         '</div>' +

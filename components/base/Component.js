@@ -16,7 +16,7 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
         attr:{},
         visible:true,
         enabled:true,
-        index:0    
+        index:0 
     };
     shallowCopy(extend(false, false, _defaultParams, _props), _props);
     var ppb =  Component.processPropertyBindings(_props);
@@ -48,7 +48,6 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
     var _dragstart = _props.dragstart;
     var _dragenter = _props.dragenter;
     var _dragleave = _props.dragleave;
-    var _DOMMutation = _props.DOMMutation;
     var _ownerDocument = _props.ownerDocument;
     var _watchers = [];
     var _bindings = ppb.bindings;
@@ -433,6 +432,16 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
         Component.surrogates[this.$el.attr('id')] = this.domID;
     }
 
+    var _DOMMutation = this.DOMMutation;
+    this.DOMMutation = function (e)
+    {
+        if (typeof _props.DOMMutation == 'function')
+            _props.DOMMutation.apply(this, arguments);
+        if(!e.isDefaultPrevented()){
+            if (typeof _DOMMutation == 'function')
+                _DOMMutation.apply(this, arguments);
+        }
+    }
     var _beforeAttach = this.beforeAttach;
     this.beforeAttach = function (e)
     {
@@ -451,7 +460,7 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
             }
         }
     }
-    
+    var _afterAttach = this.afterAttach;
     this.afterAttach = function (e)
     {
         if (e.target.id == this.domID) 
@@ -460,8 +469,12 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
             if (typeof _props.afterAttach == 'function')
                 _props.afterAttach.apply(this, arguments);
             if(!e.isDefaultPrevented()){
-                this.trigger('creationComplete');
-                console.log("CreationComplete : Type:",this.ctor+" id:"+ this.$el.attr("id"));
+                if (typeof _afterAttach == 'function')
+                    _afterAttach.apply(this, arguments);
+                if(!e.isDefaultPrevented()){
+                    this.trigger('creationComplete');
+                    console.log("CreationComplete : Type:",this.ctor+" id:"+ this.$el.attr("id"));
+                }
             }
             console.log("AfterAttach : Type:",this.ctor+" id:"+ this.$el.attr("id"));
         }
@@ -487,7 +500,7 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
                 'dragstart': _dragstart && typeof _dragstart == 'function' ? _dragstart.bind(_self) : undefined,
                 'dragenter': _dragenter && typeof _dragenter == 'function' ? _dragenter.bind(_self) : undefined,
                 'dragleave': _dragleave && typeof _dragleave == 'function' ? _dragleave.bind(_self) : undefined,
-                'DOMMutation': _DOMMutation && typeof _DOMMutation == 'function' ? _DOMMutation.bind(_self) : undefined,
+                'DOMMutation': this.DOMMutation && typeof this.DOMMutation == 'function' ? this.DOMMutation.bind(_self) : undefined,
                 'afterAttach': this.afterAttach && typeof this.afterAttach == 'function' ? this.afterAttach.bind(_self) : undefined,
                 'beforeAttach': this.beforeAttach && typeof this.beforeAttach == 'function' ? this.beforeAttach.bind(_self) : undefined,
             }
@@ -912,10 +925,14 @@ Component.ready = function(cmp, fn, ownerDocument=document)
     {
         Component.observer[ownerDocument["id"]] = new MutationObserver(Component.check);
         // Watch for changes in the document window.document.documentElement
-        Component.observer[ownerDocument["id"]].observe(ownerDocument, {
+        let oo = {
             childList: true,
-            subtree: true
-        });
+            subtree: true,
+            attributes : true, 
+            attributeFilter : ['style', 'class']
+        };
+                    
+        Component.observer[ownerDocument["id"]].observe(ownerDocument, oo);
     }
 // Check if the element is currently in the DOM
     //Component.check();
@@ -934,33 +951,36 @@ Component.check = function(mutations)
                     Component.instances[Component.domID2ID[mutations[g].target.id]].trigger(evt);
                 }
             }
-            for(var h=0;h<mutations[g].addedNodes.length;h++)
+            if(mutations[g].type == "childList")
             {
-                var DOMNode = mutations[g].addedNodes[h];
-                if(DOMNode.querySelectorAll)
+                for(var h=0;h<mutations[g].addedNodes.length;h++)
                 {
-                    // Check the DOM for elements matching a stored selector
-                    if(Component.listeners[DOMNode.ownerDocument.id])
+                    var DOMNode = mutations[g].addedNodes[h];
+                    if(DOMNode.querySelectorAll)
                     {
-                        for (var i = 0, len = Component.listeners[DOMNode.ownerDocument.id].length, listener, elements; i < len; i++) 
+                        // Check the DOM for elements matching a stored selector
+                        if(Component.listeners[DOMNode.ownerDocument.id])
                         {
-                            listener = Component.listeners[DOMNode.ownerDocument.id][i];
-                            if(!listener.element.attached)
+                            for (var i = 0, len = Component.listeners[DOMNode.ownerDocument.id].length, listener, elements; i < len; i++) 
                             {
-                                var $el = listener.element.$el;
-                                var id = $el[0].id;
-                                //console.log(DOMNode.id);
-                                var resultNodes = DOMNode.id==id?[DOMNode]:DOMNode.querySelectorAll("#"+id);
-
-                                // Make sure the callback isn't invoked with the 
-                                // same element more than once
-                            // if (mutations.addedNodes[h]==element && !element.ready) 
-                                if(resultNodes.length>0 && !resultNodes[0].ready)
+                                listener = Component.listeners[DOMNode.ownerDocument.id][i];
+                                if(!listener.element.attached)
                                 {
-                                    resultNodes[0].ready = true;
-                                    // Invoke the callback with the element
-                                    //listener.element.addedOnDOM();
-                                    listener.fn.call(listener.element, $el);
+                                    var $el = listener.element.$el;
+                                    var id = $el[0].id;
+                                    //console.log(DOMNode.id);
+                                    var resultNodes = DOMNode.id==id?[DOMNode]:DOMNode.querySelectorAll("#"+id);
+
+                                    // Make sure the callback isn't invoked with the 
+                                    // same element more than once
+                                // if (mutations.addedNodes[h]==element && !element.ready) 
+                                    if(resultNodes.length>0 && !resultNodes[0].ready)
+                                    {
+                                        resultNodes[0].ready = true;
+                                        // Invoke the callback with the element
+                                        //listener.element.addedOnDOM();
+                                        listener.fn.call(listener.element, $el);
+                                    }
                                 }
                             }
                         }

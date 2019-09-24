@@ -122,7 +122,7 @@ var DataGrid = function(_props)
     this.template = function () 
     {
         var html = 
-            "<div id='" + this.domID + "' data-triggers='cellEditFinished cellEdit rowClick rowDblClick cellStyling rowStyling'  style='overflow-y: scroll'>" +
+            "<div id='" + this.domID + "' data-triggers='cellEditFinished cellEdit rowEdit rowAdd rowDelete beginDraw endDraw rowClick rowDblClick cellStyling rowStyling'  style='overflow-y: scroll'>" +
                 "<table class='table' id='" + this.domID + "-table'>"+
                     "<thead id='" + this.domID + "-header'>"+
                     "</thead>"+
@@ -483,14 +483,14 @@ var DataGrid = function(_props)
             var columnIndex = 0;
             renderedRow.click(function(evt)
             {
-                _self.trigger("rowClick",  [_self, new RepeaterEventArgs(_rowItems, data, index)]);
+                _self.trigger("rowClick",  [_self, new RepeaterEventArgs(_rowItems, _dataProvider[index-1 + _virtualIndex], index+_virtualIndex)]);
             });
 
             renderedRow.dblclick(function(evt)
             {
-                _self.trigger("rowDblClick", [_self, new RepeaterEventArgs(_rowItems, data, index)]);
+                _self.trigger("rowDblClick", [_self, new RepeaterEventArgs(_rowItems, _dataProvider[index-1 + _virtualIndex], index+_virtualIndex)]);
             });
-            let rsEvt = jQuery.Event('rowStyling', [_self, new RepeaterEventArgs(_rowItems, data, index)]);
+            let rsEvt = jQuery.Event('rowStyling', [_self, new RepeaterEventArgs(_rowItems, _dataProvider[index-1 + _virtualIndex], index+_virtualIndex)]);
 
             var rowBindingFunctions = [], bIndex = 0;
             for (var columnIndex=0;columnIndex<_self.columns.length;columnIndex++) 
@@ -563,7 +563,7 @@ var DataGrid = function(_props)
                     //console.log("creation Complete", this.id);
                     if (ccComponents.length == _self.columns.length) {
                         //trigger row add event
-                        _self.$el.trigger('onRowAdd', [_self, new RepeaterEventArgs(_rowItems, data, index)]);
+                        _self.$el.trigger('rowAdd', [_self, new RepeaterEventArgs(_rowItems, data, index)]);
                         //duhet te shtojme nje flag qe ne rast se metoda addRow eshte thirrur nga addRowHangler te mos e exec kodin meposhte
                         
                         //manage dp
@@ -599,7 +599,7 @@ var DataGrid = function(_props)
                         data[bindedValue] = this.value;
                     }
 
-                    _self.$el.trigger('onRowEdit', [_self, new RepeaterEventArgs(rowItems, data, index)]);
+                    _self.$el.trigger('rowEdit', [_self, new RepeaterEventArgs(rowItems, _dataProvider[index-1 + _virtualIndex], index+_virtualIndex)]);
                 });
                 //width='"+column.calculatedWidth+"'
                 var cell = $("<td id='cell_"+(index-1)+"_"+columnIndex+"'></td>");
@@ -674,7 +674,7 @@ var DataGrid = function(_props)
             this.cells.splice(index - 1, 1);
             this.cellItemRenderers.splice(index - 1, 1);
             
-            this.$el.trigger('onRowDelete', [this, new RepeaterEventArgs([], _currentItem, index, rowItems)]);
+            this.$el.trigger('rowDelete', [this, new RepeaterEventArgs([], _currentItem, index, rowItems)]);
             //animate
             if (focusOnRowDelete)
                 this.cellItemRenderers[index-2][0].scrollTo();
@@ -697,6 +697,61 @@ var DataGrid = function(_props)
         }
   
     };   
+
+    this.updateDisplayList = function(){
+        _displayed = true;
+        //we now know the parent and element dimensions
+        _avgRowHeight = (this.$table.height() - this.$header.height())/ _rowCount;
+        this.virtualHeight = _dataProvider.length * _avgRowHeight;
+
+        this.bufferedRowsCount = _rowCount;
+
+        var pos = this.$table.position();
+        var left = pos.left + this.$table.width() - 14;
+        var top = pos.top + this.$header.height();
+        this.realHeight = (this.$table.height()+this.$header.height()-16);
+        this.$message = $("<div>Creating Rows</div>");
+
+        this.$scrollArea = $("<div/>");
+        this.$scroller = $("<div style='border:1px solid black;position:relative; height:40px;top:15px'></div>");
+        this.$scrollArea.append(this.$scroller);
+        this.$scrollArea.css({border: "1px", opacity:100, "margin-top":-this.realHeight+"px", float: "right",position:"relative", "margin-left": "-16px", width:"10px", height : this.virtualHeight + "px"});
+        
+        this.$el.css({border: "1px solid black"});
+        this.$el.css({height:this.$table.height()});
+        this.$table.after(this.$scrollArea);
+
+        this.delayScroll = debounce(_onScroll, 400);
+
+        this.$el.on("scroll", function(e){
+            if(this.virtualHeight > (e.target.scrollTop+this.realHeight)-2*_avgRowHeight){
+                this.loading = true;
+                this.$message.css({position:"absolute", top:150+"px", left:150+"px", "background-color":"white","z-index":9999});
+                this.$el.append(this.$message);
+                this.$table.css({"margin-top":e.target.scrollTop});
+                this.$scrollArea.css({"margin-top": (-(this.realHeight)-e.target.scrollTop)+"px"});
+                //let top = this.$scroller.position().top;
+                let h = this.$scrollArea.height();
+                this.$scroller.css({"top": (16 + 1.2*(h - (h- e.target.scrollTop)))+"px"});
+                var cScrollHeight =  this.$scrollArea.css("height");
+                this.delayScroll.apply(this, arguments)
+            //this.onScroll.apply(this, arguments);
+            }
+        }.bind(this));
+        this.setCellsWidth();
+    }
+
+    let _displayed = false;
+    this.afterAttach = function (e) 
+    {
+        if (e.target.id == this.domID) 
+        {
+            let av = e.target.style.getPropertyValue('display');
+            if(av.trim()!="" && av!="none" && !_displayed){
+                this.updateDisplayList();
+            }
+        }
+    };
 
     var _defaultParams = {
         rendering: {
@@ -731,53 +786,12 @@ var DataGrid = function(_props)
     Component.call(this, _props, true);
     var base = this.base;
     //overrides
-    this.afterAttach = function (e) 
-    {
-        if(e.target == this.$el[0])
-        {
-            //we now know the parent and element dimensions
-            _avgRowHeight = (this.$table.height() - this.$header.height())/ _rowCount;
-            this.virtualHeight = _dataProvider.length * _avgRowHeight;
-
-            this.bufferedRowsCount = _rowCount;
-
-            var pos = this.$table.position();
-            var left = pos.left + this.$table.width() - 14;
-            var top = pos.top + this.$header.height();
-            this.realHeight = (this.$table.height()+this.$header.height()-16);
-            this.$message = $("<div>Creating Rows</div>");
-
-            this.$scroller = $("<div/>");
-            this.$scroller.css({border: "1px", opacity:100, "margin-top":-this.realHeight+"px", float: "right",position:"relative", "margin-left": "-16px", width:"10px", height : this.virtualHeight + "px"});
-            
-            this.$el.css({border: "1px solid black"});
-            this.$el.css({height:this.$table.height()});
-            this.$table.after(this.$scroller);
-
-            this.delayScroll = debounce(_onScroll, 400);
-
-            this.$el.on("scroll", function(e){
-                if(this.virtualHeight > (e.target.scrollTop+this.realHeight)-2*_avgRowHeight){
-                    this.loading = true;
-                    this.$message.css({position:"absolute", top:150+"px", left:150+"px", "background-color":"white","z-index":9999});
-                    this.$el.append(this.$message);
-                    this.$table.css({"margin-top":e.target.scrollTop});
-                    this.$scroller.css({"margin-top": (-(this.realHeight)-e.target.scrollTop)+"px"})
-                    var cScrollHeight =  this.$scroller.css("height");
-                    this.delayScroll.apply(this, arguments)
-                //this.onScroll.apply(this, arguments);
-                }
-            }.bind(this));
-
-
-            this.setCellsWidth();
-        }
-    };
+    
     this.render = function () 
     {
         var _self = this;
         
-        this.$el.trigger('onBeginDraw');
+        this.$el.trigger('beginDraw');
       
 
         this.$table = this.$el.find("#" + this.domID + '-table');
@@ -791,7 +805,7 @@ var DataGrid = function(_props)
        // });
        
         
-        this.$el.trigger('onEndDraw');
+        this.$el.trigger('endDraw');
 
         return this.$el;
     };

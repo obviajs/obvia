@@ -138,11 +138,16 @@ var AutoBrowse = function (_props, overrided = false) {
                                 rowDblClick: _selectItem.bind(_self)
                             }
                         }
-                    ]
+                    ],
+                    displayListUpdated: _drawGrid
                 }
             }
         ];
     };
+
+    var _drawGrid = function(e){
+        _dg.updateDisplayList();
+    }
 
     var _browse = function(e){
         let evt = jQuery.Event("browse");
