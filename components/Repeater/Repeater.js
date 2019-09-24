@@ -128,14 +128,17 @@ var Repeater = function(_props)
 
         if(_dataProvider && _dataProvider.forEach)
         {
-            if(_dataProvider.length>0){
-                _self.dataProvider.forEach(function (data, index) {  
-                    if(_dataProvider[index]!=null){
-                        if(!_dataProvider[index][_guidField])
-                            _dataProvider[index][_guidField] = StringUtils.guid();
-                        _self.addRow(data, index + 1);
+            let len = _dataProvider.length;
+            if(len>0){
+                for(let i=0;i<len;i++)
+                {
+                    let data = _dataProvider[i];
+                    if(data!=null){
+                        if(!data[_guidField])
+                            data[_guidField] = StringUtils.guid();
+                        _self.addRow(data, i + 1);
                     }
-                });
+                }
             }else
                 _creationFinished = true;
             _oldDataProvider = acExtend(_dataProvider);
@@ -237,7 +240,8 @@ var Repeater = function(_props)
                 }
                
             }
-        }
+        },
+        enumerable:true
     });
 
     var _dpWatcher;
@@ -305,7 +309,8 @@ var Repeater = function(_props)
                 }
             }
             return value;
-        }
+        },
+        configurable:true
     });
     var _createdRows = 0;
     //renders a new row, adds components in stack
@@ -571,18 +576,6 @@ var Repeater = function(_props)
   
     };
 
-    this.template = function () 
-    {
-        if(_container)
-            if(_container.jquery)
-                this.$el = _container
-            else{
-                _container.props.guid = this.guid;
-                this.$el = Component.fromLiteral(_container).$el;
-            }
-        this.$container = this.$el;
-        return null;
-    };
     this.afterAttach = function (e) 
     {
         if (e.target.id == this.domID) 
@@ -591,29 +584,31 @@ var Repeater = function(_props)
                 _props.afterAttach.apply(this, arguments);
             if((!_creationFinished && (_dataProvider && _dataProvider.forEach && _dataProvider.length>0)) || e.isDefaultPrevented())    
                 e.preventDefault();
-            //_registerSurrogate();
         }
     };
-    this.userCanManageItems = true;
-    var _registerSurrogate = function(e){
-        //init events for this surrogate component.
-       _self.initEvents(_self.$el, 0);
+    var _beforeAttach = this.beforeAttach;
+    this.beforeAttach = function(e) 
+    {
+        if (e.target.id == this.domID) 
+        {
+            this.$container = this.$el;
+            if(_props.dataProvider)
+                this.dataProvider = _props.dataProvider;
+            if (typeof _beforeAttach == 'function')
+                _beforeAttach.apply(this, arguments);
+            if(!e.isDefaultPrevented()){
+                e.preventDefault();
+            }
+        }
     }
+
     var _defaultParams = {
         rendering: {
 			direction: 'vertical',
             separator: false
         },
-        dataProvider:[],
-        container:{
-            ctor: Container,
-            props: {
-                id: _props.id,
-                type: ContainerType.NONE,
-                afterAttach: this.afterAttach,
-                ownerDocument: _props.ownerDocument
-            }
-        },
+        type: ContainerType.NONE,
+        dataProvider: new ArrayEx([]),
         attr:{"data-triggers":"rowAdd endDraw rowEdit beforeRowAdd rowDelete beforeRowDelete beginDraw"},   
         guidField:"guid"
     };
@@ -621,13 +616,12 @@ var Repeater = function(_props)
     var _dataProvider;
     var _rendering = _props.rendering;
     var _enabled = _props.enabled;
-    var _container = _props.container;
     var _guidField = _props.guidField;
     this.components = _props.components;
     var _keydown = _props.keydown;
     _props.keydown = this.containerKeyDown;
 
-    Component.call(this, _props, true, true);
+    Container.call(this, _props, true, true);
     var base = this.base;
 /*
     var click =  props.click;
@@ -641,8 +635,6 @@ var Repeater = function(_props)
     
     this.render = function () 
     {  
-        if(_props.dataProvider)
-            this.dataProvider = _props.dataProvider;
         return this.$el;
     };
 

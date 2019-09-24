@@ -231,6 +231,9 @@ ObjectEditor.componentList = [
         "label":"Repeater", "ctor": "Repeater"
     },
     {
+        "label":"List", "ctor": "List"
+    },
+    {
         "label":"DataGrid", "ctor": "DataGrid"
     },
     {
@@ -238,6 +241,12 @@ ObjectEditor.componentList = [
     },
     {
         "label":"CalendarWeek", "ctor": "CalendarWeek"
+    },
+    {
+        "label":"CalendarMonth", "ctor": "CalendarMonth"
+    },
+    {
+        "label":"Calendar", "ctor": "Calendar"
     }
 ];
 ObjectEditor.metaProps = {
@@ -817,6 +826,38 @@ ObjectEditor.components = {
             }
         },
         label:"Repeater",
+        icon:".png"
+    },
+    "List":{
+        iteral: {
+            ctor: List,
+            props: {
+                id: 'list',
+                multiselect: true,
+                dataProvider: new ArrayEx([
+                    { "id": "1", "text": "Option 1", "buttonClass": ["btn-default"]},
+                    { "id": "2", "text": "Option 2", "buttonClass": ["btn-default"]},
+                    { "id": "3", "text": "Option 3", "buttonClass": ["btn-default"]},
+                    { "id": "4", "text": "Option 4", "buttonClass": ["btn-default"]}
+                ]),
+                valueField: "id",
+                classesField: "buttonClass",
+                defaultClasses: ["btn-default"],
+                selectedClasses: ["btn-success"],    
+                value:[{ "id": "1"}],      
+                components: [{
+                    ctor: Button,
+                    props: {
+                        id: 'button',
+                        type: "button",
+                        value: "{id}",
+                        label: "{text}",
+                        classes: "{buttonClass}"
+                    }
+                }]
+            }
+        },
+        label:"List",
         icon:".png"
     },
     "DataGrid":{

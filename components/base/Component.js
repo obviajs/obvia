@@ -73,7 +73,7 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
             return _guid;
         }
     });
-    Object.defineProperty(this, "_attached",
+    Object.defineProperty(this, "attached",
     {
         get: function attached() 
         {
@@ -139,7 +139,7 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
 
     Object.defineProperty(this, 'ownerDocument',
     {
-        get: function () {
+        get: function ownerDocument() {
             return _ownerDocument;
         }, 
         set: function ownerDocument(v)
@@ -157,14 +157,14 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
 
     Object.defineProperty(this, 'isSurrogate',
     {
-        get: function () {
+        get: function isSurrogate() {
             return _isSurrogate;
         }
     });
 
     Object.defineProperty(this, 'domID',
     {
-        get: function () {
+        get: function domID() {
             return _domID;
         }
     });
@@ -703,27 +703,51 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
     {
         _bindedTo = data;
         var _self = this, w = [];
-        for(var bi=0;bi<_bindings.length;bi++){
-            (function(currentItem, bindingExp, site, site_chain, nullable){
-                return (function(e) { // a closure is created
-                    //this here refers to window context
-                    var defaultBindTo = "currentItem_"+_self.guid;
-                    this[defaultBindTo] = (currentItem || Component.defaultContext);
-                    if(!("currentItem" in this[defaultBindTo])){
-                        this[defaultBindTo]["currentItem"] = this[defaultBindTo];
-                    }
-                   // var context = extend(false, true, this, obj);
-                    var fn = function(){
-                        w.splicea(w.length, 0, BindingUtils.getValue(this, bindingExp, site, site_chain, defaultBindTo));
-                    };
-                    if(nullable){
-                        var fnDelayed = whenDefined(this[defaultBindTo], bindingExp, fn);
-                        fnDelayed();
-                    }else{
-                        fn();
-                    }
-                })();	
-            })(data, _bindings[bi].expression, this, [_bindings[bi].property], _bindings[bi].nullable);
+        // for(var bi=0;bi<_bindings.length;bi++){
+        //     (function(currentItem, bindingExp, site, site_chain, nullable){
+        //         return (function(e) { // a closure is created
+        //             //this here refers to window context
+        //             var defaultBindTo = "currentItem_"+_self.guid;
+        //             this[defaultBindTo] = (currentItem || Component.defaultContext);
+        //             if(!("currentItem" in this[defaultBindTo])){
+        //                 this[defaultBindTo]["currentItem"] = this[defaultBindTo];
+        //             }
+        //            // var context = extend(false, true, this, obj);
+        //             var fn = function(){
+        //                 w.splicea(w.length, 0, BindingUtils.getValue(this, bindingExp, site, site_chain, defaultBindTo));
+        //             };
+        //             if(nullable){
+        //                 var fnDelayed = whenDefined(this[defaultBindTo], bindingExp, fn);
+        //                 fnDelayed();
+        //             }else{
+        //                 fn();
+        //             }
+        //         })();	
+        //     })(data, _bindings[bi].expression, this, [_bindings[bi].property], _bindings[bi].nullable);
+        // }
+        for(let bi=0;bi<_bindings.length;bi++){
+            let currentItem = data;
+            let bindingExp = _bindings[bi].expression; 
+            let site = this;
+            let site_chain = [_bindings[bi].property];
+            let  nullable = _bindings[bi].nullable;
+            
+            //this here refers to window context
+            let defaultBindTo = "currentItem_"+_self.guid;
+            window[defaultBindTo] = (currentItem || Component.defaultContext);
+            if(!("currentItem" in window[defaultBindTo])){
+                window[defaultBindTo]["currentItem"] = window[defaultBindTo];
+            }
+            // var context = extend(false, true, this, obj);
+            let fn = function(){
+                w.splicea(w.length, 0, BindingUtils.getValue(window, bindingExp, site, site_chain, defaultBindTo));
+            };
+            if(nullable){
+                let fnDelayed = whenDefined(window[defaultBindTo], bindingExp, fn);
+                fnDelayed();
+            }else{
+                fn();
+            }
         }
         return w;
     };

@@ -12,7 +12,7 @@ var CollectionEditor = function (_props, overrided = false) {
     this.initMembers = function(){
         let c = _field!=null && _field!=""?_instance[_field]:_instance;
         if(c==null || c.length==0){
-            c = [(new window[_memberType]).props];
+            c.splicea(0, 0, [(new window[_memberType]).props]);
         }
     }
 

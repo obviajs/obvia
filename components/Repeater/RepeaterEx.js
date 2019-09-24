@@ -123,7 +123,6 @@ var RepeaterEx = function(_props)
     var _dataProvider;
     var _rendering = _props.rendering;
     var _enabled = _props.enabled;
-    var _container = _props.container;
     var _guidField = _props.guidField;
     this.components = _props.components;
 

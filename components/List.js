@@ -7,6 +7,126 @@
 var List = function (_props, overrided = false) {
     var _self = this;
 
+    this.beforeAttach = function () {
+        _states = _states == null ?
+            [
+                {dataProviderField: _classesField, states: {on: _selectedClasses, off: _defaultClasses}}
+            ] : _states;
+        
+        var lookUpValues = _value ? (!Array.isArray(_value) ? (_value=[_value], true):true):false;
+        var ind = -1;
+        for(var i=0;i<this.dataProvider.length;i++)
+        {
+            if(lookUpValues){
+                ind = indexOfObject(_value, _valueField,  this.dataProvider[i][_valueField]);
+                _states.forEach(function (state) {
+                    if(ind>-1){
+                        _self.dataProvider[i][state.dataProviderField] = state.states.on;
+                    }
+                });
+            }
+            if(!lookUpValues || ind == -1) {
+                _states.forEach(function (state) {
+                    _self.dataProvider[i][state.dataProviderField] = state.states.off;
+                });
+            }
+        }
+    };
+
+    this.selectComponent = function (e, repeaterEventArgs) {
+        var componentID = this.id;
+        var clickedComponent = repeaterEventArgs.currentRow[componentID];
+        var index = repeaterEventArgs.currentIndex;
+
+        var v = repeaterEventArgs.currentItem;
+        var arrDpIndex = -1;
+        var arrValueIndex = indexOfObject(_self.value, _valueField, v[_valueField]);
+        var newValue = _self.value.slice();
+        if (arrValueIndex == -1) {
+            if (_multiselect) {
+                newValue.push(v);
+            } else
+                newValue = [v];
+        } else {
+            if (_multiselect) {
+                newValue.splice(arrValueIndex, 1);
+            } else
+                newValue = [];
+        }
+        _self.value = newValue;
+    };
+
+    this.addRow = function (item, index, isPreventable = false, focusOnRowAdd = false) {
+        if (index == undefined)
+            index = this.repeater.currentIndex + 1;
+        this.repeater.addRow(item, index, isPreventable, focusOnRowAdd);
+    };
+
+    this.removeRow = function (index, isPreventable = false, focusOnRowDelete = false) {
+        if (index == undefined)
+            index = this.repeater.currentIndex + 1;
+        this.repeater.removeRow(index, isPreventable, focusOnRowDelete);
+    };
+
+    var _defaultParams = {
+        rendering: {
+			direction: 'horizontal',
+            separator: false
+        },
+        attr:{"data-triggers":"rowAdd endDraw rowEdit beforeRowAdd rowDelete beforeRowDelete beginDraw change itemClick itemDblClick"},
+        multiselect: false,
+        valueField: "id",
+        defaultClasses: ["btn btn-sm btn-default"],
+        selectedClasses: ["btn btn-sm btn-success"],
+        value: []
+    };
+
+    _props = extend(false, false, _defaultParams, _props);
+
+    let _multiselect = _props.multiselect;
+    let _value = _props.value;
+    let _states = _props.states;
+    let _valueField = _props.valueField;
+    let _classesField = _props.classesField;
+    let _selectedClasses = _props.selectedClasses;
+    let _defaultClasses = _props.defaultClasses;
+    let _components = _props.components;
+    let _rowAdd = _props.rowAdd;
+
+    _props.rowAdd = function(e, r, ra){
+        if (e.target.id == _self.domID) 
+        {
+            if (typeof _rowAdd == 'function')
+                _rowAdd.apply(_self, arguments);
+            if (!e.isDefaultPrevented()) {
+                for(let p in ra.currentRow){
+                    ra.currentRow[p].on("click", _click);
+                    ra.currentRow[p].on("dblclick", _dblclick);
+                }
+            }
+        }
+    }.bind(this);
+
+    let _click = function (e) {
+        this.$el.trigger("itemClick", arguments);
+        if (!e.isDefaultPrevented()) {
+            _self.selectComponent.apply(this, arguments);
+        }
+    };
+
+    let _dblclick = function (e) {
+        this.$el.trigger("itemDblClick", arguments);
+        if (!e.isDefaultPrevented()) {
+            _self.selectComponent.apply(this, arguments);
+        }
+    };
+
+    Repeater.call(this, _props);
+
+    if (overrided) {
+        this.keepBase();
+    }
+
     Object.defineProperty(this, "value", {
         get: function value() {
             return _value;
@@ -25,31 +145,33 @@ var List = function (_props, overrided = false) {
                     v[_valueField] = value;
                     value = [v];
                 }
-                _value = intersectOnKeyMatch(_dataProvider, value, _valueField); //value;
-                var unselect = _dataProvider.difference(_value);
+                _value = intersectOnKeyMatch(this.dataProvider, value, _valueField); //value;
+                var unselect = this.dataProvider.difference(_value);
 
                 unselect.forEach(function (v) {
-                    var arrDpIndex = (v == undefined || v == null || v[_valueField] == undefined) ? -1 : indexOfObject(_dataProvider, _valueField, v[_valueField]);
+                    var arrDpIndex = (v == undefined || v == null || v[_valueField] == undefined) ? -1 : indexOfObject(this.dataProvider, _valueField, v[_valueField]);
                     if (arrDpIndex != -1) {
                         _states.forEach(function (state) {
                             if(state.dataProviderField == _classesField){
-                                if(this.repeater)
-                                    this.repeater[_component.props.id][arrDpIndex].$el.removeClass(state.states.on);
+                                for(let i=0;i<_components.length;i++){
+                                    this[_components[i].props.id][arrDpIndex].$el.removeClass(state.states.on.join(" "));
+                                }
                             }
-                            _dataProvider[arrDpIndex][state.dataProviderField] = state.states.off;
+                            this.dataProvider[arrDpIndex][state.dataProviderField] = state.states.off;
                         }.bind(this));
                     }
                 }.bind(this));
 
                 this.value.slice(0).forEach(function (v, i) {
-                    var arrDpIndex = (v == null || v[_valueField] == null) ? -1 : indexOfObject(_dataProvider, _valueField, v[_valueField]);
+                    var arrDpIndex = (v == null || v[_valueField] == null) ? -1 : indexOfObject(this.dataProvider, _valueField, v[_valueField]);
                     if (arrDpIndex != -1) {
                         _states.forEach(function (state) {
                             if(state.dataProviderField == _classesField){
-                                if(this.repeater)
-                                    this.repeater[_component.props.id][arrDpIndex].$el.removeClass(state.states.off);
+                                for(let i=0;i<_components.length;i++){
+                                    this[_components[i].props.id][arrDpIndex].$el.removeClass(state.states.off.join(" "));
+                                }
                             }
-                            _dataProvider[arrDpIndex][state.dataProviderField] = state.states.on;
+                            this.dataProvider[arrDpIndex][state.dataProviderField] = state.states.on;
                         }.bind(this));
                     } else {
                         _self.value.splice(i, 1);
@@ -58,220 +180,6 @@ var List = function (_props, overrided = false) {
                 if(this.attached){
                     this.trigger('change');
                 }
-            }
-        }
-    });
-
-    this.beforeAttach = function () {
-        _states = _states == null ?
-            [
-                {dataProviderField: _classesField, states: {on: _selectedClasses, off: _defaultClasses}}
-            ] : _states;
-        
-        var lookUpValues = _value ? (!Array.isArray(_value) ? (_value=[_value], true):true):false;
-        var ind = -1;
-        for(var i=0;i<_dataProvider.length;i++)
-        {
-            if(lookUpValues){
-                ind = indexOfObject(_value, _valueField,  _dataProvider[i][_valueField]);
-                _states.forEach(function (state) {
-                    if(ind>-1){
-                        _dataProvider[i][state.dataProviderField] = state.states.on;
-                    }
-                });
-            }
-            if(!lookUpValues || ind == -1) {
-                _states.forEach(function (state) {
-                    _dataProvider[i][state.dataProviderField] = state.states.off;
-                });
-            }
-        }
-    };
-
-    this.selectComponent = function (e, repeaterEventArgs) {
-        var componentID = _self.repeater.components[0].props.id;
-        var clickedComponent = repeaterEventArgs.currentRow[componentID];
-        var index = repeaterEventArgs.currentIndex;
-
-        var v = repeaterEventArgs.currentItem;
-        var arrDpIndex = -1;
-        var arrValueIndex = indexOfObject(this.value, _valueField, v[_valueField]);
-        var newValue = this.value.slice();
-        if (arrValueIndex == -1) {
-            if (_multiselect) {
-                newValue.push(v);
-            } else
-                newValue = [v];
-        } else {
-            if (_multiselect) {
-                newValue.splice(arrValueIndex, 1);
-            } else
-                newValue = [];
-        }
-        this.value = newValue;
-    };
-
-    this.addRow = function (item, index, isPreventable = false, focusOnRowAdd = false) {
-        if (index == undefined)
-            index = this.repeater.currentIndex + 1;
-        this.repeater.addRow(item, index, isPreventable, focusOnRowAdd);
-    };
-
-    this.removeRow = function (index, isPreventable = false, focusOnRowDelete = false) {
-        if (index == undefined)
-            index = this.repeater.currentIndex + 1;
-        this.repeater.removeRow(index, isPreventable, focusOnRowDelete);
-    };
-
-    this.template = function () { 
-        /*if(_container)
-            if(_container.jquery)
-                this.$el = _container
-            else{
-                _container.props.guid = this.guid;
-                this.$el = Component.fromLiteral(_container).$el;
-            }
-            */
-        
-        this.repeater = new Repeater({
-            id: 'listRepeater',
-            guid: this.guid,
-            defaultItem: this.defaultItem,
-            rendering: {
-                direction: _direction,
-                separator: this.separator || false
-            },
-            container: _container,//this.$el,
-            dataProvider: _dataProvider,
-            components: [_component]
-        }).on('creationComplete', function (e) {
-            e.stopImmediatePropagation();
-            _self.$container.append(_self.repeater.render());
-            if(_props.enabled === false){
-                _self.enabled = _props.enabled;
-            }
-           // _self.trigger('creationComplete');
-                
-        }.bind(this));
-        this.repeater.$el.data("triggers", "change itemClick itemDblClick");
-        this.$el = this.repeater.$el;
-        this.$container = this.$el;
-        return null; /*"<div data-triggers='change itemClick itemDblClick' id='" + this.domID + "' role='group'>" +
-            "</div>";*/
-    };
-   
-    var _defaultParams = {
-        direction: 'horizontal',
-        multiselect: false,
-        dataProvider: [],
-        valueField: "id",
-        defaultClasses: ["btn btn-sm btn-default"],
-        selectedClasses: ["btn btn-sm btn-success"],
-        value: [],
-        container:{
-            ctor: Container,
-            props: {
-                id: _props.id,
-                type: ContainerType.NONE
-            }
-        }
-    };
-
-    _props = extend(false, false, _defaultParams, _props);
-
-    var _multiselect = _props.multiselect;
-    var _dataProvider = _props.dataProvider;
-    var _component = _props.component;
-    var _value = _props.value;
-    var _states = _props.states;
-    var _direction = _props.direction;
-    var _valueField = _props.valueField;
-    var _classesField = _props.classesField;
-    var _selectedClasses = _props.selectedClasses;
-    var _defaultClasses = _props.defaultClasses;
-    var _change = _props.change;
-    var _container = _props.container;
-    _container.props.beforeAttach = this.beforeAttach.bind(this);
-
-    var _cmpClick = _component.props.click;
-    var _cmpDblClick = _component.props.dblclick;
-    let _enabled;
-
-    var _click = function (e) {
-        if (typeof _cmpClick == 'function')
-            _cmpClick.apply(this, arguments);
-        this.$el.trigger("itemClick", arguments);
-        if (!e.isDefaultPrevented()) {
-            _self.selectComponent.apply(this, arguments);
-        }
-    };
-
-    var _dblclick = function (e) {
-        if (typeof _cmpDblClick == 'function')
-            _cmpDblClick.apply(this, arguments);
-        this.$el.trigger("itemDblClick", arguments);
-        if (!e.isDefaultPrevented()) {
-            _self.selectComponent.apply(this, arguments);
-        }
-    };
-
-    if(_component) {
-        _component.props.click = _click.bind(this);
-        _component.props.dblclick = _dblclick.bind(this);
-    }
-
-    var _containerAfterAttach = _container.props.afterAttach;
-     //container afterAttach
-     _afterAttach = function (e) {
-        if (e.target.id == this.domID) 
-        {
-            if (typeof _containerAfterAttach == 'function')
-                _containerAfterAttach.apply(this, arguments);     
-        }
-    };
-    _container.props.afterAttach = _afterAttach;
-
-    Component.call(this, _props);
-
-    this.render = function () {
-        return this.$el;
-    };
-
-    if (overrided) {
-        this.keepBase();
-    }
-    /*
-    this.registerEvents = function () 
-    {
-        return [];
-    }*/
-
-    Object.defineProperty(this, "dataProvider", 
-    {
-        get: function dataProvider() 
-        {
-            return _dataProvider;
-        },
-        set: function dataProvider(v) 
-        {
-            if(_dataProvider != v)
-            {
-                _dataProvider = v;
-            }
-        }
-    });
-    Object.defineProperty(this, "enabled", 
-    {
-        get: function enabled() 
-        {
-            return _enabled;
-        },
-        set: function enabled(v) 
-        {
-            if(_enabled != v)
-            {
-                _enabled = v;
-                this.repeater.enabled = v;
             }
         }
     });

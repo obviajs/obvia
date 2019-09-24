@@ -94,10 +94,10 @@ var AutoCompleteEx = function(_props)
                 this.trigger('creationComplete');  
             }
             tokenInputReSize();
-            this.tokensRepeater.on('onRowAdd', function(){
+            this.tokensRepeater.on('rowAdd', function(){
                 tokenInputReSize();
             });
-            this.tokensRepeater.on('onRowDelete', function(){
+            this.tokensRepeater.on('rowDelete', function(){
                 tokenInputReSize();
             });
         }.bind(this));

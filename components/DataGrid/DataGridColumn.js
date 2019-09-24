@@ -23,7 +23,7 @@ var DataGridColumn = function(_props)
         oncellstyling: null,
         oncelleditfinished: null
     };
-    var _props = extend(false, false, [],[],["itemRenderer", "itemEditor"], _defaultParams, _props);
+    var _props = extend(false, false, _defaultParams, _props);
     this.width = _props.width;
     this.calculatedWidth = _props.calculatedWidth;
     this.field = _props.field;
