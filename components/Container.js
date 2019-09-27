@@ -164,7 +164,7 @@ var Container = function(_props, overrided=false)
     var _afterAttach = _props.afterAttach;
     _props.afterAttach = this.afterAttach;
     var _placeholder;
-    Parent.call(this, _props, overrided);
+    let r = Parent.call(this, _props, overrided);
     var base = this.base;
     if(overrided)
     {
@@ -185,5 +185,6 @@ var Container = function(_props, overrided=false)
     {
         return [];
     }*/
+    return r;
 };
 Container.prototype.ctor = 'Container';

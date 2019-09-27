@@ -854,7 +854,7 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
     }   
     
     if(_props.applyBindings==null || _props.applyBindings==true)
-        _watchers = this.applyBindings(_bindingDefaultContext);
+        _watchers = this.applyBindings(_bindingDefaultContext);    
 }
 
 Component.processPropertyBindings = function(props)

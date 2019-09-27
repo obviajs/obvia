@@ -61,8 +61,8 @@ var AutoBrowse = function (_props, overrided = false) {
             this.components = _cmps;
             this.addComponents();
             _autocomplete = this.children[this.components[0].props.id].children[this.components[0].props.components[0].props.id];
-            _dg = this.children[this.components[2].props.id].children[this.components[2].props.components[0].props.id];
             _modal = this.children[this.components[2].props.id];
+            _dg = _modal.modalDialog.modalContent.modalBody.dataGrid;
             if(_props.value){
                 this.value = _props.value;
             }

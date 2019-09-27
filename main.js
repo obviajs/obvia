@@ -125,8 +125,9 @@ rjs.define("./components/AutoComplete/TokenRenderer.js", "TokenRenderer");
 rjs.define("./components/AutoComplete/SuggestionRenderer.js", "SuggestionRenderer");
  
 //Map
-//rjs.define("https://maps.googleapis.com/maps/api/js?key=AIzaSyD04Q93F3BcHhGl483rfMC_MD1Y8y7K0lo", "GoogleMapScript");
-//rjs.define("./components/Map.js", "GoogleMap");
+rjs.define("https://unpkg.com/leaflet@1.5.1/dist/leaflet.js", "LeafletJS");
+rjs.define("https://unpkg.com/leaflet@1.5.1/dist/leaflet.css", "LeafletCSS");
+rjs.define("./components/Map/MapLocationPicker.js", "MapLocationPicker");
 //Toggle
 rjs.define("./components/Toggle/ToggleBgStyle.js", "ToggleBgStyle");
 rjs.define("./components/Toggle/Toggle.js", "Toggle");
@@ -265,8 +266,9 @@ rjs.require([
         "AutoCompleteExCSS",
         "ModalSize",
         "Modal",
-        //"GoogleMapScript",
-        //"GoogleMap",
+        "LeafletJS",
+        "LeafletCSS",
+        "MapLocationPicker",
         "ToggleBgStyle",
         "Toggle",
         "toggle_default_css",
@@ -283,7 +285,6 @@ rjs.require([
         "Image",
         "ProgressBarStyle",
         "ProgressBar",
-        //
         "CurrencyExRate",
         "tree_default_css",
         "Li",

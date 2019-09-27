@@ -7,6 +7,7 @@
 //component definition
 var Modal = function(_props)
 {
+    let _self = this;
     Object.defineProperty(this, "title", 
     {
         get: function title() 
@@ -18,11 +19,13 @@ var Modal = function(_props)
             if(_title != v)
             {
                 _title = v;
-                if(this.$title)
-                    this.$title.html(v);
+                if(_modalHeader.title){
+                    _modalHeader.title.label = v;
+                }
             }
         }
     });
+
     let _displayed = false;
     this.DOMMutation = function(e)
     {
@@ -36,64 +39,169 @@ var Modal = function(_props)
         }
         //
     }
-
-    this.template = function () 
-    {
-        return '<div data-triggers="displayListUpdated" class="modal fade modal-fullscreen" id="' + this.domID + '" tabindex="-1" role="dialog">' +
-                '<div class="modal-dialog '+ _size +'" role="document">' +
-                    '<div class="modal-content">' +
-                        '<div class="modal-header" id="' + this.domID + '-modal-header">' +
-                            '<h5 class="modal-title" id="' + this.domID + '-modal-title">'+_title+'</h5>' +
-                            '<button type="button" class="close no-form-control" data-dismiss="modal" aria-label="Close">' +
-                                '<span aria-hidden="true">&times;</span>' +    
-                            '</button>' +
-                        '</div>' +
-                        '<div class="modal-body" id="' + this.domID + '-modal-body">' +
-
-                        '</div>' +
-                        '<div class="modal-footer" id="' + this.domID + '-modal-footer">' +
-
-                        '</div>' +
-                    '</div>' +
-                '</div>' +
-            '</div>';
+    let _defaultComponents = {
+        "modalBody": _props.components && _props.components.forEach ? _props.components : null,
+        "modalHeader": [
+            {
+                ctor: Heading,
+                props: {
+                    id: "title",
+                    label: _props.title,
+                    headingType: HeadingType.h5,
+                }
+            },
+            {
+                ctor: Container,
+                props: {
+                    type: ContainerType.BTN_GROUP,
+                    components: [
+                        {
+                            ctor: Button,
+                            props: {
+                                id: 'dismissButton',
+                                type: "button",
+                                classes: ["close", "no-form-control"],
+                                attr: {"data-dismiss":"modal", "aria-label":"Dismiss"},
+                                components: [{
+                                    ctor: Label,
+                                    props: {
+                                        id: 'fa',
+                                        labelType: LabelType.i,
+                                        classes: ["fas","fa-times"]
+                                    }
+                                }],
+                                click: function(e){
+                                    _self.trigger("dismiss");
+                                }
+                            }
+                        },
+                        {
+                            ctor: Button,
+                            props: {
+                                id: 'acceptButton',
+                                type: "button",
+                                classes: ["close", "no-form-control"],
+                                attr: {"data-dismiss":"modal", "aria-label":"Accept"},
+                                components: [{
+                                    ctor: Label,
+                                    props: {
+                                        id: 'fa',
+                                        labelType: LabelType.i,
+                                        classes: ["fas","fa-check"]
+                                    }
+                                }],
+                                click: function(e){
+                                    _self.trigger("accept");
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
     };
 
     var _defaultParams = {
-        size: ModalSize.LARGE
+        size: ModalSize.LARGE,
+        type: ContainerType.NONE,
+        classes: ["modal", "fade", "modal-fullscreen"],
+        attr: {"data-triggers":"displayListUpdated accept dismiss", tabindex:-1, role:"dialog"},
+        components: _defaultComponents
     };
     _props = extend(false, false, _defaultParams, _props);
+    if(_props.components && _props.components.forEach){
+        _props.components = _defaultComponents;
+    }
+    
     var _title = _props.title;
     var _size = _props.size;
     
-    this.beforeAttach = function () 
+    this.beforeAttach = function (e) 
     {
         console.log("Modal before attach");
-        this.$body = this.$el.find('#' + this.domID + '-modal-body');
-        this.$modalDialog = this.$el.first();
-        this.$footer = this.$el.find('#' + this.domID + '-modal-footer');
-        this.$header = this.$el.find('#' + this.domID + '-modal-header');
-        this.$title = this.$el.find('#' + this.domID + '-modal-title');
-        this.$container = this.$body;
-        this.$modal = this.$el;
+        this.$container = this.$el;
+        fnContainerDelayInit();
+        this.components = _cmps;
         this.addComponents();
+        _modalDialog = this.children[this.components[0].props.id];
+        _modalContent = _modalDialog.children[_modalDialog.components[0].props.id];
+        _modalHeader = _modalContent.children[_modalContent.components[0].props.id];
+        _modalBody = _modalContent.children[_modalContent.components[1].props.id];
+        _modalFooter = _modalContent.children[_modalContent.components[2].props.id];
+        e.preventDefault();
     };
 
-    Parent.call(this, _props, true);
+    let _cmps, _modalDialog, _modalContent, _modalHeader, _modalBody, _modalFooter;
+    var fnContainerDelayInit = function(){
+        _cmps = 
+        [
+            {
+                ctor: Container,
+                props: {
+                    type: ContainerType.NONE,
+                    classes: ["modal-dialog", _size],
+                    attr: {role:"document"},
+                    id: "modalDialog",
+                    components: [
+                        {
+                            ctor: Container,
+                            props: {
+                                type: ContainerType.NONE,
+                                classes: ["modal-content"],
+                                id: "modalContent",
+                                components: [
+                                    {
+                                        ctor: Container,
+                                        props: {
+                                            id: "modalHeader",
+                                            type: ContainerType.NONE,
+                                            classes: ["modal-header"],
+                                            components: _props.components.modalHeader
+                                        }
+                                    },
+                                    {
+                                        ctor: Container,
+                                        props: {
+                                            id: "modalBody",
+                                            type: ContainerType.NONE,
+                                            classes: ["modal-body"],
+                                            components: _props.components.modalBody
+                                        }
+                                    },
+                                    {
+                                        ctor: Container,
+                                        props: {
+                                            id: "modalFooter",
+                                            type: ContainerType.NONE,
+                                            classes: ["modal-footer"],
+                                            components: _props.components.modalFooter
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            }
+        ];
+    }
+
+    let r = Container.call(this, _props, true);
     var base = this.base;
     
     this.show = function () 
     {
-        if(this.$modal)
-            this.$modal.modal('show');
+        if(this.$el)
+            this.$el.modal('show');
         return this;
     };
     
     this.hide = function () 
     {
-        if(this.$modal)
-            this.$modal.modal('hide');
+        if(this.$el)
+            this.$el.modal('hide');
         return this;
     };  
+    return r;
 };
 Modal.prototype.ctor = 'Modal';

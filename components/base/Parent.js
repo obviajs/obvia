@@ -1,5 +1,16 @@
 var Parent = function(_props, overrided=false, _isSurrogate=false)
 {
+    let _proxy = new Proxy(this, {
+        get: function(target, property, receiver) {
+            if(!target.hasOwnProperty(property)){
+                console.log(property);
+                if(target.children && _self.childrenIDR[property] && target.children[_self.childrenIDR[property]])
+                    return target.children[_self.childrenIDR[property]];
+            }
+            return Reflect.get(...arguments);
+        }
+    });
+
     Object.defineProperty(this, "children", 
     {
         get: function children() 
@@ -48,9 +59,9 @@ var Parent = function(_props, overrided=false, _isSurrogate=false)
                 this.$el.insertAt(child.$el, index);
                 _components.splice(index, 0, {ctor:child.ctor, props:child.props});
                 _children[child.id] = child; 
-                child.parent = this;
+                child.parent = _proxy;
                 child.parentType = this.type;
-                child.parentForm = this;
+                child.parentForm = _proxy;
                 var event = jQuery.Event("childAdded");
                 event.child = child;
                 this.trigger(event);
@@ -150,9 +161,9 @@ var Parent = function(_props, overrided=false, _isSurrogate=false)
             _childrenIDR[component.props.id].push(cmp.id);
             component.props.id = cmp.id;
             _children[cmp.id] = cmp;
-            cmp.parent = _self;
+            cmp.parent = _proxy;
             cmp.parentType = _self.type;
-            cmp.parentForm = _self;
+            cmp.parentForm = _proxy;
             if(resetBindingContext){
                 component.props.bindingDefaultContext = null;
             }
@@ -348,5 +359,6 @@ var Parent = function(_props, overrided=false, _isSurrogate=false)
         },
         configurable: true
     });  
+    return _proxy;
 }
 Parent.prototype.ctor = 'Parent';

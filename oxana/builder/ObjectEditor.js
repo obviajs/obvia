@@ -228,6 +228,9 @@ ObjectEditor.componentList = [
         "label":"MultiUpload", "ctor": "MultiUpload"
     },
     {
+        "label":"MapLocationPicker", "ctor": "MapLocationPicker"
+    },
+    {
         "label":"Repeater", "ctor": "Repeater"
     },
     {
@@ -816,6 +819,21 @@ ObjectEditor.components = {
             }
         },
         label:"MultiUpload",
+        icon:".png"
+    },
+    "MapLocationPicker":{
+        literal: {
+            ctor: MapLocationPicker,
+            props: {
+                id: 'map',
+                value: {
+                    latitude: 41.1533,
+                    longitude: 20.1683
+                },
+                zoomLevel: 7
+            }
+        },
+        label:"MapLocationPicker",
         icon:".png"
     },
     "Repeater":{
