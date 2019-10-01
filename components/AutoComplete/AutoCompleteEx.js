@@ -138,7 +138,7 @@ var AutoCompleteEx = function(_props)
         this.suggestionRenderer.props.click = _suggestionRendererClickHandler;
         this.suggestionRenderer.props.dblclick = _suggestionRendererDoubleClickHandler;
         this.suggestionRenderer.props.mousedown = _suggestionRendererMouseDownHandler;
-
+        this.suggestionRenderer.props.keydown = _suggestionRendererKeyDownHandler;
        
         this.suggestionsRepeater = new Repeater({
             id: 'listRepeater',
@@ -182,6 +182,29 @@ var AutoCompleteEx = function(_props)
             }
         }
     };
+    var _suggestionRendererKeyDownHandler = function(e, repeaterEventArgs)
+    {
+        switch (e.keyCode) {
+            case 9: // TAB - apply and move to next column on the same row 
+            console.log("TAB");
+
+            console.log(repeaterEventArgs);
+            //this.parent.parent.addTokenItems(repeaterEventArgs.currentItem);
+            if(_self.multiSelect){
+                //TODO:check because concat will return a new value
+                _self.value.splice(_self.value.length, 0, repeaterEventArgs.currentItem);
+            }else{
+                _self.value = repeaterEventArgs.currentItem;
+            }
+    
+            _self.removeSuggestionItemAt(repeaterEventArgs.currentIndex);
+           // acEx.closeSuggestionsList();
+            _closeSuggestionsList();
+            _self.tokenInput.$el.focus();
+            break;
+        }
+    }
+
     var _tokenInputKeyDown = function(e)
     {
         if (typeof _self.tokeninputkeydown == 'function')

@@ -7,6 +7,7 @@
 //component definition
 var DataGrid = function(_props)
 {
+    var _self = this;
     var _currentIndex = 1;
     Object.defineProperty(this, "currentIndex",
     {
@@ -88,8 +89,7 @@ var DataGrid = function(_props)
                         if(_self.editPosition.event == 1 || _self.editPosition.event==3){
                         
                             if(_self.editPosition.event == 1){
-                                var cellEditFinishedEvent = jQuery.Event("cellEditFinished");
-                                _self.trigger(cellEditFinishedEvent, [_self.editPosition.rowIndex, _self.editPosition.columnIndex, false]);
+                                _self.cellEditFinished(_self.editPosition.rowIndex, _self.editPosition.columnIndex, false);
                                 _self.cellItemRenderers[_self.editPosition.rowIndex][_self.editPosition.columnIndex].show();  
                             }
                             
@@ -97,7 +97,7 @@ var DataGrid = function(_props)
 
                             if((newEditPosition >=0) && (newEditPosition<_rowCount)){
                                 console.log("show editor phase", _self.editPosition.event, " at: ", newEditPosition," ",_self.editPosition.rowIndex," ",scrollRowStep);
-                                _self.trigger('cellEdit', [newEditPosition, _self.editPosition.columnIndex]);
+                                _self.cellEdit(newEditPosition, _self.editPosition.columnIndex);
                                 //TODO:need to add a parameter to cellEdit handler 
                                 //so that we do not set the value of the editor to the value in the dp, but just keep the not-yet stored value.
                             }else{
@@ -221,7 +221,6 @@ var DataGrid = function(_props)
         }
         headerHtml += "</tr>";
         var $header = $(headerHtml);
-        var _self = this;
         var sortDirFADic = {"asc":"down", "desc":"up"};
         var colElements = new Array(_columns.length);
         for (var columnIndex=0;columnIndex<_columns.length;columnIndex++) {
@@ -241,21 +240,17 @@ var DataGrid = function(_props)
         $header.append(colElements);
         this.$header.append($header);
     },
-    this.cellEdit = function(e, rowIndex, columnIndex)
+    this.cellEdit = function(rowIndex, columnIndex)
     {
-       /* if (typeof _cellEdit == 'function')
-            _cellEdit.apply(this, arguments);
-        var e = arguments[0];
+        var e = jQuery.Event('cellEdit');
+        _self.trigger(e, [rowIndex, columnIndex]);
         if(!e.isDefaultPrevented())
-        {*/
-        
-
+        {
             if(this.editPosition!=null && this.editPosition.event==1 && (this.editPosition.rowIndex != rowIndex || this.editPosition.columnIndex != columnIndex)){
             
-                var cellEditFinishedEvent = jQuery.Event("cellEditFinished");
-                this.trigger(cellEditFinishedEvent, [this.editPosition.rowIndex, this.editPosition.columnIndex, true]);
+                let r = this.cellEditFinished(this.editPosition.rowIndex, this.editPosition.columnIndex, true);
                 
-                if (cellEditFinishedEvent.isDefaultPrevented()) {
+                if (!r) {
                     return;
                 }
                 this.editPosition.event = 1;
@@ -272,7 +267,7 @@ var DataGrid = function(_props)
                 --rowIndex;
             }
             var column = _columns[columnIndex];
-            var data;
+            let data;
 
             if(rowIndex > _rowCount - 1){
                 this.editPosition.rowIndex = rowIndex;
@@ -340,7 +335,17 @@ var DataGrid = function(_props)
                         itemEditor.focus();
                     }
                 });  
-                var _self = this;
+                itemEditor.on('keydown', function(e) { 
+                    switch (e.keyCode) {
+                        case 9: // TAB - apply and move to next column on the same row 
+                            //_self.trigger('cellEditFinished', [rowIndex, columnIndex, column, data, true]);
+                            //TODO: Check columnIndex boundaries and pass to next row if it is 
+                            //the last one, if now rows remaining pass to first row(check repeater implementation)
+                            e.preventDefault();
+                            _self.cellEdit(_self.editPosition.rowIndex, _self.editPosition.columnIndex + (e.shiftKey?-1:1));
+                            break;    
+                    }
+                });
                 itemEditor.on('keyup', function(e) { 
                         switch (e.keyCode) {
                             case 13: // ENTER - apply value
@@ -352,17 +357,7 @@ var DataGrid = function(_props)
                                 e.preventDefault();
                                 _self.cellEditFinished(_self.editPosition.rowIndex, _self.editPosition.columnIndex, false);
                                 break;
-                            case 9: // TAB - apply and move to next column on the same row 
-                                //_self.trigger('cellEditFinished', [rowIndex, columnIndex, column, data, true]);
-                                //TODO: Check columnIndex boundaries and pass to next row if it is 
-                                //the last one, if now rows remaining pass to first row(check repeater implementation)
-                                e.preventDefault();
-                                if(e.shiftKey)
-                                    _self.trigger('cellEdit', [_self.editPosition.rowIndex, _self.editPosition.columnIndex-1]);
-                                else
-                                    _self.trigger('cellEdit', [_self.editPosition.rowIndex, _self.editPosition.columnIndex+1]);
                             
-                                break;
                         }
                 });	
 
@@ -376,10 +371,8 @@ var DataGrid = function(_props)
                     itemEditor.$el.detach();
                     //itemEditor.$el.detach();
                 } 
-                itemEditor.value = null;
                 itemEditor.refreshBindings(data);
             }
-            var _self = this;
             /*
             itemEditor.off('blur');
             itemEditor.on('blur', function(){
@@ -418,11 +411,12 @@ var DataGrid = function(_props)
                     itemEditor.focus();
                 }
             } 
-       // }       
+        }       
     };
 
     this.cellEditFinished = function(rowIndex, columnIndex, applyEdit)
     {
+        let r = true;
         var e = jQuery.Event('cellEditFinished');
         _self.trigger(e, [rowIndex, columnIndex, applyEdit]);
         if(!e.isDefaultPrevented())
@@ -436,14 +430,14 @@ var DataGrid = function(_props)
             var itemEditor = itemEditorInfo.itemEditor;
         
 
-            if((typeof column.oncelleditfinished == 'function') && applyEdit){
+            if((typeof column.cellEditFinished == 'function') && applyEdit){
                 var args = [];
                 for (var i = 0; i < arguments.length-1; i++) {
                     args.push(arguments[i]);
                 }
                 //we dont need applyEdit argument any more
                 args.push(itemEditorInfo);
-                value = column.oncelleditfinished.apply(this, args);
+                value = column.cellEditFinished.apply(this, args);
                 calledHandler = true;
             }
             
@@ -462,13 +456,14 @@ var DataGrid = function(_props)
                 }
                 this.editPosition.event = 2;
             }
-        }
+        }else
+            r = false;
+        return r;
     };
     
      //renders a new row, adds components in stack
     this.addRow = function (data, index, isPreventable = false, focusOnRowAdd = true) 
     {
-        var _self = this;
         
         var renderedRow = $('<tr>')
         
@@ -550,7 +545,7 @@ var DataGrid = function(_props)
                     el.on('dblclick', (function(rowIndex, columnIndex, column, data){
                         return (function(e) { // a closure is created
                             //alert(JSON.stringify(column)+" "+JSON.stringify(data)+" "+(index-1));
-                            _self.trigger('cellEdit', [rowIndex, columnIndex]);
+                            _self.cellEdit(rowIndex, columnIndex);
                         });	
                     })(index - 1, columnIndex, column, data));
                 }
@@ -747,7 +742,7 @@ var DataGrid = function(_props)
         if (e.target.id == this.domID) 
         {
             let av = e.target.style.getPropertyValue('display');
-            if(av.trim()!="" && av!="none" && !_displayed){
+            if(av!="none" && !_displayed){
                 this.updateDisplayList();
             }
         }
@@ -769,11 +764,7 @@ var DataGrid = function(_props)
     var _rendering = _props.rendering;
     var _showRowIndex = _props.showRowIndex;
     var _rowCount = _props.rowCount;
-    var _self = this;
-    //var _cellEditFinished = _props.cellEditFinished;
-    var _cellEdit = _props.cellEdit;
-
-
+    
     this.components = _props.components;
     let _columns = _props.columns;
     this.rows = [];
@@ -789,7 +780,6 @@ var DataGrid = function(_props)
     
     this.render = function () 
     {
-        var _self = this;
         
         this.$el.trigger('beginDraw');
       

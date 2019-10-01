@@ -6,11 +6,11 @@ var oncellstyling_ex = function(e, rowIndex, columnIndex, column, data)
 {
     return "css object";
 }
-var oncelleditfinished_ex = function(e, rowIndex, columnIndex, itemEditorInfo)
+var celleditfinished_ex = function(e, rowIndex, columnIndex, itemEditorInfo)
 {
     var realRowIndex = rowIndex % this.rowCount;
     //e.preventDefault();
-    console.log("oncelleditfinished_ex");
+    console.log("celleditfinished_ex");
    // itemEditorInfo.itemEditor
     //itemEditorInfo.dataProviderValueField
     var value = itemEditorInfo.itemEditor.value;
@@ -28,7 +28,7 @@ var oncelleditfinished_ex = function(e, rowIndex, columnIndex, itemEditorInfo)
         }
     }
     //e.preventDefault();
-    //this.dataProvider[rowIndex][column.dataField] = value;
+    //this.dataProvider[rowIndex][column.field] = value;
     return label;
 }
 var onrowstyling_ex = function(e, rowIndex, data)
@@ -326,13 +326,12 @@ var myDataGrid = new DataGrid({
     columns: [
         {
             width:400,
-            dataField: "ministry",
-            headerText: "Ministria",
+            field: "ministry",
+            description: "Ministria",
             sortable:true,
             sortInfo:{sortOrder:0, sortDirection:"ASC"},
-            oncellstyling:oncellstyling_ex,
-            oncelleditfinished: oncelleditfinished_ex,
-            itemRenderer:null,
+            cellStyling:oncellstyling_ex,
+            cellEditFinished: celleditfinished_ex,
             editable:true,
 
             itemEditor:{
@@ -349,13 +348,12 @@ var myDataGrid = new DataGrid({
             }
         },
         {
-            dataField: "textLabel",
-            headerText: "Pija Preferuar",
+            field: "textLabel",
+            description: "Pija Preferuar",
             sortable:false,
             sortInfo:{sortOrder:0, sortDirection:"ASC"},
-            oncellstyling:oncellstyling_ex,
-            //oncelleditfinished:oncelleditfinished_ex,
-            itemRenderer:null,
+            cellStyling:oncellstyling_ex,
+            //cellEditFinished:celleditfinished_ex,
             editable:true,
 
             itemEditor:{
@@ -367,12 +365,12 @@ var myDataGrid = new DataGrid({
             }
         },
         {
-            dataField: "checkboxValue",
-            headerText: "Vertete",
+            field: "checkboxValue",
+            description: "Vertete",
             sortable:false,
             sortInfo:{sortOrder:0, sortDirection:"ASC"},
-            oncellstyling:oncellstyling_ex,
-            //oncelleditfinished:oncelleditfinished_ex,
+            cellStyling:oncellstyling_ex,
+            //cellEditFinished:celleditfinished_ex,
             itemRenderer:{
                 ctor: CheckBox,
                 props: {

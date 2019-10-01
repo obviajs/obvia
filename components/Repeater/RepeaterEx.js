@@ -128,4 +128,4 @@ var RepeaterEx = function(_props)
 
     Container.call(this, _props, true, true);
 };
-Repeater.prototype.ctor = 'Repeater';
+RepeaterEx.prototype.ctor = 'RepeaterEx';

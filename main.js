@@ -290,7 +290,7 @@ rjs.require([
         "Li",
         "Tree",
         "DropDown",
-         "ButtonSize",
+        "ButtonSize",
         "DropMenuDirection",
         "DropSplitType",
         "Calendar",
