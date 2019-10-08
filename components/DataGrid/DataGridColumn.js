@@ -4,6 +4,7 @@ var DataGridColumn = function(_props)
         width:null,
         calculatedWidth:null,
         field: "",
+        name:"",
         fieldToFilter: "",   
         description: "",
         sortOrder: 0,
@@ -27,6 +28,7 @@ var DataGridColumn = function(_props)
     this.width = _props.width;
     this.calculatedWidth = _props.calculatedWidth;
     this.field = _props.field;
+    this.name = _props.name;
     this.fieldToFilter = _props.fieldToFilter;   
 	this.description = _props.description;
 	this.sortOrder = _props.sortOrder;

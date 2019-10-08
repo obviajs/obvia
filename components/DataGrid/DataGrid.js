@@ -447,12 +447,19 @@ var DataGrid = function(_props)
                 if(applyEdit){
                     if(!calledHandler){
                         value = itemEditor.value;
-                        if(itemEditor["labelField"] && isObject(value) && value[itemEditor.labelField]){
-                            value = value[itemEditor.labelField];
+                        let exp = itemEditor.getBindingExpression("value");
+                        if(exp){
+                            if(exp=="currentItem"){
+                                _dataProvider[rowIndex+_virtualIndex] = value;
+                            }else{
+                                setChainValue(_dataProvider[rowIndex+_virtualIndex], exp, value);
+                            }
                         }
+                        this.cellItemRenderers[rowIndex][columnIndex].refreshBindings(_dataProvider[rowIndex+_virtualIndex]);
+                        
                     }
                     //TODO:dataProviderChanged or integrate Binding ? 
-                    _dataProvider[rowIndex+_virtualIndex][column.field] = value;
+                    //_dataProvider[rowIndex+_virtualIndex][column.field] = value;
                 }
                 this.editPosition.event = 2;
             }
@@ -506,7 +513,7 @@ var DataGrid = function(_props)
                 //
                 component.props["label"] = "{?"+dataProviderField+"}";
                 //might not be wanted
-                component.props.id = column.field;
+                component.props.id = column.name;
 
 
                 var cmp = _self["cellItemRenderers"][index-1];
@@ -534,7 +541,7 @@ var DataGrid = function(_props)
                 el.repeaterIndex = index - 1;
 
                 _self.cellItemRenderers[index-1][columnIndex] = el; 
-                rowItems[column.field] = el;
+                rowItems[column.name] = el;
                 _rowItems[index - 1] = rowItems;
                 
                 //

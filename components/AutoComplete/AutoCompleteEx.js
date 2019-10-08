@@ -21,7 +21,13 @@ var AutoCompleteEx = function(_props)
             return _valueField;
         }
     });
-    
+    Object.defineProperty(this, "labelField", 
+    {
+        get: function labelField() 
+        {
+            return _labelField;
+        }
+    });
     this.beforeAttach = function () 
     {
         this.cComponents = [];

@@ -414,12 +414,12 @@ var Repeater = function(_props)
                         el.on('change', function (e, rargs) {
                             var currentItem = _self.dataProvider[index - 1];
                             if (component.props.value && isString(component.props.value) && component.props.value[0] == '{' && component.props.value[component.props.value.length - 1] == '}') {
-                                var bindingExp = component.props.value.slice(1, -1);
+                                var bindingExp = this.getBindingExpression("value");
                                 if(bindingExp=="currentItem"){
                                     _self.dataProvider[rargs.currentIndex] = data = this.value;
                                 }else{
-                                    setChainValue(_self.dataProvider[rargs.currentIndex], bindingExp, this.value);
-                                    data = _self.dataProvider[rargs.currentIndex];
+                                    setChainValue(_dataProvider[rargs.currentIndex], bindingExp, this.value);
+                                    data = _dataProvider[rargs.currentIndex];
                                 }
                                     
                                 
