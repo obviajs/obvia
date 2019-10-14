@@ -106,13 +106,13 @@ var DateTimeCb = function (_props, overrided = false) {
         _cmps = 
             [
                 {
-                    "constructor": "Container",
+                    "ctor": "Container",
                     "props": {
                         type: ContainerType.NONE,
                         "id": "workArea",
                         "components": [
                             {
-                                "constructor": "Select",
+                                "ctor": "Select",
                                 "props": {
                                     "id": "dateSelect",
                                     "dataProvider": _dpDate,
@@ -124,13 +124,13 @@ var DateTimeCb = function (_props, overrided = false) {
                     }
                 },
                 {
-                    "constructor": "Container",
+                    "ctor": "Container",
                     "props": {
                         type: ContainerType.NONE,
                         "id": "workArea_53",
                         "components": [
                             {
-                                "constructor": "Select",
+                                "ctor": "Select",
                                 "props": {
                                     "id": "monthSelect",
                                     "dataProvider": _dpMonth,
@@ -142,13 +142,13 @@ var DateTimeCb = function (_props, overrided = false) {
                     }
                 },
                 {
-                    "constructor": "Container",
+                    "ctor": "Container",
                     "props": {
                         type: ContainerType.NONE,
                         "id": "workArea_54",
                         "components": [
                             {
-                                "constructor": "Select",
+                                "ctor": "Select",
                                 "props": {
                                     "id": "yearSelect",
                                     "dataProvider": _dpYear,
@@ -165,14 +165,14 @@ var DateTimeCb = function (_props, overrided = false) {
             ];
 
             let hour = {
-                "constructor": "Container",
+                "ctor": "Container",
                 "props": {
                     type: ContainerType.NONE,
                     "id": "workArea_55",
                     classes:["pl-1"],
                     "components": [
                         {
-                            "constructor": "Select",
+                            "ctor": "Select",
                             "props": {
                                 "id": "hourSelect",
                                 "dataProvider": _dpHour,
@@ -184,13 +184,13 @@ var DateTimeCb = function (_props, overrided = false) {
                 }
             };
             let minute = {
-                "constructor": "Container",
+                "ctor": "Container",
                 "props": {
                     type: ContainerType.NONE,
                     "id": "workArea_56",
                     "components": [
                         {
-                            "constructor": "Select",
+                            "ctor": "Select",
                             "props": {
                                 "id": "minuteSelect",
                                 "dataProvider": _dpMinute,
@@ -202,13 +202,13 @@ var DateTimeCb = function (_props, overrided = false) {
                 }
             };
             let second = {
-                "constructor": "Container",
+                "ctor": "Container",
                 "props": {
                     type: ContainerType.NONE,
                     "id": "workArea_57",
                     "components": [
                         {
-                            "constructor": "Select",
+                            "ctor": "Select",
                             "props": {
                                 "id": "secondSelect",
                                 "dataProvider": _dpSecond,
