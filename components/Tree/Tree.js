@@ -30,7 +30,7 @@ var Tree = function (_props, overrided = false) {
                 _dataProvider.on("propertyChange", _dpMemberChanged);
                 this.removeAllChildren();
                 _self.components = _self.buildTree();
-                _self.addComponents(_self.components);
+                _self.addComponents();
             }
         }
     });
