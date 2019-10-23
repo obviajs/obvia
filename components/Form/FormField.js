@@ -104,7 +104,8 @@ var FormField = function(_props)
                 if(_lbl)
                     _lbl.label = v;
             }
-        }
+        },
+        enumerable:true
     });
 
     Object.defineProperty(this, "cmp", 
@@ -143,7 +144,8 @@ var FormField = function(_props)
         required: false,
         size: FormFieldSize.SMALL,
         type:ContainerType.NONE,
-        name:""                 
+        name:"",
+        label:""                 
     };
     
     _props = extend(false, false, _defaultParams, _props);

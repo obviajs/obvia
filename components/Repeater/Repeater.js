@@ -102,23 +102,6 @@ var Repeater = function(_props)
             this.rowItems[rowIndex][cIndex].$el.focus();
         }
     };
-   
-    // validate: function () {
-    //     var _self = this;
-    //     var valid = true;
-    //     this.errorList = [];
-    //     console.log("_self",_self)
-    //     this.components.forEach(function (component) {
-    //         _self[component.props.id].forEach(function (instance) {
-    //             if (!instance.validate()) {
-    //                 _self.errorList = _self.errorList.concat(instance.errorList)
-    //                 valid = false;
-    //             }
-    //         });
-    //     });
-
-    //     return valid;
-    // },
 
     var _createRows = function(){
         _self.trigger('beginDraw');
@@ -181,6 +164,15 @@ var Repeater = function(_props)
         }
         _oldDataProvider = acExtend(_dataProvider);
     };
+
+    Object.defineProperty(this, "rendering", 
+    {
+        get: function rendering() 
+        {
+            return _rendering;
+        },
+        enumerable:true
+    });
 
     var _oldDataProvider;
     Object.defineProperty(this, "dataProvider", 
@@ -300,12 +292,12 @@ var Repeater = function(_props)
     Object.defineProperty(this, "value", {
         get: function value() {
             var value = {};
-            for(var i=0;i<this.components.length;i++)
+            for(var i=0;i<_components.length;i++)
             {
-                value[components[i].props.id] = [];        
-                for(var j=0;j<this[components[i].props.id].length;j++)
+                value[_components[i].props.id] = [];        
+                for(var j=0;j<this[_components[i].props.id].length;j++)
                 {
-                    value[components[i].props.id].push(this[components[i].props.id][j].value);
+                    value[_components[i].props.id].push(this[_components[i].props.id][j].value);
                 }
             }
             return value;
@@ -524,8 +516,8 @@ var Repeater = function(_props)
             } 
 
             //delete component instances on that row
-            for(var cI=0;cI<this.components.length;cI++){  
-                var component = this.components[cI];
+            for(var cI=0;cI<_components.length;cI++){  
+                var component = _components[cI];
                 //remove repeated block from dom
                 if (cI == 0) {
                     this[component.props.id][index - 1].$el.closest('.repeated-block').remove();
@@ -554,7 +546,7 @@ var Repeater = function(_props)
             this.rows.splice(index - 1, 1);
             //animate
             if (focusOnRowDelete && (index-2)>=0)
-                this.rowItems[index - 2][this.components[0].props.id].scrollTo();
+                this.rowItems[index - 2][_components[0].props.id].scrollTo();
 
             return removedItem;
         }
@@ -617,7 +609,7 @@ var Repeater = function(_props)
     var _rendering = _props.rendering;
     var _enabled = _props.enabled;
     var _guidField = _props.guidField;
-    this.components = _props.components;
+    var _components = _props.components;
     var _keydown = _props.keydown;
     _props.keydown = this.containerKeyDown;
 
@@ -659,6 +651,15 @@ var Repeater = function(_props)
 
             }
         }
+    });
+    
+    Object.defineProperty(this, "components", 
+    {
+        get: function components() 
+        {
+            return _components;
+        },
+        enumerable:true
     });
 };
 Repeater.prototype.ctor = 'Repeater';

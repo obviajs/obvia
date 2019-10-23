@@ -27,7 +27,8 @@ var Hidden = function (_props, overrided = false) {
                     }
                 }
             }
-        }
+        },
+        enumerable:true
     });
     
     Object.defineProperty(this, "name", 
@@ -51,7 +52,8 @@ var Hidden = function (_props, overrided = false) {
                         this.$el.removeAttr('name');
                 }
             }
-        }
+        },
+        enumerable:true
     });
   
     this.changeHandler = function () {
@@ -64,7 +66,8 @@ var Hidden = function (_props, overrided = false) {
     };
  
     var _defaultParams = {
-        value: ""
+        value: "",
+        name:""
     };
     _props = extend(false, false, _defaultParams, _props);
  

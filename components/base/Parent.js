@@ -28,7 +28,8 @@ var Parent = function(_props, overrided=false, _isSurrogate=false)
         set: function components(v) 
         {
             _components = v;
-        }
+        },
+        configurable:true
     });
 
     Object.defineProperty(this, "magnets", 

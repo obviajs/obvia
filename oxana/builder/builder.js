@@ -30,13 +30,6 @@ var _DOMMutationHandler = function (e) {
         this.label = e.mutation.addedNodes[0].childNodes[0].childNodes[0].data;
     }
 };
-var remoteSources = new ArrayEx([{name:"test", description:"Test Remote Source", props:{url:"http://139.162.158.49/rca/index.php", post:{"testKey":"testValue"}, recordsPerPage:5}}]);
-var remoteData = {};
-for(let i=0;i<remoteSources.length;i++){
-    let r = new ArrayEx(new RemoteArray(remoteSources[i].props));
-    remoteData[remoteSources[i].name] = r;
-}
-
 
 var handle = {
     ctor: Container,
