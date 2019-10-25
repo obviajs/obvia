@@ -41,7 +41,8 @@ var HRule = function(_props)
                 if(this.$el)
                     this.$el.attr('align', v);
             }
-        }
+        },
+        enumerable:true
     });
 
     Object.defineProperty(this, "width", 

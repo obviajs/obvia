@@ -52,31 +52,32 @@ var ObjectEditor = function (_props, overrided = false) {
         let rows = [];
         _self.removeAllChildren();
         for(let prop in props){
-            if(ObjectEditor.metaProps[prop]){
-                let propEditor = ObjectEditor.components[ObjectEditor.metaProps[prop].ctor];
+            let propsMeta = ObjectEditor.metaProps[prop] || (ObjectEditor.metaProps[inst.ctor]?ObjectEditor.metaProps[inst.ctor][prop]:null);
+            if(propsMeta){
+                let propEditor = ObjectEditor.components[propsMeta.ctor];
                 if(propEditor){
                     let itemEditorLit = propEditor.literal;
-                    if(ObjectEditor.metaProps[prop].props)
-                        itemEditorLit.props = extend(false, false, itemEditorLit.props, ObjectEditor.metaProps[prop].props);
+                    if(propsMeta.props)
+                        itemEditorLit.props = extend(false, false, itemEditorLit.props, propsMeta.props);
                     
-                    if(ObjectEditor.metaProps[prop].ctor in {"CollectionEditor":1, "ObjectEditor":1}){
+                    if(propsMeta.ctor in {"CollectionEditor":1, "ObjectEditor":1}){
                         itemEditorLit.props.instance = props[prop];
                         itemEditorLit.props.field = null;
                     }
                     let ff = extend(true, formField);
-                    ff.props.label = ObjectEditor.metaProps[prop].label;
-                    ff.props.placeholder = ObjectEditor.metaProps[prop].label;
-                    ff.props.required = ObjectEditor.metaProps[prop].required;
+                    ff.props.label = propsMeta.label;
+                    ff.props.placeholder = propsMeta.label;
+                    ff.props.required = propsMeta.required;
 
-                    if(ObjectEditor.metaProps[prop].targetProps != undefined)
+                    if(propsMeta.targetProps != undefined)
                     {
                         let targetLit;
-                        if(ObjectEditor.metaProps[prop].targetProps.target && ObjectEditor.metaProps[prop].targetProps.target.ctor){
-                            targetLit = ObjectEditor.components[ObjectEditor.metaProps[prop].targetProps.target.ctor].literal;
-                            targetLit.props = extend(false, false,targetLit.props, ObjectEditor.metaProps[prop].targetProps.target.props);
+                        if(propsMeta.targetProps.target && propsMeta.targetProps.target.ctor){
+                            targetLit = ObjectEditor.components[propsMeta.targetProps.target.ctor].literal;
+                            targetLit.props = extend(false, false,targetLit.props, propsMeta.targetProps.target.props);
                         }
                         
-                        let anchor = ObjectEditor.metaProps[prop].targetProps.anchor;
+                        let anchor = propsMeta.targetProps.anchor;
                     
                         let events = {};
                         for(let i=0;i<anchor.events.length;i++){
@@ -100,7 +101,7 @@ var ObjectEditor = function (_props, overrided = false) {
                     }
                     ff.props.component.props.bindingDefaultContext = props;
                     ff.props.component.props[(propEditor.valueField || "value")] = "{?"+prop+"}";
-                    ff.props.index = ObjectEditor.metaProps[prop].index;
+                    ff.props.index = propsMeta.index;
                     rows.push(extend(true, ff));
                 }else{
                     console.log("Couldnt find and itemEditor for " + prop + "property");
@@ -351,17 +352,16 @@ ObjectEditor.initMetaProps = function(){
         direction:{ctor:"Select", label:"Direction", props:{
             dataProvider:new ArrayEx([{value:"vertical", text:"Vertical"}, {value:"horizontal", text:"Horizontal"}])
         }},
-        separator:{ctor:"Toggle", label: "Separator"},
-        components:{ctor:"AutoBrowse", label: "Repeated Form", required:true, props:{
-            valueField: "form_id",
-            labelField: "form_name",
-            dataProvider: ObjectEditor.remoteData.forms,
-            change: function(){
-                //propsForm.children["dataProvider"].value
-                //get the fields for the selected datProvider and 
-                //assign them to the labelField and valueField editor`s dataProvider property
+        align:{ctor:"Select", label:"Align", props:{
+            dataProvider:new ArrayEx(getMembersCollection(Align, "text", "value"))
+        }},
+        headingType:{ctor:"Select", label:"Heading Type", props:{
+            dataProvider:new ArrayEx(getMembersCollection(HeadingType, "text", "value")),
+            change:function(){
+                this.parent.parent.instance.headingType = this.value;           
             }
-        }, index:8},
+        }},
+        separator:{ctor:"Toggle", label: "Separator"},
         itemRenderer:{ctor:"ObjectEditor", label: "Item Renderer", required:true, props:{
             change: function(){
                 //propsForm.children["dataProvider"].value
@@ -450,6 +450,21 @@ ObjectEditor.initMetaProps = function(){
         },
         index:19}
     };
+    //Overrides
+    ObjectEditor.metaProps.Repeater = {
+        components:{ctor:"AutoBrowse", label: "Repeated Form", required:true, props:{
+            valueField: "form_id",
+            labelField: "form_name",
+            dataProvider: ObjectEditor.remoteData.forms,
+            fields:[{"field":"form_id", "description":"form_id", "visible":false}, {"field":"form_name", "description":"form_name"}],   
+            change: function(){
+                //propsForm.children["dataProvider"].value
+                //get the fields for the selected datProvider and 
+                //assign them to the labelField and valueField editor`s dataProvider property
+                this.parent.parent.instance.attr.repeated_id_form = this.value.length>0?this.value[0][this.valueField]:undefined; 
+            }
+        }, index:7}
+    }
 };
 
 ObjectEditor.formField = {

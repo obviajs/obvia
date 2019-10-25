@@ -43,6 +43,27 @@ var Heading = function(_props)
         enumerable:true
     });
 
+    Object.defineProperty(this, "headingType", 
+    {
+        get: function headingType() 
+        {
+            return _headingType;
+        },
+        set: function headingType(v) 
+        {
+            if(_headingType != v)
+            {
+                _headingType = v;
+                if(this.$el){
+                    let $newEl = $(this.template());
+                    this.$el.replaceWith($newEl);
+                    this.$el = $newEl;
+                }
+            }
+        },
+        enumerable:true
+    });
+
     this.beforeAttach = function () 
     {
         this.$container = this.$el;

@@ -25,6 +25,19 @@ var AutoBrowse = function (_props, overrided = false) {
         enumerable:true
     });
 
+    Object.defineProperty(this, "valueField", 
+    {
+        get: function valueField() 
+        {
+            return _valueField;
+        },
+        set: function valueField(v) 
+        {
+            _valueField = v;
+        },
+        enumerable:true
+    });
+
     Object.defineProperty(this, "value", 
     {
         get: function value() 
@@ -167,7 +180,8 @@ var AutoBrowse = function (_props, overrided = false) {
         fields:[],
         attr:{"data-triggers":"browse"},   
         value:new ArrayEx([]),
-        classes:["wrap"]                           
+        classes:["wrap"],
+        valueField:""                           
     };
 
     _props = extend(false, false, _defaultParams, _props);

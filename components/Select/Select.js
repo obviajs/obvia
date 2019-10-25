@@ -39,7 +39,7 @@ var Select = function (_props, overrided = false) {
         }
     });
     
-    this.changeHandler = function (e) {
+    _changeHandler = function (e) {
         _value = this.$el.val();
     };
 
@@ -51,6 +51,9 @@ var Select = function (_props, overrided = false) {
     {
         this.$container = this.$el;
         this.addComponents();
+        if(_props.value){
+            _value = _props.value;
+        }
     };
 
     var _defaultParams = {
@@ -78,20 +81,19 @@ var Select = function (_props, overrided = false) {
         _props.components[i].props.bindingDefaultContext = _dataProvider[i];
     }
 
-    var _value = _props.value;
     var _change = _props.change;
     _props.change = function () {
-        if (typeof _change == 'function')
-            _change.apply(this, arguments);
-
         var e = arguments[0];
-        if (!e.isDefaultPrevented()) {
-            _self.changeHandler.apply(this, arguments);
+        if(!e.isDefaultPrevented()) {
+            _changeHandler.apply(_self, arguments);
         }
+        if(typeof _change == 'function')
+            _change.apply(_self, arguments);
     };
 
     Parent.call(this, _props);
-
+    let _value;
+    
     if (overrided) {
         this.keepBase();
     }
