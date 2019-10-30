@@ -6,7 +6,7 @@
 
 //component definition
 var Select = function (_props, overrided = false) {
-    var _self = this;
+    let _self = this, _value, _dataProvider;
     Object.defineProperty(this, "dataProvider", 
     {
         get: function dataProvider() 
@@ -50,6 +50,14 @@ var Select = function (_props, overrided = false) {
     this.beforeAttach = function() 
     {
         this.$container = this.$el;
+        if(_props.dataProvider)
+        {
+            _dataProvider = _props.dataProvider;
+            _props.components = [].pad(_component, _dataProvider.length);
+            for(var i=0;i<_dataProvider.length;i++){
+                _props.components[i].props.bindingDefaultContext = _dataProvider[i];
+            }
+        }
         this.addComponents();
         if(_props.value){
             _value = _props.value;
@@ -64,7 +72,6 @@ var Select = function (_props, overrided = false) {
     };
     shallowCopy(extend(false, false, _defaultParams, _props), _props);
     _props.applyBindings = false;
-    var _dataProvider = _props.dataProvider;
     var _labelField = _props.labelField;
     var _valueField = _props.valueField;
 
@@ -76,11 +83,7 @@ var Select = function (_props, overrided = false) {
             label: '{'+_labelField+'}'
         }
     };
-    _props.components = [].pad(_component, _dataProvider.length);
-    for(var i=0;i<_dataProvider.length;i++){
-        _props.components[i].props.bindingDefaultContext = _dataProvider[i];
-    }
-
+   
     var _change = _props.change;
     _props.change = function () {
         var e = arguments[0];
@@ -92,7 +95,6 @@ var Select = function (_props, overrided = false) {
     };
 
     Parent.call(this, _props);
-    let _value;
     
     if (overrided) {
         this.keepBase();

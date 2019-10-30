@@ -42,8 +42,8 @@ var AutoCompleteEx = function(_props)
                 ctor: TokenRenderer,
                 props: {
                     id: 'token',
-                    label: '{'+_labelField+'}',
-                    value: '{'+_valueField+'}',
+                    label: '{?'+_labelField+'}',
+                    value: '{?'+_valueField+'}',
                     closeiconclick: _tokenRendererCloseIconClickHandler.bind(this),
                     closeIconSide: _closeIconSide
                 }

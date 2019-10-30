@@ -52,3 +52,4 @@ var DataGridColumn = function(_props)
         configurable: true
     });  
 }
+DataGridColumn.prototype.ctor = 'DataGridColumn';

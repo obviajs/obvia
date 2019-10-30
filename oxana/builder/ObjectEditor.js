@@ -37,9 +37,10 @@ var ObjectEditor = function (_props, overrided = false) {
 
     var _initDP = function(){
         if(!ObjectEditor.init){
-            for(let i=0;i<ObjectEditor.remoteSources.length;i++){
-                let r = new ArrayEx(new RemoteArray(ObjectEditor.remoteSources[i].props));
-                ObjectEditor.remoteData[ObjectEditor.remoteSources[i].name] = r;
+            for(let i=0;i<ObjectEditor.sources.length;i++){
+                //if(ObjectEditor.source[i].remote)
+                let r = new ArrayEx(new RemoteArray(ObjectEditor.sources[i].props));
+                ObjectEditor.data[ObjectEditor.sources[i].name] = r;
             }
             ObjectEditor.initMetaProps();
             ObjectEditor.init = true;
@@ -52,7 +53,7 @@ var ObjectEditor = function (_props, overrided = false) {
         let rows = [];
         _self.removeAllChildren();
         for(let prop in props){
-            let propsMeta = ObjectEditor.metaProps[prop] || (ObjectEditor.metaProps[inst.ctor]?ObjectEditor.metaProps[inst.ctor][prop]:null);
+            let propsMeta = ObjectEditor.metaProps[inst.ctor] && ObjectEditor.metaProps[inst.ctor][prop]?ObjectEditor.metaProps[inst.ctor][prop]:ObjectEditor.metaProps[prop];
             if(propsMeta){
                 let propEditor = ObjectEditor.components[propsMeta.ctor];
                 if(propEditor){
@@ -148,7 +149,9 @@ ObjectEditor.masks;
 ObjectEditor.maskValueField = "";
 ObjectEditor.maskLabelField = "";
 
-ObjectEditor.remoteData = {};
+ObjectEditor.data = {};
+ObjectEditor.data.countries = [{ "value": "1", "text": "Albania" }, { "value": "2", "text": "Greece" }, { "value": "3", "text": "Italy" }];
+
 
 ObjectEditor.componentValueField = "ctor";
 ObjectEditor.componentLabelField = "label";
@@ -265,7 +268,7 @@ ObjectEditor.initMetaProps = function(){
         dataProvider: {ctor:"AutoBrowse", label: "Data Provider", required:true, props:{
             valueField: ObjectEditor.providerValueField,
             labelField: ObjectEditor.providerLabelField,
-            dataProvider: ObjectEditor.remoteSources,
+            dataProvider: ObjectEditor.sources,
             change: function(){
                 //propsForm.children["dataProvider"].value
                 //get the fields for the selected datProvider and 
@@ -455,7 +458,7 @@ ObjectEditor.initMetaProps = function(){
         components:{ctor:"AutoBrowse", label: "Repeated Form", required:true, props:{
             valueField: "form_id",
             labelField: "form_name",
-            dataProvider: ObjectEditor.remoteData.forms,
+            dataProvider: ObjectEditor.data.forms,
             fields:[{"field":"form_id", "description":"form_id", "visible":false}, {"field":"form_name", "description":"form_name"}],   
             change: function(){
                 //propsForm.children["dataProvider"].value
@@ -464,6 +467,9 @@ ObjectEditor.initMetaProps = function(){
                 this.parent.parent.instance.attr.repeated_id_form = this.value.length>0?this.value[0][this.valueField]:undefined; 
             }
         }, index:7}
+    }
+    ObjectEditor.metaProps.DataGridColumn = {
+        name: {ctor:"TextInput", label: "Column Name", required:true, index:1}
     }
 };
 
@@ -620,7 +626,6 @@ ObjectEditor.components = {
             "ctor": Select,
             "props":{
                 id: 'select',
-                dataProvider: [{ "value": "1", "text": "Albania" }, { "value": "2", "text": "Greece" }, { "value": "3", "text": "Italy" }],
                 labelField: "text",
                 valueField: "value",
                 value: "2"
@@ -708,7 +713,7 @@ ObjectEditor.components = {
                 id: "AutoBrowse",
                 labelField: ObjectEditor.providerLabelField,
                 valueField: ObjectEditor.providerValueField,
-                dataProvider: ObjectEditor.remoteSources,
+                dataProvider: ObjectEditor.sources,
                 classes:["ml-0"],
                 fields:[{"field":ObjectEditor.providerValueField, "description":ObjectEditor.providerValueField, "visible":false}, {"field":ObjectEditor.providerLabelField, "description":ObjectEditor.providerLabelField}]
             }

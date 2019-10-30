@@ -7,6 +7,7 @@
 //component definition
 var TokenRenderer = function(_props)
 {
+    let _self = this, _value, _label, _closeIconSide;
     /*
 
     this.beforeAttach = function () 
@@ -62,6 +63,10 @@ var TokenRenderer = function(_props)
             {
                 _self.trigger("closeiconclick");
             });
+            if(_props.value)
+                _value = _props.value;
+            if(_props.label)
+                _label = _props.label;
         }
     }
 
@@ -120,10 +125,7 @@ var TokenRenderer = function(_props)
         closeIconSide:"left",
     };
     _props = extend(false, false, _defaultParams, _props);
-    var _value = _props.value;
-    var _label = _props.label;
-    var _self = this;
-    var _closeIconSide = _props.closeIconSide;
+    _closeIconSide = _props.closeIconSide;
 
     Component.call(this, _props);
 };

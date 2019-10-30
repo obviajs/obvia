@@ -25,11 +25,13 @@
         <script>
             rjs.init({debug:false});     
             function main(){
+                
                 //Can be a RemoteArray perse...
-                ObjectEditor.remoteSources = new ArrayEx([
+                ObjectEditor.sources = new ArrayEx([
                     {name:"test", description:"Test Remote Source", props:{url:"http://139.162.158.49/rca/index.php", post:{"testKey":"testValue"}, recordsPerPage:5}},
                     {name:"forms", description:"Forms", props:{url:"http://flower-gaia/api/forms", post:{}, recordsPerPage:5}}
                 ]);
+               
                 //rjs.define("./examples/Tree/example.js", "TreeExample");
                 //rjs.define("./examples/DropDown/example.js", "DropDownExample");
                 //rjs.define("./examples/Label/example.js", "LabelExample");
