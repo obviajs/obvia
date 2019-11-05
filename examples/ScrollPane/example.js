@@ -1,9 +1,10 @@
-var ra = new RemoteArray({url:"http://192.168.64.2/rca/index.php", post:{"testKey":"testValue"}, recordsPerPage:10, method: "POST"})
+var rpp = 10;
+var ra = new RemoteArray({url:"http://192.168.64.2/rca/index.php", post:{"testKey":"testValue"}, recordsPerPage:rpp, method: "POST"})
 var dp = new ArrayEx(ra);
 var myScrollPane = new ScrollPane({
     id: "pane",
     height: 230,
-    scrollHeight: 260,
+    scrollHeight: 253,
     scrollUnitHeight:23,
     component: {
         ctor: Repeater,
@@ -27,7 +28,9 @@ myScrollPane.on('creationComplete', function(e)
     dp.on("propertyChange", function(e){
         if(e.property == "length"){
             if(ra.totalRecords == Infinity){
-                myScrollPane.scrollHeight += 260;
+                myScrollPane.scrollHeight += 230;
+            }else{
+                myScrollPane.scrollHeight += (ra.totalRecords % rpp) * myScrollPane.scrollUnitHeight;
             }
         }
     });

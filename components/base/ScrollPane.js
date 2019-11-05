@@ -24,7 +24,15 @@ var ScrollPane = function(_props)
         },
         configurable:true
     });
-
+    
+    Object.defineProperty(this, "scrollUnitHeight", 
+    {
+        get: function scrollUnitHeight() 
+        {
+            return _scrollUnitHeight;
+        }
+    });
+    
     Object.defineProperty(this, "child", 
     {
         get: function child() 
@@ -118,27 +126,29 @@ var ScrollPane = function(_props)
             scrollTop = virtualIndex * _scrollUnitHeight;
 
             let deltaScroll = _prevScrollTop - scrollTop;
-        
-            let scrollUnits = Math.ceil(Math.abs(deltaScroll) / _scrollUnitHeight) * (deltaScroll/Math.abs(deltaScroll));
+            if(deltaScroll!=0)
+            {
+                let scrollUnits = Math.ceil(Math.abs(deltaScroll) / _scrollUnitHeight) * (deltaScroll/Math.abs(deltaScroll));
 
-            if(deltaScroll < 0){
-                console.log("scroll down");
-            }else{
-                console.log("scroll up");  
-            }
-        
-           // virtualIndex = (_rowCount+virtualIndex < _dataProvider.length) ? virtualIndex : (_dataProvider.length-_rowCount);        
-            _prevScrollTop = scrollTop;
-            if(_prevVirtualIndex != virtualIndex){
-                _prevVirtualIndex = virtualIndex;
-                if(scrollUnits!=0){
-                    _progressiveScrollUnits += scrollUnits;
+                if(deltaScroll < 0){
+                    console.log("scroll down");
+                }else{
+                    console.log("scroll up");  
                 }
+            
+            // virtualIndex = (_rowCount+virtualIndex < _dataProvider.length) ? virtualIndex : (_dataProvider.length-_rowCount);        
+                _prevScrollTop = scrollTop;
+                if(_prevVirtualIndex != virtualIndex){
+                    _prevVirtualIndex = virtualIndex;
+                    if(scrollUnits!=0){
+                        _progressiveScrollUnits += scrollUnits;
+                    }
+                }
+            
+                evt.virtualIndex = virtualIndex;
+                evt.scrollUnits = scrollUnits;
+                evt.progressiveScrollUnits = _progressiveScrollUnits;
             }
-           
-            evt.virtualIndex = virtualIndex;
-            evt.scrollUnits = scrollUnits;
-            evt.progressiveScrollUnits = _progressiveScrollUnits;
         }
         _self.trigger(evt);
     }
