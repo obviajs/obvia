@@ -33,47 +33,51 @@ var Container = function(_props, overrided=false)
             configurable: true
         });
     }
-    
-    Object.defineProperty(this, "width", 
+    if(!this.hasOwnProperty("width"))
     {
-        get: function width() 
+        Object.defineProperty(this, "width", 
         {
-            return _width;
-        },
-        set: function width(v) 
-        {
-            if(_width != v)
+            get: function width() 
             {
-                _width = v;
-                if(this.$el)
+                return _width;
+            },
+            set: function width(v) 
+            {
+                if(_width != v)
                 {
-                    v = v || 0;
-                    this.$el.css('width', v+ (isString(_width) && _width.indexOf("%")>-1?"":"px"));
+                    _width = v;
+                    if(this.$el)
+                    {
+                        v = v || 0;
+                        this.$el.css('width', v+ (isString(_width) && _width.indexOf("%")>-1?"":"px"));
+                    }
                 }
             }
-        }
-    });
-
-    Object.defineProperty(this, "height", 
+        });
+    }
+    if(!this.hasOwnProperty("height"))
     {
-        get: function height() 
+        Object.defineProperty(this, "height", 
         {
-            return _height;
-        },
-        set: function height(v) 
-        {
-            if(_height != v)
+            get: function height() 
             {
-                _height = v;
-                if(this.$el)
+                return _height;
+            },
+            set: function height(v) 
+            {
+                if(_height != v)
                 {
-                    v = v || 0;
-                    this.$el.css('height', v+(isString(_width) && _width.indexOf("%")>-1?"":"px"));
+                    _height = v;
+                    if(this.$el)
+                    {
+                        v = v || 0;
+                        this.$el.css('height', v+(isString(_height) && _height.indexOf("%")>-1?"":"px"));
+                    }
                 }
-            }
-        }
-    });
-
+            },
+            configurable:true
+        });
+    }
     Object.defineProperty(this, "role",
     {
         get:function role(){
@@ -122,7 +126,7 @@ var Container = function(_props, overrided=false)
     { 
         return  '<div id="' + this.domID + '"></div>'; 
     };
-    var _beforeAttach = this.beforeAttach;
+    let _beforeAttach = this.beforeAttach;
     this.beforeAttach = function(e) 
     {
         if (e.target.id == this.domID) 
@@ -135,7 +139,7 @@ var Container = function(_props, overrided=false)
             }
         }
     };
-
+    let _afterAttach = this.afterAttach;
     this.afterAttach = function (e) 
     {
         //if (e.target.id == this.domID) 
@@ -161,8 +165,8 @@ var Container = function(_props, overrided=false)
     var _width;
     var _height;
     var _type, _role;
-    var _afterAttach = _props.afterAttach;
-    _props.afterAttach = this.afterAttach;
+    //var _afterAttach = _props.afterAttach;
+    //_props.afterAttach = this.afterAttach;
     var _placeholder;
     let r = Parent.call(this, _props, overrided);
     var base = this.base;

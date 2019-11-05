@@ -204,6 +204,7 @@ var Parent = function(_props, overrided=false, _isSurrogate=false)
         }
     };
 
+    let _afterAttach = this.afterAttach;
     this.afterAttach = function (e) 
     {
         if (e.target.id == this.domID) 
@@ -234,8 +235,8 @@ var Parent = function(_props, overrided=false, _isSurrogate=false)
 
     var _self = this;
     var _creationFinished = false;
-    var _afterAttach = _props.afterAttach;
-    _props.afterAttach = this.afterAttach;
+    //var _afterAttach = _props.afterAttach;
+    //_props.afterAttach = this.afterAttach;
     var _children = {};
     let _sortChildren = _props.sortChildren;
    

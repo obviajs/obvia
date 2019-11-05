@@ -70,6 +70,8 @@ rjs.define("./components/Container.js", "Container");
 rjs.define("./components/Nav.js", "Nav");
 rjs.define("./components/Header.js", "Header");
 rjs.define("./components/Footer.js", "Footer");
+//ScrollPane
+rjs.define("./components//base/ScrollPane.js", "ScrollPane");
 //Tab
 rjs.define("./components/Tab/TabNavigator.js", "TabNavigator");
 rjs.define("./components/Tab/Tab.js", "Tab");
@@ -216,6 +218,7 @@ rjs.require([
         "ContainerType",
         "NavParent",
         "Container",
+        "ScrollPane",
         "Nav",
         "Header",
         "Footer",

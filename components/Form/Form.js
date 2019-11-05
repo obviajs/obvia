@@ -26,9 +26,9 @@ var Form = function(_props)
     {
         this.components.forEach(function (component) {
             try {
-                if (typeof this[component.props.id].cmp.value == "string")
-                    this[component.props.id].cmp.value = "";
-                else this[component.props.id].cmp.value = [];
+                if (typeof this[component.props.id].child.value == "string")
+                    this[component.props.id].child.value = "";
+                else this[component.props.id].child.value = [];
             } catch (error) {
                 
             }   
@@ -39,7 +39,7 @@ var Form = function(_props)
     {
         var value = {};
         this.components.forEach(function (component) {
-            value[component.props.id] = this[component.props.id].cmp.value;
+            value[component.props.id] = this[component.props.id].child.value;
         }.bind(this));
 
         var serialized = JSON.stringify(value);

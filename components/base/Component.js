@@ -743,7 +743,7 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
             let bindingExp = _bindings[bi].expression; 
             let site = this;
             let site_chain = [_bindings[bi].property];
-            let  nullable = _bindings[bi].nullable;
+            let nullable = _bindings[bi].nullable;
             
             //this here refers to window context
             let defaultBindTo = "currentItem_"+_self.guid;

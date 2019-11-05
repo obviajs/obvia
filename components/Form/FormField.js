@@ -8,7 +8,7 @@
 var FormField = function(_props)
 {   
     var _self = this;
-    var _cmp, _lbl;
+    var _child, _lbl;
 
     this.beforeAttach = function(e) 
     {
@@ -18,8 +18,8 @@ var FormField = function(_props)
             this.$container = this.$el;
             let inst = this.addComponents();
             _lbl = inst[0];
-            _cmp = inst[1];
-            _lbl.$el.prop("for", _cmp.domID);
+            _child = inst[1];
+            _lbl.$el.prop("for", _child.domID);
             if(_props.required)
                 _self.required = _props.required;
             if(_props.placeholder)
@@ -53,12 +53,12 @@ var FormField = function(_props)
                 _name = v;
                 if(_name)
                 {
-                    if(_cmp.$el)
-                        _cmp.$el.attr("name", _name);
+                    if(_child.$el)
+                        _child.$el.attr("name", _name);
                 }else
                 {
-                    if(_cmp.$el)
-                        _cmp.$el.removeAttr('name');
+                    if(_child.$el)
+                        _child.$el.removeAttr('name');
                 }
             }
         },
@@ -78,12 +78,12 @@ var FormField = function(_props)
                 _required = v;
                 if(_required)
                 {
-                    if(_cmp.$el)
-                        _cmp.$el.attr('required', _required);
+                    if(_child.$el)
+                        _child.$el.attr('required', _required);
                 }else
                 {
-                    if(_cmp.$el)
-                        _cmp.$el.removeAttr('required');
+                    if(_child.$el)
+                        _child.$el.removeAttr('required');
                 }
             }
         },
@@ -108,11 +108,11 @@ var FormField = function(_props)
         enumerable:true
     });
 
-    Object.defineProperty(this, "cmp", 
+    Object.defineProperty(this, "child", 
     {
-        get: function cmp() 
+        get: function child() 
         {
-            return _cmp;
+            return _child;
         }
     });
     /**
@@ -181,8 +181,8 @@ var FormField = function(_props)
             if(_enabled != v)
             {
                 _enabled = v;
-                if(_cmp)
-                    _cmp.enabled = !!v;
+                if(_child)
+                    _child.enabled = !!v;
             }
         },
         configurable: true
@@ -199,8 +199,8 @@ var FormField = function(_props)
                     {
                         case "component":
                             var component = {};
-                            component.ctor = _cmp.ctor; //_component.ctor;
-                            component.props = _cmp.props;
+                            component.ctor = _child.ctor; //_component.ctor;
+                            component.props = _child.props;
                             obj[prop] = component;
                             break;
                         case "ownerDocument":
@@ -230,12 +230,12 @@ var FormField = function(_props)
                 _placeholder = v;
                 if(_placeholder)
                 {
-                    if(_cmp && _cmp.$el)
-                        _cmp.$el.attr("placeholder", _placeholder);
+                    if(_child && _child.$el)
+                        _child.$el.attr("placeholder", _placeholder);
                 }else
                 {
-                    if(_cmp && _cmp.$el)
-                        _cmp.$el.removeAttr('placeholder');
+                    if(_child && _child.$el)
+                        _child.$el.removeAttr('placeholder');
                 }
             }
         }
@@ -244,15 +244,15 @@ var FormField = function(_props)
     this.on('childCreated childAdded', function(e){
         if(e.child.ctor != 'Label'){
             if(_component ==null || Object.isEmpty(_component)){
-                _component = _cmp.literal;
+                _component = _child.literal;
             }
             
             e.stopPropagation();
             var _cmpObj;
-            if(["input", "select", "textarea", "button"].indexOf(_cmp.$el[0].tagName.toLowerCase())>-1){
-                _cmpObj = _cmp.$el;
+            if(["input", "select", "textarea", "button"].indexOf(_child.$el[0].tagName.toLowerCase())>-1){
+                _cmpObj = _child.$el;
             }else{
-                _cmpObj = _cmp.$el.find("input, select, textarea, button").filter(function(){ 
+                _cmpObj = _child.$el.find("input, select, textarea, button").filter(function(){ 
                     return ($(this).closest(".no-form-control").length == 0);
                 });
             }
