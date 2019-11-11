@@ -320,9 +320,9 @@ var Repeater = function(_props)
         var buildRow = function () {
             var rowItems = {};
 
-            for(var cIndex=0;cIndex<_self.components.length;cIndex++)
+            for(var cIndex=0;cIndex<_components.length;cIndex++)
             {
-                let comp = _self.components[cIndex];
+                let comp = _components[cIndex];
 
                 (function (component, vcolIndex) {
                     return function(){
@@ -357,7 +357,7 @@ var Repeater = function(_props)
                                 e.stopPropagation();
                                 ccComponents.push(el.id);
                                 _createdRows++;
-                                if (ccComponents.length == _self.components.length) {
+                                if (ccComponents.length == _components.length) {
                                     //trigger row add event
                                     let era = jQuery.Event("rowAdd");
                                     era.row = renderedRow;
@@ -387,7 +387,7 @@ var Repeater = function(_props)
 
                                     //animate
                                     if (addRowFlag && focusOnRowAdd) {
-                                        _self.rowItems[_self.rowItems.length - 1][_self.components[0].props.id].scrollTo();
+                                        _self.rowItems[_self.rowItems.length - 1][_components[0].props.id].scrollTo();
                                     }         
                                 
                                 }
@@ -451,9 +451,9 @@ var Repeater = function(_props)
                 }
                 else
                 */
-                    _self.$container.append(renderedRow);
+                    _self.$container.append(_rendering.wrap?renderedRow:renderedRow.children());
             }else{
-                _self.$container.prepend(renderedRow);
+                _self.$container.prepend(_rendering.wrap?renderedRow:renderedRow.children());
             }
             
             return rowItems;
@@ -597,7 +597,8 @@ var Repeater = function(_props)
     var _defaultParams = {
         rendering: {
 			direction: 'vertical',
-            separator: false
+            separator: false,
+            wrap: true
         },
         type: ContainerType.NONE,
         dataProvider: new ArrayEx([]),

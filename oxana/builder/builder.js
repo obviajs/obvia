@@ -77,7 +77,7 @@ var formField = {
 };
 
 var parents = ["Container", "Form"];
-var noNeedFF = ["Button", "Label"];
+var noNeedFF = ["Button", "Label", "Container"];
 var dpCmpSelect = [];
 
 var zeroCool = {
@@ -259,17 +259,19 @@ var zeroCool = {
                                                                                                 classesField: "listItemClass",
                                                                                                 defaultClasses: [],
                                                                                                 selectedClasses: ["active-container"],   
-                                                                                                component: {
-                                                                                                    ctor: Label,
-                                                                                                    props: {
-                                                                                                        id: 'labelHistoryStep',
-                                                                                                        value: "{id}",
-                                                                                                        label: "{description}",
-                                                                                                        classes: "{?listItemClass}",
-                                                                                                        DOMMutation: _DOMMutationHandler,
-                                                                                                        click: function(e){e.preventDefault();}
+                                                                                                components: [
+                                                                                                    {
+                                                                                                        ctor: Label,
+                                                                                                        props: {
+                                                                                                            id: 'labelHistoryStep',
+                                                                                                            value: "{id}",
+                                                                                                            label: "{description}",
+                                                                                                            classes: "{?listItemClass}",
+                                                                                                            DOMMutation: _DOMMutationHandler,
+                                                                                                            click: function(e){e.preventDefault();}
+                                                                                                        }
                                                                                                     }
-                                                                                                }
+                                                                                                ]
                                                                                             }
                                                                                         }
                                                                                     ]

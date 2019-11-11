@@ -59,11 +59,12 @@ var ScrollPane = function(_props)
         {
             if(_scrollHeight != v)
             {
-                _scrollHeight = v;
                 if(this.$el)
                 {
                     v = v || 0;
-                    _$scrollArea.css('height', v+(isString(_scrollHeight) && _scrollHeight.indexOf("%")>-1?"":"px"));
+                    _$scrollArea.css('height', v+(isString(v) && v.indexOf("%")>-1?"":"px"));
+                    //_updateMyScrollerTop(this.$el.scrollTop());
+                    _scrollHeight = v;
                 }
             }
         },
@@ -78,7 +79,7 @@ var ScrollPane = function(_props)
             if(_props.height)
                 this.height = _props.height;
             this.$el.css({"overflow-y": "scroll"});
-            _$scrollArea.css({border: "1px", opacity:100, "margin-top":-_height+"px", float: "right",position:"relative", "margin-left": "-16px", width:"10px", height : _scrollHeight + "px"});   
+            _$scrollArea.css({"margin-top":-_height+"px", float: "right",position:"relative", "margin-left": "-16px", width:"10px", height : _scrollHeight + "px"});   
             this.$container = this.$el;
             let inst = this.addComponents();
             _child = inst[0];
@@ -105,10 +106,33 @@ var ScrollPane = function(_props)
             _self.trigger(evt);
             _child.$el.css({"margin-top":e.target.scrollTop});   
             _$scrollArea.css({"margin-top": (-(_height)-e.target.scrollTop)+"px"});
+
+            //let mt = parseInt(_$scrollArea.css("margin-top"));
+            
+            let mt = -(_height)-e.target.scrollTop;
+            let pct = e.target.scrollTop/_self.scrollHeight;
+            let myScrollTop = (_self.scrollHeight + mt)*pct;
+/*
+            pct = e.target.scrollTop/(_self.scrollHeight-mt);
+            myScrollTop = pct * (_self.scrollHeight-230);
+            myScrollTop *= _self.scrollHeight/_scrollHeightInit;
+            */
+            console.log("scrollTop:",e.target.scrollTop," scrollHeight:",_self.scrollHeight," mt:",mt," pct:",pct," myScrollTop:",myScrollTop);
+            _$scroller.css({"top": myScrollTop +"px", "margin-top":-230+"px"});
+            
+            //_updateMyScrollerTop(e.target.scrollTop);
             _delayScroll.apply(_self, arguments);
         }
     };
-   
+    let _updateMyScrollerTop = function(scrollTop)
+    {
+        let mt = -(_height) - scrollTop;
+        let pct = scrollTop/_self.scrollHeight;
+        let myScrollTop = (_self.scrollHeight + mt)*pct;
+        
+        console.log("scrollTop:",scrollTop," scrollHeight:",_self.scrollHeight," mt:",mt," pct:",pct," myScrollTop:",myScrollTop);
+        _$scroller.css({"top": myScrollTop +"px", "margin-top":-230+"px"});
+    }
 
     let _virtualScroll = function(e)
     {
@@ -160,6 +184,7 @@ var ScrollPane = function(_props)
             if(_height==0)
                 this.$el.css({height:_child.$el.height()});
             this.$el.append(_$scrollArea);
+            this.$el.append(_$scroller);
             this.$el.on("scroll", _scroll);
         }
     }
@@ -174,8 +199,12 @@ var ScrollPane = function(_props)
     _props = extend(false, false, _defaultParams, _props);
     let _height = 0;
     let _scrollHeight = _props.scrollHeight;
+    let _scrollHeightInit = _scrollHeight;
     let _scrollUnitHeight = _props.scrollUnitHeight;
-    let _$scrollArea = $("<div/>");
+    let _$scrollArea = $("<div style='border:1px solid black;'/>");
+    let _$scroller = $("<div style='border:1px solid black;position:relative;float:right;height:40px;width:16px;top:0px;margin-left:-16px;margin-top:-230px;'></div>");
+        
+
     _component = _props.component;
     _props.components = [];
 

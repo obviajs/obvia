@@ -7,37 +7,6 @@
 //component definition
 var Select = function (_props, overrided = false) {
     let _self = this, _value, _dataProvider;
-    Object.defineProperty(this, "dataProvider", 
-    {
-        get: function dataProvider() 
-        {
-            return _dataProvider;
-        },
-        set: function dataProvider(v) 
-        {
-            if(_dataProvider != v)
-            {
-                _dataProvider = v;
-            }
-        },
-        enumerable:true
-    });
-
-    Object.defineProperty(this, "value",
-    {
-        get: function value() {
-            return _value;
-        },
-        set: function value(v) {
-            if (_value != v) {
-                _value = v;
-                if (this.$el) {
-                    this.$el.val(v);
-                    this.trigger('change');
-                }
-            }
-        }
-    });
     
     _changeHandler = function (e) {
         _value = this.$el.val();
@@ -50,15 +19,6 @@ var Select = function (_props, overrided = false) {
     this.beforeAttach = function() 
     {
         this.$container = this.$el;
-        if(_props.dataProvider)
-        {
-            _dataProvider = _props.dataProvider;
-            _props.components = [].pad(_component, _dataProvider.length);
-            for(var i=0;i<_dataProvider.length;i++){
-                _props.components[i].props.bindingDefaultContext = _dataProvider[i];
-            }
-        }
-        this.addComponents();
         if(_props.value){
             _value = _props.value;
         }
@@ -68,21 +28,25 @@ var Select = function (_props, overrided = false) {
         dataProvider: null,
         labelField: "",
         valueField: "",
-        value: null
+        value: null,
+        rendering: {
+            wrap: false
+        }
     };
+    
     shallowCopy(extend(false, false, _defaultParams, _props), _props);
     _props.applyBindings = false;
     var _labelField = _props.labelField;
     var _valueField = _props.valueField;
 
-    var _component = {
+    _props.components = [{
         ctor: Option,
         props:{
             id:"opt",
             value: '{'+_valueField+'}',
             label: '{'+_labelField+'}'
         }
-    };
+    }];
    
     var _change = _props.change;
     _props.change = function () {
@@ -94,7 +58,7 @@ var Select = function (_props, overrided = false) {
             _change.apply(_self, arguments);
     };
 
-    Parent.call(this, _props);
+    Repeater.call(this, _props);
     
     if (overrided) {
         this.keepBase();
@@ -124,6 +88,22 @@ var Select = function (_props, overrided = false) {
         },
         configurable: true
     });  
+    
+    Object.defineProperty(this, "value",
+    {
+        get: function value() {
+            return _value;
+        },
+        set: function value(v) {
+            if (_value != v) {
+                _value = v;
+                if (this.$el) {
+                    this.$el.val(v);
+                    this.trigger('change');
+                }
+            }
+        }
+    });
 };
 
 //component prototype
