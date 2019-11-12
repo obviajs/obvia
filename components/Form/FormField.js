@@ -18,14 +18,17 @@ var FormField = function(_props)
             this.$container = this.$el;
             let inst = this.addComponents();
             _lbl = inst[0];
-            _child = inst[1];
-            _lbl.$el.prop("for", _child.domID);
-            if(_props.required)
-                _self.required = _props.required;
-            if(_props.placeholder)
-                _self.placeholder = _props.placeholder;
-            if(_props.name)   
-                _self.name = _props.name;
+            if(inst[1])
+            {
+                _child = inst[1];
+                _lbl.$el.prop("for", _child.domID);
+                if(_props.required)
+                    _self.required = _props.required;
+                if(_props.placeholder)
+                    _self.placeholder = _props.placeholder;
+                if(_props.name)   
+                    _self.name = _props.name;
+            }
             if(_props.label)       
                 _self.label = _props.label;
             e.preventDefault();
@@ -53,11 +56,11 @@ var FormField = function(_props)
                 _name = v;
                 if(_name)
                 {
-                    if(_child.$el)
+                    if(_child && _child.$el)
                         _child.$el.attr("name", _name);
                 }else
                 {
-                    if(_child.$el)
+                    if(_child && _child.$el)
                         _child.$el.removeAttr('name');
                 }
             }
@@ -78,11 +81,11 @@ var FormField = function(_props)
                 _required = v;
                 if(_required)
                 {
-                    if(_child.$el)
+                    if(_child && _child.$el)
                         _child.$el.attr('required', _required);
                 }else
                 {
-                    if(_child.$el)
+                    if(_child && _child.$el)
                         _child.$el.removeAttr('required');
                 }
             }
@@ -243,7 +246,15 @@ var FormField = function(_props)
 
     this.on('childCreated childAdded', function(e){
         if(e.child.ctor != 'Label'){
-            if(_component ==null || Object.isEmpty(_component)){
+            if(_component == null || Object.isEmpty(_component)){
+                _child = e.child;
+                _lbl.$el.prop("for", _child.domID);
+                if(_props.required)
+                    _self.required = _props.required;
+                if(_props.placeholder)
+                    _self.placeholder = _props.placeholder;
+                if(_props.name)   
+                    _self.name = _props.name;
                 _component = _child.literal;
             }
             

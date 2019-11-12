@@ -413,6 +413,13 @@ var AutoCompleteEx = function(_props)
         {
             if(v)
             {
+                if(isString(v) || isNumber(v))
+                {
+                    let vo = {};
+                    vo[_labelField] = v;
+                    vo[_valueField] = v;    
+                    v = vo;
+                }
                 if(typeof(v)==="object" && !(v instanceof Array)){
                     v = [v];
                 }

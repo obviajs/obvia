@@ -7,6 +7,31 @@
 //component definition
 var Select = function (_props, overrided = false) {
     let _self = this, _value, _dataProvider;
+    Object.defineProperty(this, "valueField", 
+    {
+        get: function valueField() 
+        {
+            return _valueField;
+        },
+        set: function valueField(v) 
+        {
+            _valueField = v;
+        },
+        enumerable:true
+    });
+    
+    Object.defineProperty(this, "labelField", 
+    {
+        get: function labelField() 
+        {
+            return _labelField;
+        },
+        set: function labelField(v) 
+        {
+            _labelField = v;
+        },
+        enumerable:true
+    });
     
     _changeHandler = function (e) {
         _value = this.$el.val();
@@ -74,6 +99,8 @@ var Select = function (_props, overrided = false) {
                     switch(prop)
                     {
                         case "components":
+                            break;
+                        case "rendering":
                             break;
                         case "ownerDocument":
                             break;

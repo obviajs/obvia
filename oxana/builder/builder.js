@@ -63,18 +63,7 @@ var shadow = {
     }
 };
 
-var formField = {
-    ctor: FormField,
-    props: {
-        id: 'formField',
-        label: 'Label',
-        placeholder: 'Plceholder',
-        name: 'formField',
-        size: FormFieldSize.SMALL,
-        //spacing:{colSpan:2},
-        component: {}
-    }
-};
+let formField = Builder.components["FormField"].literal;
 
 var parents = ["Container", "Form"];
 var noNeedFF = ["Button", "Label", "Container"];
@@ -303,7 +292,7 @@ var zeroCool = {
                                                                     ctor: Repeater,
                                                                     props: {
                                                                         id:"componentList",
-                                                                        dataProvider:ObjectEditor.componentList,
+                                                                        dataProvider: Builder.componentList,
                                                                         rendering: {
                                                                             direction: 'horizontal'
                                                                         },
@@ -521,8 +510,10 @@ oxana.behaviorimplementations["ADD_COMPONENT"] = {
                     ff.props.draggable = true;
                     ff.props.classes = !Array.isArray(ff.props.classes)?[]:ff.props.classes;
                     ff.props.classes.push("selected-component");
-                    workArea = workArea.addComponent(ff);
-                    addBehaviors(workArea, cmpBehaviors, false);
+                    let instF = workArea.addComponent(ff);
+                    instF.addChild(inst);
+                    inst = instF;
+                    addBehaviors(inst, cmpBehaviors, false);
                 }
                 workArea.addChild(inst);
             }

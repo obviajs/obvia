@@ -1,5 +1,6 @@
 var flowerCM = window.flowerCM || {};
 //base Components
+rjs.define("lib/NumberUtils.js", "NumberUtils");
 rjs.define("lib/JTemplate.js", "JTemplate");
 rjs.define("lib/DataStore.js", "DataStore");
 rjs.define("lib/cache/Cache.js", "Cache");
@@ -76,7 +77,8 @@ rjs.define("./components//base/ScrollPane.js", "ScrollPane");
 rjs.define("./components/Tab/TabNavigator.js", "TabNavigator");
 rjs.define("./components/Tab/Tab.js", "Tab");
 //Link
-rjs.define("./components/Link.js", "Link");
+rjs.define("./components/Link/LinkTarget.js", "LinkTarget");
+rjs.define("./components/Link/Link.js", "Link");
 //Repeater
 rjs.define("./components/Repeater/Repeater.js", "Repeater");
 rjs.define("./components/Repeater/RepeaterEx.js", "RepeaterEx");
@@ -176,6 +178,7 @@ rjs.define("./components/Calendar/css/calendarWeek-default.css", "calendarWeek_d
 rjs.define("./oxana/builder/CollectionEditor.js", "CollectionEditor");
 rjs.define("./oxana/builder/ObjectEditor.js", "ObjectEditor");
 rjs.require([
+        "NumberUtils",
         "JTemplate",
         "DataStore",
         "Cache",
@@ -209,6 +212,10 @@ rjs.require([
         "Component",
         "Spacing",
         "SpacingEditor",
+        "Form",
+        "FormField",
+        "FormFieldSize",
+        "FormEventType",
         "CollectionEditor",
         "ObjectEditor",
         "AutoBrowse",
@@ -228,10 +235,6 @@ rjs.require([
         "EnvType",
         "Env",
         "App",
-        "Form",
-        "FormField",
-        "FormFieldSize",
-        "FormEventType",
         "Hidden",
         "BootBox",
         "Repeater",
@@ -243,6 +246,7 @@ rjs.require([
         "Heading",
         "LabelType",
         "Label",
+        "LinkTarget",
         "Link",
         "InputMaskBundle",
         "TextInput", 

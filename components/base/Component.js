@@ -687,7 +687,7 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
             expression = match.objects[0]["expression"];
         }
         return expression;
-    },
+    };
 
     this.resetBindings = function()
     {
@@ -696,13 +696,51 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
             _watchers[i].reset();        
         }
     };
-    var _bindedTo;
+    
+    this.setBindingExpression = function(property, expression)
+    {
+        var match = getMatching(_bindings, "property",  property, true);
+        if(match.indices.length>0){
+           
+            var b = getBindingExp(expression);
+            if (b) {
+                let newBinding = {"expression":b.expression, "property":property, "nullable":false};
+                _bindings.splice(match.indices[0], 1, newBinding);
+                _watchers[match.indices[0]].reset(); 
+                
+                let currentItem = _bindingDefaultContext;
+                let bindingExp = expression; 
+                let site = this;
+                let site_chain = [property];
+                let nullable = false;
+                
+                //this here refers to window context
+                let defaultBindTo = "currentItem_"+_self.guid;
+                window[defaultBindTo] = (currentItem || Component.defaultContext);
+                if(!("currentItem" in window[defaultBindTo])){
+                    window[defaultBindTo]["currentItem"] = window[defaultBindTo];
+                }
+                // var context = extend(false, true, this, obj);
+                let fn = function(){
+                    _watchers.splicea(match.indices[0], 1, BindingUtils.getValue(window, bindingExp, site, site_chain, defaultBindTo));
+                };
+                if(nullable){
+                    let fnDelayed = whenDefined(window[defaultBindTo], bindingExp, fn);
+                    fnDelayed();
+                }else{
+                    fn();
+                }
+            }
+        }
+
+    };
+    
+    let _bindedTo;
     this.refreshBindings = function(data)
     {
         if(_bindedTo!=data){
             this.resetBindings();
-            _watchers = [];
-            this.applyBindings(data);
+            _watchers = this.applyBindings(data);
             if(this.children){
                 for(var cid in this.children){
                     this.children[cid].refreshBindings(data);
@@ -715,7 +753,7 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
     this.applyBindings = function(data)
     {
         _bindedTo = data;
-        var _self = this, w = [];
+        let w = [];
         // for(var bi=0;bi<_bindings.length;bi++){
         //     (function(currentItem, bindingExp, site, site_chain, nullable){
         //         return (function(e) { // a closure is created
@@ -764,7 +802,7 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
         }
         return w;
     };
-
+        
     this.keepBase = function()
     {
         this.base = {};

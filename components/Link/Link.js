@@ -32,7 +32,8 @@ var Link = function(_props)
                     }
                 }                    
             }
-        }
+        },
+        enumerable:true
     });
 
     Object.defineProperty(this, "target", 
@@ -60,7 +61,8 @@ var Link = function(_props)
                     }
                 }  
             }
-        }
+        },
+        enumerable:true
     });
 
     Object.defineProperty(this, "label", 
@@ -77,7 +79,8 @@ var Link = function(_props)
                 if(this.$el)
                     this.$el.html(v);
             }
-        }
+        },
+        enumerable:true
     });
     
     this.beforeAttach = function () 
@@ -92,6 +95,9 @@ var Link = function(_props)
     };
 
     var _defaultParams = {
+        label: "Click Me",
+        href: "javascript:void()",
+        target: "_blank"
     };
     
     _props = extend(false, false, _defaultParams, _props);
