@@ -7,5 +7,6 @@ var LabelType =
     "label":"label",
     "p":"p",
     "sup":"sup",
-    "small":"small"
+    "small":"small",
+    "strong":"strong"
 }

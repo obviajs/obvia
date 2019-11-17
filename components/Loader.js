@@ -9,7 +9,7 @@ var Loader = function(_props)
 { 
     this.template = function () 
     {
-        return  "<div id='" + this.domID + "-wrapper' style='display: none;'>" +
+        return  "<div id='" + this.domID + "' style='display: none;'>" +
                     "<style>" +
                         ".se-pre-con {" +
                             "position: fixed;" +
@@ -19,7 +19,7 @@ var Loader = function(_props)
                             "height: 100%;" +
                             "z-index: 999999;" +
                             "opacity: 0.9;" +
-                            "background: url('lib/dependencies/images/loader.gif')center no-repeat #fff;" +
+                            "background: url('"+(Env.getInstance().baseurl)+"/flowerui/lib/dependencies/images/loader.gif')center no-repeat #fff;" +
                         "}" +
                     "</style>"+
                     "<div class='se-pre-con'></div>" +                    

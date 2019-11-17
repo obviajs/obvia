@@ -17,8 +17,14 @@ var Env = function(){
             return _current;
         }
     });
+    
+    Object.defineProperty(this, "baseurl", {
+        get: function baseurl()
+        {
+            return window.location.origin;
+        }
+    });
 }
-
 Env.instance;
 Env.getInstance = function()
 {

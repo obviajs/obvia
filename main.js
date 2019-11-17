@@ -1,6 +1,8 @@
 var flowerCM = window.flowerCM || {};
 //base Components
 rjs.define("lib/NumberUtils.js", "NumberUtils");
+rjs.define("./components/base/EnvType.js", "EnvType");
+rjs.define("./components/base/Env.js", "Env");
 rjs.define("lib/JTemplate.js", "JTemplate");
 rjs.define("lib/DataStore.js", "DataStore");
 rjs.define("lib/cache/Cache.js", "Cache");
@@ -13,6 +15,7 @@ rjs.define("lib/ArrayEx.js", "ArrayEx");
 rjs.define("lib/ObjectUtils.js", "ObjectUtils");
 rjs.define("lib/StringUtils.js", "StringUtils");
 rjs.define("lib/DecoratorUtils.js", "DecoratorUtils");
+rjs.define("lib/coroutine.js", "coroutine");
 rjs.define("lib/BinUtils.js", "BinUtils");
 rjs.define("lib/CSSUtils.js", "CSSUtils");
 rjs.define("lib/my.js", "my");
@@ -41,8 +44,6 @@ rjs.define("./components/base/css/parent-default.css", "parent_default_css");
 rjs.define("./components/base/NavParent.js", "NavParent");
 rjs.define("./components/base/ContainerType.js","ContainerType");
 rjs.define("./components/base/ViewStack.js", "ViewStack");
-rjs.define("./components/base/EnvType.js", "EnvType");
-rjs.define("./components/base/Env.js", "Env");
 rjs.define("./components/base/App.js", "App");
 //TextInput
 rjs.define("./lib/dependencies/scripts/jquery.inputmask.bundle.min.js", "InputMaskBundle");
@@ -191,6 +192,7 @@ rjs.require([
         "ObjectUtils",
         "StringUtils",
         "DecoratorUtils",
+        "coroutine",
         "BinUtils",
         "CSSUtils",
         "my",

@@ -95,7 +95,7 @@ var Scrap = function(){
                     width: $(n).attr('width')
                 }
             };
-        } else if(["i", "b", "u", "span", "label", "p", "sup", "small"].indexOf($(n).prop("tagName").toLowerCase()) > -1){
+        } else if(["i", "b", "u", "span", "label", "p", "sup", "small", "strong"].indexOf($(n).prop("tagName").toLowerCase()) > -1){
             lit = {
                 ctor: "Label",
                 props: {
