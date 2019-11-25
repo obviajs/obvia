@@ -7,26 +7,34 @@
 //component definition
 var Container = function(_props, overrided=false)
 {
-    if(!this.hasOwnProperty("placeholder")){
-        Object.defineProperty(this, "placeholder", 
+    let _textAlign;
+
+    if(!this.hasOwnProperty("label")){
+        Object.defineProperty(this, "label", 
         {
-            get: function placeholder() 
+            get: function label() 
             {
-                return _placeholder;
+                return _label;
             },
-            set: function placeholder(v) 
+            set: function label(v) 
             {
-                if(_placeholder != v)
+                if(_label != v)
                 {  
-                    _placeholder = v;
-                    if(_placeholder)
+                    _label = v;
+                    if(this.$el)
                     {
-                        if(this.$el)
-                            this.$el.attr("placeholder", _placeholder);
-                    }else
-                    {
-                        if(this.$el)
-                            this.$el.removeAttr('placeholder');
+                        var last = this.$el.children().last();
+                        if(last && last.length>0)
+                            if(last[0].nextSibling)
+                                last[0].nextSibling.textContent = v;
+                            else
+                                if(_textAlign == "left")
+                                    this.$el.prependText(v);
+                                else
+                                    this.$el.appendText(v);
+                        else
+                            //this.$el.appendText(v);
+                            this.$el.text(v);
                     }
                 }
             },
@@ -155,8 +163,10 @@ var Container = function(_props, overrided=false)
                 _afterAttach.apply(this, arguments);
             var e = arguments[0];
             if (!e.isDefaultPrevented()) {
-                if(_props.placeholder)
-                    this.placeholder = _props.placeholder;
+                if(_props.label)
+                    this.label = _props.label;
+                if(_props.textAlign)
+                    _textAlign = _props.textAlign;
             }
             //e.preventDefault();
         //}
@@ -168,7 +178,8 @@ var Container = function(_props, overrided=false)
         spacing:{},
         width: undefined,
         height: undefined,
-        role: undefined
+        role: undefined,
+        textAlign: "left"
     };
     //_props = extend(false, false, _defaultParams, _props);
     shallowCopy(extend(false, false, _defaultParams, _props), _props);
@@ -177,7 +188,7 @@ var Container = function(_props, overrided=false)
     var _type, _role;
     //var _afterAttach = _props.afterAttach;
     //_props.afterAttach = this.afterAttach;
-    var _placeholder;
+    let _label;
     let r = Parent.call(this, _props, overrided);
     var base = this.base;
     if(overrided)

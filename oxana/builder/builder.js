@@ -49,7 +49,7 @@ var shadow = {
         type: ContainerType.NONE,
         draggable: true,
         attr:{handle:true},
-        classes:["default-component", "placeholder"],
+        classes:["default-component"],
         mouseout:function(e){
             if(this.parent.ctor!="FormField"){
                 let parent = this.parent;
@@ -301,14 +301,14 @@ var zeroCool = {
                                                                                 ctor: Container,
                                                                                 props: {
                                                                                     id: 'component',
-                                                                                    placeholder: "{label}",
+                                                                                    label: "{label}",
                                                                                     draggable: true,
                                                                                     dragstart: function(e, ra){
                                                                                         console.log(arguments);
                                                                                         e.originalEvent.dataTransfer.setData("domID", e.target.id);
                                                                                         e.originalEvent.dataTransfer.setData("ctor", ra.currentItem.ctor);
                                                                                     },
-                                                                                    classes:["border", "placeholder"],
+                                                                                    classes:["border"],
                                                                                     width:80,
                                                                                     height:50,
                                                                                     type: ContainerType.NONE
