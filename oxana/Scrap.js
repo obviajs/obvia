@@ -57,7 +57,8 @@ var Scrap = function(){
                     childrenField: "children",
                     componentsField: "components",
                     dataProvider: cmp,
-                    classes: cls
+                    classes: cls,
+                    classesField: "classes"
                 }
             };
             var txt = $(n).mytext();
@@ -74,6 +75,7 @@ var Scrap = function(){
             lit.title = title;
             lit.key = ++Scrap.liInc;
             lit.components = cmp;
+            lit.classes = cls;
         } else if(["button"].indexOf($(n).prop("tagName").toLowerCase()) > -1){
             lit = {
                 ctor: "Button",

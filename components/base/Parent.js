@@ -26,7 +26,9 @@ var Parent = function(_props, overrided=false, _isSurrogate=false)
         },
         set: function components(v) 
         {
+            this.removeAllChildren();
             _components = v;
+            this.addComponents();
         },
         configurable:true
     });

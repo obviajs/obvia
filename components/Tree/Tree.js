@@ -173,6 +173,8 @@ var Tree = function (_props, overrided = false) {
         dataProvider:[],
         labelField: "label",
         valueField: "value",
+        classesField: undefined,
+        componentsField: undefined,
         childrenField: "children",
         expandIcon: 'fas fa-chevron-circle-right',
         collapseIcon: 'fas fa-chevron-circle-down',
@@ -190,6 +192,7 @@ var Tree = function (_props, overrided = false) {
     var _valueField = _props.valueField;
     var _childrenField = _props.childrenField;
     let _componentsField = _props.componentsField;
+    let _classesField = _props.classesField;
     var _selectedClasses = _props.selectedClasses;
     var _guidField = _props.guidField;
     var _selectedItem = _props.selectedItem;
@@ -263,12 +266,17 @@ var Tree = function (_props, overrided = false) {
             id: "li",
             "value": '{'+_valueField+'}',
             "label": '{'+_labelField+'}',
-            "click": _toggleTree,
-            "classes":["list-group-item"],
-            "components": '{'+_componentsField+'}'
+            "click": _toggleTree
         }
     };
     
+    if(_componentsField)
+        _componentLi.components = '{'+_componentsField+'}';
+    if(_classesField)   
+        _componentLi.classes = '{'+_classesField+'}';
+    else
+        _componentLi.classses = ["list-group-item"];
+
     var _componentTree = {
         ctor: Tree,
         props:{
