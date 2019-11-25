@@ -54,7 +54,7 @@ var ObjectEditor = function (_props, overrided = false) {
         for(let prop in props){
             let propsMeta = ObjectEditor.metaProps[inst.ctor] && ObjectEditor.metaProps[inst.ctor][prop]?ObjectEditor.metaProps[inst.ctor][prop]:ObjectEditor.metaProps[prop];
             if(propsMeta){
-                let propEditor = ObjectEditor.components[propsMeta.ctor];
+                let propEditor = extend(true, ObjectEditor.components[propsMeta.ctor]);
                 if(propEditor){
                     let itemEditorLit = propEditor.literal;
                     if(propsMeta.props)

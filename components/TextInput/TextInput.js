@@ -16,7 +16,7 @@ var TextInput = function (_props, overrided = false) {
         set: function value(v) {
             if (_value != v) {
                 _value = v;
-                if (_value) {
+                if (_value!=null) {
                     if (this.$el) {
                         this.$el.attr('value', _value);
                         this.$el.val(_value);
@@ -27,7 +27,7 @@ var TextInput = function (_props, overrided = false) {
                         this.$el.val("");
                     }
                 }
-                this.trigger('change');
+                //this.trigger('change');
             }
         },
         enumerable:true
@@ -41,13 +41,13 @@ var TextInput = function (_props, overrided = false) {
         set: function placeholder(v){
             if(_placeholder != v){
                 _placeholder = v;
-                if(_placeholder){
+                if(_placeholder!=null){
                     if(this.$el){
-                        this.$el.attr = ('placeholder', _placeholder)
+                        this.$el.attr = ('placeholder', _placeholder);
                     }
                 }else {
                     if(this.$el){
-                        this.$el.removeAttr("placeholder")
+                        this.$el.removeAttr("placeholder");
                     }
                 }
             }
@@ -63,20 +63,52 @@ var TextInput = function (_props, overrided = false) {
         set: function type(v){
             if(_type != v ){
                 _type = v;
-                if(_type){
+                if(_type!=null){
                     if(this.$el){
-                        this.$el.attr('type', _type)
+                        this.$el.attr('type', _type);
                     }
                 }else {
                     if(this.$el){
-                        this.$el.removeAttr('type')
+                        this.$el.removeAttr('type');
                     }
                 }
             }
         },
         enumerable:true
     });
- 
+    
+    Object.defineProperty(this, "autocomplete", 
+    {
+        get: function autocomplete(){
+            return _autocomplete
+        },
+        set: function autocomplete(v){
+            if(_autocomplete != v ){
+                _autocomplete = v;
+                if(_autocomplete!=null){
+                    if(this.$el){
+                        this.$el.attr('autocomplete', _autocomplete);
+                    }
+                }else {
+                    if(this.$el){
+                        this.$el.removeAttr('autocomplete');
+                    }
+                }
+            }
+        },
+        enumerable:true
+    });
+   
+    this.beforeAttach = function(e) 
+    {
+        if (e.target.id == this.domID) 
+        {
+            if(_props.value)
+                this.value = _props.value;
+            if(_props.autocomplete)
+                this.autocomplete = _props.autocomplete;
+        }
+    }
     this.afterAttach = function (e) {
         if (e.target.id == this.$el.attr('id') && !this.attached) {
             //init input mask
@@ -104,28 +136,29 @@ var TextInput = function (_props, overrided = false) {
         value: "",
         type: "text",
         placeholder: "",
-        afterAttach: this.afterAttach
+        afterAttach: this.afterAttach,
+        autocomplete: "off"
     };
+    
     _props = extend(false, false, _defaultParams, _props);
- 
-    var _value = _props.value;
+    let _autocomplete;
+    let _value;
     var _mask = _props.mask;
     var _placeholder = _props.placeholder;
     var _type = _props.type;
     var _change = _props.change;
  
     _props.change = function () {
-        if (typeof _change == 'function')
-            _change.apply(this, arguments);
- 
         var e = arguments[0];
         if (!e.isDefaultPrevented()) {
             _self.changeHandler(e);
         }
+        if (typeof _change == 'function')
+            _change.apply(this, arguments);
     };
  
     Component.call(this, _props);
- 
+    
     if (overrided) {
         this.keepBase();
     }

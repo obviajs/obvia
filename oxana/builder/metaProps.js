@@ -224,3 +224,22 @@ Builder.metaProps.Repeater = {
 Builder.metaProps.DataGridColumn = {
     name: {ctor:"TextInput", label: "Column Name", required:true, index:1}
 }
+Builder.metaProps.TextInput = {
+    type: {ctor:"Select", label:"Input Type", props:{
+        dataProvider:new ArrayEx(getMembersCollection(TextInputType, "text", "value")),
+        change:function(){
+            this.parent.parent.instance.type = this.value;           
+        }
+    }},
+    value: {ctor:"TextInput", label: "Text", required:true, index:3, props:{
+        change:function(){
+            this.parent.parent.instance.value = this.value;           
+        }        
+    }},
+    autocomplete: {ctor:"Select", label:"Autocomplete", props:{
+        dataProvider:new ArrayEx([{"value":"on", "text":"On"}, {"value":"off", "text":"Off"}]),
+        change:function(){
+            this.parent.parent.instance.autocomplete = this.value;           
+        }
+    }}
+}

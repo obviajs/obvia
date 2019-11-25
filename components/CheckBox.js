@@ -87,13 +87,12 @@ var CheckBox = function (_props, overrided = false) {
     var _change = _props.change;
 
     _props.change = function () {
-        if (typeof _change == 'function')
-            _change.apply(this, arguments);
-
         var e = arguments[0];
         if (!e.isDefaultPrevented()) {
             _changeHandler.apply(this, arguments);
         }
+        if (typeof _change == 'function')
+        _change.apply(this, arguments);
     };
 
     Component.call(this, _props);
