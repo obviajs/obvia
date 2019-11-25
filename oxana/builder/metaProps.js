@@ -5,7 +5,9 @@ Builder.metaProps = {
     href: {ctor:"TextInput", label: "URL", required:true, index:3},
     target: {ctor:"Select", label:"Target", props:{
         dataProvider:new ArrayEx(getMembersCollection(LinkTarget, "text", "value"))
-    }},
+    }, index:3},
+    width: {ctor:"TextInput", label: "Width", required:true, index:3},
+    height: {ctor:"TextInput", label: "Height", required:true, index:3},
     visible: {ctor:"Toggle", label: "Visible", index:4},
     enabled: {ctor:"Toggle", label: "Enabled", index:5}, 
     required: {ctor:"Toggle", label: "Required", index:6},
@@ -107,6 +109,12 @@ Builder.metaProps = {
         dataProvider:new ArrayEx(getMembersCollection(HeadingType, "text", "value")),
         change:function(){
             this.parent.parent.instance.headingType = this.value;           
+        }
+    }},
+    side:{ctor:"Select", label:"Side", props:{
+        dataProvider:new ArrayEx(getMembersCollection(SideNavSide, "text", "value")),
+        change:function(){
+            this.parent.parent.instance.side = this.value;           
         }
     }},
     separator:{ctor:"Toggle", label: "Separator"},

@@ -1,5 +1,5 @@
 Builder.components = {
-    "FormField":{
+    "FormField": {
         literal: {
             ctor: FormField,
             props: {
@@ -13,381 +13,494 @@ Builder.components = {
             }
         },
         label: "Form Field",
-        icon:".png"
+        icon: ".png"
     },
-    
-    "Label":{
+
+    "Label": {
         literal: {
             "ctor": Label,
-            "props":{
+            "props": {
                 id: 'label',
-                label:"Label"
+                label: "Label"
             }
         },
-        label:"Label",
-        icon:".png"
+        label: "Label",
+        icon: ".png"
     },
-    "Heading":{
+    "Heading": {
         literal: {
-    "ctor": Heading,
-    "props": {
-    id: 'heading',
-    label: 'Heading',
-    headingType: HeadingType.h1,
-    align: Align.left,
-    classes: [],
-    components: []
-    }
+            "ctor": Heading,
+            "props": {
+                id: 'heading',
+                label: 'Heading',
+                headingType: HeadingType.h1,
+                align: Align.left,
+                classes: [],
+                components: []
+            }
+        },
+        label: "Heading",
+        icon: ".png"
     },
-        label:"Heading",
-        icon:".png"
-    },
-    "Link":{
+    "Link": {
         literal: {
-    "ctor": Link,
-    "props":{
-    id: 'label',
-    label:"Click Me",
-    href:"#",
-    target:""
-    }
+            "ctor": Link,
+            "props": {
+                id: 'label',
+                label: "Click Me",
+                href: "#",
+                target: ""
+            }
+        },
+        label: "Link",
+        icon: ".png"
     },
-        label:"Link",
-        icon:".png"
-    },
-    "HRule":{
+    "HRule": {
         literal: {
-    "ctor": HRule,
-    "props":{
-    id: 'hrule',
-    align: "center",
-    size: 5,
-    width: 1000,
-    }
+            "ctor": HRule,
+            "props": {
+                id: 'hrule',
+                align: "center",
+                size: 5,
+                width: 1000,
+            }
+        },
+        label: "HRule",
+        icon: ".png"
     },
-        label:"HRule",
-        icon:".png"
-    },
-"Button": {
+    "Button": {
         literal: {
-    "ctor": Button,
-    "props":{
-    id: 'button',
-    type: "button",
-    value: "",
-    label:"Click Me",
-    classes: ["btn", "btn-success"]
-    }
-    },
-        label:"Button",
-        icon:".png"
+            "ctor": Button,
+            "props": {
+                id: 'button',
+                type: "button",
+                value: "",
+                label: "Click Me",
+                classes: ["btn", "btn-success"]
+            }
+        },
+        label: "Button",
+        icon: ".png"
     },
     "TextInput": {
         literal: {
             "ctor": TextInput,
-            "props":{
+            "props": {
                 id: 'textField'
             }
         },
-        set:null,
-        get:null,
-        valueField:null,
-        label:"Text Input",
-        icon:"horizontal-line.png"
+        set: null,
+        get: null,
+        valueField: null,
+        label: "Text Input",
+        icon: "horizontal-line.png"
     },
-"TextArea":{
+    "TextArea": {
         literal: {
-    "ctor": TextArea,
-    "props":{
-    id: 'textarea',
-    value: ''
-    }
-    },
-        label:"TextArea",
-        icon:"horizontal-line.png"
-    },
-"DateTime":{
-        literal: {
-    "ctor": DateTime,
-    "props":{
-    id: 'datetime',
-    inputFormat: 'DD/MM/YYYY',
-    outputFormat: 'DD-MM-YYYY',
-    displayFormat: 'MM/DD/YYYY',
-    value: '2022/02/04'
-    }
-    },
-        label:"DateTime",
-        icon:".png"
-    },
-    "DateTimeCb":{
-        literal: {
-    "ctor": DateTimeCb,
-    props: {
-    id: 'dateTimeCb',
-    mode: DateTimeMode.DATE_TIME_SECOND,
-    versionStyle: '',
-    inputFormat: 'DD/MM/YYYY',
-    outputFormat: 'DD-MM-YYYY',
-    value: '06/06/2019',
-    classes:["ml-0"]
-    }
-    },
-        label:"DateTimeSel",
-        icon:".png"
-    },
-    "Image":{
-        literal: {
-    "ctor": Image,
-    "props":{
-    id: 'image',
-    src: 'https://d28hgpri8am2if.cloudfront.net/book_images/cvr9781451648539_9781451648539_hr.jpg',
-    alt: "Steve Jobs",
-    height: 100,
-    width: 100        
-    }
-    },
-        label:"Image",
-        icon:".png"
-    },
-    "Select":{
-        literal: {
-    "ctor": Select,
-    "props":{
-    id: 'select',
-    labelField: "text",
-    valueField: "value",
-    value: "2"
+            "ctor": TextArea,
+            "props": {
+                id: 'textarea',
+                value: ''
             }
         },
-        label:"Image",
-        icon:".png"
+        label: "TextArea",
+        icon: "horizontal-line.png"
     },
-    "DropDown":{
+    "DateTime": {
         literal: {
-    "ctor": DropDown,
-    "props":{
-    id: 'dropdown',
-    hrefField:"key",
-    labelField:"title",
-    label:"Click me",
-    dataProvider: new ArrayEx([
-    { key: "#",title: "Folder 1"},        
-    { key: "#",title: "Folder 2"},
-    { key: "#",title: "Folder 3"}
-    ])
-    }
+            "ctor": DateTime,
+            "props": {
+                id: 'datetime',
+                inputFormat: 'DD/MM/YYYY',
+                outputFormat: 'DD-MM-YYYY',
+                displayFormat: 'MM/DD/YYYY',
+                value: '2022/02/04'
+            }
+        },
+        label: "DateTime",
+        icon: ".png"
     },
-        label:"DropDown",
-        icon:".png"
-    },
-    "Amount":{
+    "DateTimeCb": {
         literal: {
-    "ctor": Amount,
-    "props":{
-    id: 'amount',
-    currencyList: [{ "id": "1", "text": "EUR" }, { "id": "2", "text": "ALL" }, { "id": "3", "text": "GBP" }],
-    value: {
-    "amount": "132323",
-    "currency": "2"
-    }
-    }
+            "ctor": DateTimeCb,
+            props: {
+                id: 'dateTimeCb',
+                mode: DateTimeMode.DATE_TIME_SECOND,
+                versionStyle: '',
+                inputFormat: 'DD/MM/YYYY',
+                outputFormat: 'DD-MM-YYYY',
+                value: '06/06/2019',
+                classes: ["ml-0"]
+            }
+        },
+        label: "DateTimeSel",
+        icon: ".png"
     },
-        label:"Amount",
-        icon:".png"
-    },
-"Tree":{
+    "Image": {
         literal: {
-    "ctor": Tree,
-    "props":{
-    id: 'tree',
-    valueField: "key",
-    labelField: "title",
-    childrenField: "children",
-    dataProvider:new ArrayEx([
-    {title: "Node 1", key: "1"},
-    {title: "Folder 2", key: "2", children: new ArrayEx([
-    {title: "Node 2.1", key: "3", myOwnAttr: "abc"},
-    {title: "Node 2.2", key: "4"}
-    ])}
-    ]),
-    expandIcon: "fa-chevron-circle-right",
-    collapseIcon: "fa-chevron-circle-down",
-    }
+            "ctor": Image,
+            "props": {
+                id: 'image',
+                src: 'https://d28hgpri8am2if.cloudfront.net/book_images/cvr9781451648539_9781451648539_hr.jpg',
+                alt: "Steve Jobs",
+                height: 100,
+                width: 100
+            }
+        },
+        label: "Image",
+        icon: ".png"
     },
-        label:"Tree",
-        icon:".png"
+    "Select": {
+        literal: {
+            "ctor": Select,
+            "props": {
+                id: 'select',
+                labelField: "text",
+                valueField: "value",
+                value: "2"
+            }
+        },
+        label: "Image",
+        icon: ".png"
+    },
+    "DropDown": {
+        literal: {
+            "ctor": DropDown,
+            "props": {
+                id: 'dropdown',
+                hrefField: "key",
+                labelField: "title",
+                label: "Click me",
+                dataProvider: new ArrayEx([{
+                        key: "#",
+                        title: "Folder 1"
+                    },
+                    {
+                        key: "#",
+                        title: "Folder 2"
+                    },
+                    {
+                        key: "#",
+                        title: "Folder 3"
+                    }
+                ])
+            }
+        },
+        label: "DropDown",
+        icon: ".png"
+    },
+    "Amount": {
+        literal: {
+            "ctor": Amount,
+            "props": {
+                id: 'amount',
+                currencyList: [{
+                    "id": "1",
+                    "text": "EUR"
+                }, {
+                    "id": "2",
+                    "text": "ALL"
+                }, {
+                    "id": "3",
+                    "text": "GBP"
+                }],
+                value: {
+                    "amount": "132323",
+                    "currency": "2"
+                }
+            }
+        },
+        label: "Amount",
+        icon: ".png"
+    },
+    "Tree": {
+        literal: {
+            "ctor": Tree,
+            "props": {
+                id: 'tree',
+                valueField: "key",
+                labelField: "title",
+                childrenField: "children",
+                dataProvider: new ArrayEx([{
+                        title: "Node 1",
+                        key: "1"
+                    },
+                    {
+                        title: "Folder 2",
+                        key: "2",
+                        children: new ArrayEx([{
+                                title: "Node 2.1",
+                                key: "3",
+                                myOwnAttr: "abc"
+                            },
+                            {
+                                title: "Node 2.2",
+                                key: "4"
+                            }
+                        ])
+                    }
+                ]),
+                expandIcon: "fa-chevron-circle-right",
+                collapseIcon: "fa-chevron-circle-down",
+            }
+        },
+        label: "Tree",
+        icon: ".png"
     },
     "AutoCompleteEx": {
         literal: {
             "ctor": AutoCompleteEx,
-            "props":{
+            "props": {
                 id: 'AutoCompleteEx',
                 allowNewItem: false,
                 value: [],
                 multiSelect: false,
-                matchType:StringMatchType.STARTS_WITH
+                matchType: StringMatchType.STARTS_WITH
             }
         },
-        set:null,
-        get:null,
-        valueField:null,
-        label:"AutoComplete",
-        icon:".png"
+        set: null,
+        get: null,
+        valueField: null,
+        label: "AutoComplete",
+        icon: ".png"
     },
     "AutoBrowse": {
         literal: {
             "ctor": AutoBrowse,
-            "props":{
+            "props": {
                 id: "AutoBrowse",
                 labelField: ObjectEditor.providerLabelField,
                 valueField: ObjectEditor.providerValueField,
                 dataProvider: ObjectEditor.sources,
-                classes:["ml-0"],
-                fields:[{"field":ObjectEditor.providerValueField, "description":ObjectEditor.providerValueField, "visible":false}, {"field":ObjectEditor.providerLabelField, "description":ObjectEditor.providerLabelField}]
+                classes: ["ml-0"],
+                fields: [{
+                    "field": ObjectEditor.providerValueField,
+                    "description": ObjectEditor.providerValueField,
+                    "visible": false
+                }, {
+                    "field": ObjectEditor.providerLabelField,
+                    "description": ObjectEditor.providerLabelField
+                }]
             }
         },
-        label:"AutoBrowse",
-        icon:".png"
+        label: "AutoBrowse",
+        icon: ".png"
     },
-"RadioGroup": {
+    "RadioGroup": {
         literal: {
-    "ctor": RadioGroup,
-    "props":{
-    id: 'radiogroup',
-    dataProvider: [
-    { "id": "1", "text": "Option 1", "enabled":true, "buttonClass": []}, 
-    { "id": "2", "text": "Option 2", "enabled":true, "buttonClass": []},
-    { "id": "3", "text": "Option 3", "enabled":false, "buttonClass": []}
-    ],
-    valueField: 'id',
-    labelField: 'text',
-    classesField: "buttonClass",
-    defaultClasses: ['btn btn-xs btn-default'],
-    selectedClasses: ['btn btn-xs btn-success'],
-    enabledField: "enabled",
-    checkedField: "checked",
-    value: [{ "id": "2", "text": "Option 2", "enabled":true}]
-    }
+            "ctor": RadioGroup,
+            "props": {
+                id: 'radiogroup',
+                dataProvider: [{
+                        "id": "1",
+                        "text": "Option 1",
+                        "enabled": true,
+                        "buttonClass": []
+                    },
+                    {
+                        "id": "2",
+                        "text": "Option 2",
+                        "enabled": true,
+                        "buttonClass": []
+                    },
+                    {
+                        "id": "3",
+                        "text": "Option 3",
+                        "enabled": false,
+                        "buttonClass": []
+                    }
+                ],
+                valueField: 'id',
+                labelField: 'text',
+                classesField: "buttonClass",
+                defaultClasses: ['btn btn-xs btn-default'],
+                selectedClasses: ['btn btn-xs btn-success'],
+                enabledField: "enabled",
+                checkedField: "checked",
+                value: [{
+                    "id": "2",
+                    "text": "Option 2",
+                    "enabled": true
+                }]
+            }
+        },
+        label: "RadioGroup",
+        icon: ".png"
     },
-        label:"RadioGroup",
-        icon:".png"
-    },
-    "CheckBox": {
+    "CheckBox": {
         literal: {
-    "ctor": CheckBox,
-    "props":{
-    id: 'checkBoxField',
-    label: 'CheckBox Label',
-    value: "1",
-    checked:false
-    }
-    },
-        label:"CheckBox",
-        icon:".png"
+            "ctor": CheckBox,
+            "props": {
+                id: 'checkBoxField',
+                label: 'CheckBox Label',
+                value: "1",
+                checked: false
+            }
+        },
+        label: "CheckBox",
+        icon: ".png"
     },
     "Toggle": {
         literal: {
             "ctor": Toggle,
-            "props":{
+            "props": {
                 id: 'toggle',
                 value: true,
-                checked:false,
-    classes:{
-    "self":["switch", "block"],
-    "span":["slider"]
-    }
+                checked: false,
+                classes: {
+                    "self": ["switch", "block"],
+                    "span": ["slider"]
+                }
             }
         },
-        set:null,
-        get:null,
-        valueField:"checked",
-        label:"Toogle",
-        icon:".png"
+        set: null,
+        get: null,
+        valueField: "checked",
+        label: "Toogle",
+        icon: ".png"
     },
-    "CheckBoxGroup":{
+    "CheckBoxGroup": {
         literal: {
-    "ctor": CheckBoxGroup,
-    "props":{
-    id: 'checkBoxGroupLonely1',
-    dataProvider: [
-    { "id": "1", "text": "Option 1", "buttonClass": ['btn btn-xs btn-default'], "enabled":true, "checked":false},
-    { "id": "2", "text": "Option 2", "buttonClass": ['btn btn-xs btn-default'], "enabled":true, "checked":false},
-    { "id": "3", "text": "Option 3", "buttonClass": ['btn btn-xs btn-success'], "enabled":true, "checked":true},
-    { "id": "4", "text": "Option 4", "buttonClass": ['btn btn-xs btn-default'], "enabled":true, "checked":false}
-    ],
-    valueField: "id",
-    labelField: "text",
-    classesField: "buttonClass",
-    defaultClasses: ['btn btn-xs btn-default'],
-    selectedClasses: ['btn btn-xs btn-success'],
-    enabledField: "enabled",
-    checkedField: "checked",
-    value: [{ "id": "3", "text": "Option 3", "buttonClass": ['btn btn-xs btn-success'], "enabled":true}]
-    }
+            "ctor": CheckBoxGroup,
+            "props": {
+                id: 'checkBoxGroupLonely1',
+                dataProvider: [{
+                        "id": "1",
+                        "text": "Option 1",
+                        "buttonClass": ['btn btn-xs btn-default'],
+                        "enabled": true,
+                        "checked": false
+                    },
+                    {
+                        "id": "2",
+                        "text": "Option 2",
+                        "buttonClass": ['btn btn-xs btn-default'],
+                        "enabled": true,
+                        "checked": false
+                    },
+                    {
+                        "id": "3",
+                        "text": "Option 3",
+                        "buttonClass": ['btn btn-xs btn-success'],
+                        "enabled": true,
+                        "checked": true
+                    },
+                    {
+                        "id": "4",
+                        "text": "Option 4",
+                        "buttonClass": ['btn btn-xs btn-default'],
+                        "enabled": true,
+                        "checked": false
+                    }
+                ],
+                valueField: "id",
+                labelField: "text",
+                classesField: "buttonClass",
+                defaultClasses: ['btn btn-xs btn-default'],
+                selectedClasses: ['btn btn-xs btn-success'],
+                enabledField: "enabled",
+                checkedField: "checked",
+                value: [{
+                    "id": "3",
+                    "text": "Option 3",
+                    "buttonClass": ['btn btn-xs btn-success'],
+                    "enabled": true
+                }]
+            }
+        },
+        label: "CheckBoxGroup",
+        icon: ".png"
     },
-        label:"CheckBoxGroup",
-        icon:".png"
-    },  
-    "Form":{
+    "Form": {
         literal: {
-    "ctor": Form,
-    "props":{
-    id: 'form',
-    formName: 'My Form',
-    action:"",
-    components: [],
-    classes:["default-cnt"]
-    }
+            "ctor": Form,
+            "props": {
+                id: 'form',
+                formName: 'My Form',
+                action: "",
+                components: [],
+                classes: ["default-cnt"]
+            }
+        },
+        label: "Form",
+        icon: ".png"
     },
-        label:"Form",
-        icon:".png"
-    },
-    "Container":{
+    "Header": {
         literal: {
-    ctor: Container,
-    props: {
-    id: 'container',
-    type: ContainerType.NONE,
-    classes:["default-component","default-cnt"]
-    }
+            ctor: Header,
+            props: {
+                id: 'header'
+            }
+        },
+        label: "Header",
+        icon: ".png"
     },
-        label:"Container",
-        icon:".png"
-    },
-    "ViewStack":{
+    "Footer": {
         literal: {
-    ctor: ViewStack,
-    props: {
-    id: 'viewStack',
-    classes:["default-component","default-cnt"]
-    }
+            ctor: Footer,
+            props: {
+                id: 'footer'
+            }
+        },
+        label: "Footer",
+        icon: ".png"
     },
-        label:"ViewStack",
-        icon:".png"
-    },
-    "UploadEx":{
+    "SideNav": {
         literal: {
-    ctor: UploadEx,
-    props: {
-    id: 'upload',
-    multiple: true
-    }
+            ctor: SideNav,
+            props: {
+                id: 'sideNav',
+                classes: ["sidenav"]
+            }
+        },
+        label: "SideNav",
+        icon: ".png"
     },
-        label:"UploadEx",
-        icon:".png"
-    },
-    "MultiUpload":{
+    "Container": {
         literal: {
-    ctor: MultiUpload,
-    props: {
-    id: 'multiUpload',
-    }
+            ctor: Container,
+            props: {
+                id: 'container',
+                type: ContainerType.NONE,
+                classes: ["default-component", "default-cnt"]
+            }
+        },
+        label: "Container",
+        icon: ".png"
     },
-        label:"MultiUpload",
-        icon:".png"
+    "ViewStack": {
+        literal: {
+            ctor: ViewStack,
+            props: {
+                id: 'viewStack',
+                classes: ["default-component", "default-cnt"]
+            }
+        },
+        label: "ViewStack",
+        icon: ".png"
     },
-    "MapLocationPicker":{
+    "UploadEx": {
+        literal: {
+            ctor: UploadEx,
+            props: {
+                id: 'upload',
+                multiple: true
+            }
+        },
+        label: "UploadEx",
+        icon: ".png"
+    },
+    "MultiUpload": {
+        literal: {
+            ctor: MultiUpload,
+            props: {
+                id: 'multiUpload',
+            }
+        },
+        label: "MultiUpload",
+        icon: ".png"
+    },
+    "MapLocationPicker": {
         literal: {
             ctor: MapLocationPicker,
             props: {
@@ -399,36 +512,53 @@ Builder.components = {
                 zoomLevel: 7
             }
         },
-        label:"MapLocationPicker",
-        icon:".png"
+        label: "MapLocationPicker",
+        icon: ".png"
     },
-    "Repeater":{
+    "Repeater": {
         literal: {
-    ctor: Repeater,
-    props: {
-    id: 'repeater',
-    }
+            ctor: Repeater,
+            props: {
+                id: 'repeater',
+            }
+        },
+        label: "Repeater",
+        icon: ".png"
     },
-        label:"Repeater",
-        icon:".png"
-    },
-    "List":{
+    "List": {
         iteral: {
-            ctor: List,
+            ctor: List,
             props: {
                 id: 'list',
                 multiselect: true,
-                dataProvider: new ArrayEx([
-                    { "id": "1", "text": "Option 1", "buttonClass": ["btn-default"]},
-                    { "id": "2", "text": "Option 2", "buttonClass": ["btn-default"]},
-                    { "id": "3", "text": "Option 3", "buttonClass": ["btn-default"]},
-                    { "id": "4", "text": "Option 4", "buttonClass": ["btn-default"]}
+                dataProvider: new ArrayEx([{
+                        "id": "1",
+                        "text": "Option 1",
+                        "buttonClass": ["btn-default"]
+                    },
+                    {
+                        "id": "2",
+                        "text": "Option 2",
+                        "buttonClass": ["btn-default"]
+                    },
+                    {
+                        "id": "3",
+                        "text": "Option 3",
+                        "buttonClass": ["btn-default"]
+                    },
+                    {
+                        "id": "4",
+                        "text": "Option 4",
+                        "buttonClass": ["btn-default"]
+                    }
                 ]),
                 valueField: "id",
                 classesField: "buttonClass",
                 defaultClasses: ["btn-default"],
-                selectedClasses: ["btn-success"],    
-                value:[{ "id": "1"}],      
+                selectedClasses: ["btn-success"],
+                value: [{
+                    "id": "1"
+                }],
                 components: [{
                     ctor: Button,
                     props: {
@@ -441,89 +571,86 @@ Builder.components = {
                 }]
             }
         },
-        label:"List",
-        icon:".png"
+        label: "List",
+        icon: ".png"
     },
-    "DataGrid":{
+    "DataGrid": {
         literal: {
-    ctor: DataGrid,
-    props: {
-    id: 'dataGrid',
-    columns:new ArrayEx([])
-    }
+            ctor: DataGrid,
+            props: {
+                id: 'dataGrid',
+                columns: new ArrayEx([])
+            }
+        },
+        label: "DataGrid",
+        icon: ".png"
     },
-        label:"DataGrid",
-        icon:".png"
-    },
-    "CalendarDay":{
+    "CalendarDay": {
         literal: {
-    ctor: CalendarDay,
-    props: {
-    id: 'calendarDay',
-    }
+            ctor: CalendarDay,
+            props: {
+                id: 'calendarDay',
+            }
+        },
+        label: "CalendarDay",
+        icon: ".png"
     },
-        label:"CalendarDay",
-        icon:".png"
-    },
-    "CalendarWeek":{
+    "CalendarWeek": {
         literal: {
-    ctor: CalendarWeek,
-    props: {
-    id: 'calendarWeek',
-    }
+            ctor: CalendarWeek,
+            props: {
+                id: 'calendarWeek',
+            }
+        },
+        label: "CalendarWeek",
+        icon: ".png"
     },
-        label:"CalendarWeek",
-        icon:".png"
-    },      
     "SpacingEditor": {
         literal: {
             "ctor": SpacingEditor,
-            "props":{
-            }
+            "props": {}
         },
-        valueField:null,
-        label:"SpacingEditor",
-        icon:".png"
+        valueField: null,
+        label: "SpacingEditor",
+        icon: ".png"
     },
-    "CollectionEditor":{
+    "CollectionEditor": {
         literal: {
             "ctor": CollectionEditor,
-            "props":{
-            }
+            "props": {}
         },
-        valueField:null,
-        label:"CollectionEditor",
-        icon:".png"
+        valueField: null,
+        label: "CollectionEditor",
+        icon: ".png"
     },
-    "ObjectEditor":{
+    "ObjectEditor": {
         literal: {
             "ctor": ObjectEditor,
-            "props":{
-            }
+            "props": {}
         },
-        valueField:null,
-        label:"ObjectEditor",
-        icon:".png"
+        valueField: null,
+        label: "ObjectEditor",
+        icon: ".png"
     },
-    "BrowserWindow":{
+    "BrowserWindow": {
         literal: {
             ctor: BrowserWindow,
             props: {
-                id:"window"
+                id: "window"
             }
         },
-        label:"BrowserWindow",
-        icon:".png"
-    },   
-    "DataGridCellRenderer":{
+        label: "BrowserWindow",
+        icon: ".png"
+    },
+    "DataGridCellRenderer": {
         literal: {
             "ctor": DataGridCellRenderer,
-            "props":{
+            "props": {
                 id: 'label',
-                label:"Click Me"
+                label: "Click Me"
             }
         },
-        label:"DataGridCellRenderer",
-        icon:".png"
+        label: "DataGridCellRenderer",
+        icon: ".png"
     }
 };

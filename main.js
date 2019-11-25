@@ -73,7 +73,11 @@ rjs.define("./components/Nav.js", "Nav");
 rjs.define("./components/Header.js", "Header");
 rjs.define("./components/Footer.js", "Footer");
 //ScrollPane
-rjs.define("./components//base/ScrollPane.js", "ScrollPane");
+rjs.define("./components/base/ScrollPane.js", "ScrollPane");
+//SideNav
+rjs.define("./components/SideNav/SideNavSide.js", "SideNavSide");
+rjs.define("./components/SideNav/SideNav.js", "SideNav");
+rjs.define("./components/SideNav/css/sidenav-default.css", "sidenav_default_css");
 //Tab
 rjs.define("./components/Tab/TabNavigator.js", "TabNavigator");
 rjs.define("./components/Tab/Tab.js", "Tab");
@@ -149,9 +153,9 @@ rjs.define("./components/UploadEx.js", "UploadEx");
 rjs.define("./components/MultiUpload.js", "MultiUpload");
 
 //DataGrid
-rjs.define("./components//DataGrid/DataGridCellRenderer.js", "DataGridCellRenderer");
-rjs.define("./components//DataGrid/DataGridColumn.js", "DataGridColumn");
-rjs.define("./components//DataGrid/DataGrid.js", "DataGrid");
+rjs.define("./components/DataGrid/DataGridCellRenderer.js", "DataGridCellRenderer");
+rjs.define("./components/DataGrid/DataGridColumn.js", "DataGridColumn");
+rjs.define("./components/DataGrid/DataGrid.js", "DataGrid");
  
 rjs.define("./oxana/accounting/components/CurrencyExRate.js", "CurrencyExRate");
 //Loader
@@ -228,6 +232,9 @@ rjs.require([
         "NavParent",
         "Container",
         "ScrollPane",
+        "SideNav",
+        "SideNavSide",
+        "sidenav_default_css",
         "Nav",
         "Header",
         "Footer",

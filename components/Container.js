@@ -48,11 +48,14 @@ var Container = function(_props, overrided=false)
                     _width = v;
                     if(this.$el)
                     {
-                        v = v || 0;
-                        this.$el.css('width', v+ (isString(_width) && _width.indexOf("%")>-1?"":"px"));
+                        if(v==null){
+                            this.$el.css('width', '');
+                        }else
+                            this.$el.css('width', v+ (isString(_width) && _width.indexOf("%")>-1?"":"px"));
                     }
                 }
-            }
+            },
+            enumerable:true
         });
     }
     if(!this.hasOwnProperty("height"))
@@ -70,12 +73,15 @@ var Container = function(_props, overrided=false)
                     _height = v;
                     if(this.$el)
                     {
-                        v = v || 0;
-                        this.$el.css('height', v+(isString(_height) && _height.indexOf("%")>-1?"":"px"));
+                        if(v==null){
+                            this.$el.css('height', '');
+                        }else
+                            this.$el.css('height', v+(isString(_height) && _height.indexOf("%")>-1?"":"px"));
                     }
                 }
             },
-            configurable:true
+            configurable:true,
+            enumerable:true
         });
     }
     Object.defineProperty(this, "role",
@@ -98,7 +104,8 @@ var Container = function(_props, overrided=false)
                     }                
                 }
             }
-        }
+        },
+        enumerable:true
     });
 
     Object.defineProperty(this, "type", 
@@ -158,7 +165,10 @@ var Container = function(_props, overrided=false)
     var _defaultParams = {
         type: ContainerType.CONTAINER,
         components:[],
-        spacing:{}
+        spacing:{},
+        width: undefined,
+        height: undefined,
+        role: undefined
     };
     //_props = extend(false, false, _defaultParams, _props);
     shallowCopy(extend(false, false, _defaultParams, _props), _props);

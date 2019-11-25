@@ -63,6 +63,15 @@ Builder.componentList = [
         "label":"Form", "ctor": "Form"
     },
     {
+        "label":"Header", "ctor": "Header"
+    },
+    {
+        "label":"Footer", "ctor": "Footer"
+    },
+    {
+        "label":"SideNav", "ctor": "SideNav"
+    },
+    {
         "label":"Container", "ctor": "Container"
     },
     {

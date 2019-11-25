@@ -3,7 +3,6 @@ var Parent = function(_props, overrided=false, _isSurrogate=false)
     let _proxy = new Proxy(this, {
         get: function(target, property, receiver) {
             if(!target.hasOwnProperty(property)){
-                console.log(property);
                 if(target.children && _self.childrenIDR[property] && target.children[_self.childrenIDR[property]])
                     return target.children[_self.childrenIDR[property]];
             }
