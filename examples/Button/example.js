@@ -4,9 +4,9 @@ loader.show();
 
 var myButton = new Button({
     id: 'button',
-    type: "button",
+    type: "",
     value: "",
-    label:"Click Me",
+    label:"Click me",
     classes: ["btn", "btn-success"],
     click : function(e){console.log("From ClickAction");}
 });

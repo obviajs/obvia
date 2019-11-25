@@ -450,6 +450,7 @@ oxana.behaviorimplementations["ALLOW_DROP"] = function(e){
 oxana.behaviorimplementations["ADD_COMPONENT"] = {
     description: "Ndaje horizontalisht",
     do:function(e) {
+        console.log('CREATED_');
         e.preventDefault();
         var workArea = Component.instances[Component.domID2ID[e.target.id]];
         var domID = e.originalEvent.dataTransfer.getData("domID");
@@ -457,9 +458,9 @@ oxana.behaviorimplementations["ADD_COMPONENT"] = {
         var move = e.originalEvent.dataTransfer.getData("move");
         let inst;
         if(move==""){
-            console.log("ADD_COMPONENT_"+domID);
+            console.log("ADD_COMPONENT_ "+domID);
             let lit = ObjectEditor.components[ctor].literal;
-            if(workArea.ctor == "Form" && noNeedFF.indexOf(ctor)==-1){
+            if(workArea.ctor == "Form" && noNeedFF.indexOf(ctor)==-1){ 
                 var ff = extend(true, formField);
                 ff.props.component = lit;
                 lit = ff;
@@ -857,7 +858,7 @@ oxana.behaviorimplementations["BECOME_ACTIVE"] = {
 oxana.behaviorimplementations["WA_HOVER"] = {
     do:function(e) {
             console.log("Container hovered "+this.id);
-            //this will holde the instance of the component who manifested this behavior (the manifestor)
+            //this will hold the instance of the component who manifested this behavior (the manifestor)
             this.toggle = false;
             var classes = this.classes.slice(0);
             classes.toggle("hovered");

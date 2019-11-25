@@ -79,17 +79,27 @@ var Image = function(_props)
         enumerable:true
     });
 
+    this.beforeAttach = function() {
+        if(_props.width){
+            this.width = _props.width;
+        }
+
+        if(_props.height){
+            this.height = _props.height;
+        }
+    }
+
     this.template = function () 
     {         
-        return  '<img id="' + this.domID + '" src="'+this.src+'" alt="'+this.alt+'" height="'+this.height+'" width="'+this.width+'">';    
+        return  '<img id="' + this.domID + '" src="'+this.src+'" alt="'+this.alt+'">';    
     };
     var _defaultParams = {
-        width:0,
-        height:0
+        width: 0,
+        height: 0
     };
 
     _props = extend(false, false, _defaultParams, _props);
-    var _width = _props.width;
+    let _width;
     var _height = _props.height;
     var _alt = _props.alt;
     var _src = _props.src;

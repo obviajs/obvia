@@ -47,7 +47,9 @@ rjs.define("./components/base/ViewStack.js", "ViewStack");
 rjs.define("./components/base/App.js", "App");
 //TextInput
 rjs.define("./lib/dependencies/scripts/jquery.inputmask.bundle.min.js", "InputMaskBundle");
-rjs.define("./components/TextInput.js", "TextInput");
+rjs.define("./components/TextInput/TextInput.js", "TextInput");
+rjs.define("./components/TextInput/TextInputType.js", "TextInputType");
+
 //Form
 rjs.define("lib/dependencies/scripts/bootstrap-bootbox.js", "BootBox");
 rjs.define("./components/Form/Form.js", "Form");
@@ -180,6 +182,9 @@ rjs.define("./components/Calendar/CalendarConstants.js", "CalendarConstants");
 rjs.define("./components/Calendar/CalendarWeek.js", "CalendarWeek");
 rjs.define("./components/Calendar/css/calendarWeek-default.css", "calendarWeek_default_css");
 
+//TextInput
+//rjs.define("./components/TextInput.js", "TextInput")
+
 rjs.define("./oxana/builder/CollectionEditor.js", "CollectionEditor");
 rjs.define("./oxana/builder/ObjectEditor.js", "ObjectEditor");
 rjs.require([
@@ -258,7 +263,8 @@ rjs.require([
         "LinkTarget",
         "Link",
         "InputMaskBundle",
-        "TextInput", 
+        "TextInput",
+        "TextInputType", 
         "TextArea",
         "Option",
         "Select",
@@ -316,6 +322,7 @@ rjs.require([
         "calendarDay_default_css",
         "CalendarWeek",
         "calendarWeek_default_css",
+        
     ], function () {
         window.main();
 }, flowerCM);

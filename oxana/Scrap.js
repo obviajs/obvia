@@ -40,13 +40,13 @@ var Scrap = function(){
                     "id": nid,
                     classes: cls,
                     components: cmp,
-                    type: ContainerType.NONE
+                    type: ContainerType.NONE,
                 }
             };
             var txt = $(n).mytext();
-            if(txt.trim().length>0){
+           
                 lit.props.label = txt;
-            }
+            
         } else if(["ul"].indexOf($(n).prop("tagName").toLowerCase()) > -1){
             lit = {
                 ctor: "Tree",
@@ -76,7 +76,7 @@ var Scrap = function(){
             lit = {
                 ctor: "Button",
                 props: {
-                    id: nid,
+                    id: nid,             
                     type: "button",
                     value: $(n).attr('value'),
                     label: $(n).mytext(),
@@ -91,10 +91,19 @@ var Scrap = function(){
                     id: nid,
                     src: $(n).attr('src'),
                     alt: $(n).attr('alt'),
-                    height: $(n).attr('height'),
-                    width: $(n).attr('width')
+                    classes: cls
                 }
+
             };
+
+            if( $(n).attr('width')) {
+                lit.width =  $(n).attr('width');
+            }
+
+            if( $(n).attr('height')){
+                lit.height =  $(n).attr('height');
+            }
+          
         } else if(["i", "b", "u", "span", "label", "p", "sup", "small", "strong"].indexOf($(n).prop("tagName").toLowerCase()) > -1){
             lit = {
                 ctor: "Label",
@@ -145,12 +154,17 @@ var Scrap = function(){
                     break;
                 case "email":
                 case "text":
+                case "password":
                     _sLit = {
                         ctor:"TextInput",
                         props: {
                             value: $(n).attr("value"), 
+                            type: $(n).attr("type").toLowerCase(),
                         }
                     };
+                    if( $(n).attr("placeholder")){
+                        _sLit.props.placeholder =  $(n).attr("placeholder")
+                    }
                     break;
                 case "file":
                     break;
