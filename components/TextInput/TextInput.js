@@ -6,7 +6,7 @@
  
 //component definition
 var TextInput = function (_props, overrided = false) {
-    var _self = this;
+    let _self = this;
  
     Object.defineProperty(this, "value",
     {
@@ -103,9 +103,9 @@ var TextInput = function (_props, overrided = false) {
     {
         if (e.target.id == this.domID) 
         {
-            if(_props.value)
+            if(_props.value!=null)
                 this.value = _props.value;
-            if(_props.autocomplete)
+            if(_props.autocomplete!=null)
                 this.autocomplete = _props.autocomplete;
         }
     }
@@ -129,7 +129,7 @@ var TextInput = function (_props, overrided = false) {
     };
  
     this.template = function () {
-        return  "<input data-triggers='change' type='"+ this.type +"' id='" + this.domID + "' value='"+ this.value+ "' placeholder='"+this.placeholder+"'>";
+        return  "<input data-triggers='change' type='"+ this.type +"' id='" + this.domID + "' placeholder='"+this.placeholder+"'>";
     };
  
     var _defaultParams = {
@@ -143,13 +143,13 @@ var TextInput = function (_props, overrided = false) {
     _props = extend(false, false, _defaultParams, _props);
     let _autocomplete;
     let _value;
-    var _mask = _props.mask;
-    var _placeholder = _props.placeholder;
-    var _type = _props.type;
-    var _change = _props.change;
+    let _mask = _props.mask;
+    let _placeholder = _props.placeholder;
+    let _type = _props.type;
+    let _change = _props.change;
  
     _props.change = function () {
-        var e = arguments[0];
+        let e = arguments[0];
         if (!e.isDefaultPrevented()) {
             _self.changeHandler(e);
         }

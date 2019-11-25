@@ -55,6 +55,7 @@ var Scrap = function(){
                     valueField: "key",
                     labelField: "title",
                     childrenField: "children",
+                    componentsField: "components",
                     dataProvider: cmp,
                     classes: cls
                 }
@@ -72,6 +73,7 @@ var Scrap = function(){
                 title = $(n).text();
             lit.title = title;
             lit.key = ++Scrap.liInc;
+            lit.components = cmp;
         } else if(["button"].indexOf($(n).prop("tagName").toLowerCase()) > -1){
             lit = {
                 ctor: "Button",

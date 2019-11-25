@@ -189,6 +189,7 @@ var Tree = function (_props, overrided = false) {
     var _labelField = _props.labelField;
     var _valueField = _props.valueField;
     var _childrenField = _props.childrenField;
+    let _componentsField = _props.componentsField;
     var _selectedClasses = _props.selectedClasses;
     var _guidField = _props.guidField;
     var _selectedItem = _props.selectedItem;
@@ -263,7 +264,8 @@ var Tree = function (_props, overrided = false) {
             "value": '{'+_valueField+'}',
             "label": '{'+_labelField+'}',
             "click": _toggleTree,
-            "classes":["list-group-item"]
+            "classes":["list-group-item"],
+            "components": '{'+_componentsField+'}'
         }
     };
     

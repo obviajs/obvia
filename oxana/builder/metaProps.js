@@ -237,7 +237,7 @@ Builder.metaProps.TextInput = {
         }        
     }},
     autocomplete: {ctor:"Select", label:"Autocomplete", props:{
-        dataProvider:new ArrayEx([{"value":"on", "text":"On"}, {"value":"off", "text":"Off"}]),
+        dataProvider:new ArrayEx([{"value":"off", "text":"Off"}, {"value":"on", "text":"On"}]),
         change:function(){
             this.parent.parent.instance.autocomplete = this.value;           
         }
