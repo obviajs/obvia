@@ -25,6 +25,7 @@ var myForm = new Form({
                 blockProcessAttr: false,
                 required: true,
                 mask: 'currency',
+                type: "password",
                 value: "1000"
             }
         },
