@@ -3,6 +3,7 @@ var Scrap = function(){
         var lit, nid = $(n).attr('id'); 
         nid = nid?nid:$(n).prop("tagName").toLowerCase();
         var cls = (new ArrayEx($(n).prop("classList"))).toArray();
+        var attrs = $(n).attributes();
         var cmp = [];
         var ch_nodes = $(n).children();
         for (var i = 0; i < ch_nodes.length; i++) {
@@ -259,7 +260,12 @@ var Scrap = function(){
                 }
             };
         } else console.log($(n).prop("tagName"));
-        
+        if(lit.props)
+            if(!Object.isEmpty(attrs))
+                lit.props.attr = attrs;
+        else
+            if(!Object.isEmpty(attrs))
+                lit.attr = attrs;
         return lit;
     }
 }
