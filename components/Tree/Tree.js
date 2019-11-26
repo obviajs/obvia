@@ -29,8 +29,8 @@ var Tree = function (_props, overrided = false) {
                 _dpWatcher.watch(_dataProvider, "length", _dpLengthChanged);
                 _dataProvider.on("propertyChange", _dpMemberChanged);
                 this.removeAllChildren();
-                _self.components = _self.buildTree();
-                _self.addComponents();
+                let cmps = _self.buildTree();
+                _self.addComponents(cmps);
             }
         }
     });
