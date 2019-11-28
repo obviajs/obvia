@@ -45,7 +45,7 @@ CodeAddons.require = function(){
     return rjs.require(["simplescrollbars", "simplescrollbars_css", "fullscreen_css", "fullscreen", "foldgutter_css",
         "foldcode", "foldgutter", "brace-fold", "indent-fold", "comment-fold", "closebrackets", "matchesonscrollbar_css",
         "search", "searchcursor", "jump-to-line", "annotatescrollbar", "dialog_css", "dialog", "merge_css", "diff_match_patch", "merge",
-        "lint_css", "lint", "json-lint", "javascript-lint.js", "show-hint_css", "show-hint", "javascript-hint", "jshint"                     
+        "lint_css", "lint", "json-lint", "javascript-lint", "show-hint_css", "show-hint", "javascript-hint", "jshint"                     
     ]);
 }
 CodeAddons.basepath = "./oxana/Code/require/addon/"; 
