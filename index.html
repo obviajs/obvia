@@ -36,12 +36,13 @@
                 rjs.define("./oxana/builder/metaProps.js", "metaProps");
                 rjs.define("./oxana/builder/componentList.js", "componentList");
                 rjs.define("./oxana/Code/Code.js", "Code");
-                
+                rjs.define("./oxana/Code/CodeMerge.js", "CodeMerge");
                 rjs.require([
                             "componentLiterals",
                             "metaProps", 
                             "componentList",
-                            "Code"                           
+                            "Code",
+                            "CodeMerge"                           
                 ]).then(function () {
                     ObjectEditor.metaProps = Builder.metaProps;   
                     ObjectEditor.components = Builder.components;

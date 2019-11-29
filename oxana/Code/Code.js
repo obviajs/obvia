@@ -5,7 +5,7 @@
  */
 //requires 
 var Code = function (_props, overrided = false) {
-    let _self = this, _cmInst, _errors = [], _mode, _theme, _content;
+    let _self = this, _cmInst, _errors = [], _mode, _theme, _content, _readOnly, _nocursor;
     let _codeArea;
     let _cmps = [{ctor: TextArea,
                     props:{
@@ -23,6 +23,71 @@ var Code = function (_props, overrided = false) {
                 doc.replaceRange(text, cursor);
         }
     }
+    
+    Object.defineProperty(this, "content", {
+        get: function content()
+        {
+            if(_cmInst){
+                _content = _cmInst.getValue();
+            }
+            return _content;
+        },
+        set: function content(v)
+        {
+            if(this.content!=v)
+            {
+                _content = v;
+                if(_cmInst){
+                    _cmInst.setValue(_content);
+                }
+            }
+        },
+        enumerable: true
+    });
+    
+    
+    Object.defineProperty(this, "readOnly", {
+        get: function readOnly()
+        {
+            return _readOnly;
+        },
+        set: function readOnly(v)
+        {
+            if(_readOnly!=v)
+            {
+                if(_readOnly){
+                    _nocursor = false;
+                }
+                _readOnly = v;
+                if(_cmInst){
+                    _cmInst.setOption('readOnly', _readOnly);
+                }
+            }
+        },
+        enumerable: true
+    });
+    
+    Object.defineProperty(this, "nocursor", {
+        get: function nocursor()
+        {
+            return _nocursor;
+        },
+        set: function nocursor(v)
+        {
+            if(_nocursor!=v)
+            {
+                _nocursor = v;
+                if(_cmInst){
+                    if(_nocursor)
+                        _cmInst.setOption('readOnly', 'nocursor');
+                    else if(_readOnly)
+                        _cmInst.setOption('readOnly', true);
+                }
+            }
+        },
+        enumerable: true
+    });
+
     Object.defineProperty(this, "theme", {
         get: function theme()
         {
@@ -43,9 +108,6 @@ var Code = function (_props, overrided = false) {
         enumerable: true
     });
     
-    
-    
-
     this.beforeAttach = function(e) 
     {
         if (e.target.id == this.domID) 
@@ -57,14 +119,16 @@ var Code = function (_props, overrided = false) {
             
         }
     }
+    
     this.afterAttach = function(e)
     {
-         coroutine(function* () {
+        coroutine(function* () {
             yield Code.require();
             yield CodeMode.require(_mode.name);
             yield CodeTheme.require(_theme);
         }).then(function(){
             _cmInst = CodeMirror.fromTextArea(_codeArea.$el[0], _props);
+            delete _cmInst.options.lint.options.errors;
             _cmInst.setValue(_content);
             _cmInst.setSize('100%', '100%');
             _cmInst.on("gutterClick", function(cm, n) {
@@ -115,18 +179,21 @@ var Code = function (_props, overrided = false) {
             "Ctrl-Space": "autocomplete",
             "Alt-F": "findPersistent"
         },   
-        content:""                   
+        content: "",
+        readOnly: false,
+        nocursor: false                   
     };
 
     _props = extend(false, false, _defaultParams, _props);
     _content = _props.content;
     _mode = _props.mode;
     _theme = _props.theme;
+    _readOnly = _props.readOnly;
+    _nocursor = _props.nocursor;
 
     let r = Container.call(this, _props, overrided);
     return r;
 };
-
 Code.prototype.ctor = 'Code';
 Code.require = function(){
     rjs.define("./oxana/Code/CodeMode.js", "CodeMode");
