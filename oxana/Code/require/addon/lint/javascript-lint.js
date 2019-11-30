@@ -21,7 +21,14 @@
     }
     if (!options.indent) // JSHint error.character actually is a column index, this fixes underlining on lines using tabs for indentation
       options.indent = 1; // JSHint default value is 4
-    JSHINT(text, options, options.globals);
+    let shOptions = {};
+    for(var prop in options)
+    {
+      if(["getAnnotations", "onUpdateLinting", "async"].indexOf(prop)<0){
+        shOptions[prop] = options[prop];
+      }
+    }
+    JSHINT(text, shOptions, shOptions.globals);
     var errors = JSHINT.data().errors, result = [];
     if (errors) parseErrors(errors, result);
     return result;

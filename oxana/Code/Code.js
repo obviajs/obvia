@@ -24,6 +24,14 @@ var Code = function (_props, overrided = false) {
         }
     }
     
+    Object.defineProperty(this, "errors", {
+        get: function errors()
+        {
+            return _errors;
+        },
+        enumerable: true
+    });
+    
     Object.defineProperty(this, "content", {
         get: function content()
         {
@@ -44,7 +52,6 @@ var Code = function (_props, overrided = false) {
         },
         enumerable: true
     });
-    
     
     Object.defineProperty(this, "readOnly", {
         get: function readOnly()
@@ -128,7 +135,6 @@ var Code = function (_props, overrided = false) {
             yield CodeTheme.require(_theme);
         }).then(function(){
             _cmInst = CodeMirror.fromTextArea(_codeArea.$el[0], _props);
-            delete _cmInst.options.lint.options.errors;
             _cmInst.setValue(_content);
             _cmInst.setSize('100%', '100%');
             _cmInst.on("gutterClick", function(cm, n) {
@@ -165,6 +171,9 @@ var Code = function (_props, overrided = false) {
         autoCloseBrackets: true,
         indentWithTabs: true,
         lint: {
+            "onUpdateLinting": function(_errs){
+                _errors = _errs;
+            },
             "getAnnotations": function (cm, updateLinting, options) { 
                 var errors = CodeMirror.lint.javascript(cm, options);
                 updateLinting(errors);
