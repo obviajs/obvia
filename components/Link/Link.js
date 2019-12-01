@@ -7,6 +7,24 @@
 //component definition
 var Link = function(_props)
 {
+    Object.defineProperty(this, "title", 
+    {
+        get: function title() 
+        {
+            return _title;
+        },
+        set: function title(v) 
+        {
+            if(_title != v)
+            {
+                _title = v;
+                if(this.$el)
+                    this.$el.attr('title', v);
+            }
+        },
+        enumerable:true
+    });
+    
     Object.defineProperty(this, "href", 
     {
         get: function href() 
@@ -87,6 +105,18 @@ var Link = function(_props)
     {
         this.$container = this.$el;
         this.addComponents();
+        if(_props.title){
+            this.title = _props.title;
+        }
+        if(_props.label){
+            this.label = _props.label;
+        }
+        if(_props.href){
+            this.href = _props.href;
+        }
+        if(_props.target){
+            this.target = _props.target;
+        }
     };
 
     this.template = function () 
@@ -97,14 +127,13 @@ var Link = function(_props)
     var _defaultParams = {
         label: "Click Me",
         href: "javascript:void()",
-        target: "_blank"
+        target: "_blank",
+        title: undefined
     };
     
     _props = extend(false, false, _defaultParams, _props);
     
-    var _label = _props.label;
-    var _href = _props.href;
-    var _target = _props.target;
+    let _label, _href, _target, _title;
 
     Parent.call(this, _props);
 };

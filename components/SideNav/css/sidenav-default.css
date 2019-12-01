@@ -1,21 +1,22 @@
 /* The side navigation menu */
 .sidenav {
-    height: 100%; /* 100% Full-height */
+    height: 100vh; /* 100% Full-height */
     width: 0; /* 0 width - change this with JavaScript */
-    position: fixed; /* Stay in place */
     z-index: 1; /* Stay on top */
     top: 0; /* Stay at the top */
     background-color: #111; /* Black*/
     overflow-x: hidden; /* Disable horizontal scroll */
     padding-top: 60px; /* Place content 60px from the top */
-    transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
+    transition: 0.25s ease-out; /* 0.5 second transition effect to slide in the sidenav */
+    -webkit-transition: margin .25s ease-out;
+    -moz-transition: margin .25s ease-out;
+    -o-transition: margin .25s ease-out;
   }
   
   /* The navigation menu links */
   .sidenav a {
     padding: 8px 8px 8px 32px;
     text-decoration: none;
-    font-size: 25px;
     color: #818181;
     display: block;
     transition: 0.3s;
@@ -23,10 +24,14 @@
   .sidenav_left {
     float:left; 
     left: 0;
+    margin-right: auto;
+    order: 0;
   }
   .sidenav_right {
     float:right; 
     right:0;
+    margin-left: auto;
+    order: 99999;
   }
   /* When you mouse over the navigation links, change their color */
   .sidenav a:hover {

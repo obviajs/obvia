@@ -58,8 +58,17 @@ var Container = function(_props, overrided=false)
                     {
                         if(v==null){
                             this.$el.css('width', '');
-                        }else
-                            this.$el.css('width', v+ (isString(_width) && _width.indexOf("%")>-1?"":"px"));
+                        }else{
+                            let s = (
+                                isString(_width) && 
+                                (
+                                    _width.indexOf("vh")>-1 ||
+                                    _width.indexOf("em")>-1 ||
+                                    _width.indexOf("%")>-1
+                                )
+                            );
+                            this.$el.css('width', v+ (s?"":"px"));
+                        }
                     }
                 }
             },
@@ -83,8 +92,17 @@ var Container = function(_props, overrided=false)
                     {
                         if(v==null){
                             this.$el.css('height', '');
-                        }else
-                            this.$el.css('height', v+(isString(_height) && _height.indexOf("%")>-1?"":"px"));
+                        }else{
+                            let s = (
+                                isString(_height) && 
+                                (
+                                    _height.indexOf("vh")>-1 ||
+                                    _height.indexOf("em")>-1 ||
+                                    _height.indexOf("%")>-1
+                                )
+                            );
+                            this.$el.css('height', v+(s?"":"px"));
+                        } 
                     }
                 }
             },

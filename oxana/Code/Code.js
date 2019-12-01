@@ -9,7 +9,8 @@ var Code = function (_props, overrided = false) {
     let _codeArea;
     let _cmps = [{ctor: TextArea,
                     props:{
-                    id: 'codeArea'
+                    id: 'codeArea',
+                    classes: ["d-none"]
                 }
             }];
 
@@ -23,7 +24,13 @@ var Code = function (_props, overrided = false) {
                 doc.replaceRange(text, cursor);
         }
     }
-    
+    Object.defineProperty(this, "cmInst", {
+        get: function cmInst()
+        {
+            return _cmInst;
+        },
+        enumerable: true
+    });
     Object.defineProperty(this, "errors", {
         get: function errors()
         {
@@ -137,11 +144,19 @@ var Code = function (_props, overrided = false) {
             _cmInst = CodeMirror.fromTextArea(_codeArea.$el[0], _props);
             _cmInst.setValue(_content);
             _cmInst.setSize('100%', '100%');
+            _cmInst.on("changes", _changes);
             _cmInst.on("gutterClick", function(cm, n) {
                 let info = _cmInst.lineInfo(n);
                 _cmInst.setGutterMarker(n, "breakpoints", info.gutterMarkers ? null : _makeMarker());
             });                                             
         }); 
+    }
+    
+    let _changes = function(cm, changes) {
+        let evt = jQuery.Event("changes");
+        evt.changes = changes;
+        evt.cmInst = cm;
+        _self.trigger(evt);
     }
     
     let _toggleFullScreen = function () {
@@ -188,6 +203,7 @@ var Code = function (_props, overrided = false) {
             "Ctrl-Space": "autocomplete",
             "Alt-F": "findPersistent"
         },   
+        attr:{"data-triggers":"change changes"},
         content: "",
         readOnly: false,
         nocursor: false                   
