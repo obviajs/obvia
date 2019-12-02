@@ -15,92 +15,107 @@ $('#root').append(myCode.render());
 $('#root').append(myMergeView.render());
 */
 let cnt = new Container({
-    type: ContainerType.NONE,                        
-    id: "ideContainer",
-    width: '100%',
-    height: '100%',   
-    classes: ["d-flex"],
+    id: "mainContainer",    
+    type: ContainerType.NONE,                          
     components:[
-        {
-            ctor: SideNav,
-            props: {
-                id: "mySideNav",
-                width: 250,
-                classes: ["sidenav"],
-                components: [
-                    {
-                        ctor: Container,
-                        props: {
-                            id: "todosCnt",
-                            components: [
-                                {
-                                    ctor: Link,
-                                    props: {
-                                        id: "todosCollapse",
-                                        attr: {"data-toggle" :"collapse"},
-                                        label: "TODOs",
-                                        classes: ["collapse_icon"],
-                                        components: [
-                                            {
-                                                ctor: Label,
-                                                props: {
-                                                    //,classes: ["fas", "fa-angle-down"]
-                                                }
+    {
+        ctor: Nav,
+        props: {
+            id: "mainNav",
+            height:40
+        }
+    },
+    {
+        ctor: Container,
+        props: {
+            type: ContainerType.NONE,                        
+            id: "ideContainer",
+            width: '100%',
+            height: '100%',   
+            classes: ["d-flex"],
+            components:[
+                {
+                    ctor: SideNav,
+                    props: {
+                        id: "mySideNav",
+                        width: 250,
+                        classes: ["sidenav"],
+                        components: [
+                            {
+                                ctor: Container,
+                                props: {
+                                    id: "todosCnt",
+                                    components: [
+                                        {
+                                            ctor: Link,
+                                            props: {
+                                                id: "todosCollapse",
+                                                attr: {"data-toggle" :"collapse"},
+                                                label: "TODOs",
+                                                classes: ["collapse_icon"],
+                                                components: [
+                                                    {
+                                                        ctor: Label,
+                                                        props: {
+                                                            //,classes: ["fas", "fa-angle-down"]
+                                                        }
+                                                    }
+                                                ]
                                             }
-                                        ]
-                                    }
-                                },
-                                {
-                                    ctor: Repeater,
-                                    props: {
-                                        id: "todosRepeater",
-                                        rendering: {
-                                            direction: 'vertical'
                                         },
-                                        components:[
-                                            {
-                                                ctor: Link,
-                                                props:{
-                                                    id:"todoItem",
-                                                    label: "{comment}",
-                                                    href: "#",
-                                                    target: "",
-                                                    "click": todoItemClick
-                                                }
+                                        {
+                                            ctor: Repeater,
+                                            props: {
+                                                id: "todosRepeater",
+                                                rendering: {
+                                                    direction: 'vertical'
+                                                },
+                                                components:[
+                                                    {
+                                                        ctor: Link,
+                                                        props:{
+                                                            id:"todoItem",
+                                                            label: "{comment}",
+                                                            href: "#",
+                                                            target: "",
+                                                            "click": todoItemClick
+                                                        }
+                                                    }
+                                                ],
+                                                dataProvider: new ArrayEx([]),
+                                                classes: ["collapse"],
+                                                afterAttach: _bindCollapsible
                                             }
-                                        ],
-                                        dataProvider: new ArrayEx([]),
-                                        classes: ["collapse"],
-                                        afterAttach: _bindCollapsible
-                                    }
+                                        }
+                                    ]
                                 }
-                            ]
-                        }
+                            }
+                        ]
                     }
-                ]
-            }
-        },
-        {
-            ctor: Code,
-            props: {
-                id: "myCode",
-                type: ContainerType.NONE,
-                width: '100%',
-                height: '100vh',  
-                changes: changesMade,
-                creationComplete: _focusEditor
-            }
-        },
-    ]
-});
+                },
+                {
+                    ctor: Code,
+                    props: {
+                        id: "myCode",
+                        type: ContainerType.NONE,
+                        width: '100%',
+                        height: '100vh',  
+                        changes: changesMade,
+                        creationComplete: _focusEditor
+                    }
+                },
+            ]
+        }
+    }
+]});
 
 $('#root').append(cnt.render());
 function _focusEditor(){
-    cnt.myCode.cmInst.focus();
+    cnt.ideContainer.myCode.cmInst.focus();
 }
     
 function _bindCollapsible(){
-    cnt.mySideNav.todosCnt.todosCollapse.href = "#"+ this.domID;
+    cnt.ideContainer.mySideNav.todosCnt.todosCollapse.href = "#"+ this.domID;
 }
 function changesMade(e){
     //e.changes;
@@ -129,14 +144,14 @@ let _debouncedHandler = debounce(function(cmInst){
                 todos.push({"line": i, "commentType": commentType, "comment":comment});
             }
         }
-        cnt.mySideNav.todosCnt.todosRepeater.dataProvider = todos;
+        cnt.ideContainer.mySideNav.todosCnt.todosRepeater.dataProvider = todos;
         console.log(todos);
     }                                  
 }, 500); 
 
 function todoItemClick(e, ra)
 {
-    cnt.myCode.cmInst.focus();
-    cnt.myCode.cmInst.scrollIntoView({line:ra.currentItem.line, ch:0}, 200);
-    cnt.myCode.cmInst.setCursor({line: ra.currentItem.line, ch: 0});
+    cnt.ideContainer.myCode.cmInst.focus();
+    cnt.ideContainer.myCode.cmInst.scrollIntoView({line:ra.currentItem.line, ch:0}, 200);
+    cnt.ideContainer.myCode.cmInst.setCursor({line: ra.currentItem.line, ch: 0});
 }
