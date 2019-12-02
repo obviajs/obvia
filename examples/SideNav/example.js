@@ -1,4 +1,4 @@
-let click = function(){
+let click = function () {
     console.log("SideNav item click", arguments);
 }
 
@@ -6,16 +6,14 @@ var mySideNav = new SideNav({
     id: "mySideNav",
     width: 250,
     classes: ["sidenav"],
-    components: 
-    [
-        {
+    components: [{
             ctor: Link,
             props: {
                 id: 'fa',
                 label: "",
                 href: "#",
                 target: "",
-                classes: ["fas","fa-times","closebtn"]
+                classes: ["fas", "fa-times", "closebtn"]
             }
         },
         {
@@ -24,19 +22,23 @@ var mySideNav = new SideNav({
                 rendering: {
                     direction: 'vertical'
                 },
-                components:[
-                    {
-                        ctor: Link,
-                        props:{
-                            id:"menuItem",
-                            label: "{label}",
-                            href: "#",
-                            target: "",
-                            "click": click
-                        }
+                components: [{
+                    ctor: Link,
+                    props: {
+                        id: "menuItem",
+                        label: "{label}",
+                        href: "#",
+                        target: "",
+                        "click": click
                     }
-                ],
-                dataProvider: new ArrayEx([{"label":"Item 1"}, {"label":"Item 2"}, {"label":"Item 3"}])
+                }],
+                dataProvider: new ArrayEx([{
+                    "label": "Item 1"
+                }, {
+                    "label": "Item 2"
+                }, {
+                    "label": "Item 3"
+                }])
             }
         }
     ]
