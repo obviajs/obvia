@@ -14,6 +14,54 @@ var parents = ["Container", "Form"];
 var noNeedFF = ["Button", "Label", "Container"];
 var dpCmpSelect = [];
 
+let mainContainer = {
+    ctor: Container,
+    props: {
+        id: "container",
+        type: ContainerType.NONE,
+        components: [{
+                ctor: Nav,
+                props: {
+                    id: "nav"
+                }
+            },
+            {
+                ctor: Container,
+                props: {
+                    id: "container",
+                    classes: ["d-flex"],
+                    components: [{
+                            ctor: SideNav,
+                            props: {
+                                id: "controlsWindow",
+                                width: "400",
+                                classes: ["sidenav"],
+                            }
+                        },
+                        {
+                            ctor: Container,
+                            props: {
+                                id: "container",
+                                component: [workArea]
+                            }
+                        },
+                        {
+
+                            ctor: Sidenav,
+                            props: {
+                                width: "250",
+                                classes: ["sidenav", "sidenav_right"],
+                            }
+
+
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}
+
 var workArea = {
 
     ctor: Container,
@@ -68,335 +116,342 @@ var workArea = {
 }
 
 
-let sideNavBuilder = new NavBar({
-    id: "navbar",
-    height: "50",
-    components: [{
-            ctor: BrowserWindow,
-            props: {
-                id: "propertyEditorWindow",
-                components: []
-            }
-        },
-        {
-            ctor: Container,
-            props: {
-                id: "container",
-                type: ContainerType.ROW,
-                spacing: {
-                    colSpan: 12
-                },
-                components: [{
-                    ctor: Container,
-                    props: {
-                        id: '',
-                        type: ContainerType.COLUMN,
-                        spacing: {
-                            colSpan: 12
-                        },
-                        classes: [""],
-                        components: [{
-                            ctor: Container,
-                            props: {
-                                spacing: {
-                                    h: 100
-                                },
-                                components: [{
-                                        ctor: Container,
-                                        props: {
-                                            id: '',
-                                            type: ContainerType.ROW,
-                                            spacing: {
-                                                h: 25
-                                            },
-                                            components: [{
-                                                ctor: Container,
-                                                props: {
-                                                    type: ContainerType.COLUMN,
-                                                    spacing: {
-                                                        colSpan: 12,
-                                                        h: 100
-                                                    },
-                                                    id: 'toolBar',
-                                                    classes: [""],
-                                                    components: [{
-                                                            ctor: Button,
-                                                            props: {
-                                                                id: 'splitHorizontal',
-                                                                type: "button",
-                                                                classes: ["mr-3"],
-                                                                components: [{
-                                                                    ctor: Label,
-                                                                    props: {
-                                                                        id: 'fa',
-                                                                        labelType: LabelType.i,
-                                                                        classes: ["fas", "fa-columns"]
-                                                                    }
-                                                                }]
-                                                            }
-                                                        },
-                                                        {
-                                                            ctor: Button,
-                                                            props: {
-                                                                id: 'splitVertical',
-                                                                type: "button",
-                                                                classes: ["mr-3"],
-                                                                components: [{
-                                                                    ctor: Label,
-                                                                    props: {
-                                                                        id: 'fa',
-                                                                        labelType: LabelType.i,
-                                                                        classes: ["fas", "fa-columns"]
-                                                                    }
-                                                                }]
-                                                            }
-                                                        },
-                                                        {
-                                                            ctor: Button,
-                                                            props: {
-                                                                id: 'saveLayout',
-                                                                type: "button",
-                                                                classes: ["mr-3"],
-                                                                components: [{
-                                                                    ctor: Label,
-                                                                    props: {
-                                                                        id: 'fa',
-                                                                        labelType: LabelType.i,
-                                                                        classes: ["fas", "fa-save"]
-                                                                    }
-                                                                }]
-                                                            }
-                                                        },
-                                                        {
-                                                            ctor: Button,
-                                                            props: {
-                                                                id: 'previewBtn',
-                                                                type: "button",
-                                                                classes: ["mr-3"],
-                                                                components: [{
-                                                                    ctor: Label,
-                                                                    props: {
-                                                                        id: 'fa',
-                                                                        labelType: LabelType.i,
-                                                                        classes: ["fas", "fa-desktop"]
-                                                                    }
-                                                                }]
-                                                            }
-                                                        },
-                                                        {
-                                                            ctor: Button,
-                                                            props: {
-                                                                id: 'selectBtn',
-                                                                classes: ["mr-3"],
-                                                                type: "button",
-                                                                components: [{
-                                                                    ctor: Label,
-                                                                    props: {
-                                                                        id: 'fa',
-                                                                        labelType: LabelType.i,
-                                                                        classes: ["fas", "fa-folder-open"]
-                                                                    }
-                                                                }]
-                                                            }
-                                                        },
-                                                        {
-                                                            ctor: Modal,
-                                                            props: {
-                                                                id: 'fileSelectModal',
-                                                                size: ModalSize.LARGE,
-                                                                title: 'Select File',
-                                                                components: [{
-                                                                    ctor: UploadEx,
-                                                                    props: {
-                                                                        id: "browseFile",
-                                                                        multiple: false,
-                                                                        showProgress: false
-                                                                    }
-                                                                }]
-                                                            }
-                                                        }
-                                                    ]
-                                                }
-                                            }]
-                                        }
-                                    },
-                                    {
-                                        ctor: Container,
-                                        props: {
-                                            id: '',
-                                            type: ContainerType.ROW,
-                                            spacing: {
-                                                h: 90
-                                            },
-                                            components: [{
-                                                ctor: Container,
-                                                props: {
-                                                    type: ContainerType.COLUMN,
-                                                    spacing: {
-                                                        colSpan: 12,
-                                                        h: 100
-                                                    },
-                                                    id: 'historySteps',
-                                                    classes: [""],
-                                                    components: [{
-                                                        ctor: List,
-                                                        props: {
-                                                            id: 'listHistorySteps',
-                                                            direction: 'vertical',
-                                                            multiselect: false,
-                                                            //dataProvider: oxana.history.steps,
-                                                            valueField: "id",
-                                                            classesField: "listItemClass",
-                                                            defaultClasses: [],
-                                                            selectedClasses: ["active-container"],
-                                                            components: [{
-                                                                ctor: Label,
-                                                                props: {
-                                                                    id: 'labelHistoryStep',
-                                                                    value: "{id}",
-                                                                    label: "{description}",
-                                                                    classes: "{?listItemClass}",
-                                                                    DOMMutation: _DOMMutationHandler,
-                                                                    click: function (e) {
-                                                                        e.preventDefault();
-                                                                    }
-                                                                }
-                                                            }]
-                                                        }
-                                                    }]
-                                                }
-                                            }]
-                                        }
-                                    }
-                                ]
-                            }
-                        }]
-                    }
-                }, ]
-            }
-        },
-        {
-            ctor: SideNav,
-            props: {
-                id: "controlsWindow",
-                width: "400",
-                classes: ["sidenav", "sidenav_right"],
-                components: [{
-                        ctor: Container,
-                        props: {
-                            id: "container",
-                            classes: [""],
-                            spacing: {
-                                colSpan: 12
-                            },
-                            components: [{
-                                    ctor: Button,
-                                    props: {
-                                        id: "arrow",
-                                        classes: ["btn", "btn-info"],
-                                        type: "button",
-                                        components: [{
-                                            ctor: Link,
-                                            props: {
-                                                id: 'leftArrow',
-                                                label: "",
-                                                href: "#",
-                                                spacing: {
-                                                    colSpan: 6
-                                                },
-                                                target: "",
-                                                classes: ["fas", "btn-sm", "fa-arrow-left"],
-                                            }
-                                        }]
-                                    }
+// let sideNavBuilder = new NavBar({
+//     id: "navbar",
+//     height: "50",
+//     components: [{
+//             ctor: BrowserWindow,
+//             props: {
+//                 id: "propertyEditorWindow",
+//                 components: []
+//             }
+//         },
+//         {
+//             ctor: Container,
+//             props: {
+//                 id: "container",
+//                 type: ContainerType.ROW,
+//                 spacing: {
+//                     colSpan: 12
+//                 },
+//                 components: [{
+//                     ctor: Container,
+//                     props: {
+//                         id: '',
+//                         type: ContainerType.COLUMN,
+//                         spacing: {
+//                             colSpan: 12
+//                         },
+//                         classes: [""],
+//                         components: [{
+//                             ctor: Container,
+//                             props: {
+//                                 spacing: {
+//                                     h: 100
+//                                 },
+//                                 components: [{
+//                                         ctor: Container,
+//                                         props: {
+//                                             id: '',
+//                                             type: ContainerType.ROW,
+//                                             spacing: {
+//                                                 h: 25
+//                                             },
+//                                             components: [{
+//                                                 ctor: Container,
+//                                                 props: {
+//                                                     type: ContainerType.COLUMN,
+//                                                     spacing: {
+//                                                         colSpan: 12,
+//                                                         h: 100
+//                                                     },
+//                                                     id: 'toolBar',
+//                                                     classes: [""],
+//                                                     components: [{
+//                                                             ctor: Button,
+//                                                             props: {
+//                                                                 id: 'splitHorizontal',
+//                                                                 type: "button",
+//                                                                 classes: ["mr-3"],
+//                                                                 components: [{
+//                                                                     ctor: Label,
+//                                                                     props: {
+//                                                                         id: 'fa',
+//                                                                         labelType: LabelType.i,
+//                                                                         classes: ["fas", "fa-columns"]
+//                                                                     }
+//                                                                 }]
+//                                                             }
+//                                                         },
+//                                                         {
+//                                                             ctor: Button,
+//                                                             props: {
+//                                                                 id: 'splitVertical',
+//                                                                 type: "button",
+//                                                                 classes: ["mr-3"],
+//                                                                 components: [{
+//                                                                     ctor: Label,
+//                                                                     props: {
+//                                                                         id: 'fa',
+//                                                                         labelType: LabelType.i,
+//                                                                         classes: ["fas", "fa-columns"]
+//                                                                     }
+//                                                                 }]
+//                                                             }
+//                                                         },
+//                                                         {
+//                                                             ctor: Button,
+//                                                             props: {
+//                                                                 id: 'saveLayout',
+//                                                                 type: "button",
+//                                                                 classes: ["mr-3"],
+//                                                                 components: [{
+//                                                                     ctor: Label,
+//                                                                     props: {
+//                                                                         id: 'fa',
+//                                                                         labelType: LabelType.i,
+//                                                                         classes: ["fas", "fa-save"]
+//                                                                     }
+//                                                                 }]
+//                                                             }
+//                                                         },
+//                                                         {
+//                                                             ctor: Button,
+//                                                             props: {
+//                                                                 id: 'previewBtn',
+//                                                                 type: "button",
+//                                                                 classes: ["mr-3"],
+//                                                                 components: [{
+//                                                                     ctor: Label,
+//                                                                     props: {
+//                                                                         id: 'fa',
+//                                                                         labelType: LabelType.i,
+//                                                                         classes: ["fas", "fa-desktop"]
+//                                                                     }
+//                                                                 }]
+//                                                             }
+//                                                         },
+//                                                         {
+//                                                             ctor: Button,
+//                                                             props: {
+//                                                                 id: 'selectBtn',
+//                                                                 classes: ["mr-3"],
+//                                                                 type: "button",
+//                                                                 components: [{
+//                                                                     ctor: Label,
+//                                                                     props: {
+//                                                                         id: 'fa',
+//                                                                         labelType: LabelType.i,
+//                                                                         classes: ["fas", "fa-folder-open"]
+//                                                                     }
+//                                                                 }]
+//                                                             }
+//                                                         },
+//                                                         {
+//                                                             ctor: Modal,
+//                                                             props: {
+//                                                                 id: 'fileSelectModal',
+//                                                                 size: ModalSize.LARGE,
+//                                                                 title: 'Select File',
+//                                                                 components: [{
+//                                                                     ctor: UploadEx,
+//                                                                     props: {
+//                                                                         id: "browseFile",
+//                                                                         multiple: false,
+//                                                                         showProgress: false
+//                                                                     }
+//                                                                 }]
+//                                                             }
+//                                                         }
+//                                                     ]
+//                                                 }
+//                                             }]
+//                                         }
+//                                     },
+//                                     {
+//                                         ctor: Container,
+//                                         props: {
+//                                             id: '',
+//                                             type: ContainerType.ROW,
+//                                             spacing: {
+//                                                 h: 90
+//                                             },
+//                                             components: [{
+//                                                 ctor: Container,
+//                                                 props: {
+//                                                     type: ContainerType.COLUMN,
+//                                                     spacing: {
+//                                                         colSpan: 12,
+//                                                         h: 100
+//                                                     },
+//                                                     id: 'historySteps',
+//                                                     classes: [""],
+//                                                     components: [{
+//                                                         ctor: List,
+//                                                         props: {
+//                                                             id: 'listHistorySteps',
+//                                                             direction: 'vertical',
+//                                                             multiselect: false,
+//                                                             //dataProvider: oxana.history.steps,
+//                                                             valueField: "id",
+//                                                             classesField: "listItemClass",
+//                                                             defaultClasses: [],
+//                                                             selectedClasses: ["active-container"],
+//                                                             components: [{
+//                                                                 ctor: Label,
+//                                                                 props: {
+//                                                                     id: 'labelHistoryStep',
+//                                                                     value: "{id}",
+//                                                                     label: "{description}",
+//                                                                     classes: "{?listItemClass}",
+//                                                                     DOMMutation: _DOMMutationHandler,
+//                                                                     click: function (e) {
+//                                                                         e.preventDefault();
+//                                                                     }
+//                                                                 }
+//                                                             }]
+//                                                         }
+//                                                     }]
+//                                                 }
+//                                             }]
+//                                         }
+//                                     }
+//                                 ]
+//                             }
+//                         }]
+//                     }
+//                 }, ]
+//             }
+//         },
+//         {
+//             ctor: SideNav,
+//             props: {
+//                 id: "controlsWindow",
+//                 width: "400",
+//                 classes: ["sidenav", "sidenav_right"],
+//                 components: [{
+//                         ctor: Container,
+//                         props: {
+//                             id: "container",
+//                             classes: [""],
+//                             spacing: {
+//                                 colSpan: 12
+//                             },
+//                             components: [{
+//                                     ctor: Button,
+//                                     props: {
+//                                         id: "arrow",
+//                                         classes: ["btn", "btn-info"],
+//                                         type: "button",
+//                                         components: [{
+//                                             ctor: Link,
+//                                             props: {
+//                                                 id: 'leftArrow',
+//                                                 label: "",
+//                                                 href: "#",
+//                                                 spacing: {
+//                                                     colSpan: 6
+//                                                 },
+//                                                 target: "",
+//                                                 classes: ["fas", "btn-sm", "fa-arrow-left"],
+//                                             }
+//                                         }]
+//                                     }
 
-                                },
-                                {
-                                    ctor: Button,
-                                    props: {
-                                        id: "closeBtn",
-                                        classes: ["btn", "btn-danger", "btn-sm"],
-                                        type: "button",
-                                        components: [{
-                                            ctor: Link,
-                                            props: {
-                                                id: 'toggleView',
-                                                label: "",
-                                                href: "#",
-                                                spacing: {
-                                                    colSpan: 6
-                                                },
-                                                target: "",
-                                                classes: ["fas", "fa-times"],
-                                            }
-                                        }]
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    {
-                        ctor: Container,
-                        props: {
-                            id: '',
-                            type: ContainerType.COLUMN,
-                            classes: [],
-                            components: [{
-                                ctor: Container,
-                                props: {
-                                    spacing: {
-                                        h: 100
-                                    },
-                                    components: [{
-                                        ctor: Repeater,
-                                        props: {
-                                            id: "componentList",
-                                            dataProvider: Builder.componentList,
-                                            rendering: {
-                                                direction: 'horizontal'
-                                            },
-                                            components: [{
-                                                ctor: Container,
-                                                props: {
-                                                    id: 'component',
-                                                    placeholder: "{label}",
-                                                    draggable: true,
-                                                    dragstart: function (e, ra) {
-                                                        console.log(arguments);
-                                                        e.originalEvent.dataTransfer.setData("domID", e.target.id);
-                                                        e.originalEvent.dataTransfer.setData("ctor", ra.currentItem.ctor);
-                                                    },
-                                                    classes: ["border", "placeholder", "m-3", "bg-white"],
-                                                    width: 80,
-                                                    height: 50,
-                                                    type: ContainerType.NONE
-                                                }
-                                            }]
-                                        }
-                                    }]
-                                }
-                            }]
-                        }
-                    }
-                ]
-            }
-        },
-        {
-            ctor: Container,
-            props: {
-                id: "",
-                type: ContainerType.COLUMN,
-                spacing: {
-                    colSpan: 12
-                },
-                components: [workArea]
-            }
-        }
+//                                 },
+//                                 {
+//                                     ctor: Button,
+//                                     props: {
+//                                         id: "closeBtn",
+//                                         classes: ["btn", "btn-danger", "btn-sm"],
+//                                         type: "button",
+//                                         components: [{
+//                                             ctor: Link,
+//                                             props: {
+//                                                 id: 'toggleView',
+//                                                 label: "",
+//                                                 href: "#",
+//                                                 spacing: {
+//                                                     colSpan: 6
+//                                                 },
+//                                                 target: "",
+//                                                 classes: ["fas", "fa-times"],
+//                                             }
+//                                         }]
+//                                     }
+//                                 }
+//                             ]
+//                         }
+//                     },
+//                     {
+//                         ctor: Container,
+//                         props: {
+//                             id: '',
+//                             type: ContainerType.COLUMN,
+//                             classes: [],
+//                             components: [{
+//                                 ctor: Container,
+//                                 props: {
+//                                     spacing: {
+//                                         h: 100
+//                                     },
+//                                     components: [{
+//                                         ctor: Repeater,
+//                                         props: {
+//                                             id: "componentList",
+//                                             dataProvider: Builder.componentList,
+//                                             rendering: {
+//                                                 direction: 'horizontal'
+//                                             },
+//                                             components: [{
+//                                                 ctor: Container,
+//                                                 props: {
+//                                                     id: 'component',
+//                                                     placeholder: "{label}",
+//                                                     draggable: true,
+//                                                     dragstart: function (e, ra) {
+//                                                         console.log(arguments);
+//                                                         e.originalEvent.dataTransfer.setData("domID", e.target.id);
+//                                                         e.originalEvent.dataTransfer.setData("ctor", ra.currentItem.ctor);
+//                                                     },
+//                                                     classes: ["border", "placeholder", "m-3", "bg-white"],
+//                                                     width: 80,
+//                                                     height: 50,
+//                                                     type: ContainerType.NONE
+//                                                 }
+//                                             }]
+//                                         }
+//                                     }]
+//                                 }
+//                             }]
+//                         }
+//                     }
+//                 ]
+//             }
+//         },
+//         {
+//             ctor: Container,
+//             props: {
+//                 id: "",
+//                 type: ContainerType.COLUMN,
+//                 spacing: {
+//                     colSpan: 12
+//                 },
+//                 components: [workArea]
+//             }
+//         }
 
 
-    ]
-});
+//     ]
+// });
 
+
+oxana.components = [{
+    ctor: ViewStack,
+    props: {
+        components: [mainContainer]
+    }
+}];
 
 
 var waBehaviors = {
@@ -423,12 +478,6 @@ var cmpBehaviors = {
     "dropped": "SELECT_COMPONENT"
 };
 
-//close and move arrow behaviors
-oxana.behaviors["leftArrow"] = {};
-oxana.behaviors["leftArrow"]["click"] = "REDIRECT_LEFT";
-
-oxana.behaviors["toggleView"] = {};
-oxana.behaviors["toggleView"]["click"] = "TOGGLE_VIEW";
 
 oxana.behaviors["splitHorizontal"] = {};
 oxana.behaviors["splitHorizontal"]["click"] = "SPLIT_HOR";
@@ -678,27 +727,7 @@ oxana.behaviorimplementations["HISTORY_REDONE"] = function (e) {
     console.log("called HISTORY_REDONE.");
     Component.instances["listHistorySteps"].value = e.redone;
 };
-/*********************************** Side nav move ***************************************/
-oxana.behaviorimplementations["REDIRECT_LEFT"] = function (e) {
-    console.log("Click left arrow to redirect the side nav in the left");
-    let classSide = Component.instances["controlsWindow"].classes;
-    if (classSide[1] == "sidenav_right") {
-        classSide[1] = "sidenav_left";
-    } else {
-        classSide[1] = "sidenav_right";
-    }
-    Component.instances["controlsWindow"].classes = classSide;
 
-};
-/************************************************************************************************/
-
-/********************************************* Close button *************************************************/
-
-oxana.behaviorimplementations["TOGGLE_VIEW"] = function (e) {
-    console.log("Hide show button clicked");
-    //Component.instance["controlsWindow"]
-}
-/********************************************** ******************************************************/
 
 oxana.behaviorimplementations["SPLIT_HOR"] = {
     //description: "Split selected container horizontally",
@@ -1232,6 +1261,3 @@ function stripHandle(lit) {
                 stripHandle(lit.props.components[i]);
         }
 }
-
-
-$("#root").append(sideNavBuilder.render());
