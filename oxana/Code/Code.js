@@ -24,6 +24,7 @@ var Code = function (_props, overrided = false) {
                 doc.replaceRange(text, cursor);
         }
     }
+    
     Object.defineProperty(this, "cmInst", {
         get: function cmInst()
         {
@@ -31,6 +32,7 @@ var Code = function (_props, overrided = false) {
         },
         enumerable: true
     });
+    
     Object.defineProperty(this, "errors", {
         get: function errors()
         {
@@ -136,6 +138,7 @@ var Code = function (_props, overrided = false) {
     
     this.afterAttach = function(e)
     {
+        e.preventDefault();
         coroutine(function* () {
             yield Code.require();
             yield CodeMode.require(_mode.name);
@@ -148,7 +151,8 @@ var Code = function (_props, overrided = false) {
             _cmInst.on("gutterClick", function(cm, n) {
                 let info = _cmInst.lineInfo(n);
                 _cmInst.setGutterMarker(n, "breakpoints", info.gutterMarkers ? null : _makeMarker());
-            });                                             
+            });      
+            _self.trigger('creationComplete');                                       
         }); 
     }
     

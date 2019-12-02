@@ -29,25 +29,52 @@ let cnt = new Container({
                 classes: ["sidenav"],
                 components: [
                     {
-                        ctor: Repeater,
+                        ctor: Container,
                         props: {
-                            id: "todos",
-                            rendering: {
-                                direction: 'vertical'
-                            },
-                            components:[
+                            id: "todosCnt",
+                            components: [
                                 {
                                     ctor: Link,
-                                    props:{
-                                        id:"todoItem",
-                                        label: "{comment}",
-                                        href: "#",
-                                        target: "",
-                                        "click": todoItemClick
+                                    props: {
+                                        id: "todosCollapse",
+                                        attr: {"data-toggle" :"collapse"},
+                                        label: "TODOs",
+                                        classes: ["collapse_icon"],
+                                        components: [
+                                            {
+                                                ctor: Label,
+                                                props: {
+                                                    //,classes: ["fas", "fa-angle-down"]
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    ctor: Repeater,
+                                    props: {
+                                        id: "todosRepeater",
+                                        rendering: {
+                                            direction: 'vertical'
+                                        },
+                                        components:[
+                                            {
+                                                ctor: Link,
+                                                props:{
+                                                    id:"todoItem",
+                                                    label: "{comment}",
+                                                    href: "#",
+                                                    target: "",
+                                                    "click": todoItemClick
+                                                }
+                                            }
+                                        ],
+                                        dataProvider: new ArrayEx([]),
+                                        classes: ["collapse"],
+                                        afterAttach: _bindCollapsible
                                     }
                                 }
-                            ],
-                            dataProvider: new ArrayEx([])
+                            ]
                         }
                     }
                 ]
@@ -60,13 +87,21 @@ let cnt = new Container({
                 type: ContainerType.NONE,
                 width: '100%',
                 height: '100vh',  
-                changes: changesMade
+                changes: changesMade,
+                creationComplete: _focusEditor
             }
         },
     ]
 });
 
 $('#root').append(cnt.render());
+function _focusEditor(){
+    cnt.myCode.cmInst.focus();
+}
+    
+function _bindCollapsible(){
+    cnt.mySideNav.todosCnt.todosCollapse.href = "#"+ this.domID;
+}
 function changesMade(e){
     //e.changes;
     _debouncedHandler(e.cmInst);
@@ -94,7 +129,7 @@ let _debouncedHandler = debounce(function(cmInst){
                 todos.push({"line": i, "commentType": commentType, "comment":comment});
             }
         }
-        cnt.mySideNav.todos.dataProvider = todos;
+        cnt.mySideNav.todosCnt.todosRepeater.dataProvider = todos;
         console.log(todos);
     }                                  
 }, 500); 
