@@ -183,7 +183,7 @@ var Form = function(_props)
                     rowColSpan += component.props.spacing.colSpan;
                 }
                 var cmpInst = this.addComponentInContainer(container, component);
-                if(!component.props['spacing'] || !component.props['spacing']['colSpan'] || component.props['spacing']['colSpan']==0)
+                if(cmpInst.ctor == "FormField" && (!component.props['spacing'] || !component.props['spacing']['colSpan'] || component.props['spacing']['colSpan']==0))
                 {
                     cmpInst.$el.addClass("form-group")
                 }

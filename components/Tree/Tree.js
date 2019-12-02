@@ -271,11 +271,11 @@ var Tree = function (_props, overrided = false) {
     };
     
     if(_componentsField)
-        _componentLi.components = '{'+_componentsField+'}';
+        _componentLi.props.components = '{'+_componentsField+'}';
     if(_classesField)   
-        _componentLi.classes = '{'+_classesField+'}';
+        _componentLi.props.classes = '{'+_classesField+'}';
     else
-        _componentLi.classses = ["list-group-item"];
+        _componentLi.props.classes = ["list-group-item"];
 
     var _componentTree = {
         ctor: Tree,

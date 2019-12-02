@@ -1,0 +1,15 @@
+a[aria-expanded="true"].collapse_icon>label:before{
+    content: "\f107";
+    font-weight: 900;
+    font-family: "Font Awesome 5 Pro";
+}
+a[aria-expanded="false"].collapse_icon>label:before{
+    content: "\f105";
+    font-weight: 900;
+    font-family: "Font Awesome 5 Pro";
+}
+a:not([aria-expanded]).collapse_icon>label:before{
+    content: "\f105";
+    font-weight: 900;
+    font-family: "Font Awesome 5 Pro";
+}

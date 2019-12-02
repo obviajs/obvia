@@ -3,6 +3,7 @@ var Scrap = function(){
         var lit, nid = $(n).attr('id'); 
         nid = nid?nid:$(n).prop("tagName").toLowerCase();
         var cls = (new ArrayEx($(n).prop("classList"))).toArray();
+        var attrs = $(n).attributes();
         var cmp = [];
         var ch_nodes = $(n).children();
         for (var i = 0; i < ch_nodes.length; i++) {
@@ -33,7 +34,7 @@ var Scrap = function(){
             cmp.push(cLit);
         };
         
-        if (["div", "header","footer"].indexOf($(n).prop("tagName").toLowerCase()) > -1) {       
+        if (["div"].indexOf($(n).prop("tagName").toLowerCase()) > -1) {       
             lit = {
                 ctor: "Container",
                 props: {
@@ -44,8 +45,44 @@ var Scrap = function(){
                 }
             };
             var txt = $(n).mytext();
-           
+            if(txt.trim().length>0){
                 lit.props.label = txt;
+                let last = $(n).children().last();
+                if(last && last.length>0)
+                    if(last[0].nextSibling && last[0].nextSibling.textContent.trim().length>0)
+                        lit.props.textAlign = "right";
+                    else
+                        lit.props.textAlign = "left";
+            }
+        } else if (["header"].indexOf($(n).prop("tagName").toLowerCase()) > -1) {       
+            lit = {
+                ctor: "Header",
+                props: {
+                    "id": nid,
+                    classes: cls,
+                    components: cmp,
+                    type: ContainerType.NONE,
+                }
+            };
+            var txt = $(n).mytext();
+            if(txt.trim().length>0){
+                lit.props.label = txt;
+            }
+            
+        } else if (["footer"].indexOf($(n).prop("tagName").toLowerCase()) > -1) {       
+            lit = {
+                ctor: "Footer",
+                props: {
+                    "id": nid,
+                    classes: cls,
+                    components: cmp,
+                    type: ContainerType.NONE,
+                }
+            };
+            var txt = $(n).mytext();
+            if(txt.trim().length>0){
+                lit.props.label = txt;
+            }
             
         } else if(["ul"].indexOf($(n).prop("tagName").toLowerCase()) > -1){
             lit = {
@@ -223,7 +260,12 @@ var Scrap = function(){
                 }
             };
         } else console.log($(n).prop("tagName"));
-        
+        if(lit.props)
+            if(!Object.isEmpty(attrs))
+                lit.props.attr = attrs;
+        else
+            if(!Object.isEmpty(attrs))
+                lit.attr = attrs;
         return lit;
     }
 }

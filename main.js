@@ -41,6 +41,7 @@ rjs.define("./oxana/AutoBrowse.js", "AutoBrowse");
 rjs.define("./components/base/Attr.js", "Attr");
 rjs.define("./components/base/Parent.js", "Parent");
 rjs.define("./components/base/css/parent-default.css", "parent_default_css");
+rjs.define("./components/base/css/collapse.css", "collapse_css");
 rjs.define("./components/base/NavParent.js", "NavParent");
 rjs.define("./components/base/ContainerType.js","ContainerType");
 rjs.define("./components/base/ViewStack.js", "ViewStack");
@@ -236,6 +237,7 @@ rjs.require([
         "Attr",
         "Parent",
         "parent_default_css",
+        "collapse_css",
         "ContainerType",
         "NavParent",
         "Container",

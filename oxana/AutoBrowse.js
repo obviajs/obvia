@@ -1,5 +1,5 @@
 /**
- * This is an AutoBrowse Definition Element
+ * This is an AutoBrowse Element
  * 
  * Kreatx 2019
  */
