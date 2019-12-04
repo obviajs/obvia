@@ -12,6 +12,7 @@ var Footer = function(_props, overrided=false)
     { 
         return  '<footer id="' + this.domID + '"></footer>'; 
     };
+    _props.type = ContainerType.NONE;
     Container.call(this, _props, overrided);
 };
 Footer.prototype.ctor = 'Footer';
