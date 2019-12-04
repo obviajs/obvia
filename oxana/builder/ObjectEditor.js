@@ -6,7 +6,7 @@
 
 //component definition
 var ObjectEditor = function (_props, overrided = false) {
-    let _self = this, _value, _instance, _field;
+    let _self = this, _instance, _field;
 
     Object.defineProperty(this, "instance",
     {
@@ -17,19 +17,6 @@ var ObjectEditor = function (_props, overrided = false) {
             if (_instance != v) {
                 _instance = v;
                 this.initFields(_instance);
-            }
-        },
-        enumerable:true
-    });
-
-    Object.defineProperty(this, "value",
-    {
-        get: function value() {
-            return _value;
-        },
-        set: function value(v) {
-            if (_value != v) {
-                _value = v;
             }
         },
         enumerable:true
@@ -52,13 +39,13 @@ var ObjectEditor = function (_props, overrided = false) {
         let rows = [];
         _self.removeAllChildren();
         for(let prop in props){
-            let propsMeta = ObjectEditor.metaProps[inst.ctor] && ObjectEditor.metaProps[inst.ctor][prop]?ObjectEditor.metaProps[inst.ctor][prop]:ObjectEditor.metaProps[prop];
-            if(propsMeta){
+            let propsMeta = extend(true, ObjectEditor.metaProps[inst.ctor] && ObjectEditor.metaProps[inst.ctor][prop]?ObjectEditor.metaProps[inst.ctor][prop]:ObjectEditor.metaProps[prop]);
+            if(propsMeta && !Object.isEmpty(propsMeta)){
                 let propEditor = extend(true, ObjectEditor.components[propsMeta.ctor]);
                 if(propEditor){
                     let itemEditorLit = propEditor.literal;
                     if(propsMeta.props)
-                        itemEditorLit.props = extend(false, false, itemEditorLit.props, propsMeta.props);
+                        itemEditorLit.props =  extend(false, false, itemEditorLit.props, propsMeta.props);
                     
                     if(propsMeta.ctor in {"CollectionEditor":1, "ObjectEditor":1}){
                         itemEditorLit.props.instance = props[prop];

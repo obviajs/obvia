@@ -200,6 +200,7 @@ var Container = function(_props, overrided=false)
         textAlign: "left"
     };
     //_props = extend(false, false, _defaultParams, _props);
+    
     shallowCopy(extend(false, false, _defaultParams, _props), _props);
     var _width;
     var _height;

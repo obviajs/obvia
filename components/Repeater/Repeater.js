@@ -289,21 +289,23 @@ var Repeater = function(_props)
             _self.dataProviderChanged(toAdd, toRemove, toRefresh);
         } 
     }
-    Object.defineProperty(this, "value", {
-        get: function value() {
-            var value = {};
-            for(var i=0;i<_components.length;i++)
-            {
-                value[_components[i].props.id] = [];        
-                for(var j=0;j<this[_components[i].props.id].length;j++)
+    if(!this.hasOwnProperty("value")){
+        Object.defineProperty(this, "value", {
+            get: function value() {
+                var value = {};
+                for(var i=0;i<_components.length;i++)
                 {
-                    value[_components[i].props.id].push(this[_components[i].props.id][j].value);
+                    value[_components[i].props.id] = [];        
+                    for(var j=0;j<this[_components[i].props.id].length;j++)
+                    {
+                        value[_components[i].props.id].push(this[_components[i].props.id][j].value);
+                    }
                 }
-            }
-            return value;
-        },
-        configurable:true
-    });
+                return value;
+            },
+            configurable:true
+        });
+    }
     var _createdRows = 0;
     //renders a new row, adds components in stack
     this.addRow = function (data, index, isPreventable = false, focusOnRowAdd = true) 

@@ -20,6 +20,22 @@ var Select = function (_props, overrided = false) {
         enumerable:true
     });
     
+    Object.defineProperty(this, "value",
+    {
+        get: function value() {
+            return _value;
+        },
+        set: function value(v) {
+            if (_value != v) {
+                _value = v;
+                if (this.$el) {
+                    this.$el.val(v);
+                    this.trigger('change');
+                }
+            }
+        }
+    });
+    
     Object.defineProperty(this, "labelField", 
     {
         get: function labelField() 
@@ -33,7 +49,7 @@ var Select = function (_props, overrided = false) {
         enumerable:true
     });
     
-    _changeHandler = function (e) {
+    let _changeHandler = function (e) {
         _value = this.$el.val();
     };
 
@@ -44,7 +60,7 @@ var Select = function (_props, overrided = false) {
     this.beforeAttach = function() 
     {
         this.$container = this.$el;
-        if(_props.value){
+        if(_props.value && !this.getBindingExpression("value")){
             _value = _props.value;
         }
     };
@@ -115,22 +131,6 @@ var Select = function (_props, overrided = false) {
         },
         configurable: true
     });  
-    
-    Object.defineProperty(this, "value",
-    {
-        get: function value() {
-            return _value;
-        },
-        set: function value(v) {
-            if (_value != v) {
-                _value = v;
-                if (this.$el) {
-                    this.$el.val(v);
-                    this.trigger('change');
-                }
-            }
-        }
-    });
 };
 
 //component prototype
