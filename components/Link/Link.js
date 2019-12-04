@@ -134,9 +134,9 @@ var Link = function(_props)
     };
 
     var _defaultParams = {
-        label: "Click Me",
+        label: "",
         href: "javascript:void()",
-        target: "_blank",
+        target: undefined,
         title: undefined
     };
     

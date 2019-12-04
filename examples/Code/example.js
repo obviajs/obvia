@@ -22,7 +22,106 @@ let cnt = new Container({
         ctor: Nav,
         props: {
             id: "mainNav",
-            height:40
+            height:40,
+            classes: ["d-flex"],
+            components:[
+                {
+                    ctor: Container,
+                    props: {
+                        type: ContainerType.NONE,  
+                        width: 250,
+                        components:[
+                            {
+                                ctor: Label,
+                                props:{
+                                    id: "mySideNavToggle",
+                                    label: "Code"
+                                }
+                            }
+                        ]
+                    }
+                },
+                {
+                    ctor: Container,
+                    props: {
+                        type: ContainerType.NONE,  
+                        components:[
+                            {
+                                ctor: Link,
+                                props:{
+                                    labelType: LabelType.i,
+                                    classes: ["fas", "fa-bars"],
+                                    click: _mySideNavToggleClick
+                                }
+                            }
+                        ]
+                    }
+                },
+                {
+                    ctor: Link,
+                    props: {
+                        id: "deployBtn",
+                        label: "Deploy",
+                        spacing: {mr:1},
+                        components: [{
+                            ctor: Label,
+                            props: {
+                                id: 'fa',
+                                labelType: LabelType.i,
+                                classes: ["fas","fa-rocket"]
+                            }
+                        }]
+                    }
+                },
+                {
+                    ctor: Link,
+                    props: {
+                        id: "versionsBtn",
+                        label: "Versions",
+                        spacing: {mr:1},
+                        components: [{
+                            ctor: Label,
+                            props: {
+                                id: 'fa',
+                                labelType: LabelType.i,
+                                classes: ["fas","fa-list-ol"]
+                            }
+                        }]
+                    }
+                },
+                {
+                    ctor: Link,
+                    props: {
+                        id: "uploadBtn",
+                        label: "Save",
+                        spacing: {mr:1},
+                        components: [{
+                            ctor: Label,
+                            props: {
+                                id: 'fa',
+                                labelType: LabelType.i,
+                                classes: ["fas","fa-cloud-upload-alt"]
+                            }
+                        }]
+                    }
+                },
+                {
+                    ctor: Link,
+                    props: {
+                        id: "removeBtn",
+                        label: "Delete",
+                        spacing: {mr:1},
+                        components: [{
+                            ctor: Label,
+                            props: {
+                                id: 'fa',
+                                labelType: LabelType.i,
+                                classes: ["fas","fa-trash"]
+                            }
+                        }]
+                    }
+                }     
+            ]
         }
     },
     {
@@ -106,10 +205,22 @@ let cnt = new Container({
                 },
             ]
         }
-    }
+    },
+    {
+        ctor: Footer,
+        props: {
+            id: "footer",
+            height:30,
+            classes: ["d-flex"],
+            components:[]
+        }
+    }  
 ]});
 
 $('#root').append(cnt.render());
+function _mySideNavToggleClick(){
+    cnt.ideContainer.mySideNav.toggleVisibility();
+}
 function _focusEditor(){
     cnt.ideContainer.myCode.cmInst.focus();
 }
