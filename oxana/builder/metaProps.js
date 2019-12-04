@@ -1,7 +1,11 @@
 Builder.metaProps = {
     id: {ctor:"TextInput", label: "Component ID", required:true, index:1},
     name: {ctor:"TextInput", label: "Component Name", required:true, index:2},
-    label: {ctor:"TextInput", label: "Label", required:true, index:3},
+    label: {ctor:"TextInput", label: "Label", required:true, index:3, props: {
+        change: function(){
+            this.parent.parent.instance.label = this.value;
+        }
+    }},
     href: {ctor:"TextInput", label: "URL", required:true, index:3},
     target: {ctor:"Select", label:"Target", props:{
         dataProvider:new ArrayEx(getMembersCollection(LinkTarget, "text", "value"))
@@ -103,7 +107,10 @@ Builder.metaProps = {
         dataProvider:new ArrayEx([{value:"vertical", text:"Vertical"}, {value:"horizontal", text:"Horizontal"}])
     }},
     align:{ctor:"Select", label:"Align", props:{
-        dataProvider:new ArrayEx(getMembersCollection(Align, "text", "value"))
+        dataProvider:new ArrayEx(getMembersCollection(Align, "text", "value")),
+        change: function(){
+            this.parent.parent.instance.align = this.value;
+        }
     }},
     headingType:{ctor:"Select", label:"Heading Type", props:{
         dataProvider:new ArrayEx(getMembersCollection(HeadingType, "text", "value")),
@@ -243,3 +250,22 @@ Builder.metaProps.TextInput = {
         }
     }}
 }
+// Builder.metaProps.Label = {
+//     label: {ctor: "TextInput", label: "Label", required:true, index:3, props: {
+//         change: function(){
+//             this.parent.parent.instance.label = this.value;
+//         }
+//     }}
+// }
+
+Builder.metaProps.Label = {
+    labelType: {ctor: "Select", label: "Label Type", props: {
+        dataProvider: new ArrayEx(getMembersCollection(LabelType, "value", "text")),
+        change: function(){
+            this.parent.parent.instance.labelType = this.value;
+        }
+    }}
+}
+
+
+

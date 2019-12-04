@@ -68,11 +68,13 @@ var Heading = function(_props)
     {
         this.$container = this.$el;
         this.addComponents();
+        if(_props.align!=null)
+            this.align = _props.align;
     };
 
     this.template = function () 
     {         
-        return "<"+_headingType+" id='" + this.domID + "'>"+_label+"</"+_headingType+">"; 
+        return "<"+_headingType+" id='" + this.domID + "' align="+_props.align+">"+_label+"</"+_headingType+">"; 
     };
 
     var _defaultParams = {

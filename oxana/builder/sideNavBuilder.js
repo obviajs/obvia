@@ -22,38 +22,265 @@ let mainContainer = {
         components: [{
                 ctor: Nav,
                 props: {
-                    id: "nav"
+                    id: "nav",
+                    height: 40,
+                    classes: ["nav"],
+                    components: [{
+                        ctor: Container,
+                        props: {
+                            id: "containerIcons",
+                            type: ContainerType.ROW,
+                            classes: ["col-sm-12"],
+                            components: [{
+                                ctor: Container,
+                                props: {
+                                    id: "undoRedo",
+                                    classes: ["col-sm-6"],
+                                    components: [{
+                                            ctor: Label,
+                                            props: {
+                                                id: "undoButton",
+                                                labelType: LabelType.i,
+                                                label: "",
+                                                classes: ["fas", "fa-arrow-left", "navIcons"]
+                                            }
+                                        },
+                                        {
+                                            ctor: Label,
+                                            props: {
+                                                id: "redoButton",
+                                                labelType: LabelType.i,
+                                                label: "",
+                                                classes: ["fas", "fa-arrow-right", "navIcons"]
+                                            }
+                                        },
+                                        {
+                                            ctor: Label,
+                                            props: {
+                                                id: "splitHorizontal",
+                                                labelType: LabelType.i,
+                                                label: "",
+                                                classes: ["fas", "fa-columns fa-rotate-270", "navIcons"]
+                                            }
+                                        },
+                                        {
+                                            ctor: Label,
+                                            props: {
+                                                id: "splitVertical",
+                                                labelType: LabelType.i,
+                                                label: "",
+                                                classes: ["fas", "fa-columns", "navIcons"]
+                                            }
+                                        },
+                                        {
+                                            ctor: Label,
+                                            props: {
+                                                id: "saveButtonLabel",
+                                                labelType: LabelType.i,
+                                                label: "",
+                                                classes: ["fa", "fa-save", "navIcons"]
+                                            }
+                                        },
+                                        {
+                                            ctor: Label,
+                                            props: {
+                                                id: "loadIcon",
+                                                labelType: LabelType.i,
+                                                label: "",
+                                                classes: ["fas", "fa-folder-open", "navIcons"]
+                                            }
+                                        }
+                                    ]
+                                }
+                            }]
+                        }
+                    }]
                 }
             },
             {
                 ctor: Container,
                 props: {
                     id: "container",
+                    type: ContainerType.NONE,
                     classes: ["d-flex"],
                     components: [{
                             ctor: SideNav,
                             props: {
                                 id: "controlsWindow",
-                                width: "400",
-                                classes: ["sidenav"],
+                                width: "700",
+                                classes: ["sidenav", "sideNav_side_left"],
+                                components: [{
+                                    ctor: Container,
+                                    props: {
+                                        id: '',
+                                        type: ContainerType.COLUMN,
+                                        spacing: {
+                                            colSpan: 12
+                                        },
+                                        components: [{
+                                                ctor: TextInput,
+                                                props: {
+                                                    id: "input",
+                                                    placeholder: "Search Components",
+                                                    type: "text",
+                                                    classes: ["form-control", "searchComponents"]
+                                                }
+                                            },
+                                            {
+                                                ctor: Container,
+                                                props: {
+                                                    spacing: {
+                                                        h: 100
+                                                    },
+                                                    components: [{
+                                                        ctor: Repeater,
+                                                        props: {
+                                                            id: "componentList",
+                                                            dataProvider: Builder.componentList,
+                                                            rendering: {
+                                                                direction: 'horizontal'
+                                                            },
+                                                            components: [{
+                                                                ctor: Container,
+                                                                props: {
+                                                                    id: 'component',
+                                                                    spacing: {
+                                                                        m: 0.999
+                                                                    },
+                                                                    label: "{label}",
+                                                                    draggable: true,
+                                                                    dragstart: function (e, ra) {
+                                                                        console.log(arguments);
+                                                                        e.originalEvent.dataTransfer.setData("domID", e.target.id);
+                                                                        e.originalEvent.dataTransfer.setData("ctor", ra.currentItem.ctor);
+                                                                    },
+                                                                    classes: ["border", "comp_side"],
+                                                                    width: 120,
+                                                                    height: 80,
+                                                                    type: ContainerType.NONE
+                                                                }
+                                                            }]
+                                                        }
+                                                    }]
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }]
                             }
                         },
                         {
                             ctor: Container,
                             props: {
-                                id: "container",
-                                component: [workArea]
+                                id: "WorkArea",
+                                components: [{
+                                    ctor: Container,
+                                    props: {
+                                        id: '',
+                                        type: ContainerType.ROW,
+                                        height: 628,
+                                        components: [{
+                                            ctor: Container,
+                                            props: {
+                                                type: ContainerType.COLUMN,
+                                                spacing: {
+                                                    colSpan: 12
+                                                },
+                                                id: "snowCrash",
+                                                components: [{
+                                                    ctor: Container,
+                                                    props: {
+                                                        spacing: {
+                                                            h: 100
+                                                        },
+                                                        type: ContainerType.NONE,
+                                                        components: [{
+                                                            ctor: Container,
+                                                            props: {
+                                                                id: '',
+                                                                type: ContainerType.ROW,
+                                                                spacing: {
+                                                                    h: 100
+                                                                },
+                                                                components: [{
+                                                                    ctor: Container,
+                                                                    props: {
+                                                                        type: ContainerType.COLUMN,
+                                                                        spacing: {
+                                                                            colSpan: 12,
+                                                                            h: 100
+                                                                        },
+                                                                        id: 'workArea',
+                                                                        classes: ["border"]
+
+                                                                    }
+                                                                }]
+                                                            }
+                                                        }]
+                                                    }
+                                                }]
+                                            }
+                                        }]
+                                    }
+                                }]
                             }
                         },
                         {
-
-                            ctor: Sidenav,
+                            ctor: SideNav,
                             props: {
-                                width: "250",
-                                classes: ["sidenav", "sidenav_right"],
+                                id: "",
+                                width: "650",
+                                classes: ["sidenav", "sidenav_right", "sideNav_side_right"],
+                                components: [{
+                                    ctor: Container,
+                                    props: {
+                                        id: "container",
+                                        components: [{
+                                                ctor: Label,
+                                                props: {
+                                                    id: "label",
+                                                    label: "Form Properties",
+                                                    classes: ["sideRight_label"]
+                                                }
+                                            },
+                                            {
+                                                ctor: HRule,
+                                                props: {
+                                                    id: "hr",
+                                                    width: 600,
+                                                    align: "center"
+                                                }
+                                            },
+                                            {
+                                                ctor: Container,
+                                                props: {
+                                                    id: "propertyEditorWindow",
+                                                    classes: ["sideNav_left_container"],
+                                                    components: [{
+                                                            ctor: Label,
+                                                            props: {
+                                                                id: "label",
+                                                                label: "Form Name *",
+                                                                classes: ["formName"]
+                                                            }
+                                                        },
+                                                        {
+                                                            ctor: TextInput,
+                                                            props: {
+                                                                id: "textinput",
+                                                                type: "text",
+                                                                placeholder: "Form Name",
+                                                                classes: ["form-control", "formName_input"]
+                                                            }
+                                                        },
+                                                    ]
+                                                }
+                                            }
+                                        ]
+
+                                    }
+                                }]
                             }
-
-
                         }
                     ]
                 }
@@ -61,390 +288,6 @@ let mainContainer = {
         ]
     }
 }
-
-var workArea = {
-
-    ctor: Container,
-    props: {
-        id: '',
-        type: ContainerType.ROW,
-        height: 800,
-        width: 935,
-        classes: ["mt-2", "ml-0", "p-0"],
-        components: [{
-            ctor: Container,
-            props: {
-                type: ContainerType.COLUMN,
-                spacing: {
-                    colSpan: 12,
-                },
-                id: "snowCrash",
-                components: [{
-                    ctor: Container,
-                    props: {
-                        spacing: {
-                            h: 100
-                        },
-                        type: ContainerType.NONE,
-                        components: [{
-                            ctor: Container,
-                            props: {
-                                id: '',
-                                type: ContainerType.ROW,
-                                spacing: {
-                                    h: 100
-                                },
-                                components: [{
-                                    ctor: Container,
-                                    props: {
-                                        type: ContainerType.COLUMN,
-                                        spacing: {
-                                            colSpan: 12,
-                                            h: 100
-                                        },
-                                        id: 'workArea',
-                                        classes: [""]
-                                    }
-                                }]
-                            }
-                        }]
-                    }
-                }]
-            }
-        }]
-    }
-}
-
-
-// let sideNavBuilder = new NavBar({
-//     id: "navbar",
-//     height: "50",
-//     components: [{
-//             ctor: BrowserWindow,
-//             props: {
-//                 id: "propertyEditorWindow",
-//                 components: []
-//             }
-//         },
-//         {
-//             ctor: Container,
-//             props: {
-//                 id: "container",
-//                 type: ContainerType.ROW,
-//                 spacing: {
-//                     colSpan: 12
-//                 },
-//                 components: [{
-//                     ctor: Container,
-//                     props: {
-//                         id: '',
-//                         type: ContainerType.COLUMN,
-//                         spacing: {
-//                             colSpan: 12
-//                         },
-//                         classes: [""],
-//                         components: [{
-//                             ctor: Container,
-//                             props: {
-//                                 spacing: {
-//                                     h: 100
-//                                 },
-//                                 components: [{
-//                                         ctor: Container,
-//                                         props: {
-//                                             id: '',
-//                                             type: ContainerType.ROW,
-//                                             spacing: {
-//                                                 h: 25
-//                                             },
-//                                             components: [{
-//                                                 ctor: Container,
-//                                                 props: {
-//                                                     type: ContainerType.COLUMN,
-//                                                     spacing: {
-//                                                         colSpan: 12,
-//                                                         h: 100
-//                                                     },
-//                                                     id: 'toolBar',
-//                                                     classes: [""],
-//                                                     components: [{
-//                                                             ctor: Button,
-//                                                             props: {
-//                                                                 id: 'splitHorizontal',
-//                                                                 type: "button",
-//                                                                 classes: ["mr-3"],
-//                                                                 components: [{
-//                                                                     ctor: Label,
-//                                                                     props: {
-//                                                                         id: 'fa',
-//                                                                         labelType: LabelType.i,
-//                                                                         classes: ["fas", "fa-columns"]
-//                                                                     }
-//                                                                 }]
-//                                                             }
-//                                                         },
-//                                                         {
-//                                                             ctor: Button,
-//                                                             props: {
-//                                                                 id: 'splitVertical',
-//                                                                 type: "button",
-//                                                                 classes: ["mr-3"],
-//                                                                 components: [{
-//                                                                     ctor: Label,
-//                                                                     props: {
-//                                                                         id: 'fa',
-//                                                                         labelType: LabelType.i,
-//                                                                         classes: ["fas", "fa-columns"]
-//                                                                     }
-//                                                                 }]
-//                                                             }
-//                                                         },
-//                                                         {
-//                                                             ctor: Button,
-//                                                             props: {
-//                                                                 id: 'saveLayout',
-//                                                                 type: "button",
-//                                                                 classes: ["mr-3"],
-//                                                                 components: [{
-//                                                                     ctor: Label,
-//                                                                     props: {
-//                                                                         id: 'fa',
-//                                                                         labelType: LabelType.i,
-//                                                                         classes: ["fas", "fa-save"]
-//                                                                     }
-//                                                                 }]
-//                                                             }
-//                                                         },
-//                                                         {
-//                                                             ctor: Button,
-//                                                             props: {
-//                                                                 id: 'previewBtn',
-//                                                                 type: "button",
-//                                                                 classes: ["mr-3"],
-//                                                                 components: [{
-//                                                                     ctor: Label,
-//                                                                     props: {
-//                                                                         id: 'fa',
-//                                                                         labelType: LabelType.i,
-//                                                                         classes: ["fas", "fa-desktop"]
-//                                                                     }
-//                                                                 }]
-//                                                             }
-//                                                         },
-//                                                         {
-//                                                             ctor: Button,
-//                                                             props: {
-//                                                                 id: 'selectBtn',
-//                                                                 classes: ["mr-3"],
-//                                                                 type: "button",
-//                                                                 components: [{
-//                                                                     ctor: Label,
-//                                                                     props: {
-//                                                                         id: 'fa',
-//                                                                         labelType: LabelType.i,
-//                                                                         classes: ["fas", "fa-folder-open"]
-//                                                                     }
-//                                                                 }]
-//                                                             }
-//                                                         },
-//                                                         {
-//                                                             ctor: Modal,
-//                                                             props: {
-//                                                                 id: 'fileSelectModal',
-//                                                                 size: ModalSize.LARGE,
-//                                                                 title: 'Select File',
-//                                                                 components: [{
-//                                                                     ctor: UploadEx,
-//                                                                     props: {
-//                                                                         id: "browseFile",
-//                                                                         multiple: false,
-//                                                                         showProgress: false
-//                                                                     }
-//                                                                 }]
-//                                                             }
-//                                                         }
-//                                                     ]
-//                                                 }
-//                                             }]
-//                                         }
-//                                     },
-//                                     {
-//                                         ctor: Container,
-//                                         props: {
-//                                             id: '',
-//                                             type: ContainerType.ROW,
-//                                             spacing: {
-//                                                 h: 90
-//                                             },
-//                                             components: [{
-//                                                 ctor: Container,
-//                                                 props: {
-//                                                     type: ContainerType.COLUMN,
-//                                                     spacing: {
-//                                                         colSpan: 12,
-//                                                         h: 100
-//                                                     },
-//                                                     id: 'historySteps',
-//                                                     classes: [""],
-//                                                     components: [{
-//                                                         ctor: List,
-//                                                         props: {
-//                                                             id: 'listHistorySteps',
-//                                                             direction: 'vertical',
-//                                                             multiselect: false,
-//                                                             //dataProvider: oxana.history.steps,
-//                                                             valueField: "id",
-//                                                             classesField: "listItemClass",
-//                                                             defaultClasses: [],
-//                                                             selectedClasses: ["active-container"],
-//                                                             components: [{
-//                                                                 ctor: Label,
-//                                                                 props: {
-//                                                                     id: 'labelHistoryStep',
-//                                                                     value: "{id}",
-//                                                                     label: "{description}",
-//                                                                     classes: "{?listItemClass}",
-//                                                                     DOMMutation: _DOMMutationHandler,
-//                                                                     click: function (e) {
-//                                                                         e.preventDefault();
-//                                                                     }
-//                                                                 }
-//                                                             }]
-//                                                         }
-//                                                     }]
-//                                                 }
-//                                             }]
-//                                         }
-//                                     }
-//                                 ]
-//                             }
-//                         }]
-//                     }
-//                 }, ]
-//             }
-//         },
-//         {
-//             ctor: SideNav,
-//             props: {
-//                 id: "controlsWindow",
-//                 width: "400",
-//                 classes: ["sidenav", "sidenav_right"],
-//                 components: [{
-//                         ctor: Container,
-//                         props: {
-//                             id: "container",
-//                             classes: [""],
-//                             spacing: {
-//                                 colSpan: 12
-//                             },
-//                             components: [{
-//                                     ctor: Button,
-//                                     props: {
-//                                         id: "arrow",
-//                                         classes: ["btn", "btn-info"],
-//                                         type: "button",
-//                                         components: [{
-//                                             ctor: Link,
-//                                             props: {
-//                                                 id: 'leftArrow',
-//                                                 label: "",
-//                                                 href: "#",
-//                                                 spacing: {
-//                                                     colSpan: 6
-//                                                 },
-//                                                 target: "",
-//                                                 classes: ["fas", "btn-sm", "fa-arrow-left"],
-//                                             }
-//                                         }]
-//                                     }
-
-//                                 },
-//                                 {
-//                                     ctor: Button,
-//                                     props: {
-//                                         id: "closeBtn",
-//                                         classes: ["btn", "btn-danger", "btn-sm"],
-//                                         type: "button",
-//                                         components: [{
-//                                             ctor: Link,
-//                                             props: {
-//                                                 id: 'toggleView',
-//                                                 label: "",
-//                                                 href: "#",
-//                                                 spacing: {
-//                                                     colSpan: 6
-//                                                 },
-//                                                 target: "",
-//                                                 classes: ["fas", "fa-times"],
-//                                             }
-//                                         }]
-//                                     }
-//                                 }
-//                             ]
-//                         }
-//                     },
-//                     {
-//                         ctor: Container,
-//                         props: {
-//                             id: '',
-//                             type: ContainerType.COLUMN,
-//                             classes: [],
-//                             components: [{
-//                                 ctor: Container,
-//                                 props: {
-//                                     spacing: {
-//                                         h: 100
-//                                     },
-//                                     components: [{
-//                                         ctor: Repeater,
-//                                         props: {
-//                                             id: "componentList",
-//                                             dataProvider: Builder.componentList,
-//                                             rendering: {
-//                                                 direction: 'horizontal'
-//                                             },
-//                                             components: [{
-//                                                 ctor: Container,
-//                                                 props: {
-//                                                     id: 'component',
-//                                                     placeholder: "{label}",
-//                                                     draggable: true,
-//                                                     dragstart: function (e, ra) {
-//                                                         console.log(arguments);
-//                                                         e.originalEvent.dataTransfer.setData("domID", e.target.id);
-//                                                         e.originalEvent.dataTransfer.setData("ctor", ra.currentItem.ctor);
-//                                                     },
-//                                                     classes: ["border", "placeholder", "m-3", "bg-white"],
-//                                                     width: 80,
-//                                                     height: 50,
-//                                                     type: ContainerType.NONE
-//                                                 }
-//                                             }]
-//                                         }
-//                                     }]
-//                                 }
-//                             }]
-//                         }
-//                     }
-//                 ]
-//             }
-//         },
-//         {
-//             ctor: Container,
-//             props: {
-//                 id: "",
-//                 type: ContainerType.COLUMN,
-//                 spacing: {
-//                     colSpan: 12
-//                 },
-//                 components: [workArea]
-//             }
-//         }
-
-
-//     ]
-// });
-
 
 oxana.components = [{
     ctor: ViewStack,
@@ -728,7 +571,7 @@ oxana.behaviorimplementations["HISTORY_REDONE"] = function (e) {
     Component.instances["listHistorySteps"].value = e.redone;
 };
 
-
+var activeContainer;
 oxana.behaviorimplementations["SPLIT_HOR"] = {
     //description: "Split selected container horizontally",
     description: "Ndaje horizontalisht",
@@ -827,6 +670,7 @@ oxana.behaviorimplementations["SPLIT_VERT"] = {
     description: "Split selected container vertically",
     do: function (e) {
         var retFromRedoMaybe = arguments[arguments.length - 1];
+        console.log(retFromRedoMaybe, "aaaaaaaaaaaaaaaa");
         if (retFromRedoMaybe.container) {
             activeContainer = retFromRedoMaybe.container;
             console.log("called SPLIT_VERT from History(REDO).");
@@ -904,7 +748,7 @@ oxana.behaviorimplementations["SPLIT_VERT"] = {
     }
 };
 
-var activeContainer;
+
 oxana.behaviorimplementations["BECOME_ACTIVE"] = {
     do: function (e) {
         console.log("Container Became active");
