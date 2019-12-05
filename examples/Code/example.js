@@ -131,7 +131,7 @@ let cnt = new Container({
             id: "ideContainer",
             width: '100%',
             height: '100%',   
-            classes: ["d-flex"],
+            classes: ["d-flex", "flex-shrink-0"],
             components:[
                 {
                     ctor: SideNav,
@@ -197,7 +197,6 @@ let cnt = new Container({
                     props: {
                         id: "myCode",
                         type: ContainerType.NONE,
-                        width: '100%',
                         height: '100vh',  
                         changes: changesMade,
                         creationComplete: _focusEditor

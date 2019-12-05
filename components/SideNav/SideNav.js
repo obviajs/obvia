@@ -40,10 +40,12 @@ var SideNav = function(_props, overrided=false)
     {
         if(!_open){
             _self.width = _width;
+            _self.minWidth = _width;
             _open = true;
         } 
         else{
             _self.width = 0;
+            _self.minWidth = 0;
             _open = false;
         }
     }

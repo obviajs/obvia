@@ -75,6 +75,40 @@ var Container = function(_props, overrided=false)
             enumerable:true
         });
     }
+    if(!this.hasOwnProperty("minWidth"))
+    {
+        Object.defineProperty(this, "minWidth", 
+        {
+            get: function minWidth() 
+            {
+                return _minWidth;
+            },
+            set: function minWidth(v) 
+            {
+                if(_minWidth != v)
+                {
+                    _minWidth = v;
+                    if(this.$el)
+                    {
+                        if(v==null){
+                            this.$el.css('min-width', '');
+                        }else{
+                            let s = (
+                                isString(_minWidth) && 
+                                (
+                                    _minWidth.indexOf("vh")>-1 ||
+                                    _minWidth.indexOf("em")>-1 ||
+                                    _minWidth.indexOf("%")>-1
+                                )
+                            );
+                            this.$el.css('min-width', v+ (s?"":"px"));
+                        }
+                    }
+                }
+            },
+            enumerable:true
+        });
+    }
     if(!this.hasOwnProperty("height"))
     {
         Object.defineProperty(this, "height", 
@@ -202,7 +236,7 @@ var Container = function(_props, overrided=false)
     //_props = extend(false, false, _defaultParams, _props);
     
     shallowCopy(extend(false, false, _defaultParams, _props), _props);
-    var _width;
+    var _width, _minWidth;
     var _height;
     var _type, _role;
     //var _afterAttach = _props.afterAttach;
@@ -217,6 +251,8 @@ var Container = function(_props, overrided=false)
 
     if(_props.width)
         this.width = _props.width;
+    if(_props.minWidth)
+        this.minWidth = _props.minWidth;
     if(_props.height)
         this.height = _props.height;
     if(_props.role)
