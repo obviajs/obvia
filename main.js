@@ -59,7 +59,8 @@ rjs.define("./components/Form/FormField.js", "FormField");
 rjs.define("./components/Form/FormFieldSize.js", "FormFieldSize");
 rjs.define("./components/Form/Hidden.js", "Hidden");
 //Button
-rjs.define("./components/Button.js", "Button");
+rjs.define("./components/Button/Button.js", "Button");
+rjs.define("./components/Button/ButtonType.js", "ButtonType");
 //Heading
 rjs.define("./components/HeadingType.js", "HeadingType");
 rjs.define("./components/Heading.js", "Heading");
@@ -268,6 +269,8 @@ rjs.require([
     "repeater_default_css",
     "List",
     "Amount",
+    "Button",
+    "ButtonType",
     "HeadingType",
     "Heading",
     "LabelType",

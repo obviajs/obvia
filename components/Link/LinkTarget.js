@@ -1,5 +1,8 @@
 var LinkTarget =
 {
     "blank":"_blank",
-    "self":"_self"
+    "self":"_self",
+    "parent": "_parent",
+    "top" : "_top",
+    "framename": "_framename"
 }

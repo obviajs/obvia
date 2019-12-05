@@ -1,3 +1,25 @@
+//Template literal for global App style
+const appStyle = `
+.ew-resize {cursor: ew-resize !important;}
+.ns-resize {cursor: ns-resize !important;}
+.selected-component {
+    border: 1px black solid !important;
+    border-right: 10px black solid !important;
+    padding-bottom: 10px;
+}
+.default-component {
+    border: 1px grey solid;
+    border-right: 10px grey solid;
+    padding-bottom: 10px;
+}
+.default-cnt{
+    min-height:50px
+}
+.active-container{
+    border: 1px dashed #3987d9 !important;
+}
+`;
+
 var _DOMMutationHandler = function (e) {
     //Google translate will add font/font/text nodes to the translated label
     if (e.mutation.addedNodes.length > 0 && e.mutation.addedNodes[0].childNodes.length > 0 && e.mutation.addedNodes[0].childNodes[0].childNodes.length > 0) {
@@ -5,7 +27,9 @@ var _DOMMutationHandler = function (e) {
     }
 };
 
-var oxana = new App();
+var oxana = new App({
+    style: appStyle
+});
 
 
 let formField = Builder.components["FormField"].literal;

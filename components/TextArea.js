@@ -8,21 +8,40 @@
 var TextArea = function (_props, overrided = false) {
     var _self = this;
 
-    Object.defineProperty(this, "value",
-        {
-            get: function value() {
-                return _value;
-            },
-            set: function value(v) {
-                if (_value != v) {
-                    _value = v;
-                    if (this.$input) {
-                        this.$input.val(_value);
-                        this.trigger('change');
-                    }
+    Object.defineProperty(this, "value", {
+        get: function value() {
+            return _value;
+        },
+        set: function value(v) {
+            if (_value != v) {
+                _value = v;
+                if (this.$input) {
+                    this.$input.val(_value);
+                    this.trigger('change');
                 }
             }
-        });
+        },
+        enumerable: true
+    });
+
+    Object.defineProperty(this, "spellCheck", {
+        get: function spellCheck() {
+            return _spellCheck;
+        },
+        set: function spellCheck(v) {
+            if (_spellCheck != v) {
+                _spellCheck = v;
+                if (_spellCheck) {
+                    if(this.$el){
+                        this.$el.attr("spellcheck", _spellCheck);
+                    }
+                }
+            }else{
+                this.$el.removeAttr("spellcheck");
+            }
+        },
+        enumerable: true
+    });
 
 
     this.beforeAttach = function () {
@@ -54,8 +73,7 @@ var TextArea = function (_props, overrided = false) {
             _dblclick.apply(this, arguments);
 
         var e = arguments[0];
-        if(!e.isDefaultPrevented()) {
-        }
+        if (!e.isDefaultPrevented()) {}
     };
 
     Component.call(this, _props);

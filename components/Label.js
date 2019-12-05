@@ -5,23 +5,18 @@
  */
 
 //component definition
-var Label = function(_props)
-{   
-    Object.defineProperty(this, "label", 
-    {
-        get: function label() 
-        {
+var Label = function (_props) {
+    Object.defineProperty(this, "label", {
+        get: function label() {
             return _label;
         },
-        set: function label(v) 
-        {
-            if(_label != v)
-            {
+        set: function label(v) {
+            if (_label != v) {
                 _label = v;
-                if(this.$el){
+                if (this.$el) {
                     var last = this.$el.children().last();
-                    if(last && last.length>0)
-                        if(last[0].nextSibling)
+                    if (last && last.length > 0)
+                        if (last[0].nextSibling)
                             last[0].nextSibling.textContent = v;
                         else
                             this.$el.appendText(v);
@@ -31,30 +26,49 @@ var Label = function(_props)
                 }
             }
         },
-        enumerable:true,
+        enumerable: true,
         configurable: true
     });
-    
-    this.beforeAttach = function () 
+
+    Object.defineProperty(this, "labelType", 
     {
+        get: function labelType() 
+        {
+            return _labelType;
+        },
+        set: function labelType(v) 
+        {
+            if(_labelType != v)
+            {
+                _labelType = v;
+                if(this.$el){
+                    let $newEl = $(this.template());
+                    this.$el.replaceWith($newEl);
+                    this.$el = $newEl;
+                }
+            }
+        },
+        enumerable:true
+    });
+
+    this.beforeAttach = function () {
         this.$container = this.$el;
         this.addComponents();
-        if(_props.label){
+        if (_props.label) {
             this.label = _props.label;
         }
     };
 
-    this.template = function () 
-    {         
-        return "<"+_labelType+" id='" + this.domID + "'></"+_labelType+">"; 
+    this.template = function () {
+        return "<" + _labelType + " id='" + this.domID + "'></" + _labelType + ">";
     };
 
     var _defaultParams = {
-        label:"",
+        label: "",
         labelType: LabelType.label
     };
     _props = extend(false, false, _defaultParams, _props);
-    
+
     var _label;
     var _labelType = _props.labelType;
 

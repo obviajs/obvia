@@ -136,7 +136,7 @@ var Link = function(_props)
     var _defaultParams = {
         label: "",
         href: "javascript:void()",
-        target: undefined,
+        target: LinkTarget.self,
         title: undefined
     };
     

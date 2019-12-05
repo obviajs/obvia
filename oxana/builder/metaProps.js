@@ -6,10 +6,17 @@ Builder.metaProps = {
             this.parent.parent.instance.label = this.value;
         }
     }},
-    href: {ctor:"TextInput", label: "URL", required:true, index:3},
-    target: {ctor:"Select", label:"Target", props:{
-        dataProvider:new ArrayEx(getMembersCollection(LinkTarget, "text", "value"))
-    }, index:3},
+    href: {ctor:"TextInput", label: "URL", required:true, index:3, props :{
+        change: function(){
+            this.parent.parent.instance.href = this.value;
+        }
+    }},
+    target: {ctor:"Select", label:"Target", index:3, props:{
+        dataProvider:new ArrayEx(getMembersCollection(LinkTarget, "text", "value")),
+        change: function(){
+            this.parent.parent.instance.target = this.value;
+        }
+    }},
     width: {ctor:"TextInput", label: "Width", required:true, index:3},
     height: {ctor:"TextInput", label: "Height", required:true, index:3},
     visible: {ctor:"Toggle", label: "Visible", index:4},
@@ -250,19 +257,40 @@ Builder.metaProps.TextInput = {
         }
     }}
 }
-// Builder.metaProps.Label = {
-//     label: {ctor: "TextInput", label: "Label", required:true, index:3, props: {
-//         change: function(){
-//             this.parent.parent.instance.label = this.value;
-//         }
-//     }}
-// }
 
 Builder.metaProps.Label = {
     labelType: {ctor: "Select", label: "Label Type", props: {
         dataProvider: new ArrayEx(getMembersCollection(LabelType, "value", "text")),
         change: function(){
             this.parent.parent.instance.labelType = this.value;
+        }
+    }}
+}
+
+Builder.metaProps.Button = {
+    type: {ctor: "Select", label: "Button Type", props: {
+        dataProvider: new ArrayEx(getMembersCollection(ButtonType, "value", "text")),
+        change: function(){
+            this.parent.parent.instance.type = this.value;
+        }
+    }},
+    label: {ctor: "TextInput", label: "Value", props: {
+        change: function(){
+            this.parent.parent.instance.label = this.value;
+        }
+    }}
+}
+
+Builder.metaProps.TextArea = {
+    value: {ctor: "TextInput", label: "Value", props: {
+        change: function(){
+            this.parent.parent.instance.value = this.value;
+        }
+    }},
+    spellCheck: {ctor: "Select", label: "Spell Check", props: {
+        dataProvider: new ArrayEx([{"value":"false", "text":"False"}, {"value":"true", "text":"True"}]),
+        change: function(){
+            this.parent.parent.instance.spellCheck = this.value;
         }
     }}
 }
