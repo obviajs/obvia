@@ -5,7 +5,9 @@
  */
 
 //component definition
-var RadioButton = function (_props, overrided = false) {
+let RadioButton = function (_props, overrided = false) {
+
+    let _label, _value, _checked, _name;
 
     Object.defineProperty(this, "label",
     {
@@ -64,32 +66,38 @@ var RadioButton = function (_props, overrided = false) {
 
     this.beforeAttach = function () {
         this.$input = this.$el.find("#" + this.domID + "-radio");
-        if(_props.name){
+        if(_props.name && !this.getBindingExpression("name")){
             this.name = _props.name;
+        }
+        if(_props.label && !this.getBindingExpression("label")){
+            this.label = _props.label;
+        }
+        if(_props.value && !this.getBindingExpression("value")){
+            this.value = _props.value;
+        }
+        if(_props.checked && !this.getBindingExpression("checked")){
+            this.checked = _props.checked;
+        }
+        if(_props.enabled && !this.getBindingExpression("enabled")){
+            this.enabled = _props.enabled;
         }
     };
 
     this.template = function () {
         return "<label id='" + this.domID + "'>" +
-            "<input data-triggers='click' id='" + this.domID + "-radio' type='radio' class='no-form-control' value='" + _value + "' " + (!_enabled ? "disabled" : "") + (_checked ? "checked='checked'" : '') + ">"
+            "<input data-triggers='click' id='" + this.domID + "-radio' type='radio' class='no-form-control' >"
             + _label +
             "</label>";
     };
 
-    var _defaultParams = {
+    let _defaultParams = {
         label: "",
         value: "",
         checked: false,
         enabled: true,
     };
     _props = extend(false, false, _defaultParams, _props);
-
-    var _label = _props.label;
-    var _value = _props.value;
-    var _checked = _props.checked;
-    var _enabled = _props.enabled;
-    var _name;
-
+  
     Component.call(this, _props);
 
     if (overrided) {

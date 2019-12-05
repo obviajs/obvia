@@ -152,11 +152,6 @@ var List = function (_props, overrided = false) {
                     var arrDpIndex = (v == undefined || v == null || v[_valueField] == undefined) ? -1 : indexOfObject(this.dataProvider, _valueField, v[_valueField]);
                     if (arrDpIndex != -1) {
                         _states.forEach(function (state) {
-                            if(state.dataProviderField == _classesField){
-                                for(let i=0;i<_components.length;i++){
-                                    this[_components[i].props.id][arrDpIndex].$el.removeClass(state.states.on.join(" "));
-                                }
-                            }
                             this.dataProvider[arrDpIndex][state.dataProviderField] = state.states.off;
                         }.bind(this));
                     }
@@ -166,11 +161,6 @@ var List = function (_props, overrided = false) {
                     var arrDpIndex = (v == null || v[_valueField] == null) ? -1 : indexOfObject(this.dataProvider, _valueField, v[_valueField]);
                     if (arrDpIndex != -1) {
                         _states.forEach(function (state) {
-                            if(state.dataProviderField == _classesField){
-                                for(let i=0;i<_components.length;i++){
-                                    this[_components[i].props.id][arrDpIndex].$el.removeClass(state.states.off.join(" "));
-                                }
-                            }
                             this.dataProvider[arrDpIndex][state.dataProviderField] = state.states.on;
                         }.bind(this));
                     } else {

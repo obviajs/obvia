@@ -4,8 +4,8 @@
  * Kreatx 2019
  */
 
-var CheckBox = function (_props, overrided = false) {
-    var _self = this;
+let CheckBox = function (_props, overrided = false) {
+    let _self = this, _label, _value, _checked;
 
     Object.defineProperty(this, "label",
     {
@@ -16,7 +16,7 @@ var CheckBox = function (_props, overrided = false) {
             if (_label != v) {
                 _label = v;
                 if (this.$el){
-                    var last = this.$el.children().last();
+                    let last = this.$el.children().last();
                     if(last && last.length>0)
                         if(last[0].nextSibling)
                             last[0].nextSibling.textContent = v;
@@ -62,16 +62,30 @@ var CheckBox = function (_props, overrided = false) {
         enumerable:true
     });
 
-    var _changeHandler = function () {
+    let _changeHandler = function () {
         _checked = !_checked;
     };
-
-    this.template = function () {
-        return "<input " + (_checked ? "checked='checked'" : '') + " id='" + this.domID + "'  value='" + _value + "' " +
-            " type='checkbox'/>" + _label;
+    
+    this.beforeAttach = function () {
+        if(_props.label && !this.getBindingExpression("label")){
+            this.label = _props.label;
+        }
+        if(_props.value && !this.getBindingExpression("value")){
+            this.value = _props.value;
+        }
+        if(_props.checked && !this.getBindingExpression("checked")){
+            this.checked = _props.checked;
+        }
+        if(_props.enabled && !this.getBindingExpression("enabled")){
+            this.enabled = _props.enabled;
+        }
     };
-
-    var _defaultParams = {
+    
+    this.template = function () {
+        return "<input id='" + this.domID + "' type='checkbox'/>" + _label;
+    };
+    
+    let _defaultParams = {
         label: '',
         value: null,
         enabled: true,
@@ -81,13 +95,10 @@ var CheckBox = function (_props, overrided = false) {
 
     _props = extend(false, false, _defaultParams, _props);
 
-    var _label = _props.label;
-    var _value = _props.value;
-    var _checked = _props.checked;
-    var _change = _props.change;
+    let _change = _props.change;
 
     _props.change = function () {
-        var e = arguments[0];
+        let e = arguments[0];
         if (!e.isDefaultPrevented()) {
             _changeHandler.apply(this, arguments);
         }

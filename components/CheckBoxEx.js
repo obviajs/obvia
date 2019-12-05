@@ -4,8 +4,8 @@
  * Kreatx 2019
  */
 
-var CheckBoxEx = function (_props, overrided = false) {
-    var _self = this;
+let CheckBoxEx = function (_props, overrided = false) {
+    let _self = this, _label, _value, _checked;
 
     Object.defineProperty(this, "label",
     {
@@ -15,8 +15,18 @@ var CheckBoxEx = function (_props, overrided = false) {
         set: function label(v) {
             if (_label != v) {
                 _label = v;
-                if (this.$input)
-                    this.$input[0].nextSibling.textContent = v;
+                if (this.$el)
+                {
+                    let last = this.$el.children().last();
+                    if(last && last.length>0)
+                        if(last[0].nextSibling)
+                            last[0].nextSibling.textContent = v;
+                        else
+                            this.$el.appendText(v);
+                    else
+                        //this.$el.appendText(v);
+                        this.$el.text(v);
+                }
             }
         }
     });
@@ -52,21 +62,31 @@ var CheckBoxEx = function (_props, overrided = false) {
 
     this.beforeAttach = function () {
         this.$input = this.$el.find("#" + this.domID + "-checkbox");
+        if(_props.label && !this.getBindingExpression("label")){
+            this.label = _props.label;
+        }
+        if(_props.value && !this.getBindingExpression("value")){
+            this.value = _props.value;
+        }
+        if(_props.checked && !this.getBindingExpression("checked")){
+            this.checked = _props.checked;
+        }
+        if(_props.enabled && !this.getBindingExpression("enabled")){
+            this.enabled = _props.enabled;
+        }
     };
 
-    var _changeHandler = function () {
+    let _changeHandler = function () {
         _checked = !_checked;
     };
 
     this.template = function () {
         return "<label  id='" + this.domID + "'>" +
-            "<input data-triggers='click change' " + (_checked ? "checked='checked'" : '') + " id='" + this.domID + "-checkbox'  value='" + _value + "' " +
-            " type='checkbox' class='no-form-control'/>" + _label + "</label>";
+            "<input data-triggers='click change' id='" + this.domID + "-checkbox' type='checkbox' class='no-form-control'/></label>";
     };
 
-    var _defaultParams = {
+    let _defaultParams = {
         label: 'CheckBox Label',
-        blockProcessAttr: false,
         value: null,
         enabled: true,
         checked: false,
@@ -75,17 +95,13 @@ var CheckBoxEx = function (_props, overrided = false) {
 
     _props = extend(false, false, _defaultParams, _props);
 
-    var _label = _props.label;
-    var _value = _props.value;
-    var _enabled = _props.enabled;
-    var _checked = _props.checked;
-    var _change = _props.change;
+    let _change = _props.change;
 
     _props.change = function () {
         if (typeof _change == 'function')
             _change.apply(this, arguments);
 
-        var e = arguments[0];
+        let e = arguments[0];
         if (!e.isDefaultPrevented()) {
             _changeHandler.apply(this, arguments);
         }
