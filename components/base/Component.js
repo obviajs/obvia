@@ -88,6 +88,18 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
         enumerable:false
     });
     
+    Object.defineProperty(this, "proxyMaybe", 
+    {
+        get: function proxyMaybe() 
+        {
+            let inst = this;
+            if(this.hasOwnProperty("proxy")){
+                inst = this.proxy;
+            }
+            return inst;
+        }
+    });
+    
     //domID property
     Object.defineProperty(this, 'id',
     {
@@ -436,10 +448,10 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
     this.DOMMutation = function (e)
     {
         if (typeof _props.DOMMutation == 'function')
-            _props.DOMMutation.apply(this, arguments);
+            _props.DOMMutation.apply(this.proxyMaybe, arguments);
         if(!e.isDefaultPrevented()){
             if (typeof _DOMMutation == 'function')
-                _DOMMutation.apply(this, arguments);
+                _DOMMutation.apply(this.proxyMaybe, arguments);
         }
     }
     var _beforeAttach = this.beforeAttach;
@@ -448,11 +460,11 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
         if (e.target.id == this.domID) 
         {
             if (typeof _props.beforeAttach == 'function')
-                _props.beforeAttach.apply(this, arguments);
+                _props.beforeAttach.apply(this.proxyMaybe, arguments);
             //TODO: not neccessary ? 
             if(!e.isDefaultPrevented()){
                 if (typeof _beforeAttach == 'function')
-                    _beforeAttach.apply(this, arguments);
+                    _beforeAttach.apply(this.proxyMaybe, arguments);
             }
             if(_props.classes)
             {
@@ -467,10 +479,10 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
         {
             _attached = true;
             if (typeof _props.afterAttach == 'function')
-                _props.afterAttach.apply(this, arguments);
+                _props.afterAttach.apply(this.proxyMaybe, arguments);
             if(!e.isDefaultPrevented()){
                 if (typeof _afterAttach == 'function')
-                    _afterAttach.apply(this, arguments);
+                    _afterAttach.apply(this.proxyMaybe, arguments);
                 if(!e.isDefaultPrevented()){
                     this.trigger('creationComplete');
                     console.log("CreationComplete : Type:",this.ctor+" id:"+ this.$el.attr("id"));
@@ -632,7 +644,7 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
                             ]);
                         }
                         //console.log(_self.$el.attr('id'), arguments[0]);
-                        return fnc.apply(_self, args);
+                        return fnc.apply(_self.proxyMaybe, args);
                     };
                     _handlers[eventType].push({"proxyHandler":proxyHandler, "originalHandler":fnc});
                     this.$el.on(eventType, proxyHandler);
@@ -856,7 +868,7 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
                                         );
                                     }
                                     args[0].originalContext = this;
-                                    handler.events[innerEventIn].apply(component, args);
+                                    handler.events[innerEventIn].apply(component.proxyMaybe, args);
                                 }
                             })(innerEventIn, _self);    
                             _handlers[innerEventIn].push({"proxyHandler":proxyHandler, "originalHandler":handler.events[innerEventIn]});

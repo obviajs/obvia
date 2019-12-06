@@ -5,7 +5,7 @@
  */
 
 //component definition
-var Container = function(_props, overrided=false)
+let Container = function(_props, overrided=false)
 {
     let _textAlign;
 
@@ -23,7 +23,7 @@ var Container = function(_props, overrided=false)
                     _label = v;
                     if(this.$el)
                     {
-                        var last = this.$el.children().last();
+                        let last = this.$el.children().last();
                         if(last && last.length>0)
                             if(last[0].nextSibling)
                                 last[0].nextSibling.textContent = v;
@@ -102,6 +102,40 @@ var Container = function(_props, overrided=false)
                                 )
                             );
                             this.$el.css('min-width', v+ (s?"":"px"));
+                        }
+                    }
+                }
+            },
+            enumerable:true
+        });
+    }
+    if(!this.hasOwnProperty("minHeight"))
+    {
+        Object.defineProperty(this, "minHeight", 
+        {
+            get: function minHeight() 
+            {
+                return _minHeight;
+            },
+            set: function minHeight(v) 
+            {
+                if(_minHeight != v)
+                {
+                    _minHeight = v;
+                    if(this.$el)
+                    {
+                        if(v==null){
+                            this.$el.css('min-height', '');
+                        }else{
+                            let s = (
+                                isString(_minHeight) && 
+                                (
+                                    _minHeight.indexOf("vh")>-1 ||
+                                    _minHeight.indexOf("em")>-1 ||
+                                    _minHeight.indexOf("%")>-1
+                                )
+                            );
+                            this.$el.css('min-height', v+ (s?"":"px"));
                         }
                     }
                 }
@@ -213,7 +247,6 @@ var Container = function(_props, overrided=false)
        // {
             if (typeof _afterAttach == 'function')
                 _afterAttach.apply(this, arguments);
-            var e = arguments[0];
             if (!e.isDefaultPrevented()) {
                 if(_props.label)
                     this.label = _props.label;
@@ -223,27 +256,29 @@ var Container = function(_props, overrided=false)
             //e.preventDefault();
         //}
     };
-
-    var _defaultParams = {
+       
+    let _defaultParams = {
         type: ContainerType.CONTAINER,
         components:[],
         spacing:{},
         width: undefined,
+        minWidth: undefined,
         height: undefined,
+        minHeight: undefined,
         role: undefined,
         textAlign: "left"
     };
     //_props = extend(false, false, _defaultParams, _props);
     
     shallowCopy(extend(false, false, _defaultParams, _props), _props);
-    var _width, _minWidth;
-    var _height;
-    var _type, _role;
-    //var _afterAttach = _props.afterAttach;
+    let _width, _minWidth;
+    let _height, _minHeight;
+    let _type, _role;
+    //let _afterAttach = _props.afterAttach;
     //_props.afterAttach = this.afterAttach;
     let _label;
     let r = Parent.call(this, _props, overrided);
-    var base = this.base;
+    let base = this.base;
     if(overrided)
     {
         this.keepBase();
@@ -255,6 +290,8 @@ var Container = function(_props, overrided=false)
         this.minWidth = _props.minWidth;
     if(_props.height)
         this.height = _props.height;
+    if(_props.minHeight)
+        this.minHeight = _props.minHeight;
     if(_props.role)
         this.role = _props.role;
 

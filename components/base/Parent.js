@@ -9,7 +9,15 @@ var Parent = function(_props, overrided=false, _isSurrogate=false)
             return Reflect.get(...arguments);
         }
     });
-
+    
+    Object.defineProperty(this, "proxy", 
+    {
+        get: function proxy() 
+        {
+            return _proxy;
+        }
+    });
+    
     Object.defineProperty(this, "children", 
     {
         get: function children() 
