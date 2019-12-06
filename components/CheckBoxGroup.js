@@ -4,7 +4,7 @@
  * Kreatx 2019
  */
 
-let CheckBoxGroup = function (_props, overrided = false) {
+var CheckBoxGroup = function (_props, overrided = false) {
     let _self = this;
     
     this.beforeAttach = function () {

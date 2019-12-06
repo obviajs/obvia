@@ -4,7 +4,7 @@
  * Kreatx 2019
  */
 
-let RadioGroup = function (_props, overrided = false) {
+var RadioGroup = function (_props, overrided = false) {
 
     this.beforeAttach = function () {
        

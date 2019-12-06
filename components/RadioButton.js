@@ -5,7 +5,7 @@
  */
 
 //component definition
-let RadioButton = function (_props, overrided = false) {
+var RadioButton = function (_props, overrided = false) {
 
     let _label, _value, _checked, _name;
 

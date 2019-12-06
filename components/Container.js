@@ -5,7 +5,7 @@
  */
 
 //component definition
-let Container = function(_props, overrided=false)
+var Container = function(_props, overrided=false)
 {
     let _textAlign;
 

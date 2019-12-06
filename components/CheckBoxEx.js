@@ -4,7 +4,7 @@
  * Kreatx 2019
  */
 
-let CheckBoxEx = function (_props, overrided = false) {
+var CheckBoxEx = function (_props, overrided = false) {
     let _self = this, _label, _value, _checked;
 
     Object.defineProperty(this, "label",
