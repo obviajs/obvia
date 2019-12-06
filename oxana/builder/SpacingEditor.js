@@ -34,8 +34,7 @@ var SpacingEditor = function (_props, overrided = false) {
             _initDP();
             this.$container = this.$el;
             fnContainerDelayInit();
-            this.components = _cmps;
-            this.addComponents();
+            this.addComponents(_cmps);
             _colSpan = this.children[this.components[0].props.id].children[this.components[0].props.components[0].props.id].children[this.my("colSpan")];
             _offset = this.children[this.components[0].props.id].children[this.components[0].props.components[1].props.id].children[this.my("offset")];
             _mb = this.children[this.components[1].props.id].children[this.components[1].props.components[0].props.id].children[this.my("mb")];

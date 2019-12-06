@@ -68,8 +68,7 @@ var DateTimeCb = function (_props, overrided = false) {
             _initDP();
             this.$container = this.$el;
             fnContainerDelayInit();
-            this.components = _cmps;
-            this.addComponents();
+            this.addComponents(_cmps);
             _dateSelect = this.children[this.components[0].props.id].children[this.components[0].props.components[0].props.id];
             _monthSelect = this.children[this.components[1].props.id].children[this.components[1].props.components[0].props.id];
             _yearSelect = this.children[this.components[2].props.id].children[this.components[2].props.components[0].props.id];

@@ -1,5 +1,6 @@
 var Parent = function(_props, overrided=false, _isSurrogate=false)
 {
+    let _$hadow = $("<div/>");
     let _proxy = new Proxy(this, {
         get: function(target, property, receiver) {
             if(!target.hasOwnProperty(property)){
@@ -205,7 +206,22 @@ var Parent = function(_props, overrided=false, _isSurrogate=false)
 
             });
             index = index > -1? index : _components.length;
-            container.insertAt(cmp.render(), index);
+            if(cmp.renderPromise){
+                cmp.renderPromise().then(function($el){
+                    container.insertAt($el, index);
+                    --_countChildren;
+                    if(_countChildren==0){
+                        _self.trigger('endDraw');
+                    }
+                });
+            }else{
+                container.insertAt(cmp.render(), index);
+                --_countChildren;
+                if(_countChildren==0){
+                    _self.trigger('endDraw');
+                }
+            }
+                
             //container.append(cmp.render());
             //expose component model
             
@@ -252,24 +268,32 @@ var Parent = function(_props, overrided=false, _isSurrogate=false)
     
     //override because creationComplete will be thrown when all children components are created
     // this.afterAttach = undefined;
-    var _magnetizedIndexes = {};
+    var _magnetizedIndexes = {}; 
+    let _countChildren;
     this.addComponents = function(cmps)
     {
+        console.time('time addComponents_'+_self.id);
+        _self.on("endDraw", function(e){
+            if (e.target.id == _self.domID) 
+            {
+                _$hadow.contents().appendTo(this.$container);
+                console.timeEnd('time addComponents_'+_self.id);
+            }
+        });
+        _self.trigger('beginDraw');
         let arrInst = [];
         let components;
         if(cmps){
-            if(this.components.length == 0 && _sortChildren){
-                acSort(cmps, "props.index");
-            }
             components = cmps;
         }else{
-            if(_sortChildren){
-                acSort(this.components, "props.index");
-            }
             components = this.components;
         }
         if(components && Array.isArray(components) && components.length>0)
         {
+            if(_sortChildren){
+                acSort(components, "props.index");
+            }
+            _countChildren = components.length;
             for(var i=0;i<components.length;i++)
             {
                 if(isObject(components[i]))
@@ -290,7 +314,7 @@ var Parent = function(_props, overrided=false, _isSurrogate=false)
                         }   
                     }
                     if(!isMagnetized)
-                        arrInst.push(this.addComponentInContainer(this.$container, components[i], i));
+                        arrInst.push(this.addComponentInContainer(_$hadow, components[i], i));
                     if(cmps){
                         _components.splice(i, 0, components[i]);
                     }
@@ -300,13 +324,15 @@ var Parent = function(_props, overrided=false, _isSurrogate=false)
             _creationFinished = true;
         return arrInst;
     }
-
+    
+  
+     
     Component.call(this, _props, true, _isSurrogate);
     var base = this.base;
     if(overrided)
     {
         this.keepBase();
-    }
+    }  
 /*
     this.destruct = function (mode=1)
     {

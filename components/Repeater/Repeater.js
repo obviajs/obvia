@@ -12,7 +12,8 @@ var Repeater = function(_props)
     this.rowItems = [];
     var _self = this;
     var _creationFinished = false;
-
+    var _$hadow = $("<div/>");
+    
     this.containerKeyDown = function(e)
     {
         if (typeof _keydown == 'function')
@@ -104,6 +105,7 @@ var Repeater = function(_props)
     };
 
     var _createRows = function(){
+        console.time('time _createRows_'+_self.id);
         _self.trigger('beginDraw');
          //this.$container.empty();
         _self.focusedRow = 0,
@@ -122,11 +124,14 @@ var Repeater = function(_props)
                         _self.addRow(data, i + 1);
                     }
                 }
+                _$hadow.contents().appendTo(_self.$container);
             }else
                 _creationFinished = true;
             _oldDataProvider = acExtend(_dataProvider);
         }else
             _creationFinished = true;
+        
+        _self.trigger('endDraw');
     }
     //handle row add click
     var _addRowHandler = function () 
@@ -162,6 +167,7 @@ var Repeater = function(_props)
             }
 
         }
+        _$hadow.contents().appendTo(_self.$container);
         _oldDataProvider = acExtend(_dataProvider);
     };
 
@@ -213,6 +219,7 @@ var Repeater = function(_props)
                                 v[i][_guidField] = StringUtils.guid();
                             this.addRow(v[i], i+1); 
                         }
+                        _$hadow.contents().appendTo(_self.$container);
                     }else if(delta<0){
                         for(var i=_dataProvider.length;i>v.length;i--){
                             this.removeRow(i, false, true, dpRemove = false); 
@@ -310,133 +317,116 @@ var Repeater = function(_props)
     //renders a new row, adds components in stack
     this.addRow = function (data, index, isPreventable = false, focusOnRowAdd = true) 
     {
-        console.log("addRow func "+this.id);
-        
         index = index || this.rows.length+1;
-        /* model check
-        var model = this.getModel();
-        */
-        //row col-sm-12
-        var renderedRow = $('<div>').addClass('');
+        var renderedRow = $('<div/>');
         var ccComponents = [];
-        var buildRow = function () {
-            var rowItems = {};
+        var rowItems = {};
 
-            for(var cIndex=0;cIndex<_components.length;cIndex++)
+        var beforeRowAddEvent = jQuery.Event("beforeRowAdd");
+        this.trigger(beforeRowAddEvent, [_self, new RepeaterEventArgs(_self.rowItems, data, index-1)]);
+
+        if (!isPreventable || (isPreventable && !beforeRowAddEvent.isDefaultPrevented())) 
+        {
+            let len = _components.length;
+            for(var cIndex=0;cIndex<len;cIndex++)
             {
-                let comp = _components[cIndex];
+                let component = _components[cIndex];
+                //clone objects
+                component = extend(true, component);
+                component.props.ownerDocument = _props.ownerDocument;
+                component.props.bindingDefaultContext = data;
+                let el = Component.fromLiteral(component, data);
+                let cmpId = component.props.id;
 
-                (function (component, vcolIndex) {
-                    return function(){
-                        //clone objects
-                        component = extend(true, component);
-                        component.props.ownerDocument = _props.ownerDocument;
-                        component.props.bindingDefaultContext = data;
-                        var el = Component.fromLiteral(component, data);
-                        var cmpId = component.props.id;
+                //build components properties, check bindings
+                if (_self[cmpId] == undefined)
+                    _self[cmpId] = [];
 
-                        //build components properties, check bindings
-                        if (_self[cmpId] == undefined)
-                            _self[cmpId] = [];
+                let cmp = _self[cmpId];
+                if (cmp[index - 1] == undefined)
+                    cmp[index - 1] = {};
+                
+                el.parent = _self;
+                el.parentType = 'repeater';
+                el.parentForm = _self.parentForm;
+                el.repeaterIndex = index - 1;
 
-                        var cmp = _self[cmpId];
-                        if (cmp[index - 1] == undefined)
-                            cmp[index - 1] = {};
+                cmp[index - 1] = el;
+                rowItems[cmpId] = el;
+                _self.rowItems[index - 1] = rowItems;
+
+                //handle component change event and delegate it to repeater
+                let ci = index;
+                el.on('creationComplete', function(e) { // a closure is created
+                    e.stopImmediatePropagation();
+                    e.stopPropagation();
+                    ccComponents.push(el.id);
+                    _createdRows++;
+                    if (ccComponents.length == _components.length) {
+                        //trigger row add event
+                        let era = jQuery.Event("rowAdd");
+                        era.row = renderedRow;
+                        _self.trigger(era, [_self, new RepeaterEventArgs(_self.rowItems[ci-1], data, ci-1)]);
+                        //duhet te shtojme nje flag qe ne rast se metoda addRow eshte thirrur nga addRowHangler te mos e exec kodin meposhte
                         
-                        el.parent = _self;
-                        el.parentType = 'repeater';
-                        el.parentForm = _self.parentForm;
-                        el.repeaterIndex = index - 1;
+                        //manage dp
+                        _self.currentItem = data;
 
-                        cmp[index - 1] = el;
-                        rowItems[cmpId] = el;
-                        _self.rowItems[index - 1] = rowItems;
-
-                        //handle component change event and delegate it to repeater
-                        el.on('creationComplete', (function (ci) { 
-                            return (function(e) { // a closure is created
-                                e.stopImmediatePropagation();
-                                e.stopPropagation();
-                                ccComponents.push(el.id);
-                                _createdRows++;
-                                if (ccComponents.length == _components.length) {
-                                    //trigger row add event
-                                    let era = jQuery.Event("rowAdd");
-                                    era.row = renderedRow;
-                                    _self.trigger(era, [_self, new RepeaterEventArgs(_self.rowItems[ci-1], data, ci-1)]);
-                                    //duhet te shtojme nje flag qe ne rast se metoda addRow eshte thirrur nga addRowHangler te mos e exec kodin meposhte
-                                    
-                                    //manage dp
-                                    _self.currentItem = data;
-
-                                    _self.currentIndex <= ci ? _self.currentIndex = ci : _self.currentIndex = _self.currentIndex;
-                                   
-                                    //skip dp if it already exist
-                                    var addRowFlag = false;
-                                    if (ci > _self.dataProvider.length) {
-                                        _self.dataProvider.push(_self.currentItem);
-                                        addRowFlag = true;
-                                    }
-                                    
-                                    if (_createdRows == _self.dataProvider.length && !addRowFlag) {
-                                        if(!_creationFinished){
-                                            _creationFinished = true;
-                                            _self.trigger('creationComplete');
-                                        }
-                                        //_self.focusComponent(0, 0);
-                                        _self.trigger('endDraw');
-                                    }
-
-                                    //animate
-                                    if (addRowFlag && focusOnRowAdd) {
-                                        _self.rowItems[_self.rowItems.length - 1][_components[0].props.id].scrollTo();
-                                    }         
-                                
-                                }
-                            });	
-                        })(index));
-
-
-                        if (_rendering.direction == 'vertical') {
-                            renderedRow.addClass("wrap");
+                        _self.currentIndex <= ci ? _self.currentIndex = ci : _self.currentIndex = _self.currentIndex;
+                        
+                        //skip dp if it already exist
+                        var addRowFlag = false;
+                        if (ci > _self.dataProvider.length) {
+                            _self.dataProvider.push(_self.currentItem);
+                            addRowFlag = true;
                         }
-                        el.on('focus', function (e, repeaterEventArgs) {
-                            _self.focusedRow = repeaterEventArgs.currentIndex;
-                            _self.focusedComponent = Object.keys(repeaterEventArgs.currentRow).indexOf(this.id);
-                            console.log("focused repeated component", _self.focusedRow , _self.focusedComponent);
-                        });
-                        el.on('change', function (e, rargs) {
-                            var currentItem = _self.dataProvider[index - 1];
-                            if (component.props.value && isString(component.props.value) && component.props.value[0] == '{' && component.props.value[component.props.value.length - 1] == '}') {
-                                var bindingExp = this.getBindingExpression("value");
-                                if(bindingExp=="currentItem"){
-                                    _self.dataProvider[rargs.currentIndex] = data = this.value;
-                                }else{
-                                    setChainValue(_dataProvider[rargs.currentIndex], bindingExp, this.value);
-                                    data = _dataProvider[rargs.currentIndex];
-                                }
-                                    
-                                
+                        
+                        if (_createdRows == _self.dataProvider.length && !addRowFlag) {
+                            if(!_creationFinished){
+                                _creationFinished = true;
+                                _self.trigger('creationComplete');
                             }
-                            _self.trigger('rowEdit', [_self, new RepeaterEventArgs(rowItems, data, index-1)]);
-                        });
+                            //_self.focusComponent(0, 0);
+                        }
 
-                        //render component in row
-                        renderedRow.append(el.render());
-                    };
-                })(comp, cIndex)();   
+                        //animate
+                        if (addRowFlag && focusOnRowAdd) {
+                            _self.rowItems[_self.rowItems.length - 1][_components[0].props.id].scrollTo();
+                        }         
+                    
+                    }
+                });	
+
+                if (_rendering.direction == 'vertical') {
+                    renderedRow.addClass("wrap");
+                }
+                
+                el.on('focus', function (e, repeaterEventArgs) {
+                    _self.focusedRow = repeaterEventArgs.currentIndex;
+                    _self.focusedComponent = Object.keys(repeaterEventArgs.currentRow).indexOf(this.id);
+                    console.log("focused repeated component", _self.focusedRow , _self.focusedComponent);
+                });
+                
+                el.on('change', function (e, rargs) {
+                    var currentItem = _self.dataProvider[index - 1];
+                    if (component.props.value && isString(component.props.value) && component.props.value[0] == '{' && component.props.value[component.props.value.length - 1] == '}') {
+                        var bindingExp = this.getBindingExpression("value");
+                        if(bindingExp=="currentItem"){
+                            _self.dataProvider[rargs.currentIndex] = data = this.value;
+                        }else{
+                            setChainValue(_dataProvider[rargs.currentIndex], bindingExp, this.value);
+                            data = _dataProvider[rargs.currentIndex];
+                        }
+                            
+                        
+                    }
+                    _self.trigger('rowEdit', [_self, new RepeaterEventArgs(rowItems, data, index-1)]);
+                });
+
+                //render component in row
+                renderedRow.append(el.render());
         }
 
-            //render row in dom
-           /*_self.$container
-                .append(
-                    $('<div>')
-                        .addClass("repeated-block")
-                        .css((_self.rendering.direction == 'horizontal' ? {display: 'inline-block'} : {}))
-                        .append((_self.rendering.separator && (index > 1) ? '<hr id="repeated-block-hr">' : ''))
-                        .append(renderedRow)
-                );   
-               */
             _self["rows"].push(renderedRow); 
             renderedRow
               .addClass("repeated-block")
@@ -453,33 +443,12 @@ var Repeater = function(_props)
                 }
                 else
                 */
-                    _self.$container.append(_rendering.wrap?renderedRow:renderedRow.children());
+                    _$hadow.append(_rendering.wrap?renderedRow:renderedRow.contents());
             }else{
-                _self.$container.prepend(_rendering.wrap?renderedRow:renderedRow.children());
+                _$hadow.prepend(_rendering.wrap?renderedRow:renderedRow.contents());
             }
-            
-            return rowItems;
         }
-
-        //trigger before row add event
-        if (isPreventable) {
-            //the before add event is preventable
-            var beforeRowAddEvent = jQuery.Event("beforeRowAdd");
-            this.trigger(beforeRowAddEvent, [_self, new RepeaterEventArgs(_self.rowItems, data, index-1)]);
-         
-            if (!beforeRowAddEvent.isDefaultPrevented()) {
-                //the event is not canceled outside
-                return buildRow();
-            } else {
-                //the event default is canceled outside
-                return false;
-            }
-
-        } else {
-            //the before add event is not preventable so buildRow anyway
-            return buildRow();    
-        }
-        
+        return rowItems;
     };
 
     //handle row delete click, nese i shtojme te register events remove dhe add kemi mundesine te heqim/shtojme ne cdo index
@@ -586,6 +555,12 @@ var Repeater = function(_props)
         if (e.target.id == this.domID) 
         {
             this.$container = this.$el;
+            _rPromise = new Promise((resolve, reject) => {
+                _self.on("endDraw", function(){
+                    console.timeEnd('time _createRows_'+_self.id);         
+                    resolve(this.$el); 
+                });                   
+            });
             if(_props.dataProvider)
                 this.dataProvider = _props.dataProvider;
             if (typeof _beforeAttach == 'function')
@@ -616,6 +591,8 @@ var Repeater = function(_props)
     var _keydown = _props.keydown;
     _props.keydown = this.containerKeyDown;
 
+    let _rPromise;
+    
     Container.call(this, _props, true, true);
     var base = this.base;
 /*
@@ -632,7 +609,12 @@ var Repeater = function(_props)
     {  
         return this.$el;
     };
-
+    
+    this.renderPromise = function () 
+    {  
+        return _rPromise;
+    };
+    
     Object.defineProperty(this, "enabled", 
     {
         get: function enabled() 

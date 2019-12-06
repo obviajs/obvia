@@ -485,10 +485,10 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
                     _afterAttach.apply(this.proxyMaybe, arguments);
                 if(!e.isDefaultPrevented()){
                     this.trigger('creationComplete');
-                    console.log("CreationComplete : Type:",this.ctor+" id:"+ this.$el.attr("id"));
+                    //console.log("CreationComplete : Type:",this.ctor+" id:"+ this.$el.attr("id"));
                 }
             }
-            console.log("AfterAttach : Type:",this.ctor+" id:"+ this.$el.attr("id"));
+            //console.log("AfterAttach : Type:",this.ctor+" id:"+ this.$el.attr("id"));
         }
     };
 
@@ -931,13 +931,10 @@ Component.processPropertyBindings = function(props)
 Component.instanceCnt = 0;
 Component.fromLiteral = function(_literal)
 {
-    var _literal = Object.assign({}, _literal);
-    var props = Object.assign({}, _literal.props);
-    //var ppb =  Component.processPropertyBindings(props);
-    //var _bindings = ppb.bindings;
-    //build components properties, check bindings
-    //var _processedProps = ppb.processedProps;
-    //construct the component
+    //var _literal = Object.assign({}, _literal);
+    //var props = Object.assign({}, _literal.props);
+    let props = _literal.props;
+    
     if(_literal.ctor)
     {
         if (typeof _literal.ctor == "string") {
