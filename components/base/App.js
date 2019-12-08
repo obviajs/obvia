@@ -273,7 +273,12 @@ var App = function(_props){
                         _root.trigger("creationComplete");
                     }
                 });    
-                _root.append(cmp.render());
+                if(cmp.renderPromise){
+                    cmp.renderPromise().then(function($el){
+                        _root.append($el);                                
+                    });
+                }else
+                    _root.append(cmp.render());
             }
         }
     }

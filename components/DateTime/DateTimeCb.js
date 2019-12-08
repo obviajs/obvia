@@ -65,28 +65,41 @@ var DateTimeCb = function (_props, overrided = false) {
     this.beforeAttach = function (e) {
         if (e.target.id == this.domID) 
         {
-            _initDP();
-            this.$container = this.$el;
-            fnContainerDelayInit();
-            this.addComponents(_cmps);
-            _dateSelect = this.children[this.components[0].props.id].children[this.components[0].props.components[0].props.id];
-            _monthSelect = this.children[this.components[1].props.id].children[this.components[1].props.components[0].props.id];
-            _yearSelect = this.children[this.components[2].props.id].children[this.components[2].props.components[0].props.id];
+            
+            //e.preventDefault();
+        }
+    };
+    //TODO: ti kapim me dot notation, gjithashtu edhe te 
+    this.endDraw = function(e)
+    {
+        if (e.target.id == this.domID) 
+        {
+            _dateSelect = this.cntDs.dateSelect;
+            _monthSelect = this.cntMs.monthSelect;
+            _yearSelect = this.cntYs.yearSelect;
             if(this.components[3])
-                _hourSelect = this.children[this.components[3].props.id].children[this.components[3].props.components[0].props.id];
+                _hourSelect = this.cntHs.hourSelect;
             if(this.components[4])
-                _minuteSelect = this.children[this.components[4].props.id].children[this.components[4].props.components[0].props.id];
+                _minuteSelect = this.cntIs.minuteSelect;
             if(this.components[5])
-                _secondSelect = this.children[this.components[5].props.id].children[this.components[5].props.components[0].props.id];
+                _secondSelect = this.cntSs.secondSelect;
 
+           
+            EventDispatcher.listen([_dateSelect, _monthSelect, _yearSelect, _hourSelect, _minuteSelect, _secondSelect], "change", _change);
+        }
+        console.log("endDraw");
+    }
+    
+    this.afterAttach = function(e)
+    {
+        if (e.target.id == this.domID) 
+        {  
             if(_props.value){
                 this.value = _props.value;
             }
-            EventDispatcher.listen([_dateSelect, _monthSelect, _yearSelect, _hourSelect, _minuteSelect, _secondSelect], "change", _change);
-            e.preventDefault();
         }
-    };
-
+    }
+    
     var _change = function (e) {
         var date = moment();
         date.date(_dateSelect.value);
@@ -108,7 +121,7 @@ var DateTimeCb = function (_props, overrided = false) {
                     "ctor": "Container",
                     "props": {
                         type: ContainerType.NONE,
-                        "id": "workArea",
+                        "id": "cntDs",
                         "components": [
                             {
                                 "ctor": "Select",
@@ -126,7 +139,7 @@ var DateTimeCb = function (_props, overrided = false) {
                     "ctor": "Container",
                     "props": {
                         type: ContainerType.NONE,
-                        "id": "workArea_53",
+                        "id": "cntMs",
                         "components": [
                             {
                                 "ctor": "Select",
@@ -144,7 +157,7 @@ var DateTimeCb = function (_props, overrided = false) {
                     "ctor": "Container",
                     "props": {
                         type: ContainerType.NONE,
-                        "id": "workArea_54",
+                        "id": "cntYs",
                         "components": [
                             {
                                 "ctor": "Select",
@@ -167,7 +180,7 @@ var DateTimeCb = function (_props, overrided = false) {
                 "ctor": "Container",
                 "props": {
                     type: ContainerType.NONE,
-                    "id": "workArea_55",
+                    "id": "cntHs",
                     classes:["pl-1"],
                     "components": [
                         {
@@ -186,7 +199,7 @@ var DateTimeCb = function (_props, overrided = false) {
                 "ctor": "Container",
                 "props": {
                     type: ContainerType.NONE,
-                    "id": "workArea_56",
+                    "id": "cntIs",
                     "components": [
                         {
                             "ctor": "Select",
@@ -204,7 +217,7 @@ var DateTimeCb = function (_props, overrided = false) {
                 "ctor": "Container",
                 "props": {
                     type: ContainerType.NONE,
-                    "id": "workArea_57",
+                    "id": "cntSs",
                     "components": [
                         {
                             "ctor": "Select",
@@ -251,7 +264,11 @@ var DateTimeCb = function (_props, overrided = false) {
     let _value = _props.value;
     let _startYear = _props.startYear
     let _endYear = _props.endYear;
-
+    
+    _initDP();
+    fnContainerDelayInit();
+    _props.components = _cmps;
+    
     Container.call(this, _props);
 
     if (overrided) {

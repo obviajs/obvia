@@ -31,10 +31,6 @@ var SpacingEditor = function (_props, overrided = false) {
     {
         if (e.target.id == this.domID) 
         {
-            _initDP();
-            this.$container = this.$el;
-            fnContainerDelayInit();
-            this.addComponents(_cmps);
             _colSpan = this.children[this.components[0].props.id].children[this.components[0].props.components[0].props.id].children[this.my("colSpan")];
             _offset = this.children[this.components[0].props.id].children[this.components[0].props.components[1].props.id].children[this.my("offset")];
             _mb = this.children[this.components[1].props.id].children[this.components[1].props.components[0].props.id].children[this.my("mb")];
@@ -151,6 +147,10 @@ var SpacingEditor = function (_props, overrided = false) {
         "components": []
     };
     _props = extend(false, false, _defaultParams, _props);
+    _initDP();
+    fnContainerDelayInit();
+    _props.components = _cmps;
+            
     Container.call(this, _props);
     let _value;
 
@@ -184,4 +184,3 @@ SpacingEditor.dpColSpan = new Array(12);
 SpacingEditor.dpOffset = new Array(12);
 SpacingEditor.dpMt = new Array(6);
 SpacingEditor.dpMb = new Array(6);
-

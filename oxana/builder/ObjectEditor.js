@@ -37,7 +37,6 @@ var ObjectEditor = function (_props, overrided = false) {
 
         props = fld!=null && fld!=""?inst[fld]:inst;
         let rows = [];
-        _self.removeAllChildren();
         for(let prop in props){
             let propsMeta = extend(true, ObjectEditor.metaProps[inst.ctor] && ObjectEditor.metaProps[inst.ctor][prop]?ObjectEditor.metaProps[inst.ctor][prop]:ObjectEditor.metaProps[prop]);
             if(propsMeta && !Object.isEmpty(propsMeta)){
@@ -97,20 +96,14 @@ var ObjectEditor = function (_props, overrided = false) {
                 console.log("Couldnt find metaProps info for " + prop + "property");
             }
         }
-        return _self.addComponents(rows);
+        return rows;
     }
 
     this.beforeAttach = function(e) 
     {
         if (e.target.id == this.domID) 
         {
-            _initDP();
-            this.$container = this.$el;
-            if(_props.instance){
-                _field = _props.field;
-                _instance = _props.instance;
-                this.initFields(_instance, _field);
-            }
+           
             e.preventDefault();
         }
     }
@@ -123,6 +116,13 @@ var ObjectEditor = function (_props, overrided = false) {
         field: "props"
     };
     _props = extend(false, false, _defaultParams, _props);
+    _initDP();
+    this.$container = this.$el;
+    if(_props.instance){
+        _field = _props.field;
+        _instance = _props.instance;
+        _props.components = this.initFields(_instance, _field);
+    }
     Container.call(this, _props);
 };
 

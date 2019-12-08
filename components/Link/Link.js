@@ -112,8 +112,6 @@ var Link = function(_props)
     
     this.beforeAttach = function () 
     {
-        this.$container = this.$el;
-        this.addComponents();
         if(_props.title){
             this.title = _props.title;
         }

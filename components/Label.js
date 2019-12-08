@@ -52,13 +52,17 @@ var Label = function (_props) {
     });
 
     this.beforeAttach = function () {
-        this.$container = this.$el;
-        this.addComponents();
-        if (_props.label) {
-            this.label = _props.label;
-        }
+        
     };
-
+    this.afterAttach = function (e) 
+    {
+        if (e.target.id == this.domID) 
+        {  
+            if (_props.label) {
+                this.label = _props.label;
+            }
+        }
+    }
     this.template = function () {
         return "<" + _labelType + " id='" + this.domID + "'></" + _labelType + ">";
     };

@@ -211,13 +211,16 @@ var Parent = function(_props, overrided=false, _isSurrogate=false)
                     container.insertAt($el, index);
                     --_countChildren;
                     if(_countChildren==0){
+                        _$hadow.contents().appendTo(_self.$container);               
                         _self.trigger('endDraw');
+                        
                     }
                 });
             }else{
                 container.insertAt(cmp.render(), index);
                 --_countChildren;
                 if(_countChildren==0){
+                    _$hadow.contents().appendTo(_self.$container);
                     _self.trigger('endDraw');
                 }
             }
@@ -272,14 +275,6 @@ var Parent = function(_props, overrided=false, _isSurrogate=false)
     let _countChildren;
     this.addComponents = function(cmps)
     {
-        console.time('time addComponents_'+_self.id);
-        _self.on("endDraw", function(e){
-            if (e.target.id == _self.domID) 
-            {
-                _$hadow.contents().appendTo(this.$container);
-                console.timeEnd('time addComponents_'+_self.id);
-            }
-        });
         _self.trigger('beginDraw');
         let arrInst = [];
         let components;
@@ -320,13 +315,29 @@ var Parent = function(_props, overrided=false, _isSurrogate=false)
                     }
                 }
             }
-        }else   
+        }else{
             _creationFinished = true;
+            _self.trigger('endDraw');
+        }   
         return arrInst;
     }
     
-  
-     
+    let _rPromise;
+    this.renderPromise = function () 
+    {  
+        this.$container = this.$el;
+        _rPromise = new Promise((resolve, reject) => {
+            _self.on("endDraw", function(e){
+                if (e.target.id == _self.domID) 
+                {
+                    resolve(this.$el); 
+                }
+            });                   
+        });
+        this.addComponents();
+        return _rPromise;
+    }; 
+    
     Component.call(this, _props, true, _isSurrogate);
     var base = this.base;
     if(overrided)

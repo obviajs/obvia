@@ -57,11 +57,13 @@ var Select = function (_props, overrided = false) {
         return "<select data-triggers='change' id='" + this.domID + "'></select>";
     };
 
-    this.beforeAttach = function() 
+    this.afterAttach = function() 
     {
-        this.$container = this.$el;
-        if(_props.value && !this.getBindingExpression("value")){
-            _value = _props.value;
+        if (e.target.id == this.domID) 
+        {
+            if(_props.value && !this.getBindingExpression("value")){
+                _value = _props.value;
+            }
         }
     };
 

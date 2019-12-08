@@ -7,7 +7,7 @@
 //component definition
 var Container = function(_props, overrided=false)
 {
-    let _textAlign;
+    let _self = this, _textAlign;
 
     if(!this.hasOwnProperty("label")){
         Object.defineProperty(this, "label", 
@@ -234,10 +234,6 @@ var Container = function(_props, overrided=false)
         {
             if (typeof _beforeAttach == 'function')
                 _beforeAttach.apply(this, arguments);
-            if(!e.isDefaultPrevented()){
-                this.$container = this.$el;
-                this.addComponents();
-            }
         }
     };
     let _afterAttach = this.afterAttach;
@@ -277,6 +273,7 @@ var Container = function(_props, overrided=false)
     //let _afterAttach = _props.afterAttach;
     //_props.afterAttach = this.afterAttach;
     let _label;
+
     let r = Parent.call(this, _props, overrided);
     let base = this.base;
     if(overrided)

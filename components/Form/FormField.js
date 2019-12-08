@@ -9,29 +9,31 @@ var FormField = function(_props)
 {   
     var _self = this;
     var _child, _lbl;
-
+    
+    this.endDraw = function(e)
+    {
+        if (e.target.id == this.domID) 
+        {
+            _child = this[_componentId];
+            _lbl = this.labelFor;
+            _lbl.$el.prop("for", _child.domID);
+            if(_props.required)
+                _self.required = _props.required;
+            if(_props.placeholder)
+                _self.placeholder = _props.placeholder;
+            if(_props.name)   
+                _self.name = _props.name;
+            if(_props.label)       
+                _self.label = _props.label;
+        }
+        console.log("endDraw");
+    }
+    
     this.beforeAttach = function(e) 
     {
         if (e.target.id == this.domID) 
         {
-            console.log("beforeAttach domID: ", this.domID);
-            this.$container = this.$el;
-            let inst = this.addComponents();
-            _lbl = inst[0];
-            if(inst[1])
-            {
-                _child = inst[1];
-                _lbl.$el.prop("for", _child.domID);
-                if(_props.required)
-                    _self.required = _props.required;
-                if(_props.placeholder)
-                    _self.placeholder = _props.placeholder;
-                if(_props.name)   
-                    _self.name = _props.name;
-            }
-            if(_props.label)       
-                _self.label = _props.label;
-            e.preventDefault();
+           
         }
     };
 
@@ -157,10 +159,11 @@ var FormField = function(_props)
     var _required;
     var _label;
     var _component = _props.component;
+    var _componentId = _props.component.props.id;
     var _lblCmp = {
         "ctor": Label,
         "props":{
-            id: 'label'
+            id: 'labelFor'
         }
     };    
     var _size = _props.size;

@@ -129,9 +129,9 @@ var Code = function (_props, overrided = false) {
         if (e.target.id == this.domID) 
         {
             this.$container = this.$el;
-            let arrInst = this.addComponents(_cmps);
-            _codeArea = arrInst[0];
-            e.preventDefault();
+            //let arrInst = this.addComponents(_cmps);
+            
+            //e.preventDefault();
             
         }
     }
@@ -139,6 +139,7 @@ var Code = function (_props, overrided = false) {
     this.afterAttach = function(e)
     {
         e.preventDefault();
+        _codeArea = this.codeArea;
         coroutine(function* () {
             yield Code.require();
             yield CodeMode.require(_mode.name);
@@ -219,7 +220,7 @@ var Code = function (_props, overrided = false) {
     _theme = _props.theme;
     _readOnly = _props.readOnly;
     _nocursor = _props.nocursor;
-
+    _props.components = _cmps;
     let r = Container.call(this, _props, overrided);
     return r;
 };

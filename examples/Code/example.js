@@ -215,8 +215,9 @@ let cnt = new Container({
         }
     }  
 ]});
-
-$('#root').append(cnt.render());
+cnt.renderPromise().then(function($el){
+    $('#root').append($el);
+});
 function _mySideNavToggleClick(){
     cnt.ideContainer.mySideNav.toggleVisibility();
 }

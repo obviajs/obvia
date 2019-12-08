@@ -367,36 +367,22 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
         },
         set: function classes(v)
         {
-            var _toggle = _toggleStack.pop();
-                    
-            if((!_classes && v) || (_classes && (!_classes.equals(v) || _toggle)))
+            if((!_classes && v) || (_classes && (!_classes.equals(v))))
             {
                 if(this.$el)
                 {
                     if(Array.isArray(v))
-                    {
-                        if(_toggle)
-                        { 
-                            _classes = v;
-                            for(var i =0;i<_classes.length;i++)
-                            {
-                                var _class = _classes[i];
-                                if(this.$el.hasClass(_class))
-                                    this.$el.removeClass(_class);
-                                else
-                                    this.$el.addClass(_class);
-                            }
-                        }else{
-                            _classes = _classes.difference(v);
-                            for(var i =0;i<_classes.length;i++)
-                            {
-                                var _class = _classes[i];
-                                if(this.$el.hasClass(_class))
-                                    this.$el.removeClass(_class);
-                            }
-                            _classes = v;
-                            this.$el.addClass(_classes);
-                        } 
+                    {   
+                        _classes = _classes.difference(v);
+                        for(var i =0;i<_classes.length;i++)
+                        {
+                            var _class = _classes[i];
+                            if(this.$el.hasClass(_class))
+                                this.$el.removeClass(_class);
+                        }
+                        _classes = v;
+                        this.$el.addClass(_classes);
+                         
                     }else{
                         for(var _cid in v){
                             if(_cid=="self")
@@ -409,18 +395,6 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
                 }
                     
             }
-        }
-    });
-
-    var _toggleStack = [];
-    Object.defineProperty(this, "toggle", {
-        get: function toggle()
-        {
-            return _toggleStack[_toggleStack.length-1];
-        },
-        set: function toggle(v)
-        {
-            _toggleStack.push(v);
         }
     });
 
@@ -472,6 +446,28 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
             }
         }
     }
+    
+    var _endDraw = this.endDraw;
+    this.endDraw = function (e)
+    {
+        if (e.target.id == this.domID) 
+        {
+            console.log("endDraw : Type:",this.ctor+" id:"+ this.$el.attr("id"));
+            if (typeof _props.endDraw == 'function')
+                _props.endDraw.apply(this.proxyMaybe, arguments);
+            //TODO: not neccessary ? 
+            if(!e.isDefaultPrevented()){
+                if (typeof _endDraw == 'function')
+                    _endDraw.apply(this.proxyMaybe, arguments);
+            }     
+            if(_props.applyBindings==null || _props.applyBindings==true)
+                _watchers = this.applyBindings(_bindingDefaultContext);   
+            
+            if(!_isSurrogate)
+                _self.trigger('beforeAttach');
+        }
+    }
+    
     var _afterAttach = this.afterAttach;
     this.afterAttach = function (e)
     {
@@ -515,6 +511,8 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
                 'DOMMutation': this.DOMMutation && typeof this.DOMMutation == 'function' ? this.DOMMutation.bind(_self) : undefined,
                 'afterAttach': this.afterAttach && typeof this.afterAttach == 'function' ? this.afterAttach.bind(_self) : undefined,
                 'beforeAttach': this.beforeAttach && typeof this.beforeAttach == 'function' ? this.beforeAttach.bind(_self) : undefined,
+                'beginDraw': this.beginDraw && typeof this.beginDraw == 'function' ? this.beginDraw.bind(_self) : undefined,
+                'endDraw': this.endDraw && typeof this.endDraw == 'function' ? this.endDraw.bind(_self) : undefined
             }
         }
     ];
@@ -567,7 +565,20 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
     {
         return _dataTriggerEventList;
     };//
-
+    
+    let _rPromise;
+    if(!this.hasOwnProperty("renderPromise"))
+    {
+        this.renderPromise = function ()
+        {
+            _self.trigger('endDraw');
+            _rPromise = new Promise((resolve, reject) => {
+                resolve(this.$el);                  
+            });
+            return _rPromise;
+        };
+    }
+    
     this.render = function ()
     {
         return this.$el;
@@ -893,8 +904,7 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
     var _spacing = new Spacing(_props.spacing, this.$el);
     
     _self.initEvents(this.$el);
-    if(!_isSurrogate)
-        _self.trigger('beforeAttach');
+    
     //execute functions before component attached on dom
     if(_ownerDocument){
         Component.ready(this, function(element){
@@ -902,9 +912,6 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
                 _self.trigger('afterAttach');
         }, _ownerDocument);
     }   
-    
-    if(_props.applyBindings==null || _props.applyBindings==true)
-        _watchers = this.applyBindings(_bindingDefaultContext);    
 }
 
 Component.processPropertyBindings = function(props)

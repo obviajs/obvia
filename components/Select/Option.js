@@ -1,6 +1,5 @@
 var Option = function (_props, overrided = false) {
-    var _self = this;
-
+    let _self = this, _label, _value;
     Object.defineProperty(this, "label", 
     {
         get: function label() 
@@ -34,21 +33,30 @@ var Option = function (_props, overrided = false) {
             }
         }
     });
-
+    this.beforeAttach = function(e) 
+    {
+        if (e.target.id == this.domID) 
+        {
+            if(_props.label && !this.getBindingExpression("label")){
+                this.label = _props.label;
+            }
+            if(_props.value && !this.getBindingExpression("value")){
+                this.value = _props.value;
+            }
+        
+        }
+    }
     this.template = function () {
-        return "<option id='" + this.domID + "' value='"+_value+"'>"+_label+"</option>";
+        return "<option id='" + this.domID + "'></option>";
     };
 
-    var _defaultParams = {
+    let _defaultParams = {
         label: "",
         value: ""
     };
 
     _props = extend(false, false, _defaultParams, _props);
     //_props.applyBindings = false;
-    var _label = _props.label;
-    var _value = _props.value;
-
     Component.call(this, _props);
 };
 //component prototype

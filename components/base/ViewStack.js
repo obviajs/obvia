@@ -168,7 +168,12 @@ var ViewStack = function(_props)
                 })(i);
                 var maxIndex = this.$container.children().length;
                 if(_selectedIndex==i)
-                    this.$container.append(cmp.render());
+                    if(cmp.renderPromise){
+                        cmp.renderPromise().then(function($el){
+                            _self.$container.append($el);                                
+                        });
+                    }else
+                        this.$container.append(cmp.render());
                 //expose component model
                 _components[i].props.id = cmp.id;
                 _children[cmp.id] = cmp;

@@ -5,7 +5,7 @@
  */
 
 var Toggle = function (_props, overrided = false) {
-    var _self = this, _checkBox;
+    var _self = this, _checkBox, _span;
     Object.defineProperty(this, "value", {
         get: function value() {
             return _checkBox.value;
@@ -44,18 +44,24 @@ var Toggle = function (_props, overrided = false) {
         },
         enumerable:false
     });
-    var _cbBeforeAttach = function(e){
-        _checkBox = this;
-        if(_props.value)
-            _self.value=_props.value;
-        if(_props.checked)
-            _self.checked=_props.checked;
+ 
+    this.endDraw = function(e)
+    {
+        if (e.target.id == this.domID) 
+        {
+            _checkBox = this.checkBoxCmp;
+            _span = this.spanCmp;
+            if(_props.value)
+                _self.value=_props.value;
+            if(_props.checked)
+                _self.checked=_props.checked;
+        }
+        console.log("endDraw");
     }
-    let _span;
-    let _lblBeforeAttach = function(e){
-        _span = this;
+    this.afterAttach = function(e)
+    {
+        
     }
-
     var _defaultParams = {
         value: 1,
         checked:false,
@@ -63,17 +69,15 @@ var Toggle = function (_props, overrided = false) {
             {
                 ctor: CheckBox,
                 props:{
-                    id: 'checkBox',
-                    beforeAttach:_cbBeforeAttach
+                    id: 'checkBoxCmp'
                 }
             },
             {
                 ctor: Label,
                 props:{
-                    id: 'span',
+                    id: 'spanCmp',
                     labelType: LabelType.span,
-                    classes: ["slider"],
-                    beforeAttach:_lblBeforeAttach
+                    classes: ["slider"]
                 }
             }
         ],
