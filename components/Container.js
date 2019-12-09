@@ -62,7 +62,7 @@ var Container = function(_props, overrided=false)
                             let s = (
                                 isString(_width) && 
                                 (
-                                    _width.indexOf("vh")>-1 ||
+                                    _width.indexOf("vw")>-1 ||
                                     _width.indexOf("em")>-1 ||
                                     _width.indexOf("%")>-1
                                 )
@@ -96,7 +96,7 @@ var Container = function(_props, overrided=false)
                             let s = (
                                 isString(_minWidth) && 
                                 (
-                                    _minWidth.indexOf("vh")>-1 ||
+                                    _minWidth.indexOf("vw")>-1 ||
                                     _minWidth.indexOf("em")>-1 ||
                                     _minWidth.indexOf("%")>-1
                                 )
