@@ -41,7 +41,7 @@ var dpCmpSelect = [];
 let mainContainer = {
     ctor: Container,
     props: {
-        id: "container",
+        id: "MainContainer",
         type: ContainerType.NONE,
         components: [{
                 ctor: Nav,
@@ -56,6 +56,21 @@ let mainContainer = {
                             type: ContainerType.ROW,
                             classes: ["col-sm-12"],
                             components: [{
+                                    ctor: Container,
+                                    props: {
+                                        id: "toggleVisibilityLeftSideNav",
+                                        classes: ["col-sm-3"],
+                                        components: [{
+                                            ctor: Label,
+                                            props: {
+                                                id: "toggleVisibilityButtonLeft",
+                                                labelType: LabelType.i,
+                                                classes: ["fas", "fa-bars", "navIcons"]
+                                            }
+                                        }]
+                                    }
+                                },
+                                {
                                 ctor: Container,
                                 props: {
                                     id: "undoRedo",
@@ -116,22 +131,41 @@ let mainContainer = {
                                         }
                                     ]
                                 }
-                            }]
+                            },
+                            {
+                                ctor: Container,
+                                props: {
+                                    id: "toggleVisibilityRightSideNav",
+                                    classes: ["col-sm-3"],
+                                    components: [{
+                                        ctor: Label,
+                                        props: {
+                                            id: "toggleVisibilityButtonRight",
+                                            labelType: LabelType.i,
+                                            classes: ["fas", "fa-bars", "navIcons"]
+                                        }
+
+                                    }]
+                                }
+                            }
+                        ]
                         }
-                    }]
+                    }
+                ]
                 }
             },
             {
                 ctor: Container,
                 props: {
-                    id: "container",
+                    id: "SideNavRightContainer",
                     type: ContainerType.NONE,
-                    classes: ["d-flex"],
+                    classes: ["d-flex", "flex-shrink-0", "flex-nowrap"],
                     components: [{
                             ctor: SideNav,
                             props: {
                                 id: "controlsWindow",
-                                width: "700",
+                                width: "350",
+                                minWidth: "350", 
                                 classes: ["sidenav", "sideNav_side_left"],
                                 components: [{
                                     ctor: Container,
@@ -252,9 +286,10 @@ let mainContainer = {
                         {
                             ctor: SideNav,
                             props: {
-                                id: "",
-                                width: "650",
-                                classes: ["sidenav", "sidenav_right", "sideNav_side_right"],
+                                id: "RightSideNav",
+                                width: "300",
+                                minWidth: "300",
+                                classes: ["sidenav", "sidenav_right", "sideNav_side_right", "flex-shrink-0"],
                                 components: [{
                                     ctor: Container,
                                     props: {
@@ -303,7 +338,28 @@ let mainContainer = {
                                         ]
 
                                     }
-                                }]
+                                },
+                                {
+                                    ctor: Container,
+                                    props: {
+                                        id: "deleteComponentId",
+                                        spacing: {
+                                            colSpan: 12,
+                                            h: 10,
+                                        },
+                                        classes:["deleteTrash"],
+                                        components: [{
+                                            ctor: Label,
+                                            props: {
+                                                id: "deleteTrashIcon",
+                                                classes: [""],
+                                                labelType: LabelType.i,
+                                                classes: ["fas", "fa-trash", "trash-icon"]
+                                            }
+                                        }] 
+                                    }
+                                }
+                            ]
                             }
                         }
                     ]
@@ -319,7 +375,6 @@ oxana.components = [{
         components: [mainContainer]
     }
 }];
-
 
 var waBehaviors = {
     "click": "BECOME_ACTIVE",
@@ -345,6 +400,14 @@ var cmpBehaviors = {
     "dropped": "SELECT_COMPONENT"
 };
 
+oxana.behaviors["deleteComponentId"] = {};
+oxana.behaviors["deleteComponentId"]["mouseover"] = "DELETE_CMP";
+
+oxana.behaviors["toggleVisibilityButtonLeft"] = {};
+oxana.behaviors["toggleVisibilityButtonLeft"]["click"] = "TOGGLE_VISIBILITY_LEFT";
+
+oxana.behaviors["toggleVisibilityButtonRight"] = {};
+oxana.behaviors["toggleVisibilityButtonRight"]["click"] = "TOGGLE_VISIBILITY_RIGHT";
 
 oxana.behaviors["splitHorizontal"] = {};
 oxana.behaviors["splitHorizontal"]["click"] = "SPLIT_HOR";
@@ -594,6 +657,28 @@ oxana.behaviorimplementations["HISTORY_REDONE"] = function (e) {
     console.log("called HISTORY_REDONE.");
     Component.instances["listHistorySteps"].value = e.redone;
 };
+
+oxana.behaviorimplementations["DELETE_CMP"] = {
+    do: function(e) {
+        console.log('hello');
+    }
+}
+
+oxana.behaviorimplementations["TOGGLE_VISIBILITY_LEFT"] = {
+    do: function(e){
+        var cmp = Component.instances["controlsWindow"];
+        cmp.toggleVisibility();
+    }
+    
+};
+
+oxana.behaviorimplementations["TOGGLE_VISIBILITY_RIGHT"] = {
+    do: function(e){
+        var cmp = Component.instances["RightSideNav"];
+        cmp.toggleVisibility();
+    }
+    
+}
 
 var activeContainer;
 oxana.behaviorimplementations["SPLIT_HOR"] = {

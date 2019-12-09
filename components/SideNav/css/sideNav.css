@@ -100,6 +100,18 @@ i:hover {
     cursor: pointer;
 }
 
+.trash-icon{
+    color: blue;
+}
+
+.deleteTrash {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: #ffffff;
+    border: 1px dotted blue;
+}
+
 @media screen and (max-height: 450px) {
     .offset-sm-3 {
         margin-left: 25%;

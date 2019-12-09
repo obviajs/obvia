@@ -24,7 +24,8 @@ var HRule = function(_props)
                     this.$el.css('height', v+"px");
                 }
             }
-        }
+        },
+        enumerable:true
     });
   
     Object.defineProperty(this, "align", 
@@ -57,15 +58,18 @@ var HRule = function(_props)
             {
                 _width = v;
                 if(this.$el)
-                    this.$el.attr('width', v);
+                {
+                    this.$el.css('width', v+"px");
+                }
             }
-        }
+        },
+        enumerable:true
     });
 
 
     this.template = function () 
     {        
-        return  '<hr id="' + this.domID + '" align="'+_align +'" style="height:'+_height +'px"   width="'+_width +'" >';    
+        return  '<hr id="' + this.domID + '" align="'+_align +'" style="height:'+_height +'px width="'+_width +'px"" >';    
     };
 
     var _defaultParams = {

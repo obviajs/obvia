@@ -15,7 +15,8 @@ var DateTime = function (_props, overrided = false) {
         set: function value(v) {
             _value = moment(v).format(_inputFormat);
             this.trigger('change');
-        }
+        },
+        enumerable: true
     });
 
     this.beforeAttach = function () {

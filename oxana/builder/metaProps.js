@@ -17,8 +17,16 @@ Builder.metaProps = {
             this.parent.parent.instance.target = this.value;
         }
     }},
-    width: {ctor:"TextInput", label: "Width", required:true, index:3},
-    height: {ctor:"TextInput", label: "Height", required:true, index:3},
+    width: {ctor:"TextInput", label: "Width", required:true, index:3, props: {
+        change: function(){
+            this.parent.parent.instance.width = this.value;
+        }
+    }},
+    height: {ctor:"TextInput", label: "Height", required:true, index:3, props: {
+        change: function(){
+            this.parent.parent.instance.height = this.value;
+        }
+    }},
     visible: {ctor:"Toggle", label: "Visible", index:4},
     enabled: {ctor:"Toggle", label: "Enabled", index:5}, 
     required: {ctor:"Toggle", label: "Required", index:6},
@@ -57,7 +65,41 @@ Builder.metaProps = {
     }, index:14},
     multiple: {ctor:"Toggle", label: "Multiple Files", index:15},
     accept:{ctor:"Toggle", label: "Allowed Files", index:16},
-    spacing:{ctor:"SpacingEditor", label: "Adjust Spacing", index:17},
+    spacing:{ctor:"SpacingEditor", label: "Adjust Spacing", index:17, props: {
+        change: function(){
+            let indexCol = null;
+            let indexMar = null;
+            let _clsCmp = this.parent.parent.instance.classes;
+            let _colCmp = this.children.Component_79.children.workArea_80.$el[0].children[0].value;
+            let _marCmp = this.children.Component_81.children.workArea_82.$el[0].children[0].value;
+
+            //push Col span into the classes array
+            for(let i = 0 ; i < 13 ; i++){
+                if(_clsCmp.indexOf("col-" + i) > -1){
+                    indexCol = _clsCmp.indexOf("col-" + i);
+                }
+            }
+            if(indexCol){
+                _clsCmp[indexCol] = "col-" + _colCmp;
+            }else{
+                _clsCmp.push("col-" + _colCmp);
+            }
+            
+            //Push margin into the classes array
+            for(let i = 0 ; i < 6 ; i++){
+                if(_clsCmp.indexOf("mb-" + i) > -1){
+                    indexMar = _clsCmp.indexOf("mb-" + i);
+                }
+            }
+            if(indexMar){
+                _clsCmp[indexMar] = "mb-" + _marCmp;
+            }else{
+                _clsCmp.push("mb-" + _marCmp);
+            }
+            
+            this.parent.parent.instance.classes.splice (0, this.parent.parent.instance.classes.length, ..._clsCmp );
+        }
+    }},
     columns:{ctor:"CollectionEditor", label: "Columns", index:18, props:{
             memberType:"DataGridColumn"
         },
@@ -264,8 +306,13 @@ Builder.metaProps.Label = {
         change: function(){
             this.parent.parent.instance.labelType = this.value;
         }
+    }},
+    label: {ctor: "TextInput", label: "Label",  props: {
+        change: function(){
+            this.parent.parent.instance.label = this.value;
+        }
     }}
-}
+};
 
 Builder.metaProps.Button = {
     type: {ctor: "Select", label: "Button Type", props: {
@@ -294,6 +341,28 @@ Builder.metaProps.TextArea = {
         }
     }}
 }
+
+Builder.metaProps.DateTime = {
+    value: {ctor: "TextInput", label: "Value", props: {
+        change: function(){
+            this.parent.parent.instance.value = this.value;
+        }
+    }}
+}
+
+Builder.metaProps.Image = {
+    alt: {ctor: "TextInput", label: "Alt", required:false, props: {
+        change: function(){
+            this.parent.parent.instance.alt = this.value;
+        }
+    }},
+    src: {ctor: "TextInput", label: "Src", required:true, index: 3, props: {
+        change: function(){
+            this.parent.parent.instance.src = this.value;
+        }
+    }}
+}
+
 
 
 
