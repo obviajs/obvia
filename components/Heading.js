@@ -66,8 +66,6 @@ var Heading = function(_props)
 
     this.beforeAttach = function () 
     {
-        this.$container = this.$el;
-        this.addComponents();
         if(_props.align!=null)
             this.align = _props.align;
     };
