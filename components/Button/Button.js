@@ -97,11 +97,6 @@ var Button = function(_props, overrided=false)
         return  "<button data-triggers='click' id='" + this.domID + "' type='"+_type+"'  "+(_value?"value='"+_value+"'":"")+"></button>";
     };
 
-    this.beforeAttach = function() 
-    {
-        this.$container = this.$el;
-        this.addComponents();
-    };
 
     var _defaultParams = {
         label:"",

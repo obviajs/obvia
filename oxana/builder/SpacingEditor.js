@@ -7,6 +7,7 @@
 //component definition
 var SpacingEditor = function (_props, overrided = false) {
     var _self = this;
+    let _value;
  
     var _dpColSpan = SpacingEditor.dpColSpan;
     var _dpOffset = SpacingEditor.dpOffset;
@@ -42,6 +43,20 @@ var SpacingEditor = function (_props, overrided = false) {
         }
     }
     let _cmps, _colSpan, _offset, _mb, _mt;
+
+    let changColSpan = function(){
+       _value.colSpan = this.value;
+    }
+    let changeOffset = function(){
+        _value.offset = this.value;
+    }
+    let changeMB = function(){
+        _value.mb = this.value;
+    }
+    let changeMt = function(){
+        _value.mt = this.value;
+    }
+    
     var fnContainerDelayInit = function(){
         _cmps = 
         [
@@ -64,7 +79,8 @@ var SpacingEditor = function (_props, overrided = false) {
                                             "id": "colSpan_"+_self.guid,
                                             "dataProvider": _dpColSpan,
                                             labelField:"label",
-                                            valueField:"value"
+                                            valueField:"value",
+                                            change: changColSpan
                                         }
                                     }
                                 ]
@@ -83,7 +99,8 @@ var SpacingEditor = function (_props, overrided = false) {
                                             "id": "offset_"+_self.guid,
                                             "dataProvider": _dpOffset,
                                             labelField:"label",
-                                            valueField:"value"
+                                            valueField:"value",
+                                            change: changeOffset
                                         }
                                     }
                                 ]
@@ -111,7 +128,9 @@ var SpacingEditor = function (_props, overrided = false) {
                                             "id": "mb_"+_self.guid,
                                             "dataProvider": _dpMb,
                                             labelField:"label",
-                                            valueField:"value"
+                                            valueField:"value",
+                                            change: changeMB
+                                    
                                         }
                                     }
                                 ]
@@ -130,7 +149,8 @@ var SpacingEditor = function (_props, overrided = false) {
                                             "id": "mt_"+_self.guid,
                                             "dataProvider": _dpMt,
                                             labelField:"label",
-                                            valueField:"value"
+                                            valueField:"value", 
+                                            change: changeMt
                                         }
                                     }
                                 ]
@@ -152,8 +172,7 @@ var SpacingEditor = function (_props, overrided = false) {
     _props.components = _cmps;
             
     Container.call(this, _props);
-    let _value;
-
+    
     Object.defineProperty(this, "value",
     {
         get: function value() {
@@ -175,6 +194,8 @@ var SpacingEditor = function (_props, overrided = false) {
         },
         enumerable:true
     });
+
+    
 };
 
 //component prototype

@@ -67,37 +67,11 @@ Builder.metaProps = {
     accept:{ctor:"Toggle", label: "Allowed Files", index:16},
     spacing:{ctor:"SpacingEditor", label: "Adjust Spacing", index:17, props: {
         change: function(){
-            let indexCol = null;
-            let indexMar = null;
-            let _clsCmp = this.parent.parent.instance.classes;
-            let _colCmp = this.children.Component_79.children.workArea_80.$el[0].children[0].value;
-            let _marCmp = this.children.Component_81.children.workArea_82.$el[0].children[0].value;
-
-            //push Col span into the classes array
-            for(let i = 0 ; i < 13 ; i++){
-                if(_clsCmp.indexOf("col-" + i) > -1){
-                    indexCol = _clsCmp.indexOf("col-" + i);
-                }
-            }
-            if(indexCol){
-                _clsCmp[indexCol] = "col-" + _colCmp;
-            }else{
-                _clsCmp.push("col-" + _colCmp);
-            }
-            
-            //Push margin into the classes array
-            for(let i = 0 ; i < 6 ; i++){
-                if(_clsCmp.indexOf("mb-" + i) > -1){
-                    indexMar = _clsCmp.indexOf("mb-" + i);
-                }
-            }
-            if(indexMar){
-                _clsCmp[indexMar] = "mb-" + _marCmp;
-            }else{
-                _clsCmp.push("mb-" + _marCmp);
-            }
-            
-            this.parent.parent.instance.classes.splice (0, this.parent.parent.instance.classes.length, ..._clsCmp );
+            let _spacing = this.value; 
+            this.parent.parent.instance.spacing.colSpan = _spacing.colSpan;
+            this.parent.parent.instance.spacing.offset = _spacing.offset;
+            this.parent.parent.instance.spacing.mb = _spacing.mb;
+            this.parent.parent.instance.spacing.mt = _spacing.mt;
         }
     }},
     columns:{ctor:"CollectionEditor", label: "Columns", index:18, props:{
@@ -361,7 +335,15 @@ Builder.metaProps.Image = {
             this.parent.parent.instance.src = this.value;
         }
     }}
-}
+};
+
+Builder.metaProps.CheckBox = {
+    value: {ctor: "TextInput", label: "Value", required:false, prop: {
+        change: function(){
+            this.parent.parent.instance.value = this.value;
+        }
+    }}
+};
 
 
 

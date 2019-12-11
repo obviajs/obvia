@@ -37,6 +37,7 @@ rjs.define("./components/base/History/HistoryEventType.js", "HistoryEventType");
 rjs.define("./components/base/Component.js", "Component");
 rjs.define("./components/base/Spacing.js", "Spacing");
 rjs.define("./oxana/builder/SpacingEditor.js", "SpacingEditor");
+rjs.define("./oxana/builder/css/builder.css", "Builder_Css")
 rjs.define("./oxana/AutoBrowse.js", "AutoBrowse");
 rjs.define("./components/base/Attr.js", "Attr");
 rjs.define("./components/base/Parent.js", "Parent");
@@ -298,6 +299,7 @@ rjs.require([
     "DateTimeMode",
     "DateTimeCb",
     "TokenRenderer",
+    "Builder_Css",
     "SuggestionRenderer",
     "AutoCompleteEx",
     "AutoCompleteExCSS",

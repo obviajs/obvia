@@ -87,12 +87,21 @@ let mainContainer = {
                                         {
                                             ctor: Label,
                                             props: {
+                                                id: "toggleHistoryDetails",
+                                                labelType: LabelType.i,
+                                                label: "",
+                                                classes: ["fas", "fa-sort-down", "navIcons"]
+                                            }
+                                        },
+                                        {
+                                            ctor: Label,
+                                            props: {
                                                 id: "redoButton",
                                                 labelType: LabelType.i,
                                                 label: "",
                                                 classes: ["fas", "fa-arrow-right", "navIcons"]
                                             }
-                                        },
+                                        }, 
                                         {
                                             ctor: Label,
                                             props: {
@@ -376,6 +385,16 @@ oxana.components = [{
     }
 }];
 
+var daBehaviors = {
+    "mouseover": "WA_HOVER",
+    "mouseout": "WA_HOVER",
+    "mousemove": {
+        "IS_WA_RESIZE_NS": isMouseMoveNS
+    },
+    "drop": "DELETE_CMP",
+    "dragover": "ALLOW_DROP",
+};
+
 var waBehaviors = {
     "click": "BECOME_ACTIVE",
     "mouseover": "WA_HOVER",
@@ -400,8 +419,13 @@ var cmpBehaviors = {
     "dropped": "SELECT_COMPONENT"
 };
 
-oxana.behaviors["deleteComponentId"] = {};
-oxana.behaviors["deleteComponentId"]["mouseover"] = "DELETE_CMP";
+oxana.behaviors["undoButton"] = {};
+oxana.behaviors["undoButton"]["click"] = "WA_UNDO";
+
+oxana.behaviors["redoButton"] = {};
+oxana.behaviors["redoButton"]["click"] = "WA_REDO";
+
+oxana.behaviors["deleteComponentId"] = daBehaviors;
 
 oxana.behaviors["toggleVisibilityButtonLeft"] = {};
 oxana.behaviors["toggleVisibilityButtonLeft"]["click"] = "TOGGLE_VISIBILITY_LEFT";
@@ -435,6 +459,7 @@ oxana.behaviors["workArea"] = waBehaviors;
 oxana.behaviors[oxana.rootID]["keydown"] = {
     "WA_UNDO": isKeyCombUndo,
     "WA_REDO": isKeyCombRedo,
+    "DELETE_CMP" : isKeyDeletePress
 };
 oxana.behaviorimplementations["ALLOW_DROP"] = function (e) {
     console.log("ALLOW_DROP ", this.domID);
@@ -660,7 +685,28 @@ oxana.behaviorimplementations["HISTORY_REDONE"] = function (e) {
 
 oxana.behaviorimplementations["DELETE_CMP"] = {
     do: function(e) {
-        console.log('hello');
+        console.log('delete component', this.id);
+        let domID;
+        e.preventDefault();
+        //if is pressed delete
+        if(e.keyCode == 46){
+           //domId of element who should delete
+           domID = activeComponent.id;
+        }else{
+            //if drop to delete area
+            domID = e.originalEvent.dataTransfer.getData("domID");
+        }
+        var _id = Component.domID2ID[domID] ? Component.domID2ID[domID] : domID;
+        var _idSurrogate = Component.surrogates[domID] && Component.domID2ID[Component.surrogates[domID]] ? Component.domID2ID[Component.surrogates[domID]] : null;
+        _id = _idSurrogate ? _idSurrogate : _id;
+        let inst = Component.instances[_id];
+        let c = confirm("Do you want to delete " + _id.toUpperCase()+ "?");
+        if(c)
+            inst.parent.removeChild(inst, 2);  
+        
+    },
+    undo: function() {
+        //undo
     }
 }
 
@@ -779,7 +825,7 @@ oxana.behaviorimplementations["SPLIT_VERT"] = {
     description: "Split selected container vertically",
     do: function (e) {
         var retFromRedoMaybe = arguments[arguments.length - 1];
-        console.log(retFromRedoMaybe, "aaaaaaaaaaaaaaaa");
+        console.log(retFromRedoMaybe);
         if (retFromRedoMaybe.container) {
             activeContainer = retFromRedoMaybe.container;
             console.log("called SPLIT_VERT from History(REDO).");
@@ -1121,6 +1167,15 @@ function isMouseMoveNS(e) {
 }
 
 //behavior can cause another behavior (throws custom event, so we may avoid filter functions...)
+
+function isKeyDeletePress(e){
+    if(e.keyCode == 46){
+        console.log("delete pressed");
+        e.preventDefault();
+        e.stopPropagation();
+        return true;  
+    }
+}
 
 function isKeyCombUndo(e) {
     if ((e.keyCode == 90 || e.keyCode == 122) && ((Env.getInstance().current == EnvType.MAC && e.metaKey && !e.shiftKey) || e.ctrlKey)) {
