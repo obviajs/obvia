@@ -49,7 +49,6 @@ let cnt = new Container({
                             {
                                 ctor: Link,
                                 props:{
-                                    labelType: LabelType.i,
                                     classes: ["fas", "fa-bars"],
                                     click: _mySideNavToggleClick
                                 }
@@ -140,6 +139,19 @@ let cnt = new Container({
                         width: 250,
                         classes: ["sidenav"],
                         components: [
+                            {
+                                ctor: Tree, 
+                                props: {
+                                    id: 'componentModelTree',
+                                    valueField: "key",
+                                    labelField: "title",
+                                    childrenField: "children",
+                                    dataProvider:new ArrayEx([]),
+                                    expandIcon: "fa-chevron-circle-right",
+                                    collapseIcon: "fa-chevron-circle-down",
+                                    click : componentModelTree_click
+                                }
+                            },
                             {
                                 ctor: Container,
                                 props: {
@@ -265,4 +277,9 @@ function todoItemClick(e, ra)
     cnt.ideContainer.myCode.cmInst.focus();
     cnt.ideContainer.myCode.cmInst.scrollIntoView({line:ra.currentItem.line, ch:0}, 200);
     cnt.ideContainer.myCode.cmInst.setCursor({line: ra.currentItem.line, ch: 0});
+}
+
+function componentModelTree_click(e, ra)
+{
+    
 }

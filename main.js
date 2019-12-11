@@ -40,6 +40,7 @@ rjs.define("./oxana/builder/SpacingEditor.js", "SpacingEditor");
 rjs.define("./oxana/builder/css/builder.css", "Builder_Css")
 rjs.define("./oxana/AutoBrowse.js", "AutoBrowse");
 rjs.define("./components/base/Attr.js", "Attr");
+rjs.define("./components/base/Css.js", "Css");
 rjs.define("./components/base/Parent.js", "Parent");
 rjs.define("./components/base/css/parent-default.css", "parent_default_css");
 rjs.define("./components/base/css/collapse.css", "collapse_css");
@@ -240,6 +241,7 @@ rjs.require([
     "ObjectEditor",
     "AutoBrowse",
     "Attr",
+    "Css",
     "Parent",
     "parent_default_css",
     "collapse_css",

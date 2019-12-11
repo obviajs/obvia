@@ -1,20 +1,20 @@
-var Attr = function(_attr, $el)
+var Css = function(_css, $el)
 { 
     let _$el = $el;
-    if(_attr){
-        for(var prop in _attr){
-            _$el.attr(prop, _attr[prop]);
-        }
+    if (_css)
+    {
+        _$el.css(_css);
     }
+    
     return new Proxy(this, {
         deleteProperty: function (target, property)
         {
-            _$el.removeAttr(property);
+            _$el.css(property, '');
             Reflect.deleteProperty(target, property);
             return true;
         },
         set: function(target, property, value, receiver) {   
-            _$el.attr(property, value);
+            _$el.css(property, value);
             target[property] = value;   
             return true;
         },

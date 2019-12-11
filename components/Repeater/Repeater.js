@@ -10,9 +10,9 @@ var Repeater = function(_props)
     this.currentIndex = 1;
     this.currentItem = {};
     this.rowItems = [];
-    var _self = this;
-    var _creationFinished = false;
-    var _$hadow = $("<div/>");
+    let _self = this;
+    let _creationFinished = false;
+    let _$hadow = $("<div/>");
     
     this.containerKeyDown = function(e)
     {
@@ -121,19 +121,18 @@ var Repeater = function(_props)
                     if(data!=null){
                         if(!data[_guidField])
                             data[_guidField] = StringUtils.guid();
-                        _compRenderPromises.push(_self.addRow(data, i + 1));
+                        _compRenderPromises.splicea(_compRenderPromises.length, 0, _self.addRow(data, i + 1));
                     }
                 }
-                Promise.all(_compRenderPromises).then(function() {
-                    _$hadow.contents().appendTo(_self.$container);
-                });
             }else
                 _creationFinished = true;
             _oldDataProvider = acExtend(_dataProvider);
         }else
             _creationFinished = true;
-        
-        _self.trigger('endDraw');
+        Promise.all(_compRenderPromises).then(function() {
+            _$hadow.contents().appendTo(_self.$container);
+            _self.trigger('endDraw');
+        });
     }
     //handle row add click
     var _addRowHandler = function () 
@@ -154,7 +153,7 @@ var Repeater = function(_props)
             if(toRefresh.indexOf(toAdd.a1_indices[i])==-1)
             {
                 var ind = toAdd.a1_indices[i];
-                _compRenderPromises.push(this.addRow(this.dataProvider[ind], ind+1));
+                _compRenderPromises.splicea(_compRenderPromises.length, 0, this.addRow(this.dataProvider[ind], ind+1));
                 //this.addComponent(cmp[0], ind);
             }
         }
@@ -224,7 +223,7 @@ var Repeater = function(_props)
                         for(var i=_dataProvider.length;i<v.length;i++){
                             if(v[i]!=null && !v[i][_guidField])
                                 v[i][_guidField] = StringUtils.guid();
-                            _compRenderPromises.push(this.addRow(v[i], i+1));
+                            _compRenderPromises.splicea(_compRenderPromises.length, 0, this.addRow(v[i], i+1));
                         }
                         Promise.all(_compRenderPromises).then(function() {
                             _$hadow.contents().appendTo(_self.$container);
@@ -326,13 +325,13 @@ var Repeater = function(_props)
     //renders a new row, adds components in stack
     this.addRow = function (data, index, isPreventable = false, focusOnRowAdd = true) 
     {
-        let _p;
+        let rp = [];
         index = index || this.rows.length+1;
         let renderedRow = $('<div/>');
         var ccComponents = [];
         var rowItems = {};
 
-        var beforeRowAddEvent = jQuery.Event("beforeRowAdd");
+        let beforeRowAddEvent = jQuery.Event("beforeRowAdd");
         this.trigger(beforeRowAddEvent, [_self, new RepeaterEventArgs(_self.rowItems, data, index-1)]);
 
         if (!isPreventable || (isPreventable && !beforeRowAddEvent.isDefaultPrevented())) 
@@ -435,7 +434,7 @@ var Repeater = function(_props)
                 
                 //render component in row
                 if(el.renderPromise){
-                    _p = el.renderPromise().then(function($el){
+                    let cp = el.renderPromise().then(function($el){
                         if(!_rendering.wrap)
                         {
                             if(_self.mode =="append")
@@ -463,12 +462,12 @@ var Repeater = function(_props)
                         }                     
                                                    
                     });
+                    rp.push(cp);
                 }
             }
-
             _self["rows"].push(renderedRow); 
         }
-        return _p;
+        return rp;
     };
 
     //handle row delete click, nese i shtojme te register events remove dhe add kemi mundesine te heqim/shtojme ne cdo index
@@ -510,11 +509,17 @@ var Repeater = function(_props)
             for(var cI=0;cI<_components.length;cI++){  
                 var component = _components[cI];
                 //remove repeated block from dom
-                if (cI == 0) {
+                if (cI == 0 && _rendering.wrap) {
                     this[component.props.id][index - 1].$el.closest('.repeated-block').remove();
                     this[component.props.id][index - 1].$el.closest('.repeated-block-hr').remove();
                 }
-            
+                if (!_rendering.wrap)
+                {
+                    for (let c = 0; c < _components.length; c++)
+                    {
+                        this[_components[c].props.id][index - 1].destruct(1);
+                    }
+                }
                 //modify new cmp repeater indexes
                 for(var i=0;i<this[component.props.id].length;i++){
                     var item = this[component.props.id][i];
@@ -587,10 +592,14 @@ var Repeater = function(_props)
         },
         type: ContainerType.NONE,
         dataProvider: new ArrayEx([]),
-        attr:{"data-triggers":"rowAdd rowEdit beforeRowAdd rowDelete beforeRowDelete beginDraw"},   
         guidField:"guid"
     };
     _props = extend(false, false, _defaultParams, _props);
+    if (!_props.attr) { 
+        _props.attr = {};
+    }
+    _props.attr["data-triggers"] = "rowAdd rowEdit beforeRowAdd rowDelete beforeRowDelete beginDraw";
+    
     var _dataProvider;
     var _rendering = _props.rendering;
     var _enabled = _props.enabled;

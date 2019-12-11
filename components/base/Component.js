@@ -27,7 +27,7 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
     
     var _bindingDefaultContext = _props.bindingDefaultContext;
     var _guid = _props.guid;
-    var _attr;
+    var _attr, _css;
     var _id = _props.id = ((!_props.id) || (_props.id =="")) ? _defaultParams.id : _props.id;
     var _enabled, _draggable, _visible;
     var _classes = [];
@@ -193,6 +193,14 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
         get: function attr() 
         {
             return _attr;
+        },
+        enumerable:true
+    });
+    Object.defineProperty(this, "css", 
+    {
+        get: function css() 
+        {
+            return _css;
         },
         enumerable:true
     });
@@ -376,13 +384,15 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
                         _classes = _classes.difference(v);
                         for(var i =0;i<_classes.length;i++)
                         {
-                            var _class = _classes[i];
+                            let _class = _classes[i];
                             if(this.$el.hasClass(_class))
                                 this.$el.removeClass(_class);
                         }
                         _classes = v;
-                        this.$el.addClass(_classes);
-                         
+                        for (var i = 0; i < _classes.length; i++)
+                        {
+                            this.$el.addClass(_classes[i]);
+                        }
                     }else{
                         for(var _cid in v){
                             if(_cid=="self")
@@ -413,6 +423,7 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
         this.$el = $(tpl);
     
     _attr = new Attr(_props.attr, this.$el);
+    _css = new Css(_props.css, this.$el);
     
     if(_isSurrogate && this.$el){
         Component.surrogates[this.$el.attr('id')] = this.domID;

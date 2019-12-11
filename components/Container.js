@@ -234,13 +234,22 @@ var Container = function(_props, overrided=false)
         {
             if (typeof _beforeAttach == 'function')
                 _beforeAttach.apply(this, arguments);
+            if (_props.width)
+                this.width = _props.width;
+           
+            if(_props.height)
+                this.height = _props.height;
         }
     };
     let _afterAttach = this.afterAttach;
     this.afterAttach = function (e) 
     {
-        //if (e.target.id == this.domID) 
-       // {
+        if (e.target.id == this.domID) 
+        {
+            if(!_width)
+                _width = this.$el.width();
+            if(!_height)     
+                _height = this.$el.height();
             if (typeof _afterAttach == 'function')
                 _afterAttach.apply(this, arguments);
             if (!e.isDefaultPrevented()) {
@@ -250,7 +259,7 @@ var Container = function(_props, overrided=false)
                     _textAlign = _props.textAlign;
             }
             //e.preventDefault();
-        //}
+        }
     };
        
     let _defaultParams = {
@@ -280,13 +289,8 @@ var Container = function(_props, overrided=false)
     {
         this.keepBase();
     }
-
-    if(_props.width)
-        this.width = _props.width;
     if(_props.minWidth)
         this.minWidth = _props.minWidth;
-    if(_props.height)
-        this.height = _props.height;
     if(_props.minHeight)
         this.minHeight = _props.minHeight;
     if(_props.role)

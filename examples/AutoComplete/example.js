@@ -7,7 +7,7 @@ var myAutoComplete = new AutoCompleteEx({
     valueField: "value",
     labelField: "ministri",
     allowNewItem: false, //allow the user to add items that are not included in the specified dataProvider
-    dataProvider: [{
+    dataProvider: new ArrayEx([{
         "value": "1",
         "ministri": "Ministria e Puneve te Jashtme"
     }, {
@@ -16,8 +16,8 @@ var myAutoComplete = new AutoCompleteEx({
     }, {
         "value": "3",
         "ministri": "Ministria e Brendshme"
-    }],
-    value: [{ "value": "1", "ministri": "Ministria e Puneve te Jashtme" }],
+    }]),
+    value: new ArrayEx([{ "value": "1", "ministri": "Ministria e Puneve te Jashtme" }]),
     remote:{
         getData_Action: "http://139.162.158.49/rca/index.php",
         recordsPerPage: 5
@@ -31,7 +31,11 @@ myAutoComplete.on('creationComplete', function () {
         console.log("Nothing found for:"+ toMatch);
     });
 });
-$('#root').append(myAutoComplete.render());
+myAutoComplete.renderPromise().then(function ($el)
+{
+    $('#root').append($el);
+});
+
 /*
 closeIconSide:"left",
 itemRenderer:{
@@ -52,4 +56,3 @@ itemRenderer:{
            
 
 */
-

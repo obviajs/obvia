@@ -7,7 +7,7 @@
 //component definition
 var TokenRenderer = function(_props)
 {
-    let _self = this, _value, _label, _closeIconSide;
+    let _self = this, _value, _label, _closeIconSide, _link, _span;
     /*
 
     this.beforeAttach = function () 
@@ -52,24 +52,31 @@ var TokenRenderer = function(_props)
     afterAttach: function (e) {        
         this.trigger('creationComplete');
     }*/
+    this.endDraw = function (e)
+    {
+        if (e.target.id == this.domID)
+        {
+            _link = this.linkCmp;
+            _span = this.labelCmp;
+        }
+    }
+    
     this.beforeAttach = function(e) 
     {
         if (e.target.id == this.domID) 
         {
-            this.$label = this.$el.find("#"+ this.domID + "_label");
-            this.$closeIcon = this.$el.find("#"+ this.domID + "_closeIcon");
-            
-            this.$closeIcon.click(function(evt)
-            {
-                _self.trigger("closeiconclick");
-            });
             if(_props.value)
                 _value = _props.value;
             if(_props.label)
                 _label = _props.label;
         }
     }
-
+    
+    let _closeIconClick = function(e)
+    {
+        _self.trigger("closeiconclick");
+    };
+    
     Object.defineProperty(this, "value", 
     {
         get: function value() 
@@ -81,11 +88,11 @@ var TokenRenderer = function(_props)
             if(_value != v)
             {
                 _value = v;
-                if(this.$label)
-                    if(v || v===false)
-                        this.$label.attr('value', v);
+                if (_span)
+                    if (v || v === false)
+                        _span.attr.value = v;
                     else
-                        this.$label.removeAttr('value');
+                        delete _span.attr.value;
             }
         }
     });
@@ -101,32 +108,54 @@ var TokenRenderer = function(_props)
             if(_label != v)
             {
                 _label = v;
-                if(this.$label)
-                    this.$label.text(v);
+                if (_span)
+                    _span.label = v;
             }
         }
     });
-
-    this.template = function () 
-    {         
-        var xHtml = '<a class="badge badge-info" id="'+ this.domID + '_closeIcon" href="#" tabindex="-1">×</a>';
-        var html = 
-            '<div id="'+ this.domID + '" data-triggers="closeiconclick" class="badge badge-info" style="font-size: 14px; margin:2px">'+
-                (_closeIconSide=="left"?xHtml:"")+    
-                '<span id="'+ this.domID + '_label" value="'+(_value!=null && _value!=undefined ? _value:'')+'">'+                      
-                (_label!=null ? _label:'')+
-                '</span>'+
-                (_closeIconSide=="right"?xHtml:"")+      
-            '</div>';
-        return html;
-                            
-    };
+    
+    //"font-size: 14px; margin:2px"
     var _defaultParams = {
-        closeIconSide:"left",
+        closeIconSide: "left",
+        components: [],
+        "type": ContainerType.NONE,
+        classes: ["badge", "badge-info"],
+        css: {"font-size": "14px", "margin":"2px"}
     };
     _props = extend(false, false, _defaultParams, _props);
-    _closeIconSide = _props.closeIconSide;
-
-    Component.call(this, _props);
+    if (!_props.attr) { 
+        _props.attr = {};
+    }
+    _props.attr["data-triggers"] = "closeiconclick";
+    
+    let _spanLit = {
+        ctor: Label,
+        props: {
+            id: 'labelCmp',
+            labelType: LabelType.span,
+            attr: { "tabindex": "-1" }
+        }
+    };
+    
+    let _linkLit = {
+        ctor: Link,
+        props: {
+            id: "linkCmp",
+            classes: ["badge", "badge-info"],
+            click: _closeIconClick,
+            label: "x"
+        }
+    };
+    
+    if (_closeIconSide == "left")
+    {
+        _props.components.push(_linkLit);
+        _props.components.push(_spanLit);
+    } else 
+    { 
+        _props.components.push(_spanLit);
+        _props.components.push(_linkLit);
+    }
+    Container.call(this, _props);
 };
 TokenRenderer.prototype.ctor = 'TokenRenderer';

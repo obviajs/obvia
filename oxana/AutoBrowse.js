@@ -6,7 +6,7 @@
 
 //component definition
 var AutoBrowse = function (_props, overrided = false) {
-    var _self = this;
+    let _self = this;
     let _dataProvider, _valueField, _labelField, _value, _columns = [], _fields;
 
     Object.defineProperty(this, "dataProvider", 
@@ -19,7 +19,12 @@ var AutoBrowse = function (_props, overrided = false) {
         {
             if(_dataProvider != v)
             {
-                _dataProvider = v;
+                if (_dataProvider != v)
+                {
+                    _dataProvider = v;
+                    _autocomplete.dataProvider = v;
+                    _dg.dataProvider = v;
+                }
             }
         },
         enumerable:true
@@ -50,32 +55,20 @@ var AutoBrowse = function (_props, overrided = false) {
         },
         enumerable:true
     });
-
+    this.endDraw = function (e)
+    {
+        if (e.target.id == this.domID)
+        {
+            _autocomplete = this.children[this.components[0].props.id].children[this.components[0].props.components[0].props.id];
+            _modal = this.children[this.components[2].props.id];
+            _dg = _modal.modalDialog.modalContent.modalBody.dataGrid;
+        }
+    }
+    
     this.beforeAttach = function(e) 
     {
         if (e.target.id == this.domID) 
         {
-            for(let i=0;i<_fields.length;i++)
-            {
-                _columns.push({
-                    width:400,
-                    field: _fields[i].field,
-                    description: _fields[i].description,
-                    visible: _fields[i].visible?_fields[i].visible:true,
-                    sortable: true,
-                    sortInfo: {sortOrder:0, sortDirection:"ASC"}
-                });
-            };
-            if(_props.dataProvider){
-                this.dataProvider = _props.dataProvider;
-            }
-            this.$container = this.$el;
-            fnContainerDelayInit();
-            this.components = _cmps;
-            this.addComponents();
-            _autocomplete = this.children[this.components[0].props.id].children[this.components[0].props.components[0].props.id];
-            _modal = this.children[this.components[2].props.id];
-            _dg = _modal.modalDialog.modalContent.modalBody.dataGrid;
             if(_props.value){
                 this.value = _props.value;
             }
@@ -162,18 +155,33 @@ var AutoBrowse = function (_props, overrided = false) {
         _dg.updateDisplayList();
     }
 
-    var _browse = function(e){
+    let _browse = function(e){
         let evt = jQuery.Event("browse");
         _self.trigger(evt);
         if (!evt.isDefaultPrevented()) {
             _modal.show();
         }
     }
-    var _selectItem = function(e, odg, ra){
+    let _selectItem = function(e, odg, ra){
         _autocomplete.value = ra.currentItem;
         _modal.hide();
     }
-    var _defaultParams = {
+    
+    let _initColumns = function ()
+    {
+        for(let i=0;i<_fields.length;i++)
+        {
+            _columns.push({
+                width:400,
+                field: _fields[i].field,
+                description: _fields[i].description,
+                visible: _fields[i].visible?_fields[i].visible:true,
+                sortable: true,
+                sortInfo: {sortOrder:0, sortDirection:"ASC"}
+            });
+        };    
+    }
+    let _defaultParams = {
         type: ContainerType.NONE,
         "components": [],
         dataProvider: new ArrayEx(),
@@ -185,10 +193,18 @@ var AutoBrowse = function (_props, overrided = false) {
     };
 
     _props = extend(false, false, _defaultParams, _props);
+    if(_props.dataProvider){
+        _dataProvider = _props.dataProvider;
+    }
+    
     _valueField = _props.valueField;
     _labelField = _props.labelField;
     _value = _props.value;
     _fields = _props.fields;
+    _initColumns();
+    fnContainerDelayInit();
+    _props.components = _cmps;
+    
     Container.call(this, _props);
 };
 AutoBrowse.prototype.ctor = 'AutoBrowse';

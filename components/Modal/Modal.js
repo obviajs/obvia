@@ -116,19 +116,16 @@ var Modal = function(_props)
     var _title = _props.title;
     var _size = _props.size;
     
-    this.beforeAttach = function (e) 
+    this.endDraw = function (e)
     {
-        console.log("Modal before attach");
-        this.$container = this.$el;
-        fnContainerDelayInit();
-        this.components = _cmps;
-        this.addComponents();
-        _modalDialog = this.children[this.components[0].props.id];
-        _modalContent = _modalDialog.children[_modalDialog.components[0].props.id];
-        _modalHeader = _modalContent.children[_modalContent.components[0].props.id];
-        _modalBody = _modalContent.children[_modalContent.components[1].props.id];
-        _modalFooter = _modalContent.children[_modalContent.components[2].props.id];
-        e.preventDefault();
+        if (e.target.id == this.domID)
+        {
+            _modalDialog = this.children[this.components[0].props.id];
+            _modalContent = _modalDialog.children[_modalDialog.components[0].props.id];
+            _modalHeader = _modalContent.children[_modalContent.components[0].props.id];
+            _modalBody = _modalContent.children[_modalContent.components[1].props.id];
+            _modalFooter = _modalContent.children[_modalContent.components[2].props.id];
+        }
     };
 
     let _cmps, _modalDialog, _modalContent, _modalHeader, _modalBody, _modalFooter;
@@ -185,7 +182,10 @@ var Modal = function(_props)
             }
         ];
     }
-
+    
+    fnContainerDelayInit();
+    _props.components = _cmps;
+    
     let r = Container.call(this, _props, true);
     var base = this.base;
     
