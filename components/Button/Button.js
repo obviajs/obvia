@@ -19,7 +19,7 @@ var Button = function(_props, overrided=false)
             {
                 _label = v;
                 if(this.$el){
-                    var last = this.$el.children().last();
+                    let last = this.$el.children().last();
                     if(last && last.length>0)
                         if(last[0].nextSibling)
                             last[0].nextSibling.textContent = v;
@@ -91,38 +91,33 @@ var Button = function(_props, overrided=false)
         },
         enumerable:true
     });
-
+    this.beforeAttach = function (e)
+    {
+        if (e.target.id == this.domID)
+        {  
+            if(_props.label)
+                this.label = _props.label;
+            if(_props.value)
+                this.value = _props.value;
+        }
+    }
     this.template = function () 
     {
-        return  "<button data-triggers='click' id='" + this.domID + "' type='"+_type+"'  "+(_value?"value='"+_value+"'":"")+"></button>";
+        return  "<button data-triggers='click' id='" + this.domID + "' type='"+_type+"'></button>";
     };
 
 
-    var _defaultParams = {
+    let _defaultParams = {
         label:"",
         type:"button",
         components:[]
     };
     //_props = extend(false, false, _defaultParams, _props);
     shallowCopy(extend(false, false, _defaultParams, _props), _props);
-    var _label;
-    var _type = _props.type;
-    var _value; 
-    var _afterAttach = _props.afterAttach;
-
-    _props.afterAttach = function () {
-        if (typeof _afterAttach == 'function')
-            _afterAttach.apply(this, arguments);
-
-        var e = arguments[0];
-        if (!e.isDefaultPrevented()) {
-            if(_props.label)
-                this.label = _props.label;
-            if(_props.value)
-                this.value = _props.value;
-        }
-    };
-
+    let _label;
+    let _type = _props.type;
+    let _value; 
+    
    // Component.call(this, _props);
     Parent.call(this, _props);
     if(overrided)

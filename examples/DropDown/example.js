@@ -20,7 +20,10 @@ var myDropDown = new DropDown({
         //alert(test);
       });
     });
-    $('#root').append(myDropDown.render());
+myDropDown.renderPromise().then(function ($el) {
+  $('#root').append($el);
+});
+   
         var dpReplace = new ArrayEx([
 
       { key: "#",title: "Link 5"},        
@@ -34,5 +37,3 @@ var myDropDown = new DropDown({
  var dp1 ={key:'#',title:'Folder 11'};
 // myDropDown.dataProvider.splice(2,1);
 //myDropDown.dataProvider.splice(2,0, dp,dp1);
-
-  

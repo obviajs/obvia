@@ -5,108 +5,82 @@
  */
 
 //component definition
-var DropDown = function (_props, overrided = false) {
-    var _self = this;
-    var _creationFinished;
-    var _dataProvider;
-    var _oldDataProvider;
-    Object.defineProperty(this, "dataProvider", 
-    {
-        get: function dataProvider() 
+var DropDown = function (_props, overrided = false)
+{
+    let _self = this;
+    let _creationFinished;
+    let _dataProvider, _btnDD, _componentRepeater;
+    
+    Object.defineProperty(this, "dataProvider",
         {
-            return _dataProvider;
-        },
-        set: function dataProvider(v) 
-        {
-            if(_dataProvider != v)
+            get: function dataProvider() 
             {
-                if(_dpWatcher){
-                    _dpWatcher.reset();
-                    _dataProvider.off("propertyChange",_dpMemberChanged);
+                return _dataProvider;
+            },
+            set: function dataProvider(v) 
+            {
+                if (_dataProvider != v)
+                {
+                    _dataProvider = v;
                 }
-    
-                _dataProvider = !ArrayEx.isArrayEx(v)?new ArrayEx(v):v;
-                _dpWatcher = ChangeWatcher.getInstance(_dataProvider);
-                _dpWatcher.watch(_dataProvider,"length",_dpLengthChanged);
-                _dataProvider.on("propertyChange",_dpMemberChanged);
-                _linkContainer.removeAllChildren();
-                _linkContainer.components = _self.buildLink();
-                _linkContainer.addComponents(_linkContainer.components);
             }
-        }
-    });
+        });
     
-    Object.defineProperty(this,"selectedItem",{
-        get: function selectedItem() {
-    
-           return _selectedItem;
-        },
-        set: function selectedItem(v) {
-            if (_selectedItem != v) {
-                _selectedItem = v;
-            }  
-        }
-    });
-
-    var _btnDD,_linkContainer;
-    var _dpWatcher;
-    var _dpLengthChanged = function (e) {
-        e.stopPropagation();
-        e.stopImmediatePropagation();
-        if(_creationFinished)
-            _self.dataProviderChanged();
-    }
-
-    var _dpMemberChanged = function(e)
-    {
-        e.stopPropagation();
-        e.stopImmediatePropagation();
-        if(_creationFinished && ["length","guid"].indexOf(e.property)==-1)
-            _self.dataProviderChanged();
-    }
-
-    this.dataProviderChanged = function ()
-    {
-        //add or remove rows
-        for(var i=0;i<_dataProvider.length;i++){
-            if(!this.dataProvider[i][_guidField])
-                this.dataProvider[i][_guidField] = StringUtils.guid();
-        }
-        var toAdd = differenceOnKeyMatch(_dataProvider,_oldDataProvider,_guidField,false,true);
-        var toRemove = differenceOnKeyMatch(_oldDataProvider, _dataProvider,_guidField,false,true);
-        var toRefresh = intersect(toAdd.a1_indices, toRemove.a1_indices);
-        
-        for(var i=toRemove.a1_indices.length;i>=0;i--) {
-            if(toRefresh.indexOf(toRemove.a1_indices[i])==-1)
-            this.children["divContent"].removeChildAtIndex(toRemove.a1_indices[i]);
-        }
-        for(var i=0;i<toAdd.a1_indices.length;i++){
-            if(toRefresh.indexOf(toAdd.a1_indices[i])==-1){
-                var ind = toAdd.a1_indices[i]; 
-                var cmp = this.buildLink([this.dataProvider[ind]]);
-                this.children["divContent"].addComponent(cmp[0],ind);
-            }
-        }    
-        //for the rows that we just added there is no need to refreshBindings
-        for(var i=0; i<toRefresh.length;i++)
+    Object.defineProperty(this, "selectedItem", {
+        get: function selectedItem()
         {
-            var cmp = this.children["divContent"].children[this.children["divContent"].components[toRefresh[i]].props.id];
-            cmp.refreshBindings(this.dataProvider[toRefresh[i]]);
-            cmp.$el.attr(_guidField, this.dataProvider[toRefresh[i]][_guidField]);
-            cmp.attr[_guidField] = this.dataProvider[toRefresh[i]][_guidField];
+    
+            return _selectedItem;
+        },
+        set: function selectedItem(v)
+        {
+            if (_selectedItem != v)
+            {
+                _selectedItem = v;
+                this.trigger("change");
+            }
         }
-        _oldDataProvider = extend(true,false,this.dataProvider);
-    };
-
-    this.afterAttach = function (e) {
+    });
+    if (!this.hasOwnProperty("label"))
+    {
+        Object.defineProperty(this, "label",
+            {
+                get: function label() 
+                {
+                    return _btnDD.label;
+                },
+                set: function label(v) 
+                {
+                    _btnDD.label = v;
+                }
+            });
+    }
+    this.endDraw = function (e)
+    {
+        if (e.target.id == this.domID)
+        { 
+            _btnDD = this.button;
+            _componentRepeater = this.repeater;
+            _componentRepeater.attr["aria-labelledby"] = _btnDD.domID;
+        }
+    }
+    this.beforeAttach = function (e)
+    {
+        if (e.target.id == this.domID)
+        { 
+         
+        }
+    }
+    this.afterAttach = function (e)
+    {
         if (typeof _afterAttach == 'function')
             _afterAttach.apply(this, arguments);
         _creationFinished = true;
     }
 
-    var _defaultParams = {
+    let _defaultParams = {
         id: 'dropdown',
-        dataProvider: [],
+        dataProvider: new ArrayEx([]),
         hrefField: "href",
         labelField: "label",
         keyField:"",
@@ -119,66 +93,48 @@ var DropDown = function (_props, overrided = false) {
         guidField:"guid"
     };
 
-    var _clickHandler = function (e) 
+    let _clickHandler = function (e, ra) 
     {
-            _btnDD.label = this.label;
-            var linkObj={};
-            linkObj[_guidField] = this.$el.attr(_guidField);
-            _self.selectedItem = getMatching(_dataProvider, _guidField, linkObj[_guidField]);
-            console.log("SelectedItem",_selectedItem);
-            e.stopPropagation();
+        _btnDD.label = this.label;
+        let linkObj={};
+        linkObj[_guidField] = ra.currentItem[_guidField];
+        _self.selectedItem = getMatching(_dataProvider, _guidField, linkObj[_guidField]).objects[0];
+        _componentRepeater.$el.removeClass("show");
+        e.stopPropagation();
     };
 
     _props = extend(false, false,_defaultParams, _props);
-
-    var _dataProvider;
-    var _hrefField = _props.hrefField;
-    var _labelField = _props.labelField;
-    var _value = _props.value;
-    var _change = _props.change;
-    var _label = _props.label;
-    var _size = _props.size;
-    var _split = _props.split;
-    var _selectedItem = _props.selectedItem;
-    var _beforeAttach = _props.beforeAttach;
-    var _afterAttach = _props.afterAttach;
-    _props.afterAttach = this.afterAttach;
-    var _guidField = _props.guidField;
-
-
-    _props.beforeAttach = function (e) {
-        this.$container = this.$el;
-        _btnDD = this.addComponent(_componentButton);
-        _linkContainer = this.addComponent(_componentContainer);
-        _linkContainer.$el.attr('aria-labelledby', _btnDD.domID);
-        this.dataProvider = _props.dataProvider;
-        e.preventDefault();
-    };
-
-    var _componentContainer = {
-        ctor: Container,
-        props:{
-            id:"divContent",
-            type:ContainerType.NONE,
-            classes:["dropdown-menu"],
-        }
+    if (!_props.attr) { 
+        _props.attr = {};
     }
+    _props.attr["data-triggers"] = "change";
+    
+    _dataProvider = _props.dataProvider;
+    let _hrefField = _props.hrefField;
+    let _labelField = _props.labelField;
+    let _value = _props.value;
+    let _change = _props.change;
+    let _label = _props.label;
+    let _size = _props.size;
+    let _split = _props.split;
+    let _selectedItem = _props.selectedItem;
+    let _guidField = _props.guidField;
 
-    var _componentButton = {
+
+    let _componentButton = {
         ctor: Button,
         props:{
-            id:"button",
+            id: "button",
             classes:[_size,_split,"btn", "btn-secondary","dropdown-toggle"],
-            label:_label,
             attr: { 
                 "data-toggle":'dropdown',
                 "aria-haspopup":"true",
                 "aria-expanded":"false"
-                }
+            }
         }
     }
 
-    var _componentLink = {
+    let _componentLink = {
         ctor:Link,
         props: {
             id:"link",
@@ -188,42 +144,19 @@ var DropDown = function (_props, overrided = false) {
             "click": _clickHandler,
         }
     };
-  
-    this.buildLink = function(dp)
-    {
-        var dp = dp || _dataProvider, components = [];
-        if(dp && dp.forEach)
-        {
-            if(dp.length>0)
-            {
-                for(var i=0 ; i< dp.length;i++)
-                {
-                    if(!dp[i][_guidField]) {
-                        dp[i][_guidField] = StringUtils.guid();
-                    }
-                    
-                    if(dp[i]) {
-                        var cmpLink=extend(true,_componentLink);
-                        cmpLink.props.bindingDefaultContext = dp[i];
-                        cmpLink.props.id = "link";
-                        cmpLink.props.attr = {};
-                        cmpLink.props.attr[_guidField] = dp[i][_guidField];
-                        components.push(cmpLink);  
-                    }
-                }
-                
-            }else {
-                _creationFinished = true;
-            }
-            _oldDataProvider = extend(true,_dataProvider);
-        }  
-        return components;
+    
+    let _componentRepeaterLit = {
+        ctor: Repeater,
+        props:{
+            id: "repeater",
+            type: ContainerType.NONE,
+            classes: ["dropdown-menu"],
+            components: [_componentLink],
+            dataProvider: _dataProvider
+        }
     }
+    _props.components = [_componentButton, _componentRepeaterLit];
 
     Container.call(this, _props);
 }
 DropDown.prototype.ctor = 'DropDown' ;
-
-
-
-
