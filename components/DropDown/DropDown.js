@@ -52,7 +52,8 @@ var DropDown = function (_props, overrided = false)
                 set: function label(v) 
                 {
                     _btnDD.label = v;
-                }
+                },
+                enumerable: true
             });
     }
     this.endDraw = function (e)

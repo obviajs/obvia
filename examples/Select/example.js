@@ -6,4 +6,7 @@ var mySelect = new Select({
     value: "2",
 });
 
-$('#root').append(mySelect.render());
+mySelect.renderPromise().then(function ($el) {
+    $('#root').append($el);
+  });
+     
