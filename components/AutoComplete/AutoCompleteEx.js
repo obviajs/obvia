@@ -7,7 +7,7 @@
 //component definition
 var AutoCompleteEx = function(_props)
 {
-    let _separator, _tokenContainer, _tokenRepeater, _suggestionsRepeater, _input;
+    let _separator, _tokenContainer, _tokenRepeater, _suggestionsRepeater, _input, _maxSuggestionsCount;
     
     Object.defineProperty(this, "dataProvider", 
     {
@@ -177,7 +177,7 @@ var AutoCompleteEx = function(_props)
     let _querySuggestions = function(toMatch){
         console.log("querySuggestions for: ", toMatch);
         let ac = differenceOnKeyMatch (_dataProvider, _value, _valueField);
-        _suggestions = new ArrayEx(sortBestMatch(ac, toMatch, _self.matchType, _labelField));
+        _suggestions = new ArrayEx(sortBestMatch(ac, toMatch, _self.matchType, _labelField, _maxSuggestionsCount));
         _openSuggestionsList();
     };
     /*
@@ -429,6 +429,7 @@ var AutoCompleteEx = function(_props)
         value: new ArrayEx([]),
         allowNewItem: false,
         multiSelect: false,
+        maxSuggestionsCount: 10,
         "type": ContainerType.NONE,
         classes: ["no-form-control"]
     };
@@ -437,6 +438,7 @@ var AutoCompleteEx = function(_props)
     if (!_props.attr) { 
         _props.attr = {};
     }
+    _maxSuggestionsCount = _props.maxSuggestionsCount;
     _props.attr["data-triggers"] = "noSuggestionsFound";
     
     let _valueField = _props.valueField;
@@ -572,7 +574,25 @@ var AutoCompleteEx = function(_props)
                 this.$input.prop('disabled', !v);
             }
         },
-        configurable: true
+        configurable: true,
+        enumerable: true
+    });
+
+    Object.defineProperty(this, "maxSuggestionsCount", 
+    {
+        get: function maxSuggestionsCount() 
+        {
+            return _maxSuggestionsCount;
+        },
+        set: function maxSuggestionsCount(v) 
+        {
+            if(_maxSuggestionsCount != v)
+            {
+                _maxSuggestionsCount = v;
+            }
+        },
+        configurable: true,
+        enumerable: true
     });
     
 };

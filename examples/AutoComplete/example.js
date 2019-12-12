@@ -6,6 +6,7 @@ var myAutoComplete = new AutoCompleteEx({
     id: 'autocomplete',
     valueField: "value",
     labelField: "ministri",
+    maxSuggestionsCount: 1,
     allowNewItem: false, //allow the user to add items that are not included in the specified dataProvider
     dataProvider: new ArrayEx([{
         "value": "1",

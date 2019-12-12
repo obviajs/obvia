@@ -100,6 +100,8 @@ let mainContainer = {
                                                 ctor: DropDown,
                                                 props: {
                                                     id: "DropDown",
+                                                    labelField: "descriptions0",
+                                                    hrefField: "",
                                                     classes: ["fas", "fas-sort-down", "btn-default", "navIcons"],
                                                     dataProvider: oxana.history.steps
                                                 }
