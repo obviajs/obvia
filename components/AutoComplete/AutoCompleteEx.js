@@ -40,7 +40,8 @@ var AutoCompleteEx = function(_props)
             _input = this.tokenContainer.tokenInput;
             _tokenRepeater = this.tokenContainer.tokenRepeater;
             _suggestionsRepeater.css.left = "inherit";
-            
+            _suggestionsRepeater.css.top = "inherit";
+            _suggestionsRepeater.css.position = "relative";
             _tokenInputReSize();
         }
     }
@@ -54,8 +55,6 @@ var AutoCompleteEx = function(_props)
     {
         if (e.target.id == this.domID)
         { 
-            //_suggestionsRepeater.css.top = _tokenContainer.height+"px";
-            _suggestionsRepeater.css.top = "20px";
         }
     }
     let _tokenRendererClickHandler = function (e)

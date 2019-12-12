@@ -9,7 +9,7 @@ var DropDown = function (_props, overrided = false)
 {
     let _self = this;
     let _creationFinished;
-    let _dataProvider, _btnDD, _componentRepeater;
+    let _dataProvider, _btnDD, _componentRepeater, _label;
     
     Object.defineProperty(this, "dataProvider",
         {
@@ -47,11 +47,11 @@ var DropDown = function (_props, overrided = false)
             {
                 get: function label() 
                 {
-                    return _btnDD.label;
+                    return _label;
                 },
                 set: function label(v) 
                 {
-                    _btnDD.label = v;
+                    _btnDD.label = _btnDD.label = v;
                 },
                 enumerable: true
             });
@@ -69,7 +69,10 @@ var DropDown = function (_props, overrided = false)
     {
         if (e.target.id == this.domID)
         { 
-         
+            if (_props.label) 
+            { 
+                this.label = _props.label;
+            }
         }
     }
     this.afterAttach = function (e)
@@ -82,8 +85,8 @@ var DropDown = function (_props, overrided = false)
     let _defaultParams = {
         id: 'dropdown',
         dataProvider: new ArrayEx([]),
-        hrefField: "href",
-        labelField: "label",
+        hrefField: undefined,
+        labelField: undefined,
         keyField:"",
         value: null,
         classes:[DropMenuDirection.DROPDOWN],
@@ -115,7 +118,6 @@ var DropDown = function (_props, overrided = false)
     let _labelField = _props.labelField;
     let _value = _props.value;
     let _change = _props.change;
-    let _label = _props.label;
     let _size = _props.size;
     let _split = _props.split;
     let _selectedItem = _props.selectedItem;
@@ -139,12 +141,16 @@ var DropDown = function (_props, overrided = false)
         ctor:Link,
         props: {
             id:"link",
-            "href":'{'+_hrefField+'}',
-            "label":'{'+_labelField+'}',
             classes:['dropdown-item'],
             "click": _clickHandler,
         }
     };
+    if (_hrefField) { 
+        _componentLink.props.href = '{' + _hrefField + '}';             
+    }
+    if (_labelField) { 
+        _componentLink.props.label = '{' + _labelField + '}'; 
+    }
     
     let _componentRepeaterLit = {
         ctor: Repeater,
