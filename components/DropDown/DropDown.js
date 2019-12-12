@@ -51,7 +51,7 @@ var DropDown = function (_props, overrided = false)
                 },
                 set: function label(v) 
                 {
-                    _btnDD.label = _btnDD.label = v;
+                    _btnDD.label = _label = v;
                 },
                 enumerable: true
             });
