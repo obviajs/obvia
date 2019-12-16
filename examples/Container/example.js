@@ -97,6 +97,6 @@ var myContainer = new Container({
 myContainer.on('creationComplete', function(e){
     loader.hide();    
 });
-myContainer.renderPromise().then(function($el){
-    $('#root').append($el);
+myContainer.renderPromise().then(function(cmpInstance){
+    $('#root').append(cmpInstance.$el);
 });

@@ -20,8 +20,8 @@ var myDropDown = new DropDown({
         //alert(test);
       });
     });
-myDropDown.renderPromise().then(function ($el) {
-  $('#root').append($el);
+myDropDown.renderPromise().then(function (cmpInstance) {
+  $('#root').append(cmpInstance.$el);
 });
    
         var dpReplace = new ArrayEx([

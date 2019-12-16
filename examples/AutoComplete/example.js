@@ -32,9 +32,9 @@ myAutoComplete.on('creationComplete', function () {
         console.log("Nothing found for:"+ toMatch);
     });
 });
-myAutoComplete.renderPromise().then(function ($el)
+myAutoComplete.renderPromise().then(function (cmpInstance)
 {
-    $('#root').append($el);
+    $('#root').append(cmpInstance.$el);
 });
 
 /*

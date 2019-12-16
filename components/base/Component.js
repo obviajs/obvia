@@ -16,7 +16,8 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
         attr:{},
         visible:true,
         enabled:true,
-        index:0 
+        index: 0,
+        appendTo: undefined
     };
     shallowCopy(extend(false, false, _defaultParams, _props), _props);
     var ppb =  Component.processPropertyBindings(_props);
@@ -53,7 +54,8 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
     var _bindings = ppb.bindings;
     var _attached = false;
     let _index = _props.index;
-
+    let _appendTo = _props.appendTo;
+    
     if(Component.usedComponentIDS[_id]==1) {
         _id += "_" +Component[this.ctor].instanceCnt;
     }
@@ -165,7 +167,23 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
             }
         }
     });
-
+    
+    Object.defineProperty(this, "appendTo",
+    {
+        get: function appendTo() 
+        {
+            return _appendTo;
+        },
+        set: function appendTo(v)
+        {
+            if (_appendTo != v)
+            {
+                _appendTo = v;
+            }
+        },
+        enumerable: true
+    });
+    
     Object.defineProperty(this, 'isSurrogate',
     {
         get: function isSurrogate() {
@@ -584,7 +602,7 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
         {
             _self.trigger('endDraw');
             _rPromise = new Promise((resolve, reject) => {
-                resolve(this.$el);                  
+                resolve(this);                  
             });
             return _rPromise;
         };

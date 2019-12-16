@@ -207,13 +207,15 @@ var Parent = function(_props, overrided=false, _isSurrogate=false)
             });
             index = index > -1? index : _components.length;
             if(cmp.renderPromise){
-                cmp.renderPromise().then(function($el){
-                    container.insertAt($el, index);
+                cmp.renderPromise().then(function(cmpInstance){
+                    if (cmpInstance.appendTo) { 
+                        cmpInstance.appendTo.insertAt(cmpInstance.$el, index);                       
+                    }else  
+                        container.insertAt(cmpInstance.$el, index);
                     --_countChildren;
                     if(_countChildren==0){
                         _$hadow.contents().appendTo(_self.$container);               
                         _self.trigger('endDraw');
-                        
                     }
                 });
             }else{
@@ -330,7 +332,7 @@ var Parent = function(_props, overrided=false, _isSurrogate=false)
             _self.on("endDraw", function(e){
                 if (e.target.id == _self.domID) 
                 {
-                    resolve(this.$el); 
+                    resolve(this); 
                 }
             });                   
         });

@@ -434,21 +434,21 @@ var Repeater = function(_props)
                 
                 //render component in row
                 if(el.renderPromise){
-                    let cp = el.renderPromise().then(function($el){
+                    let cp = el.renderPromise().then(function(cmpInstance){
                         if(!_rendering.wrap)
                         {
                             if(_self.mode =="append")
                             {
-                                _$hadow.append($el);
+                                _$hadow.append(cmpInstance.$el);
                             }else{
-                                _$hadow.prepend($el);
+                                _$hadow.prepend(cmpInstance.$el);
                             }
                         }else   
                         {
                             renderedRow
                             .addClass("repeated-block")
                             .css((_rendering.direction == 'horizontal' ? {display: 'inline-block'} : {}))
-                            .append($el);
+                            .append(cmpInstance.$el);
                                  
                             if(_rendering.separator && (index > 1) && (index-1 < _self.dataProvider.length)){
                                 renderedRow.addClass("separator");  
@@ -635,7 +635,7 @@ var Repeater = function(_props)
                 if (e.target.id == _self.domID) 
                 {
                     console.timeEnd('time _createRows_'+_self.id);         
-                    resolve(this.$el); 
+                    resolve(this); 
                 }
             });                   
         });

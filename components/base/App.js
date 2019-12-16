@@ -274,8 +274,11 @@ var App = function(_props){
                     }
                 });    
                 if(cmp.renderPromise){
-                    cmp.renderPromise().then(function($el){
-                        _root.append($el);                                
+                    cmp.renderPromise().then(function(cmpInstance){
+                        if (cmpInstance.appendTo) { 
+                            cmpInstance.appendTo.append(cmpInstance.$el);                       
+                        }else                         
+                            _root.append(cmpInstance.$el);                                
                     });
                 }else
                     _root.append(cmp.render());

@@ -109,6 +109,7 @@ var Modal = function(_props)
         components: _defaultComponents
     };
     _props = extend(false, false, _defaultParams, _props);
+    _props.appendTo = $(_props.ownerDocument.body);
     if(_props.components && _props.components.forEach){
         _props.components = _defaultComponents;
     }

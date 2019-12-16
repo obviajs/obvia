@@ -227,8 +227,8 @@ let cnt = new Container({
         }
     }  
 ]});
-cnt.renderPromise().then(function($el){
-    $('#root').append($el);
+cnt.renderPromise().then(function(cmpInstance){
+    $('#root').append(cmpInstance.$el);
 });
 function _mySideNavToggleClick(){
     cnt.ideContainer.mySideNav.toggleVisibility();

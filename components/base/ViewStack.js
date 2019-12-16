@@ -169,8 +169,11 @@ var ViewStack = function(_props)
                 var maxIndex = this.$container.children().length;
                 if(_selectedIndex==i)
                     if(cmp.renderPromise){
-                        cmp.renderPromise().then(function($el){
-                            _self.$container.append($el);                                
+                        cmp.renderPromise().then(function(cmpInstance){
+                            if (cmpInstance.appendTo) { 
+                                cmpInstance.appendTo.append(cmpInstance.$el);                       
+                            }else  
+                                _self.$container.append(cmpInstance.$el);                                
                         });
                     }else
                         this.$container.append(cmp.render());

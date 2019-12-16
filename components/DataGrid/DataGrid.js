@@ -409,9 +409,9 @@ var DataGrid = function(_props)
             }else
                 itemEditor.value = column.itemEditor.props["value"] || data[column.field];
             */
-            itemEditor.renderPromise().then(function ($el)
+            itemEditor.renderPromise().then(function (cmpInstance)
             {
-                _self.cells[rowIndex][columnIndex].append($el);
+                _self.cells[rowIndex][columnIndex].append(cmpInstance.$el);
                 itemEditor.show();
                 if(itemEditorInfo != null)
                 {
@@ -621,9 +621,9 @@ var DataGrid = function(_props)
                     _self.cells[index-1] = [];
                 _self.cells[index-1][columnIndex] = cell;
                 //render component in row
-                let cp = el.renderPromise().then(function ($el)
+                let cp = el.renderPromise().then(function (cmpInstance)
                 {
-                    renderedRow.append(cell.append($el));
+                    renderedRow.append(cell.append(cmpInstance.$el));
                     _$hadow.append(renderedRow);
                     _self["rows"].push(renderedRow); 
                 });
@@ -789,7 +789,7 @@ var DataGrid = function(_props)
             _self.on("endDraw", function(e){
                 if (e.target.id == _self.domID) 
                 {
-                    resolve(this.$el); 
+                    resolve(this); 
                 }
             });                   
         });
