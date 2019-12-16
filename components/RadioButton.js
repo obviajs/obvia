@@ -63,26 +63,42 @@ var RadioButton = function (_props, overrided = false) {
             return _name;
         }
     });
-
-    this.beforeAttach = function () {
-        this.$input = this.$el.find("#" + this.domID + "-radio");
-        if(_props.name && !this.getBindingExpression("name")){
-            this.name = _props.name;
+    
+    this.endDraw = function (e)
+    {
+        if (e.target.id == this.domID)
+        {
+            this.$input = this.$el.find("#" + this.domID + "-radio");
         }
-        if(_props.label && !this.getBindingExpression("label")){
-            this.label = _props.label;
-        }
-        if(_props.value && !this.getBindingExpression("value")){
-            this.value = _props.value;
-        }
-        if(_props.checked && !this.getBindingExpression("checked")){
-            this.checked = _props.checked;
-        }
-        if(_props.enabled && !this.getBindingExpression("enabled")){
-            this.enabled = _props.enabled;
+    }
+    
+    this.beforeAttach = function (e)
+    {
+        if (e.target.id == this.domID)
+        {       
+            if (_props.name && !this.getBindingExpression("name"))
+            {
+                this.name = _props.name;
+            }
+            if (_props.label && !this.getBindingExpression("label"))
+            {
+                this.label = _props.label;
+            }
+            if (_props.value && !this.getBindingExpression("value"))
+            {
+                this.value = _props.value;
+            }
+            if (_props.checked && !this.getBindingExpression("checked"))
+            {
+                this.checked = _props.checked;
+            }
+            if (_props.enabled && !this.getBindingExpression("enabled"))
+            {
+                this.enabled = _props.enabled;
+            }
         }
     };
-
+    
     this.template = function () {
         return "<label id='" + this.domID + "'>" +
             "<input data-triggers='click' id='" + this.domID + "-radio' type='radio' class='no-form-control' >"
