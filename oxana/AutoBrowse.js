@@ -91,7 +91,7 @@ var AutoBrowse = function (_props, overrided = false) {
                                 id: 'autocomplete',
                                 valueField: _valueField,
                                 labelField: _labelField,
-                                allowNewItem: false, //allow the user to add items that are not included in the specified dataProvider
+                                allowNewItem: _props.allowNewItem, //allow the user to add items that are not included in the specified dataProvider
                                 dataProvider: _dataProvider,
                                 value: _value,
                                 multiSelect: false,
@@ -137,7 +137,7 @@ var AutoBrowse = function (_props, overrided = false) {
                                 ctor:DataGrid,
                                 props:{
                                 id: 'dataGrid',
-                                allowNewItem: true, //allow the user to add items that are not included in the specified dataProvider
+                                allowNewItem: _props.allowNewItem, //allow the user to add items that are not included in the specified dataProvider
                                 rowCount:5, //visible rows count - virtual scrolling wil be applied on scroll
                                 dataProvider: _dataProvider,
                                 columns: _columns,
@@ -189,7 +189,8 @@ var AutoBrowse = function (_props, overrided = false) {
         attr:{"data-triggers":"browse"},   
         value:new ArrayEx([]),
         classes:["wrap"],
-        valueField:""                           
+        valueField: "",
+        allowNewItem: false
     };
 
     _props = extend(false, false, _defaultParams, _props);

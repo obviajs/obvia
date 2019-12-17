@@ -26,14 +26,25 @@ var DataGrid = function(_props)
             return _rowItems;
         }
     });
-    Object.defineProperty(this, "dataProvider", 
+    
+    Object.defineProperty(this, "rowCount",
     {
-        get: function dataProvider() 
+        get: function rowCount()
         {
-            return _dataProvider;
-        }
+            return _rowCount;
+        },
+        enumerable:true
     });
-
+    
+    Object.defineProperty(this, "allowNewItem",
+    {
+        get: function allowNewItem()
+        {
+            return _allowNewItem;
+        },
+        enumerable:true
+    });
+    
     Object.defineProperty(this, "columns", {
         get: function columns() {
             return _columns;
@@ -156,19 +167,24 @@ var DataGrid = function(_props)
         }
     };
 
-    this.renderRows = function(startIndex, endIndex) 
+    this.createRows = function() 
     {
-        endIndex = endIndex > _dataProvider.length ? _dataProvider.length: endIndex;
-        startIndex = startIndex < 0 ? 0: startIndex;
-        // _rowItems = {}; we need this if we create Repeater instances via Object.assign
+        this.$el.trigger('beginDraw');
         let _compRenderPromises = [];
-        for(let i=startIndex;i<endIndex;i++)
-        {
-            _compRenderPromises.splicea(_compRenderPromises.length, 0, this.addRow(extend(false, false, _dataProvider[i]), i + 1));
-        } 
-        if(this.allowNewItem && endIndex==_dataProvider.length)
+        if (_dataProvider && _dataProvider.length)
         { 
-            _compRenderPromises.splicea(_compRenderPromises.length, 0, this.addEmptyRow());
+            let endIndex = this.rowCount;
+            // _rowItems = {}; we need this if we create Repeater instances via Object.assign
+            for(let i=0;i<endIndex;i++)
+            {
+                _compRenderPromises.splicea(_compRenderPromises.length, 0, this.addRow(_dataProvider[i], i + 1));
+            } 
+            if(_allowNewItem && endIndex==_dataProvider.length)
+            { 
+                let emptyObj = this.defaultItem = createEmptyObject(_columns, "field", "description");
+                _dataProvider.pad(emptyObj, 1);
+                _compRenderPromises.splicea(_compRenderPromises.length, 0, this.addRow(_dataProvider[_dataProvider.length-1], _dataProvider.length));
+            }
         }
         Promise.all(_compRenderPromises).then(function() {
             _$hadow.contents().appendTo(_self.$table);
@@ -180,7 +196,7 @@ var DataGrid = function(_props)
     {
         let emptyObj = this.defaultItem = createEmptyObject(_columns, "field", "description");
         _dataProvider.pad(emptyObj, 1);
-        let _compRenderPromises = this.addRow(extend(false, false, _dataProvider[i]), i + 1);
+        let _compRenderPromises = this.addRow(_dataProvider[_dataProvider.length-1], _dataProvider.length);
         return Promise.all(_compRenderPromises).then(function() {
             _$hadow.contents().appendTo(_self.$table);
         });
@@ -478,7 +494,177 @@ var DataGrid = function(_props)
         return r;
     };
     
-     //renders a new row, adds components in stack
+    this.removeAllRows = function()
+    {
+        for(let i=this.rows.length;i>0;i--)
+        {
+            this.removeRow(i, false, false, false);
+        }
+        this.rows = [];
+    };
+
+    this.removeRow = function (index, isPreventable = false, focusOnRowDelete = true, removeFromDp = false) 
+    {
+        let rowItems = {};
+        
+        let removeRow = function () {
+            //remove dp row
+            let removedItem = null;
+            if(removeFromDp){
+                _dataProvider.splice(index - 1, 1);
+            }
+            for(let i=index-1;i<this.cellItemRenderers.length;i++){
+                
+                this.cellItemRenderers[i].repeaterIndex -= 1;
+                this.cells[i][0].prev().text(i);
+            }
+            //manage dp
+            _currentIndex--;
+            _currentItem = _dataProvider[index - 1];
+            if (_currentIndex == 1 && _allowNewItem) {
+                //model.displayRemoveButton = false;
+            }
+            this.rows[index-1].remove();
+            this.rows.splice(index - 1, 1);
+            _rowItems.splice(index - 1, 1);
+            this.cells.splice(index - 1, 1);
+            this.cellItemRenderers.splice(index - 1, 1);
+            
+            this.$el.trigger('rowDelete', [this, new RepeaterEventArgs([], _currentItem, index, rowItems)]);
+            //animate
+            if (focusOnRowDelete)
+                this.cellItemRenderers[index-2][0].scrollTo();
+            return removedItem;
+        }.bind(this);
+
+        //trigger before row delete event
+        if (isPreventable) {
+            //trigger before row delete event
+            let beforeRowDeleteEvent = jQuery.Event("beforeRowDelete");
+            this.$el.trigger(beforeRowDeleteEvent);
+
+            if (!beforeRowDeleteEvent.isDefaultPrevented()) {
+                return removeRow.call(this);
+            } else {
+                return false;
+            }
+        } else {
+            return removeRow.call(this);
+        }
+  
+    };   
+
+    this.updateDisplayList = function(){
+        _displayed = true;
+        //we now know the parent and element dimensions
+        _avgRowHeight = (this.$table.height() - this.$header.height())/ _rowCount;
+        this.virtualHeight = (_dataProvider.length - 2*(_allowNewItem?1:0)) * _avgRowHeight;
+
+        this.bufferedRowsCount = _rowCount;
+
+        let pos = this.$table.position();
+        let left = pos.left + this.$table.width() - 14;
+        let top = pos.top + this.$header.height();
+        this.realHeight = (this.$table.height()+this.$header.height()-16);
+        this.$message = $("<div>Creating Rows</div>");
+
+        this.$scrollArea = $("<div/>");
+        this.$scroller = $("<div style='border:1px solid black;position:relative; height:40px;top:15px'></div>");
+        this.$scrollArea.append(this.$scroller);
+        this.$scrollArea.css({border: "1px", opacity:100, "margin-top":-this.realHeight+"px", float: "right",position:"relative", "margin-left": "-16px", width:"10px", height : this.virtualHeight + "px"});
+        
+        this.$el.css({border: "1px solid black"});
+        this.$el.css({height:this.$table.height()});
+        this.$table.after(this.$scrollArea);
+
+        this.delayScroll = debounce(_onScroll, 400);
+
+        this.$el.on("scroll", function(e){
+            if(this.virtualHeight > (e.target.scrollTop+this.realHeight)-2*_avgRowHeight){
+                this.loading = true;
+                this.$message.css({position:"absolute", top:150+"px", left:150+"px", "background-color":"white","z-index":9999});
+                this.$el.append(this.$message);
+                this.$table.css({"margin-top":e.target.scrollTop});
+                this.$scrollArea.css({"margin-top": (-(this.realHeight)-e.target.scrollTop)+"px"});
+                //let top = this.$scroller.position().top;
+                let h = this.$scrollArea.height();
+                this.$scroller.css({"top": (16 + 1.2*(h - (h- e.target.scrollTop)))+"px"});
+                let cScrollHeight =  this.$scrollArea.css("height");
+                this.delayScroll.apply(this, arguments)
+            //this.onScroll.apply(this, arguments);
+            }
+        }.bind(this));
+        this.setCellsWidth();
+    }
+
+    let _displayed = false;
+    this.afterAttach = function (e) 
+    {
+        if (e.target.id == this.domID) 
+        {
+            let av = e.target.style.getPropertyValue('display');
+            if(av!="" && av!="none" && !_displayed){
+                this.updateDisplayList();
+            }
+        }
+    };
+
+    let _defaultParams = {
+        rendering: {
+			direction: 'vertical',
+			separator: true,
+			actions: false
+        },
+        showRowIndex:true,
+        dataProvider: new ArrayEx([]),
+        rowCount:5,
+        columns: [],
+        allowNewItem: false
+    };
+    _props = extend(false, false, _defaultParams, _props);
+    let _dataProvider = _props.dataProvider;
+    let _rendering = _props.rendering;
+    let _showRowIndex = _props.showRowIndex;
+    let _rowCount = _props.rowCount;
+    _rowCount = _rowCount? Math.min(_rowCount, (_dataProvider && _dataProvider.length ? _dataProvider.length:0)): _dataProvider.length;
+        
+    let _allowNewItem = _props.allowNewItem = true;
+    
+    this.components = _props.components;
+    let _columns = _props.columns;
+    this.rows = [];
+    this.cellItemRenderers = [[]];
+    this.cellItemEditors = [];
+    this.cells = [];// matrix
+    this.editPosition = null;
+    this.bindingExpressions = []; //array of bindings arrays (bindings for each column)
+   
+    Repeater.call(this, _props, true);
+    let base = this.base;
+    //overrides
+    let _rPromise;
+    this.renderPromise = function () 
+    { 
+        this.$container = this.$el;
+        this.$table = this.$el.find("#" + this.domID + '-table');
+        this.$header = this.$el.find('#' + this.domID + '-header'); 
+        
+        _rPromise = new Promise((resolve, reject) => {
+            _self.on("endDraw", function(e){
+                if (e.target.id == _self.domID) 
+                {
+                    resolve(this); 
+                }
+            });                   
+        });
+        
+        this.createHeader();
+        if(_props.dataProvider)
+            this.dataProvider = _props.dataProvider;
+        return _rPromise;
+    };
+
+    //renders a new row, adds components in stack
     this.addRow = function (data, index, isPreventable = false, focusOnRowAdd = true) 
     {
         let rp = [];
@@ -633,171 +819,5 @@ var DataGrid = function(_props)
         return rp;
     }; 
     
-    this.removeAllRows = function()
-    {
-        for(let i=this.rows.length;i>0;i--)
-        {
-            this.removeRow(i, false, false, false);
-        }
-        this.rows = [];
-    };
-
-    this.removeRow = function (index, isPreventable = false, focusOnRowDelete = true, removeFromDp = false) 
-    {
-        let rowItems = {};
-        
-        let removeRow = function () {
-            //remove dp row
-            let removedItem = null;
-            if(removeFromDp){
-                _dataProvider.splice(index - 1, 1);
-            }
-            for(let i=index-1;i<this.cellItemRenderers.length;i++){
-                
-                this.cellItemRenderers[i].repeaterIndex -= 1;
-                this.cells[i][0].prev().text(i);
-            }
-            //manage dp
-            _currentIndex--;
-            _currentItem = _dataProvider[index - 1];
-            if (_currentIndex == 1 && this.allowNewItem) {
-                //model.displayRemoveButton = false;
-            }
-            this.rows[index-1].remove();
-            this.rows.splice(index - 1, 1);
-            _rowItems.splice(index - 1, 1);
-            this.cells.splice(index - 1, 1);
-            this.cellItemRenderers.splice(index - 1, 1);
-            
-            this.$el.trigger('rowDelete', [this, new RepeaterEventArgs([], _currentItem, index, rowItems)]);
-            //animate
-            if (focusOnRowDelete)
-                this.cellItemRenderers[index-2][0].scrollTo();
-            return removedItem;
-        }.bind(this);
-
-        //trigger before row delete event
-        if (isPreventable) {
-            //trigger before row delete event
-            let beforeRowDeleteEvent = jQuery.Event("beforeRowDelete");
-            this.$el.trigger(beforeRowDeleteEvent);
-
-            if (!beforeRowDeleteEvent.isDefaultPrevented()) {
-                return removeRow.call(this);
-            } else {
-                return false;
-            }
-        } else {
-            return removeRow.call(this);
-        }
-  
-    };   
-
-    this.updateDisplayList = function(){
-        _displayed = true;
-        //we now know the parent and element dimensions
-        _avgRowHeight = (this.$table.height() - this.$header.height())/ _rowCount;
-        this.virtualHeight = _dataProvider.length * _avgRowHeight;
-
-        this.bufferedRowsCount = _rowCount;
-
-        let pos = this.$table.position();
-        let left = pos.left + this.$table.width() - 14;
-        let top = pos.top + this.$header.height();
-        this.realHeight = (this.$table.height()+this.$header.height()-16);
-        this.$message = $("<div>Creating Rows</div>");
-
-        this.$scrollArea = $("<div/>");
-        this.$scroller = $("<div style='border:1px solid black;position:relative; height:40px;top:15px'></div>");
-        this.$scrollArea.append(this.$scroller);
-        this.$scrollArea.css({border: "1px", opacity:100, "margin-top":-this.realHeight+"px", float: "right",position:"relative", "margin-left": "-16px", width:"10px", height : this.virtualHeight + "px"});
-        
-        this.$el.css({border: "1px solid black"});
-        this.$el.css({height:this.$table.height()});
-        this.$table.after(this.$scrollArea);
-
-        this.delayScroll = debounce(_onScroll, 400);
-
-        this.$el.on("scroll", function(e){
-            if(this.virtualHeight > (e.target.scrollTop+this.realHeight)-2*_avgRowHeight){
-                this.loading = true;
-                this.$message.css({position:"absolute", top:150+"px", left:150+"px", "background-color":"white","z-index":9999});
-                this.$el.append(this.$message);
-                this.$table.css({"margin-top":e.target.scrollTop});
-                this.$scrollArea.css({"margin-top": (-(this.realHeight)-e.target.scrollTop)+"px"});
-                //let top = this.$scroller.position().top;
-                let h = this.$scrollArea.height();
-                this.$scroller.css({"top": (16 + 1.2*(h - (h- e.target.scrollTop)))+"px"});
-                let cScrollHeight =  this.$scrollArea.css("height");
-                this.delayScroll.apply(this, arguments)
-            //this.onScroll.apply(this, arguments);
-            }
-        }.bind(this));
-        this.setCellsWidth();
-    }
-
-    let _displayed = false;
-    this.afterAttach = function (e) 
-    {
-        if (e.target.id == this.domID) 
-        {
-            let av = e.target.style.getPropertyValue('display');
-            if(av!="none" && !_displayed){
-                this.updateDisplayList();
-            }
-        }
-    };
-
-    let _defaultParams = {
-        rendering: {
-			direction: 'vertical',
-			separator: true,
-			actions: false
-        },
-        showRowIndex:true,
-        dataProvider:[],
-        rowCount:5,
-        columns:[]
-    };
-    _props = extend(false, false, _defaultParams, _props);
-    let _dataProvider = _props.dataProvider;
-    let _rendering = _props.rendering;
-    let _showRowIndex = _props.showRowIndex;
-    let _rowCount = _props.rowCount;
-    
-    this.components = _props.components;
-    let _columns = _props.columns;
-    this.rows = [];
-    this.cellItemRenderers = [[]];
-    this.cellItemEditors = [];
-    this.cells = [];// matrix
-    this.editPosition = null;
-    this.bindingExpressions = []; //array of bindings arrays (bindings for each column)
-   
-    Component.call(this, _props, true);
-    let base = this.base;
-    //overrides
-    let _rPromise;
-    this.renderPromise = function () 
-    {
-        
-        this.$el.trigger('beginDraw');
-        this.$table = this.$el.find("#" + this.domID + '-table');
-        this.$header = this.$el.find('#' + this.domID + '-header'); 
-        
-        _rPromise = new Promise((resolve, reject) => {
-            _self.on("endDraw", function(e){
-                if (e.target.id == _self.domID) 
-                {
-                    resolve(this); 
-                }
-            });                   
-        });
-        
-        this.createHeader();
-        let len = _rowCount? Math.min(_rowCount, _dataProvider.length): _dataProvider.length;
-        this.renderRows(0, len);
-        return _rPromise;
-    };
 };
 DataGrid.prototype.ctor = 'DataGrid';

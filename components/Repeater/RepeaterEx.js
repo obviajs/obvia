@@ -31,21 +31,24 @@ var RepeaterEx = function(_props)
 
     }
     let _repeater, _removeButton, _addButton, _dpWatcher;
-    this.beforeAttach = function(e) 
+    this.endDraw = function (e)
     {
-        if (e.target.id == this.domID) 
+        if (e.target.id == this.domID)
         {
-            this.$container = this.$el;
-            fnContainerDelayInit();
-            this.components = _cmps;
-            this.addComponents();
             _repeater = this.children[this.components[0].props.id];
             if(_repeater.dataProvider){
                 _dpWatcher = ChangeWatcher.getInstance(_repeater.dataProvider);
                 _dpWatcher.watch(_repeater.dataProvider, "length", _dpLengthChanged);
             }
             _removeButton = this.children[this.components[1].props.id].children[this.components[1].props.components[0].props.id];
-            _addButton = this.children[this.components[1].props.id].children[this.components[1].props.components[1].props.id];
+            _addButton = this.children[this.components[1].props.id].children[this.components[1].props.components[1].props.id];            
+        }
+    }
+    
+    this.beforeAttach = function(e) 
+    {
+        if (e.target.id == this.domID) 
+        {
             e.preventDefault();
         }
     }
@@ -55,7 +58,7 @@ var RepeaterEx = function(_props)
         [
             {
                 ctor: Repeater,
-                props: _props
+                props: _propsRepeater
             },
             {
                 "ctor": "Container",
@@ -124,8 +127,12 @@ var RepeaterEx = function(_props)
     var _rendering = _props.rendering;
     var _enabled = _props.enabled;
     var _guidField = _props.guidField;
-    this.components = _props.components;
-
+    let _propsRepeater = {};
+    //avoid circular reference, by shallow copying, and later adding components to _props
+    shallowCopy(_props, _propsRepeater);
+    fnContainerDelayInit();
+    _props.components = _cmps;
+    
     Container.call(this, _props, true, true);
 };
 RepeaterEx.prototype.ctor = 'RepeaterEx';

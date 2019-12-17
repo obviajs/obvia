@@ -475,8 +475,21 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
             }
         }
     }
+    let _beginDraw = this.beginDraw;
+    this.beginDraw = function (e)
+    {
+        if (e.target.id == this.domID) 
+        {
+            if (typeof _props.beginDraw == 'function')
+                _props.beginDraw.apply(this.proxyMaybe, arguments);
+            if(!e.isDefaultPrevented()){
+                if (typeof _beginDraw == 'function')
+                    _beginDraw.apply(this.proxyMaybe, arguments);
+            }
+        }
+    };
     
-    var _endDraw = this.endDraw;
+    let _endDraw = this.endDraw;
     this.endDraw = function (e)
     {
         if (e.target.id == this.domID) 
@@ -497,7 +510,7 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
         }
     }
     
-    var _afterAttach = this.afterAttach;
+    let _afterAttach = this.afterAttach;
     this.afterAttach = function (e)
     {
         if (e.target.id == this.domID) 
@@ -600,6 +613,7 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
     {
         this.renderPromise = function ()
         {
+            _self.trigger('beginDraw');
             _self.trigger('endDraw');
             _rPromise = new Promise((resolve, reject) => {
                 resolve(this);                  

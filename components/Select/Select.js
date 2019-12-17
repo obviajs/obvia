@@ -57,7 +57,7 @@ var Select = function (_props, overrided = false) {
         return "<select data-triggers='change' id='" + this.domID + "'></select>";
     };
 
-    this.afterAttach = function() 
+    this.afterAttach = function(e) 
     {
         if (e.target.id == this.domID) 
         {

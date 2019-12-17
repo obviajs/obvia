@@ -18,25 +18,23 @@ var CollectionEditor = function (_props, overrided = false) {
             c.splicea(0, 0, [defaultObj]);
         }
     }
-
-    this.beforeAttach = function(e) 
+    this.beginDraw = function (e)
+    {
+        
+    }
+    this.endDraw = function (e)
+    {
+        if (e.target.id == this.domID)
+        {
+            _repeater = this.repeater;
+        }
+    }
+    
+    this.beforeAttach = function (e) 
     {
         if (e.target.id == this.domID) 
         {
             
-            this.$container = this.$el;
-            if(_props.memberType){
-                _memberType = _props.memberType;
-            }
-            if(_props.instance){
-                _field = _props.field;
-                _instance = _props.instance;
-                this.initMembers();
-                fnContainerDelayInit();
-                this.components = _cmps;
-                let inst = this.addComponents();
-                _repeater = inst[0];
-            }
             e.preventDefault();
         }
     }
@@ -81,6 +79,18 @@ var CollectionEditor = function (_props, overrided = false) {
         "components": [],
         memberType:""
     };
+    
+    if (_props.memberType)
+    {
+        _memberType = _props.memberType;
+    }
+    if(_props.instance){
+        _field = _props.field;
+        _instance = _props.instance;
+        this.initMembers();
+    }
+    fnContainerDelayInit();
+    _props.components = _cmps;
     _props = extend(false, false, _defaultParams, _props);
     Container.call(this, _props);
     

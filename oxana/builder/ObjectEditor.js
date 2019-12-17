@@ -16,7 +16,7 @@ var ObjectEditor = function (_props, overrided = false) {
         set: function instance(v) {
             if (_instance != v) {
                 _instance = v;
-                this.initFields(_instance);
+                this.addComponents(this.initFields(_instance));
             }
         },
         enumerable:true

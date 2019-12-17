@@ -101,7 +101,7 @@ var Modal = function(_props)
         ]
     };
 
-    var _defaultParams = {
+    let _defaultParams = {
         size: ModalSize.LARGE,
         type: ContainerType.NONE,
         classes: ["modal", "fade", "modal-fullscreen"],
@@ -109,18 +109,18 @@ var Modal = function(_props)
         components: _defaultComponents
     };
     _props = extend(false, false, _defaultParams, _props);
-    _props.appendTo = $(_props.ownerDocument.body);
     if(_props.components && _props.components.forEach){
         _props.components = _defaultComponents;
     }
     
-    var _title = _props.title;
-    var _size = _props.size;
+    let _title = _props.title;
+    let _size = _props.size;
     
     this.endDraw = function (e)
     {
         if (e.target.id == this.domID)
         {
+            this.appendTo = $(this.ownerDocument.body);
             _modalDialog = this.children[this.components[0].props.id];
             _modalContent = _modalDialog.children[_modalDialog.components[0].props.id];
             _modalHeader = _modalContent.children[_modalContent.components[0].props.id];
@@ -130,7 +130,7 @@ var Modal = function(_props)
     };
 
     let _cmps, _modalDialog, _modalContent, _modalHeader, _modalBody, _modalFooter;
-    var fnContainerDelayInit = function(){
+    let fnContainerDelayInit = function(){
         _cmps = 
         [
             {
@@ -188,7 +188,7 @@ var Modal = function(_props)
     _props.components = _cmps;
     
     let r = Container.call(this, _props, true);
-    var base = this.base;
+    let base = this.base;
     
     this.show = function () 
     {

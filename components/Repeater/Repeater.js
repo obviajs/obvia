@@ -103,36 +103,42 @@ var Repeater = function(_props)
             this.rowItems[rowIndex][cIndex].$el.focus();
         }
     };
-
-    var _createRows = function(){
-        console.time('time _createRows_'+_self.id);
-        _self.trigger('beginDraw');
-         //this.$container.empty();
-        _self.focusedRow = 0,
-        _self.focusedComponent = 0;
-        let _compRenderPromises = [];
-        if(_dataProvider && _dataProvider.forEach)
+    if (!this.hasOwnProperty("createRows"))
+    {
+        this.createRows = function ()
         {
-            let len = _dataProvider.length;
-            if(len>0){
-                for(let i=0;i<len;i++)
+            console.time('time _createRows_' + _self.id);
+            _self.trigger('beginDraw');
+            //this.$container.empty();
+            _self.focusedRow = 0,
+            _self.focusedComponent = 0;
+            let _compRenderPromises = [];
+            if (_dataProvider && _dataProvider.forEach)
+            {
+                let len = _dataProvider.length;
+                if (len > 0)
                 {
-                    let data = _dataProvider[i];
-                    if(data!=null){
-                        if(!data[_guidField])
-                            data[_guidField] = StringUtils.guid();
-                        _compRenderPromises.splicea(_compRenderPromises.length, 0, _self.addRow(data, i + 1));
+                    for (let i = 0; i < len; i++)
+                    {
+                        let data = _dataProvider[i];
+                        if (data != null)
+                        {
+                            if (!data[_guidField])
+                                data[_guidField] = StringUtils.guid();
+                            _compRenderPromises.splicea(_compRenderPromises.length, 0, _self.addRow(data, i + 1));
+                        }
                     }
-                }
-            }else
+                } else
+                    _creationFinished = true;
+                _oldDataProvider = acExtend(_dataProvider);
+            } else
                 _creationFinished = true;
-            _oldDataProvider = acExtend(_dataProvider);
-        }else
-            _creationFinished = true;
-        Promise.all(_compRenderPromises).then(function() {
-            _$hadow.contents().appendTo(_self.$container);
-            _self.trigger('endDraw');
-        });
+            Promise.all(_compRenderPromises).then(function ()
+            {
+                _$hadow.contents().appendTo(_self.$container);
+                _self.trigger('endDraw');
+            });
+        }
     }
     //handle row add click
     var _addRowHandler = function () 
@@ -203,7 +209,7 @@ var Repeater = function(_props)
                         this.removeAllRows(false);
                     _dataProvider = v;
                     _creationFinished = true;
-                    _createRows();
+                    this.createRows();
                 }else if(_dataProvider && _dataProvider.length>0)
                 {
                     var delta = (v.length?v.length:0) - (_dataProvider.length?_dataProvider.length:0);
@@ -236,7 +242,7 @@ var Repeater = function(_props)
                     _dataProvider = !ArrayEx.isArrayEx(v)?new ArrayEx(v):v;
                 }else if(_dataProvider==null || _dataProvider.length==0){
                     _dataProvider = !ArrayEx.isArrayEx(v)?new ArrayEx(v):v;
-                    _createRows();
+                    this.createRows();
                     //temp hack
                     _creationFinished = true;
                 }
@@ -323,6 +329,7 @@ var Repeater = function(_props)
     }
     var _createdRows = 0;
     //renders a new row, adds components in stack
+    
     this.addRow = function (data, index, isPreventable = false, focusOnRowAdd = true) 
     {
         let rp = [];
@@ -341,7 +348,7 @@ var Repeater = function(_props)
             {
                 let component = _components[cIndex];
                 //clone objects
-                component = extend(true, component);
+                component = deepCopy(component);
                 component.props.ownerDocument = _props.ownerDocument;
                 component.props.bindingDefaultContext = data;
                 let el = Component.fromLiteral(component, data);
@@ -563,13 +570,13 @@ var Repeater = function(_props)
         }
   
     };
-
+    let _afterAttach = this.afterAttach;
     this.afterAttach = function (e) 
     {
         if (e.target.id == this.domID) 
         {
-            if (typeof _props.afterAttach == 'function')
-                _props.afterAttach.apply(this, arguments);
+            if (typeof _afterAttach == 'function')
+                _afterAttach.apply(this, arguments);
             if((!_creationFinished && (_dataProvider && _dataProvider.forEach && _dataProvider.length>0)) || e.isDefaultPrevented())    
                 e.preventDefault();
         }
