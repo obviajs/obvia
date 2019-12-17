@@ -628,7 +628,7 @@ var DataGrid = function(_props)
     let _rowCount = _props.rowCount;
     _rowCount = _rowCount? Math.min(_rowCount, (_dataProvider && _dataProvider.length ? _dataProvider.length:0)): _dataProvider.length;
         
-    let _allowNewItem = _props.allowNewItem = true;
+    let _allowNewItem = _props.allowNewItem;
     
     this.components = _props.components;
     let _columns = _props.columns;

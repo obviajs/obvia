@@ -150,10 +150,17 @@ var Parent = function(_props, overrided=false, _isSurrogate=false)
         },
         enumerable:false
     });
-
+    Object.defineProperty(this, "renderPromises",
+    {
+        get:function renderPromises(){
+            return _compRenderPromises;
+        },
+        enumerable: false,
+        configurable: true
+    });
     let _childrenIDR = {};
     let _childrenRID = {};
-
+    let _compRenderPromises = [];
     this.addComponentInContainer = function (container, component, index) 
     {
         if(container)
@@ -207,16 +214,21 @@ var Parent = function(_props, overrided=false, _isSurrogate=false)
             });
             index = index > -1? index : _components.length;
             if(cmp.renderPromise){
-                cmp.renderPromise().then(function(cmpInstance){
-                    if (cmpInstance.appendTo) { 
-                        cmpInstance.appendTo.insertAt(cmpInstance.$el, index);                       
-                    }else  
-                        container.insertAt(cmpInstance.$el, index);
-                    --_countChildren;
-                    if(_countChildren==0){
-                        _$hadow.contents().appendTo(_self.$container);               
-                        _self.trigger('endDraw');
-                    }
+                _compRenderPromises.push({
+                    "cmp": cmp, "promise": cmp.renderPromise().then(function (cmpInstance)
+                    {
+                        if (cmpInstance.appendTo)
+                        {
+                            cmpInstance.appendTo.insertAt(cmpInstance.$el, index);
+                        } else
+                            container.insertAt(cmpInstance.$el, index);
+                        --_countChildren;
+                        if (_countChildren == 0)
+                        {
+                            _$hadow.contents().appendTo(_self.$container);
+                            _self.trigger('endDraw');
+                        }
+                    })
                 });
             }else{
                 container.insertAt(cmp.render(), index);

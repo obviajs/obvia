@@ -195,8 +195,6 @@ rjs.define("./components/Calendar/css/calendarWeek-default.css", "calendarWeek_d
 //TextInput
 //rjs.define("./components/TextInput.js", "TextInput")
 
-rjs.define("./oxana/builder/CollectionEditor.js", "CollectionEditor");
-rjs.define("./oxana/builder/ObjectEditor.js", "ObjectEditor");
 rjs.require([
     "NumberUtils",
     "JTemplate",
@@ -237,8 +235,6 @@ rjs.require([
     "FormField",
     "FormFieldSize",
     "FormEventType",
-    "CollectionEditor",
-    "ObjectEditor",
     "AutoBrowse",
     "Attr",
     "Css",

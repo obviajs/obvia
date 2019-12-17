@@ -24,10 +24,10 @@ var ObjectEditor = function (_props, overrided = false) {
 
     var _initDP = function(){
         if(!ObjectEditor.init){
-            for(let i=0;i<ObjectEditor.sources.length;i++){
+            for(let i=0;i<Builder.sources.length;i++){
                 //if(ObjectEditor.source[i].remote)
-                let r = new ArrayEx(new RemoteArray(ObjectEditor.sources[i].props));
-                ObjectEditor.data[ObjectEditor.sources[i].name] = r;
+                let r = new ArrayEx(new RemoteArray(Builder.sources[i].props));
+                ObjectEditor.data[Builder.sources[i].name] = r;
             }
             ObjectEditor.init = true;
         }
@@ -38,9 +38,9 @@ var ObjectEditor = function (_props, overrided = false) {
         props = fld!=null && fld!=""?inst[fld]:inst;
         let rows = [];
         for(let prop in props){
-            let propsMeta = extend(true, ObjectEditor.metaProps[inst.ctor] && ObjectEditor.metaProps[inst.ctor][prop]?ObjectEditor.metaProps[inst.ctor][prop]:ObjectEditor.metaProps[prop]);
+            let propsMeta = extend(true, Builder.metaProps[inst.ctor] && Builder.metaProps[inst.ctor][prop]?Builder.metaProps[inst.ctor][prop]:Builder.metaProps[prop]);
             if(propsMeta && !Object.isEmpty(propsMeta)){
-                let propEditor = extend(true, ObjectEditor.components[propsMeta.ctor]);
+                let propEditor = extend(true, Builder.components[propsMeta.ctor]);
                 if(propEditor){
                     let itemEditorLit = propEditor.literal;
                     if(propsMeta.props)
@@ -59,7 +59,7 @@ var ObjectEditor = function (_props, overrided = false) {
                     {
                         let targetLit;
                         if(propsMeta.targetProps.target && propsMeta.targetProps.target.ctor){
-                            targetLit = ObjectEditor.components[propsMeta.targetProps.target.ctor].literal;
+                            targetLit = Builder.components[propsMeta.targetProps.target.ctor].literal;
                             targetLit.props = extend(false, false,targetLit.props, propsMeta.targetProps.target.props);
                         }
                         
@@ -129,8 +129,6 @@ var ObjectEditor = function (_props, overrided = false) {
 ObjectEditor.prototype.ctor = 'ObjectEditor';
 
 ObjectEditor.init = false;
-ObjectEditor.providerValueField = "name";
-ObjectEditor.providerLabelField = "description";
 ObjectEditor.masks;
 ObjectEditor.maskValueField = "";
 ObjectEditor.maskLabelField = "";
