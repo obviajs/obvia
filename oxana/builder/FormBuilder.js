@@ -20,6 +20,8 @@ const appStyle = `
 }
 `;
 
+var _cmpList = new ArrayEx(Builder.componentList);
+
 var _DOMMutationHandler = function (e) {
     //Google translate will add font/font/text nodes to the translated label
     if (e.mutation.addedNodes.length > 0 && e.mutation.addedNodes[0].childNodes.length > 0 && e.mutation.addedNodes[0].childNodes[0].childNodes.length > 0) {
@@ -224,7 +226,7 @@ let mainContainer = {
                                                         ctor: Repeater,
                                                         props: {
                                                             id: "componentList",
-                                                            dataProvider: Builder.componentList,
+                                                            dataProvider: _cmpList,
                                                             rendering: {
                                                                 direction: 'horizontal'
                                                             },
@@ -441,7 +443,7 @@ var cmpBehaviors = {
 };
 
 oxana.behaviors["SearchComponents"] = {},
-    oxana.behaviors["SearchComponents"]["keydown"] = "SEARCH_CMP";
+    oxana.behaviors["SearchComponents"]["keyup"] = "SEARCH_CMP";
 
 oxana.behaviors["undoButton"] = {};
 oxana.behaviors["undoButton"]["click"] = "WA_UNDO";
@@ -655,11 +657,14 @@ oxana.behaviorimplementations["FILE_SELECTED"] = function (e) {
 oxana.behaviorimplementations["SEARCH_CMP"] = function (e) {
     console.log("search box change");
     let value = e.target.value.toLowerCase();
-    if(value != ""){
-        let component = Builder.componentList.map(cmp => cmp.ctor.toLowerCase());
-        let c = component.filter(cmp => cmp == value);
-        Component.instances["componentList"].dataProviderChanged(c);
-
+    if (value.length == 0 || e.keyCode == 8) {
+        _cmpList.undoAll();
+    }
+    if (value.length > 0) {
+        _cmpList.filter(function (el) {
+            let regEx = new RegExp(`${value}`, "gi");
+            return el.label.toLowerCase().match(regEx);
+        });
     }
 };
 
