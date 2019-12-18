@@ -32,9 +32,9 @@ Builder.metaProps = {
     required: {ctor:"Toggle", label: "Required", index:6},
     checked: {ctor:"Toggle", label: "Checked", index:7},
     dataProvider: {ctor:"AutoBrowse", label: "Data Provider", required:true, props:{
-        valueField: ObjectEditor.providerValueField,
-        labelField: ObjectEditor.providerLabelField,
-        dataProvider: ObjectEditor.sources,
+        valueField: Builder.providerValueField,
+        labelField: Builder.providerLabelField,
+        dataProvider: Builder.sources,
         change: function(){
             //propsForm.children["dataProvider"].value
             //get the fields for the selected datProvider and 
@@ -171,7 +171,7 @@ Builder.metaProps = {
                     id: 'anchorBtn',
                     valueField: ObjectEditor.componentValueField,
                     labelField: ObjectEditor.componentValueField,
-                    dataProvider: ObjectEditor.componentList,
+                    dataProvider: Builder.componentList,
                     fields:[{"field":ObjectEditor.componentValueField, "description":ObjectEditor.componentValueField, "visible":false}, {"field":ObjectEditor.componentLabelField, "description":ObjectEditor.componentLabelField}]        
                 }
             },
@@ -180,7 +180,7 @@ Builder.metaProps = {
                     if(this.value && this.value.length>0){
                         e.preventDefault();
                         let wl = extend(true, targetLit);
-                        itemEditorLit.props.instance = extend(true, ObjectEditor.components[this.value[0][ObjectEditor.componentValueField]].literal);
+                        itemEditorLit.props.instance = extend(true, Builder.components[this.value[0][ObjectEditor.componentValueField]].literal);
                         itemEditorLit.props.field = "props";
                         wl.props.components = [itemEditorLit];
                         let win = oe.addComponent(wl);
@@ -215,7 +215,7 @@ Builder.metaProps = {
                     id: 'anchorBtn',
                     valueField: ObjectEditor.componentValueField,
                     labelField: ObjectEditor.componentValueField,
-                    dataProvider: ObjectEditor.componentList,
+                    dataProvider: Builder.componentList,
                     fields:[{"field":ObjectEditor.componentValueField, "description":ObjectEditor.componentValueField, "visible":false}, {"field":ObjectEditor.componentLabelField, "description":ObjectEditor.componentLabelField}]        
                 }
             },
@@ -224,7 +224,7 @@ Builder.metaProps = {
                     if(this.value && this.value.length>0){
                         e.preventDefault();
                         let wl = extend(true, targetLit);
-                        itemEditorLit.props.instance = extend(true, ObjectEditor.components[this.value[0][ObjectEditor.componentValueField]].literal);
+                        itemEditorLit.props.instance = extend(true, Builder.components[this.value[0][ObjectEditor.componentValueField]].literal);
                         itemEditorLit.props.field = "props";
                         wl.props.components = [itemEditorLit];
                         let win = oe.addComponent(wl);
@@ -344,7 +344,3 @@ Builder.metaProps.CheckBox = {
         }
     }}
 };
-
-
-
-

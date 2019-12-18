@@ -253,7 +253,7 @@ Builder.components = {
             "props": {
                 id: 'AutoCompleteEx',
                 allowNewItem: false,
-                value: [],
+                value: new ArrayEx([]),
                 multiSelect: false,
                 matchType: StringMatchType.STARTS_WITH
             }
@@ -269,17 +269,17 @@ Builder.components = {
             "ctor": AutoBrowse,
             "props": {
                 id: "AutoBrowse",
-                labelField: ObjectEditor.providerLabelField,
-                valueField: ObjectEditor.providerValueField,
-                dataProvider: ObjectEditor.sources,
+                labelField: Builder.providerLabelField,
+                valueField: Builder.providerValueField,
+                dataProvider: Builder.sources,
                 classes: ["ml-0"],
                 fields: [{
-                    "field": ObjectEditor.providerValueField,
-                    "description": ObjectEditor.providerValueField,
+                    "field": Builder.providerValueField,
+                    "description": Builder.providerValueField,
                     "visible": false
                 }, {
-                    "field": ObjectEditor.providerLabelField,
-                    "description": ObjectEditor.providerLabelField
+                    "field": Builder.providerLabelField,
+                    "description": Builder.providerLabelField
                 }]
             }
         },

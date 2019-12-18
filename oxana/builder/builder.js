@@ -459,7 +459,7 @@ oxana.behaviorimplementations["ADD_COMPONENT"] = {
         let inst;
         if(move==""){
             console.log("ADD_COMPONENT_ "+domID);
-            let lit = ObjectEditor.components[ctor].literal;
+            let lit = Builder.components[ctor].literal;
             if(workArea.ctor == "Form" && noNeedFF.indexOf(ctor)==-1){ 
                 var ff = extend(true, formField);
                 ff.props.component = lit;

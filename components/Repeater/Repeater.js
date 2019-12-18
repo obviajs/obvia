@@ -103,6 +103,7 @@ var Repeater = function(_props)
             this.rowItems[rowIndex][cIndex].$el.focus();
         }
     };
+    let _compRenderPromises = [];
     if (!this.hasOwnProperty("createRows"))
     {
         this.createRows = function ()
@@ -112,7 +113,7 @@ var Repeater = function(_props)
             //this.$container.empty();
             _self.focusedRow = 0,
             _self.focusedComponent = 0;
-            let _compRenderPromises = [];
+            _compRenderPromises = [];
             if (_dataProvider && _dataProvider.forEach)
             {
                 let len = _dataProvider.length;
@@ -140,6 +141,7 @@ var Repeater = function(_props)
             });
         }
     }
+
     //handle row add click
     var _addRowHandler = function () 
     {
@@ -154,7 +156,7 @@ var Repeater = function(_props)
                 this.removeRow(toRemove.a1_indices[i]+1, false, true, dpRemove = false); 
                 //this.removeChildAtIndex(toRemove.a1_indices[i]);
         }
-        let _compRenderPromises = [];
+        _compRenderPromises = [];
         for(var i=0;i<toAdd.a1_indices.length;i++){
             if(toRefresh.indexOf(toAdd.a1_indices[i])==-1)
             {
@@ -225,7 +227,7 @@ var Repeater = function(_props)
             
                     }
                     if(delta>0){
-                        let _compRenderPromises = [];
+                        _compRenderPromises = [];
                         for(var i=_dataProvider.length;i<v.length;i++){
                             if(v[i]!=null && !v[i][_guidField])
                                 v[i][_guidField] = StringUtils.guid();
@@ -279,6 +281,12 @@ var Repeater = function(_props)
             var toRemove = {result:[],a1_indices:[]};
             if(e.newValue < e.oldValue){
                 toRemove = differenceOnKeyMatch(_oldDataProvider, _dataProvider, _guidField, false, true, e.newValue);
+            }
+            if (e.newValue < e.oldValue && toRemove.result.length != e.oldValue - e.newValue)
+            {
+                let r = _oldDataProvider.dedupe(_guidField);
+                toRemove.result = r.result;
+                toRemove.a1_indices = r.indices;
             }
             if(e.newValue < e.oldValue && toRemove.result.length!=e.oldValue-e.newValue){
                 toRemove = differenceOnKeyMatch(_oldDataProvider, _dataProvider, _guidField, false, true);
@@ -681,6 +689,14 @@ var Repeater = function(_props)
             return _components;
         },
         enumerable:true
+    });
+    Object.defineProperty(this, "renderPromises",
+    {
+        get:function renderPromises(){
+            return _compRenderPromises;
+        },
+        enumerable: false,
+        configurable: true
     });
 };
 Repeater.prototype.ctor = 'Repeater';
