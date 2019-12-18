@@ -206,13 +206,49 @@ let mainContainer = {
                                         spacing: {
                                             colSpan: 12
                                         },
-                                        components: [{
-                                                ctor: TextInput,
+                                        "components": [{
+                                                ctor: Container,
                                                 props: {
-                                                    id: "SearchComponents",
-                                                    placeholder: "Search Components",
-                                                    type: "text",
-                                                    classes: ["form-control", "searchComponents"]
+                                                    id: "container",
+                                                    type: ContainerType.NONE,
+                                                    classes: ["inner-addon right-addon"],
+                                                    components: [{
+                                                            ctor: TextInput,
+                                                            props: {
+                                                                id: "SearchComponents",
+                                                                type: "text",
+                                                                placeholder: "Search Components",
+                                                                classes: [
+                                                                    "search-term"
+                                                                ]
+                                                            }
+                                                        },
+                                                        {
+                                                            ctor: "Button",
+                                                            props: {
+                                                                id: "button",
+                                                                type: "button",
+                                                                label: "",
+                                                                classes: [
+                                                                    "btn"
+                                                                ],
+                                                                components: [{
+                                                                    ctor: "Label",
+                                                                    props: {
+                                                                        id: "i",
+                                                                        label: "",
+                                                                        labelType: "i",
+                                                                        classes: [
+                                                                            "fa",
+                                                                            "fa-search"
+                                                                        ],
+                                                                        components: []
+                                                                    }
+                                                                }]
+                                                            }
+                                                        }
+
+                                                    ]
                                                 }
                                             },
                                             {
@@ -443,7 +479,7 @@ var cmpBehaviors = {
 };
 
 oxana.behaviors["SearchComponents"] = {},
-    oxana.behaviors["SearchComponents"]["keyup"] = "SEARCH_CMP";
+    oxana.behaviors["SearchComponents"]["change"] = "SEARCH_CMP";
 
 oxana.behaviors["undoButton"] = {};
 oxana.behaviors["undoButton"]["click"] = "WA_UNDO";
