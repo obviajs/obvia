@@ -13,3 +13,30 @@ i:hover {
     background-color: #ffffff;
     border: 1px dotted blue;
 }
+
+.search-term {
+    width: 100%;
+    padding: 5px 15px;
+    border: 0;
+    border-radius: 25px
+}
+
+/* enable absolute positioning */
+.inner-addon { 
+    position: relative; 
+    margin-bottom: 5px;
+}
+
+/* style icon */
+.inner-addon .btn {
+  position: absolute;
+  padding: 3px;
+  pointer-events: none;
+}
+
+/* align icon */
+.left-addon .btn  { left:  0px;}
+.right-addon .btn { right: 20px;}
+
+/* add padding  */
+.right-addon input { padding-right: 40px; }
