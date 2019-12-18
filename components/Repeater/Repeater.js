@@ -282,6 +282,12 @@ var Repeater = function(_props)
             if(e.newValue < e.oldValue){
                 toRemove = differenceOnKeyMatch(_oldDataProvider, _dataProvider, _guidField, false, true, e.newValue);
             }
+            if (e.newValue < e.oldValue && toRemove.result.length != e.oldValue - e.newValue)
+            {
+                let r = _oldDataProvider.dedupe(_guidField);
+                toRemove.result = r.result;
+                toRemove.a1_indices = r.indices;
+            }
             if(e.newValue < e.oldValue && toRemove.result.length!=e.oldValue-e.newValue){
                 toRemove = differenceOnKeyMatch(_oldDataProvider, _dataProvider, _guidField, false, true);
             }
