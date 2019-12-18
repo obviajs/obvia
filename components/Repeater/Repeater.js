@@ -113,7 +113,6 @@ var Repeater = function(_props)
             //this.$container.empty();
             _self.focusedRow = 0,
             _self.focusedComponent = 0;
-            _compRenderPromises = [];
             if (_dataProvider && _dataProvider.forEach)
             {
                 let len = _dataProvider.length;
@@ -131,12 +130,12 @@ var Repeater = function(_props)
                     }
                 } else
                     _creationFinished = true;
-                _oldDataProvider = acExtend(_dataProvider);
             } else
                 _creationFinished = true;
             Promise.all(_compRenderPromises).then(function ()
             {
                 _$hadow.contents().appendTo(_self.$container);
+                _compRenderPromises = [];
                 _self.trigger('endDraw');
             });
         }
@@ -150,36 +149,53 @@ var Repeater = function(_props)
 
     this.dataProviderChanged = function (toAdd, toRemove, toRefresh) 
     {
-       for(var i=0;i<toRemove.a1_indices.length;i++){
+        for (var i = 0; i < toRemove.a1_indices.length; i++)
+        {
             //var ind = this.rowItems.length + i;
             if(toRefresh.indexOf(toRemove.a1_indices[i])==-1)
                 this.removeRow(toRemove.a1_indices[i]+1, false, true, dpRemove = false); 
                 //this.removeChildAtIndex(toRemove.a1_indices[i]);
         }
-        _compRenderPromises = [];
-        for(var i=0;i<toAdd.a1_indices.length;i++){
-            if(toRefresh.indexOf(toAdd.a1_indices[i])==-1)
+        if (toAdd.a1_indices.length > 0)
+        { 
+            _self.$container.contents().appendTo(_$hadow);      
+            for (var i = 0; i < toAdd.a1_indices.length; i++)
             {
-                var ind = toAdd.a1_indices[i];
-                _compRenderPromises.splicea(_compRenderPromises.length, 0, this.addRow(this.dataProvider[ind], ind+1));
-                //this.addComponent(cmp[0], ind);
+                if(toRefresh.indexOf(toAdd.a1_indices[i])==-1)
+                {
+                    var ind = toAdd.a1_indices[i];
+                    _compRenderPromises.splicea(_compRenderPromises.length, 0, this.addRow(this.dataProvider[ind], ind+1));
+                    //this.addComponent(cmp[0], ind);
+                }
+            }
+            if (_compRenderPromises.length > 0)
+            {
+                let cLen = _compRenderPromises.length;
+                Promise.all(_compRenderPromises).then(function ()
+                {
+                    if (_compRenderPromises.length > 0)
+                    {
+                        console.log('prevLength:', cLen, ' currentLength: ', _compRenderPromises.length);
+                        _$hadow.contents().appendTo(_self.$container);
+                        _compRenderPromises = [];
+                        
+                        
+                    }
+                });
             }
         }
-        
+       
         for(var i = 0; i<toRefresh.length;i++){
             var ri = toRefresh[i];
-            for(var cmpID in this.rowItems[ri]){
-                var cmp = this.rowItems[ri][cmpID];
-                cmp.refreshBindings(this.dataProvider[ri]);
-                cmp.$el.attr(_guidField, this.dataProvider[ri][_guidField]);
-                cmp.attr[_guidField] = this.dataProvider[ri][_guidField];
+            for(var cmpID in _self.rowItems[ri]){
+                var cmp = _self.rowItems[ri][cmpID];
+                cmp.refreshBindings(_self.dataProvider[ri]);
+                cmp.$el.attr(_guidField, _self.dataProvider[ri][_guidField]);
+                cmp.attr[_guidField] = _self.dataProvider[ri][_guidField];
             }
-
         }
-        Promise.all(_compRenderPromises).then(function() {
-            _$hadow.contents().appendTo(_self.$container);
-        });
-        _oldDataProvider = acExtend(_dataProvider);
+ 
+       
     };
 
     Object.defineProperty(this, "rendering", 
@@ -191,7 +207,7 @@ var Repeater = function(_props)
         enumerable:true
     });
 
-    var _oldDataProvider;
+    let _oldDataProvider;
     Object.defineProperty(this, "dataProvider", 
     {
         get: function dataProvider() 
@@ -207,15 +223,15 @@ var Repeater = function(_props)
                     _dataProvider.off("propertyChange", _dpMemberChanged);
                 } 
                 if(v==null || v.length==0){
-                    if(_dataProvider && _dataProvider.length>0)
+                    if(_oldDataProvider && _oldDataProvider.length>0)
                         this.removeAllRows(false);
                     _dataProvider = v;
                     _creationFinished = true;
                     this.createRows();
-                }else if(_dataProvider && _dataProvider.length>0)
+                }else if(_oldDataProvider && _oldDataProvider.length>0)
                 {
-                    var delta = (v.length?v.length:0) - (_dataProvider.length?_dataProvider.length:0);
-                    for(var ri=0;ri<Math.min(v.length, _dataProvider.length);ri++){
+                    var delta = (v.length?v.length:0) - (_oldDataProvider.length?_oldDataProvider.length:0);
+                    for(var ri=0;ri<Math.min(v.length, _oldDataProvider.length);ri++){
                         if(v[ri]!=null && !v[ri][_guidField])
                             v[ri][_guidField] = StringUtils.guid();
                         for(var cmpID in this.rowItems[ri]){
@@ -227,22 +243,26 @@ var Repeater = function(_props)
             
                     }
                     if(delta>0){
-                        _compRenderPromises = [];
-                        for(var i=_dataProvider.length;i<v.length;i++){
+                        for(var i=_oldDataProvider.length;i<v.length;i++){
                             if(v[i]!=null && !v[i][_guidField])
                                 v[i][_guidField] = StringUtils.guid();
                             _compRenderPromises.splicea(_compRenderPromises.length, 0, this.addRow(v[i], i+1));
                         }
-                        Promise.all(_compRenderPromises).then(function() {
-                            _$hadow.contents().appendTo(_self.$container);
-                        });
+                        if (_compRenderPromises.length > 0)
+                        {
+                            Promise.all(_compRenderPromises).then(function() {
+                                _$hadow.contents().appendTo(_self.$container);
+                                _compRenderPromises = [];
+                            });
+                        }
+                        
                     }else if(delta<0){
-                        for(var i=_dataProvider.length;i>v.length;i--){
+                        for(var i=_oldDataProvider.length;i>v.length;i--){
                             this.removeRow(i, false, true, dpRemove = false); 
                         }
                     }
                     _dataProvider = !ArrayEx.isArrayEx(v)?new ArrayEx(v):v;
-                }else if(_dataProvider==null || _dataProvider.length==0){
+                }else if(_oldDataProvider==null || _oldDataProvider.length==0){
                     _dataProvider = !ArrayEx.isArrayEx(v)?new ArrayEx(v):v;
                     this.createRows();
                     //temp hack
@@ -250,10 +270,10 @@ var Repeater = function(_props)
                 }
                 if(_dataProvider){
                     _dpWatcher = ChangeWatcher.getInstance(_dataProvider);
-                    _dpWatcher.watch(_dataProvider, "length", _dpLengthChanged);
-                    _dataProvider.on("propertyChange", _dpMemberChanged);
+                    _dpWatcher.watch(_dataProvider, "length", _debouncedLengthChanged);
+                   // _dataProvider.on("propertyChange", _dpMemberChanged);
                 }
-               
+                _oldDataProvider = acExtend(_dataProvider);
             }
         },
         enumerable:true
@@ -272,7 +292,7 @@ var Repeater = function(_props)
         if(_creationFinished){
             var toAdd = {result:[],a1_indices:[]};
             if(e.newValue > e.oldValue){
-                toAdd = differenceOnKeyMatch(_dataProvider, _oldDataProvider, _guidField, false, true, e.oldValue);
+                toAdd = differenceOnKeyMatch(_dataProvider, _oldDataProvider, _guidField, false, true);
             }
             if(e.newValue>e.oldValue && toAdd.result.length!=e.newValue-e.oldValue){
                 toAdd = differenceOnKeyMatch(_dataProvider, _oldDataProvider, _guidField, false, true);
@@ -280,21 +300,26 @@ var Repeater = function(_props)
             
             var toRemove = {result:[],a1_indices:[]};
             if(e.newValue < e.oldValue){
-                toRemove = differenceOnKeyMatch(_oldDataProvider, _dataProvider, _guidField, false, true, e.newValue);
+                toRemove = differenceOnKeyMatch(_oldDataProvider, _dataProvider, _guidField, false, true);
             }
             if (e.newValue < e.oldValue && toRemove.result.length != e.oldValue - e.newValue)
             {
                 let r = _oldDataProvider.dedupe(_guidField);
-                toRemove.result = r.result;
-                toRemove.a1_indices = r.indices;
+                toRemove.result.splicea(toRemove.result.length, 0, r.result);
+                toRemove.a1_indices.splicea(toRemove.a1_indices.length, 0, r.indices);
             }
-            if(e.newValue < e.oldValue && toRemove.result.length!=e.oldValue-e.newValue){
+            if(e.newValue < e.oldValue && toRemove.result.length<e.oldValue-e.newValue){
                 toRemove = differenceOnKeyMatch(_oldDataProvider, _dataProvider, _guidField, false, true);
             }
-            var toRefresh = intersect(toAdd.a1_indices, toRemove.a1_indices);
+            toRefresh.splicea(toRefresh.length, 0, intersect(toAdd.a1_indices, toRemove.a1_indices));
             _self.dataProviderChanged(toAdd, toRemove, toRefresh);
+            _oldDataProvider = acExtend(_dataProvider);
         }
     }
+    let _debouncedLengthChanged = debounce(_dpLengthChanged, 10);
+    
+    let toRefresh = [];
+
     var _dpMemberChanged = function(e)
     {
         e.stopPropagation();
@@ -304,20 +329,18 @@ var Repeater = function(_props)
                 _dataProvider[parseInt(e.property)][_guidField] = StringUtils.guid();
             var toAdd = {a1_indices:[], result:[]};
             var toRemove = {a1_indices:[], result:[]};
-            var toRefresh = [];
-
-            if(e.oldValue==null && e.newValue!=null){
-                toAdd.a1_indices[0] = parseInt(e.property);
-                toAdd.result[0] = e.newValue;
-            }else if(e.oldValue!=null && e.newValue==null){
-                toRemove.a1_indices[0] = parseInt(e.property);
-                toRemove.result[0] = e.newValue;
-            }else{
+           
+            if (e.oldValue != null && e.newValue != null)
+            {
                 toRefresh = [parseInt(e.property)];
+                debouncedChange(toAdd, toRemove, toRefresh);
+                //te shtohet param e
+                _debouncedLengthChanged();
+    
             }
-            _self.dataProviderChanged(toAdd, toRemove, toRefresh);
         } 
     }
+    
     if(!this.hasOwnProperty("value")){
         Object.defineProperty(this, "value", {
             get: function value() {
@@ -452,12 +475,13 @@ var Repeater = function(_props)
                     let cp = el.renderPromise().then(function(cmpInstance){
                         if(!_rendering.wrap)
                         {
-                            if(_self.mode =="append")
-                            {
-                                _$hadow.append(cmpInstance.$el);
-                            }else{
-                                _$hadow.prepend(cmpInstance.$el);
-                            }
+                            // if(_self.mode =="append")
+                            // {
+                            //     _$hadow.append(cmpInstance.$el);
+                            // }else{
+                            //     _$hadow.prepend(cmpInstance.$el);
+                            // }
+                            _$hadow.insertAt(cmpInstance.$el, index-1);
                         }else   
                         {
                             renderedRow
@@ -468,12 +492,13 @@ var Repeater = function(_props)
                             if(_rendering.separator && (index > 1) && (index-1 < _self.dataProvider.length)){
                                 renderedRow.addClass("separator");  
                             }        
-                            if(_self.mode =="append")
-                            {
-                                _$hadow.append(renderedRow);
-                            }else{
-                                _$hadow.prepend(renderedRow);
-                            }
+                            // if(_self.mode =="append")
+                            // {
+                            //     _$hadow.append(renderedRow);
+                            // }else{
+                            //     _$hadow.prepend(renderedRow);
+                            // }
+                            _$hadow.insertAt(renderedRow, index-1);
                         }                     
                                                    
                     });
