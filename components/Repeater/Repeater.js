@@ -143,23 +143,28 @@ var Repeater = function(_props)
 
     this.dataProviderChanged = function (toAdd, toRemove, toRefresh) 
     {
-        acSort(toRemove.a1_indices);
-        for (var i = 0; i < toRemove.a1_indices.length; i++)
+        acSort(toRemove.a1_indices, null, 2);
+        for (let i = 0; i < toRemove.a1_indices.length; i++)
         {
             //var ind = this.rowItems.length + i;
-            if(toRefresh.indexOf(toRemove.a1_indices[i])==-1)
-                this.removeRow(toRemove.a1_indices[i]-i, false, true, dpRemove = false); 
+            if(toRefresh.indexOf(toRemove.a1_indices[i])==-1 && toAdd.a1_indices.indexOf(toRemove.a1_indices[i])==-1)
+                this.removeRow(toRemove.a1_indices[i], false, true, dpRemove = false); 
                 //this.removeChildAtIndex(toRemove.a1_indices[i]);
         }
         if (toAdd.a1_indices.length > 0)
         { 
             acSort(toAdd.a1_indices);
-            _self.$container.contents().appendTo(_$hadow);      
-            for (var i = 0; i < toAdd.a1_indices.length; i++)
+            let transferNodes = false;
+            for (let i = 0; i < toAdd.a1_indices.length; i++)
             {
-                if(toRefresh.indexOf(toAdd.a1_indices[i])==-1)
+                if(toRefresh.indexOf(toAdd.a1_indices[i])==-1 && toRemove.a1_indices.indexOf(toAdd.a1_indices[i])==-1)
                 {
-                    var ind = toAdd.a1_indices[i];
+                    if (!transferNodes)
+                    { 
+                        _self.$container.contents().appendTo(_$hadow);    
+                        transferNodes = true;
+                    }
+                    let ind = toAdd.a1_indices[i];
                     _compRenderPromises.splicea(_compRenderPromises.length, 0, this.addRow(this.dataProvider[ind], ind));
                 }
             }
@@ -180,10 +185,10 @@ var Repeater = function(_props)
             }
         }
        
-        for(var i = 0; i<toRefresh.length;i++){
-            var ri = toRefresh[i];
-            for(var cmpID in _self.rowItems[ri]){
-                var cmp = _self.rowItems[ri][cmpID];
+        for(let i = 0; i<toRefresh.length;i++){
+            let ri = toRefresh[i];
+            for(let cmpID in _self.rowItems[ri]){
+                let cmp = _self.rowItems[ri][cmpID];
                 cmp.refreshBindings(_self.dataProvider[ri]);
                 cmp.$el.attr(_guidField, _self.dataProvider[ri][_guidField]);
                 cmp.attr[_guidField] = _self.dataProvider[ri][_guidField];
@@ -289,26 +294,18 @@ var Repeater = function(_props)
         }
         if(_creationFinished){
             var toAdd = {result:[], a1_indices:[]};
-            if(newValue > oldValue){
-                toAdd = differenceOnKeyMatch(_dataProvider, _oldDataProvider, _guidField, false, true);
-            }
-            if(newValue < oldValue && toAdd.result.length!=newValue-oldValue){
-                toAdd = differenceOnKeyMatch(_dataProvider, _oldDataProvider, _guidField, false, true);
-            }
+            toAdd = differenceOnKeyMatch(_dataProvider, _oldDataProvider, _guidField, false, true);
             
             var toRemove = {result:[],a1_indices:[]};
-            if(newValue < oldValue){
-                toRemove = differenceOnKeyMatch(_oldDataProvider, _dataProvider, _guidField, false, true);
-            }
+            toRemove = differenceOnKeyMatch(_oldDataProvider, _dataProvider, _guidField, false, true);
+            
             if (newValue < oldValue && toRemove.result.length != oldValue - newValue)
             {
                 let r = _oldDataProvider.dedupe(_guidField);
                 toRemove.result.splicea(toRemove.result.length, 0, r.result);
                 toRemove.a1_indices.splicea(toRemove.a1_indices.length, 0, r.indices);
             }
-            if(newValue < oldValue && toRemove.result.length<oldValue-newValue){
-                toRemove = differenceOnKeyMatch(_oldDataProvider, _dataProvider, _guidField, false, true);
-            }
+            let toRefresh = [];
             toRefresh.splicea(toRefresh.length, 0, intersect(toAdd.a1_indices, toRemove.a1_indices));
             _self.dataProviderChanged(toAdd, toRemove, toRefresh);
             _oldDataProvider = acExtend(_dataProvider);
@@ -316,8 +313,6 @@ var Repeater = function(_props)
     }
     let _debouncedLengthChanged = debounce(_dpLengthChanged, 1);
     
-    let toRefresh = [];
-
     var _dpMemberChanged = function(e)
     {
         e.stopPropagation();
