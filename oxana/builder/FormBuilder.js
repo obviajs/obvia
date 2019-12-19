@@ -565,6 +565,11 @@ oxana.behaviorimplementations["ADD_COMPONENT"] = {
             }
             
             lit = extend(true, lit);
+            lit.props.afterAttach = function (e)
+            { 
+                var evt = new jQuery.Event("dropped");
+                this.trigger(evt);
+            }
             lit.props.draggable = true;
             if (isObject(lit.props.classes))
                 lit.props.classes["self"].push("selected-component");
@@ -616,10 +621,11 @@ oxana.behaviorimplementations["ADD_COMPONENT"] = {
                     addBehaviors(inst, cmpBehaviors, false);
                 }
                 workArea.addChild(inst);
+                var evt = new jQuery.Event("dropped");
+                inst.trigger(evt);
             }
         }
-        var evt = new jQuery.Event("dropped");
-        inst.trigger(evt);
+        
     },
     undo: function () {},
     stopPropagation: true,
