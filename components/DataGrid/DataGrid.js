@@ -694,6 +694,7 @@ var DataGrid = function(_props)
             let rsEvt = jQuery.Event('rowStyling', [_self, new RepeaterEventArgs(_rowItems, _dataProvider[index + _virtualIndex], index+_virtualIndex)]);
 
             let rowBindingFunctions = [], bIndex = 0;
+            _self.cellItemRenderers.splice(index, 0, []);
             for (let columnIndex=0;columnIndex<_self.columns.length;columnIndex++) 
             {
                 let column = _self.columns[columnIndex];
@@ -705,9 +706,7 @@ var DataGrid = function(_props)
 
                 
                 //build components properties, check bindings
-                if (_self.cellItemRenderers[index] == undefined)
-                    _self.cellItemRenderers[index] = [];
-
+                
                 let dataProviderField = column.field;
                 //
                 component.props["label"] = "{?"+dataProviderField+"}";
@@ -715,11 +714,7 @@ var DataGrid = function(_props)
                 component.props.id = column.name;
 
 
-                let cmp = _self["cellItemRenderers"][index];
-                if (cmp[columnIndex] == undefined)
-                    cmp[columnIndex] = {};
-
-               
+                let cmp = _self["cellItemRenderers"][index];               
 
                 /*
                 cmp[columnIndex]["label"] = data[dataProviderField];

@@ -153,6 +153,7 @@ var Repeater = function(_props)
         }
         if (toAdd.a1_indices.length > 0)
         { 
+            acSort(toAdd.a1_indices);
             _self.$container.contents().appendTo(_$hadow);      
             for (var i = 0; i < toAdd.a1_indices.length; i++)
             {
@@ -160,7 +161,6 @@ var Repeater = function(_props)
                 {
                     var ind = toAdd.a1_indices[i];
                     _compRenderPromises.splicea(_compRenderPromises.length, 0, this.addRow(this.dataProvider[ind], ind));
-                    //this.addComponent(cmp[0], ind);
                 }
             }
             if (_compRenderPromises.length > 0)
@@ -266,7 +266,7 @@ var Repeater = function(_props)
                 if(_dataProvider){
                     _dpWatcher = ChangeWatcher.getInstance(_dataProvider);
                     _dpWatcher.watch(_dataProvider, "length", _debouncedLengthChanged);
-                    //_dataProvider.on("propertyChange", _dpMemberChanged);
+                    _dataProvider.on("propertyChange", _dpMemberChanged);
                 }
                 _oldDataProvider = acExtend(_dataProvider);
             }
@@ -330,7 +330,7 @@ var Repeater = function(_props)
            
             if (e.oldValue != null && e.newValue != null)
             {
-                toRefresh = [parseInt(e.property)];
+                //toRefresh = [parseInt(e.property)];
                 //te shtohet param e
                 _debouncedLengthChanged();
             }
@@ -360,7 +360,7 @@ var Repeater = function(_props)
     this.addRow = function (data, index, isPreventable = false, focusOnRowAdd = true) 
     {
         let rp = [];
-        index = index || this.rows.length;
+        index = index==null?this.rows.length:index;
         let renderedRow = $('<div/>');
         var ccComponents = [];
         var rowItems = {};
@@ -385,18 +385,14 @@ var Repeater = function(_props)
                 if (_self[cmpId] == undefined)
                     _self[cmpId] = [];
 
-                let cmp = _self[cmpId];
-                if (cmp[index] == undefined)
-                    cmp[index] = {};
-                
                 el.parent = _self;
                 el.parentType = 'repeater';
                 el.parentForm = _self.parentForm;
                 el.repeaterIndex = index;
-
-                cmp[index] = el;
+                
+                _self[cmpId].splice(index, 0, el);
                 rowItems[cmpId] = el;
-                _self.rowItems[index] = rowItems;
+                _self.rowItems.splice(index, 0, rowItems);
 
                 //handle component change event and delegate it to repeater
                 let ci = index+1;
