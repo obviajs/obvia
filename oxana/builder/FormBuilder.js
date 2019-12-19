@@ -40,12 +40,27 @@ var parents = ["Container", "Form"];
 var noNeedFF = ["Button", "Label", "Container"];
 var dpCmpSelect = [];
 
-let mainContainer = {
+var mainContainer = {
     ctor: Container,
     props: {
         id: "MainContainer",
         type: ContainerType.NONE,
         components: [{
+                ctor: Container,
+                props: {
+                    id: "dragImage",
+                    css: {
+                        position: "absolute",
+                        top: "-1000px",
+                        width: "50px",
+                        height: "50px"
+                    },
+                    type: ContainerType.NONE,
+                    label: "Dragging"
+                }
+            },
+
+            {
                 ctor: Nav,
                 props: {
                     id: "nav",
@@ -279,6 +294,9 @@ let mainContainer = {
                                                                         console.log(arguments);
                                                                         e.originalEvent.dataTransfer.setData("domID", e.target.id);
                                                                         e.originalEvent.dataTransfer.setData("ctor", ra.currentItem.ctor);
+                                                                        var $elem = Component.instances["dragImage"].$container[0];
+                                                                        $(document.body).append($elem);
+                                                                        e.originalEvent.dataTransfer.setDragImage($elem, 0, 0)
                                                                     },
                                                                     classes: ["border", "comp_side"],
                                                                     width: 120,
@@ -545,6 +563,7 @@ oxana.behaviorimplementations["ADD_COMPONENT"] = {
                 ff.props.component = lit;
                 lit = ff;
             }
+            
             lit = extend(true, lit);
             lit.props.afterAttach = function (e)
             { 
@@ -672,6 +691,10 @@ oxana.behaviorimplementations["DRAGSTART_COMPONENT"] = {
         e.originalEvent.dataTransfer.setData("domID", this.domID);
         e.originalEvent.dataTransfer.setData("ctor", this.ctor);
         e.originalEvent.dataTransfer.setData("move", 1);
+        var $elem = $("<div/>");
+        var $elem = Component.instances["dragImage"].$container[0];
+        $(document.body).append($elem);
+        e.originalEvent.dataTransfer.setDragImage($elem, 0, 0)
     }
 }
 oxana.behaviorimplementations["HISTORY_STEP_DETAILS"] = function (e) {
@@ -699,9 +722,8 @@ oxana.behaviorimplementations["FILE_SELECTED"] = function (e) {
 oxana.behaviorimplementations["SEARCH_CMP"] = function (e) {
     console.log("search box change");
     let value = e.target.value.toLowerCase();
-    if (value.length == 0 || e.keyCode == 8) {
-        _cmpList.undoAll();
-    }
+    _cmpList.undoAll();
+    
     if (value.length > 0) {
         _cmpList.filter(function (el) {
             let regEx = new RegExp(`${value}`, "gi");

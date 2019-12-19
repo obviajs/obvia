@@ -49,6 +49,7 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
     var _dragstart = _props.dragstart;
     var _dragenter = _props.dragenter;
     var _dragleave = _props.dragleave;
+    var _dragend = _props.dragend;
     var _ownerDocument = _props.ownerDocument;
     var _watchers = [];
     var _bindings = ppb.bindings;
@@ -548,6 +549,7 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
                 'drop': _drop && typeof _drop == 'function' ? _drop.bind(_self) : undefined,
                 'dragover': _dragover && typeof _dragover == 'function' ? _dragover.bind(_self) : undefined,
                 'dragstart': _dragstart && typeof _dragstart == 'function' ? _dragstart.bind(_self) : undefined,
+                'dragend': _dragend && typeof _dragend == 'function' ? _dragend.bind(_self) : undefined,
                 'dragenter': _dragenter && typeof _dragenter == 'function' ? _dragenter.bind(_self) : undefined,
                 'dragleave': _dragleave && typeof _dragleave == 'function' ? _dragleave.bind(_self) : undefined,
                 'DOMMutation': this.DOMMutation && typeof this.DOMMutation == 'function' ? this.DOMMutation.bind(_self) : undefined,
