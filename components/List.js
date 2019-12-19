@@ -58,13 +58,13 @@ var List = function (_props, overrided = false) {
 
     this.addRow = function (item, index, isPreventable = false, focusOnRowAdd = false) {
         if (index == undefined)
-            index = this.repeater.currentIndex + 1;
+            index = this.repeater.currentIndex;
         this.repeater.addRow(item, index, isPreventable, focusOnRowAdd);
     };
 
     this.removeRow = function (index, isPreventable = false, focusOnRowDelete = false) {
         if (index == undefined)
-            index = this.repeater.currentIndex + 1;
+            index = this.repeater.currentIndex;
         this.repeater.removeRow(index, isPreventable, focusOnRowDelete);
     };
 

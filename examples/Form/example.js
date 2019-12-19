@@ -869,7 +869,7 @@ myForm.on('creationComplete', function () {
         bootbox.confirm("Do you want to add row?", function (result) {
             if (result) {
                 loader.show();
-                setTimeout(function () { repeater.addRow(repeater.defaultItem, repeater.currentIndex + 1); }, 200)
+                setTimeout(function () { repeater.addRow(repeater.defaultItem, repeater.currentIndex); }, 200)
             }
         });
 
@@ -899,6 +899,3 @@ $('#root').append(myForm.render());
 $('#root').append(myForm2.render());
 
 this["myForm"] = myForm;
-
-
-
