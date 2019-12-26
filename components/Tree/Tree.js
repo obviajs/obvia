@@ -32,7 +32,8 @@ var Tree = function (_props, overrided = false) {
                 let cmps = _self.buildTree();
                 _self.addComponents(cmps);
             }
-        }
+        },
+        enumerable: true
     });
 
     var _dpWatcher;
@@ -373,7 +374,8 @@ var Tree = function (_props, overrided = false) {
                 else if(this.parent && this.parent.ctor =="Li")
                     this.parent.parent.selectedItem = _selectedItem;
             }
-        }
+        },
+        enumerable: true
     });
 };
 

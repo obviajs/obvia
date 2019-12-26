@@ -55,7 +55,11 @@ var Heading = function(_props)
             {
                 _headingType = v;
                 if(this.$el){
+                    let newCls = this.$el[0].className;
+                    let drag =  this.$el[0].draggable;
                     let $newEl = $(this.template());
+                    $newEl[0].className = newCls;
+                    $newEl[0].draggable = drag;
                     this.$el.replaceWith($newEl);
                     this.$el = $newEl;
                 }

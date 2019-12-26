@@ -3,20 +3,19 @@
  *
  * Kreatx 2019
  */
- 
+
 //component definition
 var TextInput = function (_props, overrided = false) {
     let _self = this;
- 
-    Object.defineProperty(this, "value",
-    {
+
+    Object.defineProperty(this, "value", {
         get: function value() {
             return _value;
         },
         set: function value(v) {
             if (_value != v) {
                 _value = v;
-                if (_value!=null) {
+                if (_value != null) {
                     if (this.$el) {
                         this.$el.attr('value', _value);
                         this.$el.val(_value);
@@ -30,82 +29,75 @@ var TextInput = function (_props, overrided = false) {
                 //this.trigger('change');
             }
         },
-        enumerable:true
+        enumerable: true
     });
 
-    Object.defineProperty(this, "placeholder",
-    {
-        get: function placeholder(){
+    Object.defineProperty(this, "placeholder", {
+        get: function placeholder() {
             return _placeholder;
         },
-        set: function placeholder(v){
-            if(_placeholder != v){
+        set: function value(v) {
+            if (_placeholder != v) {
                 _placeholder = v;
-                if(_placeholder!=null){
-                    if(this.$el){
-                        this.$el.attr = ('placeholder', _placeholder);
-                    }
-                }else {
-                    if(this.$el){
-                        this.$el.removeAttr("placeholder");
-                    }
+                if (_placeholder) {
+                    if (this.$el)
+                        this.$el.attr('placeholder', _placeholder);
+
                 }
+            } else {
+                this.$el.removeAttr('placeholder');
             }
         },
-        enumerable:true
-    })
+        enumerable: true
+    });
 
-    Object.defineProperty(this, "type", 
-    {
-        get: function type(){
+    Object.defineProperty(this, "type", {
+        get: function type() {
             return _type
         },
-        set: function type(v){
-            if(_type != v ){
+        set: function type(v) {
+            if (_type != v) {
                 _type = v;
-                if(_type!=null){
-                    if(this.$el){
+                if (_type != null) {
+                    if (this.$el) {
                         this.$el.attr('type', _type);
                     }
-                }else {
-                    if(this.$el){
+                } else {
+                    if (this.$el) {
                         this.$el.removeAttr('type');
                     }
                 }
             }
         },
-        enumerable:true
+        enumerable: true
     });
-    
-    Object.defineProperty(this, "autocomplete", 
-    {
-        get: function autocomplete(){
+
+    Object.defineProperty(this, "autocomplete", {
+        get: function autocomplete() {
             return _autocomplete
         },
-        set: function autocomplete(v){
-            if(_autocomplete != v ){
+        set: function autocomplete(v) {
+            if (_autocomplete != v) {
                 _autocomplete = v;
-                if(_autocomplete!=null){
-                    if(this.$el){
+                if (_autocomplete != null) {
+                    if (this.$el) {
                         this.$el.attr('autocomplete', _autocomplete);
                     }
-                }else {
-                    if(this.$el){
+                } else {
+                    if (this.$el) {
                         this.$el.removeAttr('autocomplete');
                     }
                 }
             }
         },
-        enumerable:true
+        enumerable: true
     });
-   
-    this.beforeAttach = function(e) 
-    {
-        if (e.target.id == this.domID) 
-        {
-            if(_props.value!=null)
+
+    this.beforeAttach = function (e) {
+        if (e.target.id == this.domID) {
+            if (_props.value != null)
                 this.value = _props.value;
-            if(_props.autocomplete!=null)
+            if (_props.autocomplete != null)
                 this.autocomplete = _props.autocomplete;
         }
     }
@@ -117,21 +109,21 @@ var TextInput = function (_props, overrided = false) {
             }
         }
     };
- 
+
     this.changeHandler = function () {
         _value = this.$el.val();
     };
- 
+
     this.focus = function () {
         if (this.$el != null) {
             this.$el.focus();
         }
     };
- 
+
     this.template = function () {
-        return  "<input data-triggers='change' type='"+ this.type +"' id='" + this.domID + "' placeholder='"+this.placeholder+"'>";
+        return "<input data-triggers='change' placeholder='" + this.placeholder + "' type='" + this.type + "' id='" + this.domID + "'>";
     };
- 
+
     var _defaultParams = {
         value: "",
         type: "text",
@@ -139,7 +131,7 @@ var TextInput = function (_props, overrided = false) {
         afterAttach: this.afterAttach,
         autocomplete: "off"
     };
-    
+
     _props = extend(false, false, _defaultParams, _props);
     let _autocomplete;
     let _value;
@@ -147,7 +139,7 @@ var TextInput = function (_props, overrided = false) {
     let _placeholder = _props.placeholder;
     let _type = _props.type;
     let _change = _props.change;
- 
+
     _props.change = function () {
         let e = arguments[0];
         if (!e.isDefaultPrevented()) {
@@ -156,13 +148,13 @@ var TextInput = function (_props, overrided = false) {
         if (typeof _change == 'function')
             _change.apply(this, arguments);
     };
- 
+
     Component.call(this, _props);
-    
+
     if (overrided) {
         this.keepBase();
     }
 };
- 
+
 //component prototype
 TextInput.prototype.ctor = 'TextInput';

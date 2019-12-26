@@ -30,34 +30,34 @@ var Label = function (_props) {
         configurable: true
     });
 
-    Object.defineProperty(this, "labelType", 
-    {
-        get: function labelType() 
-        {
+    Object.defineProperty(this, "labelType", {
+        get: function labelType() {
             return _labelType;
         },
-        set: function labelType(v) 
-        {
-            if(_labelType != v)
-            {
+        set: function labelType(v) {
+            if (_labelType != v) {
                 _labelType = v;
-                if(this.$el){
+                if (this.$el) {
+                    let newCls = this.$el[0].className;
+                    let drag = this.$el[0].draggable;
+                    let label = this.$el[0].textContent;
                     let $newEl = $(this.template());
                     this.$el.replaceWith($newEl);
+                    $newEl[0].className = newCls;
+                    $newEl[0].draggable = drag;
+                    $newEl[0].textContent = label;
                     this.$el = $newEl;
                 }
             }
         },
-        enumerable:true
+        enumerable: true
     });
 
     this.beforeAttach = function () {
         
     };
-    this.afterAttach = function (e) 
-    {
-        if (e.target.id == this.domID) 
-        {  
+    this.afterAttach = function (e) {
+        if (e.target.id == this.domID) {
             if (_props.label) {
                 this.label = _props.label;
             }

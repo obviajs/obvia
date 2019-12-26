@@ -56,6 +56,7 @@ var SideNav = function(_props, overrided=false)
         {
             this.$container = this.$el;
             _width = _props.width;
+            _minWidth =  _props.width;
             _open != _props.open;
             _self.side = _props.side;
             this.toggleVisibility();

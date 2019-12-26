@@ -1,9 +1,11 @@
 .sideNav_side_left {
     background-color: #ecf3f3;
+    padding-top: 10px;
 }
 
 .sideNav_side_right {
     background-color: #ecf0f1;
+    padding-top: 10px;
 
 }
 
@@ -24,8 +26,6 @@
     line-height: 1.2;
     color: inherit;
     margin: .5rem;
-    position: absolute;
-    top: 7%;
 }
 
 .sideNav_left_container {

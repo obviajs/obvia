@@ -526,7 +526,7 @@ Builder.components = {
         icon: ".png"
     },
     "List": {
-        iteral: {
+        literal: {
             ctor: List,
             props: {
                 id: 'list',

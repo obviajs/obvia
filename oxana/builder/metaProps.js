@@ -1,5 +1,5 @@
 Builder.metaProps = {
-    id: {ctor:"TextInput", label: "Component ID", required:true, index:1},
+    id: {ctor:"TextInput", label: "Component ID", required:true, index:1,},
     name: {ctor:"TextInput", label: "Component Name", required:true, index:2},
     label: {ctor:"TextInput", label: "Label", required:true, index:3, props: {
         change: function(){
@@ -271,6 +271,11 @@ Builder.metaProps.TextInput = {
         change:function(){
             this.parent.parent.instance.autocomplete = this.value;           
         }
+    }},
+    placeholder: {ctor:"TextInput", label: "Placeholder",index: 3, required: false, props: {
+        change: function(){
+            this.parent.parent.instance.placeholder = this.value;
+        }
     }}
 }
 
@@ -279,11 +284,6 @@ Builder.metaProps.Label = {
         dataProvider: new ArrayEx(getMembersCollection(LabelType, "value", "text")),
         change: function(){
             this.parent.parent.instance.labelType = this.value;
-        }
-    }},
-    label: {ctor: "TextInput", label: "Label",  props: {
-        change: function(){
-            this.parent.parent.instance.label = this.value;
         }
     }}
 };
@@ -312,6 +312,11 @@ Builder.metaProps.TextArea = {
         dataProvider: new ArrayEx([{"value":"false", "text":"False"}, {"value":"true", "text":"True"}]),
         change: function(){
             this.parent.parent.instance.spellCheck = this.value;
+        }
+    }},
+    placeholder: {ctor:"TextInput", label: "Placeholder", props: {
+        change: function(){
+            this.parent.parent.instance.placeholder = this.value;
         }
     }}
 }
@@ -344,3 +349,27 @@ Builder.metaProps.CheckBox = {
         }
     }}
 };
+
+Builder.metaProps.SideNav = {
+    width: {ctor:"TextInput", label: "Width", required:true, index:3, props: {
+        change: function(){
+            this.parent.parent.instance.width = this.value;
+            this.parent.parent.instance.minWidth = this.value;
+        }
+    }},
+};
+
+Builder.metaProps.viewStack = {
+    width: {ctor:"TextInput", label: "Width", required:true, index:3, props: {
+        change: function(){
+            this.parent.parent.instance.width = this.value;
+        }
+    }},
+    height: {ctor:"TextInput", label: "Height", required:true, index:3, props: {
+        change: function(){
+            this.parent.parent.instance.height = this.value;
+        }
+    }},
+};
+
+

@@ -43,7 +43,8 @@ var ViewStack = function(_props)
                     this.$el.css('width', v+"px");
                 }
             }
-        }
+        },
+        enumerable: true
     });
 
     Object.defineProperty(this, "height", 
@@ -63,7 +64,8 @@ var ViewStack = function(_props)
                     this.$el.css('height', v+"px");
                 }
             }
-        }
+        },
+        enumerable: true
     });
 
     this.template = function ()

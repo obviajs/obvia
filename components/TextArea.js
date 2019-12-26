@@ -24,6 +24,25 @@ var TextArea = function (_props, overrided = false) {
         enumerable: true
     });
 
+    Object.defineProperty(this, "placeholder", {
+        get: function placeholder() {
+            return _placeholder;
+        },
+        set: function value(v) {
+            if (_placeholder != v) {
+                _placeholder = v;
+                if (_placeholder) {
+                    if (this.$el)
+                        this.$el.attr('placeholder', _placeholder);
+
+                }
+            } else {
+                this.$el.removeAttr('placeholder');
+            }
+        },
+        enumerable: true
+    });
+
     Object.defineProperty(this, "spellCheck", {
         get: function spellCheck() {
             return _spellCheck;
@@ -32,11 +51,11 @@ var TextArea = function (_props, overrided = false) {
             if (_spellCheck != v) {
                 _spellCheck = v;
                 if (_spellCheck) {
-                    if(this.$el){
+                    if (this.$el) {
                         this.$el.attr("spellcheck", _spellCheck);
                     }
                 }
-            }else{
+            } else {
                 this.$el.removeAttr("spellcheck");
             }
         },
@@ -53,20 +72,22 @@ var TextArea = function (_props, overrided = false) {
     };
 
     this.template = function () {
-        return "<textarea data-triggers='change' id='" + this.domID + "' " + (!this.enabled ? "disabled" : "") + ">" + _value + "</textarea>";
+        return "<textarea data-triggers='change' placeholder='" + this.placeholder + "' id='" + this.domID + "' " + (!this.enabled ? "disabled" : "") + ">" + _value + "</textarea>";
     };
 
     var _defaultParams = {
         value: "",
         spellCheck: null,
-        class: "form-control"
+        class: "form-control",
+        placeholder: ""
     };
     _props = extend(false, false, _defaultParams, _props);
 
-    var _spellCheck = _props.spellCheck;
-    var _value = _props.value;
-    var _change = _props.change;
-    var _dblclick = _props.dblclick;
+    let _spellCheck = _props.spellCheck;
+    let _value = _props.value;
+    let _placeholder = _props.placeholder;
+    let _change = _props.change;
+    let _dblclick = _props.dblclick;
 
     _props.dblclick = function () {
         if (typeof _dblclick == 'function')

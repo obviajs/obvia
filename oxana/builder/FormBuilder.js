@@ -79,22 +79,20 @@ var mainContainer = {
                                         spacing: {
                                             colSpan: 1
                                         },
+                                        css: {
+                                            marginLeft: "250px"
+                                        },
+                                        type: ContainerType.NONE,
                                         components: [{
-                                            ctor: Container,
+                                            ctor: Label,
                                             props: {
-                                                id: "container",
-                                                type: ContainerType.ROW,
-                                                spacing: {
-                                                    colSpan: 1
-                                                },
-                                                components: [{
-                                                    ctor: Label,
-                                                    props: {
-                                                        id: "toggleVisibilityButtonLeft",
-                                                        labelType: LabelType.i,
-                                                        classes: ["fas", "fa-bars", "navIcons"]
-                                                    }
-                                                }]
+                                                id: "toggleVisibilityButtonLeft",
+                                                labelType: LabelType.i,
+                                                classes: ["fas", "fa-bars", "navIcons"], 
+                                                css: {
+                                                    float: "right",
+                                                    marginTop: "15px" 
+                                                }
                                             }
                                         }]
                                     }
@@ -183,15 +181,25 @@ var mainContainer = {
                                     ctor: Container,
                                     props: {
                                         id: "toggleVisibilityRightSideNav",
-                                        classes: ["col-sm-1"],
+                                        spacing: {
+                                            colSpan: 1
+                                        },
+                                        css: {
+                                            marginRight: "100px"
+                                        },
+                                        type: ContainerType.NONE,
                                         components: [{
                                             ctor: Label,
                                             props: {
                                                 id: "toggleVisibilityButtonRight",
                                                 labelType: LabelType.i,
-                                                classes: ["fas", "fa-bars", "navIcons"]
+                                                classes: ["fas", "fa-bars", "navIcons"],
+                                                css: {
+                                                    marginTop: "15px",
+                                                    float: "left",
+                                                    padding: "0"
+                                                }
                                             }
-
                                         }]
                                     }
                                 }
@@ -248,16 +256,15 @@ var mainContainer = {
                                                                     "btn"
                                                                 ],
                                                                 components: [{
-                                                                    ctor: "Label",
+                                                                    ctor: Label,
                                                                     props: {
                                                                         id: "i",
                                                                         label: "",
-                                                                        labelType: "i",
+                                                                        type: LabelType.i,
                                                                         classes: [
                                                                             "fa",
                                                                             "fa-search"
-                                                                        ],
-                                                                        components: []
+                                                                        ]
                                                                     }
                                                                 }]
                                                             }
@@ -286,7 +293,7 @@ var mainContainer = {
                                                                 props: {
                                                                     id: 'component',
                                                                     spacing: {
-                                                                        m: 0.999
+                                                                        m: 0.9
                                                                     },
                                                                     label: "{label}",
                                                                     draggable: true,
@@ -299,7 +306,7 @@ var mainContainer = {
                                                                         e.originalEvent.dataTransfer.setDragImage($elem, 0, 0)
                                                                     },
                                                                     classes: ["border", "comp_side"],
-                                                                    width: 120,
+                                                                    width: 130,
                                                                     height: 80,
                                                                     type: ContainerType.NONE
                                                                 }
@@ -465,9 +472,6 @@ oxana.components = [{
 var daBehaviors = {
     "mouseover": "WA_HOVER",
     "mouseout": "WA_HOVER",
-    "mousemove": {
-        "IS_WA_RESIZE_NS": isMouseMoveNS
-    },
     "drop": "DELETE_CMP",
     "dragover": "ALLOW_DROP",
 };
@@ -497,7 +501,7 @@ var cmpBehaviors = {
 };
 
 oxana.behaviors["SearchComponents"] = {},
-    oxana.behaviors["SearchComponents"]["change"] = "SEARCH_CMP";
+    oxana.behaviors["SearchComponents"]["keyup"] = "SEARCH_CMP";
 
 oxana.behaviors["undoButton"] = {};
 oxana.behaviors["undoButton"]["click"] = "WA_UNDO";
@@ -546,7 +550,7 @@ oxana.behaviorimplementations["ALLOW_DROP"] = function (e) {
     e.preventDefault();
 }
 oxana.behaviorimplementations["ADD_COMPONENT"] = {
-    description: "Ndaje horizontalisht",
+    description: "Add component ",
     do: function (e) {
         console.log('CREATED_');
         e.preventDefault();
@@ -555,6 +559,9 @@ oxana.behaviorimplementations["ADD_COMPONENT"] = {
         var ctor = e.originalEvent.dataTransfer.getData("ctor");
         var move = e.originalEvent.dataTransfer.getData("move");
         let inst;
+        var ret = {
+            track: false
+        };
         if (move == "") {
             console.log("ADD_COMPONENT_ " + domID);
             let lit = Builder.components[ctor].literal;
@@ -563,10 +570,9 @@ oxana.behaviorimplementations["ADD_COMPONENT"] = {
                 ff.props.component = lit;
                 lit = ff;
             }
-            
+
             lit = extend(true, lit);
-            lit.props.afterAttach = function (e)
-            { 
+            lit.props.afterAttach = function (e) {
                 var evt = new jQuery.Event("dropped");
                 this.trigger(evt);
             }
@@ -586,7 +592,13 @@ oxana.behaviorimplementations["ADD_COMPONENT"] = {
             if (parents.indexOf(ctor) > -1) {
                 addBehaviors(inst, cntBehaviors, false);
             }
+            ret.child = lit;
+            ret.parent = workArea;
+            ret.container = workArea;
+            ret.track = true;
+            return ret;
         } else {
+
             console.log("MOVED_", domID, workArea.domID);
             var _id = Component.domID2ID[domID] ? Component.domID2ID[domID] : domID;
             var _idSurrogate = Component.surrogates[domID] && Component.domID2ID[Component.surrogates[domID]] ? Component.domID2ID[Component.surrogates[domID]] : null;
@@ -625,7 +637,7 @@ oxana.behaviorimplementations["ADD_COMPONENT"] = {
                 inst.trigger(evt);
             }
         }
-        
+
     },
     undo: function () {},
     stopPropagation: true,
@@ -723,7 +735,6 @@ oxana.behaviorimplementations["SEARCH_CMP"] = function (e) {
     console.log("search box change");
     let value = e.target.value.toLowerCase();
     _cmpList.undoAll();
-    
     if (value.length > 0) {
         _cmpList.filter(function (el) {
             let regEx = new RegExp(`${value}`, "gi");
@@ -775,7 +786,6 @@ function removeBehaviors(cmp, behaviors, recurse = true) {
 oxana.behaviorimplementations["HISTORY_STEP_ADDED"] = function (e) {
     console.log("called HISTORY_STEP_ADDED.", e.current);
     Component.instances["listHistorySteps"].value = e.current;
-
 };
 oxana.behaviorimplementations["HISTORY_UNDONE"] = function (e) {
     console.log("called HISTORY_UNDONE.");
@@ -806,9 +816,11 @@ oxana.behaviorimplementations["DELETE_CMP"] = {
             var _idSurrogate = Component.surrogates[domID] && Component.domID2ID[Component.surrogates[domID]] ? Component.domID2ID[Component.surrogates[domID]] : null;
             _id = _idSurrogate ? _idSurrogate : _id;
             let inst = Component.instances[_id];
+            //let objInst = Component.instances["propertyEditorWindow"];
             let c = confirm("Do you want to delete " + _id.toUpperCase() + "?");
             if (c)
                 inst.parent.removeChild(inst, 2);
+            //objInst.parent.removeChild(objInst, 2);
             activeComponent = null;
         } else {
             alert("Please select component you want to delete.");

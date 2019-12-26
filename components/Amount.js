@@ -20,7 +20,8 @@ var Amount = function (_props, overrided = false) {
                 this.amountInput.value = v.amount;
                 this.amountInput.currency = v.currency;
             }
-        }
+        },
+        enumerable: true,
     });
 
     this.changeHandler = function (e) {

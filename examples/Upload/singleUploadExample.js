@@ -24,4 +24,9 @@ multiUpl.on('creationComplete', function () {
 });
 
 
-$('#root').append(multiUpl.render());
+multiUpl.on('creationComplete', function(e){
+    loader.hide();
+});
+multiUpl.renderPromise().then(function(cmpInstance){
+    $('#root').append(cmpInstance.$el);
+});
