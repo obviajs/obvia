@@ -325,18 +325,18 @@ var Parent = function(_props, overrided=false, _isSurrogate=false)
                         _components.splice(i, 0, components[i]);
                     }
                 }
-                let cr = [];
-                for (let i = 0; i < _compRenderPromises.length; i++)
-                { 
-                    cr.push(_compRenderPromises[i].promise);
-                }
-                Promise.all(cr).then(function ()
-                {   
-                    _compRenderPromises = [];
-                    _$hadow.contents().appendTo(_self.$container);
-                    _self.trigger('endDraw');
-                });
             }
+            let cr = [];
+            for (let i = 0; i < _compRenderPromises.length; i++)
+            { 
+                cr.push(_compRenderPromises[i].promise);
+            }
+            Promise.all(cr).then(function ()
+            {   
+                _compRenderPromises = [];
+                _$hadow.contents().appendTo(_self.$container);
+                _self.trigger('endDraw');
+            });
         }else{
             _creationFinished = true;
             _self.trigger('endDraw');

@@ -29,7 +29,7 @@ var MultiUpload = function (_props, overrided = false) {
                     {
                         ctor: Repeater,
                         props: {
-                            id: "listRepeater_"+_self.guid,
+                            id: "listRepeater",
                             rendering: {
                                 direction: "vertical",
                                 separator: false
@@ -39,7 +39,7 @@ var MultiUpload = function (_props, overrided = false) {
                                 {
                                     ctor: UploadEx,
                                     props: {
-                                        id: "upload_"+_self.guid,
+                                        id: "upload",
                                         change: _upload_change,
                                         form: _form,
                                         value: "{currentItem}",
@@ -53,7 +53,7 @@ var MultiUpload = function (_props, overrided = false) {
                     {
                         ctor: Container,
                         props: {
-                            id: "dropContainer_"+_self.guid,
+                            id: "dropContainer",
                             type: ContainerType.NONE,
                             width: "100%",
                             height: 50,
@@ -62,7 +62,7 @@ var MultiUpload = function (_props, overrided = false) {
                                 {
                                     ctor: Label,
                                     props: {
-                                        id: "label_"+_self.guid,
+                                        id: "infoLabel",
                                         label: 'Drag and Drop File or Click Me',
                                         classes: ["text-center"],
                                         labelType: LabelType.p
@@ -74,7 +74,7 @@ var MultiUpload = function (_props, overrided = false) {
                     {
                         ctor: Container,
                         props: {
-                            id: "progressRow_"+_self.guid,
+                            id: "progressRow",
                             type: ContainerType.NONE,
                             classes:["d-none", "progress"],
                             height: 5,
@@ -82,7 +82,7 @@ var MultiUpload = function (_props, overrided = false) {
                                 {
                                     ctor: ProgressBar,
                                     props: {
-                                        id:"progressbar_"+_self.guid,
+                                        id:"progressbar",
                                         valueNow: 0,
                                         valueMin: 0,
                                         valueMax: 100,
@@ -101,15 +101,11 @@ var MultiUpload = function (_props, overrided = false) {
     {
         if (e.target.id == this.domID) 
         {
-            this.$container = this.$el;
-            fnContainerDelayInit();
-            this.components = _cmps;
-            this.addComponents();
-            _lblDrop = this.children[this.my("dropContainer")].children[this.my("label")];
-            _dropContainer = this.children[this.my("dropContainer")];
-            _listRepeater = this.children[this.my("listRepeater")];
-            _progressRow = this.children[this.my("progressRow")];
-            _progressBar = this.children[this.my("progressRow")].children[this.my("progressbar")];  
+            _lblDrop = this.dropContainer.infoLabel;
+            _dropContainer = this.dropContainer;
+            _listRepeater = this.listRepeater;
+            _progressRow = this.progressRow;
+            _progressBar = this.progressRow.progressbar;  
             
             this.on("creationComplete", function(){
                 $("html").on("dragover", _htmlDragOverHandler); 
@@ -171,11 +167,11 @@ var MultiUpload = function (_props, overrided = false) {
         
         for(var n=0;n<e.originalEvent.dataTransfer.files.length;n++)
         {
-            var len = _listRepeater[_self.my("upload")] ? _listRepeater[_self.my("upload")].length : 0;
+            var len = _listRepeater["upload"] ? _listRepeater["upload"].length : 0;
             var allUsed = true;
             var i, rowUpl;
             for(i=0;i<len && allUsed;i++){
-                rowUpl = _listRepeater[_self.my("upload")][i];
+                rowUpl = _listRepeater["upload"][i];
                 if(rowUpl.upload.files.length==0 || !("size" in rowUpl.upload.files[0])){
                     allUsed = false;
                     break;
@@ -209,15 +205,15 @@ var MultiUpload = function (_props, overrided = false) {
     var _clickHandler = function(e){
         var fnUplRowAdded = function(){
             _listRepeater.off("onRowAdd", fnUplRowAdded);
-            var len = _listRepeater[_self.my("upload")].length;
-            var rowUpl = _listRepeater[_self.my("upload")][len-1];
+            var len = _listRepeater["upload"].length;
+            var rowUpl = _listRepeater["upload"][len-1];
             rowUpl.upload.fileDialog();
         };
 
-        var len = _listRepeater[_self.my("upload")] ? _listRepeater[_self.my("upload")].length : 0;
+        var len = _listRepeater["upload"] ? _listRepeater["upload"].length : 0;
         var allUsed = true;
         for(var i=0;i<len && allUsed;i++){
-            var rowUpl = _listRepeater[_self.my("upload")][i];
+            var rowUpl = _listRepeater["upload"][i];
             if(rowUpl.upload.files.length==0 || !("size" in rowUpl.upload.files[0])){
                 allUsed = false;
                 rowUpl.upload.fileDialog();
@@ -248,9 +244,9 @@ var MultiUpload = function (_props, overrided = false) {
         _form.on(FormEventType.POST_PROGRESS, _ajaxUpload_progress);
         _form.on(FormEventType.POST_COMPLETE, _ajaxUpload_complete);
         _form.on(FormEventType.POST_STARTED, _ajaxUpload_started);
-        var len = _listRepeater[_self.my("upload")] ? _listRepeater[_self.my("upload")].length : 0;
+        var len = _listRepeater["upload"] ? _listRepeater["upload"].length : 0;
         for(var i=0;i<len;i++){
-            var rowUpl = _listRepeater[_self.my("upload")][i];
+            var rowUpl = _listRepeater["upload"][i];
             rowUpl.ajaxUpload(i==len-1?false:true);
         }
     }
@@ -291,6 +287,9 @@ var MultiUpload = function (_props, overrided = false) {
     _props = extend(false, false, _defaultParams, _props);
     this.dataProvider = new ArrayEx(_props.dataProvider);
     _form = _props.form;
+    
+    fnContainerDelayInit();
+    _props.components = _cmps;
     Container.call(this, _props, true, true);
 
     if(_props.accept)
