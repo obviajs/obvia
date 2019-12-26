@@ -7,7 +7,12 @@ var myTree = new Tree({
         {title: "Node 1", key: "1"},
         {title: "Folder 2", key: "2", children: new ArrayEx([
           {title: "Node 2.1", key: "3", myOwnAttr: "abc"},
-          {title: "Node 2.2", key: "4"}
+          {
+            title: "Node 2.2", key: "4"
+            , children: new ArrayEx([
+            {title: "Node 2.2.1", key: "7", myOwnAttr: "abc"},
+            {title: "Node 2.2.2", key: "9"}])
+          }
         ])}
       ]),
     expandIcon: "fa-chevron-circle-right",
@@ -20,4 +25,7 @@ myTree.on('creationComplete', function () {
    // alert("test");
   });
 });
-$('#root').append(myTree.render());
+myTree.renderPromise().then(function (cmpInstance)
+{
+  $('#root').append(cmpInstance.$el);
+});

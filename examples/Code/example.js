@@ -140,16 +140,43 @@ let cnt = new Container({
                         classes: ["sidenav"],
                         components: [
                             {
-                                ctor: Tree, 
+                                ctor: Container,
                                 props: {
-                                    id: 'componentModelTree',
-                                    valueField: "key",
-                                    labelField: "title",
-                                    childrenField: "children",
-                                    dataProvider:new ArrayEx([]),
-                                    expandIcon: "fa-chevron-circle-right",
-                                    collapseIcon: "fa-chevron-circle-down",
-                                    click : componentModelTree_click
+                                    id: "cmCnt",
+                                    components: [
+                                        {
+                                            ctor: Link,
+                                            props: {
+                                                id: "cmCollapse",
+                                                attr: { "data-toggle": "collapse" },
+                                                label: "Component Model",
+                                                classes: ["collapse_icon"],
+                                                components: [
+                                                    {
+                                                        ctor: Label,
+                                                        props: {
+                                                            //,classes: ["fas", "fa-angle-down"]
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        },
+                                        {
+                                            ctor: Tree,
+                                            props: {
+                                                id: 'componentModelTree',
+                                                valueField: "guid",
+                                                labelField: "label",
+                                                childrenField: "children",
+                                                dataProvider: new ArrayEx([]),
+                                                expandIcon: "fa-chevron-circle-right",
+                                                collapseIcon: "fa-chevron-circle-down",
+                                                click: componentModelTree_click,
+                                                classes: ["collapse"],
+                                                afterAttach: _bindCmCollapsible
+                                            }
+                                        }
+                                    ]
                                 }
                             },
                             {
@@ -240,6 +267,9 @@ function _focusEditor(){
 function _bindCollapsible(){
     cnt.ideContainer.mySideNav.todosCnt.todosCollapse.href = "#"+ this.domID;
 }
+function _bindCmCollapsible(){
+    cnt.ideContainer.mySideNav.cmCnt.cmCollapse.href = "#"+ this.domID;
+}
 function changesMade(e){
     //e.changes;
     _debouncedHandler(e.cmInst);
@@ -261,6 +291,7 @@ let _debouncedHandler = debounce(function(cmInst){
                     case "//TODO": commentType = 1; break;
                     case "//NOTE": commentType = 2; break;
                     case "//ATTN": commentType = 3; break;
+                    //case "//FIXME": commentType = 4; break;
                     default: continue;
                 }
                 let comment = lnTokens[j].string.substr(7, lnTokens[j].string.length);
@@ -279,7 +310,53 @@ function todoItemClick(e, ra)
     cnt.ideContainer.myCode.cmInst.setCursor({line: ra.currentItem.line, ch: 0});
 }
 
+get("https://api.myjson.com/bins/190n0g").then(function (r)
+{ 
+    console.log(r.response);
+    let cmInstance = Component.fromLiteral(JSON.parse(r.response));
+    let hiddenDiv = $("<div style='display:none'/>");
+    cmInstance.renderPromise().then(function (instance) {
+        hiddenDiv.append(instance.$el);
+        let cmDp = initComponentModel(instance);
+        cnt.ideContainer.mySideNav.cmCnt.componentModelTree.dataProvider = cmDp;
+      });
+});
+
+function initComponentModel(cmInstance)
+{ 
+    let dp = new ArrayEx();
+    let node = {};
+    node.nodeType = 1; //component
+    node.label = cmInstance.props.id;
+    node.ctor = cmInstance.ctor;
+    node.children = new ArrayEx();
+    for (let i = 0; i < cmInstance.events.length; i++)
+    { 
+        for (let evt in cmInstance.events[i].events)
+        { 
+            let cNode = { "nodeType": 2, "label": evt };
+            node.children.push(cNode);
+        }    
+    }
+    for (let cid in cmInstance.children)
+    { 
+        node.children.splicea(node.children.length, 0, initComponentModel(cmInstance.children[cid]));
+    }
+    dp.push(node);
+    return dp;
+}
+
 function componentModelTree_click(e, ra)
 {
     
 }
+//Notes
+/*
+-panel per bashkepunimin:
+--parse author
+--chat
+
+-component model modes:
+--advanced : show component lifecycle events: beforeAttach, endDraw etc
+--simple : show component behavior events only
+*/

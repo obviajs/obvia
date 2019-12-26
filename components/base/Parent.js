@@ -223,11 +223,6 @@ var Parent = function(_props, overrided=false, _isSurrogate=false)
                         } else
                             container.insertAt(cmpInstance.$el, index);
                         --_countChildren;
-                        if (_countChildren == 0)
-                        {
-                            _$hadow.contents().appendTo(_self.$container);
-                            _self.trigger('endDraw');
-                        }
                     })
                 });
             }else{
@@ -294,9 +289,11 @@ var Parent = function(_props, overrided=false, _isSurrogate=false)
         let components;
         if(cmps){
             components = cmps;
+            //_self.$container.contents().appendTo(_$hadow);
         }else{
             components = this.components;
         }
+        _compRenderPromises = [];
         if(components && Array.isArray(components) && components.length>0)
         {
             if(_sortChildren){
@@ -328,6 +325,17 @@ var Parent = function(_props, overrided=false, _isSurrogate=false)
                         _components.splice(i, 0, components[i]);
                     }
                 }
+                let cr = [];
+                for (let i = 0; i < _compRenderPromises.length; i++)
+                { 
+                    cr.push(_compRenderPromises[i].promise);
+                }
+                Promise.all(cr).then(function ()
+                {   
+                    _compRenderPromises = [];
+                    _$hadow.contents().appendTo(_self.$container);
+                    _self.trigger('endDraw');
+                });
             }
         }else{
             _creationFinished = true;
@@ -344,7 +352,7 @@ var Parent = function(_props, overrided=false, _isSurrogate=false)
             _self.on("endDraw", function(e){
                 if (e.target.id == _self.domID) 
                 {
-                    resolve(this); 
+                    resolve(_proxy); 
                 }
             });                   
         });

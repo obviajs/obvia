@@ -1,24 +1,28 @@
 var Li = function (_props, overrided = false) {
     var _self = this;
-
-    Object.defineProperty(this, "label", 
-    {
-        get: function label() 
-        {
+    
+    Object.defineProperty(this, "label", {
+        get: function label() {
             return _label;
         },
-        set: function label(v) 
-        {
-            if(_label != v)
-            {
+        set: function label(v) {
+            if (_label != v) {
                 _label = v;
-                if(this.components.length==0){
-                    if(this.$el){
+                if (this.$el) {
+                    var last = this.$el.children().last();
+                    if (last && last.length > 0)
+                        if (last[0].nextSibling)
+                            last[0].nextSibling.textContent = v;
+                        else
+                            this.$el.appendText(v);
+                    else
+                        //this.$el.appendText(v);
                         this.$el.text(v);
-                    }
                 }
             }
-        }
+        },
+        enumerable: true,
+        configurable: true
     });
 
     Object.defineProperty(this, "value", 
@@ -35,7 +39,8 @@ var Li = function (_props, overrided = false) {
                 if(this.$el)
                     this.$el.attr('value', v);
             }
-        }
+        },
+        enumerable: true
     });
 
     this.template = function () {
@@ -51,10 +56,11 @@ var Li = function (_props, overrided = false) {
     _props = extend(false, false, _defaultParams, _props);
     //_props.applyBindings = false;
    
-    Container.call(this, _props); 
+    let r = Container.call(this, _props); 
    
     var _label = _props.label;
     var _value = _props.value;
+    return r;
 };
 //component prototype
 Li.prototype.ctor = 'Li';
