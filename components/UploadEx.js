@@ -150,14 +150,14 @@ var UploadEx = function (_props, overrided = false) {
             {
                 ctor: Container,
                 props: {
-                    id: "mainRow_"+_self.guid,
+                    id: "mainRow",
                     type: ContainerType.ROW,
                     height: 30,
                     components:[
                         {
                             ctor: Container,
                             props: {
-                                id: "iconColumn_"+_self.guid,
+                                id: "iconColumn",
                                 type: ContainerType.COLUMN,
                                 spacing: {colSpan:1},
                                 classes:["border"],
@@ -165,7 +165,7 @@ var UploadEx = function (_props, overrided = false) {
                                     {
                                         ctor: Label,
                                         props: {
-                                            id: "iconLbl_"+_self.guid,
+                                            id: "iconLbl",
                                             labelType: LabelType.i
                                         }
                                     }
@@ -175,7 +175,7 @@ var UploadEx = function (_props, overrided = false) {
                         {
                             ctor: Container,
                             props: {
-                                id: "fileNameColumn_"+_self.guid,
+                                id: "fileNameColumn",
                                 type: ContainerType.COLUMN,
                                 spacing: {colSpan:7},
                                 classes:["border"],
@@ -183,14 +183,14 @@ var UploadEx = function (_props, overrided = false) {
                                     {
                                         ctor: Label,
                                         props: {
-                                            id: "fileName_"+_self.guid,
+                                            id: "fileName",
                                             label:"No file selected."
                                         }
                                     },
                                     {
                                         ctor: Upload,
                                         props: {
-                                            id: "uploadInput_"+_self.guid,
+                                            id: "uploadInput",
                                             classes:["d-none"],
                                             change: upload_change
                                         }
@@ -201,7 +201,7 @@ var UploadEx = function (_props, overrided = false) {
                         {
                             ctor: Container,
                             props: {
-                                id: "fileSizeColumn_"+_self.guid,
+                                id: "fileSizeColumn",
                                 type: ContainerType.COLUMN,
                                 spacing: {colSpan:1},
                                 classes:["border"],
@@ -209,7 +209,7 @@ var UploadEx = function (_props, overrided = false) {
                                     {
                                         ctor: Label,
                                         props: {
-                                            id: "fileSize_"+_self.guid,
+                                            id: "fileSize",
                                         }
                                     }
                                 ]
@@ -218,7 +218,7 @@ var UploadEx = function (_props, overrided = false) {
                         {
                             ctor: Container,
                             props: {
-                                id: "controlsColumn_"+_self.guid,
+                                id: "controlsColumn",
                                 type: ContainerType.BTN_GROUP,
                                 role:"group",
                                 spacing: {colSpan:3, pr:0, pl:0},
@@ -226,7 +226,7 @@ var UploadEx = function (_props, overrided = false) {
                                     {
                                         ctor: Button,
                                         props: {
-                                            id: "selectBtn_"+_self.guid,
+                                            id: "selectBtn",
                                             type: "button",
                                             components: [{
                                                 ctor: Label,
@@ -242,7 +242,7 @@ var UploadEx = function (_props, overrided = false) {
                                     {
                                         ctor: Button,
                                         props: {
-                                            id: "uploadBtn_"+_self.guid,
+                                            id: "uploadBtn",
                                             type: "button",
                                             enabled:false,
                                             components: [{
@@ -259,7 +259,7 @@ var UploadEx = function (_props, overrided = false) {
                                     {
                                         ctor: Button,
                                         props: {
-                                            id: "downloadBtn_"+_self.guid,
+                                            id: "downloadBtn",
                                             type: "button",
                                             enabled:false,
                                             components: [{
@@ -276,7 +276,7 @@ var UploadEx = function (_props, overrided = false) {
                                     {
                                         ctor: Button,
                                         props: {
-                                            id: "removeBtn_"+_self.guid,
+                                            id: "removeBtn",
                                             type: "button",
                                             enabled:false,
                                             components: [{
@@ -299,7 +299,7 @@ var UploadEx = function (_props, overrided = false) {
             {
                 ctor: Container,
                 props: {
-                    id: "progressRow_"+_self.guid,
+                    id: "progressRow",
                     type: ContainerType.ROW,
                     height: 5,
                     classes:["d-none"],
@@ -307,7 +307,7 @@ var UploadEx = function (_props, overrided = false) {
                         {
                             ctor: Container,
                             props: {
-                                id: "progressColumn_"+_self.guid,
+                                id: "progressColumn",
                                 type: ContainerType.COLUMN,
                                 spacing: {colSpan:12,pl:0},
                                 classes:["border", "progress"],
@@ -316,7 +316,7 @@ var UploadEx = function (_props, overrided = false) {
                                     {
                                         ctor: ProgressBar,
                                         props: {
-                                            id:"progressbar_"+_self.guid,
+                                            id:"progressbar",
                                             valueNow: 0,
                                             valueMin: 0,
                                             valueMax: 100,
@@ -464,22 +464,18 @@ var UploadEx = function (_props, overrided = false) {
     {
         if (e.target.id == this.domID) 
         {
-            this.$container = this.$el;
-            fnContainerDelayInit();
-            this.components = _cmps;
-            this.addComponents();
-            _upload = this.children[this.my("mainRow")].children[this.my("fileNameColumn")].children[this.my("uploadInput")];
-            _iconLbl = this.children[this.my("mainRow")].children[this.my("iconColumn")].children[this.my("iconLbl")];
-            _progressRow = this.children[this.my("progressRow")];
-            _progressBar = this.children[this.my("progressRow")].children[this.my("progressColumn")].children[this.my("progressbar")];  
+            _upload = this.children["mainRow"].children["fileNameColumn"].children["uploadInput"]
+            _iconLbl = this.children["mainRow"].children["iconColumn"].children["iconLbl"]
+            _progressRow = this.children["progressRow"]
+            _progressBar = this.children["progressRow"].children["progressColumn"].children["progressbar"]  
     
-            _lblFileName = this.children[this.my("mainRow")].children[this.my("fileNameColumn")].children[this.my("fileName")];
-            _lblFileSize = this.children[this.my("mainRow")].children[this.my("fileSizeColumn")].children[this.my("fileSize")];
-            _btnSelect = this.children[this.my("mainRow")].children[this.my("controlsColumn")].children[this.my("selectBtn")];
-            _btnUpload = this.children[this.my("mainRow")].children[this.my("controlsColumn")].children[this.my("uploadBtn")];
-            _btnDownload = this.children[this.my("mainRow")].children[this.my("controlsColumn")].children[this.my("downloadBtn")];
-            _btnRemove = this.children[this.my("mainRow")].children[this.my("controlsColumn")].children[this.my("removeBtn")];
-            _removeColumn = this.children[this.my("mainRow")].children[this.my("controlsColumn")].children[this.my("removeColumn")];         
+            _lblFileName = this.children["mainRow"].children["fileNameColumn"].children["fileName"]
+            _lblFileSize = this.children["mainRow"].children["fileSizeColumn"].children["fileSize"]
+            _btnSelect = this.children["mainRow"].children["controlsColumn"].children["selectBtn"]
+            _btnUpload = this.children["mainRow"].children["controlsColumn"].children["uploadBtn"]
+            _btnDownload = this.children["mainRow"].children["controlsColumn"].children["downloadBtn"]
+            _btnRemove = this.children["mainRow"].children["controlsColumn"].children["removeBtn"]
+            _removeColumn = this.children["mainRow"].children["controlsColumn"].children["removeColumn"]         
             
             if(_props.multiple!=null)
                 this.multiple = _props.multiple;
@@ -504,6 +500,8 @@ var UploadEx = function (_props, overrided = false) {
 
     _props = extend(false, false, _defaultParams, _props);
     _showProgress = _props.showProgress;
+    fnContainerDelayInit();
+    _props.components = _cmps;
     Container.call(this, _props, false, true);
     _form = _props.form;
 };
