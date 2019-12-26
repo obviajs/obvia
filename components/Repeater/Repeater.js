@@ -276,7 +276,8 @@ var Repeater = function(_props)
                 _oldDataProvider = acExtend(_dataProvider);
             }
         },
-        enumerable:true
+        enumerable: true,
+        configurable: true
     });
 
     var _dpWatcher;
@@ -630,7 +631,7 @@ var Repeater = function(_props)
 
     let _rPromise;
     
-    Container.call(this, _props, true, true);
+    let r = Container.call(this, _props, true, true);
     var base = this.base;
 /*
     var click =  props.click;
@@ -703,5 +704,7 @@ var Repeater = function(_props)
         enumerable: false,
         configurable: true
     });
+    
+    return r;
 };
 Repeater.prototype.ctor = 'Repeater';

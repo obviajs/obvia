@@ -17,7 +17,70 @@ $('#root').append(myMergeView.render());
 let cnt = new Container({
     id: "mainContainer",    
     type: ContainerType.NONE,                          
-    components:[
+    components: [
+    {
+        ctor: Modal,
+        props: {
+            id: 'versionSelectModal',
+            size: ModalSize.LARGE,
+            title: 'Versions',
+            components: [
+                {
+                    ctor: DataGrid,
+                    props:
+                    {
+                        id: 'dataGrid',
+                        rowCount:5, //visible rows count - virtual scrolling wil be applied on scroll
+                        dataProvider: new ArrayEx([]),
+                        columns: [
+                            {
+                                width: 400,
+                                field: "name",
+                                description: "Name",
+                                visible: true,
+                                sortable: true,
+                                sortInfo: {sortOrder:0, sortDirection:"ASC"}
+                            },
+                            {
+                                width: 400,
+                                field: "user",
+                                description: "Author",
+                                visible: true,
+                                sortable: true,
+                                sortInfo: {sortOrder:0, sortDirection:"ASC"}
+                            },
+                            {
+                                width: 400,
+                                field: "date",
+                                description: "Date",
+                                visible: true,
+                                sortable: true,
+                                sortInfo: {sortOrder:0, sortDirection:"ASC"}
+                            },
+                            {
+                                width: 400,
+                                field: "size",
+                                description: "Size",
+                                visible: true,
+                                sortable: true,
+                                sortInfo: {sortOrder:0, sortDirection:"ASC"}
+                            },
+                            {
+                                width: 400,
+                                field: "deployed",
+                                description: "Deployed",
+                                visible: true,
+                                sortable: true,
+                                sortInfo: {sortOrder:0, sortDirection:"ASC"}
+                            }
+                        ],
+                        rowDblClick: selectVersion
+                    }
+                }
+            ],
+            displayListUpdated: drawGrid
+        }
+    },
     {
         ctor: Nav,
         props: {
@@ -171,6 +234,7 @@ let cnt = new Container({
                                                 dataProvider: new ArrayEx([]),
                                                 expandIcon: "fa-chevron-circle-right",
                                                 collapseIcon: "fa-chevron-circle-down",
+                                                clearClassesField: "clearFasClasses",
                                                 click: componentModelTree_click,
                                                 classes: ["collapse"],
                                                 afterAttach: _bindCmCollapsible
@@ -321,7 +385,7 @@ get("https://api.myjson.com/bins/190n0g").then(function (r)
         cnt.ideContainer.mySideNav.cmCnt.componentModelTree.dataProvider = cmDp;
       });
 });
-
+let lifecycleEvents = ["afterAttach", "beforeAttach", "beginDraw", "endDraw", "creationComplete"];
 function initComponentModel(cmInstance)
 { 
     let dp = new ArrayEx();
@@ -334,7 +398,7 @@ function initComponentModel(cmInstance)
     { 
         for (let evt in cmInstance.events[i].events)
         { 
-            let cNode = { "nodeType": 2, "label": evt };
+            let cNode = { "nodeType": 2, "label": evt , "clearFasClasses":["fas", "fa-code"]};
             node.children.push(cNode);
         }    
     }
@@ -346,9 +410,35 @@ function initComponentModel(cmInstance)
     return dp;
 }
 
-function componentModelTree_click(e, ra)
+function componentModelTree_click(e)
 {
+    let rpp = 10;
+    let _raVersions = new RemoteArray({url:"https://api.myjson.com/bins/7f3gs", post:{"testKey":"testValue"}, recordsPerPage:rpp, method: "GET"})
+    let _dpVersions = new ArrayEx(_raVersions);
+    _dpVersions.on("propertyChange", function (e)
+    {
+        if (e.property == "length")
+        { 
+            if (e.newValue > 0)
+            {
+                cnt.versionSelectModal.modalDialog.modalContent.modalBody.dataGrid.dataProvider = _dpVersions;
+                cnt.versionSelectModal.show();
+            } else
+            { 
+                //create default function
+            }
+        }
+    });
     
+}
+
+function selectVersion(e)
+{ 
+    
+}
+
+var drawGrid = function(e){
+    _dg.updateDisplayList();
 }
 //Notes
 /*
