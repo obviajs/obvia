@@ -68,7 +68,7 @@ var Select = function (_props, overrided = false) {
     };
 
     var _defaultParams = {
-        dataProvider: null,
+        dataProvider: new ArrayEx([]),
         labelField: "",
         valueField: "",
         value: null,
