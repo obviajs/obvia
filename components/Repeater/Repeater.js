@@ -385,6 +385,15 @@ var Repeater = function(_props)
                 el.parentForm = _self.parentForm;
                 el.repeaterIndex = index;
                 
+                //update repeaterIndex
+                if (_self[cmpId][index])
+                { 
+                    for (let u = index; u < _self[cmpId].length; u++)
+                    { 
+                        _self[cmpId][u].repeaterIndex += 1;
+                    }
+                }
+                
                 _self[cmpId].splice(index, 0, el);
                 rowItems[cmpId] = el;
                 _self.rowItems.splice(index, 0, rowItems);

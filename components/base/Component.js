@@ -376,7 +376,7 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
         get: function classes()
         {
             let r = _classes;
-            if(this.children){
+            if(1!=1 && this.children){
                 let p;
                 for(var _cid in this.children){
                     if(this[this.childrenRID[_cid]] && this[this.childrenRID[_cid]]["ctor"]){
@@ -604,12 +604,19 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
     };
 
    // var _dataTriggerEventList = _isSurrogate?_defaultHandlers:this.dataTriggerEvents();
-    var _dataTriggerEventList = this.dataTriggerEvents();
+    let _dataTriggerEventList = this.dataTriggerEvents();
     this.registerEvents = function ()
     {
         return _dataTriggerEventList;
     };//
-    
+    Object.defineProperty(this, "events",
+    {
+        get: function events()
+        {
+            return _dataTriggerEventList;
+        }
+    });
+        
     let _rPromise;
     if(!this.hasOwnProperty("renderPromise"))
     {

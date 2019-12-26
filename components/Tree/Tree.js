@@ -84,7 +84,7 @@ var Tree = function (_props, overrided = false) {
             cmp.$el.attr(_guidField, this.dataProvider[toRefresh[i]][_guidField]);
             cmp.attr[_guidField] = this.dataProvider[toRefresh[i]][_guidField];
         }
-        _oldDataProvider = extend(true, false, this.dataProvider);
+        _oldDataProvider = acExtend(this.dataProvider);
     };
 
     Object.defineProperty(this, "expandIcon", 
@@ -143,8 +143,6 @@ var Tree = function (_props, overrided = false) {
         if (e.target.id == this.domID) 
         {
             if(!e.isDefaultPrevented()){
-                this.$container = this.$el;
-                this.dataProvider = _props.dataProvider;
             }
         }
         //this.components = this.buildTree();
@@ -162,8 +160,6 @@ var Tree = function (_props, overrided = false) {
     };
 
     this.afterAttach = function (e) {
-        if (typeof _afterAttach == 'function')
-            _afterAttach.apply(this, arguments);
         if(_selectedItem){
             this.select(_selectedItem);
         }
@@ -197,8 +193,6 @@ var Tree = function (_props, overrided = false) {
     var _selectedClasses = _props.selectedClasses;
     var _guidField = _props.guidField;
     var _selectedItem = _props.selectedItem;
-    var _afterAttach = _props.afterAttach;
-    _props.afterAttach = this.afterAttach;
 
     var _click = _props.click;
     var _toggleTree = function(e){
@@ -228,7 +222,7 @@ var Tree = function (_props, overrided = false) {
     }   
     //to unselect all call with liObj null
     this.select = function(liObj, visited){
-        var cLi;
+        var cLi; var visited = visited ? visited : [];
         if(liObj && liObj[_guidField])
         {
             var match = getMatching(this.components, "props.attr."+_guidField,  liObj.guid, true);
@@ -252,12 +246,20 @@ var Tree = function (_props, overrided = false) {
             } 
             if(cc.components.length>0){
                 var tree = cc.children[cc.components[2].props.id];
-                if(tree!=visited)
-                    tree.select(liObj);
+                if (visited.indexOf(tree) < 0)
+                { 
+                    visited.push(tree);
+                    tree.select(liObj, visited);
+                }
             }
         }
-        if(this["parent"] && this.parent["parent"] && this.parent["parent"].ctor == "Tree"){
-            this.parent.parent.select(liObj, this);
+        if (this["parent"] && this.parent["parent"] && this.parent["parent"].ctor == "Tree")
+        {
+            if (visited.indexOf(this.parent.parent) < 0)
+            {
+                visited.push(this.parent.parent);
+                this.parent.parent.select(liObj, visited);
+            }
         }
     }
 
@@ -266,7 +268,6 @@ var Tree = function (_props, overrided = false) {
         props:{
             id: "li",
             "value": '{'+_valueField+'}',
-            "label": '{'+_labelField+'}',
             "click": _toggleTree
         }
     };
@@ -315,6 +316,7 @@ var Tree = function (_props, overrided = false) {
         var components = [];
         if(dp && dp.forEach)
         {
+            console.log("buildTree: ", dp[_guidField]);
             if(dp.length>0)
             {
                 for(var i=0;i<dp.length;i++)
@@ -326,7 +328,7 @@ var Tree = function (_props, overrided = false) {
                     cmpLi.props.id = "li";
                     cmpLi.props.attr = {};
                     cmpLi.props.attr[_guidField] = dp[i][_guidField];
-                    if(dp[i][_childrenField] && dp[i][_childrenField].length>0)
+                    if (dp[i][_childrenField] && dp[i][_childrenField].length > 0)
                     {
                         var tree = extend(true, _componentTree);
                         var cmpIcon = extend(true, _componentIconLbl);
@@ -335,13 +337,16 @@ var Tree = function (_props, overrided = false) {
 
                         tree.props.dataProvider = dp[i][_childrenField];
                         cmpLi.props.components = [cmpIcon, cmpLbl, tree];
+                    } else
+                    { 
+                        cmpLi.props.label = '{' + _labelField + '}';
                     }	
                     components.push(cmpLi);
                 }
             }else{
                 _creationFinished = true;
             }
-            _oldDataProvider = extend(true, false, _dataProvider);
+            _oldDataProvider = acExtend(_dataProvider);
         }
         return components;
     }
@@ -356,7 +361,7 @@ var Tree = function (_props, overrided = false) {
         }
     };
 
-    Parent.call(this, _props);
+    let r = Parent.call(this, _props);
 
     if (overrided) {
         this.keepBase();
@@ -377,6 +382,23 @@ var Tree = function (_props, overrided = false) {
         },
         enumerable: true
     });
+    let _rPromise;
+    this.renderPromise = function () 
+    {  
+        this.$container = this.$el;
+        _rPromise = new Promise((resolve, reject) => {
+            _self.on("endDraw", function(e){
+                if (e.target.id == _self.domID) 
+                {       
+                    resolve(r); 
+                }
+            });                   
+        });
+        if(_props.dataProvider)
+            this.dataProvider = _props.dataProvider;
+        return _rPromise;
+    };
+    return r;
 };
 
 //component prototype
