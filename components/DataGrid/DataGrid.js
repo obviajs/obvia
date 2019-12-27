@@ -10,6 +10,7 @@ var DataGrid = function(_props)
     let _self = this;
     let _currentIndex = 1;
     let _$hadow = $("<div/>"); 
+    let _multiSelect;
     
     Object.defineProperty(this, "currentIndex",
     {
@@ -585,6 +586,20 @@ var DataGrid = function(_props)
         this.setCellsWidth();
     }
     
+    Object.defineProperty(this, "multiSelect", 
+    {
+        get: function multiSelect() 
+        {
+            return _multiSelect;
+        },
+        set: function multiSelect(v) 
+        {
+            if(_multiSelect != v)
+                _multiSelect = v;
+        },
+        enumerable:true
+        });
+    
     Object.defineProperty(this, "selectedItems",
     {
         get: function selectedItems()
@@ -593,27 +608,58 @@ var DataGrid = function(_props)
         }
     });
     let _selectedItems = new ArrayEx();
-    
+    let _selectedIndices = [];
     let _rowClickHandler = function (e, dgInst, ra)
     { 
-        console.log(ra);
+        if (_ctrlIsPressed && _multiSelect)
+        {
+            let ind = _selectedIndices.indexOf(ra.currentIndex);
+            if (ind < 0)
+            {
+                _selectedIndices.push(ra.currentIndex);
+                _selectedItems.push(ra.currentItem);
+            } else
+            { 
+                _selectedIndices.splice(ind, 1);
+                _selectedItems.splice(ind, 1);
+            }
+                
+        } else
+        { 
+            if (_selectedIndices.indexOf(ra.currentIndex) < 0)
+            {
+                _selectedIndices = [ra.currentIndex];
+                _selectedItems.splice(0, _selectedItems.length, ra.currentItem);
+            } else
+            { 
+                _selectedIndices = [];
+                _selectedItems.splice(0, _selectedItems.length);
+            }
+        }
         let len = _self["rows"].length;
         for (let i = 0; i < len; i++)
         { 
-            if (i == ra.currentIndex - ra.virtualIndex)
-            {
-                _self["rows"][i].addClass("datagrid-row-selected");
-            } else
+            let found = false;
+            for (let j = 0; j < _selectedIndices.length; j++)
+            { 
+                if (i == _selectedIndices[j] - ra.virtualIndex)
+                { 
+                    found = true;
+                    _self["rows"][i].addClass("datagrid-row-selected");
+                }
+            }
+            if(!found)
             { 
                 _self["rows"][i].removeClass("datagrid-row-selected");
             }
         }
         
-        _selectedItems.splice(0, 1, ra.currentItem);
+        
         //_self["rows"].
     }
     
     let _displayed = false;
+    let _ctrlIsPressed = false;
     this.afterAttach = function (e) 
     {
         if (e.target.id == this.domID) 
@@ -622,6 +668,17 @@ var DataGrid = function(_props)
             if(av!="" && av!="none" && !_displayed){
                 this.updateDisplayList();
             }
+            
+            $(_self.ownerDocument).keydown(function(event){
+                if ((Env.getInstance().current == EnvType.MAC && event.metaKey && !event.shiftKey) || event.ctrlKey)
+                    _ctrlIsPressed = true;
+            });
+            
+            $(_self.ownerDocument).keyup(function ()
+            {
+                if((Env.getInstance().current == EnvType.MAC && !event.metaKey) || event.which == "17")
+                    _ctrlIsPressed = false;
+            });
         }
     };
 
@@ -635,7 +692,8 @@ var DataGrid = function(_props)
         dataProvider: new ArrayEx([]),
         rowCount:5,
         columns: [],
-        allowNewItem: false
+        allowNewItem: false,
+        multiSelect: false
     };
     _props = extend(false, false, _defaultParams, _props);    
     if (!_props.attr) { 
@@ -643,7 +701,8 @@ var DataGrid = function(_props)
     }
     
     let _rowClick = _props.rowClick;
-
+    _multiSelect = _props.multiSelect;
+    
     _props.rowClick = function () {
         if (typeof _rowClick == 'function')
             _rowClick.apply(this, arguments);

@@ -54,6 +54,7 @@ let cnt = new Container({
                             id: 'dataGrid',
                             rowCount:5, //visible rows count - virtual scrolling wil be applied on scroll
                             dataProvider: new ArrayEx([]),
+                            multiSelect:true,
                             columns: [
                                 {
                                     width: 400,
@@ -477,7 +478,7 @@ function selectVersion(e)
 }
 
 function drawGrid(e){
-    _dg.updateDisplayList();
+    cnt.versionSelectModal.modalDialog.modalContent.modalBody.dataGrid.updateDisplayList();
 }
 
 function diffWithSelected(e)
