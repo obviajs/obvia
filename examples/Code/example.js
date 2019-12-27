@@ -24,60 +24,93 @@ let cnt = new Container({
             id: 'versionSelectModal',
             size: ModalSize.LARGE,
             title: 'Versions',
-            components: [
-                {
-                    ctor: DataGrid,
-                    props:
+            accept: selectVersion,
+            components: {
+                "modalFooter": [
                     {
-                        id: 'dataGrid',
-                        rowCount:5, //visible rows count - virtual scrolling wil be applied on scroll
-                        dataProvider: new ArrayEx([]),
-                        columns: [
-                            {
-                                width: 400,
-                                field: "name",
-                                description: "Name",
-                                visible: true,
-                                sortable: true,
-                                sortInfo: {sortOrder:0, sortDirection:"ASC"}
-                            },
-                            {
-                                width: 400,
-                                field: "user",
-                                description: "Author",
-                                visible: true,
-                                sortable: true,
-                                sortInfo: {sortOrder:0, sortDirection:"ASC"}
-                            },
-                            {
-                                width: 400,
-                                field: "date",
-                                description: "Date",
-                                visible: true,
-                                sortable: true,
-                                sortInfo: {sortOrder:0, sortDirection:"ASC"}
-                            },
-                            {
-                                width: 400,
-                                field: "size",
-                                description: "Size",
-                                visible: true,
-                                sortable: true,
-                                sortInfo: {sortOrder:0, sortDirection:"ASC"}
-                            },
-                            {
-                                width: 400,
-                                field: "deployed",
-                                description: "Deployed",
-                                visible: true,
-                                sortable: true,
-                                sortInfo: {sortOrder:0, sortDirection:"ASC"}
-                            }
-                        ],
-                        rowDblClick: selectVersion
+                        ctor: Button,
+                        props: {
+                            id: 'diffButton',
+                            type: "button",
+                            classes: ["close", "no-form-control"],
+                            attr: {"data-dismiss":"modal", "aria-label":"Dismiss"},
+                            components: [{
+                                ctor: Label,
+                                props: {
+                                    id: 'fa',
+                                    labelType: LabelType.i,
+                                    classes: ["fas","fa-code-fork"]
+                                }
+                            }],
+                            click: diffWithSelected
+                        }
                     }
-                }
-            ],
+                ],
+                "modalBody": [
+                    {
+                        ctor: DataGrid,
+                        props:
+                        {
+                            id: 'dataGrid',
+                            rowCount:5, //visible rows count - virtual scrolling wil be applied on scroll
+                            dataProvider: new ArrayEx([]),
+                            columns: [
+                                {
+                                    width: 400,
+                                    field: "name",
+                                    description: "Name",
+                                    visible: true,
+                                    sortable: true,
+                                    sortInfo: {sortOrder:0, sortDirection:"ASC"}
+                                },
+                                {
+                                    width: 400,
+                                    field: "user",
+                                    description: "Author",
+                                    visible: true,
+                                    sortable: true,
+                                    sortInfo: {sortOrder:0, sortDirection:"ASC"}
+                                },
+                                {
+                                    width: 400,
+                                    field: "date",
+                                    description: "Date",
+                                    visible: true,
+                                    sortable: true,
+                                    sortInfo: {sortOrder:0, sortDirection:"ASC"}
+                                },
+                                {
+                                    width: 400,
+                                    field: "size",
+                                    description: "Size",
+                                    visible: true,
+                                    sortable: true,
+                                    sortInfo: {sortOrder:0, sortDirection:"ASC"}
+                                },
+                                {
+                                    width: 400,
+                                    field: "deployed",
+                                    description: "Deployed",
+                                    visible: true,
+                                    sortable: true,
+                                    itemRenderer: {
+                                        ctor: Label,
+                                        props: {
+                                            id: 'fa',
+                                            labelType: LabelType.i,
+                                            classes: ["fas", "fa-rocket", "text-info"],
+                                            visible: "{deployed}",
+                                            label:""
+                                        }
+                                    },
+                                    sortInfo: {sortOrder:0, sortDirection:"ASC"}
+                                }
+                            ],
+                            rowDblClick: selectVersion
+                        }
+                    }
+                ]
+            },
             displayListUpdated: drawGrid
         }
     },
@@ -413,7 +446,7 @@ function initComponentModel(cmInstance)
 function componentModelTree_click(e)
 {
     let rpp = 10;
-    let _raVersions = new RemoteArray({url:"https://api.myjson.com/bins/7f3gs", post:{"testKey":"testValue"}, recordsPerPage:rpp, method: "GET"})
+    let _raVersions = new RemoteArray({url:"https://api.myjson.com/bins/7eax0", post:{"testKey":"testValue"}, recordsPerPage:rpp, method: "GET"})
     let _dpVersions = new ArrayEx(_raVersions);
     _dpVersions.on("propertyChange", function (e)
     {
@@ -431,15 +464,28 @@ function componentModelTree_click(e)
     });
     
 }
-
+let selectedEventVersion;
 function selectVersion(e)
+{ 
+    if (cnt.versionSelectModal.modalDialog.modalContent.modalBody.dataGrid.selectedItems.length > 0)
+    {
+        selectedEventVersion = cnt.versionSelectModal.modalDialog.modalContent.modalBody.dataGrid.selectedItems[0];
+    } else
+    { 
+        alert("Nothing selected.");
+    }
+}
+
+function drawGrid(e){
+    _dg.updateDisplayList();
+}
+
+function diffWithSelected(e)
 { 
     
 }
 
-var drawGrid = function(e){
-    _dg.updateDisplayList();
-}
+
 //Notes
 /*
 -panel per bashkepunimin:

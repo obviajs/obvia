@@ -584,7 +584,35 @@ var DataGrid = function(_props)
         }.bind(this));
         this.setCellsWidth();
     }
-
+    
+    Object.defineProperty(this, "selectedItems",
+    {
+        get: function selectedItems()
+        {
+            return _selectedItems;
+        }
+    });
+    let _selectedItems = new ArrayEx();
+    
+    let _rowClickHandler = function (e, dgInst, ra)
+    { 
+        console.log(ra);
+        let len = _self["rows"].length;
+        for (let i = 0; i < len; i++)
+        { 
+            if (i == ra.currentIndex - ra.virtualIndex)
+            {
+                _self["rows"][i].addClass("datagrid-row-selected");
+            } else
+            { 
+                _self["rows"][i].removeClass("datagrid-row-selected");
+            }
+        }
+        
+        _selectedItems.splice(0, 1, ra.currentItem);
+        //_self["rows"].
+    }
+    
     let _displayed = false;
     this.afterAttach = function (e) 
     {
@@ -613,6 +641,19 @@ var DataGrid = function(_props)
     if (!_props.attr) { 
         _props.attr = {};
     }
+    
+    let _rowClick = _props.rowClick;
+
+    _props.rowClick = function () {
+        if (typeof _rowClick == 'function')
+            _rowClick.apply(this, arguments);
+
+        let e = arguments[0];
+        if (!e.isDefaultPrevented()) {
+            _rowClickHandler.apply(this, arguments);
+        }
+    };
+    
     let myDtEvts = ["cellEditFinished", "cellEdit", "rowEdit", "rowAdd", "rowDelete", "beginDraw", "endDraw", "rowClick", "rowDblClick", "cellStyling", "rowStyling"];
     if (!Object.isEmpty(_props.attr) && _props.attr["data-triggers"] && !Object.isEmpty(_props.attr["data-triggers"]))
     {
@@ -670,7 +711,9 @@ var DataGrid = function(_props)
     {
         let rp = [];
         let beforeRowAddEvent = jQuery.Event("beforeRowAdd");
-        this.trigger(beforeRowAddEvent, [_self, new RepeaterEventArgs(_self.rowItems, data, index-1)]);
+        let rargs = new RepeaterEventArgs(_self.rowItems, data, index - 1);
+        rargs.virtualIndex = _virtualIndex;
+        this.trigger(beforeRowAddEvent, [_self, rargs]);
 
         if (!isPreventable || (isPreventable && !beforeRowAddEvent.isDefaultPrevented())) 
         {
@@ -684,14 +727,20 @@ var DataGrid = function(_props)
             let columnIndex = 0;
             renderedRow.click(function(evt)
             {
-                _self.trigger("rowClick",  [_self, new RepeaterEventArgs(_rowItems, _self.dataProvider[index + _virtualIndex], index+_virtualIndex)]);
+                let rargs = new RepeaterEventArgs(_rowItems, _self.dataProvider[index + _virtualIndex], index + _virtualIndex);
+                rargs.virtualIndex = _virtualIndex;
+                _self.trigger("rowClick",  [_self, rargs]);
             });
 
             renderedRow.dblclick(function(evt)
             {
-                _self.trigger("rowDblClick", [_self, new RepeaterEventArgs(_rowItems, _self.dataProvider[index + _virtualIndex], index+_virtualIndex)]);
+                let rargs = new RepeaterEventArgs(_rowItems, _self.dataProvider[index + _virtualIndex], index + _virtualIndex);
+                rargs.virtualIndex = _virtualIndex;
+                _self.trigger("rowDblClick", [_self, rargs]);
             });
-            let rsEvt = jQuery.Event('rowStyling', [_self, new RepeaterEventArgs(_rowItems, _self.dataProvider[index + _virtualIndex], index+_virtualIndex)]);
+            let rargs = new RepeaterEventArgs(_rowItems, _self.dataProvider[index + _virtualIndex], index + _virtualIndex);
+            rargs.virtualIndex = _virtualIndex;
+            let rsEvt = jQuery.Event('rowStyling', [_self, rargs]);
 
             let rowBindingFunctions = [], bIndex = 0;
             _self.cellItemRenderers.splice(index, 0, []);
@@ -709,7 +758,7 @@ var DataGrid = function(_props)
                 
                 let dataProviderField = column.field;
                 //
-                component.props["label"] = "{?"+dataProviderField+"}";
+                //component.props["label"] = "{?"+dataProviderField+"}";
                 //might not be wanted
                 component.props.id = column.name;
 
@@ -794,8 +843,9 @@ var DataGrid = function(_props)
                         let bindedValue = tempComponent.props.value.slice(1, -1);
                         data[bindedValue] = this.value;
                     }
-
-                    _self.$el.trigger('rowEdit', [_self, new RepeaterEventArgs(rowItems, _self.dataProvider[index + _virtualIndex], index+_virtualIndex)]);
+                    let rargs = new RepeaterEventArgs(rowItems, _self.dataProvider[index + _virtualIndex], index + _virtualIndex);
+                    rargs.virtualIndex = _virtualIndex;
+                    _self.$el.trigger('rowEdit', [_self, rargs]);
                 });
                 //width='"+column.calculatedWidth+"'
                 let cell = $("<td id='cell_"+(index)+"_"+columnIndex+"'></td>");
@@ -807,10 +857,11 @@ var DataGrid = function(_props)
                 {
                     renderedRow.append(cell.append(cmpInstance.$el));
                     _$hadow.append(renderedRow);
-                    _self["rows"].push(renderedRow); 
+                    
                 });
                 rp.push(cp);
             }   
+            _self["rows"].push(renderedRow); 
         }
         return rp;
     }; 
