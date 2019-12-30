@@ -19,6 +19,9 @@ myModal.on('creationComplete', function (e) {
     myModal.show();
 }); 
 myModal.addComponent(myLabel, 0);
-$('#root').append(myModal.render());
+myModal.renderPromise().then(function (cmpInstance)
+{ 
+    $('#root').append(cmpInstance.$el);
+});
 
 console.log("Modal after adding a new component",myModal);

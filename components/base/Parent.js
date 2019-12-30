@@ -217,11 +217,11 @@ var Parent = function(_props, overrided=false, _isSurrogate=false)
                 _compRenderPromises.push({
                     "cmp": cmp, "promise": cmp.renderPromise().then(function (cmpInstance)
                     {
-                        if (cmpInstance.appendTo)
-                        {
-                            cmpInstance.appendTo.insertAt(cmpInstance.$el, index);
-                        } else
-                            container.insertAt(cmpInstance.$el, index);
+                        // if (cmpInstance.appendTo)
+                        // {
+                        //     cmpInstance.appendTo.insertAt(cmpInstance.$el, index);
+                        // } else
+                        //     container.insertAt(cmpInstance.$el, index);
                         --_countChildren;
                     })
                 });
@@ -334,6 +334,16 @@ var Parent = function(_props, overrided=false, _isSurrogate=false)
             Promise.all(cr).then(function ()
             {   
                 _compRenderPromises = [];
+                for (let i = 0; i < _components.length; i++)
+                { 
+                    let cmpInstance = _children[_components[i].props.id];
+                    if (cmpInstance.appendTo)
+                    {
+                        cmpInstance.appendTo.insertAt(cmpInstance.$el, i);
+                    } else
+                        _$hadow.insertAt(cmpInstance.$el, i);
+                }
+                
                 _$hadow.contents().appendTo(_self.$container);
                 _self.trigger('endDraw');
             });

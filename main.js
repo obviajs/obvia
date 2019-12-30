@@ -167,6 +167,7 @@ rjs.define("./components/MultiUpload.js", "MultiUpload");
 //DataGrid
 rjs.define("./components/DataGrid/DataGridCellRenderer.js", "DataGridCellRenderer");
 rjs.define("./components/DataGrid/DataGridColumn.js", "DataGridColumn");
+rjs.define("./components/DataGrid/css/datagrid-default.css", "datagrid_default_css");
 rjs.define("./components/DataGrid/DataGrid.js", "DataGrid");
 
 rjs.define("./oxana/accounting/components/CurrencyExRate.js", "CurrencyExRate");
@@ -316,6 +317,7 @@ rjs.require([
     "UploadEx",
     "DataGridCellRenderer",
     "DataGridColumn",
+    "datagrid_default_css",
     "DataGrid",
     "HRule",
     "Color",
