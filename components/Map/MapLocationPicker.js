@@ -88,13 +88,9 @@ var MapLocationPicker = function (_props, overrided = false) {
     {
         if (e.target.id == this.domID) 
         {
-            this.$container = this.$el;
-            fnContainerDelayInit();
-            this.components = _cmps;
-            this.addComponents();
-            _latitude = this.children[this.components[0].props.id];
-            _longitude = this.children[this.components[1].props.id];
-            _modal = this.children[this.components[3].props.id];
+            _latitude = this.latitude;
+            _longitude = this.longitude;
+            _modal = this.locationSelectModal;
             _mapCnt = _modal.modalDialog.modalContent.modalBody.mapContainer;
             _modalLatitude = _modal.modalDialog.modalContent.modalBody.inputsRow.inputsColumn.mLatitude;
             _modalLongitude = _modal.modalDialog.modalContent.modalBody.inputsRow.inputsColumn.mLongitude;
@@ -244,6 +240,8 @@ var MapLocationPicker = function (_props, overrided = false) {
     };
 
     _props = extend(false, false, _defaultParams, _props);
+    fnContainerDelayInit();
+    _props.components = _cmps;
     Container.call(this, _props);
 };
 

@@ -15,7 +15,8 @@ var ViewStack = function(_props)
         get: function children() 
         {
             return _children;
-        }
+        },
+        enumerable: true
     });
 
     Object.defineProperty(this, "components", 
@@ -23,7 +24,8 @@ var ViewStack = function(_props)
         get: function components() 
         {
             return _components;
-        }
+        },
+        enumerable: true
     });
     
     Object.defineProperty(this, "width", 
@@ -102,7 +104,8 @@ var ViewStack = function(_props)
                     } 
                 }
             }
-        }
+        },
+        enumerable: true
     });
     
     var _mutationHandler = function(e, ci)
@@ -227,6 +230,7 @@ var ViewStack = function(_props)
                 }
             }
         },
+        enumerable: true,
         configurable: true
     });
 

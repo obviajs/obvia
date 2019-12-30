@@ -54,14 +54,23 @@ Builder.metaProps = {
         labelField: ObjectEditor.maskLabelField,
         dataProvider: ObjectEditor.masks
     }, index:11},
-    inputFormat: {ctor:"TextInput", label: "Input Format", required:true, props:{
-        value:'DD/MM/YYYY'
+    inputFormat: {ctor:"Select", label: "Input Format", required:true, props:{
+        dataProvider:new ArrayEx(getMembersCollection(DateTimeFormat, "text", "value")),
+        change: function(){
+            this.parent.parent.instance.inputFormat = this.value;
+        }
     }, index:12},
-    outputFormat: {ctor:"TextInput", label: "Output Format", required:true, props:{
-        value:'DD-MM-YYYY'
+    outputFormat: {ctor:"Select", label: "Output Format", required:true, props:{
+        dataProvider:new ArrayEx(getMembersCollection(DateTimeFormat, "text", "value")),
+        change: function(){
+            this.parent.parent.instance.outputFormat = this.value;
+        }
     }, index:13},
-    displayFormat: {ctor:"TextInput", label: "Display Format", required:true, props:{
-        value:'DD/MM/YYYY'
+    displayFormat: {ctor:"Select", label: "Display Format", required:true, props:{
+        dataProvider:new ArrayEx(getMembersCollection(DateTimeFormat, "text", "value")),
+        change: function(){
+            this.parent.parent.instance.displayFormat = this.value;
+        }
     }, index:14},
     multiple: {ctor:"Toggle", label: "Multiple Files", index:15},
     accept:{ctor:"Toggle", label: "Allowed Files", index:16},
@@ -249,7 +258,13 @@ Builder.metaProps.Repeater = {
             //assign them to the labelField and valueField editor`s dataProvider property
             this.parent.parent.instance.attr.repeated_id_form = this.value.length>0?this.value[0][this.valueField]:undefined; 
         }
-    }, index:7}
+    }, index:7},
+    rendering: {ctor: "TextInput0", label: "Rendering", required:false, props: {
+        change: function(){
+            this.parent.parent.instance.rendering = this.value;
+        }
+    }}
+    
 }
 Builder.metaProps.DataGridColumn = {
     name: {ctor:"TextInput", label: "Column Name", required:true, index:1}
@@ -371,5 +386,20 @@ Builder.metaProps.viewStack = {
         }
     }},
 };
+
+Builder.metaProps.DateTimeCb = {
+    value: {ctor:"TextInput", label: "Value", required:true, index:3, props: {
+        change: function(){
+            this.parent.parent.instance.value = this.value;
+        }
+    }},
+    mode: {ctor:"Select", label: "Display Mode", props: {
+        //dataProvider: new ArrayEx([{value: "date", text: "Date"}, {value: "time", text: "Time"},{value: "datetime", text: "Datetime"}]),
+        dataProvider: new ArrayEx(getMembersCollection(DateTimeMode, "text", "value")),
+        change: function(){
+            this.parent.parent.instance.mode = this.value;
+        }
+    }}
+}
 
 

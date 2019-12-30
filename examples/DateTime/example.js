@@ -3,7 +3,9 @@ var myDate = new DateTime({
     inputFormat: 'DD/MM/YYYY',
     outputFormat: 'DD-MM-YYYY',
     displayFormat: 'MM/DD/YYYY',
-    value: '2022/02/04'
+    value: '27/12/2019'
 });
 
-$('#root').append(myDate.render());
+myDate.renderPromise().then(function (cmpInstance) {
+    $('#root').append(cmpInstance.$el);
+});

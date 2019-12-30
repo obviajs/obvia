@@ -114,7 +114,7 @@ Builder.components = {
                 inputFormat: 'DD/MM/YYYY',
                 outputFormat: 'DD-MM-YYYY',
                 displayFormat: 'MM/DD/YYYY',
-                value: '2022/02/04'
+                value: String(new Date().getDate()).padStart(2, '0') + '/' + String(new Date().getMonth() + 1).padStart(2, '0')  +  '/' +  new Date().getFullYear()
             }
         },
         label: "DateTime",

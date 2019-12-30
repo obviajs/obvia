@@ -130,9 +130,9 @@ rjs.define("./components/Tree/Li.js", "Li");
 rjs.define("./components/Tree/Tree.js", "Tree");
 //DateTime
 rjs.define("./components/DateTime/DateTime.js", "DateTime");
+rjs.define("./components/DateTime/css/dateTime_default.css", "DateTime_Default_css");
+rjs.define("./components/DateTime/DateTimeFormat.js", "DateTimeFormat");
 rjs.define("lib/dependencies/scripts/moment.js", "MomentJS");
-rjs.define("https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/js/bootstrap-datepicker.min.js", "DatePickerScript");
-rjs.define("https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/css/bootstrap-datepicker.min.css", "DatePickerCSS");
 //DateTimeCb
 rjs.define("./components/DateTime/DateTimeMode.js", "DateTimeMode");
 rjs.define("./components/DateTime/DateTimeCb.js", "DateTimeCb");
@@ -286,9 +286,9 @@ rjs.require([
     "SummerNoteScript",
     "TextEditor",
     "DateTime",
+    "DateTime_Default_css",
+    "DateTimeFormat",
     "MomentJS",
-    "DatePickerScript",
-    "DatePickerCSS",
     "CheckBox",
     "CheckBoxEx",
     "CheckBoxGroup",
