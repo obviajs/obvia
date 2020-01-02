@@ -17,7 +17,8 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
         visible:true,
         enabled:true,
         index: 0,
-        appendTo: undefined
+        appendTo: undefined,
+        attach:true
     };
     shallowCopy(extend(false, false, _defaultParams, _props), _props);
     var ppb =  Component.processPropertyBindings(_props);
@@ -54,6 +55,7 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
     var _watchers = [];
     var _bindings = ppb.bindings;
     var _attached = false;
+    let _attach = _props.attach;
     let _index = _props.index;
     let _appendTo = _props.appendTo;
     
@@ -73,6 +75,14 @@ var Component = function(_props, overrided=false, _isSurrogate=false)
         get: function guid() 
         {
             return _guid;
+        }
+    });
+    
+    Object.defineProperty(this, "attach",
+    {
+        get: function attach() 
+        {
+            return _attach;
         }
     });
     Object.defineProperty(this, "attached",

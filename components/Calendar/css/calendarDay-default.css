@@ -1,10 +1,12 @@
 
-.fc-hour{
+.fc-hour-day{
     float:left;
     margin-left:6%;
     padding-bottom:2%;
     border-bottom:1px solid rgb(218, 214, 214);
     margin-bottom:1.2%;
+    /* color:black;
+    font-size:14.7px; */
 }
 .fc-hr{
     margin-left:60px;
@@ -36,7 +38,7 @@
     
 /*} */
 
-.fc-container-label-hour{
+.fc-container-hour{
     font-weight:800;
     font-size:20px;
     margin-right:5%;

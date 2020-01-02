@@ -193,6 +193,10 @@ rjs.define("./components/Calendar/CalendarConstants.js", "CalendarConstants");
 rjs.define("./components/Calendar/CalendarWeek.js", "CalendarWeek");
 rjs.define("./components/Calendar/css/calendarWeek-default.css", "calendarWeek_default_css");
 
+rjs.define("./components/Calendar/CalendarMonth.js", "CalendarMonth");
+rjs.define("./components/Calendar/css/calendarMonth-default.css", "calendarMonth_default_css");
+
+
 //TextInput
 //rjs.define("./components/TextInput.js", "TextInput")
 
@@ -339,6 +343,8 @@ rjs.require([
     "calendarDay_default_css",
     "CalendarWeek",
     "calendarWeek_default_css",
+    "CalendarMonth",
+    "calendarMonth_default_css",
 
 ], function () {
     window.main();

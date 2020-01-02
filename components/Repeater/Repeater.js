@@ -216,7 +216,7 @@ var Repeater = function(_props)
         },
         set: function dataProvider(v) 
         {
-            if(_dataProvider != v)
+            if(!_dataProvider || _dataProvider != v)
             {
                 if(_dpWatcher && _dataProvider){
                     _dpWatcher.reset();
@@ -660,7 +660,7 @@ var Repeater = function(_props)
                 }
             });                   
         });
-        if(_props.dataProvider)
+        //if(_props.dataProvider)
             this.dataProvider = _props.dataProvider;
         return _rPromise;
     };

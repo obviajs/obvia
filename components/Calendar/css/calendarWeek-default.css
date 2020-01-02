@@ -96,13 +96,16 @@
     border-bottom:1px solid rgb(218, 214, 214);
     border-right: 1px solid rgb(218, 214, 214);
     margin-bottom:1.2%;
-    color:white;
+    color: transparent;
+    font-size:8px;
+    /* color:white; */
 }
 .fc-container-label-hour{
     font-weight:800;
     font-size:20px;
     margin-right:5%;
     padding-bottom:1.2%;
+    margin-left:-46%
 }
 
 .fc-event{
@@ -112,4 +115,47 @@
     color:rgb(41, 43, 44);
     font-size:16px;
     color:rgb(41, 43, 44);
+}
+
+
+.fc-repeater-top {
+    position: absolute;
+    z-index: 400;
+}
+
+.fc-event-first{
+    position: absolute;
+    background-color:blue;
+    width:80px;
+    /* height:90px; */
+    opacity: 0.5;
+    color:white;
+}
+
+.fc-event-second{
+position: absolute;
+background-color:red;
+margin-left:10px;
+margin-top:10px;
+width:90px;
+/* height:90px; */
+opacity: 0.5;
+}
+
+.form-controll{
+    display: block;
+    width: 100%;
+    height: calc(1.5em + .75rem + 2px);
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    transition: border-color .15s;
+    font-size:16px;
+    font-weight:700;
 }

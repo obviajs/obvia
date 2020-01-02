@@ -178,6 +178,41 @@ var Container = function(_props, overrided=false)
             enumerable:true
         });
     }
+    if(!this.hasOwnProperty("top"))
+    {
+        Object.defineProperty(this, "top", 
+        {
+            get: function top() 
+            {
+                return _top;
+            },
+            set: function top(v) 
+            {
+                if(_top != v)
+                {
+                    _top = v;
+                    if(this.$el)
+                    {
+                        if(v==null){
+                            this.$el.css('top', '');
+                        }else{
+                            let s = (
+                                isString(_top) && 
+                                (
+                                    _top.indexOf("vh")>-1 ||
+                                    _top.indexOf("em")>-1 ||
+                                    _top.indexOf("%")>-1
+                                )
+                            );
+                            this.$el.css('top', v+(s?"":"px"));
+                        } 
+                    }
+                }
+            },
+            configurable:true,
+            enumerable:true
+        });
+    }
     Object.defineProperty(this, "role",
     {
         get:function role(){
@@ -236,9 +271,10 @@ var Container = function(_props, overrided=false)
                 _beforeAttach.apply(this, arguments);
             if (_props.width)
                 this.width = _props.width;
-           
             if(_props.height)
                 this.height = _props.height;
+            if(_props.top)
+                this.top = _props.top;
         }
     };
     let _afterAttach = this.afterAttach;
@@ -277,7 +313,7 @@ var Container = function(_props, overrided=false)
     
     shallowCopy(extend(false, false, _defaultParams, _props), _props);
     let _width, _minWidth;
-    let _height, _minHeight;
+    let _height, _minHeight, _top;
     let _type, _role;
     //let _afterAttach = _props.afterAttach;
     //_props.afterAttach = this.afterAttach;
