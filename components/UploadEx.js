@@ -464,18 +464,17 @@ var UploadEx = function (_props, overrided = false) {
     {
         if (e.target.id == this.domID) 
         {
-            _upload = this.children["mainRow"].children["fileNameColumn"].children["uploadInput"]
-            _iconLbl = this.children["mainRow"].children["iconColumn"].children["iconLbl"]
-            _progressRow = this.children["progressRow"]
-            _progressBar = this.children["progressRow"].children["progressColumn"].children["progressbar"]  
-    
-            _lblFileName = this.children["mainRow"].children["fileNameColumn"].children["fileName"]
-            _lblFileSize = this.children["mainRow"].children["fileSizeColumn"].children["fileSize"]
-            _btnSelect = this.children["mainRow"].children["controlsColumn"].children["selectBtn"]
-            _btnUpload = this.children["mainRow"].children["controlsColumn"].children["uploadBtn"]
-            _btnDownload = this.children["mainRow"].children["controlsColumn"].children["downloadBtn"]
-            _btnRemove = this.children["mainRow"].children["controlsColumn"].children["removeBtn"]
-            _removeColumn = this.children["mainRow"].children["controlsColumn"].children["removeColumn"]         
+            _upload = this.mainRow.fileNameColumn.uploadInput;
+            _iconLbl = this.mainRow.iconColumn.iconLbl;
+            _progressRow = this.progressRow;
+            _progressBar = this.progressRow.progressColumn.progressbar;
+            _lblFileName = this.mainRow.fileNameColumn.fileName;
+            _lblFileSize = this.mainRow.fileSizeColumn.fileSize;
+            _btnSelect = this.mainRow.controlsColumn.selectBtn;
+            _btnUpload = this.mainRow.controlsColumn.uploadBtn;
+            _btnDownload = this.mainRow.controlsColumn.downloadBtn;
+            _btnRemove = this.mainRow.controlsColumn.removeBtn;
+            _removeColumn = this.mainRow.controlsColumn.removeColumn;         
             
             if(_props.multiple!=null)
                 this.multiple = _props.multiple;

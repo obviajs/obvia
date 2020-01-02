@@ -94,6 +94,10 @@
     font-size: 15px;
 }
 
+.comp_side:hover{
+    cursor: grab;
+}
+
 
 
 @media screen and (max-height: 450px) {

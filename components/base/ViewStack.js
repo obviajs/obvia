@@ -40,7 +40,8 @@ var ViewStack = function(_props)
                     } 
                 }
             }
-        }
+        },
+        enumerable: true
     });
     
     let _mutationHandler = function(e, ci)

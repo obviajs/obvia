@@ -64,7 +64,7 @@ var mainContainer = {
                 ctor: Nav,
                 props: {
                     id: "nav",
-                    height: 40,
+                    height: 48,
                     classes: ["nav"],
                     components: [{
                         ctor: Container,
@@ -88,10 +88,10 @@ var mainContainer = {
                                             props: {
                                                 id: "toggleVisibilityButtonLeft",
                                                 labelType: LabelType.i,
-                                                classes: ["fas", "fa-bars", "navIcons"], 
+                                                classes: ["fas", "fa-bars", "navIcons"],
                                                 css: {
                                                     float: "right",
-                                                    marginTop: "15px" 
+                                                    marginTop: "15px"
                                                 }
                                             }
                                         }]
@@ -102,13 +102,17 @@ var mainContainer = {
                                     props: {
                                         id: "undoRedo",
                                         classes: ["col-sm-6"],
+                                        css: {
+                                            marginLeft: "0",
+                                            marginRight: "0"
+                                        },
                                         components: [{
                                                 ctor: Label,
                                                 props: {
                                                     id: "undoButton",
                                                     labelType: LabelType.i,
                                                     label: "",
-                                                    classes: ["fas", "fa-arrow-left", "navIcons"]
+                                                    classes: ["fas", "fa-arrow-left", "navIcons"],
                                                 }
                                             },
                                             {
@@ -308,7 +312,7 @@ var mainContainer = {
                                                                     classes: ["border", "comp_side"],
                                                                     width: 130,
                                                                     height: 80,
-                                                                    type: ContainerType.NONE
+                                                                    type: ContainerType.NONE,
                                                                 }
                                                             }]
                                                         }
@@ -391,7 +395,10 @@ var mainContainer = {
                                                     ctor: Label,
                                                     props: {
                                                         id: "label",
-                                                        label: "Form Properties",
+                                                        label: "Field Properties",
+                                                        css: {
+                                                            marginLeft: "0"
+                                                        },
                                                         classes: ["sideRight_label"]
                                                     }
                                                 },
@@ -400,7 +407,10 @@ var mainContainer = {
                                                     props: {
                                                         id: "hr",
                                                         width: 600,
-                                                        align: "center"
+                                                        align: "center",
+                                                        css: {
+                                                            margin: 0
+                                                        }
                                                     }
                                                 },
                                                 {
@@ -413,6 +423,9 @@ var mainContainer = {
                                                                 props: {
                                                                     id: "label",
                                                                     label: "Form Name *",
+                                                                    css: {
+                                                                        marginTop: "15px"
+                                                                    },
                                                                     classes: ["formName"]
                                                                 }
                                                             },
@@ -422,6 +435,9 @@ var mainContainer = {
                                                                     id: "textinput",
                                                                     type: "text",
                                                                     placeholder: "Form Name",
+                                                                    css: {
+                                                                        width: "280px"
+                                                                    },
                                                                     classes: ["form-control", "formName_input"]
                                                                 }
                                                             },
@@ -682,16 +698,8 @@ oxana.behaviorimplementations["SELECT_COMPONENT"] = {
                 field: "props"
             }
         };
-        if (pew.window) {
-            let objectEditor = Component.instances[pew.components["0"].props.id];
-            objectEditor.instance = this;
-
-        } else {
-            pew.removeAllChildren();
-            pew.components = [oeLit];
-        }
-        pew.show();
-
+        pew.removeAllChildren();
+        pew.components = [oeLit];
     },
     stopPropagation: true
 }
@@ -816,11 +824,44 @@ oxana.behaviorimplementations["DELETE_CMP"] = {
             var _idSurrogate = Component.surrogates[domID] && Component.domID2ID[Component.surrogates[domID]] ? Component.domID2ID[Component.surrogates[domID]] : null;
             _id = _idSurrogate ? _idSurrogate : _id;
             let inst = Component.instances[_id];
-            //let objInst = Component.instances["propertyEditorWindow"];
+            let pew = Component.instances["propertyEditorWindow"];
+            let pow = {
+                ctor: Container,
+                props: {
+                    id: "container",
+                    type: ContainerType.NONE,
+                    components: [{
+                            ctor: Label,
+                            props: {
+                                id: "Label",
+                                label: "Form Name *",
+                                css: {
+                                    marginTop: "15px"
+                                },
+                                classes: ["formName"]
+                            }
+                        },
+                        {
+                            ctor: TextInput,
+                            props: {
+                                id: "textinput",
+                                type: "text",
+                                placeholder: "Form Name",
+                                css: {
+                                    width: "280px"
+                                },
+                                classes: ["form-control", "formName_input"]
+                            }
+                        }
+
+                    ]
+                }
+            };
             let c = confirm("Do you want to delete " + _id.toUpperCase() + "?");
-            if (c)
+            if (c) {
                 inst.parent.removeChild(inst, 2);
-            //objInst.parent.removeChild(objInst, 2);
+                pew.components = [pow];
+            }
             activeComponent = null;
         } else {
             alert("Please select component you want to delete.");
@@ -1041,6 +1082,39 @@ oxana.behaviorimplementations["BECOME_ACTIVE"] = {
         classes.pushUnique("active-container");
         this.classes = classes;
         activeContainer = this;
+        let pew = Component.instances["propertyEditorWindow"];
+        let pow = {
+            ctor: Container,
+            props: {
+                id: "container",
+                type: ContainerType.NONE,
+                components: [{
+                        ctor: Label,
+                        props: {
+                            id: "Label",
+                            label: "Form Name *",
+                            css: {
+                                marginTop: "15px"
+                            },
+                            classes: ["formName"]
+                        }
+                    },
+                    {
+                        ctor: TextInput,
+                        props: {
+                            id: "textinput",
+                            type: "text",
+                            placeholder: "Form Name",
+                            css: {
+                                width: "280px"
+                            },
+                            classes: ["form-control", "formName_input"]
+                        }
+                    }
+                ]
+            }
+        };
+        pew.components = [pow];
     },
     stopPropagation: true
 };

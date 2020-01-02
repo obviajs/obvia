@@ -62,6 +62,44 @@ var DateTimeCb = function (_props, overrided = false) {
         }
     });
 
+    Object.defineProperty(this, "inputFormat", {
+        get: function inputFormat() {
+            return _inputFormat;
+        },
+        set: function inputFormat(v) {
+            if (_inputFormat !== v) {
+                _inputFormat = v;
+                this.value = _value.format(_inputFormat);;
+            }
+        },
+        enumerable: true
+    });
+
+    Object.defineProperty(this, "outputFormat", {
+        get: function outputFormat() {
+            return _outputFormat;
+        },
+        set: function outputFormat(v) {
+            if (_outputFormat !== v) {
+                _outputFormat = v;
+                //this.value = _value;
+            }
+        },
+        enumerable: true
+    });
+
+    Object.defineProperty(this, "mode", {
+        get: function mode() {
+           return _mode;
+        },
+        set: function mode(v) {
+            if(_mode != v)
+                _mode = v;
+        },
+        enumerable: true
+    });
+
+
     this.beforeAttach = function (e) {
         if (e.target.id == this.domID) 
         {
