@@ -258,7 +258,7 @@ var CalendarMonth = function(_props)
 
     this.beforeAttach = function(e){
         if(e.target.id == this.domID){
-            _repeater_day = this.OutcontainerForWeekDays.listRepeater;
+            _repeater_day = this.listRepeater;
             e.preventDefault();
         }
     };
@@ -317,100 +317,96 @@ var CalendarMonth = function(_props)
         event.call = this;
         _self.trigger(event);
     }
-    let  _componentCalendarMonth;
+    let  _cmps;
     let fnContainerDelayInit  = function(){
-        _componentCalendarMonth = {
-            ctor: Container,
-            props: {
-                type: ContainerType.NONE,
-                id: "OutcontainerForWeekDays",
-                components:[{
-                    ctor: Repeater,
-                    props:{
-                        id:'repeaterForWeekDays',
-                        rendering: {
-                            direction: "horizontal",
-                            separator: false
-                        },
-                        dataProvider:new ArrayEx([
-                        {value:'Monday',classes:['fc-border']},
-                        {value:'Tuesday',classes:['fc-border']},
-                        {value:'Wednesday',classes:['fc-border']},
-                        {value:'Thursday',classes:['fc-border']},
-                        {value:'Friday',classes:['fc-border']},
-                        {value:'Saturday',classes:['fc-border-Saturday-Sunday']},
-                        {value:'Sunday',classes:['fc-border-Saturday-Sunday']},
-                        ]),
-                        components:[{
-                            ctor:Container,
-                            props:{
-                                type:ContainerType.NONE,
-                                id:"IncontainerForWeekDays",
-                                label:'{'+_labelField1+'}',
-                                classes:"{classes}",
-                                height:40,
-                                width:140
-                            }
-                        }]
-                    }
-                },
-                {
-                    ctor:Repeater,
-                    props : {
-                        id: "listRepeater",
-                        rendering:{
-                            direction: "horizontal",
-                            separator: false
-                        },
-                        dataProvider:_dataProvider,
-                        components:[{
-                            ctor: Container,
-                            props:{
-                                type:ContainerType.NONE,
-                                id:"containerOneDay",
-                                classes:["border-c"],
-                                height:140,
-                                width:140,
-                                components:[{
-                                    ctor: Container,
-                                    props:{
-                                        type:ContainerType.NONE,
-                                        id:"containerforDays",
-                                        classes:"{classField}",
-                                        label: '{'+_labelField+'}'
-                                    }
-                                },
-                                {
-                                    ctor:Repeater,
-                                    props:{
-                                        id:"eventRepeater",
-                                        dataProvider:"{children}",
-                                        components: [{
-                                            ctor:Container,
-                                            props:{
-                                                type:ContainerType.NONE,
-                                                id:"eventContainer",
-                                                label:"{descriptionField}",
-                                                classes:["fc-event-inner"],
-                                            }
-                                        }]
-                                    }   
-                                }],
-                                "click":_cellClick,
-                            }
-                        }],
-                    }
-                }]
+        _cmps = [
+            {
+                ctor: Repeater,
+                props: {
+                    id: 'repeaterForWeekDays',
+                    ownerDocument: _self.ownerDocument,
+                    rendering: {
+                        direction: "horizontal",
+                        separator: false
+                    },
+                    dataProvider: new ArrayEx([
+                        { value: 'Monday', classes: ['fc-border'] },
+                        { value: 'Tuesday', classes: ['fc-border'] },
+                        { value: 'Wednesday', classes: ['fc-border'] },
+                        { value: 'Thursday', classes: ['fc-border'] },
+                        { value: 'Friday', classes: ['fc-border'] },
+                        { value: 'Saturday', classes: ['fc-border-Saturday-Sunday'] },
+                        { value: 'Sunday', classes: ['fc-border-Saturday-Sunday'] },
+                    ]),
+                    components: [{
+                        ctor: Container,
+                        props: {
+                            type: ContainerType.NONE,
+                            id: "IncontainerForWeekDays",
+                            label: '{' + _labelField1 + '}',
+                            classes: "{classes}",
+                            height: 40,
+                            width: 140
+                        }
+                    }]
+                }
+            },
+            {
+                ctor: Repeater,
+                props: {
+                    id: "listRepeater",
+                    ownerDocument: _self.ownerDocument,
+                    rendering: {
+                        direction: "horizontal",
+                        separator: false
+                    },
+                    dataProvider: _dataProvider,
+                    components: [{
+                        ctor: Container,
+                        props: {
+                            type: ContainerType.NONE,
+                            id: "containerOneDay",
+                            classes: ["border-c"],
+                            height: 140,
+                            width: 140,
+                            components: [{
+                                ctor: Container,
+                                props: {
+                                    type: ContainerType.NONE,
+                                    id: "containerforDays",
+                                    classes: "{classField}",
+                                    label: '{' + _labelField + '}'
+                                }
+                            },
+                            {
+                                ctor: Repeater,
+                                props: {
+                                    id: "eventRepeater",
+                                    dataProvider: "{children}",
+                                    components: [{
+                                        ctor: Container,
+                                        props: {
+                                            type: ContainerType.NONE,
+                                            id: "eventContainer",
+                                            label: "{descriptionField}",
+                                            classes: ["fc-event-inner"],
+                                        }
+                                    }]
+                                }
+                            }],
+                            "click": _cellClick,
+                        }
+                    }],
+                }
             }
-        }
-        _componentCalendarMonth.props.ownerDocument = _self.ownerDocument;
+        ];
     };
     if(_props.calendarEvents){
         this.calendarEvents = _props.calendarEvents;
     }
     _dataProvider = _createData(_nowDate, eve);
     fnContainerDelayInit();
-    _props.components = [_componentCalendarMonth];
+    _props.components = _cmps;
     let r = Container.call(this, _props);
     return r;
 };

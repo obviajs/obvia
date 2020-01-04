@@ -72,6 +72,7 @@ var CalendarWeek = function(_props)
        
     let _defaultParams = {
         dataProvider: [],
+        type: ContainerType.NONE,
         nowDate: new Date(),
         labelField:'label',
         labelFieldHour:'label',
@@ -91,7 +92,8 @@ var CalendarWeek = function(_props)
         calendarEvents:[],
         calendarStartDate:" ",
         inputFormat: 'YYYY-MM-DD HH:mm',
-        outputFormat: 'YYYY-MM-DD HH:mm'
+        outputFormat: 'YYYY-MM-DD HH:mm',
+        css: {display: "flex"}
     }
 
     let _calendarStartDate ;
@@ -249,8 +251,8 @@ var CalendarWeek = function(_props)
     this.beforeAttach = function(e){
         
         if (e.target.id == this.domID){
-            _repeater_for_week = this.Out_Week_Container.Container_Month_Year_Prev_Next_Button.repeater_For_WeekDays_AND_Dates;
-            _repeater_for_hour = this.Out_Week_Container.Container_Month_Year_Prev_Next_Button.Container_Repeater.repeater_for_weekDays_and_dates;
+            _repeater_for_week = this.cntRow.repeater_For_WeekDays_AND_Dates;
+            _repeater_for_hour = this.cntRow.repeater_for_weekDays_and_dates;
             e.preventDefault();
         }
     };
@@ -260,7 +262,7 @@ var CalendarWeek = function(_props)
         for(let j=_startHourCalendar;j<_endHourCalendar;j++){
             let hours = j;
                 hours = hours % 12;
-                hours = hours ? hours :12 ; // Hour: '0' -> '12'
+                hours = hours ? hours : 12; // Hour: '0' -> '12'
                 let ampm = j >=12 ? 'pm':'am';
          
             let arrayHours = new ArrayEx(_self.dataProvider.length*2);
@@ -275,7 +277,6 @@ var CalendarWeek = function(_props)
                     "endHour":hours+':30',
                     "interval":(hours+":00") + "-" + (hours+':30') + ampm,
                     "timing": ampm,
-                    "classes":["placeholder-top-left"],
                     "descriptionField":" ",
                     "children": new ArrayEx([]),
                 }
@@ -300,12 +301,55 @@ var CalendarWeek = function(_props)
                 arrayHours[k + _self.dataProvider.length] = dp2;
 
             }
-            dataProvider_second.splicea(dataProvider_second.length,0,arrayHours);                                                           
+            dataProvider_second.splicea(dataProvider_second.length, 0, arrayHours);                                                           
         }
-     
         return dataProvider_second; 
     };
+    
+    let initHourGrid_Prim = function(){
+        let dataProvider_second = new ArrayEx();
+        for (let j = 0; j < 24; j++)
+        {
+            let hours = j;
+                hours = hours % 12;
+                hours = hours ? hours : 12; // Hour: '0' -> '12'
+                let ampm = j >=12 ? 'pm':'am';
+         
+        
+                let dp1 = {
+                    "value":" ",
+                    "valueHour":hours+":00",
+                    "startHour":hours+":00"+ " "+ ampm,
+                    "startHourC":hours+":00",
+                    "duration":"",
+                    "endHour":hours+':30',
+                    "interval":(hours+":00") + "-" + (hours+':30') + ampm,
+                    "timing": ampm,
+                    "descriptionField":" ",
+                    "children": new ArrayEx([]),
+                }
+                
+                dp1[_guidField] = StringUtils.guid();
 
+                let dp2 = {
+                    "value":" ",
+                    "valueHour":" ",
+                    "startHour":hours+":30" + "" +ampm ,
+                    "startHourC":hours+":30",
+                    "duration":" ",
+                    "classes":[],
+                    "endHour":(hours+1)+':00',
+                    "interval":(hours+":30") + "-" + ((hours == 12 ) ? ((j%12)+1) : (hours+1))+':00' + ampm,
+                    "descriptionField":" ",
+                    "children":new ArrayEx([]),
+                }
+                
+                dp2[_guidField] = StringUtils.guid();
+            dataProvider_second.splicea(dataProvider_second.length, 0, [dp1, dp2]);                                                           
+        }
+        return dataProvider_second; 
+    };
+    
     this.previous = function(){
         let two_weeks_a = new Date(_dataProvider[0].dateContent[0]);
         let two_weeks_ago = new Date(two_weeks_a.getTime() - 7 * 24 * 60 * 60 * 1000) ;
@@ -388,154 +432,153 @@ var CalendarWeek = function(_props)
         _self.trigger(event);
     };
 
-    let _componentCalendarWeek;
+    let _cmps;
     let fnContainerDelayInit = function(){
-        _componentCalendarWeek = {
-            ctor: Container,
-            props: {
-                type: ContainerType.NONE,
-                id:"Out_Week_Container",
-                components:[
-                    {
-                        ctor: Container,
-                        props:{
-                            type:ContainerType.NONE,
-                            id:"Container_Month_Year_Prev_Next_Button",
-                            components:[
-                                {
-                                    ctor: Repeater,
-                                    props:{
-                                        id:"repeater_For_WeekDays_AND_Dates",
-                                        rendering:{
-                                            direction:"horizontal",
-                                            separator:false
-                                        },
-                                        dataProvider:_dataProvider,
-                                        components:[
-                                            {
-                                                ctor: Container,
-                                                props:{
-                                                    type:Container.NONE,
-                                                    id:"Container_Week_Days",
-                                                    height:40,
-                                                    width:150,
-                                                    label:'{'+_labelField+'}',
-                                                    classes:'{'+_classFieldWeek+'}',
-                                                    classes:['fc-week-display']
-                                                }
-                                            },
-                                            {
-                                                ctor:Container,
-                                                props:{
-                                                    type:ContainerType.NONE,
-                                                    id:"container_top",
-                                                    height:40,
-                                                    width:150,
-                                                    classes:["fc-repeater-top"],
-                                                    components:[
-                                                        {
-                                                            ctor: Repeater,
-                                                            props:{
-                                                                id:"repeater_top",
-                                                                dataProvider: "{children}",
-                                                                rendering:{
-                                                                    direction:"vertical",
-                                                                    separator:false,
-                                                                },
-                                                                components:[
-                                                                    {
-                                                                        ctor:Container,
-                                                                        props:{
-                                                                            type:ContainerType.NONE,
-                                                                            top:"{top}",
-                                                                            height:"{height}",
-                                                                            marginTop:"{marginTop}",
-                                                                            marginLeft:"{marginLeft}",
-                                                                            id:"Container_top",
-                                                                            label:"{descriptionField}",
-                                                                            classes:["placeholder-top-left","fc-event-first"],
-                                                                        }
-                                                                    }
-                                                                ]
-                                                            }
-                                                        }
-                                                    ]
-                                                }
-                                            }
-                                        ]
-                                    }
-                                },
-                                {
-                                    ctor:Container,
-                                    props:{
-                                        type:ContainerType.NONE,
-                                        id:"Container_Repeater",
-                                        classes:["fc-float"],
-                                        components:[
-                                            {
-                                                ctor: Repeater,
-                                                props:{
-                                                    id:'repeater_for_weekDays_and_dates_'+_self.guid,
-                                                    rendering:{
-                                                        direction:"horizontal",
-                                                        separator:false
-                                                    },
-                                                    classes:["fc-float"],
-                                                    dataProvider: _dataProvider_Hour,
-                                                    components:[
-                                                        {
-                                                            ctor:Container,
-                                                            props:{
-                                                                type:ContainerType.NONE,
-                                                                id:"pass_value_hour",
-                                                                label:'{'+_valueHour+'}',
-                                                                classes:["fc-container-label-hour"],
-                                                                height:20,
-                                                                width:20,
-                                                            }
-                                                        },
-                                                        {
-                                                            ctor:Container,
-                                                            props:{
-                                                                type:ContainerType.NONE,
-                                                                id:"container_hour_display",
-                                                                components:[
-                                                                    {
-                                                                        ctor:Container,
-                                                                        props:{
-                                                                            type:ContainerType.NONE,
-                                                                            id:"container_half",
-                                                                            label:'{'+_interval+'}',
-                                                                            classes:["fc-hour","placeholder-top-left"],
-                                                                            height:10,
-                                                                            width:150,
-                                                                        }
-                                                                    },
-                                                                ],
-                                                                "click":_cellClick,
-                                                            }
-                                                        }
-                                                    ]
-                                                }
-                                            }
-                                        ]
-                                    }
-                                }
-                            ]
+        _cmps = [
+            {
+                ctor: Repeater,
+                props: {
+                    id: 'repeaterDayHour',
+                    rendering: {
+                        direction: "vertical",
+                        separator: false,
+                        wrap: false
+                    },
+                    classes: ["fc-float"],
+                    dataProvider: _dataProvider_Hour_Prim,
+                    components: [
+                        {
+                            ctor: Container,
+                            props: {
+                                type: ContainerType.NONE,
+                                id: "pass_value_hour",
+                                label: '{' + _valueHour + '}',
+                                classes: ["fc-container-label-hour"],
+                                height: 25,
+                                width: 20,
+                            }
                         }
-                    }
-                ]
+                    ]
+                }
+            },
+            {
+                ctor: Container,
+                props: {
+                    id: 'cntRow',
+                    type: ContainerType.NONE,
+                    components: [
+                        {
+                            ctor: Repeater,
+                            props: {
+                                ownerDocument: _self.ownerDocument,
+                                id: "repeater_For_WeekDays_AND_Dates",
+                                type: ContainerType.NONE,
+                                rendering: {
+                                    direction: "horizontal",
+                                    separator: false,
+                                    wrap: false
+                                },
+                                css: {display: "flex"},
+                                dataProvider: _dataProvider,
+                                components: [
+                                    {
+                                        ctor: Container,
+                                        props: {
+                                            type: Container.NONE,
+                                            id: "Container_Week_Days",
+                                            height: 40,
+                                            width: 150,
+                                            label: '{' + _labelField + '}',
+                                            classes: '{' + _classFieldWeek + '}',
+                                            classes: ['fc-week-display'],
+                                            components: [
+                                                {
+                                                    ctor: Repeater,
+                                                    props: {
+                                                        id: "repeater_top",
+                                                        dataProvider: "{children}",
+                                                        rendering: {
+                                                            direction: "vertical",
+                                                            separator: false,
+                                                            wrap: false
+                                                        },
+                                                        classes: ["fc-repeater-top"],
+                                                        components: [
+                                                            {
+                                                                ctor: Container,
+                                                                props: {
+                                                                    type: ContainerType.NONE,
+                                                                    top: "{top}",
+                                                                    height: "{height}",
+                                                                    marginTop: "{marginTop}",
+                                                                    marginLeft: "{marginLeft}",
+                                                                    id: "Container_top",
+                                                                    label: "{descriptionField}",
+                                                                    classes: ["fc-event-first"],
+                                                                }
+                                                            }
+                                                        ]
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            ctor: Repeater,
+                            props: {
+                                id: 'repeaterDayHour',
+                                type: ContainerType.NONE,
+                                rendering: {
+                                    direction: "horizontal",
+                                    separator: false,
+                                    wrap: false
+                                },
+                                classes: ["fc-float"],
+                                dataProvider: _dataProvider_Hour,
+                                components: [
+                                    // {
+                                    //     ctor: Container,
+                                    //     props: {
+                                    //         type: ContainerType.NONE,
+                                    //         id: "pass_value_hour",
+                                    //         label: '{' + _valueHour + '}',
+                                    //         classes: ["fc-container-label-hour"],
+                                    //         height: 20,
+                                    //         width: 20,
+                                    //     }
+                                    // },
+                                    {
+                                        ctor: Container,
+                                        props: {
+                                            type: ContainerType.NONE,
+                                            id: "container_hour_display",
+                                            classes: ["fc-hour"],
+                                            height: 20,
+                                            width: 150,
+                                            components: [
+                                            ],
+                                            "click": _cellClick,
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
             }
-        }
-        _componentCalendarWeek.props.ownerDocument = _self.ownerDocument;
+        ];
     };
     if(_props.calendarEvents){
         this.calendarEvents = _props.calendarEvents;
     }
     _dataProvider = _createDataProvider( new Date(_nowDate.getTime() ));
     _dataProvider_Hour = initHourGrid();
+    _dataProvider_Hour_Prim = initHourGrid_Prim();
     fnContainerDelayInit(); 
-    _props.components = [_componentCalendarWeek];
+    _props.components = _cmps;
     let r = Container.call(this, _props);
     return r;
 }
