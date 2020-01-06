@@ -213,6 +213,76 @@ var Container = function(_props, overrided=false)
             enumerable:true
         });
     }
+    if(!this.hasOwnProperty("marginTop"))
+    {
+        Object.defineProperty(this, "marginTop", 
+        {
+            get: function marginTop() 
+            {
+                return _marginTop;
+            },
+            set: function marginTop(v) 
+            {
+                if(_marginTop != v)
+                {
+                    _marginTop = v;
+                    if(this.$el)
+                    {
+                        if(v==null){
+                            this.$el.css('margin-top', '');
+                        }else{
+                            let s = (
+                                isString(_marginTop) && 
+                                (
+                                    _marginTop.indexOf("vh")>-1 ||
+                                    _marginTop.indexOf("em")>-1 ||
+                                    _marginTop.indexOf("%")>-1
+                                )
+                            );
+                            this.$el.css('margin-top', v+(s?"":"px"));
+                        } 
+                    }
+                }
+            },
+            configurable:true,
+            enumerable:true
+        });
+    }
+    if(!this.hasOwnProperty("marginLeft"))
+    {
+        Object.defineProperty(this, "marginLeft", 
+        {
+            get: function marginLeft() 
+            {
+                return _marginLeft;
+            },
+            set: function marginLeft(v) 
+            {
+                if(_marginLeft != v)
+                {
+                    _marginLeft = v;
+                    if(this.$el)
+                    {
+                        if(v==null){
+                            this.$el.css('margin-left', '');
+                        }else{
+                            let s = (
+                                isString(_marginLeft) && 
+                                (
+                                    _marginLeft.indexOf("vh")>-1 ||
+                                    _marginLeft.indexOf("em")>-1 ||
+                                    _marginLeft.indexOf("%")>-1
+                                )
+                            );
+                            this.$el.css('margin-left', v+(s?"":"px"));
+                        } 
+                    }
+                }
+            },
+            configurable:true,
+            enumerable:true
+        });
+    }
     Object.defineProperty(this, "role",
     {
         get:function role(){
@@ -275,6 +345,11 @@ var Container = function(_props, overrided=false)
                 this.height = _props.height;
             if(_props.top)
                 this.top = _props.top;
+            if(_props.marginTop)
+                this.marginTop = _props.marginTop;
+            if(_props.marginLeft)
+                this.marginLeft = _props.marginLeft;
+            
         }
     };
     let _afterAttach = this.afterAttach;
@@ -313,7 +388,7 @@ var Container = function(_props, overrided=false)
     
     shallowCopy(extend(false, false, _defaultParams, _props), _props);
     let _width, _minWidth;
-    let _height, _minHeight, _top;
+    let _height, _minHeight, _top, _marginTop, _marginLeft;
     let _type, _role;
     //let _afterAttach = _props.afterAttach;
     //_props.afterAttach = this.afterAttach;

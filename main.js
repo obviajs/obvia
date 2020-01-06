@@ -183,6 +183,7 @@ rjs.define("./components/DropDown/ButtonSize.js", "ButtonSize");
 rjs.define("./components/DropDown/DropMenuDirection.js", "DropMenuDirection");
 rjs.define("./components/DropDown/DropSplitType.js", "DropSplitType");
 //Calendar
+rjs.define("./components/Calendar/CalendarBase.js", "CalendarBase");
 rjs.define("./components/Calendar/Calendar.js", "Calendar");
 rjs.define("./components/Calendar/css/calendar-default.css", "calendar_default_css");
 //CalendarDay
@@ -336,6 +337,7 @@ rjs.require([
     "ButtonSize",
     "DropMenuDirection",
     "DropSplitType",
+    "CalendarBase",
     "Calendar",
     "calendar_default_css",
     "CalendarDay",

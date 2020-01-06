@@ -240,7 +240,17 @@ var Parent = function(_props, overrided=false, _isSurrogate=false)
             return cmp;
         }
     };
-
+    let _beforeAttach = this.beforeAttach;
+    this.beforeAttach = function (e) 
+    {
+        if (e.target.id == this.domID) 
+        {
+            if (typeof _beforeAttach == 'function')
+                _beforeAttach.apply(this, arguments);
+            if (_props.enabled)
+                this.enabled = _props.enabled;
+        }
+    };
     let _afterAttach = this.afterAttach;
     this.afterAttach = function (e) 
     {
@@ -388,7 +398,7 @@ var Parent = function(_props, overrided=false, _isSurrogate=false)
         base.destruct(mode);
     }
 */
-    var _enabled = _props.enabled;
+    let _enabled = true;
     Object.defineProperty(this, "enabled", 
     {
         get: function enabled() 

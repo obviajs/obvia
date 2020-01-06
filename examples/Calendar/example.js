@@ -18,7 +18,7 @@ var myModal = new Modal({
         {
             ctor:"TextInput",
             props:{
-                id: 'TextInput',
+                id: 'instTextInput',
                 value: " " ,
                 classes:["fc-event-input","form-control"]
             },
@@ -26,7 +26,7 @@ var myModal = new Modal({
         {
             ctor:"TextInput",
             props:{
-                id: 'TextInput_',
+                id: 'instTextDay',
                 value: " " ,
                 classes:["fc-event-input-w","form-control"]
             },  
@@ -34,7 +34,7 @@ var myModal = new Modal({
         {
             ctor: Label ,
             props:{
-                id: 'label',
+                id: 'instLabelDate',
                 label: 'Begin Date',
                 classes:['fc-event-date']
             },
@@ -42,7 +42,7 @@ var myModal = new Modal({
         {
             ctor:"TextInput",
             props:{
-                id: 'TextInput_2',
+                id: 'instDate',
                 value: " " ,
                 classes:["fc-event-input-w","form-control"]
             },
@@ -66,7 +66,7 @@ var myModal = new Modal({
         {
             ctor: "Label",
             props:{
-                id: 'label_d',
+                id: 'instLabelDuration',
                 label: 'Vendosni kohezgjatjen e eventit',
                 classes:['fc-event-label-title']
             },
@@ -74,7 +74,7 @@ var myModal = new Modal({
         {
             ctor: "TextInput",
             props:{
-                id: 'TextInput_Date',
+                id: 'instDateTime',
                 value: '',
                 classes:["form-control"]
             }
@@ -82,7 +82,7 @@ var myModal = new Modal({
         {
             ctor:"Select",
             props:{
-            id: 'select',
+            id: 'instDuration',
             dataProvider: [{ "value": "20 ", "text": "20 min " },{ "value": "30 ", "text": "30 min " },{ "value": "45", "text": "45 min " }, { "value": "60", "text": "60 min" }, { "value": "120", "text": "120 min" }, { "value": "180", "text": "180 min" }],
             labelField: "text",
             valueField: "value",
@@ -164,39 +164,48 @@ myModal.renderPromise().then(function (cmpInstance)
     $('#root').append(cmpInstance.$el);   
 });
 
-myCalendar.on('creationComplete',function(){
+myCalendar.on('creationComplete', function ()
+{
+    let instDateTime = myModal.modalDialog.modalContent.modalBody.instDateTime;
+    let instTextDay = myModal.modalDialog.modalContent.modalBody.instTextDay;
+    let instLabelDate = myModal.modalDialog.modalContent.modalBody.instLabelDate;
+    let instDate = myModal.modalDialog.modalContent.modalBody.instDate;
+    let instDuration = myModal.modalDialog.modalContent.modalBody.instDuration;
+    let instLabelDuration = myModal.modalDialog.modalContent.modalBody.instLabelDuration;
+    let instTextInput = myModal.modalDialog.modalContent.modalBody.instTextInput;
+    
     this.on("cellClick",function(e){
         if(myCalendar.viewStack.selectedIndex == 0 ){
-            instDateTime.visible = true;
-            instTextDay.visible = false;
-            instLabelDate.visible = false;
-            instDate.visible = false;
-            instDuration.visible = false;
-            instLabelDuration.visible = false;
+            instDateTime.enabled = true;
+            instTextDay.enabled = false;
+            instLabelDate.enabled = false;
+            instDate.enabled = false;
+            instDuration.enabled = false;
+            instLabelDuration.enabled = false;
             instTextInput.value = e.interval;
             instDateTime.value = e.startDateTime;
             myModal.show();
         }
         else  if(myCalendar.viewStack.selectedIndex == 1 ){
-            instTextInput.visible = true;
-            instDateTime.visible = true;
-            instTextDay.visible = false;
-            instLabelDate.visible = false;
-            instDate.visible = false;
-            instDuration.visible = true;
-            instLabelDuration.visible = true;
+            instTextInput.enabled = true;
+            instDateTime.enabled = true;
+            instTextDay.enabled = false;
+            instLabelDate.enabled = false;
+            instDate.enabled = false;
+            instDuration.enabled = true;
+            instLabelDuration.enabled = true;
             instTextInput.value = e.startHour;
             instDateTime.value = e.startDateTime;
             myModal.show();
         }
         else if(myCalendar.viewStack.selectedIndex == 2 ){
-            instLabelDate.visible = true;
-            instDate.visible = true;
-            instDateTime.visible = true;
-            instTextInput.visible = false;
-            instTextDay.visible = false;
-            instLabelDuration.visible = false;
-            instDuration.visible = false;
+            instLabelDate.enabled = true;
+            instDate.enabled = true;
+            instDateTime.enabled = true;
+            instTextInput.enabled = false;
+            instTextDay.enabled = false;
+            instLabelDuration.enabled = false;
+            instDuration.enabled = false;
             instDate.value = e.dateContent;
             instDateTime.value = e.startDateTime;
             myModal.show();
