@@ -4,69 +4,51 @@
  * Kreatx 2019
  */
 
-var HierarchialTree = function(_props){
+var HierarchialTree = function (_props) {
     var _self = this;
-    
+
 
     var _defaultParams = {
-        id:"hierarchialTree",
-        dataProvider:[],
+        dataProvider: new ArrayEx(),
+        type: ContainerType.NONE,
+        valueField: "key",
+        labelField: "title",
+        childrenField: "children",
+        liClasses: ["tree-li"],
+        liClassesField: 'liClasses',
+        classes: ["tree"],
+        labelClasses: ["tree-li-a"],
+        ulClasses: ["tree-ul"],
+        ulClassesField: 'ulClasses',
+        selectedClasses: ["li-none"],
+        selectedClassesField: 'classes',
+        expandIcon: '',
+        collapseIcon: ''
     };
 
-    _props = extend(false,false,_defaultParams,_props);
-    var _tree;
+    _props = extend(false, false, _defaultParams, _props);
+    let _dataProvider = _props.dataProvider;
+    let _selectedClassesField = _props.selectedClassesField;
+    let _childrenField = _props.childrenField;
+    let _liClasses = _props.liClasses;
+    let _ulClasses = _props.ulClasses;
+    let _ulClassesField = _props.ulClassesField;
+    let _liClassesField = _props.liClassesField;
 
-    this.beforeAttach = function(e){
-        if(e.target.id == this.domID){
-            this.$container = this.$el;
-            fnContaierDelayInit();
-            this.components = [_organisationChartComponent];
-            this.addComponents();
-            _tree = _self.children[_self.my("container")].children[_self.my("tree")];
-            var classes = _tree.classes.slice(0);
-            classes.pushUnique("tree-ul");
-            _tree.classes = classes;
-            e.preventDefault();
-        }
-    }
-
-    var _organisationChartComponent;
-    var fnContaierDelayInit = function(){
-        _organisationChartComponent = {
-            ctor:Container,
-            props:{
-                id:"container_"+_self.guid,
-                type:ContainerType.NONE,
-                guid:_self.guid,
-                components:[
-                    {
-                        ctor:Tree,
-                        props:{
-                            id:"tree_"+_self.guid,
-                            valueField:"key",
-                            labelField:"title",
-                            childrenField:"children",
-                            listClasses: ["tree-li"],
-                            classes:["tree-ul"],
-                            labelClasses:["tree-li-a"],
-                            ulClasses:["tree-ul"],
-                            selectedClasses:"li-none",
-                            expandIcon:'',
-                            collapseIcon:'',
-                            dataProvider:new ArrayEx()
-                        }
-                    }
-                ]
+    let _assignClasses = function (dp) {
+        for (let i = 0; i < dp.length; i++) {
+            if (!dp[i][_liClassesField]) {
+                if (dp[i][_childrenField] && dp[i][_childrenField].length > 0) {
+                    dp[i][_ulClassesField] = _ulClasses;
+                    _assignClasses(dp[i][_childrenField]);
+                } else {
+                    dp[i][_liClassesField] = _liClasses;
+                }
             }
         }
-        _organisationChartComponent.props.ownerDocument = _self.ownerDocument;
     }
-
-
-
-
-
-    _props = extend(false,false,_defaultParams,_props);
-    Container.call(this,_props);
+    _assignClasses(_dataProvider);
+    let r = Tree.call(this, _props);
+    return r;
 }
 HierarchialTree.prototype.ctor = "HierarchialTree";

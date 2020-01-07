@@ -43,21 +43,17 @@ var CreditCard = function(_props){
         return _dpYear;
     }
         
-    
+    let that;
     this.beforeAttach = function(e){
         if(e.target.id == this.domID){
-
-            this.$container = this.$el;
-            fnContaierDelayInit();
-            this.components = [_creditCardComponent];
-            this.addComponents();
-            _cardNumber = _self.children[_self.my("contaier")].children[_self.my("container_2")].children[_self.my("card_number_value")];
-            _monthExpire = _self.children[_self.my("contaier")].children[_self.my("container_expire")].children[_self.my("expire_month_value")];
-            _yearExpire =  _self.children[_self.my("contaier")].children[_self.my("container_expire")].children[_self.my("expire_year_value")];
-            _cvv = _self.children[_self.my("contaier")].children[_self.my("container_expire")].children[_self.my("cvv_card")];
-            _fullName = _self.children[_self.my("contaier")].children[_self.my("full_name_value")];     
-            _label_error = _self.children[this.components[0].props.id].children[_self.my("container_label")].children[_self.my("label_error")];
+            _cardNumber = this.container.container_2.card_number_value;
+            _monthExpire =this.container.container_expire.expire_month_value;
+            _yearExpire =  this.container.container_expire.expire_year_value;
+            _cvv = this.container.container_expire.cvv_card;
+            _fullName = this.container.full_name_value;     
+            _label_error = this.container.container_label.label_error;
             console.log("labelError",_label_error);
+            that = this
             EventDispatcher.listen([_fullName,_cardNumber, _monthExpire, _yearExpire , _cvv], "change", _change);
             e.preventDefault();
         }
@@ -169,7 +165,7 @@ var CreditCard = function(_props){
 
     var _validate_card_number = function(){
        
-        let number = _self.children[_self.my("contaier")].children[_self.my("container_2")].children[_self.my("card_number_value")].$el[0].value;
+        let number = that.container.container_2.card_number_value.value;
        
         card_number_error;
         if( (number && _self.valid_credit_card(number) &&
@@ -215,7 +211,7 @@ var CreditCard = function(_props){
 
  
     var _validate_cvv = function(){
-        var cvv = _self.children[_self.my("contaier")].children[_self.my("container_expire")].children[_self.my("cvv_card")].$el[0].value;
+        var cvv = that.container.container_expire.cvv_card.value;
 
         if( cvv.match(/^\d{3}$/)){
             card_cvv_error = 0;
@@ -245,10 +241,10 @@ var CreditCard = function(_props){
    
     var _creditCardComponent;
     var fnContaierDelayInit = function(){
-        _creditCardComponent = {
+        _creditCardComponent = [{
             ctor: Container,
             props: {
-                id:"contaier_"+_self.guid,
+                id: "container",
                 type:ContainerType.COLUMN,
                 spacing:{colSpan:8},
                 guid:_self.guid,
@@ -257,7 +253,7 @@ var CreditCard = function(_props){
                     {
                         ctor:Label,
                         props:{
-                            id:'name_'+_self.guid,
+                            id:'name',
                             spacing:{colSpan:8},
                             label:'Full name (on the card)',
                             classes:['text-emphasize'],
@@ -266,7 +262,7 @@ var CreditCard = function(_props){
                     {
                         ctor:TextInput,
                         props:{
-                            id:'full_name_value_'+_self.guid,
+                            id:'full_name_value',
                             spacing:{colSpan:8},
                             value:" ",
                             classes:["fc-controll"],
@@ -275,7 +271,7 @@ var CreditCard = function(_props){
                     {
                         ctor:Label,
                         props:{
-                            id:'card_number_'+_self.guid,
+                            id:'card_number',
                             spacing:{colSpan:8},
                             label:'Card number',
                             classes:['text-emphasize'],
@@ -285,14 +281,14 @@ var CreditCard = function(_props){
                     {
                         ctor:Container,
                         props:{
-                        id:'container_2_'+_self.guid,
+                        id:'container_2',
                         type:ContainerType.ROW,
                         spacing:{colSpan:10},
                             components:[
                                 {
                                     ctor:TextInput,
                                     props:{
-                                        id:'card_number_value_'+_self.guid,
+                                        id:'card_number_value',
                                         value:" ",
                                         spacing:{colSpan:6},
                                         classes:["fc-controll"],
@@ -331,7 +327,7 @@ var CreditCard = function(_props){
                     {
                         ctor:Label,
                         props:{
-                            id:"expiration_"+_self.guid,
+                            id:"expiration",
                             spacing:{colSpan:6},
                             label:"Expiration",
                             classes:["text-emphasize"]
@@ -340,7 +336,7 @@ var CreditCard = function(_props){
                     {
                         ctor:Label,
                         props:{
-                            id:"cvv_"+_self.guid,
+                            id:"cvv",
                             spacing:{colSpan:4},
                             label:'CVV',
                             classes:["text-emphasize"],
@@ -358,13 +354,13 @@ var CreditCard = function(_props){
                         ctor:Container,
                         props:{
                             type:ContainerType.COLUMN,
-                            id:"container_expire_"+_self.guid,
+                            id:"container_expire",
                             spacing:{colSpan:10},
                             components:[
                                 {
                                     ctor:Select,
                                     props:{
-                                        id:"expire_month_value_"+_self.guid,
+                                        id:"expire_month_value",
                                         spacing: {rowSpan:3,colSpan:3},
                                         dataProvider:_select_month(),
                                         classes:["fc-controll","text-select"],
@@ -375,7 +371,7 @@ var CreditCard = function(_props){
                                 {
                                     ctor:Select,
                                     props:{
-                                        id:"expire_year_value_"+_self.guid,
+                                        id:"expire_year_value",
                                         spacing: {rowSpan:3,colSpan:3},
                                         dataProvider:_select_year(),
                                         classes:["fc-controll","text-select_year"],
@@ -386,7 +382,7 @@ var CreditCard = function(_props){
                                 {
                                     ctor:TextInput,
                                     props:{
-                                        id:"cvv_card_"+_self.guid,
+                                        id:"cvv_card",
                                         spacing:{rowSpan:2,colSpan:2},
                                         value:"",
                                         classes:["fc-controll"]
@@ -399,13 +395,13 @@ var CreditCard = function(_props){
                         ctor:Container,
                         props:{
                             type:ContainerType.COLUMN,
-                            id:"container_label_"+_self.guid,
+                            id:"container_label",
                             spacing:{colSpan:10},
                             components:[
                                 {
                                     ctor: Label,
                                     props:{
-                                        id:"label_error_"+_self.guid,
+                                        id:"label_error",
                                         spacing:{colSpan:10},
                                         label: " " ,
                                         classes:['is-invalid'],
@@ -417,12 +413,14 @@ var CreditCard = function(_props){
                     }
                 ]
             }
-        }
-        _creditCardComponent.props.ownerDocument = _self.ownerDocument;
+        }]
+        _creditCardComponent[0].props.ownerDocument = _self.ownerDocument;
     }
 
     
     _props = extend(false,false,_defaultParams,_props);
+    fnContaierDelayInit();
+    _props.components = _creditCardComponent;
     let _validationErrors  = _props.validationErrors;
     var _guidField = _props.guidField;
 
