@@ -327,8 +327,10 @@ var CalendarMonth = function(_props)
                     ownerDocument: _self.ownerDocument,
                     rendering: {
                         direction: "horizontal",
-                        separator: false
+                        separator: false,
+                        wrap:false
                     },
+                    css: {display: "flex"},
                     dataProvider: new ArrayEx([
                         { value: 'Monday', classes: ['fc-border'] },
                         { value: 'Tuesday', classes: ['fc-border'] },

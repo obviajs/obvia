@@ -59,8 +59,7 @@ var Calendar = function(_props){
         calendarMonth:"",
         calendarEvents:[],
         inputFormat: 'YYYY-MM-DD HH:mm',
-        outputFormat: 'YYYY-MM-DD HH:mm',
-        type: ContainerType.NONE
+        outputFormat: 'YYYY-MM-DD HH:mm'
     }
 
     let _calendarDay;

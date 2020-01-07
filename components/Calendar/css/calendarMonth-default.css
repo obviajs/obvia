@@ -211,19 +211,12 @@ margin-bottom:1.5%;
 }
     /* "fc-event-time","fc-event-title" */
 .border-c {
-
-    border-top-width: 0;
     border-width: 1px 0 0 1px;
-    padding: 0;
     vertical-align: top;
     border: 1px solid #e5e5e5;
     border-collapse: separate;
     font-size: 1em;
     font-family: "Helvetica Neue",Helvetica;
-    /* padding-left:1px; */
-    padding-right:2px;
-    padding-bottom:1px;
-    padding-top:2%;
-    padding-left:2%;
+    padding: 1px;
     box-sizing: border-box;  
 }

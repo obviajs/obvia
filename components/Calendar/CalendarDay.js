@@ -59,7 +59,6 @@ var CalendarDay = function(_props)
     }
 
     let _defaultParams = {
-        type: ContainerType.NONE,
         dataProvider: [],
         nowDate : new Date(),
         labelField:'label',
@@ -71,7 +70,6 @@ var CalendarDay = function(_props)
         childrenField:"children",
         dateContent:" ",
         guidField:"guid",
-        calendarEvents:[],
         inputFormat: 'YYYY-MM-DD HH:mm',
         outputFormat: 'YYYY-MM-DD HH:mm'
     }
