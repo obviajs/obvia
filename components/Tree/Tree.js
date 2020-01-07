@@ -86,7 +86,23 @@ var Tree = function (_props, overrided = false) {
         }
         _oldDataProvider = acExtend(this.dataProvider);
     };
-
+    
+    Object.defineProperty(this, "selectedClasses", 
+    {
+        get: function selectedClasses() 
+        {
+            return _selectedClasses;
+        },
+        set: function selectedClasses(v) 
+        {
+            if(_selectedClasses != v)
+            {  
+                _selectedClasses = v;
+                this.select(_selectedItem);
+            }
+        }
+    });
+    
     Object.defineProperty(this, "expandIcon", 
     {
         get: function expandIcon() 
@@ -172,13 +188,23 @@ var Tree = function (_props, overrided = false) {
         valueField: "value",
         classesField: undefined,
         componentsField: undefined,
+        liComponents: undefined,
         childrenField: "children",
         expandIcon: 'fas fa-chevron-circle-right',
         collapseIcon: 'fas fa-chevron-circle-down',
         selectedClasses: ["active-node"],
         clearClassesField: undefined,
-        classes:["list-group"],
-        guidField:"guid"
+        selectedClassesField: undefined,
+        classes: ["list-group"],
+        guidField: "guid",
+        
+        ulClasses: [],
+        ulClassesField: undefined,
+        ulSelectedClasses: [],
+        ulSelectedClassesField: undefined,
+        liClasses: [],
+        liClassesField: undefined,
+        liSelectedClassesField: undefined
     };
         
     _props = extend(false, false, _defaultParams, _props);
@@ -194,7 +220,7 @@ var Tree = function (_props, overrided = false) {
     let _classesField = _props.classesField;
     let _selectedClasses = _props.selectedClasses;
     let _clearClassesField = _props.clearClassesField;
-    
+    let _selectedClassesField = _props.selectedClassesField;
     let _guidField = _props.guidField;
     let _selectedItem = _props.selectedItem;
 
@@ -276,8 +302,8 @@ var Tree = function (_props, overrided = false) {
         }
     };
     
-    if(_componentsField)
-        _componentLi.props.components = '{'+_componentsField+'}';
+    if (_componentsField)
+        _componentLi.props.components = '{' + _componentsField + '}';
     if(_classesField)   
         _componentLi.props.classes = '{'+_classesField+'}';
     else
@@ -299,6 +325,11 @@ var Tree = function (_props, overrided = false) {
     if (_clearClassesField)
     { 
         _componentTree.props.clearClassesField = _clearClassesField;
+    }
+    if (_selectedClassesField)
+    { 
+        _componentTree.props.selectedClassesField = _selectedClassesField;
+        _componentTree.props.selectedClasses = '{'+_selectedClassesField+'}';
     }
     
     let _componentIconLbl = {
@@ -385,7 +416,12 @@ var Tree = function (_props, overrided = false) {
             _self.clickHandler();
         }
     };
-
+    
+    if (_selectedClassesField)
+    { 
+        _props.selectedClasses = '{'+_selectedClassesField+'}';
+    }
+    
     let r = Parent.call(this, _props);
 
     if (overrided) {
