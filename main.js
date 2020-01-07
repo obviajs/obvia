@@ -128,6 +128,12 @@ rjs.define("./components/Select/Select.js", "Select");
 rjs.define("./components/Tree/css/tree-default.css", "tree_default_css");
 rjs.define("./components/Tree/Li.js", "Li");
 rjs.define("./components/Tree/Tree.js", "Tree");
+//HierarchicalTree
+rjs.define("./oxana/HierarchialTree/HierarchialTree.js", "HierarchialTree");
+rjs.define("./oxana/HierarchialTree/css/HierarchialTree-default.css", "HierarchialTree_css");
+//CreditCard
+rjs.define('./oxana/CreditCard/CreditCard.js', "CreditCard");
+rjs.define('oxana/CreditCard/css/creditCard-default.css', 'creditCard-default_css');
 //DateTime
 rjs.define("./components/DateTime/DateTime.js", "DateTime");
 rjs.define("./components/DateTime/css/dateTime_default.css", "DateTime_Default_css");
@@ -182,7 +188,7 @@ rjs.define("./components/DropDown/DropDown.js", "DropDown");
 rjs.define("./components/DropDown/ButtonSize.js", "ButtonSize");
 rjs.define("./components/DropDown/DropMenuDirection.js", "DropMenuDirection");
 rjs.define("./components/DropDown/DropSplitType.js", "DropSplitType");
-//Calendar
+//FF
 rjs.define("./components/Calendar/Calendar.js", "Calendar");
 rjs.define("./components/Calendar/css/calendar-default.css", "calendar_default_css");
 //CalendarDay
@@ -332,6 +338,10 @@ rjs.require([
     "tree_default_css",
     "Li",
     "Tree",
+    "HierarchialTree",
+    "HierarchialTree_css",
+    "CreditCard",
+    "creditCard-default_css",
     "DropDown",
     "ButtonSize",
     "DropMenuDirection",
