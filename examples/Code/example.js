@@ -268,9 +268,11 @@ let cnt = new Container({
                                                 dataProvider: new ArrayEx([]),
                                                 expandIcon: "fa-chevron-circle-right",
                                                 collapseIcon: "fa-chevron-circle-down",
-                                                clearClassesField: "clearFasClasses",
+                                                iconField: "iconClasses",
                                                 click: componentModelTree_click,
-                                                classes: ["collapse"],
+                                                classes: ["collapse", "list-unstyled"],
+                                                selectedClasses: [],
+                                                ulClasses: ["d-none", "list-unstyled", "ml-1"],
                                                 afterAttach: _bindCmCollapsible
                                             }
                                         }
@@ -432,7 +434,7 @@ function initComponentModel(cmInstance)
     { 
         for (let evt in cmInstance.events[i].events)
         { 
-            let cNode = { "nodeType": 2, "label": evt , "clearFasClasses":["fas", "fa-code"]};
+            let cNode = { "nodeType": 2, "label": evt , "iconClasses":["fas", "fa-code"]};
             node.children.push(cNode);
         }    
     }

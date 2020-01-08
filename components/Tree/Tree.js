@@ -190,21 +190,18 @@ var Tree = function (_props, overrided = false) {
         componentsField: undefined,
         liComponents: undefined,
         childrenField: "children",
-        expandIcon: 'fas fa-chevron-circle-right',
-        collapseIcon: 'fas fa-chevron-circle-down',
+        expandIcon: 'fa-chevron-circle-right',
+        collapseIcon: 'fa-chevron-circle-down',
+        iconField: undefined,
         selectedClasses: ["active-node"],
-        clearClassesField: undefined,
         selectedClassesField: undefined,
         classes: ["list-group"],
         guidField: "guid",
         
-        ulClasses: [],
-        ulClassesField: undefined,
-        ulSelectedClasses: [],
-        ulSelectedClassesField: undefined,
         liClasses: [],
         liClassesField: undefined,
-        liSelectedClassesField: undefined
+        ulClasses: [],
+        ulClassesField: undefined,
     };
         
     _props = extend(false, false, _defaultParams, _props);
@@ -213,23 +210,27 @@ var Tree = function (_props, overrided = false) {
     let _expandIcon = _props.expandIcon;
     let _collapseIcon = _props.collapseIcon;
     let _labelField = _props.labelField;
-    
+    let _liClasses = _props.liClasses;
+    let _liClassesField = _props.liClassesField;
+    let _ulClassesField = _props.ulClassesField;
+    let _ulClasses = _props.ulClasses;
     let _valueField = _props.valueField;
     let _childrenField = _props.childrenField;
     let _componentsField = _props.componentsField;
-    let _classesField = _props.classesField;
     let _selectedClasses = _props.selectedClasses;
-    let _clearClassesField = _props.clearClassesField;
+    let _iconField = _props.iconField;
     let _selectedClassesField = _props.selectedClassesField;
     let _guidField = _props.guidField;
     let _selectedItem = _props.selectedItem;
 
     let _click = _props.click;
-    let _toggleTree = function(e){
-        if(this.components.length>2 && e.target == this.children[this.components[0].props.id].$el[0]){
+    let _toggleTree = function (e)
+    {
+        let match = getMatching(this.components, "ctor.prototype.ctor", "Tree", true);
+        if(match.objects.length>0 && e.target == this.children[this.components[0].props.id].$el[0]){
             let liIcon = this.children[this.components[0].props.id];
             let liIconClasses = liIcon.classes.slice(0);
-            let tree = this.children[this.components[2].props.id];
+            let tree = this.children[this.components[match.indices[0]].props.id];
             let classes = tree.classes.slice(0);
             let ind = classes.indexOf("d-none");
             if(ind>-1){
@@ -297,18 +298,12 @@ var Tree = function (_props, overrided = false) {
         ctor: Li,
         props:{
             id: "li",
-            "value": '{'+_valueField+'}',
-            "click": _toggleTree
+            "value": '{?'+_valueField+'}',
+            "click": _toggleTree,
+            classes: ["list-group-item"]
         }
     };
     
-    if (_componentsField)
-        _componentLi.props.components = '{' + _componentsField + '}';
-    if(_classesField)   
-        _componentLi.props.classes = '{'+_classesField+'}';
-    else
-        _componentLi.props.classes = ["list-group-item"];
-
     let _componentTree = {
         ctor: Tree,
         props:{
@@ -319,17 +314,45 @@ var Tree = function (_props, overrided = false) {
             "collapseIcon": _collapseIcon,
             "selectedClasses": _selectedClasses,
             "guidField": _guidField,
-            "classes":["d-none"]
+            classes: this.classes
         }
     };
-    if (_clearClassesField)
+    
+    if (_componentsField)
+    {
+        _componentTree.props.componentsField = _componentsField;
+        _componentLi.props.components = '{?' + _componentsField + '}';
+    }
+    if (_liClassesField)
     { 
-        _componentTree.props.clearClassesField = _clearClassesField;
+        _componentTree.props.liClassesField = _liClassesField;
+        _componentLi.props.classes = '{?' + _liClassesField + '}';
+    }        
+    else if (_liClasses)
+    {
+        _componentTree.props.liClasses = _liClasses;
+        _componentLi.props.classes = _liClasses;
+    }
+    
+    if (_ulClassesField)
+    {
+        _componentTree.props.ulClassesField = _ulClassesField;
+        _componentTree.props.classes = '{?' + _ulClassesField + '}';
+    }
+    else if (_ulClasses)
+    { 
+        _componentTree.props.ulClasses = _ulClasses;
+        _componentTree.props.classes = _ulClasses;
+    }
+    
+    if (_iconField)
+    { 
+        _componentTree.props.iconField = _iconField;
     }
     if (_selectedClassesField)
     { 
         _componentTree.props.selectedClassesField = _selectedClassesField;
-        _componentTree.props.selectedClasses = '{'+_selectedClassesField+'}';
+        _componentTree.props.selectedClasses = '{?'+_selectedClassesField+'}';
     }
     
     let _componentIconLbl = {
@@ -354,7 +377,7 @@ var Tree = function (_props, overrided = false) {
         props: {
             id: 'label',
             labelType: LabelType.label,
-            "label": '{'+_labelField+'}',
+            "label": '{?'+_labelField+'}',
         }
     };
 
@@ -376,26 +399,39 @@ var Tree = function (_props, overrided = false) {
                     cmpLi.props.id = "li";
                     cmpLi.props.attr = {};
                     cmpLi.props.attr[_guidField] = dp[i][_guidField];
+                    let cmps = [];
                     if (dp[i][_childrenField] && dp[i][_childrenField].length > 0)
                     {
                         let tree = extend(true, _componentTree);
-                        let cmpIcon = extend(true, _componentIconLbl);
+                        if (_collapseIcon || _expandIcon)
+                        { 
+                            let cmpIcon = extend(true, _componentIconLbl);
+                            cmps.push(cmpIcon);
+                        }
                         let cmpLbl = extend(true, _componentLbl);
                         cmpLbl.props.bindingDefaultContext = dp[i];
-
+                        cmps.push(cmpLbl);
                         tree.props.dataProvider = dp[i][_childrenField];
-                        cmpLi.props.components = [cmpIcon, cmpLbl, tree];
+                        cmps.push(tree);
+                        cmpLi.props.components = cmps;
                     } else
                     { 
-                        if (_clearClassesField)
-                        { 
+                        if (_iconField)
+                        {
+                            
                             let cmpIcon = extend(true, _nodeIconLbl);
-                            cmpIcon.props.classes = '{'+_clearClassesField+'}';
+                            cmpIcon.props.bindingDefaultContext = dp[i];
+                            cmpIcon.props.classes = '{?' + _iconField + '}';
+                            cmps.push(cmpIcon);
+                        }
+                        if (_componentLbl || _iconField)
+                        {
                             let cmpLbl = extend(true, _componentLbl);
                             cmpLbl.props.bindingDefaultContext = dp[i];
-                            cmpLi.props.components = [cmpIcon, cmpLbl];
+                            cmps.push(cmpLbl);
+                            cmpLi.props.components = cmps;
                         }else
-                            cmpLi.props.label = '{' + _labelField + '}';
+                            cmpLi.props.label = '{?' + _labelField + '}';
                     }	
                     components.push(cmpLi);
                 }
@@ -419,7 +455,7 @@ var Tree = function (_props, overrided = false) {
     
     if (_selectedClassesField)
     { 
-        _props.selectedClasses = '{'+_selectedClassesField+'}';
+        _props.selectedClasses = '{?'+_selectedClassesField+'}';
     }
     
     let r = Parent.call(this, _props);

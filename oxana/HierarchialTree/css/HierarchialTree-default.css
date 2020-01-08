@@ -1,87 +1,87 @@
-.tree-ul {
-	margin: 0; padding: 0;
-    padding-top: 20px; 
-    position: relative; 
-    transition: all 0.5s;
-	-webkit-transition: all 0.5s;
-    -moz-transition: all 0.5s;
+	/*Now the CSS*/
+* {margin: 0; padding: 0;}
+
+.tree
+{
+	width: auto;
+
+	margin-left: auto;
+	margin-right: auto;
 }
 
-.tree-ul li {
-	margin: 0; padding: 0;
-    float: left;
-    text-align: center;
+.tree ul {
+	padding-top: 20px; position: relative;
+	
+	transition: all 0.5s;
+	-webkit-transition: all 0.5s;
+	-moz-transition: all 0.5s;
+}
+
+.tree li {
+	float: left; text-align: center;
 	list-style-type: none;
 	position: relative;
 	padding: 20px 5px 0 5px;
 	
 	transition: all 0.5s;
 	-webkit-transition: all 0.5s;
-    -moz-transition: all 0.5s; 
-    
+	-moz-transition: all 0.5s;
 }
+
 /*We will use ::before and ::after to draw the connectors*/
-.tree-ul li::before, .tree-li::after{
-	margin: 0; padding: 0;
+
+.tree li::before, .tree li::after{
 	content: '';
 	position: absolute; top: 0; right: 50%;
 	border-top: 1px solid #ccc;
 	width: 50%; height: 20px;
 }
-.tree-ul li::after{
-	margin: 0; padding: 0;
+.tree li:after{
 	right: auto; left: 50%;
 	border-left: 1px solid #ccc;
 }
 
-/*We need to remove left-right connectors from elements without any siblings*/
-.tree-ul li:only-child::after, .tree-li:only-child::before {
-	margin: 0; padding: 0;
+/*We need to remove left-right connectors from elements without 
+any siblings*/
+.tree li:only-child::after, .tree li:only-child::before {
 	display: none;
-} 
-
-/*Remove space from the top of single children*/
-.tree-ul li:only-child{ 
-	margin: 0; padding: 0;
-	padding-top: 0;
 }
 
-/*Remove left connector from first child and right connector from last child*/
-.tree-ul li:first-child::before, .tree-li:last-child::after{
-	margin: 0; padding: 0;
+/*Remove space from the top of single children*/
+.tree li:only-child{ padding-top: 0;}
+
+/*Remove left connector from first child and 
+right connector from last child*/
+.tree li:first-child::before, .tree li:last-child::after{
 	border: 0 none;
 }
 /*Adding back the vertical connector to the last nodes*/
-.tree-ul li:last-child::before{
-	margin: 0; padding: 0;
+.tree li:last-child::before{
 	border-right: 1px solid #ccc;
 	border-radius: 0 5px 0 0;
 	-webkit-border-radius: 0 5px 0 0;
 	-moz-border-radius: 0 5px 0 0;
 }
-.tree-ul li:first-child::after{
-	margin: 0; padding: 0;
+.tree li:first-child::after{
 	border-radius: 5px 0 0 0;
 	-webkit-border-radius: 5px 0 0 0;
-	-moz-border-radius: 5px 0 0 0; 
+	-moz-border-radius: 5px 0 0 0;
 }
 
-/*Adding downward connectors from parents*/
-.tree-ul ul::before{
-	margin: 0; padding: 0;
+/*Time to add downward connectors from parents*/
+.tree ul:not(:first-child)::before{
 	content: '';
-    position: absolute; 
-    top: 0; left: 50%;
+	position: absolute; top: 0; left: 50%;
 	border-left: 1px solid #ccc;
 	width: 0; height: 20px;
+    margin-left: -1px;
 }
 
-.tree-ul li a {
-	margin: 0; padding: 0;
-    border: 1px solid #ccc;
+.tree li label{
+	border: 1px solid #ccc;
 	padding: 5px 10px;
 	text-decoration: none;
-	color:#666;; 
+	color: #666;
 	font-family: arial, verdana, tahoma;
 	font-size: 11px;
 	display: inline-block;
@@ -92,18 +92,28 @@
 	
 	transition: all 0.5s;
 	-webkit-transition: all 0.5s;
-	-moz-transition: all 0.5s; 
+	-moz-transition: all 0.5s;
 }
 
-.tree-ul li a:hover , .tree-ul li a:hover + .tree-ul .tree-ul li .tree-ul li a {
-	margin: 0; padding: 0;
+/*Time for some hover effects*/
+/*We will apply the hover effect the the lineage of the element also*/
+.tree li label:hover, .tree li label:hover+ul li label {
 	background: #c8e4f8; color: #000; border: 1px solid #94a0b4;
 }
+/*Connector styles on hover*/
+.tree li label:hover+ul li::after, 
+.tree li label:hover+ul li::before, 
+.tree li label:hover+ul::before, 
+.tree li label:hover+ul ul::before{
+	border-color:  #94a0b4;
+}
 
-.tree-ul a:hover + .tree-ul .tree-ul li::after, 
-.tree-ul a:hover + .tree-ul .tree-ul li::before, 
-.tree-ul a:hover + .tree-ul::before, 
-.tree-ul a:hover + .tree-ul .tree-ul::before{
-	margin: 0; padding: 0;
-    border-color:  #353403;    
+li a.just-line {
+    display: none;
+}
+a.just-line + ul {
+	padding-top: 74px;
+}
+a.just-line + ul:before {
+	height: 74px;
 }
