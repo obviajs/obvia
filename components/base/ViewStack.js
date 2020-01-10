@@ -76,7 +76,7 @@ var ViewStack = function(_props)
     }
     let _defaultParams = {
         selectedIndex: 0,
-        components: undefined
+        type: ContainerType.NONE
     };
 
     _props = extend(false, false, _defaultParams, _props);
