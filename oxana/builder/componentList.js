@@ -106,5 +106,8 @@ Builder.componentList = [
     },
     {
         "label":"Calendar", "ctor": "Calendar"
+    },
+    {
+        "label":"CreditCard", "ctor": "CreditCard"
     }
 ];

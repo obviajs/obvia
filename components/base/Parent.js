@@ -217,11 +217,11 @@ var Parent = function(_props, overrided=false, _isSurrogate=false)
                 _compRenderPromises.push({
                     "cmp": cmp, "promise": cmp.renderPromise().then(function (cmpInstance)
                     {
-                        // if (cmpInstance.appendTo)
-                        // {
-                        //     cmpInstance.appendTo.insertAt(cmpInstance.$el, index);
-                        // } else
-                        //     container.insertAt(cmpInstance.$el, index);
+                        if (cmpInstance.appendTo)
+                        {
+                            cmpInstance.appendTo.insertAt(cmpInstance.$el, index);
+                        } else
+                            container.insertAt(cmpInstance.$el, index);
                         --_countChildren;
                     })
                 });

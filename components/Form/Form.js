@@ -7,6 +7,62 @@
 //component definition
 var Form = function(_props)
 {
+
+    Object.defineProperty(this, "method", 
+    {
+        get: function method() 
+        {
+            return _method;
+        },
+        set: function method(v) 
+        {
+            if(_method != v)
+            {
+                if(_method){
+                    if(this.$el){
+                        this.$el.attr('method', v);
+                        _method = v;
+                    }
+                }else
+                {
+                    if(this.$el)
+                    {
+                        this.$el.removeAttr('method');
+                    }                
+                }
+            }
+        },
+        enumerable:true
+    });
+
+    Object.defineProperty(this, "action", 
+    {
+        get: function action() 
+        {
+            return _action;
+        },
+        set: function _action(v) 
+        {
+            if(_action != v)
+            {
+                if(_action){
+                    if(this.$el){
+                        this.$el.attr('action', v);
+                        _action = v;
+                    }
+                }else
+                {
+                    if(this.$el)
+                    {
+                        this.$el.removeAttr('action');
+                    }                
+                }
+            }
+        },
+        enumerable:true
+    });
+
+
     this.validate = function () 
     {
         var valid = true;

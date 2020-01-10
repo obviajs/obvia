@@ -233,6 +233,9 @@ var mainContainer = {
                                         spacing: {
                                             colSpan: 12
                                         },
+                                        css: {
+                                            paddingRight: "8px"
+                                        },
                                         "components": [{
                                                 ctor: Container,
                                                 props: {
@@ -268,7 +271,10 @@ var mainContainer = {
                                                                         classes: [
                                                                             "fa",
                                                                             "fa-search"
-                                                                        ]
+                                                                        ],
+                                                                        css: {
+                                                                            marginTop: "0"
+                                                                        }
                                                                     }
                                                                 }]
                                                             }
@@ -296,10 +302,10 @@ var mainContainer = {
                                                                 ctor: Container,
                                                                 props: {
                                                                     id: 'component',
-                                                                    spacing: {
-                                                                        m: 0.9
-                                                                    },
-                                                                    label: "{label}",
+                                                                    // spacing: {
+                                                                    //     m: 1
+                                                                    // },
+                                                                    //label: "{label}",
                                                                     draggable: true,
                                                                     dragstart: function (e, ra) {
                                                                         console.log(arguments);
@@ -310,9 +316,25 @@ var mainContainer = {
                                                                         e.originalEvent.dataTransfer.setDragImage($elem, 0, 0)
                                                                     },
                                                                     classes: ["border", "comp_side"],
+                                                                    css: {
+                                                                        borderRadius: '5px',
+                                                                        margin : "2px 2px"
+                                                                    },
                                                                     width: 130,
                                                                     height: 80,
                                                                     type: ContainerType.NONE,
+                                                                    components: [{
+                                                                        ctor: Label,
+                                                                        props: {
+                                                                            id: "Component Label",
+                                                                            label: "{label}",
+                                                                            css: {
+                                                                                fontSize: "15px",
+                                                                                marginTop: "20px",
+                                                                                fontWeight: "bold"
+                                                                            }
+                                                                        }
+                                                                    }]
                                                                 }
                                                             }]
                                                         }
@@ -481,6 +503,7 @@ var mainContainer = {
 oxana.components = [{
     ctor: ViewStack,
     props: {
+        type: ContainerType.NONE,
         components: [mainContainer]
     }
 }];
@@ -599,10 +622,6 @@ oxana.behaviorimplementations["ADD_COMPONENT"] = {
                 lit.props.classes = !Array.isArray(lit.props.classes) ? [] : lit.props.classes;
                 lit.props.classes.push("selected-component");
             }
-            //var hnd = extend(true, handle);
-            //hnd.props.components = [lit];
-            //var inst = workArea.addComponent(hnd);
-            //  inst.width = inst.children[lit.props.id].$el.width() + 10;
             inst = workArea.addComponent(lit);
             addBehaviors(inst, cmpBehaviors, false);
             if (parents.indexOf(ctor) > -1) {
@@ -620,10 +639,11 @@ oxana.behaviorimplementations["ADD_COMPONENT"] = {
             var _idSurrogate = Component.surrogates[domID] && Component.domID2ID[Component.surrogates[domID]] ? Component.domID2ID[Component.surrogates[domID]] : null;
             _id = _idSurrogate ? _idSurrogate : _id;
             inst = Component.instances[_id];
+            let lit = Builder.components[ctor].literal;
             if (inst.parent && (inst.parent != workArea) && (domID != workArea.domID)) {
                 inst.parent.removeChild(inst, 0);
                 if (inst.ctor == "FormField" && workArea.ctor != "Form") {
-                    inst = inst.children[inst.component.props.id];
+                    // inst = inst.children[inst.component.props.id];
                     inst.draggable = true;
                     addBehaviors(inst, cmpBehaviors, false);
                     var classes = inst.classes.slice(0);
@@ -631,22 +651,28 @@ oxana.behaviorimplementations["ADD_COMPONENT"] = {
                     inst.classes = classes;
                 } else if (workArea.ctor == "Form" && noNeedFF.indexOf(inst.ctor) == -1) {
                     removeBehaviors(inst, cmpBehaviors, false);
-                    inst.toggle = false;
                     var classes = inst.classes.slice(0);
-                    classes.toggle("default-component");
-                    let ind = classes.indexOf("selected-component");
+                    let ind = classes.indexOf("default-component");
+                    if(id > -1){
+                        classes.splice(ind, 1);
+                    }
+                    ind = classes.indexOf("selected-component");
                     if (ind > -1)
                         classes.splice(ind, 1);
                     inst.classes = classes;
                     inst.draggable = false;
                     var ff = extend(true, formField);
+                    ff.props.component = inst.literal;
                     ff.props.draggable = true;
                     ff.props.classes = !Array.isArray(ff.props.classes) ? [] : ff.props.classes;
                     ff.props.classes.push("selected-component");
-                    let instF = workArea.addComponent(ff);
-                    instF.addChild(inst);
-                    inst = instF;
+                    inst = workArea.addComponent(ff);
+                    //inst.addChild(inst);
+                    //inst = instF;
                     addBehaviors(inst, cmpBehaviors, false);
+                    // if (parents.indexOf(ctor) > -1) {
+                    //     addBehaviors(instF, cntBehaviors, false);
+                    // }
                 }
                 workArea.addChild(inst);
                 var evt = new jQuery.Event("dropped");

@@ -1,8 +1,10 @@
-var myCheckBox =  CheckBox({
+var myCheckBox = new CheckBox({
     id: 'checkBoxField',
     label: 'CheckBox Label',
     value: "1",
     checked:false
 });
 
-$('#root').append(myCheckBox.render());
+myCheckBox.renderPromise().then(function (cmpInstance) {
+    $('#root').append(cmpInstance.$el);
+});

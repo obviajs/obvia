@@ -43,4 +43,7 @@ myScrollPane.on('creationComplete', function(e)
     });
 });
 
-$('#root').append(myScrollPane.render());
+myScrollPane.renderPromise().then(function (cmpInstance)
+{
+  $('#root').append(cmpInstance.$el);
+});

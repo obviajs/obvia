@@ -136,7 +136,10 @@ Builder.metaProps = {
     }},
     rendering:{ctor:"ObjectEditor", label: "Rendering", required:false},
     direction:{ctor:"Select", label:"Direction", props:{
-        dataProvider:new ArrayEx([{value:"vertical", text:"Vertical"}, {value:"horizontal", text:"Horizontal"}])
+        dataProvider:new ArrayEx([{value:"vertical", text:"Vertical"}, {value:"horizontal", text:"Horizontal"}]),
+        change: function(){
+            this.parent.parent.instance.direction = this.value;
+        }
     }},
     align:{ctor:"Select", label:"Align", props:{
         dataProvider:new ArrayEx(getMembersCollection(Align, "text", "value")),
@@ -259,7 +262,7 @@ Builder.metaProps.Repeater = {
             this.parent.parent.instance.attr.repeated_id_form = this.value.length>0?this.value[0][this.valueField]:undefined; 
         }
     }, index:7},
-    rendering: {ctor: "TextInput0", label: "Rendering", required:false, props: {
+    rendering: {ctor: "TextInput", label: "Rendering", required:false, props: {
         change: function(){
             this.parent.parent.instance.rendering = this.value;
         }
@@ -398,6 +401,34 @@ Builder.metaProps.DateTimeCb = {
         dataProvider: new ArrayEx(getMembersCollection(DateTimeMode, "text", "value")),
         change: function(){
             this.parent.parent.instance.mode = this.value;
+        }
+    }}
+};
+
+Builder.metaProps.Form = {
+    method: {ctor: "Select", label: "Method", props: {
+        dataProvider: new ArrayEx([{"value":"GET", "text":"GET"}, {"value":"POST", "text":"POST"}]),
+        change: function(){
+            this.parent.parent.instance.method = this.value;
+        }
+    }},
+    action: {ctor: "TextInput", label: "Action", props: {
+        change: function() {
+            this.parent.parent.instance.action = this.value;
+        }
+    }}
+};
+
+Builder.metaProps.Container = {
+    type: {ctor: "Select", label: "Type", props: {
+        dataProvider: new ArrayEx(getMembersCollection(ContainerType, "text", "value")),
+        change: function(){
+            this.parent.parent.instance.type = this.value;
+        }
+    }},
+    role: {ctor: "TextInput", label: "Role", props: {
+        change: function(){
+            this.parent.parent.instance.role = this.value;
         }
     }}
 }

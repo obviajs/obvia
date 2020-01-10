@@ -28,14 +28,14 @@ var SpacingEditor = function (_props, overrided = false) {
         }
     }
     
-    this.beforeAttach = function(e) 
+    this.endDraw = function(e) 
     {
         if (e.target.id == this.domID) 
         {
-            _colSpan = this.children[this.components[0].props.id].children[this.components[0].props.components[0].props.id].children[this.my("colSpan")];
-            _offset = this.children[this.components[0].props.id].children[this.components[0].props.components[1].props.id].children[this.my("offset")];
-            _mb = this.children[this.components[1].props.id].children[this.components[1].props.components[0].props.id].children[this.my("mb")];
-            _mt = this.children[this.components[1].props.id].children[this.components[1].props.components[1].props.id].children[this.my("mt")];
+            _colSpan = this.Component_79.workArea_80.colSpan;
+            _offset = this.Component_79.workArea_84.offset;
+            _mb = this.Component_81.workArea_82.mb;
+            _mt = this.Component_81.workArea_86.mt;
             if(_props.value){
                 this.value = _props.value;
             }
@@ -76,7 +76,7 @@ var SpacingEditor = function (_props, overrided = false) {
                                     {
                                         ctor: "Select",
                                         "props": {
-                                            "id": "colSpan_"+_self.guid,
+                                            "id": "colSpan",
                                             "dataProvider": _dpColSpan,
                                             labelField:"label",
                                             valueField:"value",
@@ -96,7 +96,7 @@ var SpacingEditor = function (_props, overrided = false) {
                                     {
                                         ctor: "Select",
                                         "props": {
-                                            "id": "offset_"+_self.guid,
+                                            "id": "offset",
                                             "dataProvider": _dpOffset,
                                             labelField:"label",
                                             valueField:"value",
@@ -125,7 +125,7 @@ var SpacingEditor = function (_props, overrided = false) {
                                     {
                                         ctor: "Select",
                                         "props": {
-                                            "id": "mb_"+_self.guid,
+                                            "id": "mb",
                                             "dataProvider": _dpMb,
                                             labelField:"label",
                                             valueField:"value",
@@ -146,7 +146,7 @@ var SpacingEditor = function (_props, overrided = false) {
                                     {
                                         ctor: "Select",
                                         "props": {
-                                            "id": "mt_"+_self.guid,
+                                            "id": "mt",
                                             "dataProvider": _dpMt,
                                             labelField:"label",
                                             valueField:"value", 

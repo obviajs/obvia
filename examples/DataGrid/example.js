@@ -322,7 +322,7 @@ var myDataGrid = new DataGrid({
                 ctor: TextInput,
                 props: {
                     id: 'text',
-                    value: '{textLabel}'
+                    value: '{textLabel}',
                 }
             }
         },
@@ -365,4 +365,8 @@ var myDataGrid = new DataGrid({
 myDataGrid.on('creationComplete', function () {
     loader.hide();
 });
-$('#root').append(myDataGrid.render());
+
+myDataGrid.renderPromise().then(function (cmpInstance)
+{
+  $('#root').append(cmpInstance.$el);
+});
