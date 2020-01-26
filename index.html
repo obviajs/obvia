@@ -60,7 +60,11 @@
                 "CollectionEditor",
                 "ObjectEditor",
                 "Code",
-                "CodeMerge"
+                "CodeMerge",
+                "yaml",
+                "ApiClient",
+                "ApiClientGen",
+                "OAMethod"
             ]).then(function () {
                 //rjs.define("./oxana/builder/builder.js", "builder");
                 //rjs.define("./examples/SideNav/example.js", "SideNavExample");
@@ -72,6 +76,7 @@
                     rjs.require([
                         "metaProps"
                     ]).then(function () {
+                        rjs.define("./examples/ApiClient/example.js", "ApiClientExample");
                         //rjs.define("./examples/Code/example.js", "CodeExample");
                         //rjs.define("./oxana/builder/FormBuilder.js", "FormBuilder");
                     });
@@ -114,7 +119,11 @@
             //rjs.define("./examples/Repeater/example.js", "RepeaterExample");
             //rjs.define("./examples/Repeater/exampleEx.js", "RepeaterExample");
             //rjs.define("./examples/Calendar/example.js", "CalendarExample");
-            rjs.define("./examples/HierachicalTree/example.js", "HierachicalTree");
+            //rjs.define("./examples/HierachicalTree/example.js", "HierachicalTree");
+            rjs.define("lib/yaml.js", "yaml");
+            rjs.define("./oxana/ApiClientGen/ApiClient.js", "ApiClient");
+            rjs.define("./oxana/ApiClientGen/ApiClientGen.js", "ApiClientGen");
+            rjs.define("./oxana/ApiClientGen/OAMethod.js", "OAMethod");
             //rjs.define('./examples/CreditCard/example.js', "CreditCard");
             //rjs.define("./examples/Calendar/example_dayView.js", "CalendarDayExample");
             //rjs.define("./examples/Calendar/example_week.js", "CalendarWeekExample");
