@@ -898,8 +898,8 @@ var DataGrid = function(_props)
 
                 el.on('change', function (e) {
                     let currentItem = _self.dataProvider[index];
-                    if (tempComponent.props.value[0] == '{' && tempComponent.props.value[tempComponent.props.value.length - 1] == '}') {
-                        let bindedValue = tempComponent.props.value.slice(1, -1);
+                    if (component.props.value[0] == '{' && component.props.value[component.props.value.length - 1] == '}') {
+                        let bindedValue = component.props.value.slice(1, -1);
                         data[bindedValue] = this.value;
                     }
                     let rargs = new RepeaterEventArgs(rowItems, _self.dataProvider[index + _virtualIndex], index + _virtualIndex);

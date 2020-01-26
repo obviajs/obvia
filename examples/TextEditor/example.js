@@ -7,4 +7,7 @@ var myTextEditor = new TextEditor({
     value: ''
 });
 
-$('#root').append(myTextEditor.render());
+  myTextEditor.renderPromise().then(function (cmpInstance)
+  {
+    $('#root').append(cmpInstance.$el);
+  });

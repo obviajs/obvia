@@ -27,81 +27,52 @@ var Amount = function (_props, overrided = false) {
     this.changeHandler = function (e) {
         if (_mask.groupSeparator) {
             var regex = new RegExp(_mask.groupSeparator, 'g');
-            _value.amount = this.amountInput.value.replace(regex, '');
+            _value.amount = this.children.Container_80.amountInput.value.replace(regex, '');
         } else {
-            _value.amount = this.amountInput.value;
+            _value.amount = this.children.Container_80.amountInput.value;
         }
-        _value.currency = this.currencySelect.value;
+        _value.currency = this.children.Container_80.currencySelect.value;
     };
 
-    this.attached = false;
-    this.afterAttach = function (e) {
-        this.cComponents = [];
-        if (e.target.id == this.domID && !this.attached) {
-            if (typeof _afterAttach == 'function')
-                _afterAttach.apply(this, arguments);
-            e.preventDefault();
-            this.$el
-                .append(this.renderAmountInput(_value.amount))
-                .append(this.renderCurrencySelect(_currencyList, _value.currency));
-
-            this.amountInput.$el.css({ 'width': '80%', 'float': 'left' });
-            this.currencySelect.$el.css({ 'width': '20%', 'float': 'left' });
-        }
-    };
-
-    this.renderAmountInput = function (value) {
-        this.amountInput = new TextInput({
-            id: 'amountInput-' + this.id,
-            mask: _mask,
-            value: value
-        });
-
-        var _self = this;
-        this.amountInput.on('creationComplete', function (e) {
-            e.stopImmediatePropagation();
-            e.stopPropagation();
-            _self.cComponents.push(this);
-
-            if (_self.cComponents.length > 1) {
-                _self.enabled = this.enabled;
-
-                _self.trigger('creationComplete');
+    let _cmps;
+    let fnContainerDelayInit = function () {
+        _cmps = [{
+            ctor: Container,
+            props: {
+                id: "Container_80",
+                type: ContainerType.NONE,
+                components: [{
+                        ctor: TextInput,
+                        props: {
+                            id: "amountInput",
+                            type: TextInputType.NUMBER,
+                            mask: _mask,
+                            value: _value.amount,
+                            css: {
+                                width: '80%',
+                                float: 'left'
+                            }
+                        }
+                    },
+                    {
+                        ctor: Select,
+                        props: {
+                            id: "currencySelect",
+                            dataProvider: _currencyList,
+                            labelField: _labelField,
+                            valueField: _valueField,
+                            value: _value.currency,
+                            css: {
+                                width: '20%',
+                                float: 'left'
+                            }
+                        }
+                    }
+                ]
             }
 
-        });
-
-        return this.amountInput.render();
-    };
-
-    this.renderCurrencySelect = function (currencyList, selected) {
-        this.currencySelect = new Select({
-            id: 'currencySelect-' + this.id,
-            dataProvider: currencyList,
-            textField: _labelField,
-            valueField: _valueField,
-            value: selected,
-        });
-
-        var _self = this;
-        this.currencySelect.on('creationComplete', function (e) {
-            e.stopImmediatePropagation();
-            e.stopPropagation();
-            _self.cComponents.push(this);
-
-            if (_self.cComponents.length > 1) {
-                _self.enabled = this.enabled;
-
-                _self.trigger('creationComplete');
-            }
-        });
-
-        return this.currencySelect.render();
-    };
-
-    this.template = function () {
-        return "<div data-triggers='change' id='" + this.domID + "'></div>";
-    };
+        }]
+    }
 
     var _defaultParams = {
         value: {
@@ -132,8 +103,6 @@ var Amount = function (_props, overrided = false) {
         _mask.groupSeparator = ',';
     }
     var _change = _props.change;
-    var _afterAttach = _props.afterAttach;
-    _props.afterAttach = this.afterAttach;
 
     _props.change = function () {
         if (typeof _change == 'function')
@@ -145,7 +114,9 @@ var Amount = function (_props, overrided = false) {
         }
     };
 
-    Component.call(this, _props, true);
+    fnContainerDelayInit();
+    _props.components = _cmps;
+    Container.call(this, _props, true);
 
     if (overrided) {
         this.keepBase();

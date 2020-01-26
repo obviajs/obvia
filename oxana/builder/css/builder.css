@@ -9,7 +9,7 @@ i:hover {
 .deleteTrash {
     position: fixed;
     bottom: 0;
-    width: 100%;
+    width: 300px;
     background-color: #ffffff;
     border: 1px dotted blue;
 }
@@ -19,7 +19,7 @@ i:hover {
     padding: 5px 15px;
     border: none !important;
     outline: none;
-    border-radius: 25px;
+    border-radius: 7px;
     box-shadow: none
 }
 
@@ -42,7 +42,7 @@ i:hover {
 }
 
 .right-addon .btn {
-    right: 20px;
+    right: 2px;
 }
 
 /* add padding  */

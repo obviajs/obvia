@@ -27,9 +27,7 @@ var myTabNavigator = new TabNavigator({
 
 });
 
-myTabNavigator.on('creationComplete', function(e){
-    loader.hide();
-    myTabNavigator.selectedIndex = 0;
-});
-
-$('#root').append(myTabNavigator.render());
+  myTabNavigator.renderPromise().then(function (cmpInstance)
+  {
+    $('#root').append(cmpInstance.$el);
+  });

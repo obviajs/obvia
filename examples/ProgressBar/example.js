@@ -7,8 +7,8 @@ var pbContainer = new ProgressBar({
     valueNow: 75,
     valueMin: 0,
     valueMax: 100,
-    label: "75%",
-    width: 600,
+    label: "10%",
+    width: 800,
     classes: {
         "self": ["progress"],
         "progressBar": [BgStyle.BG_INFO, ProgressBarStyle.PROGRESS, ProgressBarStyle.PROGRESS_ANIMATED, ProgressBarStyle.PROGRESS_STRIPED]
@@ -17,8 +17,11 @@ var pbContainer = new ProgressBar({
 
 pbContainer.on('creationComplete', function(e){
     loader.hide();
-    pbContainer.valueNow = 85;
-    pbContainer.label = "85%";
+    pbContainer.valueNow = 75;
+    pbContainer.label = "65%";
 });
-$('#root').append(pbContainer.render());
+pbContainer.renderPromise().then(function (cmpInstance)
+{
+  $('#root').append(cmpInstance.$el);
+});
 

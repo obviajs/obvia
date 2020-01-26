@@ -652,5 +652,13 @@ Builder.components = {
         },
         label: "DataGridCellRenderer",
         icon: ".png"
+    },
+    "CreditCard": {
+        literal: {
+            "ctor" : CreditCard,
+            "props": {
+                id: "creditCard"
+            }
+        }
     }
 };

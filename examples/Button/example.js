@@ -10,10 +10,17 @@ var myButton = new Button({
     classes: ["btn", "btn-success"],
     click : function(e){console.log("From ClickAction");}
 });
-myButton.on('creationComplete', function(e){
+myButton.on('creationComplete', function () {
     loader.hide();
-});
-$('#root').append(myButton.render());
+    myButton.on('click',function (){
+        
+     // alert("test");
+    });
+  });
+  myButton.renderPromise().then(function (cmpInstance)
+  {
+    $('#root').append(cmpInstance.$el);
+  });
 
 
 

@@ -55,6 +55,7 @@ var DateTime = function (_props, overrided = false) {
             if (_displayFormat !== v) {
                 _displayFormat = v;
                 //this.value = _value;
+                this.trigger('change')
             }
         },
         enumerable: true

@@ -87,9 +87,6 @@ rjs.define("./components/SideNav/SideNavSide.js", "SideNavSide");
 rjs.define("./components/SideNav/SideNav.js", "SideNav");
 rjs.define("./components/SideNav/css/sidenav-default.css", "sidenav_default_css");
 rjs.define("./components/SideNav/css/sideNav.css", "sideNav_css")
-//NavBar
-rjs.define("./components/NavBar/NavBar.js", "NavBar");
-rjs.define("./components/NavBar/css/NavBar-default.css", "NavBar_default_css");
 //Tab
 rjs.define("./components/Tab/TabNavigator.js", "TabNavigator");
 rjs.define("./components/Tab/Tab.js", "Tab");
@@ -261,8 +258,6 @@ rjs.require([
     "SideNavSide",
     "sidenav_default_css",
     "sideNav_css",
-    "NavBar",
-    "NavBar_default_css",
     "Nav",
     "Nav_css",
     "Header",

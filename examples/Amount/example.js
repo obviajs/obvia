@@ -7,4 +7,7 @@ var myAmount = new Amount({
     }
 });
 
-$('#root').append(myAmount.render());
+  myAmount.renderPromise().then(function (cmpInstance)
+  {
+    $('#root').append(cmpInstance.$el);
+  });

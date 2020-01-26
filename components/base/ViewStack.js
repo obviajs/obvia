@@ -83,9 +83,11 @@ var ViewStack = function(_props)
     let _selectedIndex = _props.selectedIndex;
     let _components = _props.components;
     
-    for (let i = 0; i < _props.components.length; i++)
-    { 
-        _props.components[i].props.attach = (i == _selectedIndex);
+    if(_components && _components.length > 0){
+        for (let i = 0; i < _props.components.length; i++)
+        { 
+            _props.components[i].props.attach = (i == _selectedIndex);
+        }
     }
 
     let r = Container.call(this, _props, true);

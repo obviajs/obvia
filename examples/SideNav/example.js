@@ -44,4 +44,7 @@ var mySideNav = new SideNav({
     ]
 });
 
-$('#root').append(mySideNav.render());
+mySideNav.renderPromise().then(function (cmpInstance)
+{
+  $('#root').append(cmpInstance.$el);
+});

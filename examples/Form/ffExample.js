@@ -104,4 +104,7 @@ myForm.on('creationComplete', function(e){
     loader.hide();
 });
 
-$('#root').append(myForm.render());
+myForm.renderPromise().then(function (cmpInstance)
+{
+  $('#root').append(cmpInstance.$el);
+});
