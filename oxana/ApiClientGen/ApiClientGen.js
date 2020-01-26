@@ -9,8 +9,11 @@ var ApiClientGen = function (_props)
         let oas = YAML.parse(r.response);
         _generate(oas);
     });
-    let apiTemplate = `var {apiTitle} = function()`;
-    let pathTemplate = `var {path} = function(apiClient) { 
+    let apiTemplate = `var {apiTitle} = function(){
+{paths}
+{pathInstances}
+    }`;
+    let pathTemplate = `\tvar {path} = function(apiClient) { 
         apiClient = apiClient || new ApiClient();
         /*{typeMap}*/
         {methods}
@@ -28,18 +31,26 @@ var ApiClientGen = function (_props)
 {strObjPath}
         let objBody = {objBody};
         let requestContentType = "{requestContentType}";
-        \tthis.apiCall(objQuery, objBody, objPath, requestContentType).then(function(resp){
-            resp.status
-            resp.response
+        return new Promise((resolve, reject) =>
+        {
+            \tthis.apiCall(objQuery, objBody, objPath, requestContentType).then(function(resp){
+                resp.status
+                resp.response
+                //TODO: convert to specified type
+                resolve();
+            }).catch(function(error){
+                reject(error);
+            });
         });
     \t};\r`
     //({})
     //getChainValue per marjen e $ref
     let _generate = function (oas)
     { 
-        let strClosures = "";
+        let strClosures = "", pathInstances = "";
         let typeMap = {};
         let url = oas.servers[0].url;
+        let apiTitle = oas.info.title; 
         for (let path in oas.paths)
         { 
             let strMethods = "";
@@ -118,10 +129,13 @@ var ApiClientGen = function (_props)
             let arrPath = path.split("/");
             let pathName = arrPath.last();
             let basePath = url + (url[url.length-1] != '/' && path[0]!= '/' ? '/' : '') + path;
-            strClosures += pathTemplate.formatUnicorn({"path":pathName, "methods":strMethods, "basePath":basePath})+"\r\n"; 
+            strClosures += pathTemplate.formatUnicorn({ "path": pathName, "methods": strMethods, "basePath": basePath }) + "\r\n"; 
+            pathInstances += `\t this.${pathName}Client = new ${pathName}();\r\n`;
         }
-        console.log(strClosures);
-        eval(strClosures)
+        let apiSrc = apiTemplate.formatUnicorn({"apiTitle":apiTitle.replace(/ /g,''), "paths":strClosures, "pathInstances":pathInstances});
+        
+        console.log(apiSrc);
+        eval(apiSrc)
     }
     //download("snowCrash.json.txt", jsonLayout); 
 }
