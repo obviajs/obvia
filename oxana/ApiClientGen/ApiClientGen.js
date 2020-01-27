@@ -31,13 +31,23 @@ var ApiClientGen = function (_props)
 {strObjPath}
         let objBody = {objBody};
         let requestContentType = "{requestContentType}";
+        let responses = {responses};
         return new Promise((resolve, reject) =>
         {
             \tthis.apiCall(objQuery, objBody, objPath, requestContentType).then(function(resp){
-                resp.status
-                resp.response
-                //TODO: convert to specified type
-                resolve();
+                if(responses[resp.status]){
+                    let responseType = responses[resp.status].responseType.toLowerCase();
+                    let ret;
+                    switch(responseType)
+                    {
+                        case "json":
+                            ret = JSON.parse(resp.response);
+                            break;
+                    }
+                    //TODO: convert to specified type
+                    resolve(ret);
+                }else//unspecified http response code returned
+                    reject();
             }).catch(function(error){
                 reject(error);
             });
@@ -55,6 +65,7 @@ var ApiClientGen = function (_props)
         { 
             let strMethods = "";
             typeMap[path] = {};
+            let responses = {};
             for (let method in oas.paths[path])
             {
                 typeMap[path][method] = {}; 
@@ -112,6 +123,7 @@ var ApiClientGen = function (_props)
                 { 
                     for (var r in oas.paths[path][method].responses)
                     { 
+                        responses[r] = { "responseType": "JSON", "type": "TODO" };
                         oas.paths[path][method].responses[r].content.JSON.schema
                         //type & properties
                         //TODO:
@@ -124,7 +136,7 @@ var ApiClientGen = function (_props)
                 let arrMethod = method.split("/");
                 method = arrMethod.last();
                 
-                strMethods += methodTemplate.formatUnicorn({"methodName":method, "methodDoc":methodDoc, "params":params.join(","), "requestContentType":requestContentType, "strObjQuery":strObjQuery, "objBody":objBody, "strObjPath":strObjPath});    
+                strMethods += methodTemplate.formatUnicorn({"methodName":method, "methodDoc":methodDoc, "params":params.join(","), "requestContentType":requestContentType, "strObjQuery":strObjQuery, "objBody":objBody, "strObjPath":strObjPath, "responses":JSON.stringify(responses)});    
             }   
             let arrPath = path.split("/");
             let pathName = arrPath.last();

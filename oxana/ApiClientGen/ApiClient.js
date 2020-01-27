@@ -3,7 +3,7 @@ var ApiClient = function (_props)
     let _defaultParams = {
         url: "https://cors-anywhere.herokuapp.com/pastebin.com/raw/tSKLhXA5",
         timeout: 50000,
-        sendCookies: true,
+        sendCookies: false,
         cache: false,
         queryParams: {},
         headers: {}
