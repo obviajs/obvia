@@ -99,22 +99,36 @@ var ApiClientGen = function (_props)
                 { 
                     for (var ct in oas.paths[path][method].requestBody.content)
                     { 
-                        requestContentType = ct;
-                         //TODO: emer me intuitive per parametrin, rastin me $ref
-                        if (oas.paths[path][method].requestBody.content[ct].schema)
+                        requestContentType = ct.toLowerCase();
+                        let typeInfo;
+                        if (requestContentType == "json" || requestContentType == "application/json")
                         {
-                            
-                        } else
-                        { 
-                            if (oas.paths[path][method].requestBody.content[ct].$ref)
-                            { 
+                            //TODO: emer me intuitive per parametrin, rastin me $ref
+                            if (oas.paths[path][method].requestBody.content[ct].schema)
+                            {
+                                typeInfo = oas.paths[path][method].requestBody.content[ct].schema;
+                            } else if (oas.paths[path][method].requestBody.content[ct].$ref)
+                            {
                                 let typePath = oas.paths[path][method].requestBody.content[ct].$ref;
                                 let typeChain = typePath.split('/');
                                 typeChain.shift();
-                                getChainValue(oas, typeChain);
-                            }
+                                typeInfo = getChainValue(oas, typeChain);
+                            }//or $ref
+                        } else if (requestContentType == "multipart/form-data")
+                        { 
                             
-                        }//or $ref
+                            if (oas.paths[path][method].requestBody.content[ct].schema)
+                            {
+                                typeInfo = oas.paths[path][method].requestBody.content[ct].schema;
+                            } else if (oas.paths[path][method].requestBody.content[ct].$ref)
+                            {
+                                let typePath = oas.paths[path][method].requestBody.content[ct].$ref;
+                                let typeChain = typePath.split('/');
+                                typeChain.shift();
+                                typeInfo = getChainValue(oas, typeChain);
+                            }
+                        }
+                        _parseType(oas, typeInfo);
                     }
                     params.push("requestBody");
                     objBody = "requestBody";
@@ -123,11 +137,22 @@ var ApiClientGen = function (_props)
                 { 
                     for (var r in oas.paths[path][method].responses)
                     { 
-                        responses[r] = { "responseType": "JSON", "type": "TODO" };
-                        oas.paths[path][method].responses[r].content.JSON.schema
-                        //type & properties
-                        //TODO:
-                        //nese ne vend te skema ka $ref atehere do procesojme tipin nga map e tipeve
+                        for (var ct in oas.paths[path][method].responses[r].content)
+                        {
+                            responses[r] = { "responseType": r, "type": "TODO" };
+                            let typeInfo;
+                            if (oas.paths[path][method].responses[r].content[ct].schema)
+                            {
+                                typeInfo = oas.paths[path][method].responses[r].content[ct].schema;
+                            } else if (oas.paths[path][method].responses[r].content[ct].$ref)
+                            {
+                                let typePath = oas.paths[path][method].responses[r].content[ct].$ref;
+                                let typeChain = typePath.split('/');
+                                typeChain.shift();
+                                typeInfo = getChainValue(oas, typeChain);
+                            }
+                            _parseType(oas, typeInfo);
+                        }
                     }
                 }
                 //FixMe
@@ -148,6 +173,68 @@ var ApiClientGen = function (_props)
         
         console.log(apiSrc);
         eval(apiSrc)
+    }
+    let _oasjsMap = { "integer": "number" };
+    let _typeTemplate = `
+    /**
+    {jsDoc}
+    */
+    var {typeName} = function(_props){
+    {properties}
+    };`;
+    let _propDocTemplate = "* @property {{jsType}}  {prop}               - {description}\r\n";
+    let _propTemplate = "\tthis.{prop};\r\n";
+    //TODO: Add Validation Ex:minimum, maximum for number & pattern for string
+    /**
+     * 
+     * @param {*} oas 
+     * @param {*} typeInfo 
+     */
+    let _parseType = function (oas, typeInfo, propName)
+    { 
+        let jsDoc = "";
+        let properties = "";
+        
+        let jsType = _oasjsMap[typeInfo.type];
+        if (!jsType)
+            jsType = typeInfo.type;
+        let description = typeInfo.description;
+        let types = "";
+        propName = propName || typeInfo.title;
+        
+        if (typeInfo.type == "object")
+        { 
+            for (var prop in typeInfo.properties)
+            { 
+                let r = _parseType(oas, typeInfo.properties[prop], prop);
+                jsDoc += r.jsDoc;
+                properties += r.properties;
+                types += r.types.length>0?r.types +"\r\n":"";
+            }
+            types += _typeTemplate.formatUnicorn({"jsDoc":jsDoc, "typeName": propName, "properties":properties});
+        }else if (typeInfo.type == "array")
+        {
+            if (typeInfo.items.oneOf)
+            {
+                
+            } else
+            { 
+                _parseType(oas, typeInfo.items);
+            }
+        }
+        else if (typeInfo.$ref)
+        {
+            let typePath = typeInfo.$ref;
+            let typeChain = typePath.split('/');
+            typeChain.shift();
+            typeInfo = getChainValue(oas, typeChain);
+            let r = _parseType(oas, typeInfo, propName);
+            jsType = typeChain.last();
+            types = r.types + "\r\n";//+ _typeTemplate.formatUnicorn({"jsDoc":r.jsDoc, "typeName": propName, "properties":r.properties});
+        }
+        properties = _propTemplate.formatUnicorn({"prop": propName});
+        jsDoc = _propDocTemplate.formatUnicorn({ "jsType": jsType, "prop": propName, "description": description});
+        return {"properties":properties, "jsDoc":jsDoc, "types":types};
     }
     //download("snowCrash.json.txt", jsonLayout); 
 }
