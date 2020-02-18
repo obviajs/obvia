@@ -17,6 +17,16 @@ var ApiClientGen = function (_props) {
     });
     let apiTemplate = `var {apiTitle} = function(){
         let _server = "{server}";
+        Object.defineProperty(this, "server", {
+            get: function server() {
+                return _server;
+            },
+            set: function server(x) {
+                if (_server != x) {
+                    _server = x;
+                }
+            }
+        });
 {paths}
 {pathInstances}
     }`;
