@@ -5,7 +5,7 @@ var Parent = function (_props, overrided = false, _isSurrogate = false) {
     let _compRenderPromises = [];
     let _self = this;
     let _children = {};
-    
+
     let _proxy = new Proxy(this, {
         get: function (target, property, receiver) {
             if (!target.hasOwnProperty(property)) {
@@ -112,7 +112,28 @@ var Parent = function (_props, overrided = false, _isSurrogate = false) {
     this.addComponent = function (component, index) {
         index = index > -1 ? index : _components.length;
         _components.splice(index, 0, component);
-        return this.addComponentInContainer(this.$container, component, index);
+        let cmp = this.addComponentInContainer(this.$container, component, index);
+        let cr = [];
+        for (let i = 0; i < _compRenderPromises.length; i++) {
+            cr.push(_compRenderPromises[i].promise);
+        }
+        Promise.all(cr).then(function () {
+            _compRenderPromises = [];
+            for (let i = 0; i < _components.length; i++) {
+                let cmpInstance = _children[_components[i].props.id];
+                if (cmpInstance && cmpInstance.attach) {
+                    if (cmpInstance.appendTo) {
+                        cmpInstance.appendTo.insertAt(cmpInstance.$el, i);
+                    } else
+                        _$hadow.insertAt(cmpInstance.$el, i);
+                } else {
+                    console.log("Component not found " + _components[i].props.id);
+                }
+            }
+            _$hadow.contents().appendTo(_self.$container);
+            _self.trigger('endDraw');
+        });
+        return cmp;
     };
 
     Object.defineProperty(this, "sortChildren",

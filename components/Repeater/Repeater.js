@@ -111,7 +111,7 @@ var Repeater = function(_props)
             console.time('time _createRows_' + _self.id);
             _self.trigger('beginDraw');
             //this.$container.empty();
-            _self.focusedRow = 0,
+            _self.focusedRow = 0;
             _self.focusedComponent = 0;
             if (_dataProvider && _dataProvider.forEach)
             {
