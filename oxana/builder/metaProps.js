@@ -1,5 +1,9 @@
 Builder.metaProps = {
-    id: {ctor:"TextInput", label: "Component ID", required:true, index:1,},
+    id: {ctor:"TextInput", label: "Component ID", required:true, index:1, props :{
+        change: function(){
+            this.parent.parent.instance.id = this.value;
+        }
+    }},
     name: {ctor:"TextInput", label: "Component Name", required:true, index:2},
     label: {ctor:"TextInput", label: "Label", required:true, index:3, props: {
         change: function(){

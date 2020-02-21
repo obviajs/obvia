@@ -219,8 +219,10 @@ var ApiClientGen = function (_props) {
         let apiSrc = types +"\r\n" + apiTemplate.formatUnicorn({ "apiTitle": apiTitle.replace(/ /g, ''), "paths": strClosures, "pathInstances": pathInstances, "server": url});
         
         console.log(apiSrc);
-        //download("snowCrash.json.txt", jsonLayout); 
+        download(apiTitle.replace(/ /g, '') + ".js", apiSrc); 
         eval(apiSrc);
+        var api = new GaiaAPI();
+        var u = api.usersClient.get(1);
     };
     let _oasjsMap = { "integer": "Number", "string": "String" };
     let _typeTemplate = `

@@ -162,7 +162,7 @@ var mainContainer = {
                                 {
                                     ctor: Label,
                                     props: {
-                                        id: "loadIcon",
+                                        id: "selectBtn",
                                         labelType: LabelType.i,
                                         label: "",
                                         classes: ["fas", "fa-folder-open", "navIcons"]
@@ -171,7 +171,7 @@ var mainContainer = {
                                 {
                                     ctor: Label,
                                     props: {
-                                        id: "loadIcon",
+                                        id: "uploadIcon",
                                         labelType: LabelType.i,
                                         label: "",
                                         classes: ["fas", "fa-cloud-upload-alt", "navIcons"]
@@ -490,7 +490,25 @@ var mainContainer = {
                         }
                         ]
                     }
-                }
+                    },
+                    {
+                        ctor: Modal,
+                        props: {
+                            id: 'fileSelectModal',
+                            size: ModalSize.LARGE,
+                            title: 'Select File',
+                            components: [
+                                {
+                                    ctor: UploadEx,
+                                    props: {
+                                        id: "browseFile",
+                                        multiple: false,
+                                        showProgress: false
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 ]
             }
         }
@@ -616,7 +634,7 @@ oxana.behaviorimplementations["ADD_COMPONENT"] = {
             addBehaviors(inst, cmpBehaviors, false);
             if (containers.indexOf(inst.ctor) > -1) { 
                 addBehaviors(inst, waBehaviors, false);
-                inst.attr.isWa = false;
+                inst.attr.isNotWa = true;
             }
             if (parents.indexOf(ctor) > -1) {
                 addBehaviors(inst, cntBehaviors, false);
@@ -749,7 +767,7 @@ oxana.behaviorimplementations["FILE_SELECTED"] = function (e) {
                 Component.instances["fileSelectModal"].hide();
                 var evt = new jQuery.Event("loadLayout");
                 evt.content = resp.content;
-                oxana.root.trigger(evt);
+                oxana.trigger(evt);
             })
             .catch(function (resp) {
                 alert(resp.description);
@@ -769,9 +787,13 @@ oxana.behaviorimplementations["SEARCH_CMP"] = function (e) {
     }
 };
 
-oxana.behaviors[oxana.rootID]["loadLayout"] = "LOAD_LAYOUT";
+oxana.behaviors[oxana.id]["loadLayout"] = "LOAD_LAYOUT";
 oxana.behaviorimplementations["LOAD_LAYOUT"] = function (e) {
     let _cmp = JSON.parse(e.content);
+    let res = objectHierarchyGetMatchingMember(_cmp, "props.id", "workArea", "props.components");
+    if (res.match) { 
+        _cmp = res.match;
+    }
     Component.instances["workArea"].removeAllChildren(0);
     if (_cmp.props.id == "workArea") {
         for (let i = 0; i < _cmp.props.components.length; i++) {
@@ -1064,10 +1086,13 @@ oxana.behaviorimplementations["SPLIT_VERT"] = {
         let toAdd = [newCell];
         let parent = activeContainer.parent;
         let notWa = false;
-        if (!activeContainer.attr.isWa && activeContainer.components.length == 0) { 
+        if (activeContainer.attr.isNotWa && activeContainer.components.length == 0) {
             notWa = true;
             toAdd = [newRow];
             parent = activeContainer;
+        } else if (activeContainer.attr.isNotWa) { 
+            alert("Select an Existing Column to split Vertically.");
+            return;
         }
         let children_len = parent.components.length;
 
