@@ -394,7 +394,8 @@ var Component = function (_props, overrided = false, _isSurrogate = false) {
                     }
                     
                 }
-            }
+            },
+            enumerable: true
         });
 
     this.my = function (id) {

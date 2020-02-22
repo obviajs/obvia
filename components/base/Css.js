@@ -2,6 +2,9 @@ var Css = function (_css, $el) {
     let _$el = $el;
     if (_css) {
         _$el.css(_css);
+        for(var prop in _css){
+            this[prop] = _css[prop];
+        }
     }
     
     return new Proxy(this, {

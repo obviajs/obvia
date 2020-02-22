@@ -410,8 +410,8 @@ var Parent = function (_props, overrided = false, _isSurrogate = false) {
                     switch (prop) {
                         case "components":
                             let components = [];
-                            for (let cid in _children) {
-                                let component = _children[cid].literal;
+                            for (let i = 0; i < _components.length;i++) {
+                                let component = _children[_components[i].props.id].literal;
                                 components.push(component);
                             }
                             obj[prop] = components;

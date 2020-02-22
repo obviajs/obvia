@@ -4,6 +4,7 @@ var Attr = function(_attr, $el)
     if(_attr){
         for(var prop in _attr){
             _$el.attr(prop, _attr[prop]);
+            this[prop] = _attr[prop];
         }
     }
     return new Proxy(this, {

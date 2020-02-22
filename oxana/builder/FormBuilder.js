@@ -636,6 +636,7 @@ oxana.behaviorimplementations["ADD_COMPONENT"] = {
                 addBehaviors(inst, waBehaviors, false);
                 inst.attr.isNotWa = true;
             }
+            inst.attr.isCmp = true;
             if (parents.indexOf(ctor) > -1) {
                 addBehaviors(inst, cntBehaviors, false);
             }
@@ -795,16 +796,20 @@ oxana.behaviorimplementations["LOAD_LAYOUT"] = function (e) {
         _cmp = res.match;
     }
     Component.instances["workArea"].removeAllChildren(0);
-    if (_cmp.props.id == "workArea") {
-        for (let i = 0; i < _cmp.props.components.length; i++) {
-            let inst = Component.instances["workArea"].addComponent(_cmp.props.components[i]);
-            addBehaviors(inst, waBehaviors);
+    for (let i = 0; i < _cmp.props.components.length; i++)
+    {
+        let inst = Component.instances["workArea"].addComponent(_cmp.props.components[i]);
+        let was = objectHierarchyGetMatchingMember(inst, "attr.isWa", true, "children", true);
+        for (let wi = 0; wi < was.length; wi++)
+        {
+            addBehaviors(was[wi].match, waBehaviors, false);
         }
-    } else {
-        let inst = Component.instances["workArea"].addComponent(_cmp);
-        addBehaviors(inst, waBehaviors);
+        let cmps = objectHierarchyGetMatchingMember(inst, "attr.isCmp", true, "children", true);
+        for (let ci = 0; ci < cmps.length; ci++)
+        {
+            addBehaviors(cmps[ci].match, cmpBehaviors, false);
+        }
     }
-
 };
 
 function addBehaviors(cmp, behaviors, recurse = true) {
@@ -959,7 +964,8 @@ oxana.behaviorimplementations["SPLIT_HOR"] = {
                             h: 100
                         },
                         id: 'workArea',
-                        classes: ["border"]
+                        classes: ["border"],
+                        attr: {"isWa": true}
                     }
                 }]
             }
@@ -972,8 +978,11 @@ oxana.behaviorimplementations["SPLIT_HOR"] = {
         if (retFromRedoMaybe.child) {
             newRowInstance = retFromRedoMaybe.child;
             activeContainer.addChild(newRowInstance);
-        } else
+        } else {
             newRowInstance = activeContainer.addComponent(newRow);
+            newRowInstance.attr.isWa = true;
+        }
+           
         var newWorkArea = newRowInstance.children[newRowInstance.components[0].props.id];
         oxana.behaviors[newWorkArea.id] = waBehaviors;
         // oxana.behaviors[newWorkArea.id]["mousemove"]["WA_RESIZE_EW"] = isMouseMoveEW;
@@ -984,8 +993,10 @@ oxana.behaviorimplementations["SPLIT_HOR"] = {
             if (retFromRedoMaybe.child2) {
                 newRowInstance2 = retFromRedoMaybe.child2;
                 activeContainer.addChild(newRowInstance2);
-            } else
+            } else { 
                 newRowInstance2 = activeContainer.addComponent(newRow2);
+                newRowInstance2.attr.isWa = true;
+            }
 
             var newWorkArea2 = newRowInstance2.children[newRowInstance2.components[0].props.id];
             oxana.behaviors[newWorkArea2.id] = waBehaviors;
@@ -1053,7 +1064,8 @@ oxana.behaviorimplementations["SPLIT_VERT"] = {
                             h: 100
                         },
                         id: 'workArea',
-                        classes: ["border"]
+                        classes: ["border"],
+                        attr: {"isWa": true}
                     }
                 },
                 {
@@ -1065,7 +1077,8 @@ oxana.behaviorimplementations["SPLIT_VERT"] = {
                             h: 100
                         },
                         id: 'workArea',
-                        classes: ["border"]
+                        classes: ["border"],
+                        attr: {"isWa": true}
                     }
                 }]
             }
@@ -1080,7 +1093,8 @@ oxana.behaviorimplementations["SPLIT_VERT"] = {
                     h: 100
                 },
                 id: 'workArea',
-                classes: ["border"]
+                classes: ["border"],
+                attr: {"isWa": true}
             }
         };
         let toAdd = [newCell];
@@ -1101,8 +1115,11 @@ oxana.behaviorimplementations["SPLIT_VERT"] = {
             if (retFromRedoMaybe.child) {
                 newInstance = retFromRedoMaybe.child;
                 parent.addChild(newInstance);
-            } else
+            } else {
                 newInstance = parent.addComponents(toAdd);
+                newInstance[0].attr.isWa = true;
+            }
+                
             let row = notWa ? newInstance[0] : activeContainer.parent;
             children_len = row.components.length;
 
@@ -1201,7 +1218,7 @@ oxana.behaviorimplementations["BECOME_ACTIVE"] = {
             pew.components = [pow];
         }
     },
-    stopPropagation: false
+    stopPropagation: true
 };
 
 oxana.behaviorimplementations["WA_HOVER"] = {
