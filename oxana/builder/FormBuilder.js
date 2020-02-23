@@ -36,7 +36,6 @@ var oxana = new App({
 
 let formField = Builder.components["FormField"].literal;
 
-var parents = ["Container", "Form"];
 var noNeedFF = ["Button", "Label", "Container"];
 var dpCmpSelect = [];
 
@@ -543,10 +542,7 @@ var waBehaviors = {
     "drop": "ADD_COMPONENT",
     "dragover": "ALLOW_DROP",
 };
-var cntBehaviors = {
-    "drop": "ADD_COMPONENT",
-    "dragover": "ALLOW_DROP"
-};
+
 var cmpBehaviors = {
     "mousedown": {
         "SELECT_COMPONENT": isSelectComponent
@@ -637,9 +633,6 @@ oxana.behaviorimplementations["ADD_COMPONENT"] = {
                 inst.attr.isNotWa = true;
             }
             inst.attr.isCmp = true;
-            if (parents.indexOf(ctor) > -1) {
-                addBehaviors(inst, cntBehaviors, false);
-            }
             ret.child = lit;
             ret.parent = workArea;
             ret.container = workArea;
@@ -707,7 +700,7 @@ function isSelectComponent(e) {
 oxana.behaviorimplementations["SELECT_COMPONENT"] = {
     description: "Select Component",
     do: function (e) {
-        console.log("SELECT_COMPONENT");
+        console.log("SELECT_COMPONENT "+this.id);
         //this will hold the instance of the component who manifested this behavior (the manifestor)
         if (activeComponent && activeComponent != this && ((isObject(activeComponent.classes) && activeComponent.classes["self"].indexOf("selected-component")) || activeComponent.classes.indexOf("selected-component") > -1)) {
             let classes = isObject(activeComponent.classes) ? activeComponent.classes["self"].slice(0) : activeComponent.classes.slice(0);

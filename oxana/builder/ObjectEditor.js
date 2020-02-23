@@ -90,10 +90,10 @@ var ObjectEditor = function (_props, overrided = false) {
                     ff.props.index = propsMeta.index;
                     rows.push(extend(true, ff));
                 }else{
-                    console.log("Couldnt find and itemEditor for " + prop + "property");
+                    console.log("Couldnt find and itemEditor for " + prop + " property");
                 }
             }else{
-                console.log("Couldnt find metaProps info for " + prop + "property");
+                console.log("Couldnt find metaProps info for " + prop + " property");
             }
         }
         return rows;

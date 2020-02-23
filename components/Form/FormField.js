@@ -6,8 +6,8 @@
 
 //component definition
 var FormField = function (_props) {
-    var _self = this;
-    var _child, _lbl;
+    let _self = this;
+    let _child, _lbl;
     
     this.endDraw = function (e) {
         if (e.target.id == this.domID) {
@@ -22,15 +22,29 @@ var FormField = function (_props) {
                 _self.name = _props.name;
             if (_props.label)
                 _self.label = _props.label;
+            _component = _child.literal;
+
+            let _cmpObj;
+            if (["input", "select", "textarea", "button"].indexOf(_child.$el[0].tagName.toLowerCase()) > -1) {
+                _cmpObj = _child.$el;
+            } else {
+                _cmpObj = _child.$el.find("input, select, textarea, button").filter(function () {
+                    return ($(this).closest(".no-form-control").length == 0);
+                });
+            }
+            _cmpObj.addClass("form-control");
+            if (_size)
+                _cmpObj.addClass(_size);
         }
         console.log("endDraw");
-    }
+    };
     
     this.beforeAttach = function (e) {
         if (e.target.id == this.domID) {
            
         }
     };
+    let _afterAttach = this.afterAttach;
 
     Object.defineProperty(this, "component",
         {
@@ -121,9 +135,9 @@ var FormField = function (_props) {
 
     this.validate = function () {
 
-    }
+    };
 
-    var _defaultParams = {
+    let _defaultParams = {
         enabled: true,
         required: false,
         size: FormFieldSize.SMALL,
@@ -133,19 +147,19 @@ var FormField = function (_props) {
     };
     
     _props = extend(false, false, _defaultParams, _props);
-    var _placeholder;
-    var _name;
-    var _required;
-    var _label;
-    var _component = _props.component;
-    var _componentId = _props.component.props.id;
-    var _lblCmp = {
+    let _placeholder;
+    let _name;
+    let _required;
+    let _label;
+    let _component = _props.component;
+    let _componentId = _props.component.props.id;
+    let _lblCmp = {
         "ctor": Label,
         "props": {
             id: 'labelFor'
         }
     };
-    var _size = _props.size;
+    let _size = _props.size;
     
     _props.components = [_lblCmp];
     if (_component && !Object.isEmpty(_component)) {
@@ -154,7 +168,7 @@ var FormField = function (_props) {
     
     Container.call(this, _props);
 
-    var _enabled = _props.enabled;
+    let _enabled = _props.enabled;
     Object.defineProperty(this, "enabled",
         {
             get: function enabled() {
@@ -172,12 +186,12 @@ var FormField = function (_props) {
 
     Object.defineProperty(this, "props", {
         get: function props() {
-            var obj = {};
-            for (var prop in _props) {
+            let obj = {};
+            for (let prop in _props) {
                 if (typeof _props[prop] != 'function') {
                     switch (prop) {
                         case "component":
-                            var component = {};
+                            let component = {};
                             component.ctor = _child.ctor; //_component.ctor;
                             component.props = _child.props;
                             obj[prop] = component;
@@ -215,36 +229,6 @@ var FormField = function (_props) {
             },
             enumerable: true
         });
-
-    this.on('childCreated childAdded', function (e) {
-        if (e.child.ctor != 'Label') {
-            if (_component == null || Object.isEmpty(_component)) {
-                _child = e.child;
-                _lbl.$el.prop("for", _child.domID);
-                if (_props.required)
-                    _self.required = _props.required;
-                if (_props.placeholder)
-                    _self.placeholder = _props.placeholder;
-                if (_props.name)
-                    _self.name = _props.name;
-                _component = _child.literal;
-            }
-            
-            e.stopPropagation();
-            var _cmpObj;
-            if (["input", "select", "textarea", "button"].indexOf(_child.$el[0].tagName.toLowerCase()) > -1) {
-                _cmpObj = _child.$el;
-            } else {
-                _cmpObj = _child.$el.find("input, select, textarea, button").filter(function () {
-                    return ($(this).closest(".no-form-control").length == 0);
-                });
-            }
-            _cmpObj.addClass("form-control");
-            if (_size)
-                _cmpObj.addClass(_size);
-            _self.trigger('creationComplete');
-        }
-    });
 };
 //component prototype
 FormField.prototype.ctor = 'FormField';

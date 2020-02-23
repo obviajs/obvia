@@ -1,13 +1,13 @@
 var Component = function (_props, overrided = false, _isSurrogate = false) {
-    var _self = this;
+    let _self = this;
     if (!Component[this.ctor]) {
         Component[this.ctor] = {};
-        Component[this.ctor].instanceCnt = 0;
+        Component[this.ctor].instanceInc = 0;
     }
-    ++Component[this.ctor].instanceCnt;
+    ++Component[this.ctor].instanceInc;
 
-    var _defaultParams = {
-        id: this.ctor + "_" + Component[this.ctor].instanceCnt,
+    let _defaultParams = {
+        id: this.ctor + "_" + Component[this.ctor].instanceInc,
         classes: [],
         guid: StringUtils.guid(),
         bindingDefaultContext: Component.defaultContext,
@@ -20,54 +20,58 @@ var Component = function (_props, overrided = false, _isSurrogate = false) {
         attach: true
     };
     shallowCopy(extend(false, false, _defaultParams, _props), _props);
-    var ppb = Component.processPropertyBindings(_props);
-    for (var prop in _props) {
+    let ppb = Component.processPropertyBindings(_props);
+    for (let prop in _props) {
         if (!ppb.processedProps.hasOwnProperty(prop))
             delete _props[prop];
     }
     
-    var _bindingDefaultContext = _props.bindingDefaultContext;
-    var _guid = _props.guid;
-    var _attr, _css;
-    var _id = _props.id = ((!_props.id) || (_props.id == "")) ? _defaultParams.id : _props.id;
-    var _enabled, _draggable, _visible;
-    var _classes = [];
-    var _parent = _props.parent;
-    var _mousedown = _props.mousedown;
-    var _mouseover = _props.mouseover;
-    var _mouseout = _props.mouseout;
-    var _mouseup = _props.mouseout;
-    var _click = _props.click;
-    var _dblclick = _props.dblclick;
-    var _blur = _props.blur;
-    var _keydown = _props.keydown;
-    var _keyup = _props.keyup;
-    var _creationComplete = _props.creationComplete;
-    var _change = _props.change;
-    var _drop = _props.drop;
-    var _dragover = _props.dragover;
-    var _dragstart = _props.dragstart;
-    var _dragenter = _props.dragenter;
-    var _dragleave = _props.dragleave;
-    var _dragend = _props.dragend;
-    var _ownerDocument = _props.ownerDocument;
-    var _watchers = [];
-    var _bindings = ppb.bindings;
-    var _attached = false;
+    let _bindingDefaultContext = _props.bindingDefaultContext;
+    let _guid = _props.guid;
+    let _attr, _css;
+    let _id = _props.id = ((!_props.id) || (_props.id == "")) ? _defaultParams.id : _props.id;
+    let _enabled, _draggable, _visible;
+    let _classes = [];
+    let _parent = _props.parent;
+    let _mousedown = _props.mousedown;
+    let _mouseover = _props.mouseover;
+    let _mouseout = _props.mouseout;
+    let _mouseup = _props.mouseout;
+    let _click = _props.click;
+    let _dblclick = _props.dblclick;
+    let _blur = _props.blur;
+    let _keydown = _props.keydown;
+    let _keyup = _props.keyup;
+    let _creationComplete = _props.creationComplete;
+    let _change = _props.change;
+    let _drop = _props.drop;
+    let _dragover = _props.dragover;
+    let _dragstart = _props.dragstart;
+    let _dragenter = _props.dragenter;
+    let _dragleave = _props.dragleave;
+    let _dragend = _props.dragend;
+    let _idChanged = _props.idChanged;
+    let _ownerDocument = _props.ownerDocument;
+    let _watchers = [];
+    let _bindings = ppb.bindings;
+    let _attached = false;
     let _attach = _props.attach;
     let _index = _props.index;
     let _appendTo = _props.appendTo;
     
-    if (Component.usedComponentIDS[_id] == 1) {
-        _id += "_" + Component[this.ctor].instanceCnt;
+    let tid = _id;
+    while (Component.usedComponentIDS[tid] == 1) {
+        ++Component[this.ctor].instanceInc;
+        tid = _id + "_" + Component[this.ctor].instanceInc;
     }
-    var _domID = _id + '_' + _guid;
+    _id = tid;
+    let _domID = _id + '_' + _guid;
 
     Component.usedComponentIDS[_id] = 1;
     Component.domID2ID[_domID] = _id;
     Component.instances[_id] = this;
 
-    //var _propUpdateMap = {"label":{"o":$el, "fn":"html", "p":[] }, "hyperlink":{}};
+    //let _propUpdateMap = {"label":{"o":$el, "fn":"html", "p":[] }, "hyperlink":{}};
     //generate GUID for this component
     Object.defineProperty(this, "guid",
         {
@@ -121,9 +125,12 @@ var Component = function (_props, overrided = false, _isSurrogate = false) {
                     delete Component.instances[_id];
                 
                     _id = v;
-                    if (Component.usedComponentIDS[_id] == 1) {
-                        _id += "_" + Component[this.ctor].instanceCnt;
+                    tid = _id;
+                    while (Component.usedComponentIDS[tid] == 1) {
+                        ++Component[this.ctor].instanceInc;
+                        tid = _id + "_" + Component[this.ctor].instanceInc;
                     }
+                    _id = tid;
                     _domID = _id + '_' + _guid;
             
                     Component.usedComponentIDS[_id] = 1;
@@ -137,10 +144,17 @@ var Component = function (_props, overrided = false, _isSurrogate = false) {
                         } else {
                             this.parent.children[_id] = this.parent.children[oldId];
                             delete this.parent.children[oldId];
+                            //TODO: Also replace old id in below dictionaries
+                            this.parent.childrenIDR;
+                            this.parent.childrenRID;
                         }
                     }
                     this.$el.attr("id", _domID);
                     _props.id = _id;
+                    let evt = new jQuery.Event("idChanged");
+                    evt.oldValue = oldId;
+                    evt.newValue = _id;
+                    _self.trigger(evt);
                 }
             },
             enumerable: true
@@ -220,8 +234,8 @@ var Component = function (_props, overrided = false, _isSurrogate = false) {
         });
     Object.defineProperty(this, "props", {
         get: function props() {
-            var obj = {};
-            for (var prop in _props) {
+            let obj = {};
+            for (let prop in _props) {
                 if (this.hasOwnProperty(prop) && this.propertyIsEnumerable(prop) && (typeof _props[prop] != 'function') && (prop != "ownerDocument"))
                     if (!isObject(this[prop]) || !Object.isEmpty(this[prop]))
                         obj[prop] = this[prop];
@@ -354,7 +368,7 @@ var Component = function (_props, overrided = false, _isSurrogate = false) {
                 let r = _classes;
                 if (1 != 1 && this.children) {
                     let p;
-                    for (var _cid in this.children) {
+                    for (let _cid in this.children) {
                         if (this[this.childrenRID[_cid]] && this[this.childrenRID[_cid]]["ctor"]) {
                             if (!p)
                                 r = {};
@@ -406,7 +420,7 @@ var Component = function (_props, overrided = false, _isSurrogate = false) {
     this.embedded = false;
 
     
-    var tpl = this.template();
+    let tpl = this.template();
     if ('jquery' in Object(tpl))
         this.$el = tpl;
     else if (tpl && tpl != "")
@@ -419,7 +433,7 @@ var Component = function (_props, overrided = false, _isSurrogate = false) {
         Component.surrogates[this.$el.attr('id')] = this.domID;
     }
 
-    var _DOMMutation = this.DOMMutation;
+    let _DOMMutation = this.DOMMutation;
     this.DOMMutation = function (e) {
         if (typeof _props.DOMMutation == 'function')
             _props.DOMMutation.apply(this.proxyMaybe, arguments);
@@ -428,7 +442,7 @@ var Component = function (_props, overrided = false, _isSurrogate = false) {
                 _DOMMutation.apply(this.proxyMaybe, arguments);
         }
     };
-    var _beforeAttach = this.beforeAttach;
+    let _beforeAttach = this.beforeAttach;
     this.beforeAttach = function (e) {
         if (e.target.id == this.domID) {
             if (typeof _props.beforeAttach == 'function')
@@ -492,7 +506,7 @@ var Component = function (_props, overrided = false, _isSurrogate = false) {
         }
     };
 
-    var _defaultHandlers =
+    let _defaultHandlers =
         [
             {
                 registerTo: this.$el, events: {
@@ -513,6 +527,7 @@ var Component = function (_props, overrided = false, _isSurrogate = false) {
                     'dragend': _dragend && typeof _dragend == 'function' ? _dragend.bind(_self) : undefined,
                     'dragenter': _dragenter && typeof _dragenter == 'function' ? _dragenter.bind(_self) : undefined,
                     'dragleave': _dragleave && typeof _dragleave == 'function' ? _dragleave.bind(_self) : undefined,
+                    'idChanged': _idChanged && typeof _idChanged == 'function' ? _idChanged.bind(_self) : undefined,
                     'DOMMutation': this.DOMMutation && typeof this.DOMMutation == 'function' ? this.DOMMutation.bind(_self) : undefined,
                     'afterAttach': this.afterAttach && typeof this.afterAttach == 'function' ? this.afterAttach.bind(_self) : undefined,
                     'beforeAttach': this.beforeAttach && typeof this.beforeAttach == 'function' ? this.beforeAttach.bind(_self) : undefined,
@@ -523,23 +538,23 @@ var Component = function (_props, overrided = false, _isSurrogate = false) {
         ];
 
     this.dataTriggerEvents = function () {
-        var customEvents = _defaultHandlers;
+        let customEvents = _defaultHandlers;
 
         this.$el.find('[data-triggers]').addBack('[data-triggers]').each(function () {
-            var eventsObj = {};
-            var events = $(this).data('triggers');
-            var eventsArr = events.split(" ");
+            let eventsObj = {};
+            let events = $(this).data('triggers');
+            let eventsArr = events.split(" ");
 
             for (let i = 0; i < eventsArr.length; i++) {
-                var eventType = eventsArr[i];
+                let eventType = eventsArr[i];
                 if (customEvents[0].events[eventType]) {
                     //overrided listener, so remove default listener on $el
                     delete customEvents[0].events[eventType];
                 }
-                var privateEvent = _props[eventType];
+                let privateEvent = _props[eventType];
                 eventsObj[eventsArr[i]] = privateEvent && typeof privateEvent == 'function' ? privateEvent.bind(_self) : undefined;
             }
-            var found = false;
+            let found = false;
             for (let i = 0; i < customEvents.length; i++) {
                 if (customEvents[i].registerTo.attr('id') == $(this).attr('id')) {
                     customEvents[i].events = extend(false, false, eventsObj, customEvents[i].events);
@@ -559,7 +574,7 @@ var Component = function (_props, overrided = false, _isSurrogate = false) {
         return customEvents;
     };
 
-    // var _dataTriggerEventList = _isSurrogate?_defaultHandlers:this.dataTriggerEvents();
+    // let _dataTriggerEventList = _isSurrogate?_defaultHandlers:this.dataTriggerEvents();
     let _dataTriggerEventList = this.dataTriggerEvents();
     this.registerEvents = function () {
         return _dataTriggerEventList;
@@ -622,7 +637,6 @@ var Component = function (_props, overrided = false, _isSurrogate = false) {
     //register outside handlers
     //event handling
     this.on = function (eventType, fnc) {
-        var _self = this;
         if (typeof fnc !== 'function') {
             throw Error("The specified parameter is not a callback");
         } else {
@@ -630,9 +644,9 @@ var Component = function (_props, overrided = false, _isSurrogate = false) {
                 if (this.$el) {
                     if (_handlers[eventType] == null)
                         _handlers[eventType] = [];
-                    var proxyHandler = function () {
-                        var args = [];
-                        for (var i = 0; i < arguments.length; i++) {
+                    let proxyHandler = function () {
+                        let args = [];
+                        for (let i = 0; i < arguments.length; i++) {
                             args.push(arguments[i]);
                         }
 
@@ -658,7 +672,7 @@ var Component = function (_props, overrided = false, _isSurrogate = false) {
         return this;
     };
     
-    var _handlers = {};
+    let _handlers = {};
 
     this.trigger = function () {
         if (this.$el)
@@ -668,7 +682,7 @@ var Component = function (_props, overrided = false, _isSurrogate = false) {
     this.off = function () {
         if (this.$el) {
             this.$el.off.apply(this.$el, arguments);
-            var evt = arguments[0], handler, ind;
+            let evt = arguments[0], handler, ind;
             if (!Array.isArray(evt))
                 evt = [evt];
             if (typeof arguments[1] == 'function') {
@@ -679,8 +693,8 @@ var Component = function (_props, overrided = false, _isSurrogate = false) {
                 handler = arguments[2];
                 ind = 2;
             }
-            var found;
-            for (var i = 0; i < evt.length; i++) {
+            let found;
+            for (let i = 0; i < evt.length; i++) {
                 found = getMatching(_handlers[evt[i]], "originalHandler", handler, true);
                 if (found.objects.length > 0) {
                     arguments[ind] = found.objects[0].proxyHandler;
@@ -692,8 +706,8 @@ var Component = function (_props, overrided = false, _isSurrogate = false) {
     };
     
     this.getBindingExpression = function (property) {
-        var match = getMatching(_bindings, "property", property, true);
-        var expression = null;
+        let match = getMatching(_bindings, "property", property, true);
+        let expression = null;
         if (match.objects.length > 0) {
             expression = match.objects[0]["expression"];
         }
@@ -701,16 +715,16 @@ var Component = function (_props, overrided = false, _isSurrogate = false) {
     };
 
     this.resetBindings = function () {
-        for (var i = 0; i < _watchers.length; i++) {
+        for (let i = 0; i < _watchers.length; i++) {
             _watchers[i].reset();
         }
     };
     
     this.setBindingExpression = function (property, expression) {
-        var match = getMatching(_bindings, "property", property, true);
+        let match = getMatching(_bindings, "property", property, true);
         if (match.indices.length > 0) {
            
-            var b = getBindingExp(expression);
+            let b = getBindingExp(expression);
             if (b) {
                 let newBinding = { "expression": b.expression, "property": property, "nullable": false };
                 _bindings.splice(match.indices[0], 1, newBinding);
@@ -728,7 +742,7 @@ var Component = function (_props, overrided = false, _isSurrogate = false) {
                 if (!("currentItem" in window[defaultBindTo])) {
                     window[defaultBindTo]["currentItem"] = window[defaultBindTo];
                 }
-                // var context = extend(false, true, this, obj);
+                // let context = extend(false, true, this, obj);
                 let fn = function () {
                     _watchers.splicea(match.indices[0], 1, BindingUtils.getValue(window, bindingExp, site, site_chain, defaultBindTo));
                 };
@@ -749,7 +763,7 @@ var Component = function (_props, overrided = false, _isSurrogate = false) {
             this.resetBindings();
             _watchers = this.applyBindings(data);
             if (this.children) {
-                for (var cid in this.children) {
+                for (let cid in this.children) {
                     this.children[cid].refreshBindings(data);
                 }
             }
@@ -760,21 +774,21 @@ var Component = function (_props, overrided = false, _isSurrogate = false) {
     this.applyBindings = function (data) {
         _bindedTo = data;
         let w = [];
-        // for(var bi=0;bi<_bindings.length;bi++){
+        // for(let bi=0;bi<_bindings.length;bi++){
         //     (function(currentItem, bindingExp, site, site_chain, nullable){
         //         return (function(e) { // a closure is created
         //             //this here refers to window context
-        //             var defaultBindTo = "currentItem_"+_self.guid;
+        //             let defaultBindTo = "currentItem_"+_self.guid;
         //             this[defaultBindTo] = (currentItem || Component.defaultContext);
         //             if(!("currentItem" in this[defaultBindTo])){
         //                 this[defaultBindTo]["currentItem"] = this[defaultBindTo];
         //             }
-        //            // var context = extend(false, true, this, obj);
-        //             var fn = function(){
+        //            // let context = extend(false, true, this, obj);
+        //             let fn = function(){
         //                 w.splicea(w.length, 0, BindingUtils.getValue(this, bindingExp, site, site_chain, defaultBindTo));
         //             };
         //             if(nullable){
-        //                 var fnDelayed = whenDefined(this[defaultBindTo], bindingExp, fn);
+        //                 let fnDelayed = whenDefined(this[defaultBindTo], bindingExp, fn);
         //                 fnDelayed();
         //             }else{
         //                 fn();
@@ -795,7 +809,7 @@ var Component = function (_props, overrided = false, _isSurrogate = false) {
             if (!("currentItem" in window[defaultBindTo])) {
                 window[defaultBindTo]["currentItem"] = window[defaultBindTo];
             }
-            // var context = extend(false, true, this, obj);
+            // let context = extend(false, true, this, obj);
             let fn = function () {
                 w.splicea(w.length, 0, BindingUtils.getValue(window, bindingExp, site, site_chain, defaultBindTo));
             };
@@ -811,7 +825,7 @@ var Component = function (_props, overrided = false, _isSurrogate = false) {
         
     this.keepBase = function () {
         this.base = {};
-        for (var prop in this) {
+        for (let prop in this) {
             if (isGetter(this, prop))
                 copyAccessor(prop, this, this.base);
             else
@@ -826,22 +840,22 @@ var Component = function (_props, overrided = false, _isSurrogate = false) {
     this.initEvents = function (element) //1:real component, 0:surrogate i.e no real DOM element 
     {
         //execute inner handlers if theres any registered
-        var handlers = [];
+        let handlers = [];
        
         if (_self['registerEvents'] && (typeof _self.registerEvents == 'function')) {
             handlers = _self.registerEvents();
             //call inner event
             handlers.forEach(function (handler, i) {
-                for (var innerEventIn in handler.events) {
+                for (let innerEventIn in handler.events) {
                     if (typeof handler.events[innerEventIn] == 'function') {
                         if (handler.registerTo != null) {
                             if (_handlers[innerEventIn] == null)
                                 _handlers[innerEventIn] = [];
                             
-                            var proxyHandler = (function (innerEventIn, component) { // a closure is created
+                            let proxyHandler = (function (innerEventIn, component) { // a closure is created
                                 return function () {
-                                    var args = [];
-                                    for (var i = 0; i < arguments.length; i++) {
+                                    let args = [];
+                                    for (let i = 0; i < arguments.length; i++) {
                                         args.push(arguments[i]);
                                     }
 
@@ -879,7 +893,7 @@ var Component = function (_props, overrided = false, _isSurrogate = false) {
         this.visible = _props.visible;
     if (_props.draggable != null)
         this.draggable = _props.draggable;
-    var _spacing = new Spacing(_props.spacing, this.$el);
+    let _spacing = new Spacing(_props.spacing, this.$el);
     
     _self.initEvents(this.$el);
     
@@ -893,14 +907,14 @@ var Component = function (_props, overrided = false, _isSurrogate = false) {
 };
 
 Component.processPropertyBindings = function (props) {
-    var _bindings = [];
+    let _bindings = [];
     //build components properties, check bindings
-    var _processedProps = {};
+    let _processedProps = {};
     
-    for (var prop in props) {
+    for (let prop in props) {
         if (typeof prop == 'string') {
             //check for binding
-            var b = getBindingExp(props[prop]);
+            let b = getBindingExp(props[prop]);
             if (b) {
                 _bindings.push({ "expression": b.expression, "property": prop, "nullable": b.nullable });
             } else {
@@ -912,17 +926,17 @@ Component.processPropertyBindings = function (props) {
     return { "bindings": _bindings, "processedProps": _processedProps };
 };
 
-Component.instanceCnt = 0;
+Component.instanceInc = 0;
 Component.fromLiteral = function (_literal) {
-    //var _literal = Object.assign({}, _literal);
-    //var props = Object.assign({}, _literal.props);
+    //let _literal = Object.assign({}, _literal);
+    //let props = Object.assign({}, _literal.props);
     let props = _literal.props;
     
     if (_literal.ctor) {
         if (typeof _literal.ctor == "string") {
             _literal.ctor = window[_literal.ctor];
         }
-        var el = new _literal.ctor(props);
+        let el = new _literal.ctor(props);
         return el;
     }
 };
@@ -966,27 +980,27 @@ Component.ready = function (cmp, fn, ownerDocument = document) {
 
 Component.check = function (mutations) {
     if (mutations && mutations.length > 0) {
-        for (var g = 0; g < mutations.length; g++) {
+        for (let g = 0; g < mutations.length; g++) {
             if (Component.domID2ID[mutations[g].target.id]) {
                 if (Component.instances[Component.domID2ID[mutations[g].target.id]]) {
-                    var evt = new jQuery.Event("DOMMutation");
+                    let evt = new jQuery.Event("DOMMutation");
                     evt.mutation = mutations[g];
                     Component.instances[Component.domID2ID[mutations[g].target.id]].trigger(evt);
                 }
             }
             if (mutations[g].type == "childList") {
-                for (var h = 0; h < mutations[g].addedNodes.length; h++) {
-                    var DOMNode = mutations[g].addedNodes[h];
+                for (let h = 0; h < mutations[g].addedNodes.length; h++) {
+                    let DOMNode = mutations[g].addedNodes[h];
                     if (DOMNode.querySelectorAll) {
                         // Check the DOM for elements matching a stored selector
                         if (Component.listeners[DOMNode.ownerDocument.id]) {
-                            for (var i = 0, len = Component.listeners[DOMNode.ownerDocument.id].length, listener, elements; i < len; i++) {
+                            for (let i = 0, len = Component.listeners[DOMNode.ownerDocument.id].length, listener, elements; i < len; i++) {
                                 listener = Component.listeners[DOMNode.ownerDocument.id][i];
                                 if (!listener.element.attached) {
-                                    var $el = listener.element.$el;
-                                    var id = $el[0].id;
+                                    let $el = listener.element.$el;
+                                    let id = $el[0].id;
                                     //console.log(DOMNode.id);
-                                    var resultNodes = DOMNode.id == id ? [DOMNode] : DOMNode.querySelectorAll("#" + id);
+                                    let resultNodes = DOMNode.id == id ? [DOMNode] : DOMNode.querySelectorAll("#" + id);
 
                                     // Make sure the callback isn't invoked with the 
                                     // same element more than once

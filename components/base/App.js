@@ -56,7 +56,7 @@ var App = function(_props){
     });
     
     let _behaviors = new AutoObject();
-    _behaviors[_self.domID] = {};
+    _behaviors[_self.id] = {};
     Object.defineProperty(this, 'behaviors',
     {
         get: function () {
@@ -88,20 +88,25 @@ var App = function(_props){
                 _self.trigger(e);
             });
     
-            _behaviors[_self.domID][HistoryEventType.HISTORY_UNDONE] = "HISTORY_UNDONE";
-            _behaviors[_self.domID][HistoryEventType.HISTORY_REDONE] = "HISTORY_REDONE";
-            _behaviors[_self.domID][HistoryEventType.HISTORY_STEP_ADDED] = "HISTORY_STEP_ADDED";
+            _behaviors[_self.id][HistoryEventType.HISTORY_UNDONE] = "HISTORY_UNDONE";
+            _behaviors[_self.id][HistoryEventType.HISTORY_REDONE] = "HISTORY_REDONE";
+            _behaviors[_self.id][HistoryEventType.HISTORY_STEP_ADDED] = "HISTORY_STEP_ADDED";
         }
     
-        _behaviors[_self.domID]['beginDraw'] = "BEGIN_DRAW";
-        _behaviors[_self.domID]['endDraw'] = "END_DRAW";
-        _behaviors[_self.domID]['InactivityDetected'] = "APP_INACTIVE";
-        _behaviors[_self.domID]['ActivityDetected'] = "APP_ACTIVE";
-        _behaviors[_self.domID]['WindowHide'] = "APP_WINDOW_HIDDEN";
-        _behaviors[_self.domID]['WindowShow'] = "APP_WINDOW_SHOWN";
-        _behaviors[_self.domID]['beforeunload'] = "APP_UNLOADED";
+        _behaviors[_self.id]['beginDraw'] = "BEGIN_DRAW";
+        _behaviors[_self.id]['endDraw'] = "END_DRAW";
+        _behaviors[_self.id]['InactivityDetected'] = "APP_INACTIVE";
+        _behaviors[_self.id]['ActivityDetected'] = "APP_ACTIVE";
+        _behaviors[_self.id]['WindowHide'] = "APP_WINDOW_HIDDEN";
+        _behaviors[_self.id]['WindowShow'] = "APP_WINDOW_SHOWN";
+        _behaviors[_self.id]['beforeunload'] = "APP_UNLOADED";
+        _behaviors[_self.id]['idChanged'] = "UPDATE_BEHAVIOR_BINDINGS";
     };
-    
+    _behaviorimplementations["UPDATE_BEHAVIOR_BINDINGS"] = function(e) {
+        console.log("UPDATE_BEHAVIOR_BINDINGS");
+        _behaviors[e.newValue] = _behaviors[e.oldValue];
+        delete  _behaviors[e.oldValue];
+    };
     _behaviorimplementations["BEGIN_DRAW"] = function(e) {
         _self.$el.append(_loader.render());
         _loader.show();
@@ -127,7 +132,7 @@ var App = function(_props){
         console.log("App Window was maximized, you may want to greet the user.");
     };
 
-    let _eventTypes = ["mousedown", "mouseover", "mouseup", "click", "dblclick", "keydown", "keyup", "mousemove", "drop", "dragstart", "dragover"];
+    let _eventTypes = ["mousedown", "mouseover", "mouseup", "click", "dblclick", "keydown", "keyup", "mousemove", "drop", "dragstart", "dragover", "idChanged"];
     let _eventTypesJoined;
     let _loader = new Loader({ id: 'loader' });
     let _event2behavior = function(e) {
@@ -159,7 +164,7 @@ var App = function(_props){
             _idBehaviorManifestor = _idCurrentTarget;
         }
         
-        console.log(e.type+" "+_idCurrentTarget+ " "+_idTarget)
+        //console.log(e.type + " " + _idCurrentTarget + " " + _idTarget);
         
         if(cmpBehaviors && cmpBehaviors[e.type]) {
             let behaviorNameArr = [], behaviorFilterArr = [];
