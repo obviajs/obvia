@@ -51,7 +51,7 @@ var ApiClientGen = function (_props) {
         let responses = {responses};
         return new Promise((resolve, reject) =>
         {
-            \tthis.apiCall(objQuery, objBody, objPath, requestContentType).then(function(resp){
+            \tthis.apiCall(objQuery, objBody, objPath, requestContentType, "{methodName}").then(function(resp){
                 if(responses[resp.status]){
                     let responseType = responses[resp.status].responseType.toLowerCase();
                     let ret;
@@ -111,29 +111,18 @@ var ApiClientGen = function (_props) {
                     for (let ct in oas.paths[path][method].requestBody.content) {
                         requestContentType = ct.toLowerCase();
                         let typeInfo;
-                        if (requestContentType == "json" || requestContentType == "application/json") {
-                            //TODO: emer me intuitive per parametrin, rastin me $ref
-                            if (oas.paths[path][method].requestBody.content[ct].schema) {
-                                typeInfo = oas.paths[path][method].requestBody.content[ct].schema;
-                            } else if (oas.paths[path][method].requestBody.content[ct].$ref) {
-                                let typePath = oas.paths[path][method].requestBody.content[ct].$ref;
-                                let typeChain = typePath.split('/');
-                                typeChain.shift();
-                                typeInfo = getChainValue(oas, typeChain);
-                                typeInfo.title = typeInfo.title || typeChain.last();
-                            }//or $ref
-                        } else if (requestContentType == "multipart/form-data") {
-                            if (oas.paths[path][method].requestBody.content[ct].schema) {
-                                typeInfo = oas.paths[path][method].requestBody.content[ct].schema;
-                            } else if (oas.paths[path][method].requestBody.content[ct].$ref) {
-                                let typePath = oas.paths[path][method].requestBody.content[ct].$ref;
-                                let typeChain = typePath.split('/');
-                                typeChain.shift();
-                                typeInfo = getChainValue(oas, typeChain);
-                                typeInfo.title = typeInfo.title || typeChain.last();
-                            }
+                        //TODO: emer me intuitive per parametrin, rastin me $ref
+                        if (oas.paths[path][method].requestBody.content[ct].schema) {
+                            typeInfo = oas.paths[path][method].requestBody.content[ct].schema;
+                        } else if (oas.paths[path][method].requestBody.content[ct].$ref) {
+                            let typePath = oas.paths[path][method].requestBody.content[ct].$ref;
+                            let typeChain = typePath.split('/');
+                            typeChain.shift();
+                            typeInfo = getChainValue(oas, typeChain);
+                            typeInfo.title = typeInfo.title || typeChain.last();
                         }
-                        typeInfo.title = typeInfo.title || convertToCamelCase(method+"RequestBody"+"_"+path.split("/").last());
+                        typeInfo.title = typeInfo.title || convertToCamelCase(method + "RequestBody" + "_" + path.split("/").last());
+                        typeInfo.type = typeInfo.type || "object";
                         if (requestBodyParamMode == 2 && typeInfo.type == "object") { 
                             let wrapParams = "";
                             for (let prop in typeInfo.properties) { 
@@ -166,7 +155,15 @@ var ApiClientGen = function (_props) {
                                 wrapParams += "\"" + prop + "\":" + prop;
                             }
                             objBody = wrapParams = "{" + wrapParams + "}";
-                        }else if (requestBodyParamMode == 1) {
+                        } else if (requestBodyParamMode == 1) {
+                            let props = Object.keys(typeInfo.properties);
+                            if (props.length == 1) {
+                                typeInfo = typeInfo.properties[props[0]];
+                                typeInfo.title = typeInfo.title || props[0];
+                                objBody = '{"'+typeInfo.title+'":'+ typeInfo.title +'}';
+                            } else { 
+                                objBody = typeInfo.title;
+                            }
                             if (typeNames.indexOf(typeInfo.title) < 0) {
                                 let t = _parseType(oas, typeInfo);
                                 if (t.typeNames.length > 0)
@@ -175,7 +172,7 @@ var ApiClientGen = function (_props) {
                             }
                             methodDoc += "\t\t* @param {" + typeInfo.title + "} " + typeInfo.title + " The request body for " + method + " " + path + " \r\n";
                             params.push(typeInfo.title);
-                            objBody = typeInfo.title;
+                           
                         }
                     }
                 }
@@ -206,9 +203,9 @@ var ApiClientGen = function (_props) {
                 methodDoc += "\t\t* @returns {Promise} ";
                 methodDoc += "\r\n\t\t*/";
                 let arrMethod = method.split("/");
-                method = arrMethod.last();
+                let methodName = arrMethod.last();
                 
-                strMethods += methodTemplate.formatUnicorn({ "methodName": method, "methodDoc": methodDoc, "params": params.join(","), "requestContentType": requestContentType, "strObjQuery": strObjQuery, "objBody": objBody, "strObjPath": strObjPath, "responses": JSON.stringify(responses) });
+                strMethods += methodTemplate.formatUnicorn({ "methodName": methodName, "methodDoc": methodDoc, "params": params.join(","), "requestContentType": requestContentType, "strObjQuery": strObjQuery, "objBody": objBody, "strObjPath": strObjPath, "responses": JSON.stringify(responses) });
             }
             let arrPath = path.split("/");
             let pathName = arrPath.last();
@@ -219,10 +216,12 @@ var ApiClientGen = function (_props) {
         let apiSrc = types +"\r\n" + apiTemplate.formatUnicorn({ "apiTitle": apiTitle.replace(/ /g, ''), "paths": strClosures, "pathInstances": pathInstances, "server": url});
         
         console.log(apiSrc);
-        download(apiTitle.replace(/ /g, '') + ".js", apiSrc); 
+        //download(apiTitle.replace(/ /g, '') + ".js", apiSrc); 
         eval(apiSrc);
         var api = new GaiaAPI();
         var u = api.usersClient.get(1);
+        var l = api.loginClient.post("admin", "admin");
+        var l2 = api.loginClient.post("test", "test");
     };
     let _oasjsMap = { "integer": "Number", "string": "String" };
     let _typeTemplate = `
@@ -295,6 +294,7 @@ var ApiClientGen = function (_props) {
                     myTypeNames.splicea(myTypeNames.length, 0, r.typeNames);
                 }
             }
+            allowedTypes.splicea(allowedTypes.length, 0, myTypeNames);
             types += _arrTypeTemplate.formatUnicorn({"typeName":propName, "allowedTypes": JSON.stringify(allowedTypes)}) + "\r\n";
         }
         else if (typeInfo.$ref) {
@@ -308,6 +308,9 @@ var ApiClientGen = function (_props) {
                 let r = _parseType(oas, typeInfo, propName);
                 types += r.types.length > 0 ? r.types + "\r\n" : "";
                 //+ _typeTemplate.formatUnicorn({"jsDoc":r.jsDoc, "typeName": propName, "properties":r.properties});
+                if (r.typeNames.length > 0) {
+                    myTypeNames.splicea(myTypeNames.length, 0, r.typeNames);
+                }
             }
         }
         properties = _propTemplate.formatUnicorn({ "prop": propName });

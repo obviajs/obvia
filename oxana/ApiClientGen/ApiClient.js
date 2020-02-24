@@ -37,11 +37,14 @@ var ApiClient = function (_props) {
             case 'application/x-www-form-urlencoded':
                 _tbody = new URLSearchParams(_body).toString();
                 break;
+            case 'form-data':
             case 'multipart/form-data':
                 _tbody = new FormData();
                 for (var key in _body) {
                     _tbody.append(key, _body[key]);
                 }
+                if(ct == "multipart/form-data")
+                    _headers["Content-Type"] += "; charset=utf-8; boundary=" + Math.random().toString().substr(2);
                 break;
             case 'json':
             case 'application/json':
