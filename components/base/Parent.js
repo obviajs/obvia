@@ -410,11 +410,23 @@ var Parent = function (_props, overrided = false, _isSurrogate = false) {
                     switch (prop) {
                         case "components":
                             let components = [];
-                            for (let i = 0; i < _components.length;i++) {
-                                let component = _children[_components[i].props.id].literal;
-                                components.push(component);
+                            if (_components) {
+                                 for (let i = 0; i < _components.length;i++) {
+                                    let component = _children[_components[i].props.id].literal;
+                                    components.push(component);
+                                }
                             }
                             obj[prop] = components;
+                            break;
+                        case "dataProvider":
+                            if (this.dataProvider) {
+                                let len = this.dataProvider.length;
+                                let dpCopy = new window[this.dataProvider.constructor.name](len);
+                                for (let i = 0; i < len; i++) {
+                                    dpCopy[i] = extend(false, false, [], ["currentItem"], this.dataProvider[i]);
+                                }
+                                obj[prop] = dpCopy;
+                            }
                             break;
                         case "ownerDocument":
                             break;

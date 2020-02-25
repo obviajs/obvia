@@ -147,6 +147,11 @@ var Component = function (_props, overrided = false, _isSurrogate = false) {
                             //TODO: Also replace old id in below dictionaries
                             this.parent.childrenIDR;
                             this.parent.childrenRID;
+                            
+                            let m = getMatching(this.parent.components, "props.id", oldId, true);	
+                            if (m.objects.length > 0) { 
+                                m.objects[0].props.id = _id;
+                            }
                         }
                     }
                     this.$el.attr("id", _domID);

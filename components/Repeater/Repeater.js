@@ -8,7 +8,6 @@
 var Repeater = function(_props)
 {
     this.currentIndex = 1;
-    this.currentItem = {};
     this.rowItems = [];
     let _self = this;
     let _creationFinished = false;
@@ -414,14 +413,12 @@ var Repeater = function(_props)
                         //duhet te shtojme nje flag qe ne rast se metoda addRow eshte thirrur nga addRowHangler te mos e exec kodin meposhte
                         
                         //manage dp
-                        _self.currentItem = data;
-
                         _self.currentIndex <= ci ? _self.currentIndex = ci : _self.currentIndex = _self.currentIndex;
                         
                         //skip dp if it already exist
                         var addRowFlag = false;
                         if (ci > _self.dataProvider.length) {
-                            _self.dataProvider.push(_self.currentItem);
+                            _self.dataProvider.push(data);
                             addRowFlag = true;
                         }
                         
@@ -452,7 +449,7 @@ var Repeater = function(_props)
                 });
                 
                 el.on('change', function (e, rargs) {
-                    var currentItem = _self.dataProvider[index];
+                    let currentItem = _self.dataProvider[index];
                     if (component.props.value && isString(component.props.value) && component.props.value[0] == '{' && component.props.value[component.props.value.length - 1] == '}') {
                         var bindingExp = this.getBindingExpression("value");
                         if(bindingExp=="currentItem"){
@@ -563,9 +560,7 @@ var Repeater = function(_props)
             }
             //manage dp
             this.currentIndex--;
-            this.currentItem = this.dataProvider[index];
-            
-            this.trigger('rowDelete', [this, new RepeaterEventArgs(rowItems, this.currentItem, index)]);
+            this.trigger('rowDelete', [this, new RepeaterEventArgs(rowItems, this.dataProvider[index], index)]);
             this.rowItems.splice(index, 1);
             this.rows.splice(index, 1);
             //animate
@@ -604,7 +599,8 @@ var Repeater = function(_props)
         },
         type: ContainerType.NONE,
         dataProvider: new ArrayEx([]),
-        guidField:"guid"
+        guidField: "guid",
+        components:[]
     };
     _props = extend(false, false, _defaultParams, _props);
     if (!_props.attr) { 
@@ -705,6 +701,38 @@ var Repeater = function(_props)
         configurable: true
     });
     
+    Object.defineProperty(this, "props", {
+        get: function props() {
+            let obj = {};
+            for (let prop in _props) {
+                if (typeof _props[prop] != 'function') {
+                    switch (prop) {
+                        case "components":
+                            obj[prop] = _components;
+                            break;
+                        case "dataProvider":
+                            if (this.dataProvider) {
+                                let len = this.dataProvider.length;
+                                let dpCopy = new window[this.dataProvider.constructor.name](len);
+                                for (let i = 0; i < len; i++) {
+                                    dpCopy[i] = extend(false, false, [], ["currentItem"], this.dataProvider[i]);
+                                }
+                                obj[prop] = dpCopy;
+                            }
+                            break;
+                        case "ownerDocument":
+                            break;
+                        default:
+                            if (this.hasOwnProperty(prop) && this.propertyIsEnumerable(prop))
+                                if (!isObject(this[prop]) || !Object.isEmpty(this[prop]))
+                                    obj[prop] = this[prop];
+                    }
+                }
+            }
+            return obj;
+        },
+        configurable: true
+    });
     return r;
 };
 Repeater.prototype.ctor = 'Repeater';
