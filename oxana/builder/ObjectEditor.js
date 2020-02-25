@@ -33,20 +33,22 @@ var ObjectEditor = function (_props, overrided = false) {
         }
     }
 
-    this.initFields = function(inst, fld){
+    this.initFields = function (inst, fld) {
 
-        props = fld!=null && fld!=""?inst[fld]:inst;
+        props = fld != null && fld != "" ? inst[fld] : inst;
         let rows = [];
-        for(let prop in props){
-            let propsMeta = extend(true, Builder.metaProps[inst.ctor] && Builder.metaProps[inst.ctor][prop]?Builder.metaProps[inst.ctor][prop]:Builder.metaProps[prop]);
-            if(propsMeta && !Object.isEmpty(propsMeta)){
+        for (let prop in props) {
+            let propsMeta = extend(true, Builder.metaProps[inst.ctor] && Builder.metaProps[inst.ctor][prop] ? Builder.metaProps[inst.ctor][prop] : Builder.metaProps[prop]);
+            if (propsMeta && !Object.isEmpty(propsMeta)) {
                 let propEditor = extend(true, Builder.components[propsMeta.ctor]);
-                if(propEditor){
+                if (propEditor) {
                     let itemEditorLit = propEditor.literal;
-                    if(propsMeta.props)
-                        itemEditorLit.props =  extend(false, false, itemEditorLit.props, propsMeta.props);
+                    if (propsMeta.props && typeof propsMeta.props != 'function')
+                        itemEditorLit.props = extend(false, false, itemEditorLit.props, propsMeta.props);
+                    else if (typeof propsMeta.props == 'function')
+                        itemEditorLit.props = propsMeta.props.call(inst, this);
                     
-                    if(propsMeta.ctor in {"CollectionEditor":1, "ObjectEditor":1}){
+                    if (propsMeta.ctor in { "CollectionEditor": 1, "ObjectEditor": 1 }) {
                         itemEditorLit.props.instance = props[prop];
                         itemEditorLit.props.field = null;
                     }
@@ -54,50 +56,60 @@ var ObjectEditor = function (_props, overrided = false) {
                     ff.props.label = propsMeta.label;
                     ff.props.placeholder = propsMeta.label;
                     ff.props.required = propsMeta.required;
-
-                    if(propsMeta.targetProps != undefined)
-                    {
+                    if (propsMeta.ctor in { "CollectionEditor": 1, "ObjectEditor": 1 }) {
+                        ff.props.afterAttach = function (e) {
+                            console.log("OE_END_DRAW" + this.id);
+                            this.inputLabel.attr["data-toggle"] = "collapse";
+                            this.inputLabel.attr["data-target"] = "#" + this.input.domID;
+                        };
+                    }
+                    if (propsMeta.targetProps != undefined) {
                         let targetLit;
-                        if(propsMeta.targetProps.target && propsMeta.targetProps.target.ctor){
+                        if (propsMeta.targetProps.target && propsMeta.targetProps.target.ctor) {
                             targetLit = Builder.components[propsMeta.targetProps.target.ctor].literal;
-                            targetLit.props = extend(false, false,targetLit.props, propsMeta.targetProps.target.props);
+                            targetLit.props = extend(false, false, targetLit.props, propsMeta.targetProps.target.props);
                         }
                         
                         let anchor = propsMeta.targetProps.anchor;
                     
                         let events = {};
-                        for(let i=0;i<anchor.events.length;i++){
+                        for (let i = 0; i < anchor.events.length; i++) {
                             let anchorHandler = anchor.events[i].handler;
-                            events[anchor.events[i].event] = function(e){
+                            events[anchor.events[i].event] = function (e) {
                                 anchorHandler.apply(this, [e, _self, itemEditorLit, targetLit]);
                             };
                         }
 
-                        if(anchor.component){
+                        if (anchor.component) {
                             ff.props.component = anchor.component;
-                        }else{
+                        } else {
                             ff.props.component = itemEditorLit;
                         }
-                        for(let evt in events){
+                        for (let evt in events) {
                             ff.props.component.props[evt] = events[evt];
                         }
-                    }else
-                    {
-                        ff.props.component = itemEditorLit;                       
+                    } else {
+                        if (propsMeta.ctor in { "CollectionEditor": 1, "ObjectEditor": 1 }) {
+                            if (!itemEditorLit.props.classes) { 
+                                itemEditorLit.props.classes = ["collapse"];
+                            }else
+                                itemEditorLit.props.classes.pushUnique("collapse");
+                        }
+                        ff.props.component = itemEditorLit;
                     }
                     ff.props.component.props.bindingDefaultContext = props;
-                    ff.props.component.props[(propEditor.valueField || "value")] = "{?"+prop+"}";
+                    ff.props.component.props[(propEditor.valueField || "value")] = "{?" + prop + "}";
                     ff.props.index = propsMeta.index;
                     rows.push(extend(true, ff));
-                }else{
+                } else {
                     console.log("Couldnt find and itemEditor for " + prop + " property");
                 }
-            }else{
+            } else {
                 console.log("Couldnt find metaProps info for " + prop + " property");
             }
         }
         return rows;
-    }
+    };
 
     this.beforeAttach = function(e) 
     {

@@ -532,6 +532,7 @@ var daBehaviors = {
 
 var waBehaviors = {
     "click": "BECOME_ACTIVE",
+    "mousedown": "WA_PREVENT_DRAGSTART",
     "mouseover": "WA_HOVER",
     "mouseout": "WA_HOVER",
     "mousemove": {
@@ -590,8 +591,16 @@ oxana.behaviorimplementations["ALLOW_DROP"] = function (e) {
     console.log("ALLOW_DROP ", this.domID);
     e.preventDefault();
 };
+oxana.behaviorimplementations["WA_PREVENT_DRAGSTART"] = {
+    description: "Prevent drag start ",
+    do: function (e) {
+        console.log('WA_PREVENT_DRAGSTART');
+        e.preventDefault();
+    }
+};
 
 let containers = ["Container", "Form"];
+
 oxana.behaviorimplementations["ADD_COMPONENT"] = {
     description: "Add component ",
     do: function (e) {

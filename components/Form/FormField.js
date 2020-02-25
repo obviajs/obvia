@@ -7,13 +7,13 @@
 //component definition
 var FormField = function (_props) {
     let _self = this;
-    let _child, _lbl;
+    let _input, _lbl;
     
     this.endDraw = function (e) {
         if (e.target.id == this.domID) {
-            _child = this[_componentId];
-            _lbl = this.labelFor;
-            _lbl.$el.prop("for", _child.domID);
+            _input = this[_componentId];
+            _lbl = this.labelForId;
+            _lbl.$el.prop("for", _input.domID);
             if (_props.required)
                 _self.required = _props.required;
             if (_props.placeholder)
@@ -22,13 +22,13 @@ var FormField = function (_props) {
                 _self.name = _props.name;
             if (_props.label)
                 _self.label = _props.label;
-            _component = _child.literal;
+            _component = _input.literal;
 
             let _cmpObj;
-            if (["input", "select", "textarea", "button"].indexOf(_child.$el[0].tagName.toLowerCase()) > -1) {
-                _cmpObj = _child.$el;
+            if (["input", "select", "textarea", "button"].indexOf(_input.$el[0].tagName.toLowerCase()) > -1) {
+                _cmpObj = _input.$el;
             } else {
-                _cmpObj = _child.$el.find("input, select, textarea, button").filter(function () {
+                _cmpObj = _input.$el.find("input, select, textarea, button").filter(function () {
                     return ($(this).closest(".no-form-control").length == 0);
                 });
             }
@@ -62,11 +62,11 @@ var FormField = function (_props) {
                 if (_name != v) {
                     _name = v;
                     if (_name) {
-                        if (_child && _child.$el)
-                            _child.$el.attr("name", _name);
+                        if (_input && _input.$el)
+                            _input.$el.attr("name", _name);
                     } else {
-                        if (_child && _child.$el)
-                            _child.$el.removeAttr('name');
+                        if (_input && _input.$el)
+                            _input.$el.removeAttr('name');
                     }
                 }
             },
@@ -82,11 +82,11 @@ var FormField = function (_props) {
                 if (_required != v) {
                     _required = v;
                     if (_required) {
-                        if (_child && _child.$el)
-                            _child.$el.attr('required', _required);
+                        if (_input && _input.$el)
+                            _input.$el.attr('required', _required);
                     } else {
-                        if (_child && _child.$el)
-                            _child.$el.removeAttr('required');
+                        if (_input && _input.$el)
+                            _input.$el.removeAttr('required');
                     }
                 }
             },
@@ -108,12 +108,21 @@ var FormField = function (_props) {
             enumerable: true
         });
 
-    Object.defineProperty(this, "child",
-        {
-            get: function child() {
-                return _child;
-            }
-        });
+    Object.defineProperty(this, "input",
+    {
+        get: function input() {
+            return _input;
+        },
+        enumerable:true
+    });
+    
+    Object.defineProperty(this, "inputLabel",
+    {
+        get: function inputLabel() {
+            return _lbl;
+        },
+        enumerable:true
+    });
     /**
          this.validate = function () {
         if (_props.required) {
@@ -143,7 +152,8 @@ var FormField = function (_props) {
         size: FormFieldSize.SMALL,
         type: ContainerType.NONE,
         name: "",
-        label: ""
+        label: "",
+        input: null
     };
     
     _props = extend(false, false, _defaultParams, _props);
@@ -156,7 +166,7 @@ var FormField = function (_props) {
     let _lblCmp = {
         "ctor": Label,
         "props": {
-            id: 'labelFor'
+            id: 'labelForId'
         }
     };
     let _size = _props.size;
@@ -177,8 +187,8 @@ var FormField = function (_props) {
             set: function enabled(v) {
                 if (_enabled != v) {
                     _enabled = v;
-                    if (_child)
-                        _child.enabled = !!v;
+                    if (_input)
+                        _input.enabled = !!v;
                 }
             },
             configurable: true
@@ -192,8 +202,8 @@ var FormField = function (_props) {
                     switch (prop) {
                         case "component":
                             let component = {};
-                            component.ctor = _child.ctor; //_component.ctor;
-                            component.props = _child.props;
+                            component.ctor = _input.ctor; //_component.ctor;
+                            component.props = _input.props;
                             obj[prop] = component;
                             break;
                         case "ownerDocument":
@@ -219,11 +229,11 @@ var FormField = function (_props) {
                 if (_placeholder != v) {
                     _placeholder = v;
                     if (_placeholder) {
-                        if (_child && _child.$el)
-                            _child.$el.attr("placeholder", _placeholder);
+                        if (_input && _input.$el)
+                            _input.$el.attr("placeholder", _placeholder);
                     } else {
-                        if (_child && _child.$el)
-                            _child.$el.removeAttr('placeholder');
+                        if (_input && _input.$el)
+                            _input.$el.removeAttr('placeholder');
                     }
                 }
             },

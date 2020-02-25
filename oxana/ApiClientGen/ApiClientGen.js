@@ -121,9 +121,10 @@ var ApiClientGen = function (_props) {
                             typeInfo = getChainValue(oas, typeChain);
                             typeInfo.title = typeInfo.title || typeChain.last();
                         }
+                        let typeDefined = typeInfo.title != null;
                         typeInfo.title = typeInfo.title || convertToCamelCase(method + "RequestBody" + "_" + path.split("/").last());
                         typeInfo.type = typeInfo.type || "object";
-                        if (requestBodyParamMode == 2 && typeInfo.type == "object") { 
+                        if ((requestBodyParamMode == 2 || !typeDefined) && typeInfo.type == "object") { 
                             let wrapParams = "";
                             for (let prop in typeInfo.properties) { 
                                 wrapParams = wrapParams == "" ? wrapParams : wrapParams + ",";
@@ -161,7 +162,10 @@ var ApiClientGen = function (_props) {
                                 typeInfo = typeInfo.properties[props[0]];
                                 typeInfo.title = typeInfo.title || props[0];
                                 objBody = '{"'+typeInfo.title+'":'+ typeInfo.title +'}';
-                            } else { 
+                            } else if ((typeInfo.type == "object" && typeDefined) || typeInfo.type == "array") {
+                                objBody = '{"'+typeInfo.title+'":'+ typeInfo.title +'}';
+                            }
+                            else { 
                                 objBody = typeInfo.title;
                             }
                             if (typeNames.indexOf(typeInfo.title) < 0) {
@@ -219,9 +223,19 @@ var ApiClientGen = function (_props) {
         //download(apiTitle.replace(/ /g, '') + ".js", apiSrc); 
         eval(apiSrc);
         var api = new GaiaAPI();
-        var u = api.usersClient.get(1);
-        var l = api.loginClient.post("admin", "admin");
-        var l2 = api.loginClient.post("test", "test");
+        // var u = api.usersClient.get(1);
+        // var l = api.loginClient.post("admin", "admin");
+        // var l2 = api.loginClient.post("test", "test");
+        let inst = new user();
+        //inst.user_id = ;
+		inst.username = "apiUser";
+		inst.password = "apiUser";
+		inst.id_role = 1;
+		inst.name = "Anony";
+		inst.surname = "Mous";
+		inst.avatar = "pic.png";
+		inst.email = "anony@mous.com";
+        var u = api.usersClient.post(inst);
     };
     let _oasjsMap = { "integer": "Number", "string": "String" };
     let _typeTemplate = `

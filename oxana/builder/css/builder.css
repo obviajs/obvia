@@ -49,3 +49,19 @@ i:hover {
 .right-addon input {
     padding-right: 40px;
 }
+/* collapsible panel  */
+label[data-toggle="collapse"][aria-expanded=true]:before{
+    content: "\f107";
+    font-weight: 900;
+    font-family: "Font Awesome 5 Pro";
+}
+label[data-toggle="collapse"][aria-expanded=false]:before{
+    content: "\f105";
+    font-weight: 900;
+    font-family: "Font Awesome 5 Pro";
+}
+label[data-toggle="collapse"]:not([aria-expanded]):before{
+    content: "\f105";
+    font-weight: 900;
+    font-family: "Font Awesome 5 Pro";
+}

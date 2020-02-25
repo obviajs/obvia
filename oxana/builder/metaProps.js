@@ -138,6 +138,17 @@ Builder.metaProps = {
         change: function(){
         }
     }},
+    input: {
+        ctor: "ObjectEditor", label: "Input Properties", index: 7, props: function (oeInst) {
+            /**
+             * this is not really necessary, just to demonstrate that props can be a function as well
+             * this - is the isntance of the object being inspected, oeInst (the first and only param)
+             * is the isntance of the ObjectEditor created for inspecting the object being inspected
+             */
+            let _props = {};
+            _props.instance = this.input;
+            return _props;
+    }},
     rendering:{ctor:"ObjectEditor", label: "Rendering", required:false},
     direction:{ctor:"Select", label:"Direction", props:{
         dataProvider:new ArrayEx([{value:"vertical", text:"Vertical"}, {value:"horizontal", text:"Horizontal"}]),
