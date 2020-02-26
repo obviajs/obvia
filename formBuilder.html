@@ -71,8 +71,10 @@
                     "componentLiterals"
                 ]).then(function () {
                     rjs.define("./oxana/builder/metaProps.js", "metaProps");
+                    rjs.define("./oxana/builder/FormProperties.js", "FormProperties");
                     rjs.require([
-                        "metaProps"
+                        "metaProps",
+                        "FormProperties"
                     ]).then(function () {
                         rjs.define("./oxana/builder/FormBuilder.js", "FormBuilder");
                     });

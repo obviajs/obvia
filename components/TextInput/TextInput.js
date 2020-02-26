@@ -99,8 +99,12 @@ var TextInput = function (_props, overrided = false) {
                 this.value = _props.value;
             if (_props.autocomplete != null)
                 this.autocomplete = _props.autocomplete;
+            if (_props.placeholder) {
+                this.placeholder = _props.placeholder;
+            }
         }
-    }
+    };
+    
     this.afterAttach = function (e) {
         if (e.target.id == this.$el.attr('id') && !this.attached) {
             //init input mask
@@ -121,7 +125,7 @@ var TextInput = function (_props, overrided = false) {
     };
 
     this.template = function () {
-        return "<input data-triggers='change' placeholder='" + this.placeholder + "' type='" + this.type + "' id='" + this.domID + "'>";
+        return "<input data-triggers='change' type='" + this.type + "' id='" + this.domID + "'>";
     };
 
     var _defaultParams = {
@@ -136,7 +140,7 @@ var TextInput = function (_props, overrided = false) {
     let _autocomplete;
     let _value;
     let _mask = _props.mask;
-    let _placeholder = _props.placeholder;
+    let _placeholder;
     let _type = _props.type;
     let _change = _props.change;
 

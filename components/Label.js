@@ -14,7 +14,7 @@ var Label = function (_props) {
             if (_label != v) {
                 _label = v;
                 if (this.$el) {
-                    var last = this.$el.children().last();
+                    let last = this.$el.children().last();
                     if (last && last.length > 0)
                         if (last[0].nextSibling)
                             last[0].nextSibling.textContent = v;
@@ -62,19 +62,19 @@ var Label = function (_props) {
                 this.label = _props.label;
             }
         }
-    }
+    };
     this.template = function () {
         return "<" + _labelType + " id='" + this.domID + "'></" + _labelType + ">";
     };
 
-    var _defaultParams = {
+    let _defaultParams = {
         label: "",
         labelType: LabelType.label
     };
     _props = extend(false, false, _defaultParams, _props);
 
-    var _label;
-    var _labelType = _props.labelType;
+    let _label;
+    let _labelType = _props.labelType;
 
     Parent.call(this, _props);
 };

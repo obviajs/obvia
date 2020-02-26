@@ -33,6 +33,8 @@ var oxana = new App({
     style: appStyle
 });
 
+let forms = [];
+let selectedForm = new FormProperties();
 
 let formField = Builder.components["FormField"].literal;
 
@@ -441,30 +443,7 @@ var mainContainer = {
                                     props: {
                                         id: "propertyEditorWindow",
                                         classes: ["sideNav_left_container"],
-                                        components: [{
-                                            ctor: Label,
-                                            props: {
-                                                id: "label",
-                                                label: "Form Name *",
-                                                css: {
-                                                    marginTop: "15px"
-                                                },
-                                                classes: ["formName"]
-                                            }
-                                        },
-                                        {
-                                            ctor: TextInput,
-                                            props: {
-                                                id: "textinput",
-                                                type: "text",
-                                                placeholder: "Form Name",
-                                                css: {
-                                                    width: "280px"
-                                                },
-                                                classes: ["form-control", "formName_input"]
-                                            }
-                                        },
-                                        ]
+                                        components: []
                                     }
                                 }
                                 ]
@@ -873,42 +852,20 @@ oxana.behaviorimplementations["DELETE_CMP"] = {
             _id = _idSurrogate ? _idSurrogate : _id;
             let inst = Component.instances[_id];
             let pew = Component.instances["propertyEditorWindow"];
-            let pow = {
-                ctor: Container,
-                props: {
-                    id: "container",
-                    type: ContainerType.NONE,
-                    components: [{
-                            ctor: Label,
-                            props: {
-                                id: "Label",
-                                label: "Form Name *",
-                                css: {
-                                    marginTop: "15px"
-                                },
-                                classes: ["formName"]
-                            }
-                        },
-                        {
-                            ctor: TextInput,
-                            props: {
-                                id: "textinput",
-                                type: "text",
-                                placeholder: "Form Name",
-                                css: {
-                                    width: "280px"
-                                },
-                                classes: ["form-control", "formName_input"]
-                            }
-                        }
-
-                    ]
-                }
-            };
+            
             let c = confirm("Do you want to delete " + _id.toUpperCase() + "?");
             if (c) {
+
                 inst.parent.removeChild(inst, 2);
-                pew.components = [pow];
+                let oeLit = {
+                    ctor: ObjectEditor,
+                    "props": {
+                        id: "objectEditor",
+                        instance: selectedForm,
+                        field: "props"
+                    }
+                };
+                pew.components = [oeLit];
             }
             activeComponent = null;
         } else {
@@ -1189,38 +1146,15 @@ oxana.behaviorimplementations["BECOME_ACTIVE"] = {
         if (this.id == "workArea")
         {
             let pew = Component.instances["propertyEditorWindow"];
-            let pow = {
-                ctor: Container,
-                props: {
-                    id: "container",
-                    type: ContainerType.NONE,
-                    components: [{
-                            ctor: Label,
-                            props: {
-                                id: "Label",
-                                label: "Form Name *",
-                                css: {
-                                    marginTop: "15px"
-                                },
-                                classes: ["formName"]
-                            }
-                        },
-                        {
-                            ctor: TextInput,
-                            props: {
-                                id: "textinput",
-                                type: "text",
-                                placeholder: "Form Name",
-                                css: {
-                                    width: "280px"
-                                },
-                                classes: ["form-control", "formName_input"]
-                            }
-                        }
-                    ]
+            let oeLit = {
+                ctor: ObjectEditor,
+                "props": {
+                    id: "objectEditor",
+                    instance: selectedForm,
+                    field: "props"
                 }
             };
-            pew.components = [pow];
+            pew.components = [oeLit];
         }
     },
     stopPropagation: true

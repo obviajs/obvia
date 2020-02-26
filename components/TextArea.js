@@ -62,9 +62,19 @@ var TextArea = function (_props, overrided = false) {
         enumerable: true
     });
 
-
     this.beforeAttach = function () {
         this.$input = this.$el;
+    };
+
+    this.afterAttach = function (e) {
+        if (e.target.id == this.domID) {
+            if (_props.value) {
+                this.value = _props.value;
+            }
+            if ( _props.placeholder) { 
+                this.placeholder = _props.placeholder;
+            }
+        }
     };
 
     this.changeHandler = function (e) {
@@ -72,7 +82,7 @@ var TextArea = function (_props, overrided = false) {
     };
 
     this.template = function () {
-        return "<textarea data-triggers='change' placeholder='" + this.placeholder + "' id='" + this.domID + "' " + (!this.enabled ? "disabled" : "") + ">" + _value + "</textarea>";
+        return "<textarea data-triggers='change' id='" + this.domID + "' " + (!this.enabled ? "disabled" : "") + "></textarea>";
     };
 
     var _defaultParams = {
@@ -84,8 +94,8 @@ var TextArea = function (_props, overrided = false) {
     _props = extend(false, false, _defaultParams, _props);
 
     let _spellCheck = _props.spellCheck;
-    let _value = _props.value;
-    let _placeholder = _props.placeholder;
+    let _value;
+    let _placeholder;
     let _change = _props.change;
     let _dblclick = _props.dblclick;
 

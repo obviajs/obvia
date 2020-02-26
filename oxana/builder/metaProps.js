@@ -1,4 +1,18 @@
 Builder.metaProps = {
+    form_name: {ctor:"TextInput", label: "Form Name", required:true, index:1, props :{
+        change: function(){
+            this.parent.parent.instance.form_name = this.value;
+        }
+    }},
+    description: {ctor:"TextArea", label: "Form Description", required:false, index:1, props :{
+        change: function(){
+            this.parent.parent.instance.description = this.value;
+        }
+    }},
+    date_created: {ctor:"Label", label: "Date Created", required:false, index:1, props :{
+    }},
+    author: {ctor:"Label", label: "Author", required:false, index:1, props :{
+    }},
     id: {ctor:"TextInput", label: "Component ID", required:true, index:1, props :{
         change: function(){
             this.parent.parent.instance.id = this.value;

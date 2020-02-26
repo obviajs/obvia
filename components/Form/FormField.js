@@ -11,7 +11,7 @@ var FormField = function (_props) {
     
     this.endDraw = function (e) {
         if (e.target.id == this.domID) {
-            _input = this[_componentId];
+            _input = this.children[this.childrenIDR[_componentId]];
             _lbl = this.labelForId;
             _lbl.$el.prop("for", _input.domID);
             if (_props.required)
