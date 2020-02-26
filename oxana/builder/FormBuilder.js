@@ -36,7 +36,7 @@ var oxana = new App({
 
 let formField = Builder.components["FormField"].literal;
 
-var noNeedFF = ["Button", "Label", "Container"];
+var noNeedFF = ["Button", "Label", "Container", "Link", "Header", "Footer", "Form", "SideNav", "ViewStack", "Calendar", "Tree", "Image", "HRule", "Heading"];
 var dpCmpSelect = [];
 
 var mainContainer = {
@@ -44,6 +44,9 @@ var mainContainer = {
     props: {
         id: "MainContainer",
         type: ContainerType.NONE,
+        props: {
+            height: "100%",
+        },
         components: [{
             ctor: Container,
             props: {
@@ -353,7 +356,7 @@ var mainContainer = {
                             props: {
                                 id: '',
                                 type: ContainerType.ROW,
-                                height: 628,
+                                height: "100%",
                                 components: [{
                                     ctor: Container,
                                     props: {
@@ -1357,7 +1360,7 @@ oxana.behaviorimplementations["PREVIEW"] = {
 oxana.behaviorimplementations["SAVE_LAYOUT"] = {
     do: function (e) {
         var workArea = Component.instances["snowCrash"];
-        var lit = workArea.literal;
+        var lit = workArea.literalLite;
         stripHandle(lit);
         var jsonLayout = JSON.stringify(lit, null, "\t");
         download("snowCrash.json.txt", jsonLayout);

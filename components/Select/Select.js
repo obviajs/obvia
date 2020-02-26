@@ -106,7 +106,32 @@ var Select = function (_props, overrided = false) {
     if (overrided) {
         this.keepBase();
     }
-
+    Object.defineProperty(this, "propsLite", {
+        get: function props() {
+            var obj = {};
+            for(var prop in _props)
+            {
+                if(typeof _props[prop] != 'function' && (this[prop]==null || !this[prop].$el))
+                {
+                    switch(prop)
+                    {
+                        case "components":
+                            break;
+                        case "rendering":
+                            break;
+                        case "ownerDocument":
+                            break;
+                        default:
+                            if(this.hasOwnProperty(prop) && this.propertyIsEnumerable(prop))
+                                if(!isObject(this[prop]) || !Object.isEmpty(this[prop]))
+                                    obj[prop] = this[prop];
+                    }
+                }
+            }
+            return obj;
+        },
+        configurable: true
+    });  
     Object.defineProperty(this, "props", {
         get: function props() {
             var obj = {};

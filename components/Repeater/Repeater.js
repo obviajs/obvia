@@ -700,7 +700,38 @@ var Repeater = function(_props)
         enumerable: false,
         configurable: true
     });
-    
+    Object.defineProperty(this, "propsLite", {
+        get: function props() {
+            let obj = {};
+            for (let prop in _props) {
+                if (typeof _props[prop] != 'function' && (this[prop]==null || !this[prop].$el)) {
+                    switch (prop) {
+                        case "components":
+                            obj[prop] = _components;
+                            break;
+                        case "dataProvider":
+                            if (this.dataProvider) {
+                                let len = this.dataProvider.length;
+                                let dpCopy = new window[this.dataProvider.constructor.name](len);
+                                for (let i = 0; i < len; i++) {
+                                    dpCopy[i] = extend(false, false, [], ["currentItem"], this.dataProvider[i]);
+                                }
+                                obj[prop] = dpCopy;
+                            }
+                            break;
+                        case "ownerDocument":
+                            break;
+                        default:
+                            if (this.hasOwnProperty(prop) && this.propertyIsEnumerable(prop))
+                                if (!isObject(this[prop]) || !Object.isEmpty(this[prop]))
+                                    obj[prop] = this[prop];
+                    }
+                }
+            }
+            return obj;
+        },
+        configurable: true
+    });
     Object.defineProperty(this, "props", {
         get: function props() {
             let obj = {};

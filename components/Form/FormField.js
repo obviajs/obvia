@@ -193,7 +193,32 @@ var FormField = function (_props) {
             },
             configurable: true
         });
-
+    Object.defineProperty(this, "propsLite", {
+        get: function propsLite() {
+            let obj = {};
+            for (let prop in _props) {
+                if (typeof _props[prop] != 'function' && (this.inspect || (this[prop]==null || !this[prop].$el))) {
+                    switch (prop) {
+                        case "component":
+                            let component = {};
+                            component.ctor = _input.ctor; //_component.ctor;
+                            component.props = _input.propsLite;
+                            obj[prop] = component;
+                            break;
+                        case "ownerDocument":
+                            break;
+                        default:
+                            if (this.hasOwnProperty(prop) && this.propertyIsEnumerable(prop))
+                                if (!isObject(this[prop]) || !Object.isEmpty(this[prop]))
+                                    obj[prop] = this[prop];
+                    }
+                }
+            }
+            return obj;
+        },
+        configurable: true
+    });
+    
     Object.defineProperty(this, "props", {
         get: function props() {
             let obj = {};

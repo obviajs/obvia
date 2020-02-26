@@ -201,7 +201,7 @@ var Component = function (_props, overrided = false, _isSurrogate = false) {
             },
             enumerable: true
         });
-    
+  
     Object.defineProperty(this, 'isSurrogate',
         {
             get: function isSurrogate() {
@@ -237,6 +237,19 @@ var Component = function (_props, overrided = false, _isSurrogate = false) {
             },
             enumerable: true
         });
+    Object.defineProperty(this, "propsLite",
+    {
+        get: function propsLite() {
+            let obj = {};
+            for (let prop in _props) {
+                if (this.hasOwnProperty(prop) && this.propertyIsEnumerable(prop) && (typeof _props[prop] != 'function') && (prop != "ownerDocument") && (this[prop]==null || !this[prop].$el))
+                    if (!isObject(this[prop]) || !Object.isEmpty(this[prop]))
+                        obj[prop] = this[prop];
+            }
+            return obj;
+        },
+        configurable: true
+    });
     Object.defineProperty(this, "props", {
         get: function props() {
             let obj = {};
@@ -249,13 +262,18 @@ var Component = function (_props, overrided = false, _isSurrogate = false) {
         },
         configurable: true
     });
+    Object.defineProperty(this, "literalLite", {
+        get: function literal() {
+            return { ctor: this.ctor, props: this.propsLite };
+        },
+        configurable: true
+    });
     Object.defineProperty(this, "literal", {
         get: function literal() {
             return { ctor: this.ctor, props: this.props };
         },
         configurable: true
     });
-   
 
     Object.defineProperty(this, "parent",
         {
