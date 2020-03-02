@@ -1,9 +1,8 @@
-var ApiClient = function (_props)
-{ 
+var ApiClient = function (_props) {
     let _defaultParams = {
         url: "https://cors-anywhere.herokuapp.com/pastebin.com/raw/tSKLhXA5",
         timeout: 50000,
-        sendCookies: true,
+        sendCookies: false,
         cache: false,
         queryParams: {},
         headers: {}
@@ -19,92 +18,80 @@ var ApiClient = function (_props)
     let _queryParams = _props.queryParams;
     let _body = {};
     let _tbody = null;
-    this.get = function (url, responseType="json")
-    { 
+    this.get = function (url, responseType = "json") {
         return _request(url, "GET", responseType);
-    }
-    this.post = function (url, responseType="json")
-    { 
+    };
+    this.post = function (url, responseType = "json") {
         return _request(url, "POST", responseType);
-    }
-    this.delete = function (url, responseType="json")
-    { 
+    };
+    this.delete = function (url, responseType = "json") {
         return _request(url, "DELETE", responseType);
-    }
-    this.put = function (url, responseType="json")
-    { 
+    };
+    this.put = function (url, responseType = "json") {
         return _request(url, "PUT", responseType);
-    }
-    this.type = function (ct='application/json')
-    { 
+    };
+    this.type = function (ct = 'application/json') {
         ct = ct.toLowerCase();
         _headers["Content-Type"] = ct;
-        switch (ct)
-        { 
+        switch (ct) {
             case 'application/x-www-form-urlencoded':
                 _tbody = new URLSearchParams(_body).toString();
                 break;
+            case 'form-data':
             case 'multipart/form-data':
                 _tbody = new FormData();
                 for (var key in _body) {
                     _tbody.append(key, _body[key]);
                 }
+                if(ct == "multipart/form-data")
+                    _headers["Content-Type"] += "; charset=utf-8; boundary=" + Math.random().toString().substr(2);
                 break;
             case 'json':
             case 'application/json':
-                _tbody = JSON.stringify(_body);    
+                _tbody = JSON.stringify(_body);
                 break;
         }
         return this;
-    }
-    this.agent = function (a)
-    { 
+    };
+    this.agent = function (a) {
         _headers["User-Agent"] = a;
         return this;
-    }
-    this.headers = function (h)
-    { 
+    };
+    this.headers = function (h) {
         _headers = extend(false, false, _headers, h);
         return this;
-    }
-    this.oauth2 = function (accessToken)
-    { 
+    };
+    this.oauth2 = function (accessToken) {
         _headers["Authorization"] = 'Bearer ' + accessToken;
         return this;
-    }
-    this.basicAuth = function (username, password)
-    { 
+    };
+    this.basicAuth = function (username, password) {
         _headers["Authorization"] = 'Basic ' + btoa(`${username}:${password}`);
         return this;
-    }
-    this.body = function (b)
-    { 
+    };
+    this.body = function (b) {
         _body = _normalizeParams(b);
         return this;
-    }
+    };
     
-    this.query = function (q)
-    { 
+    this.query = function (q) {
         _queryParams = _normalizeParams(q);
         return this;
-    }
-    this.path = function (p)
-    { 
+    };
+    this.path = function (p) {
         _pathParams = p;
         return this;
-    }
-    let _request = function (url, method, responseType="json")
-    {
-        return new Promise((resolve, reject) =>
-        {
+    };
+    let _request = function (url, method, responseType = "json") {
+        return new Promise((resolve, reject) => {
             if (method.toUpperCase() === 'GET' && _cache === false) {
                 _queryParams['r'] = Math.random();
             }
             url = _buildUrl(url, _pathParams);
-            if (url[url.length-1] != '/') {
-                url = url + '/' ;
+            if (url[url.length - 1] != '/') {
+                url = url + '/';
             }
-            url += "?"+new URLSearchParams(_queryParams).toString();
+            url += "?" + new URLSearchParams(_queryParams).toString();
             // create an XHR object
             _xhr = new XMLHttpRequest();
             _xhr.withCredentials = _sendCookies;
@@ -118,28 +105,28 @@ var ApiClient = function (_props)
                 } else {
                     console.error('Error!');
                 }
-                return; 
+                return;
             };
             
             _xhr.onerror = () => {
                 reject({
                     status: this.status,
                     statusText: _xhr.statusText
-                  });
-            }
+                });
+            };
             _xhr.onprogress = (event) => {
                 // event.loaded returns how many bytes are downloaded
                 // event.total returns the total number of bytes
                 // event.total is only available if server sends `Content-Length` header
                 console.log(`Downloaded ${event.loaded} of ${event.total}`);
-            }
+            };
             _xhr.ontimeout = () => console.log('Request timeout.', _xhr.responseURL);
             _xhr.onreadystatechange = function () {
-                if(_xhr.readyState == 1) {
+                if (_xhr.readyState == 1) {
                     console.log('Request started.');
                 }
                 
-                if(_xhr.readyState == 2) {
+                if (_xhr.readyState == 2) {
                     console.log('Headers received.');
                 }
                 
@@ -147,12 +134,11 @@ var ApiClient = function (_props)
                     console.log('Data loading..!');
                 }
                 if (_xhr.readyState == 4) {
-                    resolve({"status":this.status, "response": _xhr.response || _xhr.responseText});
+                    resolve({ "status": this.status, "response": _xhr.response || _xhr.responseText });
                 }
             };
             responseType = responseType.toLowerCase();
-            if (_responseTypes.indexOf(responseType) > -1)
-            { 
+            if (_responseTypes.indexOf(responseType) > -1) {
                 _xhr.responseType = responseType;
             } else
                 reject({
@@ -168,50 +154,50 @@ var ApiClient = function (_props)
                     status: -1,
                     statusText: "unsupported method"
                 });
-            for (header in _headers)
-            { 
+            for (let header in _headers) {
                 _xhr.setRequestHeader(header, _headers[header]);
             }
             _xhr.send(_tbody);
         });
-    }
+    };
 
-    this.abort = function ()
-    { 
+    this.abort = function () {
         _xhr.abort();
-    }
-     /**
-    * Normalizes parameter values:
-    * <ul>
-    * <li>remove nils</li>
-    * <li>keep files and arrays</li>
-    * <li>format to string with `paramToString` for other cases</li>
-    * </ul>
-    * @param {Object.<String, Object>} params The parameters as object properties.
-    * @returns {Object.<String, Object>} normalized parameters.
-    */
-    let _normalizeParams = function(params)
-    {
-        var newParams = {};
-        for (var key in params) {
+    };
+    /**
+   * Normalizes parameter values:
+   * <ul>
+   * <li>remove nils</li>
+   * <li>keep files and arrays</li>
+   * <li>format to string with `paramToString` for other cases</li>
+   * </ul>
+   * @param {Object.<String, Object>} params The parameters as object properties.
+   * @returns {Object.<String, Object>} normalized parameters.
+   */
+    let _normalizeParams = function (params) {
+        let newParams = {};
+        for (let key in params) {
             if (params.hasOwnProperty(key) && params[key] != undefined && params[key] != null) {
-                var value = params[key];
+                let value = params[key];
                 if (BinUtils.isFile(value) || BinUtils.isBlob(value) || Array.isArray(value)) {
                     newParams[key] = value;
-                } else {
+                } if (isObject(value)) { 
+                    newParams[key] = _normalizeParams(value);
+                }
+                else {
                     newParams[key] = _paramToString(value);
                 }
             }
         }
         return newParams;
-    }
+    };
     
     /**
     * Returns a string representation for an actual parameter.
     * @param param The actual parameter.
     * @returns {String} The string representation of <code>param</code>.
     */
-    let _paramToString = function(param) {
+    let _paramToString = function (param) {
         if (param == undefined || param == null) {
             return '';
         }
@@ -220,7 +206,7 @@ var ApiClient = function (_props)
         }
 
         return param.toString();
-    }
+    };
     /**
     * Builds full URL by appending the given path to the base URL and replacing path parameter place-holders with parameter values.
     * NOTE: query parameters are not handled here.
@@ -228,9 +214,9 @@ var ApiClient = function (_props)
     * @param {Object} pathParams The parameter values to append.
     * @returns {String} The encoded path with parameter values substituted.
     */
-    let _buildUrl = function(url, pathParams) {
-        if (url[url.length-1] != '/') {
-            url = url + '/' ;
+    let _buildUrl = function (url, pathParams) {
+        if (url[url.length - 1] != '/') {
+            url = url + '/';
         }
         url = url.replace(/\{([\w-]+)\}/g, (fullMatch, key) => {
             var value;
@@ -244,8 +230,8 @@ var ApiClient = function (_props)
         });
 
         return url;
-    }
+    };
     
     //getResponseHeader('Content-Type');
     //xhr.getAllResponseHeaders();
-}
+};

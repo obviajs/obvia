@@ -1,5 +1,23 @@
 Builder.metaProps = {
-    id: {ctor:"TextInput", label: "Component ID", required:true, index:1,},
+    form_name: {ctor:"TextInput", label: "Form Name", required:true, index:1, props :{
+        change: function(){
+            this.parent.parent.instance.form_name = this.value;
+        }
+    }},
+    description: {ctor:"TextArea", label: "Form Description", required:false, index:1, props :{
+        change: function(){
+            this.parent.parent.instance.description = this.value;
+        }
+    }},
+    date_created: {ctor:"Label", label: "Date Created", required:false, index:1, props :{
+    }},
+    author: {ctor:"Label", label: "Author", required:false, index:1, props :{
+    }},
+    id: {ctor:"TextInput", label: "Component ID", required:true, index:1, props :{
+        change: function(){
+            this.parent.parent.instance.id = this.value;
+        }
+    }},
     name: {ctor:"TextInput", label: "Component Name", required:true, index:2},
     label: {ctor:"TextInput", label: "Label", required:true, index:3, props: {
         change: function(){
@@ -133,6 +151,17 @@ Builder.metaProps = {
     editable:{ctor:"Toggle", label: "Editable", index:21, props:{
         change: function(){
         }
+    }},
+    input: {
+        ctor: "ObjectEditor", label: "Input Properties", index: 7, props: function (oeInst) {
+            /**
+             * this is not really necessary, just to demonstrate that props can be a function as well
+             * this - is the isntance of the object being inspected, oeInst (the first and only param)
+             * is the isntance of the ObjectEditor created for inspecting the object being inspected
+             */
+            let _props = {};
+            _props.instance = this.input;
+            return _props;
     }},
     rendering:{ctor:"ObjectEditor", label: "Rendering", required:false},
     direction:{ctor:"Select", label:"Direction", props:{

@@ -1,11 +1,10 @@
-var DataGridColumn = function(_props)
-{
-    var _defaultParams = {
-        width:null,
-        calculatedWidth:null,
+var DataGridColumn = function (_props) {
+    let _defaultParams = {
+        width: null,
+        calculatedWidth: null,
         field: "",
-        name:"",
-        fieldToFilter: "",   
+        name: "",
+        fieldToFilter: "",
         description: "",
         sortOrder: 0,
         sortDirection: "ASC",//DESC
@@ -14,9 +13,9 @@ var DataGridColumn = function(_props)
             ctor: "DataGridCellRenderer",
             props: {
                 id: 'cell_',
-                label: _props && _props.field && _props.field!=""?'{'+_props.field+'}':'',
+                label: _props && _props.field && _props.field != "" ? '{' + _props.field + '}' : '',
                 href: false,
-                target:null
+                target: null
             }
         },
         itemEditor: null,
@@ -29,9 +28,9 @@ var DataGridColumn = function(_props)
     this.calculatedWidth = _props.calculatedWidth;
     this.field = _props.field;
     this.name = _props.name;
-    this.fieldToFilter = _props.fieldToFilter;   
-	this.description = _props.description;
-	this.sortOrder = _props.sortOrder;
+    this.fieldToFilter = _props.fieldToFilter;
+    this.description = _props.description;
+    this.sortOrder = _props.sortOrder;
     this.sortDirection = _props.sortDirection;//DESC
     this.sortable = _props.sortable;
     this.itemRenderer = _props.itemRenderer;
@@ -42,14 +41,14 @@ var DataGridColumn = function(_props)
 
     Object.defineProperty(this, "props", {
         get: function props() {
-            var obj = {};
-            for(var prop in _props){
-                if(this.hasOwnProperty(prop) && this.propertyIsEnumerable(prop) && (typeof _props[prop] != 'function') && (prop != "ownerDocument"))
+            let obj = {};
+            for (let prop in _props) {
+                if (this.hasOwnProperty(prop) && this.propertyIsEnumerable(prop) && (typeof _props[prop] != 'function') && (prop != "ownerDocument"))
                     obj[prop] = this[prop];
             }
             return obj;
         },
         configurable: true
-    });  
-}
+    });
+};
 DataGridColumn.prototype.ctor = 'DataGridColumn';

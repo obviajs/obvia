@@ -7,6 +7,7 @@
 //component definition
 var Form = function(_props)
 {
+    let _formData, _action, _method;
 
     Object.defineProperty(this, "method", 
     {
@@ -41,7 +42,7 @@ var Form = function(_props)
         {
             return _action;
         },
-        set: function _action(v) 
+        set: function action(v) 
         {
             if(_action != v)
             {
@@ -65,12 +66,12 @@ var Form = function(_props)
 
     this.validate = function () 
     {
-        var valid = true;
+        let valid = true;
         this.errorList = [];
 
         this.components.forEach(function (component) {
             if (!this[component.props.id].validate()) {
-                this.errorList = this.errorList.concat(this[component.props.id].errorList)
+                this.errorList = this.errorList.concat(this[component.props.id].errorList);
                 valid = false;
             }
         }.bind(this));
@@ -93,12 +94,12 @@ var Form = function(_props)
 
     this.serialize = function (encode = false) 
     {
-        var value = {};
+        let value = {};
         this.components.forEach(function (component) {
             value[component.props.id] = this[component.props.id].child.value;
         }.bind(this));
 
-        var serialized = JSON.stringify(value);
+        let serialized = JSON.stringify(value);
         if (encode) {
             serialized = btoa(serialized);   
         }
@@ -127,8 +128,8 @@ var Form = function(_props)
                 _formData.delete(name);
             }else
             {
-                var _formData2 = new FormData();
-                for (var pair of _formData.entries())
+                let _formData2 = new FormData();
+                for (let pair of _formData.entries())
                 {
                     if(pair[0]!=name){
                         _formData2.append(pair[0], pair[1]);
@@ -153,10 +154,9 @@ var Form = function(_props)
     this.reset = function(){
         this.$el.get(0).reset();
     };
-    this.post = function(dataType)
-    {
-        var type = dataType? dataType:"json";
-        var _self = this;
+    this.post = function (dataType) {
+        let type = dataType ? dataType : "json";
+        let _self = this;
         $.ajax({
             url: _action,
             data: this.getFormData(),
@@ -164,91 +164,53 @@ var Form = function(_props)
             contentType: false,
             processData: false,
             cache: false,
-            "dataType": type, 
-            xhr: function(){
-                _self.trigger(FormEventType.POST_STARTED);     
-                var cXhr = $.ajaxSettings.xhr();
-                if(cXhr.upload){
-                    cXhr.upload.addEventListener('progress', 
-                    function(e){
-                        if(e.lengthComputable){
-                            var max = e.total;
-                            var current = e.loaded;
+            "dataType": type,
+            xhr: function () {
+                _self.trigger(FormEventType.POST_STARTED);
+                let cXhr = $.ajaxSettings.xhr();
+                if (cXhr.upload) {
+                    cXhr.upload.addEventListener('progress',
+                        function (e) {
+                            if (e.lengthComputable) {
+                                let max = e.total;
+                                let current = e.loaded;
                     
-                            var percentage = (current * 100)/max;
-                            console.log(percentage);
+                                let percentage = (current * 100) / max;
+                                console.log(percentage);
                     
-                            if(percentage >= 100)
-                            {
-                               // process completed  
+                                if (percentage >= 100) {
+                                    // process completed  
+                                }
+                                e.percentage = percentage;
                             }
-                            e.percentage = percentage;
-                        }
-                        _self.trigger(FormEventType.POST_PROGRESS, [e]);        
-                    }
-                    ,false);
+                            _self.trigger(FormEventType.POST_PROGRESS, [e]);
+                        }, false);
                 }
                 return cXhr;
             },
-            error: function(jqXHR,  textStatus, errorThrown){
+            error: function (jqXHR, textStatus, errorThrown) {
                 console.error(errorThrown);
-                _self.trigger(FormEventType.POST_ERROR, [jqXHR,  textStatus, errorThrown]);
+                _self.trigger(FormEventType.POST_ERROR, [jqXHR, textStatus, errorThrown]);
             },
-            success: function(data, textStatus, jqXHR){
+            success: function (data, textStatus, jqXHR) {
                 _self.trigger(FormEventType.POST_SUCCESS, [data, textStatus, jqXHR]);
             },
-            always: function(jqXHR, textStatus){
+            always: function (jqXHR, textStatus) {
                 _self.trigger(FormEventType.POST_COMPLETE, [jqXHR, textStatus]);
             }
         });
-    }
+    };
 
-    var _defaultParams = {
+    let _defaultParams = {
         method: "POST"
     };
     _props = extend(false, false, _defaultParams, _props);
-    var _width = _props.width;
-    var _height = _props.height;
-    var _formData = null;
-    var _action = _props.action;
-    var _method = _props.method;
+    _formData = null;
+    _action = _props.action;
+    _method = _props.method;
     
-    this.beforeAttach = function(e) 
-    {
-        
-        this.$container = this.$form = this.$el;
-        if(this.sortChildren){
-            acSort(this.components, "props.index");
-        }
-        if(this.components && Array.isArray(this.components) && this.components.length>0)
-        {
-            var $form_group;
-            var rowColSpan = 0;
-            for(var i=0;i<this.components.length;i++)
-            {
-                var component = Object.assign({}, this.components[i]);
-                var container = this.$container;
-                if(component.props['spacing'] && component.props['spacing']['colSpan'] && component.props['spacing']['colSpan']>0)
-                {
-                    if(rowColSpan + component.props.spacing.colSpan > 12 || !$form_group)
-                    {
-                        $form_group = $('<div class="form-group row"></div>');
-                        this.$container.append($form_group);
-                    }
-                    container = $form_group;
-                    rowColSpan += component.props.spacing.colSpan;
-                }
-                var cmpInst = this.addComponentInContainer(container, component);
-                if(cmpInst.ctor == "FormField" && (!component.props['spacing'] || !component.props['spacing']['colSpan'] || component.props['spacing']['colSpan']==0))
-                {
-                    cmpInst.$el.addClass("form-group")
-                }
-            }
-        }
-    };
+    Container.call(this, _props, true);
 
-    Parent.call(this, _props, true);
-
-    var base = this.base;
+    let base = this.base;
 };
 Form.prototype.ctor = 'Form';

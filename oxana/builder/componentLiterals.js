@@ -21,7 +21,7 @@ Builder.components = {
             "ctor": Label,
             "props": {
                 id: 'label',
-                label: "Label"
+                label: ""
             }
         },
         label: "Label",

@@ -1,4 +1,6 @@
 let gen = ApiClientGen({
-    url: "http://192.168.64.2/testYaml.txt"
+    url: "http://flower-gaia/api/users/yaml",
+    //url: "http://ui/testYaml.txt",
+    requestBodyParamMode: 1
 });
 //gen.
