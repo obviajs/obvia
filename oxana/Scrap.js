@@ -1,7 +1,7 @@
-var Scrap = function(){
-    this.visit = function(n, parent) {
-        var lit, nid = $(n).attr('id'); 
-        nid = nid?nid:$(n).prop("tagName").toLowerCase();
+var Scrap = function () {
+    this.visit = function (n, parent) {
+        var lit, nid = $(n).attr('id');
+        nid = nid ? nid : $(n).prop("tagName").toLowerCase();
         var cls = (new ArrayEx($(n).prop("classList"))).toArray();
         var attrs = $(n).attributes();
         var cmp = [];
@@ -9,32 +9,31 @@ var Scrap = function(){
         for (var i = 0; i < ch_nodes.length; i++) {
             var cLit = this.visit(ch_nodes[i]);
             var cid = $(ch_nodes[i]).attr('id');
-            cid = cid?cid:$(ch_nodes[i]).prop("tagName").toLowerCase();
+            cid = cid ? cid : $(ch_nodes[i]).prop("tagName").toLowerCase();
             var chcls = (new ArrayEx($(ch_nodes[i]).prop("classList"))).toArray();
-            if(
-                ["form"].indexOf($(n).prop("tagName").toLowerCase()) > -1 && 
-                ["input"].indexOf($(ch_nodes[i]).prop("tagName").toLowerCase()) >-1 && 
-                ["button", "hidden"].indexOf($(ch_nodes[i]).attr("type").toLowerCase()) <0 && 
+            if (
+                ["form"].indexOf($(n).prop("tagName").toLowerCase()) > -1 && ["input"].indexOf($(ch_nodes[i]).prop("tagName").toLowerCase()) > -1 && ["button", "hidden"].indexOf($(ch_nodes[i]).attr("type").toLowerCase()) < 0 &&
                 chcls.indexOf("form-control") > -1
-            )
-            {
+            ) {
                 cLit = {
                     ctor: "FormField",
                     props: {
-                        id: 'ff_'+cid,
+                        id: 'ff_' + cid,
                         label: 'Example  Input',
                         placeholder: $(ch_nodes[i]).attr('placeholder'),
                         name: $(ch_nodes[i]).attr('name'),
                         size: FormFieldSize.SMALL,
-                        spacing:{colSpan:2},
+                        spacing: {
+                            colSpan: 2
+                        },
                         component: cLit
                     }
                 };
             }
             cmp.push(cLit);
         };
-        
-        if (["div"].indexOf($(n).prop("tagName").toLowerCase()) > -1) {       
+
+        if (["div"].indexOf($(n).prop("tagName").toLowerCase()) > -1) {
             lit = {
                 ctor: "Container",
                 props: {
@@ -45,16 +44,16 @@ var Scrap = function(){
                 }
             };
             var txt = $(n).mytext();
-            if(txt.trim().length>0){
+            if (txt.trim().length > 0) {
                 lit.props.label = txt;
                 let last = $(n).children().last();
-                if(last && last.length>0)
-                    if(last[0].nextSibling && last[0].nextSibling.textContent.trim().length>0)
+                if (last && last.length > 0)
+                    if (last[0].nextSibling && last[0].nextSibling.textContent.trim().length > 0)
                         lit.props.textAlign = "right";
                     else
                         lit.props.textAlign = "left";
             }
-        } else if (["header"].indexOf($(n).prop("tagName").toLowerCase()) > -1) {       
+        } else if (["header"].indexOf($(n).prop("tagName").toLowerCase()) > -1) {
             lit = {
                 ctor: "Header",
                 props: {
@@ -65,11 +64,11 @@ var Scrap = function(){
                 }
             };
             var txt = $(n).mytext();
-            if(txt.trim().length>0){
+            if (txt.trim().length > 0) {
                 lit.props.label = txt;
             }
-            
-        } else if (["footer"].indexOf($(n).prop("tagName").toLowerCase()) > -1) {       
+
+        } else if (["footer"].indexOf($(n).prop("tagName").toLowerCase()) > -1) {
             lit = {
                 ctor: "Footer",
                 props: {
@@ -80,11 +79,11 @@ var Scrap = function(){
                 }
             };
             var txt = $(n).mytext();
-            if(txt.trim().length>0){
+            if (txt.trim().length > 0) {
                 lit.props.label = txt;
             }
-            
-        } else if(["ul"].indexOf($(n).prop("tagName").toLowerCase()) > -1){
+
+        } else if (["ul"].indexOf($(n).prop("tagName").toLowerCase()) > -1) {
             lit = {
                 ctor: "Tree",
                 props: {
@@ -99,13 +98,14 @@ var Scrap = function(){
                 }
             };
             var txt = $(n).mytext();
-            if(txt.trim().length>0){
+            if (txt.trim().length > 0) {
                 lit.props.label = txt;
             }
             Scrap.liInc = 0;
-        } else if(["li"].indexOf($(n).prop("tagName").toLowerCase()) > -1){
-            lit = {}; var title;
-            if($(n).children().length>0)
+        } else if (["li"].indexOf($(n).prop("tagName").toLowerCase()) > -1) {
+            lit = {};
+            var title;
+            if ($(n).children().length > 0)
                 title = $(n).last().text();
             else
                 title = $(n).text();
@@ -113,11 +113,11 @@ var Scrap = function(){
             lit.key = ++Scrap.liInc;
             lit.components = cmp;
             lit.classes = cls;
-        } else if(["button"].indexOf($(n).prop("tagName").toLowerCase()) > -1){
+        } else if (["button"].indexOf($(n).prop("tagName").toLowerCase()) > -1) {
             lit = {
                 ctor: "Button",
                 props: {
-                    id: nid,             
+                    id: nid,
                     type: "button",
                     value: $(n).attr('value'),
                     label: $(n).mytext(),
@@ -125,7 +125,7 @@ var Scrap = function(){
                     components: cmp
                 }
             };
-        } else if(["img"].indexOf($(n).prop("tagName").toLowerCase()) > -1){
+        } else if (["img"].indexOf($(n).prop("tagName").toLowerCase()) > -1) {
             lit = {
                 ctor: "Image",
                 props: {
@@ -137,15 +137,15 @@ var Scrap = function(){
 
             };
 
-            if( $(n).attr('width')) {
-                lit.width =  $(n).attr('width');
+            if ($(n).attr('width')) {
+                lit.width = $(n).attr('width');
             }
 
-            if( $(n).attr('height')){
-                lit.height =  $(n).attr('height');
+            if ($(n).attr('height')) {
+                lit.height = $(n).attr('height');
             }
-          
-        } else if(["i", "b", "u", "span", "label", "p", "sup", "small", "strong"].indexOf($(n).prop("tagName").toLowerCase()) > -1){
+
+        } else if (["i", "b", "u", "span", "label", "p", "sup", "small", "strong"].indexOf($(n).prop("tagName").toLowerCase()) > -1) {
             lit = {
                 ctor: "Label",
                 props: {
@@ -156,7 +156,7 @@ var Scrap = function(){
                     components: cmp
                 }
             };
-        } else if(["a"].indexOf($(n).prop("tagName").toLowerCase()) > -1){
+        } else if (["a"].indexOf($(n).prop("tagName").toLowerCase()) > -1) {
             lit = {
                 ctor: "Link",
                 props: {
@@ -168,27 +168,27 @@ var Scrap = function(){
                     components: cmp
                 }
             };
-        }else if(["input"].indexOf($(n).prop("tagName").toLowerCase()) > -1){
+        } else if (["input"].indexOf($(n).prop("tagName").toLowerCase()) > -1) {
             var _sLit;
-            switch($(n).attr("type").toLowerCase()){
+            switch ($(n).attr("type").toLowerCase()) {
                 case "button":
                 case "reset":
                 case "submit":
                     _sLit = {
-                        ctor:"Button",
+                        ctor: "Button",
                         props: {
                             label: $(n).mytext(),
-                            type:$(n).attr("type").toLowerCase(),
-                            value:$(n).attr("value"),
+                            type: $(n).attr("type").toLowerCase(),
+                            value: $(n).attr("value"),
                             components: cmp
                         }
                     };
                     break;
                 case "hidden":
                     _sLit = {
-                        ctor:"Hidden",
+                        ctor: "Hidden",
                         props: {
-                            value: $(n).attr("value"), 
+                            value: $(n).attr("value"),
                             name: $(n).attr("name")
                         }
                     };
@@ -197,35 +197,35 @@ var Scrap = function(){
                 case "text":
                 case "password":
                     _sLit = {
-                        ctor:"TextInput",
+                        ctor: "TextInput",
                         props: {
-                            value: $(n).attr("value"), 
+                            value: $(n).attr("value"),
                             type: $(n).attr("type").toLowerCase(),
                         }
                     };
-                    if( $(n).attr("placeholder")){
-                        _sLit.props.placeholder =  $(n).attr("placeholder")
+                    if ($(n).attr("placeholder")) {
+                        _sLit.props.placeholder = $(n).attr("placeholder")
                     }
                     break;
                 case "file":
                     break;
                 case "checkbox":
                     _sLit = {
-                        ctor:"CheckBox",
+                        ctor: "CheckBox",
                         props: {
-                            value: $(n).attr("value"), 
+                            value: $(n).attr("value"),
                             label: 'CheckBox Label',
-                            checked: $(n).attr("checked")=="checked", 
+                            checked: $(n).attr("checked") == "checked",
                         }
                     };
                     break;
                 case "radio":
                     _sLit = {
-                        ctor:"RadioButton",
+                        ctor: "RadioButton",
                         props: {
-                            value: $(n).attr("value"), 
+                            value: $(n).attr("value"),
                             label: 'CheckBox Label',
-                            checked: $(n).attr("checked")=="checked", 
+                            checked: $(n).attr("checked") == "checked",
                         }
                     };
                     break;
@@ -237,7 +237,7 @@ var Scrap = function(){
                 }
             };
             lit = extend(false, false, _sLit, lit);
-        }else if(["form"].indexOf($(n).prop("tagName").toLowerCase()) > -1){
+        } else if (["form"].indexOf($(n).prop("tagName").toLowerCase()) > -1) {
             lit = {
                 ctor: "Form",
                 props: {
@@ -246,26 +246,41 @@ var Scrap = function(){
                     components: cmp
                 }
             };
-        } else if(["h1", "h2", "h3", "h4", "h5", "h6"].indexOf($(n).prop("tagName").toLowerCase()) > -1){
-            var a = $(n).attr("align"); a = a? Align[a.toLowerCase()]:undefined,
+        } else if (["hr"].indexOf($(n).prop("tagName").toLowerCase()) > -1) {
             lit = {
-                ctor: "Heading",
+                ctor: "HRule",
                 props: {
                     id: nid,
-                    label: $(n).mytext(),
-                    headingType: HeadingType[$(n).prop("tagName").toLowerCase()],
-                    align: a,
-                    classes: cls,
-                    components: cmp
+                    classes: cls
                 }
             };
+            if ($(n).attr('width')) {
+                lit.width = $(n).attr('width');
+            }
+            if ($(n).attr('align')) {
+                lit.align = $(n).attr('align');
+            }
+        } else if (["h1", "h2", "h3", "h4", "h5", "h6"].indexOf($(n).prop("tagName").toLowerCase()) > -1) {
+            var a = $(n).attr("align");
+            a = a ? Align[a.toLowerCase()] : undefined,
+                lit = {
+                    ctor: "Heading",
+                    props: {
+                        id: nid,
+                        label: $(n).mytext(),
+                        headingType: HeadingType[$(n).prop("tagName").toLowerCase()],
+                        align: a,
+                        classes: cls,
+                        components: cmp
+                    }
+                };
         } else console.log($(n).prop("tagName"));
-        if(lit.props)
-            if(!Object.isEmpty(attrs))
+        if (lit.props)
+            if (!Object.isEmpty(attrs))
                 lit.props.attr = attrs;
-        else
-            if(!Object.isEmpty(attrs))
-                lit.attr = attrs;
+            else
+        if (!Object.isEmpty(attrs))
+            lit.attr = attrs;
         return lit;
     }
 }
