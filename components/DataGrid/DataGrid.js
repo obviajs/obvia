@@ -32,7 +32,7 @@ var DataGrid = function(_props)
     {
         get: function rowCount()
         {
-            _rowCount = _rowCount? Math.min(_rowCount, (_self.dataProvider && _self.dataProvider.length ? _self.dataProvider.length:0)): _self.dataProvider.length;   
+            _rowCount = _rowCount != null? Math.min(_rowCount, (_self.dataProvider && _self.dataProvider.length ? _self.dataProvider.length:0)): _self.dataProvider.length;   
             return _rowCount;
         },
         enumerable:true
@@ -169,11 +169,20 @@ var DataGrid = function(_props)
         }
     };
 
+    Object.defineProperty(this, "renderPromises",
+    {
+        get:function renderPromises(){
+            return _compRenderPromises;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    
+    let _compRenderPromises = [];
     this.createRows = function() 
     {
         this.$el.trigger('beginDraw');
-        let _compRenderPromises = [];
-        if (_self.dataProvider && _self.dataProvider.length)
+       if (_self.dataProvider && _self.dataProvider.length)
         { 
             let endIndex = this.rowCount;
             // _rowItems = {}; we need this if we create Repeater instances via Object.assign
@@ -190,6 +199,7 @@ var DataGrid = function(_props)
         }
         Promise.all(_compRenderPromises).then(function() {
             _$hadow.contents().appendTo(_self.$table);
+            _compRenderPromises = [];
             _self.$el.trigger('endDraw');
         });
     };
@@ -198,8 +208,9 @@ var DataGrid = function(_props)
     {
         let emptyObj = this.defaultItem = createEmptyObject(_columns, "field", "description");
         _self.dataProvider.pad(emptyObj, 1);
-        let _compRenderPromises = this.addRow(_self.dataProvider[_self.dataProvider.length-1], _self.dataProvider.length-1);
-        return Promise.all(_compRenderPromises).then(function() {
+        _compRenderPromises = this.addRow(_self.dataProvider[_self.dataProvider.length-1], _self.dataProvider.length-1);
+        return Promise.all(_compRenderPromises).then(function () {
+            _compRenderPromises = [];
             _$hadow.contents().appendTo(_self.$table);
         });
     };
@@ -727,7 +738,7 @@ var DataGrid = function(_props)
     let _rendering = _props.rendering;
     let _showRowIndex = _props.showRowIndex;
     let _rowCount = _props.rowCount;
-    _rowCount = _rowCount? Math.min(_rowCount, (_props.dataProvider && _props.dataProvider.length ? _props.dataProvider.length:0)): _props.dataProvider.length;
+    _rowCount = _rowCount != null? Math.min(_rowCount, (_props.dataProvider && _props.dataProvider.length ? _props.dataProvider.length:0)): _props.dataProvider.length;
         
     let _allowNewItem = _props.allowNewItem;
     
@@ -760,7 +771,7 @@ var DataGrid = function(_props)
         });
         
         this.createHeader();
-        if(_props.dataProvider)
+        //if(_props.dataProvider)
             this.dataProvider = _props.dataProvider;
         return _rPromise;
     };

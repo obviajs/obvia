@@ -279,52 +279,61 @@ Builder.metaProps = {
 };
 
 Builder.metaProps.Repeater = {
-    components:{ctor:"AutoBrowse", label: "Repeated Form", required:true, props:{
-        valueField: "form_id",
-        labelField: "form_name",
-        dataProvider: ObjectEditor.data.forms,
-        fields:[{"field":"form_id", "description":"form_id", "visible":false}, {"field":"form_name", "description":"form_name"}],   
-        change: function(){
-            //propsForm.children["dataProvider"].value
-            //get the fields for the selected datProvider and 
-            //assign them to the labelField and valueField editor`s dataProvider property
-            this.parent.parent.instance.attr.repeated_id_form = this.value.length>0?this.value[0][this.valueField]:undefined; 
+    components: {
+        ctor: "AutoBrowse", label: "Repeated Form", required: true, props: {
+            valueField: "form_id",
+            labelField: "form_name",
+            dataProvider: ObjectEditor.data.forms,
+            fields: [{ "field": "form_id", "description": "form_id", "visible": false }, { "field": "form_name", "description": "form_name" }],
+            change: function () {
+                //propsForm.children["dataProvider"].value
+                //get the fields for the selected datProvider and 
+                //assign them to the labelField and valueField editor`s dataProvider property
+                this.parent.parent.instance.attr.repeated_id_form = this.value.length > 0 ? this.value[0][this.valueField] : undefined;
+            }
+        }, index: 7
+    },
+    rendering: {
+        ctor: "ObjectEditor", label: "Rendering", required: false, props: {
         }
-    }, index:7},
-    rendering: {ctor: "TextInput", label: "Rendering", required:false, props: {
-        change: function(){
-            this.parent.parent.instance.rendering = this.value;
-        }
-    }}
+    }
     
-}
+};
 Builder.metaProps.DataGridColumn = {
-    name: {ctor:"TextInput", label: "Column Name", required:true, index:1}
-}
+    name: { ctor: "TextInput", label: "Column Name", required: true, index: 1 }
+};
 Builder.metaProps.TextInput = {
-    type: {ctor:"Select", label:"Input Type", props:{
-        dataProvider:new ArrayEx(getMembersCollection(TextInputType, "text", "value")),
-        change:function(){
-            this.parent.parent.instance.type = this.value;           
+    type: {
+        ctor: "Select", label: "Input Type", props: {
+            dataProvider: new ArrayEx(getMembersCollection(TextInputType, "text", "value")),
+            change: function () {
+                this.parent.parent.instance.type = this.value;
+            }
         }
-    }},
-    value: {ctor:"TextInput", label: "Text", required:true, index:3, props:{
-        change:function(){
-            this.parent.parent.instance.value = this.value;           
-        }        
-    }},
-    autocomplete: {ctor:"Select", label:"Autocomplete", props:{
-        dataProvider:new ArrayEx([{"value":"off", "text":"Off"}, {"value":"on", "text":"On"}]),
-        change:function(){
-            this.parent.parent.instance.autocomplete = this.value;           
+    },
+    value: {
+        ctor: "TextInput", label: "Text", required: true, index: 3, props: {
+            change: function () {
+                this.parent.parent.instance.value = this.value;
+            }
         }
-    }},
-    placeholder: {ctor:"TextInput", label: "Placeholder",index: 3, required: false, props: {
-        change: function(){
-            this.parent.parent.instance.placeholder = this.value;
+    },
+    autocomplete: {
+        ctor: "Select", label: "Autocomplete", props: {
+            dataProvider: new ArrayEx([{ "value": "off", "text": "Off" }, { "value": "on", "text": "On" }]),
+            change: function () {
+                this.parent.parent.instance.autocomplete = this.value;
+            }
         }
-    }}
-}
+    },
+    placeholder: {
+        ctor: "TextInput", label: "Placeholder", index: 3, required: false, props: {
+            change: function () {
+                this.parent.parent.instance.placeholder = this.value;
+            }
+        }
+    }
+};
 
 Builder.metaProps.Label = {
     labelType: {ctor: "Select", label: "Label Type", props: {
@@ -336,45 +345,57 @@ Builder.metaProps.Label = {
 };
 
 Builder.metaProps.Button = {
-    type: {ctor: "Select", label: "Button Type", props: {
-        dataProvider: new ArrayEx(getMembersCollection(ButtonType, "value", "text")),
-        change: function(){
-            this.parent.parent.instance.type = this.value;
+    type: {
+        ctor: "Select", label: "Button Type", props: {
+            dataProvider: new ArrayEx(getMembersCollection(ButtonType, "value", "text")),
+            change: function () {
+                this.parent.parent.instance.type = this.value;
+            }
         }
-    }},
-    label: {ctor: "TextInput", label: "Value", props: {
-        change: function(){
-            this.parent.parent.instance.label = this.value;
+    },
+    label: {
+        ctor: "TextInput", label: "Value", props: {
+            change: function () {
+                this.parent.parent.instance.label = this.value;
+            }
         }
-    }}
-}
+    }
+};
 
 Builder.metaProps.TextArea = {
-    value: {ctor: "TextInput", label: "Value", props: {
-        change: function(){
-            this.parent.parent.instance.value = this.value;
+    value: {
+        ctor: "TextInput", label: "Value", props: {
+            change: function () {
+                this.parent.parent.instance.value = this.value;
+            }
         }
-    }},
-    spellCheck: {ctor: "Select", label: "Spell Check", props: {
-        dataProvider: new ArrayEx([{"value":"false", "text":"False"}, {"value":"true", "text":"True"}]),
-        change: function(){
-            this.parent.parent.instance.spellCheck = this.value;
+    },
+    spellCheck: {
+        ctor: "Select", label: "Spell Check", props: {
+            dataProvider: new ArrayEx([{ "value": "false", "text": "False" }, { "value": "true", "text": "True" }]),
+            change: function () {
+                this.parent.parent.instance.spellCheck = this.value;
+            }
         }
-    }},
-    placeholder: {ctor:"TextInput", label: "Placeholder", props: {
-        change: function(){
-            this.parent.parent.instance.placeholder = this.value;
+    },
+    placeholder: {
+        ctor: "TextInput", label: "Placeholder", props: {
+            change: function () {
+                this.parent.parent.instance.placeholder = this.value;
+            }
         }
-    }}
-}
+    }
+};
 
 Builder.metaProps.DateTime = {
-    value: {ctor: "TextInput", label: "Value", props: {
-        change: function(){
-            this.parent.parent.instance.value = this.value;
+    value: {
+        ctor: "TextInput", label: "Value", props: {
+            change: function () {
+                this.parent.parent.instance.value = this.value;
+            }
         }
-    }}
-}
+    }
+};
 
 Builder.metaProps.Image = {
     alt: {ctor: "TextInput", label: "Alt", required:false, props: {
@@ -449,17 +470,21 @@ Builder.metaProps.Form = {
 };
 
 Builder.metaProps.Container = {
-    type: {ctor: "Select", label: "Type", props: {
-        dataProvider: new ArrayEx(getMembersCollection(ContainerType, "text", "value")),
-        change: function(){
-            this.parent.parent.instance.type = this.value;
+    type: {
+        ctor: "Select", label: "Type", props: {
+            dataProvider: new ArrayEx(getMembersCollection(ContainerType, "text", "value")),
+            change: function () {
+                this.parent.parent.instance.type = this.value;
+            }
         }
-    }},
-    role: {ctor: "TextInput", label: "Role", props: {
-        change: function(){
-            this.parent.parent.instance.role = this.value;
+    },
+    role: {
+        ctor: "TextInput", label: "Role", props: {
+            change: function () {
+                this.parent.parent.instance.role = this.value;
+            }
         }
-    }}
-}
+    }
+};
 
 

@@ -36,7 +36,6 @@ var FormField = function (_props) {
             if (_size)
                 _cmpObj.addClass(_size);
         }
-        console.log("endDraw");
     };
     
     this.beforeAttach = function (e) {

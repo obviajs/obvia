@@ -105,10 +105,11 @@ var App = function(_props){
     _behaviorimplementations["UPDATE_BEHAVIOR_BINDINGS"] = function(e) {
         console.log("UPDATE_BEHAVIOR_BINDINGS");
         _behaviors[e.newValue] = _behaviors[e.oldValue];
-        delete  _behaviors[e.oldValue];
+        delete _behaviors[e.oldValue];
     };
-    _behaviorimplementations["BEGIN_DRAW"] = function(e) {
-        _self.$el.append(_loader.render());
+    _behaviorimplementations["BEGIN_DRAW"] = function (e) {
+        if (!_loader.attached) 
+            _self.$el.append(_loader.render());
         _loader.show();
     };
     //default behavior is to hide loader on endDraw
@@ -290,8 +291,8 @@ var App = function(_props){
     });
 
     let r = Container.call(this, _props);
-    
     window.id = _self.domID;
+    
     _initDefaultBehaviors();
     this.registerBehaviors();   
     return r;

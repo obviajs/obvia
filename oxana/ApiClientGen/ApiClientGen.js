@@ -246,7 +246,7 @@ var ApiClientGen = function (_props) {
 {properties}
     };`;
     let _propDocTemplate = "\t* @property {{jsType}}  {prop}               - {description}\r\n";
-    let _propTemplate = "\t\tthis.{prop};\r\n";
+    let _propTemplate = "\t\tthis.{prop} = _props.{prop};\r\n";
     let _arrTypeTemplate = `var {typeName} = function()
 {
     let r = ArrayEx.apply(this, arguments);

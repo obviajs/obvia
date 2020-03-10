@@ -105,23 +105,18 @@ var Repeater = function(_props)
     let _compRenderPromises = [];
     if (!this.hasOwnProperty("createRows"))
     {
-        this.createRows = function ()
-        {
+        this.createRows = function () {
             console.time('time _createRows_' + _self.id);
             _self.trigger('beginDraw');
             //this.$container.empty();
             _self.focusedRow = 0;
             _self.focusedComponent = 0;
-            if (_dataProvider && _dataProvider.forEach)
-            {
+            if (_dataProvider && _dataProvider.forEach) {
                 let len = _dataProvider.length;
-                if (len > 0)
-                {
-                    for (let i = 0; i < len; i++)
-                    {
+                if (len > 0) {
+                    for (let i = 0; i < len; i++) {
                         let data = _dataProvider[i];
-                        if (data != null)
-                        {
+                        if (data != null) {
                             if (!data[_guidField])
                                 data[_guidField] = StringUtils.guid();
                             _compRenderPromises.splicea(_compRenderPromises.length, 0, _self.addRow(data, i));
@@ -131,13 +126,12 @@ var Repeater = function(_props)
                     _creationFinished = true;
             } else
                 _creationFinished = true;
-            Promise.all(_compRenderPromises).then(function ()
-            {
+            Promise.all(_compRenderPromises).then(function () {
                 _$hadow.contents().appendTo(_self.$container);
                 _compRenderPromises = [];
                 _self.trigger('endDraw');
             });
-        }
+        };
     }
 
     this.dataProviderChanged = function (toAdd, toRemove, toRefresh) 
