@@ -38,7 +38,7 @@ let selectedForm = new FormProperties();
 
 let formField = Builder.components["FormField"].literal;
 
-var noNeedFF = ["Button", "Label", "Container", "Link", "Header", "Footer", "Form", "SideNav", "ViewStack", "Calendar", "Tree", "Image", "HRule", "Heading"];
+var noNeedFF = ["Button", "Label", "Container", "Link", "Header", "Footer", "Form", "SideNav", "ViewStack", "Calendar", "Tree", "Image", "HRule", "Heading", "Repeater", "RepeaterEx"];
 var dpCmpSelect = [];
 
 var mainContainer = {

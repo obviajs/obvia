@@ -119,6 +119,10 @@ var App = function(_props){
     _behaviorimplementations["APP_UNLOADED"] = function(e) {
         //window.open("http://google.com/");
         //return "You have unsaved changes";
+        let len = BrowserWindow.all.length;
+        for (let i = 0; i < len; i++) { 
+            BrowserWindow.all[i].close();
+        }
     };
     _behaviorimplementations["APP_INACTIVE"] = function(e, idleTime, idleCount) {
         console.log("App became Inactive, Launch a cool screensaver here");
@@ -260,7 +264,7 @@ var App = function(_props){
     let _winWatcher = ChangeWatcher.getInstance(BrowserWindow.all);
     _winWatcher.watch(BrowserWindow.all, "length", function(e){
         if(e.oldValue < e.newValue){
-            _self.registerBehaviors(BrowserWindow.all[BrowserWindow.all.length-1]);
+            _self.registerBehaviors(BrowserWindow.all[BrowserWindow.all.length-1].window);
 
         }
         //

@@ -5,7 +5,8 @@ var Parent = function (_props, overrided = false, _isSurrogate = false) {
     let _compRenderPromises = [];
     let _self = this;
     let _children = {};
-
+    let _enabled;
+    
     let _proxy = new Proxy(this, {
         get: function (target, property, receiver) {
             if (!target.hasOwnProperty(property)) {
@@ -249,7 +250,7 @@ var Parent = function (_props, overrided = false, _isSurrogate = false) {
         if (e.target.id == this.domID) {
             if (typeof _beforeAttach == 'function')
                 _beforeAttach.apply(this, arguments);
-            if (_props.enabled)
+            if (_props.enabled === false)
                 this.enabled = _props.enabled;
         }
     };
@@ -383,7 +384,6 @@ var Parent = function (_props, overrided = false, _isSurrogate = false) {
             base.destruct(mode);
         }
     */
-    let _enabled = true;
     Object.defineProperty(this, "enabled",
         {
             get: function enabled() {

@@ -20,6 +20,7 @@ var DataGridColumn = function (_props) {
         },
         itemEditor: null,
         editable: false,
+        visible: true,
         oncellstyling: null,
         oncelleditfinished: null
     };
@@ -36,6 +37,7 @@ var DataGridColumn = function (_props) {
     this.itemRenderer = _props.itemRenderer;
     this.itemEditor = _props.itemEditor;
     this.editable = _props.editable;
+    this.visible = _props.visible;
     this.oncellstyling = _props.oncellstyling;
     this.oncelleditfinished = _props.oncelleditfinished;
 

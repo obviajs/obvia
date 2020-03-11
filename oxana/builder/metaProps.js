@@ -4,7 +4,7 @@ Builder.metaProps = {
             this.parent.parent.instance.form_name = this.value;
         }
     }},
-    description: {ctor:"TextArea", label: "Form Description", required:false, index:1, props :{
+    description: {ctor:"TextArea", label: "Description", required:false, index:1, props :{
         change: function(){
             this.parent.parent.instance.description = this.value;
         }
@@ -18,7 +18,11 @@ Builder.metaProps = {
             this.parent.parent.instance.id = this.value;
         }
     }},
-    name: {ctor:"TextInput", label: "Component Name", required:true, index:2},
+    name: {ctor:"TextInput", label: "Component Name", required:true, index:2, props: {
+        change: function(){
+            this.parent.parent.instance.name = this.value;
+        }
+    }},
     label: {ctor:"TextInput", label: "Label", required:true, index:3, props: {
         change: function(){
             this.parent.parent.instance.label = this.value;
@@ -45,14 +49,31 @@ Builder.metaProps = {
             this.parent.parent.instance.height = this.value;
         }
     }},
-    visible: {ctor:"Toggle", label: "Visible", index:4},
-    enabled: {ctor:"Toggle", label: "Enabled", index:5}, 
-    required: {ctor:"Toggle", label: "Required", index:6},
-    checked: {ctor:"Toggle", label: "Checked", index:7},
+    visible: {ctor:"Toggle", label: "Visible", index:4, props: {
+        change: function(){
+            this.parent.parent.instance.visible = this.value;
+        }
+    }},
+    enabled: {ctor:"Toggle", label: "Enabled", index:5, props: {
+        change: function(){
+            this.parent.parent.instance.enabled = this.value;
+        }
+    }}, 
+    required: {ctor:"Toggle", label: "Required", index:6, props: {
+        change: function(){
+            this.parent.parent.instance.required = this.value;
+        }
+    }},
+    checked: {ctor:"Toggle", label: "Checked", index:7, props: {
+        change: function(){
+            this.parent.parent.instance.checked = this.value;
+        }
+    }},
     dataProvider: {ctor:"AutoBrowse", label: "Data Provider", required:true, props:{
         valueField: Builder.providerValueField,
         labelField: Builder.providerLabelField,
         dataProvider: Builder.sources,
+        classes:["no-form-control"],
         change: function(){
             //propsForm.children["dataProvider"].value
             //get the fields for the selected datProvider and 
@@ -90,7 +111,11 @@ Builder.metaProps = {
             this.parent.parent.instance.displayFormat = this.value;
         }
     }, index:14},
-    multiple: {ctor:"Toggle", label: "Multiple Files", index:15},
+    multiple: {ctor:"Toggle", label: "Multiple Files", index:15, props: {
+        change: function(){
+            this.parent.parent.instance.multiple = this.value;
+        }
+    }},
     accept:{ctor:"Toggle", label: "Allowed Files", index:16},
     spacing:{ctor:"SpacingEditor", label: "Adjust Spacing", index:17, props: {
         change: function(){
@@ -145,11 +170,13 @@ Builder.metaProps = {
     headerText: "Pija Preferuar",
     sortInfo:{sortOrder:0, sortDirection:"ASC"},
     sortable:{ctor:"Toggle", label: "Sortable", index:20, props:{
-        change: function(){
+        change: function () {
+            this.parent.parent.instance.sortable = this.checked;
         }
     }},
     editable:{ctor:"Toggle", label: "Editable", index:21, props:{
-        change: function(){
+        change: function () {
+            this.parent.parent.instance.editable = this.checked;
         }
     }},
     input: {
@@ -188,93 +215,45 @@ Builder.metaProps = {
             this.parent.parent.instance.side = this.value;           
         }
     }},
-    separator:{ctor:"Toggle", label: "Separator"},
-    itemRenderer:{ctor:"ObjectEditor", label: "Item Renderer", required:true, props:{
+    separator:{ctor:"Toggle", label: "Separator", props: {
         change: function(){
-            //propsForm.children["dataProvider"].value
-            //get the fields for the selected datProvider and 
-            //assign them to the labelField and valueField editor`s dataProvider property
+            this.parent.parent.instance.separator = this.value;
         }
-    },
-    targetProps:{
-        target:{
-            ctor:"BrowserWindow",
-            props:{
-                height:500,
-                width:600,
-                left:800,
-                top:200,
-            }
-        },anchor:{
-            component:{
-                ctor: AutoBrowse,
-                props: {
-                    id: 'anchorBtn',
-                    valueField: ObjectEditor.componentValueField,
-                    labelField: ObjectEditor.componentValueField,
-                    dataProvider: Builder.componentList,
-                    fields:[{"field":ObjectEditor.componentValueField, "description":ObjectEditor.componentValueField, "visible":false}, {"field":ObjectEditor.componentLabelField, "description":ObjectEditor.componentLabelField}]        
+    }},
+    itemRenderer: {
+        ctor: "AutoBrowse", label: "Item Renderer", required: true, props: {
+            valueField: ObjectEditor.componentValueField,
+            labelField: ObjectEditor.componentValueField,
+            dataProvider: Builder.componentList,
+            fields:[{"field":ObjectEditor.componentValueField, "description":ObjectEditor.componentValueField, "visible":false}, {"field":ObjectEditor.componentLabelField, "description":ObjectEditor.componentLabelField}],        
+            classes:["no-form-control"],
+            change: function () {
+                //propsForm.children["dataProvider"].value
+                //get the fields for the selected datProvider and 
+                //assign them to the labelField and valueField editor`s dataProvider property
+                if (this.value && this.value.length > 0) {
+                    this.parent.parent.instance.itemEditor = this.value[0];
                 }
-            },
-            events:[{
-                event:"browse", handler: function(e, oe, itemEditorLit, targetLit){
-                    if(this.value && this.value.length>0){
-                        e.preventDefault();
-                        let wl = extend(true, targetLit);
-                        itemEditorLit.props.instance = extend(true, Builder.components[this.value[0][ObjectEditor.componentValueField]].literal);
-                        itemEditorLit.props.field = "props";
-                        wl.props.components = [itemEditorLit];
-                        let win = oe.addComponent(wl);
-                        win.show();
-                    }
-                }}
-            ]
-        }
+            }
     },
     index:18},
-    itemEditor:{ctor:"ObjectEditor", label: "Item Editor", required:false, props:{
-        change: function(){
-            //propsForm.children["dataProvider"].value
-            //get the fields for the selected datProvider and 
-            //assign them to the labelField and valueField editor`s dataProvider property
-            console.log(arguments);
-        }
-    }, 
-    targetProps:{
-        target:{
-            ctor:"BrowserWindow",
-            props:{
-                height:500,
-                width:600,
-                left:800,
-                top:200,
-            }
-        },anchor:{
-            component:{
-                ctor: AutoBrowse,
-                props: {
-                    id: 'anchorBtn',
-                    valueField: ObjectEditor.componentValueField,
-                    labelField: ObjectEditor.componentValueField,
-                    dataProvider: Builder.componentList,
-                    fields:[{"field":ObjectEditor.componentValueField, "description":ObjectEditor.componentValueField, "visible":false}, {"field":ObjectEditor.componentLabelField, "description":ObjectEditor.componentLabelField}]        
+    itemEditor: {
+        ctor: "AutoBrowse", label: "Item Editor", required: false, props: {
+            valueField: ObjectEditor.componentValueField,
+            labelField: ObjectEditor.componentValueField,
+            dataProvider: Builder.componentList,
+            fields:[{"field":ObjectEditor.componentValueField, "description":ObjectEditor.componentValueField, "visible":false}, {"field":ObjectEditor.componentLabelField, "description":ObjectEditor.componentLabelField}],
+            classes:["no-form-control"],
+            change: function () {
+                //propsForm.children["dataProvider"].value
+                //get the fields for the selected datProvider and 
+                //assign them to the labelField and valueField editor`s dataProvider property
+                if (this.value && this.value.length > 0) {
+                    this.parent.parent.instance.itemEditor = this.value[0];
                 }
-            },
-            events:[{
-                event:"browse", handler: function(e, oe, itemEditorLit, targetLit){
-                    if(this.value && this.value.length>0){
-                        e.preventDefault();
-                        let wl = extend(true, targetLit);
-                        itemEditorLit.props.instance = extend(true, Builder.components[this.value[0][ObjectEditor.componentValueField]].literal);
-                        itemEditorLit.props.field = "props";
-                        wl.props.components = [itemEditorLit];
-                        let win = oe.addComponent(wl);
-                        win.show();
-                    }
-                }}
-            ]
-        }
-    },
+                console.log(arguments);
+            }
+    }, 
     index:19}
 };
 
@@ -285,6 +264,29 @@ Builder.metaProps.Repeater = {
             labelField: "form_name",
             dataProvider: ObjectEditor.data.forms,
             fields: [{ "field": "form_id", "description": "form_id", "visible": false }, { "field": "form_name", "description": "form_name" }],
+            classes:["no-form-control"],
+            change: function () {
+                //propsForm.children["dataProvider"].value
+                //get the fields for the selected datProvider and 
+                //assign them to the labelField and valueField editor`s dataProvider property
+                this.parent.parent.instance.attr.repeated_id_form = this.value.length > 0 ? this.value[0][this.valueField] : undefined;
+            }
+        }, index: 7
+    },
+    rendering: {
+        ctor: "ObjectEditor", label: "Rendering", required: false, props: {
+        }
+    }
+    
+};
+Builder.metaProps.RepeaterEx = {
+    components: {
+        ctor: "AutoBrowse", label: "Repeated Form", required: true, props: {
+            valueField: "form_id",
+            labelField: "form_name",
+            dataProvider: ObjectEditor.data.forms,
+            fields: [{ "field": "form_id", "description": "form_id", "visible": false }, { "field": "form_name", "description": "form_name" }],
+            classes:["no-form-control"],
             change: function () {
                 //propsForm.children["dataProvider"].value
                 //get the fields for the selected datProvider and 
@@ -300,7 +302,12 @@ Builder.metaProps.Repeater = {
     
 };
 Builder.metaProps.DataGridColumn = {
-    name: { ctor: "TextInput", label: "Column Name", required: true, index: 1 }
+    name: {
+        ctor: "TextInput", label: "Column Name", required: true, index: 1, props: {
+            change: function () {
+                this.parent.parent.instance.name = this.value;
+            }
+    }}
 };
 Builder.metaProps.TextInput = {
     type: {

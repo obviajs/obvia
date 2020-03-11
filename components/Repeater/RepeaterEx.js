@@ -20,7 +20,7 @@ var RepeaterEx = function(_props)
         },
         enumerable:true
     });
-    var _dpLengthChanged = function(e)
+    let _dpLengthChanged = function(e)
     {
         e.stopPropagation();
         e.stopImmediatePropagation();
@@ -31,88 +31,84 @@ var RepeaterEx = function(_props)
 
     }
     let _repeater, _removeButton, _addButton, _dpWatcher;
-    this.endDraw = function (e)
-    {
-        if (e.target.id == this.domID)
-        {
+    this.endDraw = function (e) {
+        if (e.target.id == this.domID) {
             _repeater = this.children[this.components[0].props.id];
-            if(_repeater.dataProvider){
+            if (_repeater.dataProvider) {
                 _dpWatcher = ChangeWatcher.getInstance(_repeater.dataProvider);
                 _dpWatcher.watch(_repeater.dataProvider, "length", _dpLengthChanged);
             }
             _removeButton = this.children[this.components[1].props.id].children[this.components[1].props.components[0].props.id];
-            _addButton = this.children[this.components[1].props.id].children[this.components[1].props.components[1].props.id];            
+            _addButton = this.children[this.components[1].props.id].children[this.components[1].props.components[1].props.id];
         }
-    }
+    };
     
-    this.beforeAttach = function(e) 
-    {
-        if (e.target.id == this.domID) 
-        {
+    this.beforeAttach = function (e) {
+        if (e.target.id == this.domID) {
             e.preventDefault();
         }
-    }
+    };
 
-    var fnContainerDelayInit = function(){
-        _cmps = 
-        [
-            {
-                ctor: Repeater,
-                props: _propsRepeater
-            },
-            {
-                "ctor": "Container",
-                "props": {
-                    type: ContainerType.Container,
-                    "id": "workArea",
-                    "components": [
-                        {
-                            ctor: Button,
-                            props: {
-                                id: 'removeButton',
-                                type: "button",
-                                components: [{
-                                    ctor: Label,
-                                    props: {
-                                        id: 'fa',
-                                        labelType: LabelType.i,
-                                        classes: ["fas","fa-minus-circle"]
-                                    }
-                                }],
-                                click:_remove,
-                                enabled: _props.dataProvider.length>1?true:false
+    let fnContainerDelayInit = function () {
+        _cmps =
+            [
+                {
+                    ctor: Repeater,
+                    props: _propsRepeater
+                },
+                {
+                    "ctor": "Container",
+                    "props": {
+                        type: ContainerType.Container,
+                        "id": "workArea",
+                        "components": [
+                            {
+                                ctor: Button,
+                                props: {
+                                    id: 'removeButton',
+                                    type: "button",
+                                    components: [{
+                                        ctor: Label,
+                                        props: {
+                                            id: 'fa',
+                                            labelType: LabelType.i,
+                                            classes: ["fas", "fa-minus-circle"]
+                                        }
+                                    }],
+                                    click: _remove,
+                                    enabled: _props.dataProvider.length > 1 ? true : false
+                                }
+                            },
+                            {
+                                ctor: Button,
+                                props: {
+                                    id: 'addButton',
+                                    type: "button",
+                                    components: [{
+                                        ctor: Label,
+                                        props: {
+                                            id: 'fa',
+                                            labelType: LabelType.i,
+                                            classes: ["fas", "fa-plus-circle"]
+                                        }
+                                    }],
+                                    click: _add
+                                }
                             }
-                        },
-                        {
-                            ctor: Button,
-                            props: {
-                                id: 'addButton',
-                                type: "button",
-                                components: [{
-                                    ctor: Label,
-                                    props: {
-                                        id: 'fa',
-                                        labelType: LabelType.i,
-                                        classes: ["fas","fa-plus-circle"]
-                                    }
-                                }],
-                                click:_add
-                            }
-                        }
-                    ]
+                        ]
+                    }
                 }
-            }
-        ]
-    }
-    var _remove = function(e){
-        _props.dataProvider.splice(_props.dataProvider.length-1, 1);
-    }
+            ];
+    };
+    let _remove = function (e) {
+        _props.dataProvider.splice(_props.dataProvider.length - 1, 1);
+    };
 
-    var _add = function(e){
+    let _add = function (e) {
         _props.dataProvider.splice(_props.dataProvider.length, 0, buildDefaultObject(_props.dataProvider[0]));
-    }
+    };
 
-    var _defaultParams = {
+    let _defaultParams = {
         type: ContainerType.CONTAINER,
         rendering: {
 			direction: 'vertical',
@@ -123,13 +119,14 @@ var RepeaterEx = function(_props)
         guidField:"guid"
     };
     _props = extend(false, false, _defaultParams, _props);
-    var _dataProvider;
-    var _rendering = _props.rendering;
-    var _enabled = _props.enabled;
-    var _guidField = _props.guidField;
+    let _dataProvider;
+    let _rendering = _props.rendering;
+    let _enabled = _props.enabled;
+    let _guidField = _props.guidField;
     let _propsRepeater = {};
     //avoid circular reference, by shallow copying, and later adding components to _props
     shallowCopy(_props, _propsRepeater);
+    _propsRepeater.minHeight = 40;
     fnContainerDelayInit();
     _props.components = _cmps;
     

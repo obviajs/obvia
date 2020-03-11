@@ -31,10 +31,8 @@ var AutoCompleteEx = function(_props)
         }
     });
     
-    this.endDraw = function(e)
-    { 
-        if (e.target.id == this.domID)
-        {
+    this.endDraw = function (e) {
+        if (e.target.id == this.domID) {
             _suggestionsRepeater = this.suggestionsRepeater;
             _tokenContainer = this.tokenContainer;
             _input = this.tokenContainer.tokenInput;
@@ -42,50 +40,46 @@ var AutoCompleteEx = function(_props)
             _suggestionsRepeater.css.left = "inherit";
             _suggestionsRepeater.css.top = "inherit";
             _suggestionsRepeater.css.position = "relative";
-            _tokenInputReSize();
+           
+            _tokenRepeater.on("endDraw", _tokenInputReSize);
         }
-    }
+    };
     
     this.beforeAttach = function () 
     {
-        
-
+       
     };
-    this.afterAttach = function (e) 
-    {
-        if (e.target.id == this.domID)
-        { 
+
+    this.afterAttach = function (e) {
+        if (e.target.id == this.domID) {
+            _tokenInputReSize();
         }
-    }
-    let _tokenRendererClickHandler = function (e)
-    {
-    }
+    };
+
+    let _tokenRendererClickHandler = function (e) {
+    };
     
-    let _tokenRendererDoubleClickHandler = function (e)
-    {
-    }
+    let _tokenRendererDoubleClickHandler = function (e) {
+    };
     
-    let _tokenRendererMouseDownHandler = function (e)
-    {
-    }
+    let _tokenRendererMouseDownHandler = function (e) {
+    };
     
-    let _tokenInputReSize = function(){
-        let rowCount = _tokenRepeater.rows.length;
-        let rowWidth = 0, rowTop = 0;
-        for(let i=0;i<rowCount;i++){
-            let rowPos = _tokenRepeater.rows[i].position();
-            if(rowPos.top != rowTop){
-                rowTop = rowPos.top;
-                rowWidth = _tokenRepeater.rows[i].width();
+    let _tokenInputReSize = function () {
+        //_tokenRepeater.token[0].$el.width()
+        let tokenCount = _tokenRepeater.token==null?0:_tokenRepeater.token.length;
+        let tokenWidth = 0, rowTop = 0;
+        for(let i=0;i<tokenCount;i++){
+            let tokenPos = _tokenRepeater.token[i].$el.position();
+            if(tokenPos.top != rowTop){
+                tokenTop = tokenPos.top;
+                tokenWidth = _tokenRepeater.token[i].$el.width();
             }else{
-                rowWidth += _tokenRepeater.rows[i].width();
+                tokenWidth += _tokenRepeater.token[i].$el.width();
             }
         }
-        let tokenInputWidth = _self.$el.width() - rowWidth - 2;
-        let tokeInputSetWidth = whenDefined(_self, "tokenInput", function(tiw){
-            _input.$el.css({"width": tiw+"px"});
-        }); 
-        tokeInputSetWidth(tokenInputWidth);
+        let tokenInputWidth = Math.max(_self.$el.width() - tokenWidth - 2, 0);
+        _input.$el.css({"width": tokenInputWidth+"px"});
     }; 
    
     let _suggestionsDropDownKeyDown = function(e)
@@ -107,28 +101,27 @@ var AutoCompleteEx = function(_props)
             }
         }
     };
-    let _suggestionRendererKeyDownHandler = function(e, repeaterEventArgs)
-    {
+    let _suggestionRendererKeyDownHandler = function (e, repeaterEventArgs) {
         switch (e.keyCode) {
             case 9: // TAB - apply and move to next column on the same row 
-            console.log("TAB");
+                console.log("TAB");
 
-            console.log(repeaterEventArgs);
-            //this.parent.parent.addTokenItems(repeaterEventArgs.currentItem);
-            if(_self.multiSelect){
-                //TODO:check because concat will return a new value
-                _self.value.splice(_self.value.length, 0, repeaterEventArgs.currentItem);
-            }else{
-                _self.value = repeaterEventArgs.currentItem;
-            }
+                console.log(repeaterEventArgs);
+                //this.parent.parent.addTokenItems(repeaterEventArgs.currentItem);
+                if (_self.multiSelect) {
+                    //TODO:check because concat will return a new value
+                    _self.value.splice(_self.value.length, 0, repeaterEventArgs.currentItem);
+                } else {
+                    _self.value = repeaterEventArgs.currentItem;
+                }
     
-            _self.removeSuggestionItemAt(repeaterEventArgs.currentIndex);
-           // acEx.closeSuggestionsList();
-            _closeSuggestionsList();
-            _input.$el.focus();
-            break;
+                _self.removeSuggestionItemAt(repeaterEventArgs.currentIndex);
+                // acEx.closeSuggestionsList();
+                _closeSuggestionsList();
+                _input.$el.focus();
+                break;
         }
-    }
+    };
 
     let _tokenInputKeyDown = function(e)
     {
@@ -499,20 +492,7 @@ var AutoCompleteEx = function(_props)
                     classes: ["border"],
                     attr: { "role": "menu" },
                     "components": [
-                        {
-                            ctor: TextInput,
-                            props: {
-                                id: 'tokenInput',
-                                attr: { "placeholder": 'Type something...' },
-                                versionStyle: '',
-                                keydown: _tokenInputKeyDown,
-                                keyup: _tokenInputKeyUp,
-                                classes: ['border-0', 'ellipsis'],
-                                ownerDocument: this.ownerDocument,
-                                css: { "outline": "none", "font-size": "14px", "float": "left" }
-                            }
-                        },
-                        {
+                         {
                             ctor: Repeater,
                             props: {
                                 id: 'tokenRepeater',
@@ -524,9 +504,20 @@ var AutoCompleteEx = function(_props)
                                 },
                                 ownerDocument: this.ownerDocument,
                                 dataProvider: _value,
-                                components: [_tokenRenderer],
-                                rowAdd: _tokenInputReSize,
-                                rowDelete: _tokenInputReSize
+                                components: [_tokenRenderer]
+                            }
+                        },
+                        {
+                            ctor: TextInput,
+                            props: {
+                                id: 'tokenInput',
+                                attr: { "placeholder": 'Type something...' },
+                                versionStyle: '',
+                                keydown: _tokenInputKeyDown,
+                                keyup: _tokenInputKeyUp,
+                                classes: ['border-0', 'ellipsis'],
+                                ownerDocument: this.ownerDocument,
+                                css: { "outline": "none", "font-size": "14px", "float": "left" }
                             }
                         }
                     ]

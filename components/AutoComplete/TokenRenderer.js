@@ -119,7 +119,7 @@ var TokenRenderer = function(_props)
         closeIconSide: "left",
         components: [],
         "type": ContainerType.NONE,
-        classes: ["badge", "badge-info"],
+        classes: ["badge", "badge-info", "d-inline"],
         css: {"font-size": "14px", "margin":"2px"}
     };
     _props = extend(false, false, _defaultParams, _props);
@@ -141,7 +141,7 @@ var TokenRenderer = function(_props)
         ctor: Link,
         props: {
             id: "linkCmp",
-            classes: ["badge", "badge-info"],
+            classes: ["badge", "badge-info", "d-inline"],
             click: _closeIconClick,
             label: "x"
         }

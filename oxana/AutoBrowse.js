@@ -59,7 +59,7 @@ var AutoBrowse = function (_props, overrided = false) {
     {
         if (e.target.id == this.domID)
         {
-            _autocomplete = this.children[this.components[0].props.id].children[this.components[0].props.components[0].props.id];
+            _autocomplete = this.autocomplete;
             _modal = this.children[this.components[2].props.id];
             _dg = _modal.modalDialog.modalContent.modalBody.dataGrid;
         }
@@ -80,25 +80,17 @@ var AutoBrowse = function (_props, overrided = false) {
         _cmps = 
         [
             {
-                "ctor": "Container",
-                "props": {
-                    type: ContainerType.NONE,
-                    "id": "workArea",
-                    "components": [
-                        {
-                            "ctor": AutoCompleteEx,
-                            "props":{
-                                id: 'autocomplete',
-                                valueField: _valueField,
-                                labelField: _labelField,
-                                allowNewItem: _props.allowNewItem, //allow the user to add items that are not included in the specified dataProvider
-                                dataProvider: _dataProvider,
-                                value: _value,
-                                multiSelect: false,
-                                matchType:StringMatchType.STARTS_WITH
-                            }
-                        }
-                    ]
+                "ctor": AutoCompleteEx,
+                "props":{
+                    id: 'autocomplete',
+                    valueField: _valueField,
+                    labelField: _labelField,
+                    allowNewItem: _props.allowNewItem, //allow the user to add items that are not included in the specified dataProvider
+                    dataProvider: _dataProvider,
+                    value: _value,
+                    multiSelect: false,
+                    matchType: StringMatchType.STARTS_WITH,
+                    width: "90%"
                 }
             },
             {
@@ -167,20 +159,19 @@ var AutoBrowse = function (_props, overrided = false) {
         _modal.hide();
     }
     
-    let _initColumns = function ()
-    {
-        for(let i=0;i<_fields.length;i++)
-        {
+    let _initColumns = function () {
+        for (let i = 0; i < _fields.length; i++) {
             _columns.push({
-                width:400,
+                width: 400,
                 field: _fields[i].field,
                 description: _fields[i].description,
-                visible: _fields[i].visible?_fields[i].visible:true,
+                visible: _fields[i].visible ? _fields[i].visible : true,
                 sortable: true,
-                sortInfo: {sortOrder:0, sortDirection:"ASC"}
+                sortInfo: { sortOrder: 0, sortDirection: "ASC" }
             });
-        };    
-    }
+        }
+    };
+
     let _defaultParams = {
         type: ContainerType.NONE,
         "components": [],
@@ -194,7 +185,22 @@ var AutoBrowse = function (_props, overrided = false) {
     };
 
     _props = extend(false, false, _defaultParams, _props);
-    if(_props.dataProvider){
+    if (!_props.attr) { 
+        _props.attr = {};
+    }
+
+    let myDtEvts = ["browse"];
+    if (!Object.isEmpty(_props.attr) && _props.attr["data-triggers"] && !Object.isEmpty(_props.attr["data-triggers"]))
+    {
+        let dt = _props.attr["data-triggers"].split(" ");
+        for (let i = 0; i < dt.length; i++)
+        {   
+            myDtEvts.pushUnique(dt[i]);
+        }
+    }
+    _props.attr["data-triggers"] = myDtEvts.join(" ");
+    
+    if (_props.dataProvider) {
         _dataProvider = _props.dataProvider;
     }
     

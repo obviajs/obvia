@@ -525,6 +525,16 @@ Builder.components = {
         label: "Repeater",
         icon: ".png"
     },
+    "RepeaterEx": {
+        literal: {
+            ctor: RepeaterEx,
+            props: {
+                id: 'repeater',
+            }
+        },
+        label: "RepeaterEx",
+        icon: ".png"
+    },
     "List": {
         literal: {
             ctor: List,

@@ -56,7 +56,7 @@ var ObjectEditor = function (_props, overrided = false) {
                     ff.props.label = propsMeta.label;
                     ff.props.placeholder = propsMeta.label;
                     ff.props.required = propsMeta.required;
-                    if (propsMeta.ctor in { "CollectionEditor": 1, "ObjectEditor": 1 }) {
+                    if (propsMeta.ctor in { "CollectionEditor": 1, "ObjectEditor": 1 } && (propsMeta.targetProps == null)) {
                         ff.props.afterAttach = function (e) {
                             console.log("OE_END_DRAW" + this.id);
                             this.inputLabel.attr["data-toggle"] = "collapse";
@@ -97,6 +97,10 @@ var ObjectEditor = function (_props, overrided = false) {
                         }
                         ff.props.component = itemEditorLit;
                     }
+                    if (ff.props.classes)
+                        ff.props.classes.pushUnique("mt-2");
+                    else
+                        ff.props.classes = ["mt-2"];
                     ff.props.component.props.bindingDefaultContext = props;
                     ff.props.component.props[(propEditor.valueField || "value")] = "{?" + prop + "}";
                     ff.props.index = propsMeta.index;

@@ -20,12 +20,10 @@ var BrowserWindow = function(_props)
         ownerDocument: null
     };
     
-    this.endDraw = function (e)
-    {
-        if (e.target.id == this.domID)
-        {
+    this.endDraw = function (e) {
+        if (e.target.id == this.domID) {
         }
-    }
+    };
     
     this.template = function ()
     {
@@ -33,12 +31,12 @@ var BrowserWindow = function(_props)
         _win.addEventListener('beforeunload', function(e){
             _self.removeAllChildren();
             _win = null;
-            BrowserWindow.all.splice(BrowserWindow.all.indexOf(_win), 1);
+            BrowserWindow.all.splice(BrowserWindow.all.indexOf(_self), 1);
             _self.$el.remove();
             delete e['returnValue'];
             _self.trigger("beforeunload");
         });
-        BrowserWindow.all.push(_win);
+        BrowserWindow.all.push(this);
         CSSUtils.copyStyles(document, _win.document);
         this.ownerDocument = _win.document;
         
@@ -48,13 +46,13 @@ var BrowserWindow = function(_props)
         return null;
     };
 
-    this.close = function(){
-        if(_win){
+    this.close = function () {
+        if (_win) {
             _win.close();
             _win = null;
-            BrowserWindow.all.splice(BrowserWindow.all.indexOf(_win), 1);
+            BrowserWindow.all.splice(BrowserWindow.all.indexOf(this), 1);
         }
-    }
+    };
 
     _props = extend(false, false, _defaultParams, _props);
     _props.ownerDocument = null;
@@ -87,10 +85,9 @@ var BrowserWindow = function(_props)
         }
     });
 
-    this.destruct = function (mode=1)
-    {
+    this.destruct = function (mode = 1) {
         this.close();
-    }
+    };
 };
 BrowserWindow.prototype.ctor = 'BrowserWindow';
 BrowserWindow.all = new ArrayEx();

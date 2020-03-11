@@ -477,7 +477,7 @@ var Repeater = function(_props)
                             .css((_rendering.direction == 'horizontal' ? {display: 'inline-block'} : {}))
                             .append(cmpInstance.$el);
                                  
-                            if(_rendering.separator && (index > 0) && (index < _self.dataProvider.length-1)){
+                            if(_rendering.separator && (index > 0)){
                                 renderedRow.addClass("separator");  
                             }        
                             // if(_self.mode =="append")

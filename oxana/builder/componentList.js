@@ -90,6 +90,9 @@ Builder.componentList = [
         "label":"Repeater", "ctor": "Repeater"
     },
     {
+        "label":"RepeaterEx", "ctor": "RepeaterEx"
+    },
+    {
         "label":"List", "ctor": "List"
     },
     {
