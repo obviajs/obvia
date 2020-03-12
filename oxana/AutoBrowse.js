@@ -38,11 +38,24 @@ var AutoBrowse = function (_props, overrided = false) {
         },
         set: function valueField(v) 
         {
-            _valueField = v;
+            _autocomplete.valueField = _valueField = v;
         },
         enumerable:true
-    });
-
+        });
+    
+    Object.defineProperty(this, "labelField", 
+    {
+        get: function labelField() 
+        {
+            return _labelField;
+        },
+        set: function labelField(v) 
+        {
+            _autocomplete.labelField = _labelField = v;
+        },
+        enumerable:true
+        });
+    
     Object.defineProperty(this, "value", 
     {
         get: function value() 
@@ -55,26 +68,22 @@ var AutoBrowse = function (_props, overrided = false) {
         },
         enumerable:true
     });
-    this.endDraw = function (e)
-    {
-        if (e.target.id == this.domID)
-        {
+    this.endDraw = function (e) {
+        if (e.target.id == this.domID) {
             _autocomplete = this.autocomplete;
             _modal = this.children[this.components[2].props.id];
             _dg = _modal.modalDialog.modalContent.modalBody.dataGrid;
         }
-    }
+    };
     
-    this.beforeAttach = function(e) 
-    {
-        if (e.target.id == this.domID) 
-        {
-            if(_props.value){
+    this.beforeAttach = function (e) {
+        if (e.target.id == this.domID) {
+            if (_props.value) {
                 this.value = _props.value;
             }
             e.preventDefault();
         }
-    }
+    };
     let _cmps, _autocomplete, _dg, _modal;
     var fnContainerDelayInit = function(){
         _cmps = 

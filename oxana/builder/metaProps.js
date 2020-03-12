@@ -78,6 +78,9 @@ Builder.metaProps = {
             //propsForm.children["dataProvider"].value
             //get the fields for the selected datProvider and 
             //assign them to the labelField and valueField editor`s dataProvider property
+            if (this.value && this.value.length > 0) { 
+                this.parent.parent.instance.dataProvider = ObjectEditor.data[this.value[0].name];
+            }
         }
     }, index:8},
     labelField: {ctor:"AutoCompleteEx", label: "Label Field", required:true, props:{
@@ -126,7 +129,9 @@ Builder.metaProps = {
             this.parent.parent.instance.spacing.mt = _spacing.mt;
         }
     }},
-    columns:{ctor:"CollectionEditor", label: "Columns", index:18, props:{
+    columns: {
+        ctor: "CollectionEditor", label: "Columns", index: 18, props: {
+            id: "columnEditor",
             memberType:"DataGridColumn"
         },
         targetProps:{
@@ -156,11 +161,35 @@ Builder.metaProps = {
                     }
                 },
                 events:[{
-                    event:"click", handler: function(e, oe, itemEditorLit, targetLit){
-                        let wl = extend(true, targetLit);
-                        wl.props.components = [itemEditorLit];
-                        let win = oe.addComponent(wl);
-                        win.show();
+                    event: "click", handler: function (e, oe, itemEditorLit, targetLit) {
+                        if (oe.dataProvider.input.value && oe.dataProvider.input.value.length > 0) {
+                            let wl = extend(true, targetLit);
+                            wl.props.components = [itemEditorLit];
+                            let dpName = oe.dataProvider.input.value[0][oe.dataProvider.input.valueField];
+                            if (ObjectEditor.data[dpName] && ObjectEditor.data[dpName].length > 0) {
+                                let win = oe.addComponent(wl);
+                                if (win.columnEditor.repeater.repeater.objectEditor) {
+                                    let dpFieldNames = Object.keys(ObjectEditor.data[dpName][0]);
+                                    let len = dpFieldNames.length;
+                                    let dpFields = new ArrayEx();
+                                    for (let i = 0; i < len; i++) { 
+                                        dpFields.push({ "dpField": dpFieldNames[i]});
+                                    }
+                                    
+                                    len = win.columnEditor.repeater.repeater.objectEditor.length;
+                                    for (let i = 0; i < len; i++) {
+                                        //win.columnEditor.repeater.repeater.objectEditor[i].dataProvider.input.dataProvider = dpFields;
+                                        //win.columnEditor.repeater.repeater.objectEditor[i].field.component.props.dataProvider = dpFields;
+                                        win.columnEditor.repeater.repeater.objectEditor[i].field.children["AutoCompleteEx"].dataProvider = dpFields;
+                                    }
+                                    win.show();
+                                }
+                            } else { 
+                                alert("The selcted DataProvider is empty or failed to load.");
+                            }
+                        } else { 
+                            alert("Please Select DataProvider");
+                        }
                     }}
                 ]
             }
@@ -254,9 +283,19 @@ Builder.metaProps = {
                 console.log(arguments);
             }
     }, 
-    index:19}
+    index: 19},
+    field: {ctor:"AutoCompleteEx", label: "DataProvider Field", required:true, props:{
+        valueField: "dpField",
+        labelField: "dpField"
+    }, index:1}    
 };
-
+Builder.metaProps.DataGrid = {
+    description: {ctor:"TextInput", label: "Column Label", required:true, index:2, props :{
+        change: function(){
+            this.parent.parent.instance.description = this.value;
+        }
+    }}
+};
 Builder.metaProps.Repeater = {
     components: {
         ctor: "AutoBrowse", label: "Repeated Form", required: true, props: {

@@ -14,6 +14,11 @@ var AutoCompleteEx = function(_props)
         get: function dataProvider() 
         {
             return _dataProvider;
+        },
+        set: function dataProvider(v) {
+            if (_dataProvider != v) {
+                _dataProvider = v;
+            }
         }
     });
     Object.defineProperty(this, "valueField", 
@@ -143,7 +148,7 @@ var AutoCompleteEx = function(_props)
                         break;
                     case 40: // TAB - apply and move to next column on the same row 
                         console.log("DOWN Arrow");
-                        _suggestions  = differenceOnKeyMatch (_dataProvider, _value, _valueField);
+                        _suggestions = differenceOnKeyMatch (_dataProvider, _value, _valueField);
                         _openSuggestionsList();
                         e.preventDefault();
                         break;

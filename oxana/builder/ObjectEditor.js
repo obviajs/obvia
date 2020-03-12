@@ -53,6 +53,7 @@ var ObjectEditor = function (_props, overrided = false) {
                         itemEditorLit.props.field = null;
                     }
                     let ff = extend(true, formField);
+                    ff.props.id = prop;
                     ff.props.label = propsMeta.label;
                     ff.props.placeholder = propsMeta.label;
                     ff.props.required = propsMeta.required;
@@ -76,7 +77,7 @@ var ObjectEditor = function (_props, overrided = false) {
                         for (let i = 0; i < anchor.events.length; i++) {
                             let anchorHandler = anchor.events[i].handler;
                             events[anchor.events[i].event] = function (e) {
-                                anchorHandler.apply(this, [e, _self, itemEditorLit, targetLit]);
+                                anchorHandler.apply(this, [e, r, itemEditorLit, targetLit]);
                             };
                         }
 
@@ -98,9 +99,9 @@ var ObjectEditor = function (_props, overrided = false) {
                         ff.props.component = itemEditorLit;
                     }
                     if (ff.props.classes)
-                        ff.props.classes.pushUnique("mt-2");
+                        ff.props.classes.pushUnique("mt-3");
                     else
-                        ff.props.classes = ["mt-2"];
+                        ff.props.classes = ["mt-3"];
                     ff.props.component.props.bindingDefaultContext = props;
                     ff.props.component.props[(propEditor.valueField || "value")] = "{?" + prop + "}";
                     ff.props.index = propsMeta.index;
@@ -139,7 +140,8 @@ var ObjectEditor = function (_props, overrided = false) {
         _instance = _props.instance;
         _props.components = this.initFields(_instance, _field);
     }
-    Container.call(this, _props);
+    let r = Container.call(this, _props);
+    return r;
 };
 
 ObjectEditor.prototype.ctor = 'ObjectEditor';

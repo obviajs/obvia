@@ -6,7 +6,7 @@
 
 //component definition
 var CollectionEditor = function (_props, overrided = false) {
-    var _self = this;
+    let _self = this;
     let _value, _memberType, _repeater;
 
     this.initMembers = function(){
@@ -22,59 +22,55 @@ var CollectionEditor = function (_props, overrided = false) {
     {
         
     }
-    this.endDraw = function (e)
-    {
-        if (e.target.id == this.domID)
-        {
+    this.endDraw = function (e) {
+        if (e.target.id == this.domID) {
             _repeater = this.repeater;
         }
-    }
+    };
     
-    this.beforeAttach = function (e) 
-    {
-        if (e.target.id == this.domID) 
-        {
+    this.beforeAttach = function (e) {
+        if (e.target.id == this.domID) {
             
             e.preventDefault();
         }
-    }
+    };
     let _cmps;
-    var fnContainerDelayInit = function(){
-        _cmps = 
-        [
-            {
-                ctor: RepeaterEx,
-                props:{
-                    id:"repeater",
-                    dataProvider: _field!=null && _field!=""?_instance[_field]:_instance,
-                    rendering: {
-                        direction: 'vertical',
-                        separator: true
-                    },
-                    rowAdd:function(e, r, ra){
-                        console.log("rowAdd", e);
-                        for(let p in ra.currentRow){
-                            ra.currentRow[p].scrollTo();
-                            break;
-                        }
-                        this.focusComponent(ra.currentIndex, 0);
-                    },
-                    components:[
-                        {
-                            ctor: ObjectEditor,
-                            props:{
-                                id: "objectEditor",
-                                instance: "{currentItem}",
-                                field: null
+    let fnContainerDelayInit = function () {
+        _cmps =
+            [
+                {
+                    ctor: RepeaterEx,
+                    props: {
+                        id: "repeater",
+                        dataProvider: _field != null && _field != "" ? _instance[_field] : _instance,
+                        rendering: {
+                            direction: 'vertical',
+                            separator: true
+                        },
+                        rowAdd: function (e, r, ra) {
+                            console.log("rowAdd", e);
+                            for (let p in ra.currentRow) {
+                                ra.currentRow[p].scrollTo();
+                                break;
                             }
-                        }
-                    ]
+                            this.focusComponent(ra.currentIndex, 0);
+                        },
+                        components: [
+                            {
+                                ctor: ObjectEditor,
+                                props: {
+                                    id: "objectEditor",
+                                    instance: "{currentItem}",
+                                    field: null
+                                }
+                            }
+                        ]
+                    }
                 }
-            }
-        ];
-    }
+            ];
+    };
 
-    var _defaultParams = {
+    let _defaultParams = {
         type: ContainerType.NONE,
         "components": [],
         memberType:""
@@ -92,7 +88,7 @@ var CollectionEditor = function (_props, overrided = false) {
     fnContainerDelayInit();
     _props.components = _cmps;
     _props = extend(false, false, _defaultParams, _props);
-    Container.call(this, _props);
-    
+    let r = Container.call(this, _props);
+    return r;
 };
 CollectionEditor.prototype.ctor = 'CollectionEditor';

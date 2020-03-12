@@ -46,66 +46,66 @@ var FormField = function (_props) {
     let _afterAttach = this.afterAttach;
 
     Object.defineProperty(this, "component",
-        {
-            get: function component() {
-                return _component;
-            }
-        });
+    {
+        get: function component() {
+            return _component;
+        }
+    });
 
     Object.defineProperty(this, "name",
-        {
-            get: function name() {
-                return _name;
-            },
-            set: function name(v) {
-                if (_name != v) {
-                    _name = v;
-                    if (_name) {
-                        if (_input && _input.$el)
-                            _input.$el.attr("name", _name);
-                    } else {
-                        if (_input && _input.$el)
-                            _input.$el.removeAttr('name');
-                    }
+    {
+        get: function name() {
+            return _name;
+        },
+        set: function name(v) {
+            if (_name != v) {
+                _name = v;
+                if (_name) {
+                    if (_input && _input.$el)
+                        _input.$el.attr("name", _name);
+                } else {
+                    if (_input && _input.$el)
+                        _input.$el.removeAttr('name');
                 }
-            },
-            enumerable: true
-        });
+            }
+        },
+        enumerable: true
+    });
     
     Object.defineProperty(this, "required",
-        {
-            get: function required() {
-                return _required;
-            },
-            set: function required(v) {
-                if (_required != v) {
-                    _required = v;
-                    if (_required) {
-                        if (_input && _input.$el)
-                            _input.$el.attr('required', _required);
-                    } else {
-                        if (_input && _input.$el)
-                            _input.$el.removeAttr('required');
-                    }
+    {
+        get: function required() {
+            return _required;
+        },
+        set: function required(v) {
+            if (_required != v) {
+                _required = v;
+                if (_required) {
+                    if (_input && _input.$el)
+                        _input.$el.attr('required', _required);
+                } else {
+                    if (_input && _input.$el)
+                        _input.$el.removeAttr('required');
                 }
-            },
-            enumerable: true
-        });
+            }
+        },
+        enumerable: true
+    });
 
     Object.defineProperty(this, "label",
-        {
-            get: function label() {
-                return _label;
-            },
-            set: function label(v) {
-                if (_label != v) {
-                    _label = v;
-                    if (_lbl)
-                        _lbl.label = v;
-                }
-            },
-            enumerable: true
-        });
+    {
+        get: function label() {
+            return _label;
+        },
+        set: function label(v) {
+            if (_label != v) {
+                _label = v;
+                if (_lbl)
+                    _lbl.label = v;
+            }
+        },
+        enumerable: true
+    });
 
     Object.defineProperty(this, "input",
     {

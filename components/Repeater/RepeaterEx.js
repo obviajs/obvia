@@ -20,16 +20,15 @@ var RepeaterEx = function(_props)
         },
         enumerable:true
     });
-    let _dpLengthChanged = function(e)
-    {
+    let _dpLengthChanged = function (e) {
         e.stopPropagation();
         e.stopImmediatePropagation();
-        if(e.newValue<=1){
+        if (e.newValue <= 1) {
             _removeButton.enabled = false;
-        }else
+        } else
             _removeButton.enabled = true;
 
-    }
+    };
     let _repeater, _removeButton, _addButton, _dpWatcher;
     this.endDraw = function (e) {
         if (e.target.id == this.domID) {
@@ -60,7 +59,7 @@ var RepeaterEx = function(_props)
                     "ctor": "Container",
                     "props": {
                         type: ContainerType.Container,
-                        "id": "workArea",
+                        "id": "buttonContainer",
                         "components": [
                             {
                                 ctor: Button,
@@ -130,6 +129,7 @@ var RepeaterEx = function(_props)
     fnContainerDelayInit();
     _props.components = _cmps;
     
-    Container.call(this, _props, true, true);
+    let r = Container.call(this, _props, true, true);
+    return r;
 };
 RepeaterEx.prototype.ctor = 'RepeaterEx';

@@ -1,7 +1,7 @@
 var BrowserWindow = function(_props)
 {
-    var _self = this, _win;
-    var _defaultParams = {
+    let _self = this, _win;
+    let _defaultParams = {
         tile: "",
         status:"",
         url:"",
@@ -56,27 +56,27 @@ var BrowserWindow = function(_props)
 
     _props = extend(false, false, _defaultParams, _props);
     _props.ownerDocument = null;
-    var _url = _props.url;
-    var _name = _props.name;
-    var _width = _props.width;
-    var _height = _props.height;
-    var _left = _props.left;
-    var _top = _props.top;
-    var _status = _props.status;
-    var _location = _props.location;
-    var _toolbar = _props.toolbar;
-    var _resizable = _props.resizable;
+    let _url = _props.url;
+    let _name = _props.name;
+    let _width = _props.width;
+    let _height = _props.height;
+    let _left = _props.left;
+    let _top = _props.top;
+    let _status = _props.status;
+    let _location = _props.location;
+    let _toolbar = _props.toolbar;
+    let _resizable = _props.resizable;
 
-    Parent.call(this, _props, false, true); 
+    let r = Parent.call(this, _props, false, true); 
     
-    this.show = function(){
-        if(!_win || _win.closed){
+    this.show = function () {
+        if (!_win || _win.closed) {
             let c = _win && _win.closed;
         }
-        else{
+        else {
             _win.focus();
         }
-    } 
+    }; 
 
     Object.defineProperty(this, 'window',
     {
@@ -88,6 +88,7 @@ var BrowserWindow = function(_props)
     this.destruct = function (mode = 1) {
         this.close();
     };
+    return r;
 };
 BrowserWindow.prototype.ctor = 'BrowserWindow';
 BrowserWindow.all = new ArrayEx();

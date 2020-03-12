@@ -271,7 +271,7 @@ var DataGrid = function(_props)
                     });	
             })(hi, column));
             //put elements in an array so jQuery will use documentFragment which is faster
-            colElements[columnIndex] = $th
+            colElements[columnIndex] = $th;
             ++hi;  
         }
         $header.append(colElements);
