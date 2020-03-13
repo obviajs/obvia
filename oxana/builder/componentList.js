@@ -1,4 +1,4 @@
-Builder.componentList = [ 
+Builder.componentList = new ArrayEx([ 
     {
         "label":"Label", "ctor": "Label"
     },
@@ -113,4 +113,4 @@ Builder.componentList = [
     {
         "label":"CreditCard", "ctor": "CreditCard"
     }
-];
+]);

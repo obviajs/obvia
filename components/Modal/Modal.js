@@ -32,7 +32,7 @@ var Modal = function (_props) {
             }
         }
         //
-    }
+    };
     let _defaultComponents = {
         "modalBody": _props.components && _props.components.forEach ? _props.components : null,
         "modalHeader": [{
@@ -108,6 +108,7 @@ var Modal = function (_props) {
             tabindex: -1,
             role: "dialog"
         },
+        css: {},
         components: _defaultComponents
     };
     _props = extend(false, false, _defaultParams, _props);
@@ -117,6 +118,7 @@ var Modal = function (_props) {
 
     let _title = _props.title;
     let _size = _props.size;
+
 
     this.endDraw = function (e) {
         if (e.target.id == this.domID) {
@@ -131,6 +133,8 @@ var Modal = function (_props) {
 
     let _cmps, _modalDialog, _modalContent, _modalHeader, _modalBody, _modalFooter;
     let fnContainerDelayInit = function () {
+        Modal.all.push(_self);
+        _props.css["z-index"] = 1040 + Modal.all.length;
         _cmps = [{
             ctor: Container,
             props: {
@@ -147,44 +151,45 @@ var Modal = function (_props) {
                         classes: ["modal-content"],
                         id: "modalContent",
                         components: [{
-                                ctor: Container,
-                                props: {
-                                    id: "modalHeader",
-                                    type: ContainerType.NONE,
-                                    classes: ["modal-header"],
-                                    components: _props.components.modalHeader
-                                }
-                            },
-                            {
-                                ctor: Container,
-                                props: {
-                                    id: "modalBody",
-                                    type: ContainerType.NONE,
-                                    classes: ["modal-body"],
-                                    components: _props.components.modalBody
-                                }
-                            },
-                            {
-                                ctor: Container,
-                                props: {
-                                    id: "modalFooter",
-                                    type: ContainerType.NONE,
-                                    classes: ["modal-footer"],
-                                    components: _props.components.modalFooter
-                                }
+                            ctor: Container,
+                            props: {
+                                id: "modalHeader",
+                                type: ContainerType.NONE,
+                                classes: ["modal-header"],
+                                components: _props.components.modalHeader
                             }
+                        },
+                        {
+                            ctor: Container,
+                            props: {
+                                id: "modalBody",
+                                type: ContainerType.NONE,
+                                classes: ["modal-body"],
+                                components: _props.components.modalBody
+                            }
+                        },
+                        {
+                            ctor: Container,
+                            props: {
+                                id: "modalFooter",
+                                type: ContainerType.NONE,
+                                classes: ["modal-footer"],
+                                components: _props.components.modalFooter
+                            }
+                        }
                         ]
                     }
                 }]
             }
         }];
-    }
+    };
 
     fnContainerDelayInit();
     _props.components = _cmps;
 
     let r = Container.call(this, _props, true);
     let base = this.base;
+    this.keepBase();
 
     this.show = function () {
         if (this.$el)
@@ -197,6 +202,15 @@ var Modal = function (_props) {
             this.$el.modal('hide');
         return this;
     };
+    
+    this.destruct = function (mode = 1) {
+        Modal.all.splice(Modal.all.indexOf(this), 1);
+        for (let id in _children) {
+            _children[id].destruct(mode);
+        }
+        base.destruct(mode);
+    };
     return r;
 };
 Modal.prototype.ctor = 'Modal';
+Modal.all = new ArrayEx();

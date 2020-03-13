@@ -197,6 +197,10 @@ var AutoBrowse = function (_props, overrided = false) {
     if (!_props.attr) { 
         _props.attr = {};
     }
+    if (!_props.classes) { 
+        _props.classes = ["wrap"];
+    } else
+        _props.classes.pushUnique("wrap");
 
     let myDtEvts = ["browse"];
     if (!Object.isEmpty(_props.attr) && _props.attr["data-triggers"] && !Object.isEmpty(_props.attr["data-triggers"]))

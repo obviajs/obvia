@@ -11,7 +11,8 @@ var FormField = function (_props) {
     
     this.endDraw = function (e) {
         if (e.target.id == this.domID) {
-            _input = this.children[this.childrenIDR[_componentId]];
+            _componentId = _component.props.id;
+            _input = this.children[_componentId];
             _lbl = this.labelForId;
             _lbl.$el.prop("for", _input.domID);
             if (_props.required)
@@ -22,7 +23,7 @@ var FormField = function (_props) {
                 _self.name = _props.name;
             if (_props.label)
                 _self.label = _props.label;
-            _component = _input.literal;
+            //_component = _input.literal;
 
             let _cmpObj;
             if (["input", "select", "textarea", "button"].indexOf(_input.$el[0].tagName.toLowerCase()) > -1) {
@@ -161,7 +162,7 @@ var FormField = function (_props) {
     let _required;
     let _label;
     let _component = _props.component;
-    let _componentId = _props.component.props.id;
+    let _componentId;
     let _lblCmp = {
         "ctor": Label,
         "props": {

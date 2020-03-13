@@ -59,7 +59,7 @@ var DataGrid = function(_props)
     let _rowItems = [];
     
     let _prevScrollTop = 0;
-    let _avgRowHeight = undefined;
+    let _avgRowHeight;
     let _virtualIndex = 0;
     let _scrollRowStep = 0;
 
@@ -69,7 +69,7 @@ var DataGrid = function(_props)
         _scroll(scrollTop);
     };
 
-    _scroll = function (scrollTop)
+    let _scroll = function (scrollTop)
     {
         if(scrollTop>=0){
             console.log("scrollTop:",scrollTop);
@@ -78,8 +78,7 @@ var DataGrid = function(_props)
             scrollTop = virtualIndex * _avgRowHeight;
             //this.scroll(scrollTop);
 
-            let deltaScroll =  _prevScrollTop - scrollTop;
-        
+            let deltaScroll = _prevScrollTop - scrollTop;
 
             let scrollRowStep = Math.ceil(Math.abs(deltaScroll) / _avgRowHeight) * (deltaScroll/Math.abs(deltaScroll));
 
@@ -152,7 +151,7 @@ var DataGrid = function(_props)
             let definedWidth = 0; let autoWidthColumns = [];
             for (let columnIndex=0;columnIndex<_columns.length;columnIndex++) {
                 let column = _columns[columnIndex];
-                if(column["width"]){
+                if(column.width){
                     definedWidth += column.calculatedWidth = column.width;
                 }else{
                     autoWidthColumns.push(column);
@@ -345,9 +344,9 @@ var DataGrid = function(_props)
             let itemEditor;
             if(itemEditorInfo == undefined)
             {
-                if(column.itemEditor.props["value"]==null)
+                if(column.itemEditor.props.value==null)
                 {
-                    column.itemEditor.props["value"] = "{?"+column.field+"}";
+                    column.itemEditor.props.value = "{?"+column.field+"}";
                 }
                 column.itemEditor.props.bindingDefaultContext = data;
                 itemEditor = Component.fromLiteral(column.itemEditor);
@@ -367,7 +366,7 @@ var DataGrid = function(_props)
 
                 itemEditor.on('creationComplete', function(){
 
-                    if (typeof itemEditor['focus'] === "function") { 
+                    if (typeof itemEditor.focus === "function") { 
                         // safe to use the function
                         itemEditor.focus();
                     }
@@ -444,7 +443,7 @@ var DataGrid = function(_props)
                 itemEditor.show();
                 if(itemEditorInfo != null)
                 {
-                    if (typeof itemEditor['focus'] === "function") { 
+                    if (typeof itemEditor.focus === "function") { 
                         // safe to use the function
                         itemEditor.focus();
                     }
@@ -554,48 +553,48 @@ var DataGrid = function(_props)
         }  
     };   
 
-    this.updateDisplayList = function(){
+    this.updateDisplayList = function () {
         _displayed = true;
         //we now know the parent and element dimensions
-        _avgRowHeight = (this.$table.height() - this.$header.height())/ _rowCount;
-        this.virtualHeight = (_self.dataProvider.length - 2*(_allowNewItem?1:0)) * _avgRowHeight;
+        _avgRowHeight = (this.$table.height() - this.$header.height()) / _rowCount;
+        this.virtualHeight = (_self.dataProvider.length - 2 * (_allowNewItem ? 1 : 0)) * _avgRowHeight;
 
         this.bufferedRowsCount = _rowCount;
 
         let pos = this.$table.position();
         let left = pos.left + this.$table.width() - 14;
         let top = pos.top + this.$header.height();
-        this.realHeight = (this.$table.height()+this.$header.height()-16);
+        this.realHeight = (this.$table.height() + this.$header.height() - 16);
         this.$message = $("<div>Creating Rows</div>");
 
         this.$scrollArea = $("<div/>");
         this.$scroller = $("<div style='border:1px solid black;position:relative; height:40px;top:15px'></div>");
         this.$scrollArea.append(this.$scroller);
-        this.$scrollArea.css({border: "1px", opacity:100, "margin-top":-this.realHeight+"px", float: "right",position:"relative", "margin-left": "-16px", width:"10px", height : this.virtualHeight + "px"});
+        this.$scrollArea.css({ border: "1px", opacity: 100, "margin-top": -this.realHeight + "px", float: "right", position: "relative", "margin-left": "-16px", width: "10px", height: this.virtualHeight + "px" });
         
-        this.$el.css({border: "1px solid black"});
-        this.$el.css({height:this.$table.height()});
+        this.$el.css({ border: "1px solid black" });
+        this.$el.css({ height: this.$table.height() });
         this.$table.after(this.$scrollArea);
 
         this.delayScroll = debounce(_onScroll, 400);
 
-        this.$el.on("scroll", function(e){
-            if(this.virtualHeight > (e.target.scrollTop+this.realHeight)-2*_avgRowHeight){
+        this.$el.on("scroll", function (e) {
+            if (this.virtualHeight > (e.target.scrollTop + this.realHeight) - 2 * _avgRowHeight) {
                 this.loading = true;
-                this.$message.css({position:"absolute", top:150+"px", left:150+"px", "background-color":"white","z-index":9999});
+                this.$message.css({ position: "absolute", top: 150 + "px", left: 150 + "px", "background-color": "white", "z-index": 9999 });
                 this.$el.append(this.$message);
-                this.$table.css({"margin-top":e.target.scrollTop});
-                this.$scrollArea.css({"margin-top": (-(this.realHeight)-e.target.scrollTop)+"px"});
+                this.$table.css({ "margin-top": e.target.scrollTop });
+                this.$scrollArea.css({ "margin-top": (-(this.realHeight) - e.target.scrollTop) + "px" });
                 //let top = this.$scroller.position().top;
                 let h = this.$scrollArea.height();
-                this.$scroller.css({"top": (16 + 1.2*(h - (h- e.target.scrollTop)))+"px"});
-                let cScrollHeight =  this.$scrollArea.css("height");
-                this.delayScroll.apply(this, arguments)
-            //this.onScroll.apply(this, arguments);
+                this.$scroller.css({ "top": (16 + 1.2 * (h - (h - e.target.scrollTop))) + "px" });
+                let cScrollHeight = this.$scrollArea.css("height");
+                this.delayScroll.apply(this, arguments);
+                //this.onScroll.apply(this, arguments);
             }
         }.bind(this));
         this.setCellsWidth();
-    }
+    };
     
     Object.defineProperty(this, "multiSelect", 
     {
@@ -620,54 +619,40 @@ var DataGrid = function(_props)
     });
     let _selectedItems = new ArrayEx();
     let _selectedIndices = [];
-    let _rowClickHandler = function (e, dgInst, ra)
-    { 
-        if (_ctrlIsPressed && _multiSelect)
-        {
+    let _rowClickHandler = function (e, dgInst, ra) {
+        if (_ctrlIsPressed && _multiSelect) {
             let ind = _selectedIndices.indexOf(ra.currentIndex);
-            if (ind < 0)
-            {
+            if (ind < 0) {
                 _selectedIndices.push(ra.currentIndex);
                 _selectedItems.push(ra.currentItem);
-            } else
-            { 
+            } else {
                 _selectedIndices.splice(ind, 1);
                 _selectedItems.splice(ind, 1);
             }
                 
-        } else
-        { 
-            if (_selectedIndices.indexOf(ra.currentIndex) < 0)
-            {
+        } else {
+            if (_selectedIndices.indexOf(ra.currentIndex) < 0) {
                 _selectedIndices = [ra.currentIndex];
                 _selectedItems.splice(0, _selectedItems.length, ra.currentItem);
-            } else
-            { 
+            } else {
                 _selectedIndices = [];
                 _selectedItems.splice(0, _selectedItems.length);
             }
         }
-        let len = _self["rows"].length;
-        for (let i = 0; i < len; i++)
-        { 
+        let len = _self.rows.length;
+        for (let i = 0; i < len; i++) {
             let found = false;
-            for (let j = 0; j < _selectedIndices.length; j++)
-            { 
-                if (i == _selectedIndices[j] - ra.virtualIndex)
-                { 
+            for (let j = 0; j < _selectedIndices.length; j++) {
+                if (i == _selectedIndices[j] - ra.virtualIndex) {
                     found = true;
-                    _self["rows"][i].addClass("datagrid-row-selected");
+                    _self.rows[i].addClass("datagrid-row-selected");
                 }
             }
-            if(!found)
-            { 
-                _self["rows"][i].removeClass("datagrid-row-selected");
+            if (!found) {
+                _self.rows[i].removeClass("datagrid-row-selected");
             }
         }
-        
-        
-        //_self["rows"].
-    }
+    };
     
     let _displayed = false;
     let _ctrlIsPressed = false;
@@ -775,7 +760,6 @@ var DataGrid = function(_props)
             this.dataProvider = _props.dataProvider;
         return _rPromise;
     };
-
     //renders a new row, adds components in stack
     this.addRow = function (data, index, isPreventable = false, focusOnRowAdd = true) 
     {
@@ -792,7 +776,7 @@ var DataGrid = function(_props)
             let rowItems = {};
         
             if(_showRowIndex){
-                renderedRow.append('<th scope="row">'+(index+1)+'</th>')
+                renderedRow.append('<th scope="row">' + (index + 1) + '</th>');
             }
             let columnIndex = 0;
             renderedRow.click(function(evt)
@@ -831,9 +815,8 @@ var DataGrid = function(_props)
                 //component.props["label"] = "{?"+dataProviderField+"}";
                 //might not be wanted
                 component.props.id = column.name;
-
-
-                let cmp = _self["cellItemRenderers"][index];               
+                
+                let cmp = _self.cellItemRenderers[index];               
 
                 /*
                 cmp[columnIndex]["label"] = data[dataProviderField];
@@ -931,7 +914,7 @@ var DataGrid = function(_props)
                 });
                 rp.push(cp);
             }   
-            _self["rows"].push(renderedRow); 
+            _self.rows.push(renderedRow); 
         }
         return rp;
     }; 

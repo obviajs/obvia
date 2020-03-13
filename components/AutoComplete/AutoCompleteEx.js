@@ -7,7 +7,7 @@
 //component definition
 var AutoCompleteEx = function(_props)
 {
-    let _separator, _tokenContainer, _tokenRepeater, _suggestionsRepeater, _input, _maxSuggestionsCount;
+    let _separator, _tokenContainer, _tokenRepeater, _suggestionsRepeater, _input, _maxSuggestionsCount, _dpWatcher;
     
     Object.defineProperty(this, "dataProvider", 
     {
@@ -17,10 +17,17 @@ var AutoCompleteEx = function(_props)
         },
         set: function dataProvider(v) {
             if (_dataProvider != v) {
-                _dataProvider = v;
+                _props.dataProvider = _dataProvider = v;
             }
         }
     });
+    
+    let _dpLengthChanged = function (e) {
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+        _tokenInputReSize();
+    };
+
     Object.defineProperty(this, "valueField", 
     {
         get: function valueField() 
@@ -38,6 +45,7 @@ var AutoCompleteEx = function(_props)
     
     this.endDraw = function (e) {
         if (e.target.id == this.domID) {
+            this.dataProvider = _props.dataProvider;
             _suggestionsRepeater = this.suggestionsRepeater;
             _tokenContainer = this.tokenContainer;
             _input = this.tokenContainer.tokenInput;
@@ -72,7 +80,7 @@ var AutoCompleteEx = function(_props)
     
     let _tokenInputReSize = function () {
         //_tokenRepeater.token[0].$el.width()
-        let tokenCount = _tokenRepeater.token==null?0:_tokenRepeater.token.length;
+        let tokenCount = _tokenRepeater.dataProvider==null?0:_tokenRepeater.dataProvider.length;
         let tokenWidth = 0, rowTop = 0;
         for(let i=0;i<tokenCount;i++){
             let tokenPos = _tokenRepeater.token[i].$el.position();
@@ -84,6 +92,7 @@ var AutoCompleteEx = function(_props)
             }
         }
         let tokenInputWidth = Math.max(_self.$el.width() - tokenWidth - 2, 0);
+        tokenInputWidth = Math.max((tokenInputWidth-tokenInputWidth*0.3).toFixed(0), 0);
         _input.$el.css({"width": tokenInputWidth+"px"});
     }; 
    
@@ -256,9 +265,9 @@ var AutoCompleteEx = function(_props)
                 let itemToAdd = [item];
                 if(!this.allowNewItem)
                 {
-                    itemToAdd = intersectOnKeyMatch(_dataProvider, itemToAdd, _valueField) //value;
+                    itemToAdd = intersectOnKeyMatch(_dataProvider, itemToAdd, _valueField); //value;
                     if(itemToAdd.length==0){
-                        itemToAdd = intersectOnKeyMatch(_suggestions, itemToAdd, _valueField) //value;
+                        itemToAdd = intersectOnKeyMatch(_suggestions, itemToAdd, _valueField); //value;
                         if(itemToAdd.length==0){
                             console.log("This value was not found in the dataProvider and you are not allowed to add new items.");
                             continue;
@@ -350,9 +359,18 @@ var AutoCompleteEx = function(_props)
                     //is the tokenRepeater rendered yet ? 
                     if(_tokenRepeater && _tokenRepeater.$container)
                     {
+                        if(_dpWatcher && _value){
+                            _dpWatcher.reset();
+                            _value.off("propertyChange", _dpLengthChanged);
+                        } 
                         _tokenRepeater.dataProvider = _value = new ArrayEx(v);
                         _input.value = ""; 
                         this.trigger('change');
+                        if(_value){
+                            _dpWatcher = ChangeWatcher.getInstance(_value);
+                            _dpWatcher.watch(_value, "length", _dpLengthChanged);
+                            _value.on("propertyChange", _dpLengthChanged);
+                        }
                     }else
                         _value.splicea(0, _value.length, v);
                 }
@@ -422,7 +440,7 @@ var AutoCompleteEx = function(_props)
         
     let _defaultParams = {
         closeIconSide: "left",
-        dataProvider: [],
+        dataProvider: new ArrayEx([]),
         value: new ArrayEx([]),
         allowNewItem: false,
         multiSelect: false,
@@ -440,7 +458,7 @@ var AutoCompleteEx = function(_props)
     
     let _valueField = _props.valueField;
     let _labelField = _props.labelField;
-    let _dataProvider = _props.dataProvider;
+    let _dataProvider;
     
     let _allowNewItem = _props.allowNewItem;
     let _label = _props.label;  
@@ -533,7 +551,7 @@ var AutoCompleteEx = function(_props)
                 props: {
                     id: 'suggestionsRepeater',
                     "type": ContainerType.NONE,
-                    classes: ["dropdown-menu"],
+                    classes: ["dropdown-menu", "position-absolute"],
                     defaultItem: this.defaultItem,
                     rendering: {
                         direction: 'vertical',

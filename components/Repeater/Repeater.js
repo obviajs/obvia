@@ -97,7 +97,7 @@ var Repeater = function(_props)
             cIndex = Object.keys(this.rowItems[rowIndex])[cIndex];
         }
         
-        if(typeof this.rowItems[rowIndex][cIndex].$el['focus'] === "function") { 
+        if(typeof this.rowItems[rowIndex][cIndex].$el.focus === "function") { 
        
             this.rowItems[rowIndex][cIndex].$el.focus();
         }
@@ -274,27 +274,25 @@ var Repeater = function(_props)
     });
 
     var _dpWatcher;
-    var _dpLengthChanged = function(e)
-    {
+    var _dpLengthChanged = function (e) {
         e.stopPropagation();
         e.stopImmediatePropagation();
         let len = _dataProvider.length;
         let oldValue = _oldDataProvider.length;
         let newValue = _dataProvider.length;
         
-        for(var i = 0;i<len;i++){
-            if(!_dataProvider[i][_guidField])
+        for (var i = 0; i < len; i++) {
+            if (!_dataProvider[i][_guidField])
                 _dataProvider[i][_guidField] = StringUtils.guid();
         }
-        if(_creationFinished){
-            var toAdd = {result:[], a1_indices:[]};
+        if (_creationFinished) {
+            var toAdd = { result: [], a1_indices: [] };
             toAdd = differenceOnKeyMatch(_dataProvider, _oldDataProvider, _guidField, false, true);
             
-            var toRemove = {result:[],a1_indices:[]};
+            var toRemove = { result: [], a1_indices: [] };
             toRemove = differenceOnKeyMatch(_oldDataProvider, _dataProvider, _guidField, false, true);
             
-            if (newValue < oldValue && toRemove.result.length != oldValue - newValue)
-            {
+            if (newValue < oldValue && toRemove.result.length != oldValue - newValue) {
                 let r = _oldDataProvider.dedupe(_guidField);
                 toRemove.result.splicea(toRemove.result.length, 0, r.result);
                 toRemove.a1_indices.splicea(toRemove.a1_indices.length, 0, r.indices);
@@ -304,27 +302,25 @@ var Repeater = function(_props)
             _self.dataProviderChanged(toAdd, toRemove, toRefresh);
             _oldDataProvider = acExtend(_dataProvider);
         }
-    }
+    };
     let _debouncedLengthChanged = debounce(_dpLengthChanged, 1);
     
-    var _dpMemberChanged = function(e)
-    {
+    var _dpMemberChanged = function (e) {
         e.stopPropagation();
         e.stopImmediatePropagation();
-        if(_creationFinished && ["length","guid"].indexOf(e.property)==-1){
-            if(!_dataProvider[parseInt(e.property)][_guidField])
+        if (_creationFinished && ["length", "guid"].indexOf(e.property) == -1) {
+            if (!_dataProvider[parseInt(e.property)][_guidField])
                 _dataProvider[parseInt(e.property)][_guidField] = StringUtils.guid();
-            var toAdd = {a1_indices:[], result:[]};
-            var toRemove = {a1_indices:[], result:[]};
+            var toAdd = { a1_indices: [], result: [] };
+            var toRemove = { a1_indices: [], result: [] };
            
-            if (e.oldValue != null && e.newValue != null)
-            {
+            if (e.oldValue != null && e.newValue != null) {
                 //toRefresh = [parseInt(e.property)];
                 //te shtohet param e
                 _debouncedLengthChanged();
             }
-        } 
-    }
+        }
+    };
     
     if(!this.hasOwnProperty("value")){
         Object.defineProperty(this, "value", {
@@ -493,7 +489,7 @@ var Repeater = function(_props)
                     rp.push(cp);
                 }
             }
-            _self["rows"].push(renderedRow); 
+            _self.rows.push(renderedRow); 
         }
         return rp;
     };
@@ -576,14 +572,12 @@ var Repeater = function(_props)
         }
     };
     var _beforeAttach = this.beforeAttach;
-    this.beforeAttach = function(e) 
-    {
-        if (e.target.id == this.domID) 
-        {
+    this.beforeAttach = function (e) {
+        if (e.target.id == this.domID) {
             if (typeof _beforeAttach == 'function')
                 _beforeAttach.apply(this, arguments);
         }
-    }
+    };
 
     var _defaultParams = {
         rendering: {

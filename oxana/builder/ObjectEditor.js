@@ -16,25 +16,24 @@ var ObjectEditor = function (_props, overrided = false) {
         set: function instance(v) {
             if (_instance != v) {
                 _instance = v;
-                this.addComponents(this.initFields(_instance));
+                this.addComponents(this.initFields(_instance, _field));
             }
         },
         enumerable:true
     });
 
-    var _initDP = function(){
-        if(!ObjectEditor.init){
-            for(let i=0;i<Builder.sources.length;i++){
+    var _initDP = function () {
+        if (!ObjectEditor.init) {
+            for (let i = 0; i < Builder.sources.length; i++) {
                 //if(ObjectEditor.source[i].remote)
                 let r = new ArrayEx(new RemoteArray(Builder.sources[i].props));
                 ObjectEditor.data[Builder.sources[i].name] = r;
             }
             ObjectEditor.init = true;
         }
-    }
+    };
 
     this.initFields = function (inst, fld) {
-
         props = fld != null && fld != "" ? inst[fld] : inst;
         let rows = [];
         for (let prop in props) {
@@ -67,8 +66,12 @@ var ObjectEditor = function (_props, overrided = false) {
                     if (propsMeta.targetProps != undefined) {
                         let targetLit;
                         if (propsMeta.targetProps.target && propsMeta.targetProps.target.ctor) {
-                            targetLit = Builder.components[propsMeta.targetProps.target.ctor].literal;
-                            targetLit.props = extend(false, false, targetLit.props, propsMeta.targetProps.target.props);
+                            if (Builder.components[propsMeta.targetProps.target.ctor]) {
+                                targetLit = Builder.components[propsMeta.targetProps.target.ctor].literal;
+                                targetLit.props = extend(false, false, targetLit.props, propsMeta.targetProps.target.props);
+                            } else { 
+                                targetLit = propsMeta.targetProps.target;
+                            }
                         }
                         
                         let anchor = propsMeta.targetProps.anchor;
@@ -116,14 +119,20 @@ var ObjectEditor = function (_props, overrided = false) {
         return rows;
     };
 
-    this.beforeAttach = function(e) 
-    {
-        if (e.target.id == this.domID) 
-        {
-           
+    this.beforeAttach = function (e) {
+        if (e.target.id == this.domID) {
             e.preventDefault();
         }
-    }
+    };
+    this.endDraw = function (e) {
+        if (e.target.id == this.domID) {
+            if(_props.instance){
+                _field = _props.field;
+                this.instance = _props.instance;
+            }
+        }
+    };
+
     let _cmps, _colSpan, _offset, _mb, _mt;
     
     var _defaultParams = {
@@ -135,11 +144,7 @@ var ObjectEditor = function (_props, overrided = false) {
     _props = extend(false, false, _defaultParams, _props);
     _initDP();
     this.$container = this.$el;
-    if(_props.instance){
-        _field = _props.field;
-        _instance = _props.instance;
-        _props.components = this.initFields(_instance, _field);
-    }
+    
     let r = Container.call(this, _props);
     return r;
 };

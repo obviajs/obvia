@@ -135,13 +135,12 @@ Builder.metaProps = {
             memberType:"DataGridColumn"
         },
         targetProps:{
-            target:{
-                ctor:"BrowserWindow",
-                props:{
-                    height:500,
-                    width:600,
-                    left:800,
-                    top:200,
+            target: {
+                ctor: Modal,
+                props: {
+                    id: 'columnsEditModal',
+                    size: ModalSize.LARGE,
+                    title: 'Edit Columns',
                 }
             },anchor:{
                 component:{
@@ -168,7 +167,8 @@ Builder.metaProps = {
                             let dpName = oe.dataProvider.input.value[0][oe.dataProvider.input.valueField];
                             if (ObjectEditor.data[dpName] && ObjectEditor.data[dpName].length > 0) {
                                 let win = oe.addComponent(wl);
-                                if (win.columnEditor.repeater.repeater.objectEditor) {
+                                let colOEInstances = win.modalDialog.modalContent.modalBody.columnEditor.repeater.repeater.objectEditor;
+                                if (colOEInstances) {
                                     let dpFieldNames = Object.keys(ObjectEditor.data[dpName][0]);
                                     let len = dpFieldNames.length;
                                     let dpFields = new ArrayEx();
@@ -176,11 +176,12 @@ Builder.metaProps = {
                                         dpFields.push({ "dpField": dpFieldNames[i]});
                                     }
                                     
-                                    len = win.columnEditor.repeater.repeater.objectEditor.length;
+                                    len = colOEInstances.length;
                                     for (let i = 0; i < len; i++) {
                                         //win.columnEditor.repeater.repeater.objectEditor[i].dataProvider.input.dataProvider = dpFields;
                                         //win.columnEditor.repeater.repeater.objectEditor[i].field.component.props.dataProvider = dpFields;
-                                        win.columnEditor.repeater.repeater.objectEditor[i].field.children["AutoCompleteEx"].dataProvider = dpFields;
+                                        let cid = colOEInstances[i].field.childrenIDR["AutoCompleteEx"];
+                                        colOEInstances[i].field.children[cid].dataProvider = dpFields;
                                     }
                                     win.show();
                                 }
@@ -289,13 +290,7 @@ Builder.metaProps = {
         labelField: "dpField"
     }, index:1}    
 };
-Builder.metaProps.DataGrid = {
-    description: {ctor:"TextInput", label: "Column Label", required:true, index:2, props :{
-        change: function(){
-            this.parent.parent.instance.description = this.value;
-        }
-    }}
-};
+
 Builder.metaProps.Repeater = {
     components: {
         ctor: "AutoBrowse", label: "Repeated Form", required: true, props: {
@@ -346,8 +341,16 @@ Builder.metaProps.DataGridColumn = {
             change: function () {
                 this.parent.parent.instance.name = this.value;
             }
+        }
+    },
+    description: {
+        ctor: "TextInput", label: "Column Label", required: true, index: 2, props: {
+        change: function(){
+            this.parent.parent.instance.description = this.value;
+        }
     }}
 };
+
 Builder.metaProps.TextInput = {
     type: {
         ctor: "Select", label: "Input Type", props: {
