@@ -33,7 +33,16 @@ var oxana = new App({
     style: appStyle
 });
 
-let forms = [];
+
+Builder.data.countries = [{ "value": "1", "text": "Albania" }, { "value": "2", "text": "Greece" }, { "value": "3", "text": "Italy" }];
+
+Builder.masks;
+Builder.maskValueField = "";
+Builder.maskLabelField = "";
+
+Builder.componentValueField = "ctor";
+Builder.componentLabelField = "label";
+
 let selectedForm = new FormProperties();
 
 let formField = Builder.components["FormField"].literal;
@@ -1318,6 +1327,7 @@ oxana.behaviorimplementations["WA_REDO"] = {
 };
 
 oxana.behaviorimplementations["END_DRAW"] = new ArrayEx(oxana.behaviorimplementations["END_DRAW"], function (e) {
+    _initDP();
     Component.instances["controlsWindow"].show();
 });
 oxana.eventTypes.splicea(oxana.eventTypes.length, 0, ["resize", "dropped"]);
@@ -1436,6 +1446,14 @@ function isKeyCombRedo(e) {
 }
 
 //utility functions
+function _initDP() {
+    for (let i = 0; i < Builder.sources.length; i++) {
+        //if(ObjectEditor.source[i].remote)
+        let r = new ArrayEx(new RemoteArray(Builder.sources[i].props));
+        Builder.data[Builder.sources[i].name] = r;
+    }
+}
+
 function childrenAutoWidth(container) {
     var children_len = container.components.length;
     var colSpan = Math.floor(12 / children_len);

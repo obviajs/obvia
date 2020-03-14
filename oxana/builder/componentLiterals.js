@@ -283,6 +283,7 @@ Builder.components = {
                 }]
             }
         },
+        //valueField: "dataProvider",
         label: "AutoBrowse",
         icon: ".png"
     },

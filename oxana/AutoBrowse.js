@@ -152,21 +152,21 @@ var AutoBrowse = function (_props, overrided = false) {
         ];
     };
 
-    var _drawGrid = function(e){
+    var _drawGrid = function (e) {
         _dg.updateDisplayList();
-    }
+    };
 
-    let _browse = function(e){
+    let _browse = function (e) {
         let evt = jQuery.Event("browse");
         _self.trigger(evt);
         if (!evt.isDefaultPrevented()) {
             _modal.show();
         }
-    }
-    let _selectItem = function(e, odg, ra){
+    };
+    let _selectItem = function (e, odg, ra) {
         _autocomplete.value = ra.currentItem;
         _modal.hide();
-    }
+    };
     
     let _initColumns = function () {
         for (let i = 0; i < _fields.length; i++) {

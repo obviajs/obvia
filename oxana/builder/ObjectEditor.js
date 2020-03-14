@@ -22,17 +22,6 @@ var ObjectEditor = function (_props, overrided = false) {
         enumerable:true
     });
 
-    var _initDP = function () {
-        if (!ObjectEditor.init) {
-            for (let i = 0; i < Builder.sources.length; i++) {
-                //if(ObjectEditor.source[i].remote)
-                let r = new ArrayEx(new RemoteArray(Builder.sources[i].props));
-                ObjectEditor.data[Builder.sources[i].name] = r;
-            }
-            ObjectEditor.init = true;
-        }
-    };
-
     this.initFields = function (inst, fld) {
         props = fld != null && fld != "" ? inst[fld] : inst;
         let rows = [];
@@ -142,22 +131,9 @@ var ObjectEditor = function (_props, overrided = false) {
         field: "props"
     };
     _props = extend(false, false, _defaultParams, _props);
-    _initDP();
     this.$container = this.$el;
     
     let r = Container.call(this, _props);
     return r;
 };
-
 ObjectEditor.prototype.ctor = 'ObjectEditor';
-
-ObjectEditor.init = false;
-ObjectEditor.masks;
-ObjectEditor.maskValueField = "";
-ObjectEditor.maskLabelField = "";
-
-ObjectEditor.data = {};
-ObjectEditor.data.countries = [{ "value": "1", "text": "Albania" }, { "value": "2", "text": "Greece" }, { "value": "3", "text": "Italy" }];
-
-ObjectEditor.componentValueField = "ctor";
-ObjectEditor.componentLabelField = "label";

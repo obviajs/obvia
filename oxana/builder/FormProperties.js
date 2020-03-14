@@ -1,11 +1,13 @@
 var FormProperties = function (_props) {
     let _defaultParams = {
+        form_id:0,
         form_name: '',
         description: '',
         date_created: '',
         author: ''        
     };
     _props = extend(false, false, _defaultParams, _props);
+    this.form_id = _props.form_id;
     this.form_name = _props.form_name;
     this.description = _props.description;
     this.date_created = _props.date_created;

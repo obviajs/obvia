@@ -53,8 +53,6 @@ var AutoCompleteEx = function(_props)
             _suggestionsRepeater.css.left = "inherit";
             _suggestionsRepeater.css.top = "inherit";
             _suggestionsRepeater.css.position = "relative";
-           
-            _tokenRepeater.on("endDraw", _tokenInputReSize);
         }
     };
     
@@ -91,9 +89,11 @@ var AutoCompleteEx = function(_props)
                 tokenWidth += _tokenRepeater.token[i].$el.width();
             }
         }
-        let tokenInputWidth = Math.max(_self.$el.width() - tokenWidth - 2, 0);
-        tokenInputWidth = Math.max((tokenInputWidth-tokenInputWidth*0.3).toFixed(0), 0);
-        _input.$el.css({"width": tokenInputWidth+"px"});
+        if (_self.$el.width() > 0 && tokenWidth > 0) {
+            let tokenInputWidth = Math.max(_self.$el.width() - tokenWidth - 2, 0);
+            tokenInputWidth = Math.max((tokenInputWidth-tokenInputWidth*0.3).toFixed(0), 0);
+            _input.$el.css({"width": tokenInputWidth+"px"});
+        }
     }; 
    
     let _suggestionsDropDownKeyDown = function(e)

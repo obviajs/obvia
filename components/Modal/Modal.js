@@ -66,7 +66,11 @@ var Modal = function (_props) {
                                     }
                                 }],
                                 click: function (e) {
-                                    _self.trigger("dismiss");
+                                    let evt = jQuery.Event('dismiss');
+                                    _self.trigger(evt);
+                                    if (!evt.isDefaultPrevented()){ 
+                                        _self.hide();
+                                    }
                                 }
                             }
                         },
@@ -89,7 +93,11 @@ var Modal = function (_props) {
                                     }
                                 }],
                                 click: function (e) {
-                                    _self.trigger("accept");
+                                    let evt = jQuery.Event('accept');
+                                    _self.trigger(evt);
+                                    if (!evt.isDefaultPrevented()){ 
+                                        _self.hide();
+                                    }
                                 }
                             }
                         }
@@ -102,7 +110,7 @@ var Modal = function (_props) {
     let _defaultParams = {
         size: ModalSize.LARGE,
         type: ContainerType.NONE,
-        classes: ["modal", "fade", "modal-fullscreen"],
+        classes: ["modal", "modal-fullscreen"],
         attr: {
             "data-triggers": "displayListUpdated accept dismiss",
             tabindex: -1,
@@ -135,6 +143,15 @@ var Modal = function (_props) {
     let fnContainerDelayInit = function () {
         Modal.all.push(_self);
         _props.css["z-index"] = 1040 + Modal.all.length;
+        if (!Modal.BackDrop) { 
+            Modal.BackDrop = Component.fromLiteral({
+                ctor: Container,
+                props: {
+                    type: ContainerType.NONE,
+                    classes: ["modal-backdrop", "fade", "show"]
+                }
+            });
+        }
         _cmps = [{
             ctor: Container,
             props: {
@@ -192,19 +209,37 @@ var Modal = function (_props) {
     this.keepBase();
 
     this.show = function () {
-        if (this.$el)
-            this.$el.modal('show');
+        if (this.$el) {
+            //this.$el.modal('show');
+            if (!Modal.BackDrop.attached) { 
+                Modal.BackDrop.renderPromise().then(function (cmpInstance)
+                {
+                    $(_self.ownerDocument.body).append(cmpInstance.$el);
+                });
+            }
+            Modal.BackDrop.show();
+            this.css.display = "block";
+            this.$el.fadeIn();
+            //$(this.$el[0].ownerDocument.body).addClass('modal-open');
+        }
         return this;
     };
 
     this.hide = function () {
-        if (this.$el)
-            this.$el.modal('hide');
+        if (this.$el) {
+            //this.$el.modal('hide');
+            Modal.BackDrop.destruct();
+            this.$el.fadeOut();
+            delete this.css["display"];
+            //$(this.$el[0].ownerDocument.body).removeClass('modal-open');
+        }
         return this;
     };
     
     this.destruct = function (mode = 1) {
-        Modal.all.splice(Modal.all.indexOf(this), 1);
+        if (mode == 1) {
+            Modal.all.splice(Modal.all.indexOf(this), 1);
+        }
         for (let id in _children) {
             _children[id].destruct(mode);
         }
@@ -214,3 +249,4 @@ var Modal = function (_props) {
 };
 Modal.prototype.ctor = 'Modal';
 Modal.all = new ArrayEx();
+Modal.BackDrop = null;

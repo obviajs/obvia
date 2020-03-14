@@ -786,7 +786,7 @@ var DataGrid = function(_props)
                 _self.trigger("rowClick",  [_self, rargs]);
             });
 
-            renderedRow.dblclick(function(evt)
+            renderedRow.on('dblclick', function(evt)
             {
                 let rargs = new RepeaterEventArgs(_rowItems, _self.dataProvider[index + _virtualIndex], index + _virtualIndex);
                 rargs.virtualIndex = _virtualIndex;

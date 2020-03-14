@@ -79,10 +79,10 @@ Builder.metaProps = {
             //get the fields for the selected datProvider and 
             //assign them to the labelField and valueField editor`s dataProvider property
             if (this.value && this.value.length > 0) { 
-                this.parent.parent.instance.dataProvider = ObjectEditor.data[this.value[0].name];
+                this.parent.parent.instance.dataProvider = Builder.data[this.value[0].name];
             }
         }
-    }, index:8},
+    }, index: 8},
     labelField: {ctor:"AutoCompleteEx", label: "Label Field", required:true, props:{
         valueField: "prop",
         labelField: "description"
@@ -92,9 +92,9 @@ Builder.metaProps = {
         labelField: "description"
     }, index:10},
     mask: {ctor:"AutoCompleteEx", label: "Data Provider", required:true, props:{
-        valueField: ObjectEditor.maskValueField,
-        labelField: ObjectEditor.maskLabelField,
-        dataProvider: ObjectEditor.masks
+        valueField: Builder.maskValueField,
+        labelField: Builder.maskLabelField,
+        dataProvider: Builder.masks
     }, index:11},
     inputFormat: {ctor:"Select", label: "Input Format", required:true, props:{
         dataProvider:new ArrayEx(getMembersCollection(DateTimeFormat, "text", "value")),
@@ -162,14 +162,17 @@ Builder.metaProps = {
                 events:[{
                     event: "click", handler: function (e, oe, itemEditorLit, targetLit) {
                         if (oe.dataProvider.input.value && oe.dataProvider.input.value.length > 0) {
-                            let wl = extend(true, targetLit);
-                            wl.props.components = [itemEditorLit];
                             let dpName = oe.dataProvider.input.value[0][oe.dataProvider.input.valueField];
-                            if (ObjectEditor.data[dpName] && ObjectEditor.data[dpName].length > 0) {
-                                let win = oe.addComponent(wl);
+                            if (Builder.data[dpName] && Builder.data[dpName].length > 0) {
+                                let win = oe.columnsEditModal;
+                                if (!win) {
+                                    let wl = extend(true, targetLit);
+                                    wl.props.components = [itemEditorLit];
+                                    win = oe.addComponent(wl);
+                                }
                                 let colOEInstances = win.modalDialog.modalContent.modalBody.columnEditor.repeater.repeater.objectEditor;
                                 if (colOEInstances) {
-                                    let dpFieldNames = Object.keys(ObjectEditor.data[dpName][0]);
+                                    let dpFieldNames = Object.keys(Builder.data[dpName][0]);
                                     let len = dpFieldNames.length;
                                     let dpFields = new ArrayEx();
                                     for (let i = 0; i < len; i++) { 
@@ -220,7 +223,6 @@ Builder.metaProps = {
             _props.instance = this.input;
             return _props;
     }},
-    rendering:{ctor:"ObjectEditor", label: "Rendering", required:false},
     direction:{ctor:"Select", label:"Direction", props:{
         dataProvider:new ArrayEx([{value:"vertical", text:"Vertical"}, {value:"horizontal", text:"Horizontal"}]),
         change: function(){
@@ -252,10 +254,10 @@ Builder.metaProps = {
     }},
     itemRenderer: {
         ctor: "AutoBrowse", label: "Item Renderer", required: true, props: {
-            valueField: ObjectEditor.componentValueField,
-            labelField: ObjectEditor.componentValueField,
+            valueField: Builder.componentValueField,
+            labelField: Builder.componentValueField,
             dataProvider: Builder.componentList,
-            fields:[{"field":ObjectEditor.componentValueField, "description":ObjectEditor.componentValueField, "visible":false}, {"field":ObjectEditor.componentLabelField, "description":ObjectEditor.componentLabelField}],        
+            fields:[{"field":Builder.componentValueField, "description":Builder.componentValueField, "visible":false}, {"field":Builder.componentLabelField, "description":Builder.componentLabelField}],        
             classes:["no-form-control"],
             change: function () {
                 //propsForm.children["dataProvider"].value
@@ -269,10 +271,10 @@ Builder.metaProps = {
     index:18},
     itemEditor: {
         ctor: "AutoBrowse", label: "Item Editor", required: false, props: {
-            valueField: ObjectEditor.componentValueField,
-            labelField: ObjectEditor.componentValueField,
+            valueField: Builder.componentValueField,
+            labelField: Builder.componentValueField,
             dataProvider: Builder.componentList,
-            fields:[{"field":ObjectEditor.componentValueField, "description":ObjectEditor.componentValueField, "visible":false}, {"field":ObjectEditor.componentLabelField, "description":ObjectEditor.componentLabelField}],
+            fields:[{"field":Builder.componentValueField, "description":Builder.componentValueField, "visible":false}, {"field":Builder.componentLabelField, "description":Builder.componentLabelField}],
             classes:["no-form-control"],
             change: function () {
                 //propsForm.children["dataProvider"].value
@@ -296,7 +298,7 @@ Builder.metaProps.Repeater = {
         ctor: "AutoBrowse", label: "Repeated Form", required: true, props: {
             valueField: "form_id",
             labelField: "form_name",
-            dataProvider: ObjectEditor.data.forms,
+            dataProvider: Builder.data.forms,
             fields: [{ "field": "form_id", "description": "form_id", "visible": false }, { "field": "form_name", "description": "form_name" }],
             classes:["no-form-control"],
             change: function () {
@@ -318,7 +320,7 @@ Builder.metaProps.RepeaterEx = {
         ctor: "AutoBrowse", label: "Repeated Form", required: true, props: {
             valueField: "form_id",
             labelField: "form_name",
-            dataProvider: ObjectEditor.data.forms,
+            dataProvider: Builder.data.forms,
             fields: [{ "field": "form_id", "description": "form_id", "visible": false }, { "field": "form_name", "description": "form_name" }],
             classes:["no-form-control"],
             change: function () {

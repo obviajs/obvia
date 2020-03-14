@@ -665,28 +665,33 @@ var Component = function (_props, overrided = false, _isSurrogate = false) {
         } else {
             if (typeof fnc == 'function') {
                 if (this.$el) {
-                    if (_handlers[eventType] == null)
-                        _handlers[eventType] = [];
-                    let proxyHandler = function () {
-                        let args = [];
-                        for (let i = 0; i < arguments.length; i++) {
-                            args.push(arguments[i]);
-                        }
+                    let eventTypeArr = eventType.split(" ");
+                    for (let t = 0; t < eventTypeArr.length; t++)
+                    {
+                        eventType = eventTypeArr[t];
+                        if (_handlers[eventType] == null)
+                            _handlers[eventType] = [];
+                        let proxyHandler = function () {
+                            let args = [];
+                            for (let i = 0; i < arguments.length; i++) {
+                                args.push(arguments[i]);
+                            }
 
-                        if (_self.parentType == 'repeater') {
-                            args = args.concat([
-                                new RepeaterEventArgs(
-                                    _self.parent.rowItems[_self.repeaterIndex],
-                                    _self.parent.dataProvider[_self.repeaterIndex],
-                                    _self.repeaterIndex
-                                )
-                            ]);
-                        }
-                        //console.log(_self.$el.attr('id'), arguments[0]);
-                        return fnc.apply(_self.proxyMaybe, args);
-                    };
-                    _handlers[eventType].push({ "proxyHandler": proxyHandler, "originalHandler": fnc });
-                    this.$el.on(eventType, proxyHandler);
+                            if (_self.parentType == 'repeater') {
+                                args = args.concat([
+                                    new RepeaterEventArgs(
+                                        _self.parent.rowItems[_self.repeaterIndex],
+                                        _self.parent.dataProvider[_self.repeaterIndex],
+                                        _self.repeaterIndex
+                                    )
+                                ]);
+                            }
+                            //console.log(_self.$el.attr('id'), arguments[0]);
+                            return fnc.apply(_self.proxyMaybe, args);
+                        };
+                        _handlers[eventType].push({ "proxyHandler": proxyHandler, "originalHandler": fnc });
+                        this.$el.on(eventType, proxyHandler);
+                    }
                 }
                 else
                     console.log("$el in not defined");

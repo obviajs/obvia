@@ -201,8 +201,11 @@ var FormField = function (_props) {
                     switch (prop) {
                         case "component":
                             let component = {};
-                            component.ctor = _input.ctor; //_component.ctor;
-                            component.props = _input.propsLite;
+                            if (_input) {
+                                component.ctor = _input.ctor; //_component.ctor;
+                                component.props = _input.propsLite;
+                            } else
+                                component = _component; 
                             obj[prop] = component;
                             break;
                         case "ownerDocument":
@@ -227,8 +230,12 @@ var FormField = function (_props) {
                     switch (prop) {
                         case "component":
                             let component = {};
-                            component.ctor = _input.ctor; //_component.ctor;
-                            component.props = _input.props;
+                            if (_input) {
+                                component.ctor = _input.ctor; //_component.ctor;
+                                component.props = _input.props;
+                            } else
+                                component = _component; 
+                            
                             obj[prop] = component;
                             break;
                         case "ownerDocument":
