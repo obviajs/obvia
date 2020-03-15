@@ -69,20 +69,30 @@ Builder.metaProps = {
             this.parent.parent.instance.checked = this.value;
         }
     }},
-    dataProvider: {ctor:"AutoBrowse", label: "Data Provider", required:true, props:{
-        valueField: Builder.providerValueField,
-        labelField: Builder.providerLabelField,
-        dataProvider: Builder.sources,
-        classes:["no-form-control"],
-        change: function(){
-            //propsForm.children["dataProvider"].value
-            //get the fields for the selected datProvider and 
-            //assign them to the labelField and valueField editor`s dataProvider property
-            if (this.value && this.value.length > 0) { 
-                this.parent.parent.instance.dataProvider = Builder.data[this.value[0].name];
+    dataProvider: {
+        ctor: "AutoBrowse", label: "Data Provider", required: true, props: {
+            valueField: Builder.providerValueField,
+            labelField: Builder.providerLabelField,
+            dataProvider: Builder.sources,
+            classes: ["no-form-control"],
+            change: function () {
+                //propsForm.children["dataProvider"].value
+                //get the fields for the selected datProvider and 
+                //assign them to the labelField and valueField editor`s dataProvider property
+                if (this.value && this.value.length > 0) {
+                    this.parent.parent.instance.dataProvider = Builder.data[this.value[0][Builder.providerValueField]];
+                    this.parent.parent.instance.attr[Builder.providerValueField] = this.value[0][Builder.providerValueField];
+                }
             }
-        }
-    }, index: 8},
+        },
+        setter: function () { 
+            if (this.attr[Builder.providerValueField]) { 
+                let m = getMatching(Builder.sources, Builder.providerValueField, this.attr[Builder.providerValueField]);
+                if (m.objects.length > 0) { 
+                    return new ArrayEx(m.objects);
+                }
+            }
+        }, index: 8},
     labelField: {ctor:"AutoCompleteEx", label: "Label Field", required:true, props:{
         valueField: "prop",
         labelField: "description"
@@ -289,7 +299,10 @@ Builder.metaProps = {
     index: 19},
     field: {ctor:"AutoCompleteEx", label: "DataProvider Field", required:true, props:{
         valueField: "dpField",
-        labelField: "dpField"
+        labelField: "dpField",
+        change: function(){
+            this.parent.parent.instance.field = this.value;
+        }
     }, index:1}    
 };
 
@@ -307,7 +320,20 @@ Builder.metaProps.Repeater = {
                 //assign them to the labelField and valueField editor`s dataProvider property
                 this.parent.parent.instance.attr.repeated_id_form = this.value.length > 0 ? this.value[0][this.valueField] : undefined;
             }
-        }, index: 7
+        }, index: 7,
+        /**
+         * by default the value of the propertyEditor is binded to the value of the property of the isntance
+         * by specifying a setter function you override this behavior. The return value of the function 
+         * will be the assigned to the property of the instance
+        */
+        setter: function () { 
+            if (this.attr.repeated_id_form) { 
+                let m = getMatching(Builder.data.forms, "form_id", this.attr.repeated_id_form);
+                if (m.objects.length > 0) { 
+                    return new ArrayEx(m.objects);
+                }
+            }
+        }
     },
     rendering: {
         ctor: "ObjectEditor", label: "Rendering", required: false, props: {

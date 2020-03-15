@@ -453,6 +453,9 @@ var AutoCompleteEx = function(_props)
     if (!_props.attr) { 
         _props.attr = {};
     }
+    if (!_props.value) { 
+        _props.value = new ArrayEx([]);
+    }
     _maxSuggestionsCount = _props.maxSuggestionsCount;
     _props.attr["data-triggers"] = "noSuggestionsFound";
     

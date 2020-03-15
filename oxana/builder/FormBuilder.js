@@ -36,13 +36,6 @@ var oxana = new App({
 
 Builder.data.countries = [{ "value": "1", "text": "Albania" }, { "value": "2", "text": "Greece" }, { "value": "3", "text": "Italy" }];
 
-Builder.masks;
-Builder.maskValueField = "";
-Builder.maskLabelField = "";
-
-Builder.componentValueField = "ctor";
-Builder.componentLabelField = "label";
-
 let selectedForm = new FormProperties();
 
 let formField = Builder.components["FormField"].literal;
@@ -1450,7 +1443,7 @@ function _initDP() {
     for (let i = 0; i < Builder.sources.length; i++) {
         //if(ObjectEditor.source[i].remote)
         let r = new ArrayEx(new RemoteArray(Builder.sources[i].props));
-        Builder.data[Builder.sources[i].name] = r;
+        Builder.data[Builder.sources[i][Builder.providerValueField]] = r;
     }
 }
 

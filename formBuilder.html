@@ -25,12 +25,19 @@
         });
         var Builder = {};
         Builder.data = {};
-    
-        Builder.providerValueField = "name";
+        Builder.masks;
+        Builder.maskValueField = "";
+        Builder.maskLabelField = "";
+
+        Builder.componentValueField = "ctor";
+        Builder.componentLabelField = "label";
+        
+        Builder.providerValueField = "dataview_id";
         Builder.providerLabelField = "description";
         function main() {
    
             Builder.sources = new ArrayEx([{
+                            dataview_id:1,
                             name: "test",
                             description: "Test Remote Source",
                             props: {
@@ -42,7 +49,8 @@
                             }
                         },
                         {
-                            name: "forms",
+                            dataview_id:2,
+                            name: "forms2",
                             description: "Forms",
                             props: {
                                 url: "http://flower-gaia/api/forms",

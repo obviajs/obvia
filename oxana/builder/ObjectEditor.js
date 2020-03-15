@@ -95,7 +95,10 @@ var ObjectEditor = function (_props, overrided = false) {
                     else
                         ff.props.classes = ["mt-3"];
                     ff.props.component.props.bindingDefaultContext = props;
-                    ff.props.component.props[(propEditor.valueField || "value")] = "{?" + prop + "}";
+                    if (propsMeta.setter && typeof propsMeta.setter == 'function') { 
+                        ff.props.component.props[(propEditor.valueField || "value")] = propsMeta.setter.call(inst, this);
+                    }else
+                        ff.props.component.props[(propEditor.valueField || "value")] = "{?" + prop + "}";
                     ff.props.index = propsMeta.index;
                     rows.push(extend(true, ff));
                 } else {
