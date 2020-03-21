@@ -2,7 +2,8 @@ var ContainerType =
 {
     "CONTAINER":"container",
     "CONTAINER_FLUID":"container-fluid",
-    "ROW":"row",
+    "ROW": "row",
+    "FORM_ROW": "form-row",
     "COLUMN":"", 
     "NONE":"", //just sugar ;)
     "BTN_GROUP":"btn-group",

@@ -4,13 +4,15 @@ var ApiClientGen = function (_props) {
         requestBodyParamMode:1
     };
     _props = extend(false, false, _defaultParams, _props);
+    _props.url += "?r="+Math.random();
     /**
      * When request contains more than one body parameter, we have two options:
      * 1- generated method will have only one parameter wrapping all params as type members and the type name for this object will be following method+RequestBody+path naming convention
      * 2- generated method will have as many params as the request specifies, they will be wrapped in an object before the request is sent
      */
     let requestBodyParamMode = _props.requestBodyParamMode;
-    
+    let _httpMethods = ["get", "post", "delete", "put", "patch"];
+        
     get(_props.url).then(function (r) {
         let oas = YAML.parse(r.response);
         _generate(oas);
@@ -84,6 +86,9 @@ var ApiClientGen = function (_props) {
             typeMap[path] = {};
             let responses = {};
             for (let method in oas.paths[path]) {
+                if (_httpMethods.indexOf(method.toLocaleLowerCase()) < 0) { 
+                    throw new Error(method+" is not a valid http method.");
+                }
                 typeMap[path][method] = {};
                 let strObjQuery = "";
                 let objBody = null;
@@ -158,11 +163,11 @@ var ApiClientGen = function (_props) {
                             objBody = wrapParams = "{" + wrapParams + "}";
                         } else if (requestBodyParamMode == 1) {
                             let props = Object.keys(typeInfo.properties);
-                            if (props.length == 1) {
+                            if (props.length == 1 && 1==2) {
                                 typeInfo = typeInfo.properties[props[0]];
                                 typeInfo.title = typeInfo.title || props[0];
                                 objBody = '{"'+typeInfo.title+'":'+ typeInfo.title +'}';
-                            } else if ((typeInfo.type == "object" && typeDefined) || typeInfo.type == "array") {
+                            } else if (((typeInfo.type == "object" && typeDefined) || typeInfo.type == "array") && 1==2) {
                                 objBody = '{"'+typeInfo.title+'":'+ typeInfo.title +'}';
                             }
                             else { 
@@ -220,7 +225,7 @@ var ApiClientGen = function (_props) {
         let apiSrc = types +"\r\n" + apiTemplate.formatUnicorn({ "apiTitle": apiTitle.replace(/ /g, ''), "paths": strClosures, "pathInstances": pathInstances, "server": url});
         
         console.log(apiSrc);
-        //download(apiTitle.replace(/ /g, '') + ".js", apiSrc); 
+        download(apiTitle.replace(/ /g, '') + ".js", apiSrc); 
         eval(apiSrc);
         var api = new GaiaAPI();
         // var u = api.usersClient.get(1);
@@ -243,6 +248,7 @@ var ApiClientGen = function (_props) {
 {jsDoc}
     */
     var {typeName} = function(_props){
+        _props = _props || {};
 {properties}
     };`;
     let _propDocTemplate = "\t* @property {{jsType}}  {prop}               - {description}\r\n";

@@ -66,20 +66,8 @@
                 "ApiClientGen",
                 "OAMethod"
             ]).then(function () {
-                //rjs.define("./oxana/builder/builder.js", "builder");
-                //rjs.define("./examples/SideNav/example.js", "SideNavExample");
-                rjs.define("./oxana/builder/componentLiterals.js", "componentLiterals");
-                rjs.require([
-                    "componentLiterals"
-                ]).then(function () {
-                    rjs.define("./oxana/builder/metaProps.js", "metaProps");
-                    rjs.require([
-                        "metaProps"
-                    ]).then(function () {
-                        rjs.define("./examples/ApiClient/example.js", "ApiClientExample");
-                        //rjs.define("./oxana/builder/FormBuilder.js", "FormBuilder");
-                    });
-                });
+                rjs.define("./examples/ApiClient/example.js", "ApiClientExample");
+                //rjs.define("./oxana/builder/FormBuilder.js", "FormBuilder");
             });
             //rjs.define("./examples/ArrayEx/example.js", "ArrayExExample");
             //rjs.define("./examples/Tree/example.js", "TreeExample");

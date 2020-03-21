@@ -99,16 +99,13 @@ var ApiClient = function (_props) {
             // listen for `onload` event
             _xhr.onload = () => {
                 // process response
-                if (_xhr.status == 200) {
-                    // parse JSON data
-                    console.log(JSON.parse(_xhr.response));
-                } else {
-                    console.error('Error!');
-                }
+                resolve({ "status": _xhr.status, "response": _xhr.response || _xhr.responseText });
                 return;
             };
-            
-            _xhr.onerror = () => {
+            _xhr.onloadend = () => {
+                console.log('onloadend');
+            };
+            _xhr.onerror = function(){
                 reject({
                     status: this.status,
                     statusText: _xhr.statusText
@@ -120,7 +117,10 @@ var ApiClient = function (_props) {
                 // event.total is only available if server sends `Content-Length` header
                 console.log(`Downloaded ${event.loaded} of ${event.total}`);
             };
-            _xhr.ontimeout = () => console.log('Request timeout.', _xhr.responseURL);
+            _xhr.ontimeout = () => reject({
+                status: -1,
+                statusText: "request timeout"
+            });
             _xhr.onreadystatechange = function () {
                 if (_xhr.readyState == 1) {
                     console.log('Request started.');
@@ -134,7 +134,7 @@ var ApiClient = function (_props) {
                     console.log('Data loading..!');
                 }
                 if (_xhr.readyState == 4) {
-                    resolve({ "status": this.status, "response": _xhr.response || _xhr.responseText });
+                    console.log('Ready State = 4');
                 }
             };
             responseType = responseType.toLowerCase();

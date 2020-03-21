@@ -20,6 +20,8 @@ const appStyle = `
 }
 `;
 
+Builder.initComponentList();
+
 var _cmpList = new ArrayEx(Builder.componentList);
 
 var _DOMMutationHandler = function (e) {
@@ -33,12 +35,8 @@ var oxana = new App({
     style: appStyle
 });
 
-
-Builder.data.countries = [{ "value": "1", "text": "Albania" }, { "value": "2", "text": "Greece" }, { "value": "3", "text": "Italy" }];
-
 let selectedForm = new FormProperties();
-
-let formField = Builder.components["FormField"].literal;
+let formField;
 
 var noNeedFF = ["Button", "Label", "Container", "Link", "Header", "Footer", "Form", "SideNav", "ViewStack", "Calendar", "Tree", "Image", "HRule", "Heading", "Repeater", "RepeaterEx"];
 var dpCmpSelect = [];
@@ -588,6 +586,9 @@ let containers = ["Container", "Form"];
 oxana.behaviorimplementations["ADD_COMPONENT"] = {
     description: "Add component ",
     do: function (e) {
+        if (!formField) { 
+            formField = Builder.components["FormField"].literal;
+        }
         console.log('CREATED_');
         e.preventDefault();
         var workArea = Component.instances[Component.domID2ID[e.target.id]];
@@ -935,6 +936,9 @@ oxana.behaviorimplementations["SPLIT_HOR"] = {
             }
         };
         var newRow2;
+        if (activeContainer.ctor == "Form" || (objectHierarchyGetMatching(activeContainer, "ctor", "Form", "parent", 1)) ["match"] != null) { 
+            newRow.props.type = ContainerType.FORM_ROW;
+        }
         if (activeContainer.components.length == 0) {
             newRow2 = extend(true, newRow);
         }
@@ -1066,6 +1070,7 @@ oxana.behaviorimplementations["SPLIT_VERT"] = {
         let notWa = false;
         if (activeContainer.attr.isNotWa && activeContainer.components.length == 0) {
             notWa = true;
+            newRow.props.type = ContainerType.FORM_ROW;
             toAdd = [newRow];
             parent = activeContainer;
         } else if (activeContainer.attr.isNotWa) { 
@@ -1440,11 +1445,57 @@ function isKeyCombRedo(e) {
 
 //utility functions
 function _initDP() {
-    for (let i = 0; i < Builder.sources.length; i++) {
-        //if(ObjectEditor.source[i].remote)
-        let r = new ArrayEx(new RemoteArray(Builder.sources[i].props));
-        Builder.data[Builder.sources[i][Builder.providerValueField]] = r;
-    }
+    Builder.data = {};
+    Builder.masks;
+    Builder.maskValueField = "";
+    Builder.maskLabelField = "";
+
+    Builder.componentValueField = "ctor";
+    Builder.componentLabelField = "label";
+    
+    Builder.providerValueField = "dataview_id";
+    Builder.providerLabelField = "description";
+    
+    let api_dv_dataviews = new GaiaAPI_DV_dataviews();
+    let api_dv_forms = new GaiaAPI_DV_forms();
+
+    let raDvs = new RemoteArray(
+        {
+            recordsPerPage: 10,
+            fetchPromise: function (p) {
+                let dvInp = new dvInput();
+                dvInp.tableData = new tableData({
+                    currentRecord: p.startPage * p.recordsPerPage,
+                    recordsPerPage: p.recordsPerPage
+                });
+                return api_dv_dataviews.dataview_pid_2Client.post(dvInp);
+            }
+        }
+    );
+
+    Builder.sources = new ArrayEx(raDvs);   
+    
+    let raFrms = new RemoteArray(
+        {
+            recordsPerPage: 10,
+            fetchPromise: function (p) {
+                let dvInp = new dvInput();
+                dvInp.tableData = new tableData({
+                    currentRecord: p.startPage * p.recordsPerPage,
+                    recordsPerPage: p.recordsPerPage
+                });
+                return api_dv_forms.dataview_pid_1Client.post(dvInp);
+            }
+        }
+    );
+
+    Builder.sources = new ArrayEx(raDvs);         
+    Builder.forms = new ArrayEx(raFrms);
+    
+    Promise.all([Builder.forms.init(), Builder.sources.init()]).then(function (result) { 
+        Builder.initComponentLiterals();
+        Builder.initMetaProps();
+    }); 
 }
 
 function childrenAutoWidth(container) {

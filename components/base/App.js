@@ -137,7 +137,7 @@ var App = function(_props){
         console.log("App Window was maximized, you may want to greet the user.");
     };
 
-    let _eventTypes = ["mousedown", "mouseover", "mouseup", "click", "dblclick", "keydown", "keyup", "mousemove", "drop", "dragstart", "dragover", "idChanged"];
+    let _eventTypes = ["mousedown", "mouseover", "mouseup", "click", "dblclick", "keydown", "keyup", "mousemove", "drop", "dragstart", "dragover", "idChanged", "endDraw"];
     let _eventTypesJoined;
     let _loader = new Loader({ id: 'loader' });
     let _event2behavior = function(e) {
@@ -163,7 +163,7 @@ var App = function(_props){
         {
             cmpBehaviors = _self.behaviors[_idTarget] || _self.behaviors[_idTargetSurrogate];
             _idBehaviorManifestor = _idTarget;
-        }else
+        }else if(1==2)
         {
             cmpBehaviors = _self.behaviors[_idCurrentTarget] || _self.behaviors[_idCurrentTargetSurrogate];
             _idBehaviorManifestor = _idCurrentTarget;
@@ -242,7 +242,16 @@ var App = function(_props){
             }
         }
     };
-    
+    this.endDraw = function (e) {
+        if (e.target.id == this.domID) {
+            $(window).trigger("endDraw");
+        }
+    };
+    this.beginDraw = function (e) {
+        if (e.target.id == this.domID) {
+            $(window).trigger("beginDraw");
+        }
+    };
     this.registerBehaviors = function(win=window)
     {
         //TODO: te bejme difference e oldBehaviors me newBehaviors dhe te shtojme vetem ato si evente per te evituar off dhe on
