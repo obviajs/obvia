@@ -452,7 +452,7 @@ oxana.behaviorimplementations["ADD_COMPONENT"] = {
     do:function(e) {
         console.log('CREATED_');
         e.preventDefault();
-        var workArea = Component.instances[Component.domID2ID[e.target.id]];
+        var workArea = Component.instances[e.target.id];
         var domID = e.originalEvent.dataTransfer.getData("domID");
         var ctor = e.originalEvent.dataTransfer.getData("ctor");
         var move = e.originalEvent.dataTransfer.getData("move");

@@ -17,8 +17,6 @@ var Repeater = function(_props)
     {
         if (typeof _keydown == 'function')
                 _keydown.apply(this, arguments);
-            console.log("containerKeyDown")
-    
             // if(!e.isDefaultPrevented()){
                 
             //     switch (e.keyCode) {
@@ -64,11 +62,6 @@ var Repeater = function(_props)
 
     this.focusComponent = function(rowIndex, cIndex)
     {
-        console.log("focus Component function")
-        console.log("focus component param")
-        console.log(rowIndex) // 0
-        console.log(cIndex) // 0
-       
         if(rowIndex>this.dataProvider.length-1)
         {
             rowIndex = 0;
@@ -106,7 +99,6 @@ var Repeater = function(_props)
     if (!this.hasOwnProperty("createRows"))
     {
         this.createRows = function () {
-            console.time('time _createRows_' + _self.id);
             _self.trigger('beginDraw');
             //this.$container.empty();
             _self.focusedRow = 0;
@@ -199,7 +191,16 @@ var Repeater = function(_props)
         },
         enumerable:true
     });
-
+    
+    Object.defineProperty(this, "$hadow", 
+    {
+        get: function $hadow() 
+        {
+            return _$hadow;
+        },
+        enumerable:false
+    });
+    
     let _oldDataProvider;
     Object.defineProperty(this, "dataProvider", 
     {
@@ -223,12 +224,12 @@ var Repeater = function(_props)
                     this.createRows();
                 }else if(_oldDataProvider && _oldDataProvider.length>0)
                 {
-                    var delta = (v.length?v.length:0) - (_oldDataProvider.length?_oldDataProvider.length:0);
-                    for(var ri=0;ri<Math.min(v.length, _oldDataProvider.length);ri++){
+                    let delta = (v.length?v.length:0) - (_oldDataProvider.length?_oldDataProvider.length:0);
+                    for(let ri=0;ri<Math.min(v.length, _oldDataProvider.length);ri++){
                         if(v[ri]!=null && !v[ri][_guidField])
                             v[ri][_guidField] = StringUtils.guid();
-                        for(var cmpID in this.rowItems[ri]){
-                            var cmp = this.rowItems[ri][cmpID];
+                        for(let cmpID in this.rowItems[ri]){
+                            let cmp = this.rowItems[ri][cmpID];
                             cmp.refreshBindings(v[ri]);
                             cmp.$el.attr(_guidField, v[ri][_guidField]);
                             cmp.attr[_guidField] = v[ri][_guidField];
@@ -236,7 +237,7 @@ var Repeater = function(_props)
             
                     }
                     if(delta>0){
-                        for(var i=_oldDataProvider.length;i<v.length;i++){
+                        for(let i=_oldDataProvider.length;i<v.length;i++){
                             if(v[i]!=null && !v[i][_guidField])
                                 v[i][_guidField] = StringUtils.guid();
                             _compRenderPromises.splicea(_compRenderPromises.length, 0, this.addRow(v[i], i));
@@ -250,7 +251,7 @@ var Repeater = function(_props)
                         }
                         
                     }else if(delta<0){
-                        for(var i=_oldDataProvider.length-1;i>=v.length;i--){
+                        for(let i=_oldDataProvider.length-1;i>=v.length;i--){
                             this.removeRow(i, false, true, dpRemove = false); 
                         }
                     }
@@ -273,23 +274,23 @@ var Repeater = function(_props)
         configurable: true
     });
 
-    var _dpWatcher;
-    var _dpLengthChanged = function (e) {
+    let _dpWatcher;
+    let _dpLengthChanged = function (e) {
         e.stopPropagation();
         e.stopImmediatePropagation();
         let len = _dataProvider.length;
         let oldValue = _oldDataProvider.length;
         let newValue = _dataProvider.length;
         
-        for (var i = 0; i < len; i++) {
+        for (let i = 0; i < len; i++) {
             if (!_dataProvider[i][_guidField])
                 _dataProvider[i][_guidField] = StringUtils.guid();
         }
         if (_creationFinished) {
-            var toAdd = { result: [], a1_indices: [] };
+            let toAdd = { result: [], a1_indices: [] };
             toAdd = differenceOnKeyMatch(_dataProvider, _oldDataProvider, _guidField, false, true);
             
-            var toRemove = { result: [], a1_indices: [] };
+            let toRemove = { result: [], a1_indices: [] };
             toRemove = differenceOnKeyMatch(_oldDataProvider, _dataProvider, _guidField, false, true);
             
             if (newValue < oldValue && toRemove.result.length != oldValue - newValue) {
@@ -302,17 +303,22 @@ var Repeater = function(_props)
             _self.dataProviderChanged(toAdd, toRemove, toRefresh);
             _oldDataProvider = acExtend(_dataProvider);
         }
+        
+        let dataProviderLengthChangedEvent = jQuery.Event("dataProviderLengthChanged");
+        dataProviderLengthChangedEvent.oldValue = oldValue;
+        dataProviderLengthChangedEvent.newValue = newValue;
+        _self.trigger("dataProviderLengthChanged", [_self]);
     };
     let _debouncedLengthChanged = debounce(_dpLengthChanged, 1);
     
-    var _dpMemberChanged = function (e) {
+    let _dpMemberChanged = function (e) {
         e.stopPropagation();
         e.stopImmediatePropagation();
         if (_creationFinished && ["length", "guid"].indexOf(e.property) == -1) {
             if (!_dataProvider[parseInt(e.property)][_guidField])
                 _dataProvider[parseInt(e.property)][_guidField] = StringUtils.guid();
-            var toAdd = { a1_indices: [], result: [] };
-            var toRemove = { a1_indices: [], result: [] };
+            let toAdd = { a1_indices: [], result: [] };
+            let toRemove = { a1_indices: [], result: [] };
            
             if (e.oldValue != null && e.newValue != null) {
                 //toRefresh = [parseInt(e.property)];
@@ -325,11 +331,11 @@ var Repeater = function(_props)
     if(!this.hasOwnProperty("value")){
         Object.defineProperty(this, "value", {
             get: function value() {
-                var value = {};
+                let value = {};
                 for(var i=0;i<_components.length;i++)
                 {
                     value[_components[i].props.id] = [];        
-                    for(var j=0;j<this[_components[i].props.id].length;j++)
+                    for(let j=0;j<this[_components[i].props.id].length;j++)
                     {
                         value[_components[i].props.id].push(this[_components[i].props.id][j].value);
                     }
@@ -339,9 +345,8 @@ var Repeater = function(_props)
             configurable:true
         });
     }
-    var _createdRows = 0;
+    let _createdRows = 0;
     //renders a new row, adds components in stack
-    
     this.addRow = function (data, index, isPreventable = false, focusOnRowAdd = true) 
     {
         let rp = [];
@@ -358,13 +363,18 @@ var Repeater = function(_props)
             let len = _components.length;
             for(var cIndex=0;cIndex<len;cIndex++)
             {
-                let component = _components[cIndex];
-                //clone objects
-                component = deepCopy(component);
+                let component = {};
+                if (_components[cIndex].props.id) {
+                    shallowCopy(_components[cIndex], component, ["props"]);
+                    component.props = {};
+                    shallowCopy(_components[cIndex].props, component.props, ["id", "bindingDefaultContext"]);
+                    component.props.id = _components[cIndex].props.id + "_" + index + "_" + cIndex;
+                    component.props.bindingDefaultContext = data;
+                }
+                
                 component.props.ownerDocument = _props.ownerDocument;
-                component.props.bindingDefaultContext = data;
                 let el = Component.fromLiteral(component, data);
-                let cmpId = component.props.id;
+                let cmpId = _components[cIndex].props.id;
 
                 //build components properties, check bindings
                 if (_self[cmpId] == undefined)
@@ -594,7 +604,7 @@ var Repeater = function(_props)
     if (!_props.attr) { 
         _props.attr = {};
     }
-    let myDtEvts = ["rowAdd", "rowEdit", "beforeRowAdd", "rowDelete", "beforeRowDelete", "beginDraw"];
+    let myDtEvts = ["rowAdd", "rowEdit", "beforeRowAdd", "rowDelete", "beforeRowDelete", "dataProviderLengthChanged"];
     if (!Object.isEmpty(_props.attr) && _props.attr["data-triggers"] && !Object.isEmpty(_props.attr["data-triggers"]))
     {
         let dt = _props.attr["data-triggers"].split(" ");
@@ -638,13 +648,13 @@ var Repeater = function(_props)
         _rPromise = new Promise((resolve, reject) => {
             _self.on("endDraw", function(e){
                 if (e.target.id == _self.domID) 
-                {
-                    console.timeEnd('time _createRows_'+_self.id);         
+                {       
                     resolve(this); 
                 }
             });                   
         });
         //if(_props.dataProvider)
+        if(!this.getBindingExpression("dataProvider"))
             this.dataProvider = _props.dataProvider;
         return _rPromise;
     };

@@ -25,38 +25,12 @@
         rjs.init({
             debug: false
         });
-        var Builder = {};
-        Builder.providerValueField = "name";
-        Builder.providerLabelField = "description";
         function main() {
-            Builder.sources = new ArrayEx([{
-                            name: "test",
-                            description: "Test Remote Source",
-                            props: {
-                                url: "http://139.162.158.49/rca/index.php",
-                                post: {
-                                    "testKey": "testValue"
-                                },
-                                recordsPerPage: 5
-                            }
-                        },
-                        {
-                            name: "forms",
-                            description: "Forms",
-                            props: {
-                                url: "http://flower-gaia/api/forms",
-                                post: {},
-                                recordsPerPage: 5
-                            }
-                        }
-                    ]);
-            rjs.define("./oxana/builder/componentList.js", "componentList");
             rjs.define("./oxana/builder/CollectionEditor.js", "CollectionEditor");
             rjs.define("./oxana/builder/ObjectEditor.js", "ObjectEditor");
             rjs.define("./oxana/Code/Code.js", "Code");
             rjs.define("./oxana/Code/CodeMerge.js", "CodeMerge");
             rjs.require([
-                "componentList",
                 "CollectionEditor",
                 "ObjectEditor",
                 "Code",
@@ -64,10 +38,10 @@
                 "yaml",
                 "ApiClient",
                 "ApiClientGen",
-                "OAMethod"
+                "OAMethod",
+                "GaiaAPI_Utils"
             ]).then(function () {
                 rjs.define("./examples/ApiClient/example.js", "ApiClientExample");
-                //rjs.define("./oxana/builder/FormBuilder.js", "FormBuilder");
             });
             //rjs.define("./examples/ArrayEx/example.js", "ArrayExExample");
             //rjs.define("./examples/Tree/example.js", "TreeExample");
@@ -113,6 +87,7 @@
             rjs.define("./oxana/ApiClientGen/ApiClient.js", "ApiClient");
             rjs.define("./oxana/ApiClientGen/ApiClientGen.js", "ApiClientGen");
             rjs.define("./oxana/ApiClientGen/OAMethod.js", "OAMethod");
+            rjs.define("./oxana/GaiaAPI/GaiaAPI_Utils.js", "GaiaAPI_Utils");
             //rjs.define('./examples/CreditCard/example.js', "CreditCard");
             //rjs.define("./examples/Calendar/example_dayView.js", "CalendarDayExample");
             //rjs.define("./examples/Calendar/example_week.js", "CalendarWeekExample");

@@ -59,17 +59,9 @@ var Component = function (_props, overrided = false, _isSurrogate = false) {
     let _index = _props.index;
     let _appendTo = _props.appendTo;
     
-    let tid = _id;
-    while (Component.usedComponentIDS[tid] == 1) {
-        ++Component[this.ctor].instanceInc;
-        tid = _id + "_" + Component[this.ctor].instanceInc;
-    }
-    _id = tid;
     let _domID = _id + '_' + _guid;
 
-    Component.usedComponentIDS[_id] = 1;
-    Component.domID2ID[_domID] = _id;
-    Component.instances[_id] = this;
+    Component.instances[_domID] = this;
 
     //let _propUpdateMap = {"label":{"o":$el, "fn":"html", "p":[] }, "hyperlink":{}};
     //generate GUID for this component
@@ -119,47 +111,29 @@ var Component = function (_props, overrided = false, _isSurrogate = false) {
             },
             set: function (v) {
                 if (v && v.trim() && (_id != v)) {
-                    let oldId = _id;
-                    delete Component.usedComponentIDS[_id];
-                    delete Component.domID2ID[_domID];
-                    delete Component.instances[_id];
-                
-                    _id = v;
-                    tid = _id;
-                    while (Component.usedComponentIDS[tid] == 1) {
-                        ++Component[this.ctor].instanceInc;
-                        tid = _id + "_" + Component[this.ctor].instanceInc;
-                    }
-                    _id = tid;
-                    _domID = _id + '_' + _guid;
-            
-                    Component.usedComponentIDS[_id] = 1;
-                    Component.domID2ID[_domID] = _id;
-                    Component.instances[_id] = this;
+                    if (!this.parent || !this.parent[v]) {
+                        let oldId = _id;
+                        delete Component.instances[this.domID];
+                        _id = v;
+                        _domID = _id + '_' + _guid;
+                        Component.instances[_domID] = this;
 
-                    if (this.parent) {
-                        if (this.parent.ctor == "Repeater") {
-                            this.parent[_id] = this.parent[oldId];
-                            delete this.parent[oldId];
-                        } else {
-                            this.parent.children[_id] = this.parent.children[oldId];
-                            delete this.parent.children[oldId];
-                            //TODO: Also replace old id in below dictionaries
-                            this.parent.childrenIDR;
-                            this.parent.childrenRID;
-                            
-                            let m = getMatching(this.parent.components, "props.id", oldId, true);	
-                            if (m.objects.length > 0) { 
-                                m.objects[0].props.id = _id;
+                        if (this.parent) {
+                            if (this.parent.ctor == "Repeater") {
+                                this.parent[_id] = this.parent[oldId];
+                                delete this.parent[oldId];
+                            } else {
+                                this.parent.children[_id] = this.parent.children[oldId];
+                                delete this.parent.children[oldId];
                             }
                         }
+                        this.$el.attr("id", _domID);
+                        _props.id = _id;
+                        let evt = new jQuery.Event("idChanged");
+                        evt.oldValue = oldId;
+                        evt.newValue = _id;
+                        _self.trigger(evt);
                     }
-                    this.$el.attr("id", _domID);
-                    _props.id = _id;
-                    let evt = new jQuery.Event("idChanged");
-                    evt.oldValue = oldId;
-                    evt.newValue = _id;
-                    _self.trigger(evt);
                 }
             },
             enumerable: true
@@ -1009,12 +983,10 @@ Component.ready = function (cmp, fn, ownerDocument = document) {
 Component.check = function (mutations) {
     if (mutations && mutations.length > 0) {
         for (let g = 0; g < mutations.length; g++) {
-            if (Component.domID2ID[mutations[g].target.id]) {
-                if (Component.instances[Component.domID2ID[mutations[g].target.id]]) {
-                    let evt = new jQuery.Event("DOMMutation");
-                    evt.mutation = mutations[g];
-                    Component.instances[Component.domID2ID[mutations[g].target.id]].trigger(evt);
-                }
+            if (Component.instances[mutations[g].target.id]) {
+                let evt = new jQuery.Event("DOMMutation");
+                evt.mutation = mutations[g];
+                Component.instances[mutations[g].target.id].trigger(evt);
             }
             if (mutations[g].type == "childList") {
                 for (let h = 0; h < mutations[g].addedNodes.length; h++) {
@@ -1051,7 +1023,5 @@ Component.check = function (mutations) {
 Component.defaultContext = window;
 Component.surrogates = {};
 Component.registered = {};
-Component.usedComponentIDS = {};
-Component.domID2ID = {};
 Component.instances = {};
 Component.observer = {};

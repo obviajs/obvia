@@ -26,7 +26,8 @@ var ObjectEditor = function (_props, overrided = false) {
         props = fld != null && fld != "" ? inst[fld] : inst;
         let rows = [];
         for (let prop in props) {
-            let propsMeta = extend(true, Builder.metaProps[inst.ctor] && Builder.metaProps[inst.ctor][prop] ? Builder.metaProps[inst.ctor][prop] : Builder.metaProps[prop]);
+            //let propsMeta = extend(true, Builder.metaProps[inst.ctor] && Builder.metaProps[inst.ctor][prop] ? Builder.metaProps[inst.ctor][prop] : Builder.metaProps[prop]);
+            let propsMeta = Builder.metaProps[inst.ctor] && Builder.metaProps[inst.ctor][prop] ? Builder.metaProps[inst.ctor][prop] : Builder.metaProps[prop];
             if (propsMeta && !Object.isEmpty(propsMeta)) {
                 let propEditor = extend(true, Builder.components[propsMeta.ctor]);
                 if (propEditor) {
@@ -40,7 +41,7 @@ var ObjectEditor = function (_props, overrided = false) {
                         itemEditorLit.props.instance = props[prop];
                         itemEditorLit.props.field = null;
                     }
-                    let ff = extend(true, formField);
+                    let ff = extend(true, Builder.components["FormField"].literal);
                     ff.props.id = prop;
                     ff.props.label = propsMeta.label;
                     ff.props.placeholder = propsMeta.label;
@@ -90,17 +91,20 @@ var ObjectEditor = function (_props, overrided = false) {
                         }
                         ff.props.component = itemEditorLit;
                     }
+                    ff.props.component.props.id = ff.props.component.props.id == null ? "input_"+prop : ff.props.component.props.id;
                     if (ff.props.classes)
                         ff.props.classes.pushUnique("mt-3");
                     else
                         ff.props.classes = ["mt-3"];
-                    ff.props.component.props.bindingDefaultContext = props;
+                    if(!ff.props.component.props.bindingDefaultContext)
+                        ff.props.component.props.bindingDefaultContext = props;
                     if (propsMeta.setter && typeof propsMeta.setter == 'function') { 
                         ff.props.component.props[(propEditor.valueField || "value")] = propsMeta.setter.call(inst, this);
                     }else
                         ff.props.component.props[(propEditor.valueField || "value")] = "{?" + prop + "}";
                     ff.props.index = propsMeta.index;
-                    rows.push(extend(true, ff));
+                    rows.push(ff);
+                    //rows.push(extend(true, ff));
                 } else {
                     console.log("Couldnt find and itemEditor for " + prop + " property");
                 }

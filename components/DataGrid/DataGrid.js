@@ -9,7 +9,6 @@ var DataGrid = function(_props)
 {
     let _self = this;
     let _currentIndex = 1;
-    let _$hadow = $("<div/>"); 
     let _multiSelect;
     
     Object.defineProperty(this, "currentIndex",
@@ -92,28 +91,28 @@ var DataGrid = function(_props)
         
             virtualIndex = (_rowCount+virtualIndex < _self.dataProvider.length) ? virtualIndex : (_self.dataProvider.length-_rowCount);        
             _prevScrollTop = scrollTop;
-            if(_virtualIndex != virtualIndex){
+            if (_virtualIndex != virtualIndex) {
                 _self.applyVirtualBindings(virtualIndex);
                 _virtualIndex = virtualIndex;
 
-                if(scrollRowStep!=0){
-                    if(_self.editPosition!=null){
+                if (scrollRowStep != 0) {
+                    if (_self.editPosition != null) {
                         let newEditPosition = (_self.editPosition.rowIndex + scrollRowStep);
-                        if(_self.editPosition.event == 1 || _self.editPosition.event==3){
+                        if (_self.editPosition.event == 1 || _self.editPosition.event == 3) {
                         
-                            if(_self.editPosition.event == 1){
+                            if (_self.editPosition.event == 1) {
                                 _self.cellEditFinished(_self.editPosition.rowIndex, _self.editPosition.columnIndex, false);
-                                _self.cellItemRenderers[_self.editPosition.rowIndex][_self.editPosition.columnIndex].show();  
+                                _self.cellItemRenderers[_self.editPosition.rowIndex][_self.editPosition.columnIndex].show();
                             }
                             
                             _self.editPosition.rowIndex = newEditPosition;
 
-                            if((newEditPosition >=0) && (newEditPosition<_rowCount)){
-                                console.log("show editor phase", _self.editPosition.event, " at: ", newEditPosition," ",_self.editPosition.rowIndex," ",scrollRowStep);
+                            if ((newEditPosition >= 0) && (newEditPosition < _rowCount)) {
+                                console.log("show editor phase", _self.editPosition.event, " at: ", newEditPosition, " ", _self.editPosition.rowIndex, " ", scrollRowStep);
                                 _self.cellEdit(newEditPosition, _self.editPosition.columnIndex);
                                 //TODO:need to add a parameter to cellEdit handler 
                                 //so that we do not set the value of the editor to the value in the dp, but just keep the not-yet stored value.
-                            }else{
+                            } else {
                                 //edited cell is out of view
                                 console.log("event = 3");
                                 _self.editPosition.event = 3;
@@ -121,17 +120,39 @@ var DataGrid = function(_props)
                                 
                             }
                         
-                        }else{
+                        } else {
                             //normalize edit row index
                             _self.editPosition.rowIndex = newEditPosition;
                         }
                     }
                 }
+                _self.$message.remove();
+            } else { 
+                if (deltaScroll < 0) {
+                    if (_self.dataProvider.nextPage) {
+                        _self.dataProvider.nextPage().then(function () {
+                            _self.$message.remove();
+                        });
+                    } else { 
+                        _self.$message.remove();
+                    }
+                       
+                } else
+                    _self.$message.remove();
             }
-            _self.$message.remove();
         }
     };
-   
+
+    let _dataProviderLengthChanged = function (e) {
+        console.log(arguments);
+    };
+
+    this.beginDraw = function (e) {
+        if (e.target.id == this.domID) {
+            _self.on("dataProviderLengthChanged", _dataProviderLengthChanged);
+        }
+    };
+
     this.template = function () 
     {
         let html = 
@@ -181,7 +202,7 @@ var DataGrid = function(_props)
     this.createRows = function() 
     {
         this.$el.trigger('beginDraw');
-       if (_self.dataProvider && _self.dataProvider.length)
+        if (_self.dataProvider && _self.dataProvider.length)
         { 
             let endIndex = this.rowCount;
             // _rowItems = {}; we need this if we create Repeater instances via Object.assign
@@ -197,7 +218,7 @@ var DataGrid = function(_props)
             }
         }
         Promise.all(_compRenderPromises).then(function() {
-            _$hadow.contents().appendTo(_self.$table);
+           _self.$hadow.contents().appendTo(_self.$table);
             _compRenderPromises = [];
             _self.$el.trigger('endDraw');
         });
@@ -210,7 +231,7 @@ var DataGrid = function(_props)
         _compRenderPromises = this.addRow(_self.dataProvider[_self.dataProvider.length-1], _self.dataProvider.length-1);
         return Promise.all(_compRenderPromises).then(function () {
             _compRenderPromises = [];
-            _$hadow.contents().appendTo(_self.$table);
+           _self.$hadow.contents().appendTo(_self.$table);
         });
     };
 
@@ -709,7 +730,7 @@ var DataGrid = function(_props)
         }
     };
     
-    let myDtEvts = ["cellEditFinished", "cellEdit", "rowEdit", "rowAdd", "rowDelete", "beginDraw", "endDraw", "rowClick", "rowDblClick", "cellStyling", "rowStyling"];
+    let myDtEvts = ["cellEditFinished", "cellEdit", "rowEdit", "rowAdd", "rowDelete", "rowClick", "rowDblClick", "cellStyling", "rowStyling"];
     if (!Object.isEmpty(_props.attr) && _props.attr["data-triggers"] && !Object.isEmpty(_props.attr["data-triggers"]))
     {
         let dt = _props.attr["data-triggers"].split(" ");
@@ -735,16 +756,15 @@ var DataGrid = function(_props)
     this.cells = [];// matrix
     this.editPosition = null;
     this.bindingExpressions = []; //array of bindings arrays (bindings for each column)
-   
     let r = Repeater.call(this, _props, true);
     let base = this.base;
     //overrides
     let _rPromise;
     this.renderPromise = function () 
     { 
-        this.$container = this.$el;
         this.$table = this.$el.find("#" + this.domID + '-table');
         this.$header = this.$el.find('#' + this.domID + '-header'); 
+        this.$container = this.$table;
         
         _rPromise = new Promise((resolve, reject) => {
             _self.on("endDraw", function(e){
@@ -757,6 +777,7 @@ var DataGrid = function(_props)
         
         this.createHeader();
         //if(_props.dataProvider)
+        if(!this.getBindingExpression("dataProvider"))
             this.dataProvider = _props.dataProvider;
         return _rPromise;
     };
@@ -805,16 +826,19 @@ var DataGrid = function(_props)
                 //column.cellStyleFunction,
                 //column.cellValueFunction,
                 //column.itemEditor    
-                let component = extend(true, true, column.itemRenderer);
-
+                let component = {};
+                column.itemRenderer.props.id = column.itemRenderer.props.id ? column.itemRenderer.props.id : "column";
+                shallowCopy(column.itemRenderer, component, ["props"]);
+                component.props = {};
+                shallowCopy(column.itemRenderer.props, component.props, ["id", "bindingDefaultContext"]);
+                component.props.id = (column.itemRenderer.props.id?column.itemRenderer.props.id:column.name) + "_" + index + "_" + columnIndex;
+                component.props.bindingDefaultContext = data;
+                component.props.ownerDocument = _props.ownerDocument;
                 
                 //build components properties, check bindings
                 
                 let dataProviderField = column.field;
-                //
-                //component.props["label"] = "{?"+dataProviderField+"}";
                 //might not be wanted
-                component.props.id = column.name;
                 
                 let cmp = _self.cellItemRenderers[index];               
 
@@ -829,7 +853,6 @@ var DataGrid = function(_props)
                 }
                 */
                 //construct the component
-                component.props.bindingDefaultContext = data;
                 let el = Component.fromLiteral(component);
                 el.parent = _self;
                 el.parentType = 'repeater';
@@ -909,8 +932,7 @@ var DataGrid = function(_props)
                 let cp = el.renderPromise().then(function (cmpInstance)
                 {
                     renderedRow.append(cell.append(cmpInstance.$el));
-                    _$hadow.append(renderedRow);
-                    
+                   _self.$hadow.append(renderedRow);
                 });
                 rp.push(cp);
             }   

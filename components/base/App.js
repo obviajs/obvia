@@ -102,11 +102,18 @@ var App = function(_props){
         _behaviors[_self.id]['beforeunload'] = "APP_UNLOADED";
         _behaviors[_self.id]['idChanged'] = "UPDATE_BEHAVIOR_BINDINGS";
     };
-    _behaviorimplementations["UPDATE_BEHAVIOR_BINDINGS"] = function(e) {
-        console.log("UPDATE_BEHAVIOR_BINDINGS");
-        _behaviors[e.newValue] = _behaviors[e.oldValue];
-        delete _behaviors[e.oldValue];
+    _behaviorimplementations["UPDATE_BEHAVIOR_BINDINGS"] = {
+        do: function (e) {
+            console.log("UPDATE_BEHAVIOR_BINDINGS");
+            _behaviors[e.newValue] = _behaviors[e.oldValue];
+            delete _behaviors[e.oldValue];
+        },
+        /**
+         * catch events thrown by children
+        */
+        onPropagation: true
     };
+
     _behaviorimplementations["BEGIN_DRAW"] = function (e) {
         if (!_loader.attached) 
             _self.$el.append(_loader.render());
@@ -148,25 +155,19 @@ var App = function(_props){
             }
             _idleTime = 0;
         }
-        let _domIDCurrentTarget = $(this).attr('id');
-        let _domIDTarget = $(e.target).attr('id'); 
-        
-        let _idCurrentTarget = Component.domID2ID[_domIDCurrentTarget]?Component.domID2ID[_domIDCurrentTarget]:_domIDCurrentTarget;
-        let _idTarget = Component.domID2ID[_domIDTarget]?Component.domID2ID[_domIDTarget]:_domIDTarget;
-        
-        let _idCurrentTargetSurrogate = Component.surrogates[_domIDCurrentTarget] && Component.domID2ID[Component.surrogates[_domIDCurrentTarget]]?Component.domID2ID[Component.surrogates[_domIDCurrentTarget]]:null;
-        let _idTargetSurrogate = Component.surrogates[_domIDTarget] && Component.domID2ID[Component.surrogates[_domIDTarget]]?Component.domID2ID[Component.surrogates[_domIDTarget]]:null;
+        let currentTarget = Component.instances[$(this).attr('id')];
+        let target = Component.instances[$(e.target).attr('id')]; 
+        let manifestor;
 
         let cmpBehaviors;
-        let _idBehaviorManifestor;
-        if(!Object.isEmpty(_self.behaviors[_idTarget]) || !Object.isEmpty(_self.behaviors[_idTargetSurrogate]))
+        if(target && !Object.isEmpty(_self.behaviors[target.id]))
         {
-            cmpBehaviors = _self.behaviors[_idTarget] || _self.behaviors[_idTargetSurrogate];
-            _idBehaviorManifestor = _idTarget;
-        }else if(1==2)
+            cmpBehaviors = _self.behaviors[target.id];
+            manifestor = target;
+        }else if(_self.behaviors[currentTarget.id] && _self.behaviors[currentTarget.id][e.type] && _self.behaviorimplementations[_self.behaviors[currentTarget.id][e.type]].onPropagation)
         {
-            cmpBehaviors = _self.behaviors[_idCurrentTarget] || _self.behaviors[_idCurrentTargetSurrogate];
-            _idBehaviorManifestor = _idCurrentTarget;
+            cmpBehaviors = _self.behaviors[currentTarget.id];
+            manifestor = currentTarget;
         }
         
         //console.log(e.type + " " + _idCurrentTarget + " " + _idTarget);
@@ -196,7 +197,7 @@ var App = function(_props){
                 let behavior = _self.behaviorimplementations[behaviorName];
                 let qualifies = true, extraArgs = [];
                 if(behavior && typeof behaviorFilter == 'function') {
-                    qualifies = behaviorFilter.apply(Component.instances[_idBehaviorManifestor], arguments);
+                    qualifies = behaviorFilter.apply(manifestor, arguments);
                     if(isObject(qualifies)){
                         extraArgs = qualifies.extraArgs;
                         qualifies = qualifies.qualifies;
@@ -212,16 +213,16 @@ var App = function(_props){
                     }
 
                     if(typeof behavior == 'function') {
-                        behavior.apply(Component.instances[_idBehaviorManifestor], args);
+                        behavior.apply(manifestor, args);
                     }else{
                         let behavior_implementations = isObject(behavior) && !behavior.forEach?[behavior]:behavior;
                         for(let bi=0;bi<behavior_implementations.length;bi++)
                         {
                             behavior = behavior_implementations[bi];
                             if(isObject(behavior)){
-                                let ret = behavior.do.apply(Component.instances[_idBehaviorManifestor], args);
+                                let ret = behavior.do.apply(manifestor, args);
                                 if(_historyProps.enabled){
-                                    _history.track(behavior, behaviorName, ret, Component.instances[_idBehaviorManifestor], args);
+                                    _history.track(behavior, behaviorName, ret, manifestor, args);
                                 }
                                 if(behavior.stopPropagation){
                                     e.stopPropagation();
@@ -233,10 +234,9 @@ var App = function(_props){
                                     e.preventDefault();
                                 }
                             }else if(typeof behavior == 'function') {
-                                behavior.apply(Component.instances[_idBehaviorManifestor], args);
+                                behavior.apply(manifestor, args);
                             }
                         }
-                        
                     }
                 }
             }

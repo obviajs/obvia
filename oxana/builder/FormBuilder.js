@@ -44,7 +44,7 @@ var dpCmpSelect = [];
 var mainContainer = {
     ctor: Container,
     props: {
-        id: "MainContainer",
+        id: "mainContainer",
         type: ContainerType.NONE,
         props: {
             height: "100%",
@@ -218,13 +218,13 @@ var mainContainer = {
         {
             ctor: Container,
             props: {
-                id: "SideNavRightContainer",
+                id: "container",
                 type: ContainerType.NONE,
                 classes: ["d-flex", "flex-shrink-0", "flex-nowrap"],
                 components: [{
                     ctor: SideNav,
                     props: {
-                        id: "controlsWindow",
+                        id: "componentsContainer",
                         width: "350",
                         minWidth: "350",
                         classes: ["sidenav", "sideNav_side_left"],
@@ -314,8 +314,7 @@ var mainContainer = {
                                                             console.log(arguments);
                                                             e.originalEvent.dataTransfer.setData("domID", e.target.id);
                                                             e.originalEvent.dataTransfer.setData("ctor", ra.currentItem.ctor);
-                                                            var $elem = Component.instances["dragImage"].$container[0];
-                                                            $(document.body).append($elem);
+                                                            var $elem = oxana.viewStack.mainContainer.dragImage.$el[0];
                                                             e.originalEvent.dataTransfer.setDragImage($elem, 0, 0);
                                                         },
                                                         classes: ["border", "comp_side"],
@@ -352,11 +351,11 @@ var mainContainer = {
                 {
                     ctor: Container,
                     props: {
-                        id: "WorkArea",
+                        id: "workArea",
                         components: [{
                             ctor: Container,
                             props: {
-                                id: '',
+                                id: 'workAreaRow',
                                 type: ContainerType.ROW,
                                 height: "100%",
                                 components: [{
@@ -366,18 +365,19 @@ var mainContainer = {
                                         spacing: {
                                             colSpan: 12
                                         },
-                                        id: "snowCrash",
+                                        id: "workAreaColumn",
                                         components: [{
                                             ctor: Container,
                                             props: {
                                                 spacing: {
                                                     h: 100
                                                 },
+                                                id: "workAreaCell",
                                                 type: ContainerType.NONE,
                                                 components: [{
                                                     ctor: Container,
                                                     props: {
-                                                        id: '',
+                                                        id: 'workAreaRowL2',
                                                         type: ContainerType.ROW,
                                                         spacing: {
                                                             h: 100
@@ -390,9 +390,8 @@ var mainContainer = {
                                                                     colSpan: 12,
                                                                     h: 100
                                                                 },
-                                                                id: 'workArea',
+                                                                id: "workAreaColumnL2",
                                                                 classes: ["border"]
-
                                                             }
                                                         }]
                                                     }
@@ -408,14 +407,14 @@ var mainContainer = {
                 {
                     ctor: SideNav,
                     props: {
-                        id: "RightSideNav",
+                        id: "rightSideNav",
                         width: "300",
                         minWidth: "300",
                         classes: ["sidenav", "sidenav_right", "sideNav_side_right", "flex-shrink-0"],
                         components: [{
                             ctor: Container,
                             props: {
-                                id: "container",
+                                id: "rightSideContainer",
                                 components: [{
                                     ctor: Label,
                                     props: {
@@ -441,7 +440,7 @@ var mainContainer = {
                                 {
                                     ctor: Container,
                                     props: {
-                                        id: "propertyEditorWindow",
+                                        id: "propertyEditorContainer",
                                         classes: ["sideNav_left_container"],
                                         components: []
                                     }
@@ -500,6 +499,7 @@ var mainContainer = {
 oxana.components.splicea(oxana.components.length, 0, [{
     ctor: ViewStack,
     props: {
+        id:"viewStack",
         type: ContainerType.NONE,
         components: [mainContainer]
     }
@@ -512,7 +512,7 @@ var daBehaviors = {
     "dragover": "ALLOW_DROP",
 };
 
-var waBehaviors = {
+let waBehaviors = {
     "click": "BECOME_ACTIVE",
     "mousedown": "WA_PREVENT_DRAGSTART",
     "mouseover": "WA_HOVER",
@@ -526,7 +526,20 @@ var waBehaviors = {
     "dragover": "ALLOW_DROP",
 };
 
-var cmpBehaviors = {
+let cmpWaBehaviors = {
+    "mousedown": "WA_PREVENT_DRAGSTART",
+    "mouseover": "WA_HOVER",
+    "mouseout": "WA_HOVER",
+    "mousemove": {
+        "IS_WA_RESIZE_NS": isMouseMoveNS
+    },
+    "resize": "WA_RESIZE",
+    "contextmenu": "WA_REMOVE",
+    "drop": "ADD_COMPONENT",
+    "dragover": "ALLOW_DROP",
+};
+
+let cmpBehaviors = {
     "mousedown": {
         "SELECT_COMPONENT": isSelectComponent
     },
@@ -562,7 +575,7 @@ oxana.behaviors["browseFile"]["change"] = "FILE_SELECTED";
 
 oxana.behaviors["listHistorySteps"]["change"] = "HISTORY_STEP_DETAILS";
 
-oxana.behaviors["workArea"] = waBehaviors;
+oxana.behaviors["workAreaColumnL2"] = waBehaviors;
 
 oxana.behaviors[oxana.rootID]["keydown"] = {
     "WA_UNDO": isKeyCombUndo,
@@ -591,7 +604,7 @@ oxana.behaviorimplementations["ADD_COMPONENT"] = {
         }
         console.log('CREATED_');
         e.preventDefault();
-        var workArea = Component.instances[Component.domID2ID[e.target.id]];
+        var workArea = Component.instances[e.target.id];
         var domID = e.originalEvent.dataTransfer.getData("domID");
         var ctor = e.originalEvent.dataTransfer.getData("ctor");
         var move = e.originalEvent.dataTransfer.getData("move");
@@ -623,7 +636,7 @@ oxana.behaviorimplementations["ADD_COMPONENT"] = {
             inst = workArea.addComponent(lit);
             addBehaviors(inst, cmpBehaviors, false);
             if (containers.indexOf(inst.ctor) > -1) { 
-                addBehaviors(inst, waBehaviors, false);
+                addBehaviors(inst, cmpWaBehaviors, false);
                 inst.attr.isNotWa = true;
             }
             inst.attr.isCmp = true;
@@ -635,10 +648,7 @@ oxana.behaviorimplementations["ADD_COMPONENT"] = {
         } else {
 
             console.log("MOVED_", domID, workArea.domID);
-            var _id = Component.domID2ID[domID] ? Component.domID2ID[domID] : domID;
-            var _idSurrogate = Component.surrogates[domID] && Component.domID2ID[Component.surrogates[domID]] ? Component.domID2ID[Component.surrogates[domID]] : null;
-            _id = _idSurrogate ? _idSurrogate : _id;
-            inst = Component.instances[_id];
+            inst = Component.instances[domID];
             let lit = Builder.components[ctor].literal;
             if (inst.parent && (inst.parent != workArea) && (domID != workArea.domID)) {
                 inst.parent.removeChild(inst, 0);
@@ -714,7 +724,6 @@ oxana.behaviorimplementations["SELECT_COMPONENT"] = {
         else
             this.classes = classes;
         activeComponent = this;
-        let pew = Component.instances["propertyEditorWindow"];
         let oeLit = {
             ctor: ObjectEditor,
             "props": {
@@ -723,8 +732,8 @@ oxana.behaviorimplementations["SELECT_COMPONENT"] = {
                 field: "props"
             }
         };
-        pew.removeAllChildren();
-        pew.components = [oeLit];
+        propertyEditorContainer.removeAllChildren();
+        propertyEditorContainer.components = [oeLit];
     },
     stopPropagation: true
 };
@@ -736,8 +745,7 @@ oxana.behaviorimplementations["DRAGSTART_COMPONENT"] = {
         e.originalEvent.dataTransfer.setData("domID", this.domID);
         e.originalEvent.dataTransfer.setData("ctor", this.ctor);
         e.originalEvent.dataTransfer.setData("move", 1);
-        let $elem = Component.instances["dragImage"].$container[0];
-        $(document.body).append($elem);
+        let $elem = oxana.viewStack.mainContainer.dragImage.$el[0];
         e.originalEvent.dataTransfer.setDragImage($elem, 0, 0);
     }
 };
@@ -746,13 +754,13 @@ oxana.behaviorimplementations["HISTORY_STEP_DETAILS"] = function (e) {
 };
 oxana.behaviorimplementations["FILE_SELECT_MODAL"] = function (e) {
     console.log("called FILE_SELECT_MODAL.");
-    Component.instances["fileSelectModal"].show();
+    fileSelectModal.show();
 };
 oxana.behaviorimplementations["FILE_SELECTED"] = function (e) {
     console.log("called FILE_SELECTED.");
-    if (Component.instances["browseFile"].value.length > 0) {
-        readFile(Component.instances["browseFile"].value[0]).then(function (resp) {
-                Component.instances["fileSelectModal"].hide();
+    if (fileSelectModal.browseFile.value.length > 0) {
+        readFile(fileSelectModal.browseFile.value[0]).then(function (resp) {
+                fileSelectModal.hide();
                 var evt = new jQuery.Event("loadLayout");
                 evt.content = resp.content;
                 oxana.trigger(evt);
@@ -782,14 +790,14 @@ oxana.behaviorimplementations["LOAD_LAYOUT"] = function (e) {
     if (res.match) { 
         _cmp = res.match;
     }
-    Component.instances["workArea"].removeAllChildren(0);
+    workArea.removeAllChildren(0);
     for (let i = 0; i < _cmp.props.components.length; i++)
     {
-        let inst = Component.instances["workArea"].addComponent(_cmp.props.components[i]);
+        let inst = workArea.addComponent(_cmp.props.components[i]);
         let was = objectHierarchyGetMatchingMember(inst, "attr.isWa", true, "children", true);
         for (let wi = 0; wi < was.length; wi++)
         {
-            addBehaviors(was[wi].match, waBehaviors, false);
+            addBehaviors(was[wi].match, cmpWaBehaviors, false);
         }
         let cmps = objectHierarchyGetMatchingMember(inst, "attr.isCmp", true, "children", true);
         for (let ci = 0; ci < cmps.length; ci++)
@@ -801,7 +809,21 @@ oxana.behaviorimplementations["LOAD_LAYOUT"] = function (e) {
 
 function addBehaviors(cmp, behaviors, recurse = true) {
     for (let b in behaviors) {
-        oxana.behaviors[cmp.id][b] = behaviors[b];
+        if (oxana.behaviors[cmp.id][b]) {
+            if (!isObject(oxana.behaviors[cmp.id][b])) {
+                let pb = oxana.behaviors[cmp.id][b];
+                oxana.behaviors[cmp.id][b] = {};
+                oxana.behaviors[cmp.id][b][pb] = null;
+            } 
+            if (isObject(behaviors[b])) {
+                for (var eb in behaviors[b]) {
+                    oxana.behaviors[cmp.id][b][eb] = behaviors[b][eb];
+                }
+            } else { 
+                oxana.behaviors[cmp.id][b][behaviors[b]] = null;
+            }
+        }else
+            oxana.behaviors[cmp.id][b] = behaviors[b];
     }
     if (recurse) {
         for (let cid in cmp.children) {
@@ -823,17 +845,17 @@ function removeBehaviors(cmp, behaviors, recurse = true) {
 }
 oxana.behaviorimplementations["HISTORY_STEP_ADDED"] = function (e) {
     console.log("called HISTORY_STEP_ADDED.", e.current);
-    Component.instances["listHistorySteps"].value = e.current;
+    listHistorySteps.value = e.current;
 };
 oxana.behaviorimplementations["HISTORY_UNDONE"] = function (e) {
     console.log("called HISTORY_UNDONE.");
-    Component.instances["listHistorySteps"].value = e.previous;
+    listHistorySteps.value = e.previous;
 
 };
 
 oxana.behaviorimplementations["HISTORY_REDONE"] = function (e) {
     console.log("called HISTORY_REDONE.");
-    Component.instances["listHistorySteps"].value = e.redone;
+    listHistorySteps.value = e.redone;
 };
 
 oxana.behaviorimplementations["DELETE_CMP"] = {
@@ -850,12 +872,7 @@ oxana.behaviorimplementations["DELETE_CMP"] = {
                 //if drop to delete area
                 domID = e.originalEvent.dataTransfer.getData("domID");
             }
-            var _id = Component.domID2ID[domID] ? Component.domID2ID[domID] : domID;
-            var _idSurrogate = Component.surrogates[domID] && Component.domID2ID[Component.surrogates[domID]] ? Component.domID2ID[Component.surrogates[domID]] : null;
-            _id = _idSurrogate ? _idSurrogate : _id;
-            let inst = Component.instances[_id];
-            let pew = Component.instances["propertyEditorWindow"];
-            
+            let inst = Component.instances[domID];
             let c = confirm("Do you want to delete " + _id.toUpperCase() + "?");
             if (c) {
 
@@ -868,7 +885,7 @@ oxana.behaviorimplementations["DELETE_CMP"] = {
                         field: "props"
                     }
                 };
-                pew.components = [oeLit];
+                propertyEditorContainer.components = [oeLit];
             }
             activeComponent = null;
         } else {
@@ -883,16 +900,14 @@ oxana.behaviorimplementations["DELETE_CMP"] = {
 
 oxana.behaviorimplementations["TOGGLE_VISIBILITY_LEFT"] = {
     do: function (e) {
-        var cmp = Component.instances["controlsWindow"];
-        cmp.toggleVisibility();
+        componentsContainer.toggleVisibility();
     }
 
 };
 
 oxana.behaviorimplementations["TOGGLE_VISIBILITY_RIGHT"] = {
     do: function (e) {
-        var cmp = Component.instances["RightSideNav"];
-        cmp.toggleVisibility();
+        rightSideNav.toggleVisibility();
     }
 
 };
@@ -1152,7 +1167,6 @@ oxana.behaviorimplementations["BECOME_ACTIVE"] = {
         activeContainer = this;
         if (this.id == "workArea")
         {
-            let pew = Component.instances["propertyEditorWindow"];
             let oeLit = {
                 ctor: ObjectEditor,
                 "props": {
@@ -1161,7 +1175,7 @@ oxana.behaviorimplementations["BECOME_ACTIVE"] = {
                     field: "props"
                 }
             };
-            pew.components = [oeLit];
+            propertyEditorContainer.components = [oeLit];
         }
     },
     stopPropagation: true
@@ -1289,22 +1303,20 @@ oxana.behaviorimplementations["WA_REMOVE"] = {
 
 oxana.behaviorimplementations["PREVIEW"] = {
     do: function (e) {
-        var workArea = Component.instances["snowCrash"];
-        var lit = workArea.literal;
+        var lit = workAreaColumn.literal;
         stripHandle(lit);
         var jsonLayout = JSON.stringify(lit, null, "\t");
-        download("snowCrash.json.txt", jsonLayout);
+        download("workAreaColumn.json.txt", jsonLayout);
     },
     stopPropagation: true
 };
 
 oxana.behaviorimplementations["SAVE_LAYOUT"] = {
     do: function (e) {
-        var workArea = Component.instances["snowCrash"];
-        var lit = workArea.literalLite;
+        var lit = workAreaColumn.literalLite;
         stripHandle(lit);
         var jsonLayout = JSON.stringify(lit, null, "\t");
-        download("snowCrash.json.txt", jsonLayout);
+        download("workAreaColumn.json.txt", jsonLayout);
     },
     stopPropagation: true
 };
@@ -1324,9 +1336,17 @@ oxana.behaviorimplementations["WA_REDO"] = {
     stopPropagation: false
 };
 
+let propertyEditorContainer, fileSelectModal, componentsContainer, rightSideNav, listHistorySteps, workArea, workAreaColumn;
 oxana.behaviorimplementations["END_DRAW"] = new ArrayEx(oxana.behaviorimplementations["END_DRAW"], function (e) {
+    propertyEditorContainer = oxana.viewStack.mainContainer.container.rightSideNav.rightSideContainer.propertyEditorContainer;
+    fileSelectModal = oxana.viewStack.mainContainer.container.children.fileSelectModal;
+    componentsContainer = oxana.viewStack.mainContainer.container.componentsContainer;
+    rightSideNav = oxana.viewStack.mainContainer.container.rightSideNav;
+    listHistorySteps = oxana.viewStack.mainContainer.nav.children.containerIcons.undoRedo.listHistorySteps;
+    workArea = oxana.viewStack.mainContainer.container.workArea.workAreaRow.workAreaColumn.workAreaCell.workAreaRowL2.workAreaColumnL2;
+    workAreaColumn = oxana.viewStack.mainContainer.container.workArea.workAreaRow.workAreaColumn;
     _initDP();
-    Component.instances["controlsWindow"].show();
+    componentsContainer.show();
 });
 oxana.eventTypes.splicea(oxana.eventTypes.length, 0, ["resize", "dropped"]);
 oxana.registerBehaviors();
@@ -1445,7 +1465,6 @@ function isKeyCombRedo(e) {
 
 //utility functions
 function _initDP() {
-    Builder.data = {};
     Builder.masks;
     Builder.maskValueField = "";
     Builder.maskLabelField = "";
@@ -1458,10 +1477,11 @@ function _initDP() {
     
     let api_dv_dataviews = new GaiaAPI_DV_dataviews();
     let api_dv_forms = new GaiaAPI_DV_forms();
+    Builder.recordsPerPage = 5;
 
     let raDvs = new RemoteArray(
         {
-            recordsPerPage: 10,
+            recordsPerPage: Builder.recordsPerPage,
             fetchPromise: function (p) {
                 let dvInp = new dvInput();
                 dvInp.tableData = new tableData({
@@ -1472,12 +1492,10 @@ function _initDP() {
             }
         }
     );
-
-    Builder.sources = new ArrayEx(raDvs);   
-    
+      
     let raFrms = new RemoteArray(
         {
-            recordsPerPage: 10,
+            recordsPerPage: Builder.recordsPerPage,
             fetchPromise: function (p) {
                 let dvInp = new dvInput();
                 dvInp.tableData = new tableData({
@@ -1491,7 +1509,8 @@ function _initDP() {
 
     Builder.sources = new ArrayEx(raDvs);         
     Builder.forms = new ArrayEx(raFrms);
-    
+    Builder.data = {};
+
     Promise.all([Builder.forms.init(), Builder.sources.init()]).then(function (result) { 
         Builder.initComponentLiterals();
         Builder.initMetaProps();

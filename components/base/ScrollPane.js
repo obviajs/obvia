@@ -71,26 +71,19 @@ var ScrollPane = function(_props)
         configurable:true
     });
 
-    this.beforeAttach = function(e) 
-    {
-        if (e.target.id == this.domID) 
-        {
-            this.on('childCreated', _childCreated);
-            if(_props.height)
+    this.beforeAttach = function (e) {
+        if (e.target.id == this.domID) {
+            if (_props.height)
                 this.height = _props.height;
-            this.$el.css({"overflow-y": "scroll"});
-            _$scrollArea.css({"margin-top":-_height+"px", float: "right",position:"relative", "margin-left": "-16px", width:"10px", height : _scrollHeight + "px"});   
+            this.$el.css({ "overflow-y": "scroll" });
+            _$scrollArea.css({ "margin-top": -_height + "px", float: "right", position: "relative", "margin-left": "-16px", width: "10px", height: _scrollHeight + "px" });
             this.$container = this.$el;
             let inst = this.addComponents();
             _child = inst[0];
             
             e.preventDefault();
         }
-    }
-    let _childCreated = function(e)
-    {
-
-    } 
+    };
     
     let _prevScrollTop = 0;
     let _prevVirtualIndex = 0;
@@ -124,47 +117,43 @@ var ScrollPane = function(_props)
             _delayScroll.apply(_self, arguments);
         }
     };
-    let _updateMyScrollerTop = function(scrollTop)
-    {
+    let _updateMyScrollerTop = function (scrollTop) {
         let mt = -(_height) - scrollTop;
-        let pct = scrollTop/_self.scrollHeight;
-        let myScrollTop = (_self.scrollHeight + mt)*pct;
+        let pct = scrollTop / _self.scrollHeight;
+        let myScrollTop = (_self.scrollHeight + mt) * pct;
         
-        console.log("scrollTop:",scrollTop," scrollHeight:",_self.scrollHeight," mt:",mt," pct:",pct," myScrollTop:",myScrollTop);
-        _$scroller.css({"top": myScrollTop +"px", "margin-top":-230+"px"});
-    }
+        console.log("scrollTop:", scrollTop, " scrollHeight:", _self.scrollHeight, " mt:", mt, " pct:", pct, " myScrollTop:", myScrollTop);
+        _$scroller.css({ "top": myScrollTop + "px", "margin-top": -230 + "px" });
+    };
 
-    let _virtualScroll = function(e)
-    {
+    let _virtualScroll = function (e) {
         let scrollTop = e.target.scrollTop;
         let evt = jQuery.Event("virtualScrollEnd");
         evt.prevVirtualIndex = _prevVirtualIndex;
         evt.virtualIndex = _prevVirtualIndex;
         evt.scrollUnits = 0;
         evt.progressiveScrollUnits = _progressiveScrollUnits;
-        if(scrollTop>=0)
-        {
-            console.log("scrollTop:",scrollTop);
+        if (scrollTop >= 0) {
+            console.log("scrollTop:", scrollTop);
                 
             let virtualIndex = Math.ceil(scrollTop / _scrollUnitHeight);
             scrollTop = virtualIndex * _scrollUnitHeight;
 
             let deltaScroll = _prevScrollTop - scrollTop;
-            if(deltaScroll!=0)
-            {
-                let scrollUnits = Math.ceil(Math.abs(deltaScroll) / _scrollUnitHeight) * (deltaScroll/Math.abs(deltaScroll));
+            if (deltaScroll != 0) {
+                let scrollUnits = Math.ceil(Math.abs(deltaScroll) / _scrollUnitHeight) * (deltaScroll / Math.abs(deltaScroll));
 
-                if(deltaScroll < 0){
+                if (deltaScroll < 0) {
                     console.log("scroll down");
-                }else{
-                    console.log("scroll up");  
+                } else {
+                    console.log("scroll up");
                 }
             
-            // virtualIndex = (_rowCount+virtualIndex < _dataProvider.length) ? virtualIndex : (_dataProvider.length-_rowCount);        
+                // virtualIndex = (_rowCount+virtualIndex < _dataProvider.length) ? virtualIndex : (_dataProvider.length-_rowCount);        
                 _prevScrollTop = scrollTop;
-                if(_prevVirtualIndex != virtualIndex){
+                if (_prevVirtualIndex != virtualIndex) {
                     _prevVirtualIndex = virtualIndex;
-                    if(scrollUnits!=0){
+                    if (scrollUnits != 0) {
                         _progressiveScrollUnits += scrollUnits;
                     }
                 }
@@ -175,19 +164,17 @@ var ScrollPane = function(_props)
             }
         }
         _self.trigger(evt);
-    }
+    };
 
-    this.afterAttach = function (e)
-    {
-        if (e.target.id == this.domID) 
-        {
-            if(_height==0)
-                this.$el.css({height:_child.$el.height()});
+    this.afterAttach = function (e) {
+        if (e.target.id == this.domID) {
+            if (_height == 0)
+                this.$el.css({ height: _child.$el.height() });
             this.$el.append(_$scrollArea);
             this.$el.append(_$scroller);
             this.$el.on("scroll", _scroll);
         }
-    }
+    };
 
     var _defaultParams = {
         type: ContainerType.NONE,
@@ -197,6 +184,19 @@ var ScrollPane = function(_props)
     };
 
     _props = extend(false, false, _defaultParams, _props);
+    if (!_props.attr) { 
+        _props.attr = {};
+    }
+    let myDtEvts = ["virtualScrollStart", "virtualScrollEnd"];
+    if (!Object.isEmpty(_props.attr) && _props.attr["data-triggers"] && !Object.isEmpty(_props.attr["data-triggers"]))
+    {
+        let dt = _props.attr["data-triggers"].split(" ");
+        for (let i = 0; i < dt.length; i++)
+        {   
+            myDtEvts.pushUnique(dt[i]);
+        }
+    }
+    _props.attr["data-triggers"] = myDtEvts.join(" ");
     let _height = 0;
     let _scrollHeight = _props.scrollHeight;
     let _scrollHeightInit = _scrollHeight;
@@ -204,7 +204,6 @@ var ScrollPane = function(_props)
     let _$scrollArea = $("<div style='border:1px solid black;'/>");
     let _$scroller = $("<div style='border:1px solid black;position:relative;float:right;height:40px;width:16px;top:0px;margin-left:-16px;margin-top:-230px;'></div>");
         
-
     _component = _props.component;
     _props.components = [];
 

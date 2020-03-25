@@ -1,10 +1,13 @@
 var ApiClientGen = function (_props) {
     let _defaultParams = {
         url: "yaml_url",
-        requestBodyParamMode:1
+        requestBodyParamMode:1,
+        title:""
     };
+
     _props = extend(false, false, _defaultParams, _props);
-    _props.url += "?r="+Math.random();
+    _props.url += "?r=" + Math.random();
+    let _title = _props.title;
     /**
      * When request contains more than one body parameter, we have two options:
      * 1- generated method will have only one parameter wrapping all params as type members and the type name for this object will be following method+RequestBody+path naming convention
@@ -12,11 +15,13 @@ var ApiClientGen = function (_props) {
      */
     let requestBodyParamMode = _props.requestBodyParamMode;
     let _httpMethods = ["get", "post", "delete", "put", "patch"];
-        
-    get(_props.url).then(function (r) {
-        let oas = YAML.parse(r.response);
-        _generate(oas);
-    });
+    this.generate = function () {
+        return get(_props.url).then(function (r) {
+            let oas = YAML.parse(r.response);
+            return _generate(oas);
+        });
+    };    
+    
     let apiTemplate = `var {apiTitle} = function(){
         let _server = "{server}";
         Object.defineProperty(this, "server", {
@@ -80,7 +85,7 @@ var ApiClientGen = function (_props) {
         let strClosures = "", pathInstances = "";
         let typeMap = {};
         let url = oas.servers[0].url;
-        let apiTitle = oas.info.title;
+        let apiTitle = oas.info.title + _title;
         for (let path in oas.paths) {
             let strMethods = "";
             typeMap[path] = {};
@@ -223,24 +228,7 @@ var ApiClientGen = function (_props) {
             pathInstances += `\t this.${pathName}Client = new ${pathName}();\r\n`;
         }
         let apiSrc = types +"\r\n" + apiTemplate.formatUnicorn({ "apiTitle": apiTitle.replace(/ /g, ''), "paths": strClosures, "pathInstances": pathInstances, "server": url});
-        
-        console.log(apiSrc);
-        download(apiTitle.replace(/ /g, '') + ".js", apiSrc); 
-        eval(apiSrc);
-        var api = new GaiaAPI();
-        // var u = api.usersClient.get(1);
-        // var l = api.loginClient.post("admin", "admin");
-        // var l2 = api.loginClient.post("test", "test");
-        let inst = new user();
-        //inst.user_id = ;
-		inst.username = "apiUser";
-		inst.password = "apiUser";
-		inst.id_role = 1;
-		inst.name = "Anony";
-		inst.surname = "Mous";
-		inst.avatar = "pic.png";
-		inst.email = "anony@mous.com";
-        var u = api.usersClient.post(inst);
+        return { "apiTitle": apiTitle.replace(/ /g, ''), "apiSrc": apiSrc };
     };
     let _oasjsMap = { "integer": "Number", "string": "String" };
     let _typeTemplate = `

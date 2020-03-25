@@ -176,7 +176,7 @@ var FormField = function (_props) {
         _props.components.push(_component);
     }
     
-    Container.call(this, _props);
+    let r = Container.call(this, _props);
 
     let _enabled = _props.enabled;
     Object.defineProperty(this, "enabled",
@@ -271,6 +271,7 @@ var FormField = function (_props) {
             },
             enumerable: true
         });
+    return r;
 };
 //component prototype
 FormField.prototype.ctor = 'FormField';

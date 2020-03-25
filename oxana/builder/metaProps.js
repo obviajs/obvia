@@ -111,7 +111,17 @@ Builder.initMetaProps = function () {
                     //get the fields for the selected datProvider and 
                     //assign them to the labelField and valueField editor`s dataProvider property
                     if (this.value && this.value.length > 0) {
-                        this.parent.parent.instance.dataProvider = Builder.data[this.value[0][Builder.providerValueField]];
+                        //let url = "http://flower-gaia/api/dataview_pid_1/yaml";
+                        let url = "http://flower-gaia/api/" + this.value[0].entity_name + "/yaml";
+                        let _self = this;
+                        if (!Builder.data[_self.value[0][Builder.providerValueField]]) {
+                            GaiaAPI_Utils.generateAndLoadDataView(url, Builder.recordsPerPage).then(function (aex) {
+                                console.log(aex);
+                                _self.parent.parent.instance.dataProvider = Builder.data[_self.value[0][Builder.providerValueField]] = aex;
+                            });
+                        } else { 
+                            _self.parent.parent.instance.dataProvider = Builder.data[_self.value[0][Builder.providerValueField]];
+                        }
                         this.parent.parent.instance.attr[Builder.providerValueField] = this.value[0][Builder.providerValueField];
                     }
                 }
@@ -241,8 +251,7 @@ Builder.initMetaProps = function () {
                                         for (let i = 0; i < len; i++) {
                                             //win.columnEditor.repeater.repeater.objectEditor[i].dataProvider.input.dataProvider = dpFields;
                                             //win.columnEditor.repeater.repeater.objectEditor[i].field.component.props.dataProvider = dpFields;
-                                            let cid = colOEInstances[i].field.childrenIDR["AutoCompleteEx"];
-                                            colOEInstances[i].field.children[cid].dataProvider = dpFields;
+                                            colOEInstances[i].field.AutoCompleteEx.dataProvider = dpFields;
                                         }
                                         win.show();
                                     }
