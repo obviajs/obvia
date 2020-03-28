@@ -65,11 +65,12 @@ var DataGrid = function(_props)
     let _onScroll = function(e) 
     {
         let scrollTop = e.target.scrollTop;
-        _scroll(scrollTop);
+        return _scroll(scrollTop);
     };
 
     let _scroll = function (scrollTop)
     {
+        let r = true;
         if(scrollTop>=0){
             console.log("scrollTop:",scrollTop);
                 
@@ -129,22 +130,32 @@ var DataGrid = function(_props)
                 _self.$message.remove();
             } else { 
                 if (deltaScroll < 0) {
-                    if (_self.dataProvider.nextPage) {
+                    if (_self.dataProvider.nextPage && _self.dataProvider.totalRecords == Infinity) {
                         _self.dataProvider.nextPage().then(function () {
                             _self.$message.remove();
                         });
                     } else { 
+                        r = false;
                         _self.$message.remove();
                     }
                        
-                } else
+                } else {
+                    r = false;
                     _self.$message.remove();
+                }
             }
         }
+        return r;
     };
 
     let _dataProviderLengthChanged = function (e) {
         console.log(arguments);
+        /*
+        _avgRowHeight = (this.$table.height() - this.$header.height()) / _rowCount;
+        _avgRowHeight = 46;
+        _virtualHeight = (_self.dataProvider.length - 2 * (_allowNewItem ? 1 : 0)) * _avgRowHeight;
+        this.$scrollArea.css({ height: _virtualHeight + "px" });
+        */
     };
 
     this.beginDraw = function (e) {
@@ -337,7 +348,6 @@ var DataGrid = function(_props)
                 let ps = _prevScrollTop ;
                 this.scroll(ps + _avgRowHeight);
                 //this.$table.css({"margin-top":(ps + _avgRowHeight)});
-            // this.$scroller.css({"margin-top": (-(this.realHeight)-(ps + _avgRowHeight))+"px"});
 
                 data = _self.dataProvider[rowIndex+_virtualIndex];
                 
@@ -573,14 +583,13 @@ var DataGrid = function(_props)
             return removedItem;
         }  
     };   
-
+    let _bodyHeight, mtt, smt;
     this.updateDisplayList = function () {
         _displayed = true;
         //we now know the parent and element dimensions
         _avgRowHeight = (this.$table.height() - this.$header.height()) / _rowCount;
-        this.virtualHeight = (_self.dataProvider.length - 2 * (_allowNewItem ? 1 : 0)) * _avgRowHeight;
-
-        this.bufferedRowsCount = _rowCount;
+        _bodyHeight = this.$table.height() - this.$header.height();
+        _virtualHeight = (_self.dataProvider.length - 2 * (_allowNewItem ? 1 : 0)) * _avgRowHeight;
 
         let pos = this.$table.position();
         let left = pos.left + this.$table.width() - 14;
@@ -589,30 +598,35 @@ var DataGrid = function(_props)
         this.$message = $("<div>Creating Rows</div>");
 
         this.$scrollArea = $("<div/>");
-        this.$scroller = $("<div style='border:1px solid black;position:relative; height:40px;top:15px'></div>");
-        this.$scrollArea.append(this.$scroller);
-        this.$scrollArea.css({ border: "1px", opacity: 100, "margin-top": -this.realHeight + "px", float: "right", position: "relative", "margin-left": "-16px", width: "10px", height: this.virtualHeight + "px" });
+
+        this.$scrollArea.css({ border: "1px", opacity: 100, "margin-top": - this.realHeight + "px", float: "right", position: "relative", "margin-left": "-16px", width: "10px", height: _virtualHeight + "px" });
         
         this.$el.css({ border: "1px solid black" });
         this.$el.css({ height: this.$table.height() });
         this.$table.after(this.$scrollArea);
 
-        this.delayScroll = debounce(_onScroll, 400);
+        this.delayScroll = debouncePromise(_onScroll, 400);
 
         this.$el.on("scroll", function (e) {
-            if (this.virtualHeight > (e.target.scrollTop + this.realHeight) - 2 * _avgRowHeight) {
+            //if (_virtualHeight > (e.target.scrollTop + this.realHeight) - 2 * _avgRowHeight) {
                 this.loading = true;
                 this.$message.css({ position: "absolute", top: 150 + "px", left: 150 + "px", "background-color": "white", "z-index": 9999 });
                 this.$el.append(this.$message);
-                this.$table.css({ "margin-top": e.target.scrollTop });
+               
+                this.$table.css({ "margin-top": e.target.scrollTop + "px" });              
                 this.$scrollArea.css({ "margin-top": (-(this.realHeight) - e.target.scrollTop) + "px" });
-                //let top = this.$scroller.position().top;
-                let h = this.$scrollArea.height();
-                this.$scroller.css({ "top": (16 + 1.2 * (h - (h - e.target.scrollTop))) + "px" });
-                let cScrollHeight = this.$scrollArea.css("height");
-                this.delayScroll.apply(this, arguments);
+            
+                this.delayScroll.apply(this, arguments).then(function (r) {
+                    if (!r) {
+                        //_self.$table.css({ "margin-top": mtt + "px" });
+                        //_self.$scrollArea.css({ "margin-top": smt + "px" });
+                    } else { 
+                        mtt = e.target.scrollTop;
+                        smt = (-(_self.realHeight) - e.target.scrollTop);
+                    }
+                });
                 //this.onScroll.apply(this, arguments);
-            }
+            //}
         }.bind(this));
         this.setCellsWidth();
     };

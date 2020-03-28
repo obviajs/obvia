@@ -12,6 +12,7 @@ var Repeater = function(_props)
     let _self = this;
     let _creationFinished = false;
     let _$hadow = $("<div/>");
+    let _autoUpdateDisplay;
     
     this.containerKeyDown = function(e)
     {
@@ -300,7 +301,8 @@ var Repeater = function(_props)
             }
             let toRefresh = [];
             toRefresh.splicea(toRefresh.length, 0, intersect(toAdd.a1_indices, toRemove.a1_indices));
-            _self.dataProviderChanged(toAdd, toRemove, toRefresh);
+            if(_autoUpdateDisplay)
+                _self.dataProviderChanged(toAdd, toRemove, toRefresh);
             _oldDataProvider = acExtend(_dataProvider);
         }
         
@@ -595,6 +597,7 @@ var Repeater = function(_props)
             separator: false,
             wrap: true
         },
+        autoUpdateDisplay: true,
         type: ContainerType.NONE,
         dataProvider: new ArrayEx([]),
         guidField: "guid",
@@ -624,7 +627,7 @@ var Repeater = function(_props)
     _props.keydown = this.containerKeyDown;
 
     let _rPromise;
-    
+    _autoUpdateDisplay = _props.autoUpdateDisplay;
     let r = Container.call(this, _props, true, true);
     var base = this.base;
 /*
