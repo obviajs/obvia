@@ -19,7 +19,8 @@ var AutoCompleteEx = function(_props)
             if (_dataProvider != v) {
                 _props.dataProvider = _dataProvider = v;
             }
-        }
+        },
+        enumerable: true
     });
     
     let _dpLengthChanged = function (e) {
@@ -33,14 +34,16 @@ var AutoCompleteEx = function(_props)
         get: function valueField() 
         {
             return _valueField;
-        }
+        },
+        enumerable:true
     });
     Object.defineProperty(this, "labelField", 
     {
         get: function labelField() 
         {
             return _labelField;
-        }
+        },
+        enumerable:true
     });
     
     this.endDraw = function (e) {
@@ -78,21 +81,23 @@ var AutoCompleteEx = function(_props)
     
     let _tokenInputReSize = function () {
         //_tokenRepeater.token[0].$el.width()
-        let tokenCount = _tokenRepeater.dataProvider==null?0:_tokenRepeater.dataProvider.length;
-        let tokenWidth = 0, rowTop = 0;
-        for(let i=0;i<tokenCount;i++){
-            let tokenPos = _tokenRepeater.token[i].$el.position();
-            if(tokenPos.top != rowTop){
-                tokenTop = tokenPos.top;
-                tokenWidth = _tokenRepeater.token[i].$el.width();
-            }else{
-                tokenWidth += _tokenRepeater.token[i].$el.width();
+        if (_tokenRepeater) {
+            let tokenCount = _tokenRepeater.dataProvider==null?0:_tokenRepeater.dataProvider.length;
+            let tokenWidth = 0, rowTop = 0;
+            for(let i=0;i<tokenCount;i++){
+                let tokenPos = _tokenRepeater.token[i].$el.position();
+                if(tokenPos.top != rowTop){
+                    tokenTop = tokenPos.top;
+                    tokenWidth = _tokenRepeater.token[i].$el.width();
+                }else{
+                    tokenWidth += _tokenRepeater.token[i].$el.width();
+                }
             }
-        }
-        if (_self.$el.width() > 0 && tokenWidth > 0) {
-            let tokenInputWidth = Math.max(_self.$el.width() - tokenWidth - 2, 0);
-            tokenInputWidth = Math.max((tokenInputWidth-tokenInputWidth*0.3).toFixed(0), 0);
-            _input.$el.css({"width": tokenInputWidth+"px"});
+            if (_self.$el.width() > 0 && tokenWidth >= 0) {
+                let tokenInputWidth = Math.max(_self.$el.width() - tokenWidth - 2, 0);
+                tokenInputWidth = Math.max((tokenInputWidth-tokenInputWidth*0.3).toFixed(0), 0);
+                _input.$el.css({"width": tokenInputWidth+"px"});
+            }
         }
     }; 
    
@@ -366,6 +371,7 @@ var AutoCompleteEx = function(_props)
                         _tokenRepeater.dataProvider = _value = new ArrayEx(v);
                         _input.value = ""; 
                         this.trigger('change');
+                        _tokenInputReSize();
                         if(_value){
                             _dpWatcher = ChangeWatcher.getInstance(_value);
                             _dpWatcher.watch(_value, "length", _dpLengthChanged);
@@ -528,9 +534,11 @@ var AutoCompleteEx = function(_props)
                                     separator: _separator || false,
                                     wrap: false
                                 },
+                                width:"100%",
                                 ownerDocument: this.ownerDocument,
                                 dataProvider: _value,
-                                components: [_tokenRenderer]
+                                components: [_tokenRenderer],
+                                endDraw: _tokenInputReSize
                             }
                         },
                         {
@@ -543,7 +551,7 @@ var AutoCompleteEx = function(_props)
                                 keyup: _tokenInputKeyUp,
                                 classes: ['border-0', 'ellipsis'],
                                 ownerDocument: this.ownerDocument,
-                                css: { "outline": "none", "font-size": "14px", "float": "left" }
+                                css: { "outline": "none", "font-size": "14px"}
                             }
                         }
                     ]

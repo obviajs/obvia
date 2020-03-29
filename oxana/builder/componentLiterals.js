@@ -255,6 +255,7 @@ Builder.initComponentLiterals = function () {
                     id: 'AutoCompleteEx',
                     allowNewItem: false,
                     value: new ArrayEx([]),
+                    dataProvider: new ArrayEx([]),
                     multiSelect: false,
                     matchType: StringMatchType.STARTS_WITH
                 }
@@ -365,7 +366,7 @@ Builder.initComponentLiterals = function () {
             literal: {
                 "ctor": CheckBoxGroup,
                 "props": {
-                    id: 'checkBoxGroupLonely1',
+                    id: 'checkBoxGroup',
                     dataProvider: [{
                         "id": "1",
                         "text": "Option 1",

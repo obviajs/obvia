@@ -722,6 +722,10 @@ var Repeater = function(_props)
                             break;
                         case "ownerDocument":
                             break;
+                        case "rendering":
+                            obj[prop] = {};
+                            shallowCopy(_rendering, obj[prop], ["currentItem"]);
+                            break;
                         default:
                             if (this.hasOwnProperty(prop) && this.propertyIsEnumerable(prop))
                                 if (!isObject(this[prop]) || !Object.isEmpty(this[prop]))

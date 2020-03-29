@@ -758,8 +758,8 @@ oxana.behaviorimplementations["FILE_SELECT_MODAL"] = function (e) {
 };
 oxana.behaviorimplementations["FILE_SELECTED"] = function (e) {
     console.log("called FILE_SELECTED.");
-    if (fileSelectModal.browseFile.value.length > 0) {
-        readFile(fileSelectModal.browseFile.value[0]).then(function (resp) {
+    if (fileSelectModal.modalDialog.modalContent.modalBody.browseFile.value.length > 0) {
+        readFile(fileSelectModal.modalDialog.modalContent.modalBody.browseFile.value[0]).then(function (resp) {
                 fileSelectModal.hide();
                 var evt = new jQuery.Event("loadLayout");
                 evt.content = resp.content;

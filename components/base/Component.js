@@ -742,7 +742,8 @@ var Component = function (_props, overrided = false, _isSurrogate = false) {
                 let defaultBindTo = "currentItem_" + _self.guid;
                 window[defaultBindTo] = (currentItem || Component.defaultContext);
                 if (!("currentItem" in window[defaultBindTo])) {
-                    window[defaultBindTo]["currentItem"] = window[defaultBindTo];
+                   // window[defaultBindTo]["currentItem"] = window[defaultBindTo];
+                    Object.defineProperty(window[defaultBindTo], "currentItem", { value: window[defaultBindTo], enumerable: false });
                 }
                 // let context = extend(false, true, this, obj);
                 let fn = function () {

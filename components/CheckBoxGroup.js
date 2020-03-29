@@ -69,6 +69,24 @@ var CheckBoxGroup = function (_props, overrided = false) {
     {
         enumerable:false
     });
+
+    Object.defineProperty(this, "valueField", 
+    {
+        get: function valueField() 
+        {
+            return _valueField;
+        },
+        enumerable:true
+    });
+    
+    Object.defineProperty(this, "labelField", 
+    {
+        get: function labelField() 
+        {
+            return _labelField;
+        },
+        enumerable:true
+    });
 };
 
 CheckBoxGroup.prototype.ctor = "CheckBoxGroup";
