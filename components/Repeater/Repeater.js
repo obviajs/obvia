@@ -211,25 +211,23 @@ var Repeater = function(_props)
         },
         set: function dataProvider(v) 
         {
-            if(!_dataProvider || _dataProvider != v)
-            {
-                if(_dpWatcher && _dataProvider){
+            if (!_dataProvider || _dataProvider != v) {
+                if (_dpWatcher && _dataProvider) {
                     _dpWatcher.reset();
                     _dataProvider.off("propertyChange", _dpMemberChanged);
-                } 
-                if(v==null || v.length==0){
-                    if(_oldDataProvider && _oldDataProvider.length>0)
+                }
+                if (v == null || v.length == 0) {
+                    if (_oldDataProvider && _oldDataProvider.length > 0)
                         this.removeAllRows(false);
                     _dataProvider = v;
                     _creationFinished = true;
                     this.createRows();
-                }else if(_oldDataProvider && _oldDataProvider.length>0)
-                {
-                    let delta = (v.length?v.length:0) - (_oldDataProvider.length?_oldDataProvider.length:0);
-                    for(let ri=0;ri<Math.min(v.length, _oldDataProvider.length);ri++){
-                        if(v[ri]!=null && !v[ri][_guidField])
+                } else if (_oldDataProvider && _oldDataProvider.length > 0 && _oldDataProvider.length == this.rowItems.length) {
+                    let delta = (v.length ? v.length : 0) - (_oldDataProvider.length ? _oldDataProvider.length : 0);
+                    for (let ri = 0; ri < Math.min(v.length, _oldDataProvider.length); ri++) {
+                        if (v[ri] != null && !v[ri][_guidField])
                             v[ri][_guidField] = StringUtils.guid();
-                        for(let cmpID in this.rowItems[ri]){
+                        for (let cmpID in this.rowItems[ri]) {
                             let cmp = this.rowItems[ri][cmpID];
                             cmp.refreshBindings(v[ri]);
                             cmp.$el.attr(_guidField, v[ri][_guidField]);
@@ -237,38 +235,41 @@ var Repeater = function(_props)
                         }
             
                     }
-                    if(delta>0){
-                        for(let i=_oldDataProvider.length;i<v.length;i++){
-                            if(v[i]!=null && !v[i][_guidField])
+                    if (delta > 0) {
+                        for (let i = _oldDataProvider.length; i < v.length; i++) {
+                            if (v[i] != null && !v[i][_guidField])
                                 v[i][_guidField] = StringUtils.guid();
                             _compRenderPromises.splicea(_compRenderPromises.length, 0, this.addRow(v[i], i));
                         }
-                        if (_compRenderPromises.length > 0)
-                        {
-                            Promise.all(_compRenderPromises).then(function() {
+                        if (_compRenderPromises.length > 0) {
+                            Promise.all(_compRenderPromises).then(function () {
                                 _$hadow.contents().appendTo(_self.$container);
                                 _compRenderPromises = [];
                             });
                         }
                         
-                    }else if(delta<0){
-                        for(let i=_oldDataProvider.length-1;i>=v.length;i--){
-                            this.removeRow(i, false, true, dpRemove = false); 
+                    } else if (delta < 0) {
+                        for (let i = _oldDataProvider.length - 1; i >= v.length; i--) {
+                            this.removeRow(i, false, true, dpRemove = false);
                         }
                     }
-                    _dataProvider = !ArrayEx.isArrayEx(v)?new ArrayEx(v):v;
-                }else if(_oldDataProvider==null || _oldDataProvider.length==0){
-                    _dataProvider = !ArrayEx.isArrayEx(v)?new ArrayEx(v):v;
+                    _dataProvider = !ArrayEx.isArrayEx(v) ? new ArrayEx(v) : v;
+                } else if (_oldDataProvider == null || _oldDataProvider.length == 0 || _oldDataProvider.length != this.rowItems.length) {
+                    _dataProvider = !ArrayEx.isArrayEx(v) ? new ArrayEx(v) : v;
                     this.createRows();
                     //temp hack
                     _creationFinished = true;
                 }
-                if(_dataProvider){
+                if (_dataProvider) {
                     _dpWatcher = ChangeWatcher.getInstance(_dataProvider);
                     _dpWatcher.watch(_dataProvider, "length", _debouncedLengthChanged);
                     _dataProvider.on("propertyChange", _dpMemberChanged);
                 }
                 _oldDataProvider = acExtend(_dataProvider);
+            } else if (_dataProvider == v)
+            {
+                this.removeAllRows(false);
+                this.createRows();
             }
         },
         enumerable: true,
@@ -691,6 +692,9 @@ var Repeater = function(_props)
         {
             return _components;
         },
+        set: function components(c) { 
+            _components = c;
+        }, 
         enumerable:true
     });
     Object.defineProperty(this, "renderPromises",

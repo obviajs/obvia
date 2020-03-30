@@ -118,9 +118,30 @@ Builder.initMetaProps = function () {
                             GaiaAPI_Utils.generateAndLoadDataView(url, Builder.recordsPerPage).then(function (aex) {
                                 console.log(aex);
                                 _self.parent.parent.instance.dataProvider = Builder.data[_self.value[0][Builder.providerValueField]] = aex;
+                                if (_self.parent.parent.labelField && aex && aex.length > 0) { 
+                                    let dpFieldNames = Object.keys(aex[0]);
+                                    let len = dpFieldNames.length;
+                                    let dpFields = new ArrayEx();
+                                    for (let i = 0; i < len; i++) {
+                                        dpFields.push({ "dpField": dpFieldNames[i] });
+                                    }
+                                    _self.parent.parent.labelField.input.dataProvider = dpFields;
+                                    _self.parent.parent.valueField.input.dataProvider = dpFields;
+                                }
                             });
                         } else { 
                             _self.parent.parent.instance.dataProvider = Builder.data[_self.value[0][Builder.providerValueField]];
+                            let aex = Builder.data[_self.value[0][Builder.providerValueField]];
+                            if (_self.parent.parent.labelField && aex && aex.length > 0) {
+                                let dpFieldNames = Object.keys(aex[0]);
+                                let len = dpFieldNames.length;
+                                let dpFields = new ArrayEx();
+                                for (let i = 0; i < len; i++) {
+                                    dpFields.push({ "dpField": dpFieldNames[i] });
+                                }
+                                _self.parent.parent.labelField.input.dataProvider = dpFields;
+                                _self.parent.parent.valueField.input.dataProvider = dpFields;
+                            }
                         }
                         this.parent.parent.instance.attr[Builder.providerValueField] = this.value[0][Builder.providerValueField];
                     }
@@ -137,14 +158,22 @@ Builder.initMetaProps = function () {
         },
         labelField: {
             ctor: "AutoCompleteEx", label: "Label Field", required: true, props: {
-                valueField: "prop",
-                labelField: "description"
+                valueField: "dpField",
+                labelField: "dpField",
+                change: function () {
+                    if(this.value && this.value.length > 0)
+                        this.parent.parent.instance.labelField = this.value[0]["dpField"];
+                }
             }, index: 9
         },
         valueField: {
             ctor: "AutoCompleteEx", label: "Value Field", required: true, props: {
-                valueField: "prop",
-                labelField: "description"
+                valueField: "dpField",
+                labelField: "dpField",
+                change: function () {
+                    if(this.value && this.value.length > 0)
+                        this.parent.parent.instance.valueField = this.value[0]["dpField"];
+                }
             }, index: 10
         },
         mask: {

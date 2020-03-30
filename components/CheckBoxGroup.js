@@ -5,11 +5,53 @@
  */
 
 var CheckBoxGroup = function (_props, overrided = false) {
-    let _self = this;
+    let _self = this, _dataProvider;
+
+    Object.defineProperty(this, "valueField", 
+    {
+        get: function valueField() 
+        {
+            return _valueField;
+        },
+        set: function valueField(v) 
+        {
+            if (_valueField != v) { 
+                _valueField = v;
+                this.components = fnContainerDelayInit();
+                this.removeAllRows(false);
+                if (_dataProvider && _dataProvider.length > 0) { 
+                    let dpFields = Object.keys(_dataProvider[0]);
+                    if (propDataProvider && dpFields.includes(_labelField) && dpFields.includes(_valueField)) { 
+                        propDataProvider['set'].call(_self, _dataProvider);
+                    }
+                }
+            }
+        },
+        enumerable:true
+    });
     
-    this.beforeAttach = function () {
-       
-    };
+    Object.defineProperty(this, "labelField", 
+    {
+        get: function labelField() 
+        {
+            return _labelField;
+        },
+        set: function labelField(v) 
+        {
+            if (_labelField != v) { 
+                _labelField = v;
+                this.components  = fnContainerDelayInit();
+                this.removeAllRows(false);
+                if (_dataProvider && _dataProvider.length > 0) { 
+                    let dpFields = Object.keys(_dataProvider[0]);
+                    if (propDataProvider && dpFields.includes(_labelField) && dpFields.includes(_valueField)) { 
+                        propDataProvider['set'].call(_self, _dataProvider);
+                    }
+                } 
+            }
+        },
+        enumerable:true
+    });
 
     let _defaultParams = {
         id: 'checkBoxGroup',
@@ -46,8 +88,9 @@ var CheckBoxGroup = function (_props, overrided = false) {
         ];
     }
     
-    _props.components = [
-        {
+    let fnContainerDelayInit = function () {
+        return [
+            {
                 ctor: CheckBoxEx,
                 props: {
                     id: 'checkBox',
@@ -57,8 +100,12 @@ var CheckBoxGroup = function (_props, overrided = false) {
                     classes: "{" + _classesField + "}",
                     enabled: "{" + _enabledField + "}",
                 }
-        }
-    ];
+            }
+        ];
+    };
+    
+    _props.components = fnContainerDelayInit();
+
     List.call(this, _props);
 
     if (overrided) {
@@ -70,23 +117,31 @@ var CheckBoxGroup = function (_props, overrided = false) {
         enumerable:false
     });
 
-    Object.defineProperty(this, "valueField", 
+    let propDataProvider = Object.getOwnPropertyDescriptor(this, "dataProvider");   
+    Object.defineProperty(this, "dataProvider", 
     {
-        get: function valueField() 
+        get: function dataProvider() 
         {
-            return _valueField;
+            return propDataProvider['get'].call(_self);
         },
-        enumerable:true
-    });
-    
-    Object.defineProperty(this, "labelField", 
-    {
-        get: function labelField() 
-        {
-            return _labelField;
+        set: function dataProvider(v)
+        { 
+            _dataProvider = v;
+            this.removeAllRows(false);
+                    
+            if (v.length > 0) { 
+                let dpFields = Object.keys(v[0]);
+                if (dpFields.includes(_labelField) && dpFields.includes(_valueField))
+                { 
+                    propDataProvider['set'].call(_self, _dataProvider);
+                }
+            } else {
+                propDataProvider['set'].call(_self, _dataProvider);
+            }  
         },
-        enumerable:true
+        enumerable: true
     });
+
 };
 
 CheckBoxGroup.prototype.ctor = "CheckBoxGroup";

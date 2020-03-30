@@ -35,6 +35,10 @@ var AutoCompleteEx = function(_props)
         {
             return _valueField;
         },
+        set: function valueField(v) 
+        {
+            _valueField = v;
+        },
         enumerable:true
     });
     Object.defineProperty(this, "labelField", 
@@ -42,6 +46,10 @@ var AutoCompleteEx = function(_props)
         get: function labelField() 
         {
             return _labelField;
+        },
+        set: function labelField(v) 
+        {
+            _labelField = v;
         },
         enumerable:true
     });
@@ -452,7 +460,9 @@ var AutoCompleteEx = function(_props)
         multiSelect: false,
         maxSuggestionsCount: 10,
         "type": ContainerType.NONE,
-        classes: ["no-form-control"]
+        classes: ["no-form-control"],
+        valueField: "id", 
+        labelField: "text"
     };
     
     _props = extend(false, false, _defaultParams, _props);

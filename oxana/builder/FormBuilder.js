@@ -527,7 +527,10 @@ let waBehaviors = {
 };
 
 let cmpWaBehaviors = {
-    "mousedown": "WA_PREVENT_DRAGSTART",
+    "mousedown": {
+        "WA_PREVENT_DRAGSTART": undefined,
+        "BECOME_ACTIVE": undefined
+    },
     "mouseover": "WA_HOVER",
     "mouseout": "WA_HOVER",
     "mousemove": {
@@ -594,7 +597,7 @@ oxana.behaviorimplementations["WA_PREVENT_DRAGSTART"] = {
     }
 };
 
-let containers = ["Container", "Form"];
+let containers = ["Container", "Form", "Header", "Footer"];
 
 oxana.behaviorimplementations["ADD_COMPONENT"] = {
     description: "Add component ",
@@ -873,7 +876,7 @@ oxana.behaviorimplementations["DELETE_CMP"] = {
                 domID = e.originalEvent.dataTransfer.getData("domID");
             }
             let inst = Component.instances[domID];
-            let c = confirm("Do you want to delete " + _id.toUpperCase() + "?");
+            let c = confirm("Do you want to delete " + inst.id.toUpperCase() + "?");
             if (c) {
 
                 inst.parent.removeChild(inst, 2);

@@ -15,7 +15,40 @@ var Select = function (_props, overrided = false) {
         },
         set: function valueField(v) 
         {
-            _valueField = v;
+            if (_valueField != v) { 
+                _valueField = v;
+                this.components = fnContainerDelayInit();
+                this.removeAllRows(false);
+                if (_dataProvider && _dataProvider.length > 0) { 
+                    let dpFields = Object.keys(_dataProvider[0]);
+                    if (propDataProvider && dpFields.includes(_labelField) && dpFields.includes(_valueField)) { 
+                        propDataProvider['set'].call(_self, _dataProvider);
+                    }
+                }
+            }
+        },
+        enumerable:true
+    });
+    
+    Object.defineProperty(this, "labelField", 
+    {
+        get: function labelField() 
+        {
+            return _labelField;
+        },
+        set: function labelField(v) 
+        {
+            if (_labelField != v) { 
+                _labelField = v;
+                this.components  = fnContainerDelayInit();
+                this.removeAllRows(false);
+                if (_dataProvider && _dataProvider.length > 0) { 
+                    let dpFields = Object.keys(_dataProvider[0]);
+                    if (propDataProvider && dpFields.includes(_labelField) && dpFields.includes(_valueField)) { 
+                        propDataProvider['set'].call(_self, _dataProvider);
+                    }
+                } 
+            }
         },
         enumerable:true
     });
@@ -36,19 +69,6 @@ var Select = function (_props, overrided = false) {
         }
     });
     
-    Object.defineProperty(this, "labelField", 
-    {
-        get: function labelField() 
-        {
-            return _labelField;
-        },
-        set: function labelField(v) 
-        {
-            _labelField = v;
-        },
-        enumerable:true
-    });
-    
     let _changeHandler = function (e) {
         _value = this.$el.val();
     };
@@ -66,8 +86,18 @@ var Select = function (_props, overrided = false) {
             }
         }
     };
+    let fnContainerDelayInit = function () {
+        return [{
+            ctor: Option,
+            props:{
+                id:"opt",
+                value: '{'+_valueField+'}',
+                label: '{'+_labelField+'}'
+            }
+        }]; 
+    };
 
-    var _defaultParams = {
+    let _defaultParams = {
         dataProvider: new ArrayEx([]),
         labelField: "",
         valueField: "",
@@ -79,21 +109,14 @@ var Select = function (_props, overrided = false) {
     
     shallowCopy(extend(false, false, _defaultParams, _props), _props);
     _props.applyBindings = false;
-    var _labelField = _props.labelField;
-    var _valueField = _props.valueField;
+    let _labelField = _props.labelField;
+    let _valueField = _props.valueField;
 
-    _props.components = [{
-        ctor: Option,
-        props:{
-            id:"opt",
-            value: '{'+_valueField+'}',
-            label: '{'+_labelField+'}'
-        }
-    }];
+    _props.components = fnContainerDelayInit();
    
-    var _change = _props.change;
+    let _change = _props.change;
     _props.change = function () {
-        var e = arguments[0];
+        let e = arguments[0];
         if(!e.isDefaultPrevented()) {
             _changeHandler.apply(_self, arguments);
         }
@@ -106,10 +129,35 @@ var Select = function (_props, overrided = false) {
     if (overrided) {
         this.keepBase();
     }
+    let propDataProvider = Object.getOwnPropertyDescriptor(this, "dataProvider");   
+    Object.defineProperty(this, "dataProvider", 
+    {
+        get: function dataProvider() 
+        {
+            return propDataProvider['get'].call(_self);
+        },
+        set: function dataProvider(v)
+        { 
+            _dataProvider = v;
+            this.removeAllRows(false);
+                    
+            if (v.length > 0) { 
+                let dpFields = Object.keys(v[0]);
+                if (dpFields.includes(_labelField) && dpFields.includes(_valueField))
+                { 
+                    propDataProvider['set'].call(_self, _dataProvider);
+                }
+            } else {
+                propDataProvider['set'].call(_self, _dataProvider);
+            }  
+        },
+        enumerable: true
+    });
+    
     Object.defineProperty(this, "propsLite", {
         get: function props() {
-            var obj = {};
-            for(var prop in _props)
+            let obj = {};
+            for(let prop in _props)
             {
                 if(typeof _props[prop] != 'function' && (this[prop]==null || !this[prop].$el))
                 {
@@ -134,8 +182,8 @@ var Select = function (_props, overrided = false) {
     });  
     Object.defineProperty(this, "props", {
         get: function props() {
-            var obj = {};
-            for(var prop in _props)
+            let obj = {};
+            for(let prop in _props)
             {
                 if(typeof _props[prop] != 'function')
                 {
