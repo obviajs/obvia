@@ -411,66 +411,82 @@ var mainContainer = {
                         width: "300",
                         minWidth: "300",
                         classes: ["sidenav", "sidenav_right", "sideNav_side_right", "flex-shrink-0"],
-                        components: [{
-                            ctor: Container,
-                            props: {
-                                id: "rightSideContainer",
-                                components: [{
-                                    ctor: Label,
-                                    props: {
-                                        id: "label",
-                                        label: "Field Properties",
-                                        css: {
-                                            marginLeft: "0"
-                                        },
-                                        classes: ["sideRight_label"]
-                                    }
-                                },
-                                {
-                                    ctor: HRule,
-                                    props: {
-                                        id: "hr",
-                                        width: 600,
-                                        align: "center",
-                                        css: {
-                                            margin: 0
+                        components: [
+                            {
+                                ctor: Container,
+                                props: {
+                                    id: "rightSideContainer",
+                                    components: [
+                                        {
+                                            ctor: ViewStack,
+                                            props: {
+                                                id:"propertyEditorViewStack",
+                                                type: ContainerType.NONE,
+                                                components: [
+                                                    {
+                                                        ctor: Container,
+                                                        props: {
+                                                            id: "propertyEditorContainerWrap",
+                                                            type: ContainerType.NONE,
+                                                            components: [
+                                                                {
+                                                                    ctor: Label,
+                                                                    props: {
+                                                                        id: "label",
+                                                                        label: "Field Properties",
+                                                                        css: {
+                                                                            marginLeft: "0"
+                                                                        },
+                                                                        classes: ["sideRight_label"]
+                                                                    }
+                                                                },
+                                                                {
+                                                                    ctor: HRule,
+                                                                    props: {
+                                                                        id: "hr",
+                                                                        width: 600,
+                                                                        align: "center",
+                                                                        css: {
+                                                                            margin: 0
+                                                                        }
+                                                                    }
+                                                                },
+                                                                {
+                                                                    ctor: Container,
+                                                                    props: {
+                                                                        id: "propertyEditorContainer",
+                                                                        type: ContainerType.NONE,
+                                                                        components: [],
+                                                                        classes: ["propertyEditor"]
+                                                                    }
+                                                                }
+                                                            ]
+                                                        }
+                                                    },
+                                                    {
+                                                        ctor: Container,
+                                                        props: {
+                                                            id: "deleteComponentId",
+                                                            classes: ["deleteTrash"],
+                                                            components: [{
+                                                                ctor: Label,
+                                                                props: {
+                                                                    id: "deleteTrashIcon",
+                                                                    labelType: LabelType.i,
+                                                                    classes: ["fas", "fa-trash", "trash-icon"]
+                                                                }
+                                                            }]
+                                                        }
+                                                    }
+                                                ]
+                                            }
                                         }
-                                    }
-                                },
-                                {
-                                    ctor: Container,
-                                    props: {
-                                        id: "propertyEditorContainer",
-                                        classes: ["sideNav_left_container"],
-                                        components: []
-                                    }
+                                    ]
                                 }
-                                ]
-
                             }
-                        },
-                        {
-                            ctor: Container,
-                            props: {
-                                id: "deleteComponentId",
-                                spacing: {
-                                    colSpan: 12,
-                                    h: 10,
-                                },
-                                classes: ["deleteTrash"],
-                                components: [{
-                                    ctor: Label,
-                                    props: {
-                                        id: "deleteTrashIcon",
-                                        labelType: LabelType.i,
-                                        classes: ["fas", "fa-trash", "trash-icon"]
-                                    }
-                                }]
-                            }
-                        }
                         ]
                     }
-                    },
+                },
                     {
                         ctor: Modal,
                         props: {
@@ -508,8 +524,16 @@ oxana.components.splicea(oxana.components.length, 0, [{
 var daBehaviors = {
     "mouseover": "WA_HOVER",
     "mouseout": "WA_HOVER",
-    "drop": "DELETE_CMP",
+    "drop": {
+        "DELETE_CMP": undefined,
+        "TOGGLE_BIN": undefined
+    },
     "dragover": "ALLOW_DROP",
+    "dragleave": "TOGGLE_BIN"
+};
+
+var vspewbehaviors = {
+    "dragover": "TOGGLE_BIN",
 };
 
 let waBehaviors = {
@@ -568,6 +592,7 @@ oxana.behaviors["splitVertical"]["click"] = {
     "SPLIT_VERT": null,
 };
 
+oxana.behaviors["uploadIcon"]["click"] = "SAVE_LAYOUT_REMOTE";
 oxana.behaviors["saveLayout"]["click"] = "SAVE_LAYOUT";
 
 oxana.behaviors["selectBtn"]["click"] = "FILE_SELECT_MODAL";
@@ -580,7 +605,7 @@ oxana.behaviors["listHistorySteps"]["change"] = "HISTORY_STEP_DETAILS";
 
 oxana.behaviors["workAreaColumnL2"] = waBehaviors;
 
-oxana.behaviors[oxana.rootID]["keydown"] = {
+oxana.behaviors[oxana.id]["keydown"] = {
     "WA_UNDO": isKeyCombUndo,
     "WA_REDO": isKeyCombRedo,
     "DELETE_CMP": isKeyDeletePress
@@ -595,6 +620,12 @@ oxana.behaviorimplementations["WA_PREVENT_DRAGSTART"] = {
         console.log('WA_PREVENT_DRAGSTART');
         e.preventDefault();
     }
+};
+oxana.behaviorimplementations["TOGGLE_BIN"] = function (e) {
+    console.log("SHOW_BIN : ", propertyEditorViewStack.selectedIndex);
+    propertyEditorViewStack.selectedIndex = propertyEditorViewStack.selectedIndex == 0 ? 1 : 0; 
+    e.preventDefault();
+    e.stopPropagation();
 };
 
 let containers = ["Container", "Form", "Header", "Footer"];
@@ -1168,7 +1199,7 @@ oxana.behaviorimplementations["BECOME_ACTIVE"] = {
         classes.pushUnique("active-container");
         this.classes = classes;
         activeContainer = this;
-        if (this.id == "workArea")
+        if (this.id == "workAreaColumnL2")
         {
             let oeLit = {
                 ctor: ObjectEditor,
@@ -1314,6 +1345,15 @@ oxana.behaviorimplementations["PREVIEW"] = {
     stopPropagation: true
 };
 
+oxana.behaviorimplementations["SAVE_LAYOUT_REMOTE"] = {
+    do: function (e) {
+        var lit = workAreaColumn.literalLite;
+        stripHandle(lit);
+        var jsonLayout = JSON.stringify(lit, null, "\t");
+        download("workAreaColumn.json.txt", jsonLayout);
+    },
+    stopPropagation: true
+};
 oxana.behaviorimplementations["SAVE_LAYOUT"] = {
     do: function (e) {
         var lit = workAreaColumn.literalLite;
@@ -1339,15 +1379,18 @@ oxana.behaviorimplementations["WA_REDO"] = {
     stopPropagation: false
 };
 
-let propertyEditorContainer, fileSelectModal, componentsContainer, rightSideNav, listHistorySteps, workArea, workAreaColumn;
+let propertyEditorViewStack, propertyEditorContainer, fileSelectModal, componentsContainer, rightSideNav, listHistorySteps, workArea, workAreaColumn;
 oxana.behaviorimplementations["END_DRAW"] = new ArrayEx(oxana.behaviorimplementations["END_DRAW"], function (e) {
-    propertyEditorContainer = oxana.viewStack.mainContainer.container.rightSideNav.rightSideContainer.propertyEditorContainer;
+    propertyEditorViewStack = oxana.viewStack.mainContainer.container.rightSideNav.rightSideContainer.propertyEditorViewStack;
+    propertyEditorContainer = propertyEditorViewStack.propertyEditorContainerWrap.propertyEditorContainer;
     fileSelectModal = oxana.viewStack.mainContainer.container.children.fileSelectModal;
     componentsContainer = oxana.viewStack.mainContainer.container.componentsContainer;
     rightSideNav = oxana.viewStack.mainContainer.container.rightSideNav;
     listHistorySteps = oxana.viewStack.mainContainer.nav.children.containerIcons.undoRedo.listHistorySteps;
     workArea = oxana.viewStack.mainContainer.container.workArea.workAreaRow.workAreaColumn.workAreaCell.workAreaRowL2.workAreaColumnL2;
     workAreaColumn = oxana.viewStack.mainContainer.container.workArea.workAreaRow.workAreaColumn;
+    
+    addBehaviors(propertyEditorContainer, vspewbehaviors, false);
     _initDP();
     componentsContainer.show();
 });

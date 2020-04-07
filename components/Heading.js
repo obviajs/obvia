@@ -90,6 +90,7 @@ var Heading = function(_props)
     var _headingType = _props.headingType;
     var _align = _props.align;
 
-    Parent.call(this, _props);
+    let r = Parent.call(this, _props);
+    return r;
 };
 Heading.prototype.ctor = 'Heading';

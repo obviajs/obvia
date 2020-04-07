@@ -30,6 +30,8 @@
             rjs.define("./oxana/builder/ObjectEditor.js", "ObjectEditor");
             rjs.define("./oxana/Code/Code.js", "Code");
             rjs.define("./oxana/Code/CodeMerge.js", "CodeMerge");
+            rjs.define("./oxana/Wizard/Wizard.js", "Wizard");
+            rjs.define("./oxana/Wizard/css/wizard-default.css", "wizard_default_css");
             rjs.require([
                 "CollectionEditor",
                 "ObjectEditor",
@@ -39,9 +41,12 @@
                 "ApiClient",
                 "ApiClientGen",
                 "OAMethod",
-                "GaiaAPI_Utils"
+                "GaiaAPI_Utils",
+                "Wizard",
+                "wizard_default_css"
             ]).then(function () {
-                rjs.define("./examples/ApiClient/example.js", "ApiClientExample");
+                //rjs.define("./examples/ApiClient/example.js", "ApiClientExample");
+                rjs.define("./examples/wizard/example.js", "wizarExample");
             });
             //rjs.define("./examples/ArrayEx/example.js", "ArrayExExample");
             //rjs.define("./examples/Tree/example.js", "TreeExample");

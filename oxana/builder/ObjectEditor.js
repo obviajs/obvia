@@ -132,7 +132,7 @@ var ObjectEditor = function (_props, overrided = false) {
     let _cmps, _colSpan, _offset, _mb, _mt;
     
     var _defaultParams = {
-        type: ContainerType.CONTAINER,
+        type: ContainerType.NONE,
         "components": [],
         sortChildren: true,
         field: "props"

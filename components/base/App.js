@@ -144,7 +144,7 @@ var App = function(_props){
         console.log("App Window was maximized, you may want to greet the user.");
     };
 
-    let _eventTypes = ["mousedown", "mouseover", "mouseup", "click", "dblclick", "keydown", "keyup", "mousemove", "drop", "dragstart", "dragover", "idChanged", "endDraw"];
+    let _eventTypes = ["mousedown", "mouseover", "mouseup", "click", "dblclick", "keydown", "keyup", "mousemove", "drop", "dragstart", "dragover", "dragleave", "idChanged", "endDraw"];
     let _eventTypesJoined;
     let _loader = new Loader({ id: 'loader' });
     let _event2behavior = function(e) {

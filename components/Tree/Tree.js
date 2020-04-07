@@ -424,13 +424,15 @@ var Tree = function (_props, overrided = false) {
                             cmpIcon.props.classes = '{?' + _iconField + '}';
                             cmps.push(cmpIcon);
                         }
-                        if (_componentLbl || _iconField)
-                        {
+                        if ((_componentLbl || _iconField) && !_componentsField) {
                             let cmpLbl = extend(true, _componentLbl);
                             cmpLbl.props.bindingDefaultContext = dp[i];
                             cmps.push(cmpLbl);
                             cmpLi.props.components = cmps;
-                        }else
+                        } else if (_componentsField) { 
+                            cmps.splicea(cmps.length, 0, dp[i][_componentsField]);
+                            cmpLi.props.components = cmps;
+                        } else
                             cmpLi.props.label = '{?' + _labelField + '}';
                     }	
                     components.push(cmpLi);

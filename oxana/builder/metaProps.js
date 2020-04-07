@@ -59,14 +59,14 @@ Builder.initMetaProps = function () {
             }
         },
         width: {
-            ctor: "TextInput", label: "Width", required: true, index: 3, props: {
+            ctor: "TextInput", label: "Width", required: true, index: 9, props: {
                 change: function () {
                     this.parent.parent.instance.width = this.value;
                 }
             }
         },
         height: {
-            ctor: "TextInput", label: "Height", required: true, index: 3, props: {
+            ctor: "TextInput", label: "Height", required: true, index: 10, props: {
                 change: function () {
                     this.parent.parent.instance.height = this.value;
                 }
@@ -659,7 +659,7 @@ Builder.initMetaProps = function () {
 
     Builder.metaProps.Form = {
         method: {
-            ctor: "Select", label: "Method", props: {
+            ctor: "Select", label: "Method", index: 3, props: {
                 dataProvider: new ArrayEx([{ "value": "GET", "text": "GET" }, { "value": "POST", "text": "POST" }]),
                 change: function () {
                     this.parent.parent.instance.method = this.value;
@@ -667,7 +667,7 @@ Builder.initMetaProps = function () {
             }
         },
         action: {
-            ctor: "TextInput", label: "Action", props: {
+            ctor: "TextInput", label: "Action", index: 4, props: {
                 change: function () {
                     this.parent.parent.instance.action = this.value;
                 }

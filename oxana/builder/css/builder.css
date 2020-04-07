@@ -1,3 +1,11 @@
+.sidenav {
+    height: calc(100vh - 50px) !important;
+}
+
+.propertyEditor {
+    height: calc(100vh - 50px) !important;
+}
+
 i:hover {
     cursor: pointer;
 }
@@ -7,9 +15,8 @@ i:hover {
 }
 
 .deleteTrash {
-    position: fixed;
-    bottom: 0;
-    width: 300px;
+    height: calc(100vh - 110px);
+    width: 100%;
     background-color: #ffffff;
     border: 1px dotted blue;
 }
