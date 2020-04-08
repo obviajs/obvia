@@ -7,6 +7,8 @@
 //component definition
 var Heading = function(_props)
 {   
+    let _self, _label, _align;
+    
     Object.defineProperty(this, "label", 
     {
         get: function label() 
@@ -18,8 +20,17 @@ var Heading = function(_props)
             if(_label != v)
             {
                 _label = v;
-                if(this.$el)
-                    this.$el.html(v);
+                if(this.$el){
+                    let last = this.$el.children().last();
+                    if(last && last.length>0)
+                        if(last[0].nextSibling)
+                            last[0].nextSibling.textContent = v;
+                        else
+                            this.$el.appendText(v);
+                    else
+                        //this.$el.appendText(v);
+                        this.$el.text(v);
+                }
             }
         },
         enumerable:true
@@ -68,27 +79,29 @@ var Heading = function(_props)
         enumerable:true
     });
 
-    this.beforeAttach = function () 
+    this.beforeAttach = function (e) 
     {
-        if(_props.align!=null)
-            this.align = _props.align;
+        if (e.target.id == this.domID) {
+            if (_props.align != null)
+                this.align = _props.align;
+            if(_props.label)
+                this.label = _props.label;
+        }
     };
 
     this.template = function () 
     {         
-        return "<"+_headingType+" id='" + this.domID + "' align="+_props.align+">"+_label+"</"+_headingType+">"; 
+        return "<"+_headingType+" id='" + this.domID + "'></"+_headingType+">"; 
     };
 
-    var _defaultParams = {
+    let _defaultParams = {
         label:"",
         headingType: HeadingType.h1,
         align: Align.left
     };
     _props = extend(false, false, _defaultParams, _props);
     
-    var _label = _props.label;
-    var _headingType = _props.headingType;
-    var _align = _props.align;
+    let _headingType = _props.headingType;
 
     let r = Parent.call(this, _props);
     return r;
