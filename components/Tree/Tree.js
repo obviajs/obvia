@@ -185,7 +185,7 @@ var Tree = function (_props, overrided = false) {
     let _defaultParams = {
         dataProvider:[],
         labelField: "label",
-        valueField: "value",
+        valueField: "guid",
         classesField: undefined,
         componentsField: undefined,
         liComponents: undefined,
@@ -224,25 +224,24 @@ var Tree = function (_props, overrided = false) {
     let _selectedItem = _props.selectedItem;
 
     let _click = _props.click;
-    let _toggleTree = function (e)
-    {
+    let _toggleTree = function (e) {
         let match = getMatching(this.components, "ctor.prototype.ctor", "Tree", true);
-        if(match.objects.length>0 && e.target == this.children[this.components[0].props.id].$el[0]){
+        if (match.objects.length > 0 && e.target == this.children[this.components[0].props.id].$el[0]) {
             let liIcon = this.children[this.components[0].props.id];
             let liIconClasses = liIcon.classes.slice(0);
             let tree = this.children[this.components[match.indices[0]].props.id];
             let classes = tree.classes.slice(0);
             let ind = classes.indexOf("d-none");
-            if(ind>-1){
+            if (ind > -1) {
                 classes.splice(ind, 1);
                 liIconClasses.splice(liIconClasses.indexOf(_expandIcon), 1);
                 liIconClasses.pushUnique(_collapseIcon);
-            }else{
+            } else {
                 classes.pushUnique("d-none");
                 liIconClasses.splice(liIconClasses.indexOf(_collapseIcon), 1);
                 liIconClasses.pushUnique(_expandIcon);
             }
-            tree.classes = classes; 
+            tree.classes = classes;
             liIcon.classes = liIconClasses;
         }
         let liObj = {};
@@ -250,49 +249,44 @@ var Tree = function (_props, overrided = false) {
         _self.selectedItem = arrayHierarchyGetMatching(_dataProvider, _guidField, liObj[_guidField], _childrenField);
         //_self.select(liObj);
         //e.stopPropagation();
-    }   
+    };   
     //to unselect all call with liObj null
-    this.select = function(liObj, visited){
+    this.select = function (liObj, visited) {
         let cLi; var visited = visited ? visited : [];
-        if(liObj && liObj[_guidField])
-        {
-            let match = getMatching(this.components, "props.attr."+_guidField,  liObj.guid, true);
-            if(match.objects.length>0)
-            {
-                cLi = this.children[match.objects[0].props.id];
+        if (liObj && liObj[_guidField]) {
+            let match = getMatchingMember(this.children, "attr." + _guidField, liObj.guid);
+            if (match.objects.length > 0) {
+                cLi = match.objects[0];
                 let liClasses = cLi.classes.slice(0);
-                let diff = _selectedClasses.difference(liClasses);
-                if(diff.length>0){
+                let diff = liClasses.difference(_selectedClasses);
+                if (diff.length > 0) {
                     liClasses.splicea(liClasses.length, 0, diff);
                 }
                 cLi.classes = liClasses;
             }
         }
-        for(let cid in this.children){
+        for (let cid in this.children) {
             let cc = this.children[cid];
-            if(cc != cLi){
-                liClasses = cc.classes.slice(0);
-                let diff = liClasses.difference(_selectedClasses);
+            if (cc != cLi) {
+                let liClasses = cc.classes.slice(0);
+                let diff = liClasses.difference(intersect(liClasses, _selectedClasses));
                 cc.classes = diff;
-            } 
-            if(cc.components.length>2){
+            }
+            if (cc.components.length > 2) {
                 let tree = cc.children[cc.components[2].props.id];
-                if (visited.indexOf(tree) < 0)
-                { 
+                if (visited.indexOf(tree) < 0) {
                     visited.push(tree);
                     tree.select(liObj, visited);
                 }
             }
         }
-        if (this["parent"] && this.parent["parent"] && this.parent["parent"].ctor == "Tree")
-        {
-            if (visited.indexOf(this.parent.parent) < 0)
-            {
+        if (this["parent"] && this.parent["parent"] && this.parent["parent"].ctor == "Tree") {
+            if (visited.indexOf(this.parent.parent) < 0) {
                 visited.push(this.parent.parent);
                 this.parent.parent.select(liObj, visited);
             }
         }
-    }
+    };
 
     let _componentLi = {
         ctor: Li,

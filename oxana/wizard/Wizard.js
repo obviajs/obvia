@@ -5,7 +5,7 @@
  */
 var Wizard = function (_props) {
     let _self = this;
-    let _viewStack, _stepPath, _detailsPath, _steps, _selectedIndex, _detailLabel;
+    let _viewStack, _stepPath, _detailsPath, _steps, _selectedIndex, _detailLabel, _wizardTree;
     
     Object.defineProperty(this, "selectedIndex", 
     {
@@ -23,6 +23,7 @@ var Wizard = function (_props) {
                     _stepHeading.label = _steps[v].stepLabel;
                     _detailLabel.label = _steps[v].detail;
                     _viewStack.selectedIndex = v;
+                    _wizardTree.select({"guid": _steps[v]["guid"]});
                 }
             }
         },
@@ -41,12 +42,13 @@ var Wizard = function (_props) {
             _viewStack = this.body.rowCnt.colCnt.wizardCnt.viewStack;
             _stepHeading = this.body.rowCnt.colCnt.wizardCnt.container_page_top_row.row_container.page_title_container.stepHeading;
             _detailLabel = _stepHeading.detailLabel;
+            _wizardTree = this.header.rowCnt.colCnt.wizardTree;
         }
     };
 
     this.afterAttach = function (e) {
         if (e.target.id == this.domID) {
-            _self.selectedIndex = _selectedIndex;
+            _self.selectedIndex = _props.selectedIndex;
         }
     };
     
@@ -104,8 +106,9 @@ var Wizard = function (_props) {
                                         components: [{
                                             ctor: Tree,
                                             props: {
-                                                id: "wizard_step_tree",
+                                                id: "wizardTree",
                                                 classes: ["wizard-steps"],
+                                                selectedClasses: ["current-step"],
                                                 componentsField: "components",
                                                 dataProvider: _steps
                                             }
@@ -307,7 +310,6 @@ var Wizard = function (_props) {
     _props = extend(false, false, _defaultParams, _props);
     _stepPath = _props.stepPath;
     _detailsPath = _props.detailsPath;
-    _selectedIndex = _props.selectedIndex;
 
     fnViewStackDelayInit();
     _props.components = _cmps;

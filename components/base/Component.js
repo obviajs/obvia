@@ -383,7 +383,7 @@ var Component = function (_props, overrided = false, _isSurrogate = false) {
                 if ((!_classes && v) || (_classes && (!_classes.equals(v)))) {
                     if (this.$el) {
                         if (Array.isArray(v)) {
-                            _classes = _classes.difference(v);
+                            _classes = v.difference(_classes);
                             for (let i = 0; i < _classes.length; i++) {
                                 let _class = _classes[i];
                                 if (this.$el.hasClass(_class))
