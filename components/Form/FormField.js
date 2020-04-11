@@ -197,7 +197,7 @@ var FormField = function (_props) {
         get: function propsLite() {
             let obj = {};
             for (let prop in _props) {
-                if (typeof _props[prop] != 'function' && (this.inspect || (this[prop]==null || !this[prop].$el))) {
+                if (typeof _props[prop] != 'function' && (this[prop]==null || !this[prop].$el)) {
                     switch (prop) {
                         case "component":
                             let component = {};

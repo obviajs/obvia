@@ -25,13 +25,13 @@
   .sidenav_left {
     float:left; 
     left: 0;
-    margin-right: auto;
+    #margin-right: auto;
     order: 0;
   }
   .sidenav_right {
     float:right; 
     right:0;
-    margin-left: auto;
+    #margin-left: auto;
     order: 99999;
   }
   /* When you mouse over the navigation links, change their color */

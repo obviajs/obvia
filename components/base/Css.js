@@ -19,6 +19,9 @@ var Css = function (_css, $el) {
             return true;
         },
         get: function (target, property, receiver) {
+            if (!isSymbol(property) && target[property] == null) {
+                target[property] = _$el.css(property); 
+            }
             return Reflect.get(...arguments);
         }
     });

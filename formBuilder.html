@@ -41,17 +41,21 @@
                 "CollectionEditor",
                 "ObjectEditor"
             ]).then(function () {
+                rjs.define("./oxana/Scrap.js", "Scrap");
                 rjs.define("./oxana/builder/metaProps.js", "metaProps");
                 rjs.define("./oxana/builder/componentLiterals.js", "componentLiterals");
-                rjs.define("./oxana/builder/FormProperties.js", "FormProperties");
+                rjs.define("./oxana/builder/model/FormProperties.js", "FormProperties");
+                rjs.define("./oxana/builder/model/WizardStep.js", "WizardStep");
                 rjs.define("./oxana/GaiaAPI/GaiaAPI_Utils.js", "GaiaAPI_Utils");
                 rjs.define("./oxana/GaiaAPI/GaiaAPI_forms.js", "GaiaAPI_forms");
                 rjs.define("./oxana/GaiaAPI/GaiaAPI_DV_forms.js", "GaiaAPI_DV_forms");
                 rjs.define("./oxana/GaiaAPI/GaiaAPI_DV_dataviews.js", "GaiaAPI_DV_dataviews");
                 rjs.require([
+                    "Scrap",
                     "metaProps",
                     "componentLiterals",
                     "FormProperties",
+                    "WizardStep",
                     "GaiaAPI_Utils",
                     "GaiaAPI_forms",
                     "GaiaAPI_DV_forms",

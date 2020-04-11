@@ -227,8 +227,8 @@ var AutoCompleteEx = function(_props)
         if (ind > -1)
         {
             cls.splice(ind, 1);
-            _suggestionsRepeater.classes = cls;
         }
+        _suggestionsRepeater.classes = cls;
         _input.$el.focus();
     };
     let _tokenRendererCloseIconClickHandler = function(e, repeaterEventArgs)

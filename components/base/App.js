@@ -164,7 +164,7 @@ var App = function(_props){
         {
             cmpBehaviors = _self.behaviors[target.id];
             manifestor = target;
-        }else if(_self.behaviors[currentTarget.id] && _self.behaviors[currentTarget.id][e.type] && _self.behaviorimplementations[_self.behaviors[currentTarget.id][e.type]].onPropagation)
+        }else if(_self.behaviors[currentTarget.id] && _self.behaviors[currentTarget.id][e.type] && _self.behaviorimplementations[_self.behaviors[currentTarget.id][e.type]] && _self.behaviorimplementations[_self.behaviors[currentTarget.id][e.type]].onPropagation)
         {
             cmpBehaviors = _self.behaviors[currentTarget.id];
             manifestor = currentTarget;

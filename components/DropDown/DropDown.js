@@ -10,15 +10,47 @@ var DropDown = function (_props, overrided = false) {
     let _creationFinished;
     let _dataProvider, _btnDD, _componentRepeater, _label;
     
+    Object.defineProperty(this, "labelField", 
+    {
+        get: function labelField() 
+        {
+            return _labelField;
+        },
+        set: function labelField(v) 
+        {
+            if (_labelField != v) { 
+                _labelField = v;
+                _componentRepeater.components  = fnInitCmpLink();
+                _componentRepeater.removeAllRows(false);
+                if (_dataProvider && _dataProvider.length > 0) { 
+                    let dpFields = Object.keys(_dataProvider[0]);
+                    if (dpFields.includes(_labelField)) { 
+                        _componentRepeater.dataProvider = _dataProvider;
+                    }
+                } 
+            }
+        },
+        enumerable:true
+    });
+
     Object.defineProperty(this, "dataProvider",
         {
             get: function dataProvider() {
                 return _dataProvider;
             },
             set: function dataProvider(v) {
-                if (_dataProvider != v) {
-                    _componentRepeater.dataProvider = _dataProvider = v;
-                }
+                _dataProvider = v;
+                _componentRepeater.removeAllRows(false);
+                        
+                if (v.length > 0) { 
+                    let dpFields = Object.keys(v[0]);
+                    if (dpFields.includes(_labelField))
+                    { 
+                        _componentRepeater.dataProvider = _dataProvider;
+                    }
+                } else {
+                    _componentRepeater.dataProvider = _dataProvider;
+                }  
             },
             enumerable: true
         });
@@ -66,6 +98,51 @@ var DropDown = function (_props, overrided = false) {
             _afterAttach.apply(this, arguments);
         _creationFinished = true;
     };
+    let fnInitCmpLink = function () {
+        let _componentLink = {
+            ctor: Link,
+            props: {
+                id: "link",
+                classes: ['dropdown-item'],
+                "click": _clickHandler,
+            }
+        };
+        if (_hrefField) {
+            _componentLink.props.href = '{' + _hrefField + '}';
+        }
+        if (_labelField) {
+            _componentLink.props.label = '{' + _labelField + '}';
+        }
+        return _componentLink;
+    };
+    let fnContainerDelayInit = function () {
+        let _componentButton = {
+            ctor: Button,
+            props: {
+                id: "button",
+                classes: [_size, _split, "btn", "btn-secondary", "dropdown-toggle"],
+                attr: {
+                    "data-toggle": 'dropdown',
+                    "aria-haspopup": "true",
+                    "aria-expanded": "false"
+                }
+            }
+        };
+    
+        let _componentLink = fnInitCmpLink();
+        
+        let _componentRepeaterLit = {
+            ctor: Repeater,
+            props: {
+                id: "repeater",
+                type: ContainerType.NONE,
+                classes: ["dropdown-menu"],
+                components: [_componentLink],
+                dataProvider: _dataProvider
+            }
+        };
+        return [_componentButton, _componentRepeaterLit];
+    };
 
     let _defaultParams = {
         id: 'dropdown',
@@ -107,46 +184,7 @@ var DropDown = function (_props, overrided = false) {
     let _selectedItem = _props.selectedItem;
     let _guidField = _props.guidField;
 
-
-    let _componentButton = {
-        ctor: Button,
-        props: {
-            id: "button",
-            classes: [_size, _split, "btn", "btn-secondary", "dropdown-toggle"],
-            attr: {
-                "data-toggle": 'dropdown',
-                "aria-haspopup": "true",
-                "aria-expanded": "false"
-            }
-        }
-    };
-
-    let _componentLink = {
-        ctor: Link,
-        props: {
-            id: "link",
-            classes: ['dropdown-item'],
-            "click": _clickHandler,
-        }
-    };
-    if (_hrefField) {
-        _componentLink.props.href = '{' + _hrefField + '}';
-    }
-    if (_labelField) {
-        _componentLink.props.label = '{' + _labelField + '}';
-    }
-    
-    let _componentRepeaterLit = {
-        ctor: Repeater,
-        props: {
-            id: "repeater",
-            type: ContainerType.NONE,
-            classes: ["dropdown-menu"],
-            components: [_componentLink],
-            dataProvider: _dataProvider
-        }
-    };
-    _props.components = [_componentButton, _componentRepeaterLit];
+    _props.components = fnContainerDelayInit();
 
     Container.call(this, _props);
 };

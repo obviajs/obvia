@@ -80,6 +80,7 @@ rjs.define("./components/Nav/Nav.js", "Nav");
 rjs.define("./components/Nav/css/nav.css", "Nav_css");
 rjs.define("./components/Header.js", "Header");
 rjs.define("./components/Footer.js", "Footer");
+rjs.define("./components/Section.js", "Section");
 //ScrollPane
 rjs.define("./components/base/ScrollPane.js", "ScrollPane");
 //SideNav
@@ -200,6 +201,8 @@ rjs.define("./components/Calendar/css/calendarWeek-default.css", "calendarWeek_d
 rjs.define("./components/Calendar/CalendarMonth.js", "CalendarMonth");
 rjs.define("./components/Calendar/css/calendarMonth-default.css", "calendarMonth_default_css");
 
+rjs.define("./oxana/Wizard/Wizard.js", "Wizard");
+rjs.define("./oxana/Wizard/css/wizard-default.css", "wizard_default_css");
 
 //TextInput
 //rjs.define("./components/TextInput.js", "TextInput")
@@ -262,6 +265,7 @@ rjs.require(["EventDispatcher"]).then(function () {
         "Nav_css",
         "Header",
         "Footer",
+        "Section",
         "TabNavigator",
         "Tab",
         "ViewStack",
@@ -352,7 +356,8 @@ rjs.require(["EventDispatcher"]).then(function () {
         "calendarWeek_default_css",
         "CalendarMonth",
         "calendarMonth_default_css",
-    
+        "Wizard",
+        "wizard_default_css"
     ], function () {
         window.main();
     }, flowerCM);

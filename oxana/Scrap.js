@@ -68,6 +68,21 @@ var Scrap = function () {
                 lit.props.label = txt;
             }
 
+        } else if (["section"].indexOf($(n).prop("tagName").toLowerCase()) > -1) {
+            lit = {
+                ctor: "Section",
+                props: {
+                    "id": nid,
+                    classes: cls,
+                    components: cmp,
+                    type: ContainerType.NONE,
+                }
+            };
+            var txt = $(n).mytext();
+            if (txt.trim().length > 0) {
+                lit.props.label = txt;
+            }
+
         } else if (["footer"].indexOf($(n).prop("tagName").toLowerCase()) > -1) {
             lit = {
                 ctor: "Footer",
@@ -81,6 +96,19 @@ var Scrap = function () {
             var txt = $(n).mytext();
             if (txt.trim().length > 0) {
                 lit.props.label = txt;
+            }
+
+        } else if (["textarea"].indexOf($(n).prop("tagName").toLowerCase()) > -1) {
+            lit = {
+                ctor: "TextArea",
+                props: {
+                    "id": nid,
+                    classes: cls
+                }
+            };
+            var txt = $(n).mytext();
+            if (txt.trim().length > 0) {
+                lit.props.value = txt;
             }
 
         } else if (["ul"].indexOf($(n).prop("tagName").toLowerCase()) > -1) {
@@ -260,9 +288,23 @@ var Scrap = function () {
             if ($(n).attr('align')) {
                 lit.align = $(n).attr('align');
             }
+        } else if (["br"].indexOf($(n).prop("tagName").toLowerCase()) > -1) {
+            lit = {
+                ctor: "Container",
+                props: {
+                    id: nid,
+                    classes: [...cls, "clearfix"]
+                }
+            };
+            if ($(n).attr('width')) {
+                lit.width = $(n).attr('width');
+            }
+            if ($(n).attr('align')) {
+                lit.align = $(n).attr('align');
+            }
         } else if (["h1", "h2", "h3", "h4", "h5", "h6"].indexOf($(n).prop("tagName").toLowerCase()) > -1) {
             var a = $(n).attr("align");
-            a = a ? Align[a.toLowerCase()] : undefined,
+            a = a ? Align[a.toLowerCase()] : undefined;
                 lit = {
                     ctor: "Heading",
                     props: {

@@ -9,6 +9,14 @@ var CollectionEditor = function (_props, overrided = false) {
     let _self = this;
     let _instance, _field, _memberType, _repeater, _itemLabel;
 
+    Object.defineProperty(this, "dataProvider",
+    {
+        get: function dataProvider() {
+            return _field != null && _field != "" ? _instance[_field] : _instance;
+        },
+        enumerable:true
+    });
+
     this.initMembers = function () {
         let c = _field != null && _field != "" ? _instance[_field] : _instance;
         if (c == null || c.length == 0) {
@@ -72,6 +80,7 @@ var CollectionEditor = function (_props, overrided = false) {
                                 ctor: ObjectEditor,
                                 props: {
                                     id: "objectEditor",
+                                    width: "100%",
                                     instance: "{currentItem}",
                                     field: null,
                                     classes: ["collapse"]

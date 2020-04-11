@@ -792,11 +792,17 @@ oxana.behaviorimplementations["FILE_SELECT_MODAL"] = function (e) {
 };
 oxana.behaviorimplementations["FILE_SELECTED"] = function (e) {
     console.log("called FILE_SELECTED.");
-    if (fileSelectModal.modalDialog.modalContent.modalBody.browseFile.value.length > 0) {
-        readFile(fileSelectModal.modalDialog.modalContent.modalBody.browseFile.value[0]).then(function (resp) {
+    if (browseFile.value.length > 0) {
+        readFile(browseFile.value[0]).then(function (resp) {
                 fileSelectModal.hide();
-                var evt = new jQuery.Event("loadLayout");
-                evt.content = resp.content;
+                let evt;
+                if (browseFile.value[0].type === "text/html") {
+                    evt = new jQuery.Event("loadHtml");
+                    evt.content = resp.content;
+                } else if (browseFile.value[0].type === "text/plain") {
+                    evt = new jQuery.Event("loadLayout");
+                    evt.content = JSON.parse(resp.content);
+                }
                 oxana.trigger(evt);
             })
             .catch(function (resp) {
@@ -817,9 +823,26 @@ oxana.behaviorimplementations["SEARCH_CMP"] = function (e) {
     }
 };
 
+oxana.behaviors[oxana.id]["loadHtml"] = "LOAD_HTML";
+oxana.behaviorimplementations["LOAD_HTML"] = function (e) {
+    let pattern = /<body[^>]*>((.|[\n\r])*)<\/body>/im;
+    let array_matches = pattern.exec(e.content);
+    let body = array_matches[1];
+
+    var SCRIPT_REGEX = /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi;
+    while (SCRIPT_REGEX.test(body)) {
+        body = body.replace(SCRIPT_REGEX, "");
+    }
+    let dn = $("<div/>").append(body);
+    let s = new Scrap();
+    let lit = s.visit(dn);
+    let evt = new jQuery.Event("loadLayout");
+    evt.content = lit;
+    oxana.trigger(evt);
+};
 oxana.behaviors[oxana.id]["loadLayout"] = "LOAD_LAYOUT";
 oxana.behaviorimplementations["LOAD_LAYOUT"] = function (e) {
-    let _cmp = JSON.parse(e.content);
+    let _cmp = e.content;
     let res = objectHierarchyGetMatchingMember(_cmp, "props.id", "workArea", "props.components");
     if (res.match) { 
         _cmp = res.match;
@@ -1379,11 +1402,12 @@ oxana.behaviorimplementations["WA_REDO"] = {
     stopPropagation: false
 };
 
-let propertyEditorViewStack, propertyEditorContainer, fileSelectModal, componentsContainer, rightSideNav, listHistorySteps, workArea, workAreaColumn;
+let propertyEditorViewStack, propertyEditorContainer, fileSelectModal, browseFile, componentsContainer, rightSideNav, listHistorySteps, workArea, workAreaColumn;
 oxana.behaviorimplementations["END_DRAW"] = new ArrayEx(oxana.behaviorimplementations["END_DRAW"], function (e) {
     propertyEditorViewStack = oxana.viewStack.mainContainer.container.rightSideNav.rightSideContainer.propertyEditorViewStack;
     propertyEditorContainer = propertyEditorViewStack.propertyEditorContainerWrap.propertyEditorContainer;
     fileSelectModal = oxana.viewStack.mainContainer.container.children.fileSelectModal;
+    browseFile = fileSelectModal.modalDialog.modalContent.modalBody.browseFile;
     componentsContainer = oxana.viewStack.mainContainer.container.componentsContainer;
     rightSideNav = oxana.viewStack.mainContainer.container.rightSideNav;
     listHistorySteps = oxana.viewStack.mainContainer.nav.children.containerIcons.undoRedo.listHistorySteps;

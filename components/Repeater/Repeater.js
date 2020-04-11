@@ -716,11 +716,8 @@ var Repeater = function(_props)
                             break;
                         case "dataProvider":
                             if (this.dataProvider) {
-                                let len = this.dataProvider.length;
-                                let dpCopy = new window[this.dataProvider.constructor.name](len);
-                                for (let i = 0; i < len; i++) {
-                                    dpCopy[i] = extend(false, false, [], ["currentItem"], this.dataProvider[i]);
-                                }
+                                
+                                let dpCopy = acExtend(false, false, [], ["currentItem"], this.dataProvider);
                                 obj[prop] = dpCopy;
                             }
                             break;

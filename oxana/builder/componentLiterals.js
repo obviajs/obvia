@@ -1,5 +1,15 @@
 Builder.initComponentLiterals = function () {
     Builder.components = {
+        "Modal": {
+            literal: {
+                ctor: Modal,
+                props: {
+                    id: 'modal',
+                    size: ModalSize.LARGE,
+                    title: 'Motal Title',
+                }
+            }
+        },
         "FormField": {
             literal: {
                 ctor: FormField,
@@ -16,7 +26,6 @@ Builder.initComponentLiterals = function () {
             label: "Form Field",
             icon: ".png"
         },
-
         "Label": {
             literal: {
                 "ctor": Label,
@@ -77,7 +86,7 @@ Builder.initComponentLiterals = function () {
                     type: "button",
                     value: "",
                     label: "Click Me",
-                    classes: ["btn", "btn-success"]
+                    classes: ["btn"]
                 }
             },
             label: "Button",
@@ -671,6 +680,17 @@ Builder.initComponentLiterals = function () {
                 "ctor": CreditCard,
                 "props": {
                     id: "creditCard"
+                }
+            }
+        },
+        "Wizard": {
+            literal: {
+                "ctor": Wizard,
+                "props": {
+                    id: "wizard",
+                    stepPath: "attr.step",
+                    detailsPath: "attr.details",
+                    components: []
                 }
             }
         }

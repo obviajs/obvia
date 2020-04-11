@@ -53,44 +53,13 @@ var ObjectEditor = function (_props, overrided = false) {
                             this.inputLabel.attr["data-target"] = "#" + this.input.domID;
                         };
                     }
-                    if (propsMeta.targetProps != undefined) {
-                        let targetLit;
-                        if (propsMeta.targetProps.target && propsMeta.targetProps.target.ctor) {
-                            if (Builder.components[propsMeta.targetProps.target.ctor]) {
-                                targetLit = Builder.components[propsMeta.targetProps.target.ctor].literal;
-                                targetLit.props = extend(false, false, targetLit.props, propsMeta.targetProps.target.props);
-                            } else { 
-                                targetLit = propsMeta.targetProps.target;
-                            }
-                        }
-                        
-                        let anchor = propsMeta.targetProps.anchor;
-                    
-                        let events = {};
-                        for (let i = 0; i < anchor.events.length; i++) {
-                            let anchorHandler = anchor.events[i].handler;
-                            events[anchor.events[i].event] = function (e) {
-                                anchorHandler.apply(this, [e, r, itemEditorLit, targetLit]);
-                            };
-                        }
-
-                        if (anchor.component) {
-                            ff.props.component = anchor.component;
-                        } else {
-                            ff.props.component = itemEditorLit;
-                        }
-                        for (let evt in events) {
-                            ff.props.component.props[evt] = events[evt];
-                        }
-                    } else {
-                        if (propsMeta.ctor in { "CollectionEditor": 1, "ObjectEditor": 1 }) {
-                            if (!itemEditorLit.props.classes) { 
-                                itemEditorLit.props.classes = ["collapse"];
-                            }else
-                                itemEditorLit.props.classes.pushUnique("collapse");
-                        }
-                        ff.props.component = itemEditorLit;
+                    if (propsMeta.ctor in { "CollectionEditor": 1, "ObjectEditor": 1 }) {
+                        if (!itemEditorLit.props.classes) { 
+                            itemEditorLit.props.classes = ["collapse"];
+                        }else
+                            itemEditorLit.props.classes.pushUnique("collapse");
                     }
+                    ff.props.component = itemEditorLit;
                     ff.props.component.props.id = ff.props.component.props.id == null ? "input_"+prop : ff.props.component.props.id;
                     if (ff.props.classes)
                         ff.props.classes.pushUnique("mt-3");

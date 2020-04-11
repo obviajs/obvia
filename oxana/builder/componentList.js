@@ -113,6 +113,9 @@ Builder.initComponentList = function () {
         },
         {
             "label": "CreditCard", "ctor": "CreditCard"
+        },
+        {
+            "label": "Wizard", "ctor": "Wizard"
         }
     ]);
 };

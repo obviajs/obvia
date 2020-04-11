@@ -126,7 +126,8 @@ Builder.initMetaProps = function () {
                                         dpFields.push({ "dpField": dpFieldNames[i] });
                                     }
                                     _self.parent.parent.labelField.input.dataProvider = dpFields;
-                                    _self.parent.parent.valueField.input.dataProvider = dpFields;
+                                    if(_self.parent.parent.valueField)
+                                        _self.parent.parent.valueField.input.dataProvider = dpFields;
                                 }
                             });
                         } else { 
@@ -140,7 +141,8 @@ Builder.initMetaProps = function () {
                                     dpFields.push({ "dpField": dpFieldNames[i] });
                                 }
                                 _self.parent.parent.labelField.input.dataProvider = dpFields;
-                                _self.parent.parent.valueField.input.dataProvider = dpFields;
+                                if(_self.parent.parent.valueField)
+                                    _self.parent.parent.valueField.input.dataProvider = dpFields;
                             }
                         }
                         this.parent.parent.instance.attr[Builder.providerValueField] = this.value[0][Builder.providerValueField];
@@ -227,72 +229,63 @@ Builder.initMetaProps = function () {
             }
         },
         columns: {
-            ctor: "CollectionEditor", label: "Columns", index: 18, props: {
+            ctor: "Button", label: "Columns", index: 18, props: {
                 id: "columnEditor",
-                memberType: "DataGridColumn"
-            },
-            targetProps: {
-                target: {
-                    ctor: Modal,
+                label: "Manage Columns",
+                classes: ["btn", "btn-secondary"],
+                components: [{
+                    ctor: Label,
                     props: {
-                        id: 'columnsEditModal',
-                        size: ModalSize.LARGE,
-                        title: 'Edit Columns',
+                        id: 'fa',
+                        labelType: LabelType.i,
+                        classes: ["fas", "fa-list"]
                     }
-                }, anchor: {
-                    component: {
-                        ctor: Button,
-                        props: {
-                            id: 'anchorBtn',
-                            type: "button",
-                            label: "Manage Columns",
-                            components: [{
-                                ctor: Label,
-                                props: {
-                                    id: 'fa',
-                                    labelType: LabelType.i,
-                                    classes: ["fas", "fa-list"]
-                                }
-                            }]
-                        }
-                    },
-                    events: [{
-                        event: "click", handler: function (e, oe, itemEditorLit, targetLit) {
-                            if (oe.dataProvider.input.value && oe.dataProvider.input.value.length > 0) {
-                                let dpName = oe.dataProvider.input.value[0][oe.dataProvider.input.valueField];
-                                if (Builder.data[dpName] && Builder.data[dpName].length > 0) {
-                                    let win = oe.columnsEditModal;
-                                    if (!win) {
-                                        let wl = extend(true, targetLit);
-                                        wl.props.components = [itemEditorLit];
-                                        win = oe.addComponent(wl);
-                                    }
-                                    let colOEInstances = win.modalDialog.modalContent.modalBody.columnEditor.repeater.repeater.objectEditor;
-                                    if (colOEInstances) {
-                                        let dpFieldNames = Object.keys(Builder.data[dpName][0]);
-                                        let len = dpFieldNames.length;
-                                        let dpFields = new ArrayEx();
-                                        for (let i = 0; i < len; i++) {
-                                            dpFields.push({ "dpField": dpFieldNames[i] });
+                }],
+                click: function (e) { 
+                    let oe = this.parent.parent;
+                    if (oe.dataProvider.input.value && oe.dataProvider.input.value.length > 0) {
+                        let dpName = oe.dataProvider.input.value[0][oe.dataProvider.input.valueField];
+                        if (Builder.data[dpName] && Builder.data[dpName].length > 0) {
+                            let win = this.parent.parent.columnsEditModal;
+                            if (!win) {
+                                let lit = extend(true, Builder.components.Modal.literal);
+                                lit.props.id = "columnsEditModal";
+                                lit.props.title = "Edit Columns";
+                                lit.props.components = [
+                                    {
+                                        ctor: CollectionEditor,
+                                        props: {
+                                            id: "columnEditor",
+                                            memberType: "DataGridColumn",
+                                            "instance": this.parent.parent.instance.columns
                                         }
-                                    
-                                        len = colOEInstances.length;
-                                        for (let i = 0; i < len; i++) {
-                                            //win.columnEditor.repeater.repeater.objectEditor[i].dataProvider.input.dataProvider = dpFields;
-                                            //win.columnEditor.repeater.repeater.objectEditor[i].field.component.props.dataProvider = dpFields;
-                                            colOEInstances[i].field.AutoCompleteEx.dataProvider = dpFields;
-                                        }
-                                        win.show();
                                     }
-                                } else {
-                                    alert("The selcted DataProvider is empty or failed to load.");
-                                }
-                            } else {
-                                alert("Please Select DataProvider");
+                                ];
+                                win = this.parent.parent.addComponent(lit);
                             }
+                            let colOEInstances = win.modalDialog.modalContent.modalBody.columnEditor.repeater.repeater.objectEditor;
+                            if (colOEInstances) {
+                                let dpFieldNames = Object.keys(Builder.data[dpName][0]);
+                                let len = dpFieldNames.length;
+                                let dpFields = new ArrayEx();
+                                for (let i = 0; i < len; i++) {
+                                    dpFields.push({ "dpField": dpFieldNames[i] });
+                                }
+                            
+                                len = colOEInstances.length;
+                                for (let i = 0; i < len; i++) {
+                                    //win.columnEditor.repeater.repeater.objectEditor[i].dataProvider.input.dataProvider = dpFields;
+                                    //win.columnEditor.repeater.repeater.objectEditor[i].field.component.props.dataProvider = dpFields;
+                                    colOEInstances[i].field.AutoCompleteEx.dataProvider = dpFields;
+                                }
+                                win.show();
+                            }
+                        } else {
+                            alert("The selcted DataProvider is empty or failed to load.");
                         }
+                    } else {
+                        alert("Please Select DataProvider");
                     }
-                    ]
                 }
             }
         },
@@ -428,7 +421,7 @@ Builder.initMetaProps = function () {
                 }
             }, index: 7,
             /**
-             * by default the value of the propertyEditor is binded to the value of the property of the isntance
+             * by default the value of the propertyEditor is binded to the value of the property of the instance
              * by specifying a setter function you override this behavior. The return value of the function 
              * will be the assigned to the property of the instance
             */
@@ -688,6 +681,101 @@ Builder.initMetaProps = function () {
             ctor: "TextInput", label: "Role", props: {
                 change: function () {
                     this.parent.parent.instance.role = this.value;
+                }
+            }
+        }
+    };
+    Builder.metaProps.WizardStep = {
+        stepHeading: {
+            ctor: "TextInput", label: "Step heading", required: true, index: 1, props: {
+                change: function () {
+                    this.parent.parent.instance.stepHeading = this.value;
+                }
+            }
+        },
+        detailLabel: {
+            ctor: "TextInput", label: "Step Detail", required: true, index: 2, props: {
+                change: function () {
+                    this.parent.parent.instance.detailLabel = this.value;
+                }
+            }
+        },
+        id_form: {
+            ctor: "AutoBrowse", label: "Select a Form", required: true, props: {
+                valueField: "form_id",
+                labelField: "form_name",
+                dataProvider: Builder.forms,
+                fields: [{ "field": "form_id", "description": "form_id", "visible": false }, { "field": "form_name", "description": "form_name" }],
+                classes: ["no-form-control"],
+                change: function () {
+                    //propsForm.children["dataProvider"].value
+                    //get the fields for the selected datProvider and 
+                    //assign them to the labelField and valueField editor`s dataProvider property
+                    this.parent.parent.instance.id_form = this.value.length > 0 ? this.value[0][this.valueField] : undefined;
+                }
+            }, index: 7,
+            /**
+             * by default the value of the propertyEditor is binded to the value of the property of the instance
+             * by specifying a setter function you override this behavior. The return value of the function 
+             * will be the assigned to the property of the instance
+            */
+            setter: function () {
+                if (this.id_form) {
+                    let m = getMatching(Builder.forms, "form_id", this.id_form);
+                    if (m.objects.length > 0) {
+                        return new ArrayEx(m.objects);
+                    }
+                } else
+                    return new ArrayEx([]);
+            }
+        } 
+    };
+    Builder.metaProps.Wizard = {
+        components: {
+            ctor: "Button", label: "Steps", index: 18, props: {
+                label: "Manage Steps",
+                classes: ["btn", "btn-secondary"],
+                components: [{
+                    ctor: Label,
+                    props: {
+                        id: 'fa',
+                        labelType: LabelType.i,
+                        classes: ["fas", "fa-list"]
+                    }
+                }],
+                click: function (e) { 
+                    let win = this.parent.parent.stepsEditModal;
+                    if (!win) {
+                        let lit = extend(true, Builder.components.Modal.literal);
+                        lit.props.id = "stepsEditModal";
+                        lit.props.title = "Edit Steps";
+                        let inst; let steps = this.parent.parent.instance.attr.steps;
+                        if (steps) {
+                            let len = steps.length;
+                            inst = new ArrayEx(len);
+                            for (let i = 0; i < len; i++) { 
+                                inst[i] = new WizardStep(steps[i]);
+                            }
+                        } else { 
+                            inst = new ArrayEx([]);
+                        } 
+                        lit.props.components = [
+                            {
+                                ctor: CollectionEditor,
+                                props: {
+                                    id: "stepEditCollEditor",
+                                    memberType: "WizardStep",
+                                    "instance": inst
+                                }
+                            }
+                        ];
+                        lit.props.accept = function (e) {
+                            let stepEditCollEditor = this.proxyMaybe.modalDialog.modalContent.modalBody.stepEditCollEditor;
+                            this.parent.instance.attr.steps = acExtend(false, false, [], ["currentItem"], stepEditCollEditor.dataProvider);
+                        };
+                        win = this.parent.parent.addComponent(lit);
+                    }
+                    win.show();
                 }
             }
         }
