@@ -13,6 +13,7 @@ var Nav = function(_props, overrided=false)
         return  '<nav id="' + this.domID + '"></nav>'; 
     };
     _props.type = ContainerType.NONE;
-    Container.call(this, _props, overrided);
+    let r = Container.call(this, _props, overrided);
+    return r;
 };
 Nav.prototype.ctor = 'Nav';

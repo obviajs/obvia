@@ -1,3 +1,7 @@
+.nav{
+    background-color: #2d3238;
+}
+
 .sidenav {
     height: calc(100vh - 50px) !important;
 }
@@ -14,7 +18,7 @@ i:hover {
     color: blue;
 }
 
-.deleteTrash {
+.cmpTrash {
     height: calc(100vh - 110px);
     width: 100%;
     background-color: #ffffff;

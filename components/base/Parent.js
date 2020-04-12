@@ -26,7 +26,8 @@ var Parent = function (_props, overrided = false, _isSurrogate = false) {
         {
             get: function children() {
                 return _children;
-            }
+            },
+            enumerable: true
         });
     
     Object.defineProperty(this, "components",

@@ -69,150 +69,131 @@ var mainContainer = {
                 id: "nav",
                 height: 48,
                 classes: ["nav"],
-                components: [{
-                    ctor: Container,
-                    props: {
-                        id: "containerIcons",
-                        type: ContainerType.ROW,
-                        classes: ["col-sm-12"],
-                        components: [{
-                            ctor: Container,
-                            props: {
-                                id: "toggleVisibilityLeftSideNav",
-                                spacing: {
-                                    colSpan: 1
-                                },
-                                css: {
-                                    marginLeft: "250px"
-                                },
-                                type: ContainerType.NONE,
-                                components: [{
-                                    ctor: Label,
-                                    props: {
-                                        id: "toggleVisibilityButtonLeft",
-                                        labelType: LabelType.i,
-                                        classes: ["fas", "fa-bars", "navIcons"],
-                                        css: {
-                                            float: "right",
-                                            marginTop: "15px"
-                                        }
-                                    }
-                                }]
-                            }
-                        },
-                        {
-                            ctor: Container,
-                            props: {
-                                id: "undoRedo",
-                                classes: ["col-sm-6"],
-                                css: {
-                                    marginLeft: "0",
-                                    marginRight: "0"
-                                },
-                                components: [{
-                                    ctor: Label,
-                                    props: {
-                                        id: "undoButton",
-                                        labelType: LabelType.i,
-                                        label: "",
-                                        classes: ["fas", "fa-arrow-left", "navIcons"],
-                                    }
-                                },
-                                {
-                                    ctor: DropDown,
-                                    props: {
-                                        id: "listHistorySteps",
-                                        classes: ["fas", "fas-sort-down", "btn-default", "navIcons"],
-                                        labelField: "description",
-                                        dataProvider: oxana.history.steps
-                                    }
-                                },
-                                {
-                                    ctor: Label,
-                                    props: {
-                                        id: "redoButton",
-                                        labelType: LabelType.i,
-                                        label: "",
-                                        classes: ["fas", "fa-arrow-right", "navIcons"]
-                                    }
-                                },
-                                {
-                                    ctor: Label,
-                                    props: {
-                                        id: "splitHorizontal",
-                                        labelType: LabelType.i,
-                                        label: "",
-                                        classes: ["fas", "fa-columns fa-rotate-270", "navIcons"]
-                                    }
-                                },
-                                {
-                                    ctor: Label,
-                                    props: {
-                                        id: "splitVertical",
-                                        labelType: LabelType.i,
-                                        label: "",
-                                        classes: ["fas", "fa-columns", "navIcons"]
-                                    }
-                                },
-                                {
-                                    ctor: Label,
-                                    props: {
-                                        id: "saveLayout",
-                                        labelType: LabelType.i,
-                                        label: "",
-                                        classes: ["fa", "fa-save", "navIcons"]
-                                    }
-                                },
-                                {
-                                    ctor: Label,
-                                    props: {
-                                        id: "selectBtn",
-                                        labelType: LabelType.i,
-                                        label: "",
-                                        classes: ["fas", "fa-folder-open", "navIcons"]
-                                    }
-                                },
-                                {
-                                    ctor: Label,
-                                    props: {
-                                        id: "uploadIcon",
-                                        labelType: LabelType.i,
-                                        label: "",
-                                        classes: ["fas", "fa-cloud-upload-alt", "navIcons"]
+                components: [
+                    {
+                        ctor: Container,
+                        props: {
+                            id: "leftNav",
+                            width: "350px",
+                            type: ContainerType.NONE,
+                            components: [{
+                                ctor: Label,
+                                props: {
+                                    id: "toggleSideNavLeft",
+                                    labelType: LabelType.i,
+                                    classes: ["fas", "fa-bars", "navIcons"],
+                                    css: {
+                                        marginTop: "15px",
+                                        marginLeft: "335px"
                                     }
                                 }
-                                ]
-                            }
-                        },
-                        {
-                            ctor: Container,
-                            props: {
-                                id: "toggleVisibilityRightSideNav",
-                                spacing: {
-                                    colSpan: 1
-                                },
-                                css: {
-                                    marginRight: "100px"
-                                },
-                                type: ContainerType.NONE,
-                                components: [{
-                                    ctor: Label,
-                                    props: {
-                                        id: "toggleVisibilityButtonRight",
-                                        labelType: LabelType.i,
-                                        classes: ["fas", "fa-bars", "navIcons"],
-                                        css: {
-                                            marginTop: "15px",
-                                            float: "left",
-                                            padding: "0"
-                                        }
-                                    }
-                                }]
-                            }
+                            }]
                         }
-                        ]
+                    },
+                    {
+                        ctor: Container,
+                        props: {
+                            id: "middleNav",
+                            css: {
+                                marginLeft: "50",
+                                marginRight: "0"
+                            },
+                            components: [{
+                                ctor: Label,
+                                props: {
+                                    id: "undoButton",
+                                    labelType: LabelType.i,
+                                    label: "",
+                                    classes: ["fas", "fa-arrow-left", "navIcons"],
+                                }
+                            },
+                            {
+                                ctor: DropDown,
+                                props: {
+                                    id: "listHistorySteps",
+                                    classes: ["fas", "fas-sort-down", "btn-default", "navIcons"],
+                                    labelField: "description",
+                                    dataProvider: oxana.history.steps
+                                }
+                            },
+                            {
+                                ctor: Label,
+                                props: {
+                                    id: "redoButton",
+                                    labelType: LabelType.i,
+                                    label: "",
+                                    classes: ["fas", "fa-arrow-right", "navIcons"]
+                                }
+                            },
+                            {
+                                ctor: Label,
+                                props: {
+                                    id: "splitHorizontal",
+                                    labelType: LabelType.i,
+                                    label: "",
+                                    classes: ["fas", "fa-columns fa-rotate-270", "navIcons"]
+                                }
+                            },
+                            {
+                                ctor: Label,
+                                props: {
+                                    id: "splitVertical",
+                                    labelType: LabelType.i,
+                                    label: "",
+                                    classes: ["fas", "fa-columns", "navIcons"]
+                                }
+                            },
+                            {
+                                ctor: Label,
+                                props: {
+                                    id: "saveLayout",
+                                    labelType: LabelType.i,
+                                    label: "",
+                                    classes: ["fa", "fa-save", "navIcons"]
+                                }
+                            },
+                            {
+                                ctor: Label,
+                                props: {
+                                    id: "selectBtn",
+                                    labelType: LabelType.i,
+                                    label: "",
+                                    classes: ["fas", "fa-folder-open", "navIcons"]
+                                }
+                            },
+                            {
+                                ctor: Label,
+                                props: {
+                                    id: "uploadIcon",
+                                    labelType: LabelType.i,
+                                    label: "",
+                                    classes: ["fas", "fa-cloud-upload-alt", "navIcons"]
+                                }
+                            }
+                            ]
+                        }
+                    },
+                    {
+                        ctor: Container,
+                        props: {
+                            id: "rightNav",
+                            type: ContainerType.NONE,
+                            width: "350px",
+                            components: [{
+                                ctor: Label,
+                                props: {
+                                    id: "toggleSideNavRight",
+                                    labelType: LabelType.i,
+                                    classes: ["fas", "fa-bars", "navIcons"],
+                                    css: {
+                                        marginTop: "15px",
+                                        marginRight: "335px"
+                                    }
+                                }
+                            }]
+                        }
                     }
-                }]
+                ]
             }
         },
         {
@@ -248,7 +229,7 @@ var mainContainer = {
                                         components: [{
                                             ctor: TextInput,
                                             props: {
-                                                id: "SearchComponents",
+                                                id: "cmpSearchTextInput",
                                                 type: "text",
                                                 placeholder: "Search Components",
                                                 classes: [
@@ -466,12 +447,12 @@ var mainContainer = {
                                                     {
                                                         ctor: Container,
                                                         props: {
-                                                            id: "deleteComponentId",
-                                                            classes: ["deleteTrash"],
+                                                            id: "cmpTrash",
+                                                            classes: ["cmpTrash"],
                                                             components: [{
                                                                 ctor: Label,
                                                                 props: {
-                                                                    id: "deleteTrashIcon",
+                                                                    id: "cmpTrashIcon",
                                                                     labelType: LabelType.i,
                                                                     classes: ["fas", "fa-trash", "trash-icon"]
                                                                 }
@@ -574,36 +555,6 @@ let cmpBehaviors = {
     "dropped": "SELECT_COMPONENT"
 };
 
-oxana.behaviors["SearchComponents"]["keyup"] = "SEARCH_CMP";
-
-oxana.behaviors["undoButton"]["click"] = "WA_UNDO";
-
-oxana.behaviors["redoButton"]["click"] = "WA_REDO";
-
-oxana.behaviors["deleteComponentId"] = daBehaviors;
-
-oxana.behaviors["toggleVisibilityButtonLeft"]["click"] = "TOGGLE_VISIBILITY_LEFT";
-
-oxana.behaviors["toggleVisibilityButtonRight"]["click"] = "TOGGLE_VISIBILITY_RIGHT";
-
-oxana.behaviors["splitHorizontal"]["click"] = "SPLIT_HOR";
-
-oxana.behaviors["splitVertical"]["click"] = {
-    "SPLIT_VERT": null,
-};
-
-oxana.behaviors["uploadIcon"]["click"] = "SAVE_LAYOUT_REMOTE";
-oxana.behaviors["saveLayout"]["click"] = "SAVE_LAYOUT";
-
-oxana.behaviors["selectBtn"]["click"] = "FILE_SELECT_MODAL";
-
-oxana.behaviors["previewBtn"]["click"] = "PREVIEW";
-
-oxana.behaviors["browseFile"]["change"] = "FILE_SELECTED";
-
-oxana.behaviors["listHistorySteps"]["change"] = "HISTORY_STEP_DETAILS";
-
-oxana.behaviors["workAreaColumnL2"] = waBehaviors;
 
 oxana.behaviors[oxana.id]["keydown"] = {
     "WA_UNDO": isKeyCombUndo,
@@ -1402,7 +1353,11 @@ oxana.behaviorimplementations["WA_REDO"] = {
     stopPropagation: false
 };
 
-let propertyEditorViewStack, propertyEditorContainer, fileSelectModal, browseFile, componentsContainer, rightSideNav, listHistorySteps, workArea, workAreaColumn;
+let propertyEditorViewStack, propertyEditorContainer, fileSelectModal, browseFile, componentsContainer,
+    rightSideNav, listHistorySteps, workArea, workAreaColumn,
+    cmpSearchTextInput, undoButton, redoButton, cmpTrash, toggleSideNavLeft, toggleSideNavRight,
+    splitHorizontal, splitVertical, uploadIcon, saveLayout, selectBtn;
+
 oxana.behaviorimplementations["END_DRAW"] = new ArrayEx(oxana.behaviorimplementations["END_DRAW"], function (e) {
     propertyEditorViewStack = oxana.viewStack.mainContainer.container.rightSideNav.rightSideContainer.propertyEditorViewStack;
     propertyEditorContainer = propertyEditorViewStack.propertyEditorContainerWrap.propertyEditorContainer;
@@ -1410,11 +1365,68 @@ oxana.behaviorimplementations["END_DRAW"] = new ArrayEx(oxana.behaviorimplementa
     browseFile = fileSelectModal.modalDialog.modalContent.modalBody.browseFile;
     componentsContainer = oxana.viewStack.mainContainer.container.componentsContainer;
     rightSideNav = oxana.viewStack.mainContainer.container.rightSideNav;
-    listHistorySteps = oxana.viewStack.mainContainer.nav.children.containerIcons.undoRedo.listHistorySteps;
-    workArea = oxana.viewStack.mainContainer.container.workArea.workAreaRow.workAreaColumn.workAreaCell.workAreaRowL2.workAreaColumnL2;
+    listHistorySteps = oxana.viewStack.mainContainer.nav.children.middleNav.listHistorySteps;
     workAreaColumn = oxana.viewStack.mainContainer.container.workArea.workAreaRow.workAreaColumn;
+    workArea = workAreaColumn.workAreaCell.workAreaRowL2.workAreaColumnL2;
+    
     
     addBehaviors(propertyEditorContainer, vspewbehaviors, false);
+
+    cmpSearchTextInput = oxana.viewStack.mainContainer.container.componentsContainer.container.container.cmpSearchTextInput;
+    addBehaviors(cmpSearchTextInput, {
+        "keyup": "SEARCH_CMP",
+    }, false);
+    undoButton = oxana.viewStack.mainContainer.nav.middleNav.undoButton;
+    addBehaviors(cmpSearchTextInput, {
+        "click": "WA_UNDO",
+    }, false);
+    redoButton = oxana.viewStack.mainContainer.nav.middleNav.redoButton;
+    addBehaviors(cmpSearchTextInput, {
+        "click": "WA_REDO",
+    }, false);
+    cmpTrash = oxana.viewStack.mainContainer.container.rightSideNav.rightSideContainer.propertyEditorViewStack.cmpTrash;
+    addBehaviors(cmpTrash, daBehaviors, false);
+    
+
+    toggleSideNavLeft = oxana.viewStack.mainContainer.nav.leftNav.toggleSideNavLeft;
+    addBehaviors(toggleSideNavLeft, {
+        "click": "TOGGLE_VISIBILITY_LEFT",
+    }, false);
+    toggleSideNavRight = oxana.viewStack.mainContainer.nav.rightNav.toggleSideNavRight;
+    addBehaviors(toggleSideNavRight, {
+        "click": "TOGGLE_VISIBILITY_RIGHT",
+    }, false);
+
+    splitHorizontal = oxana.viewStack.mainContainer.nav.middleNav.splitHorizontal;
+    addBehaviors(splitHorizontal, {
+        "click": "SPLIT_HOR",
+    }, false);
+    splitVertical = oxana.viewStack.mainContainer.nav.middleNav.splitVertical;
+    addBehaviors(splitVertical, {
+        "click": "SPLIT_VERT",
+    }, false);
+    uploadIcon = oxana.viewStack.mainContainer.nav.middleNav.uploadIcon;
+    addBehaviors(uploadIcon, {
+        "click": "SAVE_LAYOUT_REMOTE",
+    }, false);
+    saveLayout = oxana.viewStack.mainContainer.nav.middleNav.saveLayout;
+    addBehaviors(saveLayout, {
+        "click": "SAVE_LAYOUT",
+    }, false);
+    selectBtn = oxana.viewStack.mainContainer.nav.middleNav.selectBtn;
+    addBehaviors(selectBtn, {
+        "click": "FILE_SELECT_MODAL",
+    }, false);
+
+    addBehaviors(browseFile, {
+        "change": "FILE_SELECTED",
+    }, false);
+    addBehaviors(listHistorySteps, {
+        "change": "HISTORY_STEP_DETAILS",
+    }, false);
+    //oxana.behaviors["previewBtn"]["click"] = "PREVIEW";
+    addBehaviors(workArea, waBehaviors, false);
+
     _initDP();
     componentsContainer.show();
 });

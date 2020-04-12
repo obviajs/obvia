@@ -75,9 +75,7 @@ rjs.define("./components/HRule.js", "HRule");
 rjs.define("./components/Color.js", "Color");
 //Container
 rjs.define("./components/Container.js", "Container");
-rjs.define("./components/Nav/Nav.js", "Nav");
-
-rjs.define("./components/Nav/css/nav.css", "Nav_css");
+rjs.define("./components/Nav.js", "Nav");
 rjs.define("./components/Header.js", "Header");
 rjs.define("./components/Footer.js", "Footer");
 rjs.define("./components/Section.js", "Section");
@@ -262,7 +260,6 @@ rjs.require(["EventDispatcher"]).then(function () {
         "sidenav_default_css",
         "sideNav_css",
         "Nav",
-        "Nav_css",
         "Header",
         "Footer",
         "Section",
