@@ -209,24 +209,15 @@ var mainContainer = {
                         width: "350",
                         minWidth: "350",
                         classes: ["sidenav", "sideNav_side_left"],
-                        components: [{
-                            ctor: Container,
-                            props: {
-                                id: 'container',
-                                type: ContainerType.COLUMN,
-                                spacing: {
-                                    colSpan: 12
-                                },
-                                css: {
-                                    paddingRight: "8px"
-                                },
-                                "components": [{
-                                    ctor: Container,
-                                    props: {
-                                        id: "container",
-                                        type: ContainerType.NONE,
-                                        classes: ["inner-addon right-addon"],
-                                        components: [{
+                        components: [
+                            {
+                                ctor: Container,
+                                props: {
+                                    id: "container",
+                                    type: ContainerType.NONE,
+                                    classes: ["inner-addon right-addon"],
+                                    components: [
+                                        {
                                             ctor: TextInput,
                                             props: {
                                                 id: "cmpSearchTextInput",
@@ -263,70 +254,47 @@ var mainContainer = {
                                                 }]
                                             }
                                         }
-
-                                        ]
-                                    }
-                                },
-                                {
-                                    ctor: Container,
-                                    props: {
-                                        id: "container_1",
-                                        spacing: {
-                                            h: 100
-                                        },
-                                        components: [{
-                                            ctor: Repeater,
-                                            props: {
-                                                id: "componentList",
-                                                dataProvider: _cmpList,
-                                                rendering: {
-                                                    direction: 'horizontal'
-                                                },
-                                                components: [{
-                                                    ctor: Container,
-                                                    props: {
-                                                        id: 'component',
-                                                        // spacing: {
-                                                        //     m: 1
-                                                        // },
-                                                        //label: "{label}",
-                                                        draggable: true,
-                                                        dragstart: function (e, ra) {
-                                                            console.log(arguments);
-                                                            e.originalEvent.dataTransfer.setData("domID", e.target.id);
-                                                            e.originalEvent.dataTransfer.setData("ctor", ra.currentItem.ctor);
-                                                            var $elem = oxana.viewStack.mainContainer.dragImage.$el[0];
-                                                            e.originalEvent.dataTransfer.setDragImage($elem, 0, 0);
-                                                        },
-                                                        classes: ["border", "comp_side"],
-                                                        css: {
-                                                            borderRadius: '5px',
-                                                            margin: "2px 2px"
-                                                        },
-                                                        width: 130,
-                                                        height: 80,
-                                                        type: ContainerType.NONE,
-                                                        components: [{
-                                                            ctor: Label,
-                                                            props: {
-                                                                id: "Component Label",
-                                                                label: "{label}",
-                                                                css: {
-                                                                    fontSize: "15px",
-                                                                    marginTop: "20px",
-                                                                    fontWeight: "bold"
-                                                                }
-                                                            }
-                                                        }]
-                                                    }
-                                                }]
-                                            }
-                                        }]
-                                    }
+                                    ]
                                 }
-                                ]
+                            },
+                            {
+                                ctor: Repeater,
+                                props: {
+                                    id: "componentList",
+                                    dataProvider: _cmpList,
+                                    rendering: {
+                                        direction: 'horizontal'
+                                    },
+                                    components: [{
+                                        ctor: Container,
+                                        props: {
+                                            id: 'component',
+                                            draggable: true,
+                                            classes: ["border", "comp_side"],
+                                            css: {
+                                                borderRadius: '5px',
+                                                margin: "2px 2px"
+                                            },
+                                            width: 130,
+                                            height: 80,
+                                            type: ContainerType.NONE,
+                                            components: [{
+                                                ctor: Label,
+                                                props: {
+                                                    id: "Component Label",
+                                                    label: "{label}",
+                                                    css: {
+                                                        fontSize: "15px",
+                                                        marginTop: "20px",
+                                                        fontWeight: "bold"
+                                                    }
+                                                }
+                                            }]
+                                        }
+                                    }]
+                                }
                             }
-                        }]
+                        ]
                     }
                 },
                 {
@@ -556,11 +524,6 @@ let cmpBehaviors = {
 };
 
 
-oxana.behaviors[oxana.id]["keydown"] = {
-    "WA_UNDO": isKeyCombUndo,
-    "WA_REDO": isKeyCombRedo,
-    "DELETE_CMP": isKeyDeletePress
-};
 oxana.behaviorimplementations["ALLOW_DROP"] = function (e) {
     console.log("ALLOW_DROP ", this.domID);
     e.preventDefault();
@@ -619,9 +582,9 @@ oxana.behaviorimplementations["ADD_COMPONENT"] = {
                 lit.props.classes.push("selected-component");
             }
             inst = workArea.addComponent(lit);
-            addBehaviors(inst, cmpBehaviors, false);
+            oxana.addBehaviors(inst, cmpBehaviors, false);
             if (containers.indexOf(inst.ctor) > -1) { 
-                addBehaviors(inst, cmpWaBehaviors, false);
+                oxana.addBehaviors(inst, cmpWaBehaviors, false);
                 inst.attr.isNotWa = true;
             }
             inst.attr.isCmp = true;
@@ -640,12 +603,12 @@ oxana.behaviorimplementations["ADD_COMPONENT"] = {
                 if (inst.ctor == "FormField" && workArea.ctor != "Form") {
                     // inst = inst.children[inst.component.props.id];
                     inst.draggable = true;
-                    addBehaviors(inst, cmpBehaviors, false);
+                    oxana.addBehaviors(inst, cmpBehaviors, false);
                     let classes = inst.classes.slice(0);
                     classes.pushUnique("selected-component");
                     inst.classes = classes;
                 } else if (workArea.ctor == "Form" && noNeedFF.indexOf(inst.ctor) == -1) {
-                    removeBehaviors(inst, cmpBehaviors, false);
+                    oxana.removeBehaviors(inst, cmpBehaviors, false);
                     let classes = inst.classes.slice(0);
                     let ind = classes.indexOf("default-component");
                     if(id > -1){
@@ -664,9 +627,9 @@ oxana.behaviorimplementations["ADD_COMPONENT"] = {
                     inst = workArea.addComponent(ff);
                     //inst.addChild(inst);
                     //inst = instF;
-                    addBehaviors(inst, cmpBehaviors, false);
+                    oxana.addBehaviors(inst, cmpBehaviors, false);
                     // if (parents.indexOf(ctor) > -1) {
-                    //     addBehaviors(instF, cntBehaviors, false);
+                    //     oxana.addBehaviors(instF, cntBehaviors, false);
                     // }
                 }
                 workArea.addChild(inst);
@@ -762,6 +725,24 @@ oxana.behaviorimplementations["FILE_SELECTED"] = function (e) {
     }
 };
 
+oxana.behaviorimplementations["PREPARE_CMP"] = function (e, r, ra) {
+    if (ra) {
+        oxana.addBehaviors(ra.currentRow.component, {
+            "dragstart": "INITIAL_DRAGSTART",
+        }, false);
+    }
+    
+    console.log("PREPARE_CMP");
+};
+
+oxana.behaviorimplementations["INITIAL_DRAGSTART"] = function (e, ra) {
+    console.log(arguments);
+    e.originalEvent.dataTransfer.setData("domID", e.target.id);
+    e.originalEvent.dataTransfer.setData("ctor", ra.currentItem.ctor);
+    var $elem = oxana.viewStack.mainContainer.dragImage.$el[0];
+    e.originalEvent.dataTransfer.setDragImage($elem, 0, 0);
+};
+
 oxana.behaviorimplementations["SEARCH_CMP"] = function (e) {
     console.log("search box change");
     let value = e.target.value.toLowerCase();
@@ -774,7 +755,6 @@ oxana.behaviorimplementations["SEARCH_CMP"] = function (e) {
     }
 };
 
-oxana.behaviors[oxana.id]["loadHtml"] = "LOAD_HTML";
 oxana.behaviorimplementations["LOAD_HTML"] = function (e) {
     let pattern = /<body[^>]*>((.|[\n\r])*)<\/body>/im;
     let array_matches = pattern.exec(e.content);
@@ -805,52 +785,16 @@ oxana.behaviorimplementations["LOAD_LAYOUT"] = function (e) {
         let was = objectHierarchyGetMatchingMember(inst, "attr.isWa", true, "children", true);
         for (let wi = 0; wi < was.length; wi++)
         {
-            addBehaviors(was[wi].match, cmpWaBehaviors, false);
+            oxana.addBehaviors(was[wi].match, cmpWaBehaviors, false);
         }
         let cmps = objectHierarchyGetMatchingMember(inst, "attr.isCmp", true, "children", true);
         for (let ci = 0; ci < cmps.length; ci++)
         {
-            addBehaviors(cmps[ci].match, cmpBehaviors, false);
+            oxana.addBehaviors(cmps[ci].match, cmpBehaviors, false);
         }
     }
 };
 
-function addBehaviors(cmp, behaviors, recurse = true) {
-    for (let b in behaviors) {
-        if (oxana.behaviors[cmp.id][b]) {
-            if (!isObject(oxana.behaviors[cmp.id][b])) {
-                let pb = oxana.behaviors[cmp.id][b];
-                oxana.behaviors[cmp.id][b] = {};
-                oxana.behaviors[cmp.id][b][pb] = null;
-            } 
-            if (isObject(behaviors[b])) {
-                for (var eb in behaviors[b]) {
-                    oxana.behaviors[cmp.id][b][eb] = behaviors[b][eb];
-                }
-            } else { 
-                oxana.behaviors[cmp.id][b][behaviors[b]] = null;
-            }
-        }else
-            oxana.behaviors[cmp.id][b] = behaviors[b];
-    }
-    if (recurse) {
-        for (let cid in cmp.children) {
-            addBehaviors(cmp.children[cid], behaviors);
-        }
-    }
-}
-
-function removeBehaviors(cmp, behaviors, recurse = true) {
-    if (oxana.behaviors[cmp.id] != null)
-        for (let b in behaviors) {
-            delete oxana.behaviors[cmp.id][b];
-        }
-    if (recurse) {
-        for (let cid in cmp.children) {
-            removeBehaviors(cmp.children[cid], behaviors);
-        }
-    }
-}
 oxana.behaviorimplementations["HISTORY_STEP_ADDED"] = function (e) {
     console.log("called HISTORY_STEP_ADDED.", e.current);
     listHistorySteps.value = e.current;
@@ -875,7 +819,7 @@ oxana.behaviorimplementations["DELETE_CMP"] = {
         if (activeComponent) {
             if (e.keyCode == 46) {
                 //domId of element who should delete
-                domID = activeComponent.id;
+                domID = activeComponent.domID;
             } else {
                 //if drop to delete area
                 domID = e.originalEvent.dataTransfer.getData("domID");
@@ -975,7 +919,7 @@ oxana.behaviorimplementations["SPLIT_HOR"] = {
         }
            
         var newWorkArea = newRowInstance.children[newRowInstance.components[0].props.id];
-        oxana.behaviors[newWorkArea.id] = waBehaviors;
+        oxana.addBehaviors(newWorkArea, waBehaviors, false);
         // oxana.behaviors[newWorkArea.id]["mousemove"]["WA_RESIZE_EW"] = isMouseMoveEW;
         //{filter: isMouseMoveEw, otherProperties...}
 
@@ -990,7 +934,7 @@ oxana.behaviorimplementations["SPLIT_HOR"] = {
             }
 
             var newWorkArea2 = newRowInstance2.children[newRowInstance2.components[0].props.id];
-            oxana.behaviors[newWorkArea2.id] = waBehaviors;
+            oxana.addBehaviors(newWorkArea2, waBehaviors, false);
             ret.child2 = newRowInstance2;
         }
 
@@ -1126,7 +1070,7 @@ oxana.behaviorimplementations["SPLIT_VERT"] = {
                     row.children[childID].spacing.colSpan = colSpan;
                 var workArea = row.children[childID];
                 //var workArea = cell.children[cell.components[0].props.id];
-                oxana.behaviors[workArea.id] = waBehaviors;
+                oxana.addBehaviors(workArea, waBehaviors, false);
             }
             ret.parent = parent;
             ret.child = newInstance;
@@ -1356,7 +1300,7 @@ oxana.behaviorimplementations["WA_REDO"] = {
 let propertyEditorViewStack, propertyEditorContainer, fileSelectModal, browseFile, componentsContainer,
     rightSideNav, listHistorySteps, workArea, workAreaColumn,
     cmpSearchTextInput, undoButton, redoButton, cmpTrash, toggleSideNavLeft, toggleSideNavRight,
-    splitHorizontal, splitVertical, uploadIcon, saveLayout, selectBtn;
+    splitHorizontal, splitVertical, uploadIcon, saveLayout, selectBtn, componentList;
 
 oxana.behaviorimplementations["END_DRAW"] = new ArrayEx(oxana.behaviorimplementations["END_DRAW"], function (e) {
     propertyEditorViewStack = oxana.viewStack.mainContainer.container.rightSideNav.rightSideContainer.propertyEditorViewStack;
@@ -1368,70 +1312,81 @@ oxana.behaviorimplementations["END_DRAW"] = new ArrayEx(oxana.behaviorimplementa
     listHistorySteps = oxana.viewStack.mainContainer.nav.children.middleNav.listHistorySteps;
     workAreaColumn = oxana.viewStack.mainContainer.container.workArea.workAreaRow.workAreaColumn;
     workArea = workAreaColumn.workAreaCell.workAreaRowL2.workAreaColumnL2;
+    componentList = componentsContainer.componentList;
+    oxana.addBehaviors(componentList, {
+        "rowAdd": "PREPARE_CMP",
+    }, false);
     
-    
-    addBehaviors(propertyEditorContainer, vspewbehaviors, false);
+    oxana.addBehaviors(propertyEditorContainer, vspewbehaviors, false);
 
-    cmpSearchTextInput = oxana.viewStack.mainContainer.container.componentsContainer.container.container.cmpSearchTextInput;
-    addBehaviors(cmpSearchTextInput, {
+    cmpSearchTextInput = oxana.viewStack.mainContainer.container.componentsContainer.container.cmpSearchTextInput;
+    oxana.addBehaviors(cmpSearchTextInput, {
         "keyup": "SEARCH_CMP",
     }, false);
     undoButton = oxana.viewStack.mainContainer.nav.middleNav.undoButton;
-    addBehaviors(cmpSearchTextInput, {
+    oxana.addBehaviors(undoButton, {
         "click": "WA_UNDO",
     }, false);
     redoButton = oxana.viewStack.mainContainer.nav.middleNav.redoButton;
-    addBehaviors(cmpSearchTextInput, {
+    oxana.addBehaviors(redoButton, {
         "click": "WA_REDO",
     }, false);
     cmpTrash = oxana.viewStack.mainContainer.container.rightSideNav.rightSideContainer.propertyEditorViewStack.cmpTrash;
-    addBehaviors(cmpTrash, daBehaviors, false);
+    oxana.addBehaviors(cmpTrash, daBehaviors, false);
     
-
     toggleSideNavLeft = oxana.viewStack.mainContainer.nav.leftNav.toggleSideNavLeft;
-    addBehaviors(toggleSideNavLeft, {
+    oxana.addBehaviors(toggleSideNavLeft, {
         "click": "TOGGLE_VISIBILITY_LEFT",
     }, false);
     toggleSideNavRight = oxana.viewStack.mainContainer.nav.rightNav.toggleSideNavRight;
-    addBehaviors(toggleSideNavRight, {
+    oxana.addBehaviors(toggleSideNavRight, {
         "click": "TOGGLE_VISIBILITY_RIGHT",
     }, false);
 
     splitHorizontal = oxana.viewStack.mainContainer.nav.middleNav.splitHorizontal;
-    addBehaviors(splitHorizontal, {
+    oxana.addBehaviors(splitHorizontal, {
         "click": "SPLIT_HOR",
     }, false);
     splitVertical = oxana.viewStack.mainContainer.nav.middleNav.splitVertical;
-    addBehaviors(splitVertical, {
+    oxana.addBehaviors(splitVertical, {
         "click": "SPLIT_VERT",
     }, false);
     uploadIcon = oxana.viewStack.mainContainer.nav.middleNav.uploadIcon;
-    addBehaviors(uploadIcon, {
+    oxana.addBehaviors(uploadIcon, {
         "click": "SAVE_LAYOUT_REMOTE",
     }, false);
     saveLayout = oxana.viewStack.mainContainer.nav.middleNav.saveLayout;
-    addBehaviors(saveLayout, {
+    oxana.addBehaviors(saveLayout, {
         "click": "SAVE_LAYOUT",
     }, false);
     selectBtn = oxana.viewStack.mainContainer.nav.middleNav.selectBtn;
-    addBehaviors(selectBtn, {
+    oxana.addBehaviors(selectBtn, {
         "click": "FILE_SELECT_MODAL",
     }, false);
 
-    addBehaviors(browseFile, {
+    oxana.addBehaviors(browseFile, {
         "change": "FILE_SELECTED",
     }, false);
-    addBehaviors(listHistorySteps, {
+    oxana.addBehaviors(listHistorySteps, {
         "change": "HISTORY_STEP_DETAILS",
     }, false);
     //oxana.behaviors["previewBtn"]["click"] = "PREVIEW";
-    addBehaviors(workArea, waBehaviors, false);
+    oxana.addBehaviors(workArea, waBehaviors, false);
+    
+    
+    oxana.addBehaviors(oxana, {
+        "loadHtml": "LOAD_HTML", 
+        "keydown": {
+            "WA_UNDO": { filter: isKeyCombUndo, onPropagation: true },
+            "WA_REDO": { filter: isKeyCombRedo, onPropagation: true },
+            "DELETE_CMP": { filter: isKeyDeletePress, onPropagation: true }
+        }
+    }, false);
 
     _initDP();
     componentsContainer.show();
 });
-oxana.eventTypes.splicea(oxana.eventTypes.length, 0, ["resize", "dropped"]);
-oxana.registerBehaviors();
+
 oxana.renderPromise().then(function (cmpInstance) {
     $(document.body).append(cmpInstance.$el);
 });

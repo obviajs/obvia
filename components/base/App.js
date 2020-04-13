@@ -84,34 +84,43 @@ var App = function(_props){
     let _initDefaultBehaviors = function () {
         if (_historyProps.enabled) {
             _history = History.getInstance(".history_" + _self.domID);
-            _history.on(HistoryEventType.HISTORY_UNDONE + " " + HistoryEventType.HISTORY_REDONE + " " + HistoryEventType.HISTORY_STEP_ADDED, function (e) {
+            /*_history.on(HistoryEventType.HISTORY_UNDONE + " " + HistoryEventType.HISTORY_REDONE + " " + HistoryEventType.HISTORY_STEP_ADDED, function (e) {
                 _self.trigger(e);
             });
-    
-            _behaviors[_self.id][HistoryEventType.HISTORY_UNDONE] = "HISTORY_UNDONE";
-            _behaviors[_self.id][HistoryEventType.HISTORY_REDONE] = "HISTORY_REDONE";
-            _behaviors[_self.id][HistoryEventType.HISTORY_STEP_ADDED] = "HISTORY_STEP_ADDED";
+            */
+            let historyBehaviors = {};
+            historyBehaviors[HistoryEventType.HISTORY_UNDONE] = "HISTORY_UNDONE";
+            historyBehaviors[HistoryEventType.HISTORY_REDONE] = "HISTORY_REDONE";
+            historyBehaviors[HistoryEventType.HISTORY_STEP_ADDED] = "HISTORY_STEP_ADDED";
+            _self.addBehaviors(_history, historyBehaviors, false);
         }
-    
-        _behaviors[_self.id]['beginDraw'] = "BEGIN_DRAW";
-        _behaviors[_self.id]['endDraw'] = "END_DRAW";
-        _behaviors[_self.id]['InactivityDetected'] = "APP_INACTIVE";
-        _behaviors[_self.id]['ActivityDetected'] = "APP_ACTIVE";
-        _behaviors[_self.id]['WindowHide'] = "APP_WINDOW_HIDDEN";
-        _behaviors[_self.id]['WindowShow'] = "APP_WINDOW_SHOWN";
-        _behaviors[_self.id]['beforeunload'] = "APP_UNLOADED";
-        _behaviors[_self.id]['idChanged'] = "UPDATE_BEHAVIOR_BINDINGS";
+        let defaultBehaviors = {
+            "beginDraw": "BEGIN_DRAW",
+            "endDraw": "END_DRAW",
+            "InactivityDetected": "APP_INACTIVE",
+            "ActivityDetected": "APP_ACTIVE",
+            "WindowHide": "APP_WINDOW_HIDDEN",
+            "WindowShow": "APP_WINDOW_SHOWN",
+            "beforeunload": "APP_UNLOADED",
+            "idChanged": {
+                "UPDATE_BEHAVIOR_BINDINGS": {
+                    onPropagation: true
+                }
+            }
+        };
+   
+        _self.addBehaviors(_self, defaultBehaviors, false);
     };
     _behaviorimplementations["UPDATE_BEHAVIOR_BINDINGS"] = {
         do: function (e) {
             console.log("UPDATE_BEHAVIOR_BINDINGS");
             _behaviors[e.newValue] = _behaviors[e.oldValue];
             delete _behaviors[e.oldValue];
-        },
+        }
         /**
          * catch events thrown by children
         */
-        onPropagation: true
+       
     };
 
     _behaviorimplementations["BEGIN_DRAW"] = function (e) {
@@ -144,8 +153,6 @@ var App = function(_props){
         console.log("App Window was maximized, you may want to greet the user.");
     };
 
-    let _eventTypes = ["mousedown", "mouseover", "mouseup", "click", "dblclick", "keydown", "keyup", "mousemove", "drop", "dragstart", "dragover", "dragleave", "idChanged", "endDraw"];
-    let _eventTypesJoined;
     let _loader = new Loader({ id: 'loader' });
     let _event2behavior = function(e) {
         if(e.type != "InactivityDetected" && e.type != "ActivityDetected" && e.type != "WindowHide" && e.type != "WindowShow"){
@@ -155,35 +162,41 @@ var App = function(_props){
             }
             _idleTime = 0;
         }
-        let currentTarget = Component.instances[$(this).attr('id')];
-        let target = Component.instances[$(e.target).attr('id')]; 
+        let currentTarget = Component.instances[$(e.currentTarget).attr('id')] ? Component.instances[$(e.currentTarget).attr('id')] : e.currentTarget;
+        let target = Component.instances[$(e.target).attr('id')] ? Component.instances[$(e.target).attr('id')] : e.target; 
         let manifestor;
 
-        let cmpBehaviors;
-        if(target && !Object.isEmpty(_self.behaviors[target.id]))
+        let behaviorObj = {};
+        if(target && _self.behaviors[target.id] && _self.behaviors[target.id][e.type])
         {
-            cmpBehaviors = _self.behaviors[target.id];
+            behaviorObj = _self.behaviors[target.id][e.type];
             manifestor = target;
-        }else if(_self.behaviors[currentTarget.id] && _self.behaviors[currentTarget.id][e.type] && _self.behaviorimplementations[_self.behaviors[currentTarget.id][e.type]] && _self.behaviorimplementations[_self.behaviors[currentTarget.id][e.type]].onPropagation)
+        }else if(_self.behaviors[currentTarget.id] && _self.behaviors[currentTarget.id][e.type] && isObject(_self.behaviors[currentTarget.id][e.type]))
         {
-            cmpBehaviors = _self.behaviors[currentTarget.id];
+            let cmpBehaviors = _self.behaviors[currentTarget.id][e.type];
+            for (var prop in cmpBehaviors) { 
+                if (cmpBehaviors[prop].onPropagation) { 
+                    behaviorObj[prop] = cmpBehaviors[prop];
+                }
+            }
             manifestor = currentTarget;
         }
         
         //console.log(e.type + " " + _idCurrentTarget + " " + _idTarget);
         
-        if(cmpBehaviors && cmpBehaviors[e.type]) {
+        if(behaviorObj) {
             let behaviorNameArr = [], behaviorFilterArr = [];
             let behaviorName, behaviorFilter;
-            let behaviorObj = cmpBehaviors[e.type];
-
+          
             if(isObject(behaviorObj))
             {
                 for(let prop in behaviorObj){
                     behaviorNameArr.push(prop);
-                    behaviorFilterArr.push(behaviorObj[prop]);
+                    if (isObject(behaviorObj[prop])) {
+                        behaviorFilterArr.push(behaviorObj[prop]["filter"]);
+                    } else
+                        behaviorFilterArr.push(behaviorObj[prop]);
                 }
-
             }else{
                 behaviorNameArr = [behaviorObj];
                 behaviorFilterArr = [null];
@@ -242,50 +255,70 @@ var App = function(_props){
             }
         }
     };
+
     this.endDraw = function (e) {
         if (e.target.id == this.domID) {
-            $(window).trigger("endDraw");
+          //  $(window).trigger("endDraw");
         }
     };
     this.beginDraw = function (e) {
         if (e.target.id == this.domID) {
             $(window).trigger("beginDraw");
+            $(this.ownerDocument).on("keydown", function (e) { 
+                //target is always body
+                if (e.guid != _self.guid) { 
+                    if (!e.guid) {
+                        e.guid = _self.guid;
+                    }
+                    _self.trigger(e);
+                }
+            });
         }
     };
-    this.registerBehaviors = function(win=window)
-    {
-        //TODO: te bejme difference e oldBehaviors me newBehaviors dhe te shtojme vetem ato si evente per te evituar off dhe on
-        if(_eventTypesJoined){
-            $(win).off(_eventTypesJoined);
+
+    this.addBehaviors = function (cmp, behaviors, recurse = true) {
+        if (!cmp["id"]) {
+            cmp["id"] = StringUtils.guid();
         }
+        let _eventTypesJoined = "";
+        for (let b in behaviors) {
+            if (_behaviors[cmp.id][b]) {
+                if (!isObject(_behaviors[cmp.id][b])) {
+                    let pb = _behaviors[cmp.id][b];
+                    _behaviors[cmp.id][b] = {};
+                    _behaviors[cmp.id][b][pb] = null;
+                } 
+                if (isObject(behaviors[b])) {
+                    for (var eb in behaviors[b]) {
+                        _behaviors[cmp.id][b][eb] = behaviors[b][eb];
+                    }
+                } else { 
+                    _behaviors[cmp.id][b][behaviors[b]] = null;
+                }
+            }else
+                _behaviors[cmp.id][b] = behaviors[b];
             
-        for(let cmpId in _behaviors)
-        {
-            for(let eventType in _behaviors[cmpId])
-            {
-                _eventTypes.pushUnique(eventType);
+            _eventTypesJoined += " " + b;
+        }
+        cmp.on(_eventTypesJoined, _event2behavior);
+        if (recurse) {
+            for (let cid in cmp.children) {
+                this.addBehaviors(cmp.children[cid], behaviors);
             }
         }
-        _eventTypesJoined = _eventTypes.join(" ");
-        $(win).on(_eventTypesJoined, _event2behavior);
     };
-
-    let _winWatcher = ChangeWatcher.getInstance(BrowserWindow.all);
-    _winWatcher.watch(BrowserWindow.all, "length", function(e){
-        if(e.oldValue < e.newValue){
-            _self.registerBehaviors(BrowserWindow.all[BrowserWindow.all.length-1].window);
-
+    
+    this.removeBehaviors = function (cmp, behaviors, recurse = true) {
+        if (_behaviors[cmp.id] != null)
+            for (let b in behaviors) {
+                delete _behaviors[cmp.id][b];
+            }
+        if (recurse) {
+            for (let cid in cmp.children) {
+                this.removeBehaviors(cmp.children[cid], behaviors);
+            }
         }
-        //
-    });
-
-    Object.defineProperty(this, "eventTypes", 
-    {
-        get: function eventTypes() 
-        {
-            return _eventTypes;
-        }
-    });
+    };
 
     Object.defineProperty(this, "idleInterval", 
     {
@@ -307,7 +340,7 @@ var App = function(_props){
     window.id = _self.domID;
     
     _initDefaultBehaviors();
-    this.registerBehaviors();   
+    //this.registerBehaviors();   
     return r;
 };
 App.prototype.ctor = 'App';
