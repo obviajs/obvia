@@ -4,7 +4,7 @@ var App = function(_props){
         inactivityInterval: 60000,
         components:[],
         historyProps: { enabled: true },
-        type: ContainerType.NONE,
+        type: ContainerType.NONE
     };
 
     _props = extend(false, false, _defaultParams, _props);
@@ -152,6 +152,19 @@ var App = function(_props){
     _behaviorimplementations["APP_WINDOW_SHOWN"] = function(e, idleTime, idleCount) {
         console.log("App Window was maximized, you may want to greet the user.");
     };
+    
+    this.addImplementation = function(imps){ 
+        for (let behavior in imps) { 
+            if (_behaviorimplementations[behavior] == null || imps[behavior].override) {
+                _behaviorimplementations[behavior] = imps[behavior];
+            } else { 
+                if (!_behaviorimplementations[behavior].forEach) { 
+                    _behaviorimplementations[behavior] = new ArrayEx([_behaviorimplementations[behavior]]);
+                }
+                _behaviorimplementations[behavior].push(imps[behavior]);
+            } 
+        }
+    };
 
     let _loader = new Loader({ id: 'loader' });
     let _event2behavior = function(e) {
@@ -258,12 +271,12 @@ var App = function(_props){
 
     this.endDraw = function (e) {
         if (e.target.id == this.domID) {
-          //  $(window).trigger("endDraw");
+            
         }
     };
+
     this.beginDraw = function (e) {
         if (e.target.id == this.domID) {
-            $(window).trigger("beginDraw");
             $(this.ownerDocument).on("keydown", function (e) { 
                 //target is always body
                 if (e.guid != _self.guid) { 
@@ -320,6 +333,14 @@ var App = function(_props){
         }
     };
 
+    Object.defineProperty(this, "loader", 
+    {
+        get: function loader() 
+        {
+            return _loader;
+        }
+        });
+    
     Object.defineProperty(this, "idleInterval", 
     {
         get: function idleInterval() 
@@ -327,7 +348,6 @@ var App = function(_props){
             return _idleInterval;
         }
     });
-
     Object.defineProperty(this, "inactivityInterval", 
     {
         get: function inactivityInterval() 

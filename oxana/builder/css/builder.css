@@ -1,3 +1,22 @@
+.ew-resize {cursor: ew-resize !important;}
+.ns-resize {cursor: ns-resize !important;}
+.selected-component {
+    border: 1px black solid !important;
+    border-right: 10px black solid !important;
+    padding-bottom: 10px;
+}
+.default-component {
+    border: 1px grey solid;
+    border-right: 10px grey solid;
+    padding-bottom: 10px;
+}
+.default-cnt{
+    min-height:50px
+}
+.active-container{
+    border: 1px dashed #3987d9 !important;
+}
+
 .nav{
     background-color: #2d3238;
 }

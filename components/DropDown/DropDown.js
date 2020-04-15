@@ -88,7 +88,7 @@ var DropDown = function (_props, overrided = false) {
     };
     this.beforeAttach = function (e) {
         if (e.target.id == this.domID) {
-            if (_props.label) {
+            if (_props.label && !this.getBindingExpression("label")) {
                 this.label = _props.label;
             }
         }
@@ -174,7 +174,6 @@ var DropDown = function (_props, overrided = false) {
     }
     _props.attr["data-triggers"] = "change";
     
-    _dataProvider = _props.dataProvider;
     let _hrefField = _props.hrefField;
     let _labelField = _props.labelField;
     let _value = _props.value;
@@ -184,6 +183,10 @@ var DropDown = function (_props, overrided = false) {
     let _selectedItem = _props.selectedItem;
     let _guidField = _props.guidField;
 
+    if (_props.dataProvider && !getBindingExp(_props.dataProvider)) {
+        _dataProvider = _props.dataProvider;
+    } else
+        _dataProvider = new ArrayEx();
     _props.components = fnContainerDelayInit();
 
     Container.call(this, _props);

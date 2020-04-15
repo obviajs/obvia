@@ -36,6 +36,7 @@ rjs.define("./components/base/History/HistoryEventType.js", "HistoryEventType");
 rjs.define("./components/base/Component.js", "Component");
 rjs.define("./components/base/Spacing.js", "Spacing");
 rjs.define("./components/base/AutoObject.js", "AutoObject");
+rjs.define("lib/TwoWayMap.js", "TwoWayMap");
 rjs.define("./oxana/builder/SpacingEditor.js", "SpacingEditor");
 rjs.define("./oxana/builder/css/builder.css", "Builder_Css")
 rjs.define("./oxana/AutoBrowse.js", "AutoBrowse");
@@ -48,6 +49,7 @@ rjs.define("./components/base/NavParent.js", "NavParent");
 rjs.define("./components/base/ContainerType.js", "ContainerType");
 rjs.define("./components/base/ViewStack.js", "ViewStack");
 rjs.define("./components/base/App.js", "App");
+rjs.define("./components/base/Applet.js", "Applet");
 //TextInput
 rjs.define("./lib/dependencies/scripts/jquery.inputmask.bundle.min.js", "InputMaskBundle");
 rjs.define("./components/TextInput/TextInput.js", "TextInput");
@@ -201,12 +203,13 @@ rjs.define("./components/Calendar/css/calendarMonth-default.css", "calendarMonth
 
 rjs.define("./oxana/Wizard/Wizard.js", "Wizard");
 rjs.define("./oxana/Wizard/css/wizard-default.css", "wizard_default_css");
-
+rjs.define("lib/KeyboardUtils.js", "KeyboardUtils");
 //TextInput
 //rjs.define("./components/TextInput.js", "TextInput")
 rjs.require(["EventDispatcher"]).then(function () {
     rjs.require([
         "AutoObject",
+        "TwoWayMap",
         "NumberUtils",
         "JTemplate",
         "DataStore",
@@ -269,6 +272,7 @@ rjs.require(["EventDispatcher"]).then(function () {
         "EnvType",
         "Env",
         "App",
+        "Applet",
         "Hidden",
         "BootBox",
         "Repeater",
@@ -354,7 +358,8 @@ rjs.require(["EventDispatcher"]).then(function () {
         "CalendarMonth",
         "calendarMonth_default_css",
         "Wizard",
-        "wizard_default_css"
+        "wizard_default_css",
+        "KeyboardUtils"
     ], function () {
         window.main();
     }, flowerCM);
