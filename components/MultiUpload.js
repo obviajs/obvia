@@ -97,31 +97,30 @@ var MultiUpload = function (_props, overrided = false) {
                 ];
     };
 
-    this.beforeAttach = function(e) 
-    {
-        if (e.target.id == this.domID) 
-        {
+    this.beforeAttach = function (e) {
+        if (e.target.id == this.domID) {
             _lblDrop = this.dropContainer.infoLabel;
             _dropContainer = this.dropContainer;
             _listRepeater = this.listRepeater;
             _progressRow = this.progressRow;
-            _progressBar = this.progressRow.progressbar;  
-            
-            this.on("creationComplete", function(){
-                $("html").on("dragover", _htmlDragOverHandler); 
-                $("html").on("drop", _htmlDropHandler);
-                $("html").on("dragleave", _htmlDragLeaveHandler);
-                _dropContainer.on('dragenter', _dragEnterHandler);
-                _dropContainer.on('dragover', _dragOverHandler);
-                _dropContainer.on('drop', _dropHandler);
-                _dropContainer.on('dragleave', _dragLeaveHandler);
-            });
-
+            _progressBar = this.progressRow.progressbar;
             _lblDrop.on('click', _clickHandler);
             e.preventDefault();
         }
-    }
-        
+    };
+    
+    this.afterAttach = function (e) {
+        if (e.target.id == this.domID) {
+            $("html").on("dragover", _htmlDragOverHandler);
+            $("html").on("drop", _htmlDropHandler);
+            $("html").on("dragleave", _htmlDragLeaveHandler);
+            _dropContainer.on('dragenter', _dragEnterHandler);
+            _dropContainer.on('dragover', _dragOverHandler);
+            _dropContainer.on('drop', _dropHandler);
+            _dropContainer.on('dragleave', _dragLeaveHandler);
+        }
+    };
+
     //TODO: on dp change set binding for show/hide trash icon
 
     var _htmlDragOverHandler = function(e){
@@ -296,12 +295,10 @@ var MultiUpload = function (_props, overrided = false) {
         this.accept = _props.accept;  
     if(_props.showBtnRemove!=null)
         this.showBtnRemove = _props.showBtnRemove;
-   
-    
+       
     var base = this.base;
-    this.destruct = function (mode=1)
-    {
-        $("html").off("dragover", _htmlDragOverHandler);  
+    this.destruct = function (mode = 1) {
+        $("html").off("dragover", _htmlDragOverHandler);
         $("html").off("drop", _htmlDropHandler);
         $("html").off("dragleave", _htmlDragLeaveHandler);
 
@@ -311,7 +308,7 @@ var MultiUpload = function (_props, overrided = false) {
         _dropContainer.off('dragleave', _dragLeaveHandler);
         _lblDrop.off('click', _clickHandler);
         base.destruct(mode);
-    }
+    };
 };
 
 MultiUpload.prototype.ctor = 'MultiUpload';

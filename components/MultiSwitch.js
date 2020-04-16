@@ -5,119 +5,132 @@
  */
 
 var MultiSwitch = function (_props, overrided = false) {
-    _self = this;
+    let _self = this, _dataProvider;
 
-    Object.defineProperty(this, "value", {
-        get: function value() {
-            return _value;
+    Object.defineProperty(this, "valueField", 
+    {
+        get: function valueField() 
+        {
+            return _valueField;
         },
-        set: function value(v) {
-            if((!_value && v) || (_value && !_value.equals(v)))
-            {
-                _value = v;
-                this.list.value = v;
-                this.trigger('change');
-            }
-        }
-    });
-
-    this.beforeAttach = function () {
-        this.$container = this.$el;
-        this.direction = this.direction == undefined || this.direction == null ? 'horizontal' : this.direction;
-
-        this.list = new List({
-            id: 'list',
-            direction: this.direction,
-            multiselect: _multiselect,
-            dataProvider: _dataProvider,
-            valueField: _valueField,
-            labelField: _labelField,
-            classField: _classField,
-            defaultClass: _defaultClass,
-            selectedClass: _selectedClass,
-            value: _value,
-            embedded: true,
-            components: [
-                {
-                    ctor: Button,
-                    props: {
-                        id: 'button',
-                        type: "button",
-                        label: "{" + _labelField + "}",
-                        value: "{" + _labelField + "}",
-                        class: "{" + _classField + "}",
-                        style: "float: left; border-radius: 0px",
-                        click: this.clickHandler.bind(this),
-                        embedded: true
+        set: function valueField(v) 
+        {
+            if (_valueField != v) { 
+                _valueField = v;
+                this.components = fnContainerDelayInit();
+                this.removeAllRows(false);
+                if (_dataProvider && _dataProvider.length > 0) { 
+                    let dpFields = Object.keys(_dataProvider[0]);
+                    if (propDataProvider && dpFields.includes(_labelField) && dpFields.includes(_valueField)) { 
+                        propDataProvider['set'].call(_self, _dataProvider);
                     }
                 }
-            ],
-            onclick: this.onclick,
-            onchange: this.onchange
-        }).on('creationComplete', function (e) {
-            e.stopPropagation();
-            this.trigger('creationComplete');
-        }.bind(this)).on('change', function () {
-            _value = this.list.value;
-        }.bind(this));
-    };
-
-    this.afterAttach = function () {
-
-    };
-
-    this.changeHandler = function (e) {
-        if (typeof this.onchange == 'function')
-            this.onchange.apply(this, arguments);
-    };
-
-    this.clickHandler = function (e) {
-        if (typeof this.onclick == 'function')
-            this.onclick.apply(this, arguments);
-    };
-
-    this.template = function () {
-        return "<div id='" + this.domID + "' role='group' style='padding:0'>" +
-            "</div>";
-    };
-
-    var _defaultParams = {
-        id: '',
+            }
+        },
+        enumerable:true
+    });
+    
+    Object.defineProperty(this, "labelField", 
+    {
+        get: function labelField() 
+        {
+            return _labelField;
+        },
+        set: function labelField(v) 
+        {
+            if (_labelField != v) { 
+                _labelField = v;
+                this.components  = fnContainerDelayInit();
+                this.removeAllRows(false);
+                if (_dataProvider && _dataProvider.length > 0) { 
+                    let dpFields = Object.keys(_dataProvider[0]);
+                    if (propDataProvider && dpFields.includes(_labelField) && dpFields.includes(_valueField)) { 
+                        propDataProvider['set'].call(_self, _dataProvider);
+                    }
+                } 
+            }
+        },
+        enumerable:true
+    });
+   
+    let _defaultParams = {
+        direction: "horizontal",
         multiselect: true,
-        dataProvider: [],
-        valueField: "",
-        labelField: "",
-        classField: "",
-        defaultClass: '',
-        selectedClass: '',
-        value: [],
-        onclick: function (e) {
-            console.log("From MultiSwitch ClickAction");
-            //e.preventDefault();
+        role: "group",
+        css: {
+            padding: 0
         }
     };
 
     _props = extend(false, false, _defaultParams, _props);
 
-    var _value = _props.value;
-    var _multiselect = _props.multiselect;
-    var _dataProvider = _props.dataProvider;
-    var _valueField = _props.valueField;
-    var _labelField = _props.labelField;
-    var _classField = _props.classField;
-    var _defaultClass = _props.defaultClass;
-    var _selectedClass = _props.selectedClass;
+    let _value = _props.value;
+    let _multiselect = _props.multiselect;
+    let _valueField = _props.valueField;
+    let _labelField = _props.labelField;
+    let _classesField = _props.classesField;
+    let _enabledField = _props.enabledField;
+    let _selectedClasses = _props.selectedClasses;
+    let _defaultClasses = _props.defaultClasses;
 
-    Component.call(this, _props);
-
-    this.render = function () {
-        this.$container.append(this.list.render());
-        return this.$el;
-    };
-
-    if (overrided) {
-        this.keepBase();
+    if(_props.states==null){
+        _props.states = [
+            {dataProviderField: _classesField, states: {on: _selectedClasses, off: _defaultClasses}}
+        ];
     }
-};
+    
+    let fnContainerDelayInit = function () {
+        return [
+            {
+                ctor: Button,
+                props: {
+                    id: "button",
+                    type: "button",
+                    label: "{" + _labelField + "}",
+                    value: "{" + _valueField + "}",
+                    classes: "{" + _classesField + "}",
+                    enabled: "{" + _enabledField + "}",
+                    css: {
+                        float: "left",
+                        borderRadius: "0px"
+                    }
+                }
+            }
+        ];
+    };
+    
+    _props.components = fnContainerDelayInit();
 
+    List.call(this, _props);
+
+    Object.defineProperty(this, "components",
+    {
+        enumerable:false
+    });
+    
+    let propDataProvider = Object.getOwnPropertyDescriptor(this, "dataProvider");   
+    Object.defineProperty(this, "dataProvider", 
+    {
+        get: function dataProvider() 
+        {
+            return propDataProvider['get'].call(_self);
+        },
+        set: function dataProvider(v)
+        { 
+            _dataProvider = v;
+            this.removeAllRows(false);
+                    
+            if (v.length > 0) { 
+                let dpFields = Object.keys(v[0]);
+                if (dpFields.includes(_labelField) && dpFields.includes(_valueField))
+                { 
+                    propDataProvider['set'].call(_self, _dataProvider);
+                }
+            } else {
+                propDataProvider['set'].call(_self, _dataProvider);
+            }  
+        },
+        enumerable: true
+    });
+};
 MultiSwitch.prototype.ctor = 'MultiSwitch';

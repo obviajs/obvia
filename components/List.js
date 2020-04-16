@@ -76,6 +76,8 @@ var List = function (_props, overrided = false) {
         attr:{"data-triggers":"rowAdd endDraw rowEdit beforeRowAdd rowDelete beforeRowDelete beginDraw change itemClick itemDblClick"},
         multiselect: false,
         valueField: "id",
+        labelField: "",
+        classField: "",
         defaultClasses: ["btn btn-sm btn-default"],
         selectedClasses: ["btn btn-sm btn-success"],
         value: []

@@ -8,69 +8,22 @@
 var TokenRenderer = function(_props)
 {
     let _self = this, _value, _label, _closeIconSide, _link, _span;
-    /*
 
-    this.beforeAttach = function () 
-    {
-        this.$closeIcon = this.$el.find('#'+ this.domID + '_closeIcon');
-        this.$label = this.$el.find('#'+ this.domID + '_label');
-    };
-
-    registerEvents: function () {
-        return [
-            {
-                registerTo: this.$closeIcon, events: {
-                    'click': this.closeIconClickHandler.bind(this)
-                }
-            },
-            {
-                registerTo: this.$el, events: {
-                    'afterAttach': this.afterAttach.bind(this),
-                    'mousedown' : this.mouseDownHandler.bind(this),
-                    'click': this.clickHandler.bind(this),
-                    'dblclick': this.doubleClickHandler.bind(this)
-                }
-            }
-        ]
-    },
-    closeIconClickHandler: function(){
-        if (typeof this.closeiconclickhandler == 'function')
-            this.closeiconclickhandler.apply(this, arguments);
-    },
-    mouseDownHandler: function () {
-        if (typeof this.onmousedown == 'function')
-            this.onmousedown.apply(this, arguments);
-    },
-    clickHandler: function () {
-        if (typeof this.onclick == 'function')
-            this.onclick.apply(this, arguments);
-    },
-    doubleClickHandler: function () {
-        if (typeof this.ondblclick == 'function')
-            this.ondblclick.apply(this, arguments);
-    },
-    afterAttach: function (e) {        
-        this.trigger('creationComplete');
-    }*/
-    this.endDraw = function (e)
-    {
-        if (e.target.id == this.domID)
-        {
+    this.endDraw = function (e) {
+        if (e.target.id == this.domID) {
             _link = this.linkCmp;
             _span = this.labelCmp;
         }
-    }
+    };
     
-    this.beforeAttach = function(e) 
-    {
-        if (e.target.id == this.domID) 
-        {
-            if(_props.value)
+    this.beforeAttach = function (e) {
+        if (e.target.id == this.domID) {
+            if (_props.value)
                 _value = _props.value;
-            if(_props.label)
+            if (_props.label)
                 _label = _props.label;
         }
-    }
+    };
     
     let _closeIconClick = function(e)
     {

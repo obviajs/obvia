@@ -157,8 +157,6 @@ rjs.define("./components/Map/MapLocationPicker.js", "MapLocationPicker");
 rjs.define("./components/Toggle/ToggleBgStyle.js", "ToggleBgStyle");
 rjs.define("./components/Toggle/Toggle.js", "Toggle");
 rjs.define("./components/Toggle/toggle-default.css", "toggle_default_css");
-//TrippleSwitch
-rjs.define("./components/TrippleSwitch.js", "TrippleSwitch");
 //MultiSwitch
 rjs.define("./components/MultiSwitch.js", "MultiSwitch");
 //Upload
@@ -321,7 +319,6 @@ rjs.require(["EventDispatcher"]).then(function () {
         "ToggleBgStyle",
         "Toggle",
         "toggle_default_css",
-        "TrippleSwitch",
         "MultiSwitch",
         "Upload",
         "SlimScroll",

@@ -31,24 +31,17 @@ var Parent = function (_props, overrided = false, _isSurrogate = false) {
         });
     
     Object.defineProperty(this, "components",
-        {
-            get: function components() {
-                return _components;
-            },
-            set: function components(v) {
-                this.removeAllChildren();
-                _components = v;
-                this.addComponents();
-            },
-            configurable: true
-        });
-
-    Object.defineProperty(this, "magnets",
-        {
-            get: function magnets() {
-                return _magnets;
-            }
-        });
+    {
+        get: function components() {
+            return _components;
+        },
+        set: function components(v) {
+            this.removeAllChildren();
+            _components = v;
+            this.addComponents();
+        },
+        configurable: true
+    });
 
     this.add = function (childOrLiteral, index) {
         if (childOrLiteral) {
@@ -189,24 +182,7 @@ var Parent = function (_props, overrided = false, _isSurrogate = false) {
             if (resetBindingContext) {
                 component.props.bindingDefaultContext = null;
             }
-            cmp.on('creationComplete', function (e) {
-                e.stopImmediatePropagation();
-                e.stopPropagation();
-                _ccComponents.push(cmp.id);
-                let event = jQuery.Event("childCreated");
-                event.child = this;
-                _self.trigger(event);
-                if ((_ccComponents.length == _self.components.length - Object.keys(_magnetizedIndexes).length) && !_creationFinished) {
-                
-                    //TODO:solve magnet dependencies, i.e: component is magnetized to a component that is magnetized to another component  
-                    for (let i in _magnetizedIndexes) {
-                        let magnetCmp = Component.instances[_magnetizedIndexes[i]];
-
-                        let magnetizedCmp = _self.addComponentInContainer(magnetCmp.$container, _components[i], i);
-                        delete _magnetizedIndexes[i];
-                    }
-                }
-            });
+           
             index = index > -1 ? index : _components.length;
             if (cmp.renderPromise) {
                 _compRenderPromises.push({
@@ -255,18 +231,13 @@ var Parent = function (_props, overrided = false, _isSurrogate = false) {
 
     let _defaultParams = {
         components: [],
-        magnets: {},
         enabled: true,
         sortChildren: false
     };
     //_props = extend(false, false, _defaultParams, _props);
     shallowCopy(extend(false, false, _defaultParams, _props), _props);
     let _components = _props.components;
-    let _magnets = _props.magnets;
     
-    let _magnetized = {};
-
-    let _ccComponents = [];
     this.$container = null;
 
     let _creationFinished = false;
@@ -275,7 +246,6 @@ var Parent = function (_props, overrided = false, _isSurrogate = false) {
     let _sortChildren = _props.sortChildren;
     //override because creationComplete will be thrown when all children components are created
     // this.afterAttach = undefined;
-    let _magnetizedIndexes = {};
     let _countChildren;
     this.addComponents = function (cmps) {
         _self.trigger('beginDraw');
@@ -294,24 +264,11 @@ var Parent = function (_props, overrided = false, _isSurrogate = false) {
             }
             _countChildren = components.length;
             for (let i = 0; i < components.length; i++) {
-                if (isObject(components[i])) {
-                    let magnet, isMagnetized = false;
-                    if (_magnets && !Object.isEmpty(_magnets)) {
-                        for (let magnet in _magnets) {
-                            if (_magnets[magnet] && _magnets[magnet].length > 0) {
-                                if (_magnets[magnet].indexOf(components[i].props.id) > -1) {
-                                    isMagnetized = true;
-                                    _magnetizedIndexes[i] = magnet;
-                                }
-                            }
-                        }
-                    }
+                if (isObject(components[i])) {          
                     if (cmps) {
                         _components.splice(i, 0, components[i]);
                     }
-                    if (!isMagnetized)
-                        arrInst.push(this.addComponentInContainer(_$hadow, components[i], i));
-                    
+                    arrInst.push(this.addComponentInContainer(_$hadow, components[i], i));
                 }
             }
             let cr = arrayFromKey(_compRenderPromises, "promise");
