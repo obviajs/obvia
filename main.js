@@ -17,6 +17,8 @@ rjs.define("lib/DecoratorUtils.js", "DecoratorUtils");
 rjs.define("lib/coroutine.js", "coroutine");
 rjs.define("lib/BinUtils.js", "BinUtils");
 rjs.define("lib/CSSUtils.js", "CSSUtils");
+rjs.define("lib/BrowserUtils.js", "BrowserUtils");
+rjs.define("lib/BrowserManager.js", "BrowserManager");
 rjs.define("lib/my.js", "my");
 rjs.define("lib/Tokenizer.js", "Tokenizer");
 rjs.define("lib/binding/BindingUtils.js", "BindingUtils");
@@ -223,6 +225,8 @@ rjs.require(["EventDispatcher"]).then(function () {
         "coroutine",
         "BinUtils",
         "CSSUtils",
+        "BrowserUtils",
+        "BrowserManager",
         "my",
         "Tokenizer",
         "BindingUtils",

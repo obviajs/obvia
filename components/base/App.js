@@ -15,7 +15,9 @@ var App = function(_props){
     let _style = _props.style;
     let _historyProps = _props.historyProps;
     let _history;
-
+    let _applets = _props.applets;
+    let _browserManager = BrowserManager.getInstance();
+    
     if(_style)
     {
         $("<style id='"+_self.domID+"_style' type='text/css'>"+_style+"</style>").appendTo("head");
@@ -152,17 +154,29 @@ var App = function(_props){
     _behaviorimplementations["APP_WINDOW_SHOWN"] = function(e, idleTime, idleCount) {
         console.log("App Window was maximized, you may want to greet the user.");
     };
-    
-    this.addImplementation = function(imps){ 
-        for (let behavior in imps) { 
-            if (_behaviorimplementations[behavior] == null || imps[behavior].override) {
-                _behaviorimplementations[behavior] = imps[behavior];
-            } else { 
-                if (!_behaviorimplementations[behavior].forEach) { 
-                    _behaviorimplementations[behavior] = new ArrayEx([_behaviorimplementations[behavior]]);
+
+    this.addApplet = function (applet) {
+        applet.app = applet.parent = r;
+        _applets.push(applet);
+        let appletInst = _appletsMap[applet.anchor] = new Applet(applet);
+    };
+
+    let _implementations = {};
+    this.addImplementation = function (imps) { 
+        if (!_implementations[imps.guid]) {
+            for (let behavior in imps) {
+                if (_behaviorimplementations[behavior] == null || imps[behavior].override) {
+                    _behaviorimplementations[behavior] = imps[behavior];
+                } else {
+                    if (!_behaviorimplementations[behavior].forEach) {
+                        _behaviorimplementations[behavior] = new ArrayEx([_behaviorimplementations[behavior]]);
+                    }
+                    _behaviorimplementations[behavior].push(imps[behavior]);
                 }
-                _behaviorimplementations[behavior].push(imps[behavior]);
-            } 
+            }
+            _implementations[imps.guid] = imps;
+        } else { 
+            console.log("implementations already added.");
         }
     };
 
@@ -275,9 +289,46 @@ var App = function(_props){
         }
     };
 
+    let _hashchange = function (e) {
+        //if 
+        _route(e.newValue);
+      
+        /**
+         * p.hash, p.map
+        e.oldValue;
+        e.newValue;
+         */
+        
+        
+    };
+
+   
+    let _route = function (hash) {
+        let m = BrowserUtils.parse(hash);
+        if (m.hash && m.hash != "") { 
+             let appletInst = _appletsMap[m.hash];
+            //p.map
+
+            appletInst.init().then((literal) => {
+                // let paths = findMember(_context, "id", [], appletInst.appendTo, false);
+                // paths[0].pop();
+                // let appendTo = getChainValue(_context, paths[0]);
+                // let arrInst = appendTo.addComponents([literal]);
+            });
+            for (let aphash in _appletsMap)
+            {
+                //_appletsMap[aphash].post();
+            }
+            //postoja kete mesazh m te gjithe Apleteve 
+        }
+    };
+
+    _browserManager.on("hashchange", _hashchange);
+    let _appletsMap = {};
+
     this.beginDraw = function (e) {
         if (e.target.id == this.domID) {
-            $(this.ownerDocument).on("keydown", function (e) { 
+            $(this.ownerDocument).on("keydown keyup", function (e) { 
                 //target is always body
                 if (e.guid != _self.guid) { 
                     if (!e.guid) {
@@ -286,6 +337,16 @@ var App = function(_props){
                     _self.trigger(e);
                 }
             });
+
+            if (_applets && _applets.length > 0) { 
+                let len = _applets.length;
+                for (let i = 0; i < len; i++) { 
+                    _applets[i].app = _applets[i].parent = r;
+                    let appletInst = _appletsMap[_applets[i].anchor] = new Applet(_applets[i]);
+                }
+            }
+            _browserManager.init();
+            _route(_browserManager.hash);
         }
     };
 

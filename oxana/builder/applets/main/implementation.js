@@ -1,7 +1,11 @@
-let Implementation = function (app) {
+let Implementation = function (applet) {
+
+    let app = applet.app;
+    let data = applet.data;
 
     let activeComponent;
     let activeContainer;
+    let _cmpList = new ArrayEx(data.componentList);
 
     let propertyEditorViewStack, propertyEditorContainer, fileSelectModal, browseFile, componentsContainer,
         rightSideNav, listHistorySteps, workArea, workAreaColumn,
@@ -9,6 +13,18 @@ let Implementation = function (app) {
         splitHorizontal, splitVertical, uploadIcon, saveLayout, selectBtn, componentList;
 
     let imp = {
+        "BEGIN_DRAW": function (e) { 
+            console.log("APPLET_INIT");
+            let paths = findMember(applet.literal, "id", [], "listHistorySteps", false);
+            paths[0].pop();
+            let propsListHistorySteps = getChainValue(applet.literal, paths[0]);
+            propsListHistorySteps.dataProvider = app.history.steps;
+    
+            paths = findMember(applet.literal, "id", [], "componentList", false);
+            paths[0].pop();
+            let propsComponentList = getChainValue(applet.literal, paths[0]);
+            propsComponentList.dataProvider = _cmpList;
+        },
         "END_DRAW": function (e) {
             propertyEditorViewStack = app.viewStack.mainContainer.container.rightSideNav.rightSideContainer.propertyEditorViewStack;
             propertyEditorContainer = propertyEditorViewStack.propertyEditorContainerWrap.propertyEditorContainer;
@@ -111,7 +127,7 @@ let Implementation = function (app) {
             description: "Add component ",
             do: function (e) {
                 if (!formField) { 
-                    formField = Builder.components["FormField"].literal;
+                    formField = data.components["FormField"].literal;
                 }
                 console.log('CREATED_');
                 e.preventDefault();
@@ -125,7 +141,7 @@ let Implementation = function (app) {
                 };
                 if (move == "") {
                     console.log("ADD_COMPONENT_ " + domID);
-                    let lit = Builder.components[ctor].literal;
+                    let lit = data.components[ctor].literal;
                     if (noNeedFF.indexOf(ctor) == -1 && (workArea.ctor == "Form" || (objectHierarchyGetMatching(workArea, "ctor", "Form", "parent", 1))["match"] !=null)) {
                         let ff = extend(true, formField);
                         ff.props.component = lit;
@@ -309,14 +325,8 @@ let Implementation = function (app) {
         },
     
         "LOAD_HTML": function (e) {
-            let pattern = /<body[^>]*>((.|[\n\r])*)<\/body>/im;
-            let array_matches = pattern.exec(e.content);
-            let body = array_matches[1];
-    
-            let SCRIPT_REGEX = /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi;
-            while (SCRIPT_REGEX.test(body)) {
-                body = body.replace(SCRIPT_REGEX, "");
-            }
+            let body = BrowserUtils.body(e.content); 
+            body = BrowserUtils.removeScripts(body);
             let dn = $("<div/>").append(body);
             let s = new Scrap();
             let lit = s.visit(dn);

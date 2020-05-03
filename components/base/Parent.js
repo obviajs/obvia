@@ -57,7 +57,6 @@ var Parent = function (_props, overrided = false, _isSurrogate = false) {
             index = index > -1 ? index : _components.length;
             if (index >= 0 && index <= _components.length) {
                 index = index > -1 ? index : _components.length;
-                this.$el.insertAt(child.$el, index);
                 let component = { ctor: child.ctor, props: child.props };
                 _components.splice(index, 0, component);
                 _children[child.id] = child;
@@ -66,9 +65,13 @@ var Parent = function (_props, overrided = false, _isSurrogate = false) {
                 child.parent = _proxy;
                 child.parentType = this.type;
                 child.parentForm = _proxy;
-                let event = jQuery.Event("childAdded");
-                event.child = child;
-                this.trigger(event);
+                
+                return child.renderPromise().then(function (cmpInstance) {
+                    _self.$el.insertAt(cmpInstance.$el, index);
+                    let event = jQuery.Event("childAdded");
+                    event.child = child;
+                    _self.trigger(event);
+                });
             }
         }
     };
@@ -389,9 +392,9 @@ var Parent = function (_props, overrided = false, _isSurrogate = false) {
                     switch (prop) {
                         case "components":
                             let components = [];
-                            if (_components) {
-                                 for (let i = 0; i < _components.length;i++) {
-                                    let component = _children[_components[i].props.id].literal;
+                            if (_csorted) {
+                                 for (let i = 0; i < _csorted.length;i++) {
+                                    let component = _children[_csorted[i]].literal;
                                     components.push(component);
                                 }
                             }

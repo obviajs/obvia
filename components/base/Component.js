@@ -457,6 +457,7 @@ var Component = function (_props, overrided = false, _isSurrogate = false) {
     let _beginDraw = this.beginDraw;
     this.beginDraw = function (e) {
         if (e.target.id == this.domID) {
+            console.log("beginDraw : Type:", this.ctor + " id:" + this.$el.attr("id"));
             if (typeof _props.beginDraw == 'function')
                 _props.beginDraw.apply(this.proxyMaybe, arguments);
             if (!e.isDefaultPrevented()) {

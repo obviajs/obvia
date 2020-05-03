@@ -4,11 +4,15 @@ var Applet = function (_props) {
     };
     _props = extend(false, false, _defaultParams, _props);
     let _self = this;
+    let _parent = _props.parent;
     let _forceReload = _props.forceReload;
     let _app = _props.app;
+    let _dataPromise = _props.dataPromise;
+    let _data = _props.data;
+    let _appendTo = _props.appendTo;
     let _mimeType = "application/json";
     //the url after # that will bring this view to focus
-    let _urlHook = _props.urlHook;
+    let _anchor = _props.anchor;
     //a two way map, to convert between hashparams to internal params and vice versa
     let _map = new TwoWayMap(_props.map);
     //the url of the view json
@@ -17,28 +21,58 @@ var Applet = function (_props) {
     let _applets = _props.applets;
     //the loaded JSON literal of the view
     let _literal;
+    //the component instance of the view
+    let _view;
     //the behaviors implementations (ex ctl)
     let _implementation;
+    let _loaded = false;
 
+    //Applet implementation skeleton
+    let _behaviors = {
+        "beginDraw": "BEGIN_DRAW",
+        "endDraw": "END_DRAW"
+    };
+    
     this.init = function () {
-        return coroutine(function* () {
-            let len = _applets;
-            for (let i = 0; i < len; i++) {
-                let applet = _applets[i];
-                yield applet.init();
-            }
+        return !_loaded ? coroutine(function* () {
             let rnd = _forceReload ? "?r=" + Math.random() : "";
             let r = yield Promise.all([
                 get(_url + "main.json" + rnd, _mimeType),
                 //import uses different starting point (currrent file directory)
-                import("../../"+_url + "implementation.js" + rnd).then((module) => { _implementation = new module.Implementation(_app); })
-            ]);
+                import("../../" + _url + "implementation.js" + rnd),
+                _dataPromise ? _dataPromise.call() : Promise.resolve(_data)
+            ]).then((p) => { 
+                let module = p[1];
+                _data = p[2];
+                _implementation = new module.Implementation(_self);
+                _implementation.guid = StringUtils.guid();
+                return p;
+            });
+            _loaded = true;
             _literal = JSON.parse(r[0].response);
+            _view = Component.fromLiteral(_literal);
+            _app.addImplementation(_implementation);
+            _app.addBehaviors(_view, _behaviors, false);
+
+            let len = _applets;
+            for (let i = 0; i < len; i++) {
+                let applet = _applets[i];
+                applet.app = _app;
+                applet.parent = _view;
+                let inst = new Applet(applet);
+                yield inst.init();
+            }
+
+            let paths = findMember(_parent, "id", ["$el", "$container", "base", "attr", "classes", "css", "spacing"], _appendTo, false);
+            paths[0].pop();
+            let appendTo = getChainValue(_parent, paths[0]);
+            
+            appendTo.addChild(_view);
+
             return _literal;
-        });
+        }) : Promise.resolve(_literal);
     };
 
-    
     Object.defineProperty(this, "url", {
         get: function url() {
             return _url;
@@ -46,9 +80,9 @@ var Applet = function (_props) {
         configurable: true
     });
 
-    Object.defineProperty(this, "urlHook", {
-        get: function urlHook() {
-            return _urlHook;
+    Object.defineProperty(this, "anchor", {
+        get: function anchor() {
+            return _anchor;
         },
         configurable: true
     });
@@ -60,9 +94,44 @@ var Applet = function (_props) {
         configurable: true
     });
 
+    Object.defineProperty(this, "appendTo", {
+        get: function appendTo() {
+            return _appendTo;
+        },
+        configurable: true
+    });
+
     Object.defineProperty(this, "implementation", {
         get: function implementation() {
             return _implementation;
+        },
+        configurable: true
+    });
+
+    Object.defineProperty(this, "behaviors", {
+        get: function behaviors() {
+            return _behaviors;
+        },
+        configurable: true
+    });
+
+    Object.defineProperty(this, "app", {
+        get: function app() {
+            return _app;
+        },
+        configurable: true
+    });
+
+    Object.defineProperty(this, "data", {
+        get: function data() {
+            return _data;
+        },
+        configurable: true
+    });
+
+    Object.defineProperty(this, "view", {
+        get: function view() {
+            return _view;
         },
         configurable: true
     });

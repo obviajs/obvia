@@ -44,16 +44,14 @@ var ViewStack = function(_props)
         enumerable: true
     });
     
-    let _mutationHandler = function(e, ci)
-    {
+    let _mutationHandler = function (e, ci) {
         let c = _self.children[(_components[ci]).props.id];
-        if(c)
-        {
+        if (c) {
             let parent = c.children[c.components[0].props.id];
             let c = parent.children[e.oldValue.props.id];
             delete parent.children[e.oldValue.props.id];
             //
-            if(c.$el.parent().length > 0){
+            if (c.$el.parent().length > 0) {
                 c.$el.detach();
             }
             let cmp = Component.fromLiteral(e.newValue);
@@ -62,13 +60,13 @@ var ViewStack = function(_props)
 
             //parent.$container.append(cmp.$el);
             parent.children[cmp.id] = cmp;
-//pergjithesoje, komponenti i ri te shtohet te indexi ku ishte i vjetri
+            //pergjithesoje, komponenti i ri te shtohet te indexi ku ishte i vjetri
             cmp.parent = _self;
             cmp.parentType = _self.type;
             cmp.parentForm = _self;
-        }       
+        }
         console.log(arguments);
-    }
+    };
 
     this.beforeAttach = function() 
     {
