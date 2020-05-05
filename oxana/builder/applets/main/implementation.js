@@ -14,7 +14,7 @@ let Implementation = function (applet) {
 
     let imp = {
         "BEGIN_DRAW": function (e) { 
-            console.log("APPLET_INIT");
+            console.log("APPLET_BEGIN_DRAW");
             let paths = findMember(applet.literal, "id", [], "listHistorySteps", false);
             paths[0].pop();
             let propsListHistorySteps = getChainValue(applet.literal, paths[0]);

@@ -439,6 +439,20 @@ var Component = function (_props, overrided = false, _isSurrogate = false) {
                 _DOMMutation.apply(this.proxyMaybe, arguments);
         }
     };
+
+    let _init = this.init;
+    this.init = function (e) {
+        if (e.target.id == this.domID) {
+            if (typeof _props.init == 'function')
+                _props.init.apply(this.proxyMaybe, arguments);
+            //TODO: not neccessary ? 
+            if (!e.isDefaultPrevented()) {
+                if (typeof _init == 'function')
+                    _init.apply(this.proxyMaybe, arguments);
+            }
+        }
+    };
+
     let _beforeAttach = this.beforeAttach;
     this.beforeAttach = function (e) {
         if (e.target.id == this.domID) {
@@ -529,6 +543,7 @@ var Component = function (_props, overrided = false, _isSurrogate = false) {
                     'DOMMutation': this.DOMMutation && typeof this.DOMMutation == 'function' ? this.DOMMutation.bind(_self) : undefined,
                     'afterAttach': this.afterAttach && typeof this.afterAttach == 'function' ? this.afterAttach.bind(_self) : undefined,
                     'beforeAttach': this.beforeAttach && typeof this.beforeAttach == 'function' ? this.beforeAttach.bind(_self) : undefined,
+                    'init': this.init && typeof this.init == 'function' ? this.init.bind(_self) : undefined,
                     'beginDraw': this.beginDraw && typeof this.beginDraw == 'function' ? this.beginDraw.bind(_self) : undefined,
                     'endDraw': this.endDraw && typeof this.endDraw == 'function' ? this.endDraw.bind(_self) : undefined
                 }
@@ -908,6 +923,18 @@ var Component = function (_props, overrided = false, _isSurrogate = false) {
                 _self.trigger('afterAttach');
         }, _ownerDocument);
     }
+    
+    this.find = function (childId) {
+        let r = null;
+        let paths = findMember(this, "id", ["$el", "$container", "base", "attr", "classes", "css", "spacing"], childId, false);
+        if (paths.length > 0) { 
+            paths[0].pop();
+            r = getChainValue(this, paths[0]);
+        }
+        return r;
+    };
+
+    this.trigger('init');
 };
 
 Component.processPropertyBindings = function (props) {
