@@ -660,6 +660,8 @@ var Repeater = function(_props)
         //if(_props.dataProvider)
         if(!this.getBindingExpression("dataProvider"))
             this.dataProvider = _props.dataProvider;
+        else
+            this.dataProvider = new ArrayEx([]);
         return _rPromise;
     };
     

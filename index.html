@@ -30,6 +30,8 @@
             rjs.define("./oxana/builder/ObjectEditor.js", "ObjectEditor");
             rjs.define("./oxana/Code/Code.js", "Code");
             rjs.define("./oxana/Code/CodeMerge.js", "CodeMerge");
+            rjs.define("./oxana/kanban/Kanban.js", "Kanban");
+            rjs.define("./oxana/kanban/css/kanban_default.css", "kanban_default_css");
             rjs.require([
                 "CollectionEditor",
                 "ObjectEditor",
@@ -39,10 +41,13 @@
                 "ApiClient",
                 "ApiClientGen",
                 "OAMethod",
-                "GaiaAPI_Utils"
+                "GaiaAPI_Utils",
+                "Kanban",
+                "kanban_default_css"
             ]).then(function () {
                 //rjs.define("./examples/ApiClient/example.js", "ApiClientExample");
-                rjs.define("./examples/wizard/example.js", "wizarExample");
+                //rjs.define("./examples/wizard/example.js", "wizarExample");
+                rjs.define("./examples/KanBan/example.js", "KanBanExample");
             });
             //rjs.define("./examples/ArrayEx/example.js", "ArrayExExample");
             //rjs.define("./examples/Tree/example.js", "TreeExample");
