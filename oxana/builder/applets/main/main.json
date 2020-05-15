@@ -59,6 +59,7 @@
                    {
                       "ctor":"Container",
                       "props":{
+                         "type": "",
                          "id":"middleNav",
                          "css":{
                             "marginLeft":"50",

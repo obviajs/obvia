@@ -41,7 +41,7 @@ var Applet = function (_props) {
                 get(_url + "main.json" + rnd, _mimeType),
                 //import uses different starting point (currrent file directory)
                 import("../../" + _url + "implementation.js" + rnd),
-                _dataPromise ? _dataPromise : Promise.resolve(_data)
+                _dataPromise ? (typeof _dataPromise == 'function' ? _dataPromise.call() : _dataPromise) : Promise.resolve(_data)
             ]).then((p) => { 
                 let module = p[1];
                 _data = p[2];

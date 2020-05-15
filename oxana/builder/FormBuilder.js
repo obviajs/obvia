@@ -1,4 +1,5 @@
 //the dataPromise function should return the dataObject when resolved
+//data will be loaded only once :)
 var _initDP = function () {
     Builder.masks;
     Builder.maskValueField = "";
