@@ -310,7 +310,7 @@ var Repeater = function(_props)
         let dataProviderLengthChangedEvent = jQuery.Event("dataProviderLengthChanged");
         dataProviderLengthChangedEvent.oldValue = oldValue;
         dataProviderLengthChangedEvent.newValue = newValue;
-        _self.trigger("dataProviderLengthChanged", [_self]);
+        _self.trigger(dataProviderLengthChangedEvent, [_self]);
     };
     let _debouncedLengthChanged = debounce(_dpLengthChanged, 1);
     

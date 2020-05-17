@@ -1,14 +1,19 @@
 var ApiClient = function (_props) {
+    this.$el = $(this);
     let _defaultParams = {
         url: "https://cors-anywhere.herokuapp.com/pastebin.com/raw/tSKLhXA5",
         timeout: 50000,
         sendCookies: false,
         cache: false,
         queryParams: {},
-        headers: {}
+        headers: {},
+        batching: false,
+        batchUrl: ""
     };
     _props = extend(false, false, _defaultParams, _props);
     let _timeout = _props.timeout;
+    let _batching = _props.batching;
+    let _batchUrl = _props.batchUrl;
     let _xhr;
     let _methods = ["GET", "POST", "DELETE", "PUT"];
     let _responseTypes = ["text", "json", "blob", "document", "arraybuffer"];
@@ -18,18 +23,93 @@ var ApiClient = function (_props) {
     let _queryParams = _props.queryParams;
     let _body = {};
     let _tbody = null;
+    let _self = this;
+
+    let _batchRequests = [];
+    let _batchBody = [];
+    let _batchQuery = [];
+    let _batchPath = [];
+    let _batchHeaders = [];
+    
+    let _resetBatch = function () {
+        _batchRequests = [];
+        _batchBody = [];
+        _batchQuery = [];
+        _batchPath = [];
+        _batchHeaders = [];
+    };
+    
+    let _prepareUrl = function (url, pathParams, queryParams) {
+        url = _buildUrl(url, pathParams);
+        if (url[url.length - 1] != '/') {
+            url = url + '/';
+        }
+        url += "?" + new URLSearchParams(queryParams).toString();
+        return url;
+    };
+
+    this.processBatch = function () {
+        let ro = { "requests": [] };
+        let len = _batchRequests.length;
+
+        for (let i = 0; i < len; i++) { 
+            let r = {
+                "id": (i + 1), "method": _batchRequests[i].method, "url": _batchRequests[i].url,
+                "body": _batchBody[i],
+                "headers": _batchHeaders[i]
+            };
+            ro.requests.push(r);
+        }
+
+        this.body(ro)
+            .type()
+            .query()
+            .path()
+            .headers({ "Accept": "application/json" })
+            .post(_batchUrl); 
+        
+        _resetBatch();
+    };
+
     this.get = function (url, responseType = "json") {
-        return _request(url, "GET", responseType);
+        if (_batching) {
+            let ci = _batchRequests.length;
+            url = _prepareUrl(url, _batchPath[ci], _batchQuery[ci]);
+            _batchRequests.push({ "url": url, "method": "GET", "responseType": responseType });
+            return new Promise((resolve, reject) => {
+                _self.on("xhrResolved", (e) => {                    
+                    let cri = indexOfObject(e.responses, "id", ci);
+                    resolve(e.responses[cri]);
+                });
+                _self.on("xhrRejected", (e) => { 
+                    reject(e.responseObject);
+                });
+            });
+        }else
+            return _request(url, "GET", responseType);
     };
+
     this.post = function (url, responseType = "json") {
-        return _request(url, "POST", responseType);
+        if (_batching) {
+            _batchRequests.push({ "url": url, "method": "POST", "responseType": responseType });
+        }else
+            return _request(url, "POST", responseType);
     };
+
     this.delete = function (url, responseType = "json") {
-        return _request(url, "DELETE", responseType);
+        if (_batching) {
+            _batchRequests.push({ "url": url, "method": "DELETE", "responseType": responseType });
+        }else
+            return _request(url, "DELETE", responseType);
     };
+
     this.put = function (url, responseType = "json") {
-        return _request(url, "PUT", responseType);
+        if (_batching) {
+            _batchRequests.push({ "url": url, "method": "PUT", "responseType": responseType });
+        }else
+            return _request(url, "PUT", responseType);
     };
+
     this.type = function (ct = 'application/json') {
         ct = ct.toLowerCase();
         _headers["Content-Type"] = ct;
@@ -69,17 +149,28 @@ var ApiClient = function (_props) {
         _headers["Authorization"] = 'Basic ' + btoa(`${username}:${password}`);
         return this;
     };
+
     this.body = function (b) {
-        _body = _normalizeParams(b);
+        if (_batching) { 
+            _batchBody.push(_normalizeParams(b));    
+        }else
+            _body = _normalizeParams(b);
         return this;
     };
     
     this.query = function (q) {
-        _queryParams = _normalizeParams(q);
+        if (_batching) {
+            _batchQuery.push(_normalizeParams(q));
+        } else
+            _queryParams = _normalizeParams(q);
         return this;
     };
+
     this.path = function (p) {
-        _pathParams = p;
+        if (_batching) {
+            _batchPath.push(p);
+        }else
+            _pathParams = p;
         return this;
     };
     let _request = function (url, method, responseType = "json") {
@@ -87,11 +178,8 @@ var ApiClient = function (_props) {
             if (method.toUpperCase() === 'GET' && _cache === false) {
                 _queryParams['r'] = Math.random();
             }
-            url = _buildUrl(url, _pathParams);
-            if (url[url.length - 1] != '/') {
-                url = url + '/';
-            }
-            url += "?" + new URLSearchParams(_queryParams).toString();
+
+            url = _prepareUrl(url, _pathParams, _queryParams);
             // create an XHR object
             _xhr = new XMLHttpRequest();
             _xhr.withCredentials = _sendCookies;
@@ -99,17 +187,24 @@ var ApiClient = function (_props) {
             // listen for `onload` event
             _xhr.onload = () => {
                 // process response
-                resolve({ "status": _xhr.status, "response": _xhr.response || _xhr.responseText });
-                return;
+                let ro = { "status": _xhr.status, "response": _xhr.response || _xhr.responseText };
+                resolve(ro);
+                if (_batching) { 
+                    ro.parsedResponse = JSON.parse(ro.response);
+                }
+                let xhrResolved = jQuery.Event("xhrResolved");
+                xhrResolved.responseObject = ro;
+                _self.trigger(xhrResolved, [_self]);
             };
             _xhr.onloadend = () => {
                 console.log('onloadend');
             };
-            _xhr.onerror = function(){
-                reject({
-                    status: this.status,
-                    statusText: _xhr.statusText
-                });
+            _xhr.onerror = function () {
+                let ro = { "status": this.status, "statusText": _xhr.statusText };
+                reject(ro);
+                let xhrRejected = jQuery.Event("xhrRejected");
+                xhrRejected.responseObject = ro;
+                _self.trigger(xhrRejected, [_self]);
             };
             _xhr.onprogress = (event) => {
                 // event.loaded returns how many bytes are downloaded
@@ -140,20 +235,26 @@ var ApiClient = function (_props) {
             responseType = responseType.toLowerCase();
             if (_responseTypes.indexOf(responseType) > -1) {
                 _xhr.responseType = responseType;
-            } else
-                reject({
-                    status: -1,
-                    statusText: "unsupported return type"
-                });
+            } else { 
+                let ro = { "status": -1, "statusText": "unsupported return type" };
+                reject(ro);
+                let xhrRejected = jQuery.Event("xhrRejected");
+                xhrRejected.responseObject = ro;
+                _self.trigger(xhrRejected, [_self]);
+            }
+                
                 
             method = method.toUpperCase();
             if (_methods.indexOf(method) > -1)
                 _xhr.open(method, url);
-            else
-                reject({
-                    status: -1,
-                    statusText: "unsupported method"
-                });
+            else {
+                let ro = { "status": -1, "statusText": "unsupported method" };
+                reject(ro);
+                let xhrRejected = jQuery.Event("xhrRejected");
+                xhrRejected.responseObject = ro;
+                _self.trigger(xhrRejected, [_self]);
+            }
+            
             for (let header in _headers) {
                 _xhr.setRequestHeader(header, _headers[header]);
             }
@@ -235,3 +336,4 @@ var ApiClient = function (_props) {
     //getResponseHeader('Content-Type');
     //xhr.getAllResponseHeaders();
 };
+ApiClient.prototype = Object.create(EventDispatcher.prototype);
