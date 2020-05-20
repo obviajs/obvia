@@ -176,7 +176,7 @@ var response = function()
     };
 
 var GaiaAPI_DV_dataviews = function(){
-        let _server = "http://flower-gaia/api";
+        let _server = "http://gaia.oxana.io/api";
         Object.defineProperty(this, "server", {
             get: function server() {
                 return _server;

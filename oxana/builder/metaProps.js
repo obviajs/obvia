@@ -112,7 +112,7 @@ Builder.initMetaProps = function () {
                     //assign them to the labelField and valueField editor`s dataProvider property
                     if (this.value && this.value.length > 0) {
                         //let url = "http://flower-gaia/api/dataview_pid_1/yaml";
-                        let url = "http://flower-gaia/api/" + this.value[0].name + "/yaml";
+                        let url = "http://gaia.oxana.io/api/" + this.value[0].name + "/yaml";
                         let _self = this;
                         if (!Builder.data[_self.value[0][Builder.providerValueField]]) {
                             GaiaAPI_Utils.generateAndLoadDataView(url, Builder.recordsPerPage).then(function (aex) {
@@ -281,7 +281,7 @@ Builder.initMetaProps = function () {
                                 win.show();
                             }
                         } else {
-                            alert("The selcted DataProvider is empty or failed to load.");
+                            alert("The selected DataProvider is empty or failed to load.");
                         }
                     } else {
                         alert("Please Select DataProvider");
