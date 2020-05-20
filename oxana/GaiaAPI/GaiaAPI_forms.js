@@ -88,7 +88,7 @@ var response = function()
 }
 
 var GaiaAPI_forms = function(){
-        let _server = "http://gaia.oxana.io/api";
+        let _server = "https://gaia.oxana.io/api";
         Object.defineProperty(this, "server", {
             get: function server() {
                 return _server;
