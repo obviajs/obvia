@@ -1,45 +1,85 @@
-.container-fluid{
-    border: 1 px dotted gray;
-    background-color: #4A4A4A;
+.kanban-centered {
+    position: relative;
+    margin-bottom: 30px;
+    transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
 }
 
-.dragging {
+.kanban-centered.drop {
+    border: 2px dashed #FFF;
+}
+
+.kanban-centered.drop div {
+    pointer-events: none;
+}
+
+.kanban-centered .kanban-entry {
+    position: relative;
+    /*width: 50%;
+        float: right;*/
+    font-size: 15px;
+    color: rgb(255, 255, 255);
+    background-color: rgb(77, 77, 77);
+    margin: 10px 8px;
+    border-radius: 4px;
+    height: 50px;
+    -webkit-box-shadow: 1px 1px 2px 0px rgba(50, 50, 50, 0.5);
+    -moz-box-shadow: 1px 1px 2px 0px rgba(50, 50, 50, 0.5);
+    box-shadow: 1px 1px 2px 0px rgba(50, 50, 50, 0.5);
+}
+
+
+
+.kanban-col {
+    width: 100%;
+    margin-right: 20px;
+    display: flex;
+    flex-direction: row;
+    position: relative;
+}
+
+.panel-heading {
+    cursor: -moz-grab;
+    cursor: -webkit-grab;
+    cursor: grab;
+    background-color: rgb(74, 71, 255);
+    border-radius: 5px;
+}
+
+.grab {
+    cursor: grab;
+    transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+}
+
+
+
+.panel-body.drop {
+    border: 2px dashed #FFF;
+}
+
+.panel-body.drop div {
+    pointer-events: none;
+}
+
+.grab.dragging {
     opacity: .5;
+    transform: scale(.8);
 }
 
-.lists {
-	display: flex;
-	flex-flow: column;
-	flex: 1;
+.grab:active {
+    cursor: grabbing;
 
-	background-color: rgba(0, 0, 0, 0.1);
-	margin: 0 15px;
-	padding: 8px;
-	transition: all 0.2s linear;
 }
 
-.list-items {
-    padding: 10px;
-    margin: 10px auto;
-    border-radius: 10%;
-}
-
-.heading{
-    color: #f3f3f3f3;
-    text-align: center;
-    font-size: 30px;
-    margin: auto;
-    background-color: #B1B1B1;
-   
+.grabbing {
+    cursor: -moz-grabbing;
+    cursor: -webkit-grabbing;
 }
 
 
-.items{
-    background-color: #F3F3F3;
-	border-radius: 8px;
-	padding: 15px 20px;
-	text-align: center;
-    margin: 4px 0px;
-    font-size: 25px;
+.panel-heading {
+    cursor: context-menu;
 }
 
+.panel-heading i {
+    cursor: pointer;
+}

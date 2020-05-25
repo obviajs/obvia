@@ -926,7 +926,7 @@ var Component = function (_props, overrided = false, _isSurrogate = false) {
     
     this.find = function (childId) {
         let r = null;
-        let paths = findMember(this, "id", ["$el", "$container", "base", "attr", "classes", "css", "spacing"], childId, false);
+        let paths = findMember(this, "id", ["$el", "$container", "base", "attr", "classes", "css", "spacing", "dataProvider", "parentForm", "parent"], childId, false);
         if (paths.length > 0) { 
             paths[0].pop();
             r = getChainValue(this, paths[0]);

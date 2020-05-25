@@ -22,8 +22,15 @@ let dp = [{
     {
         status: "In Progress",
         tasks: [{
-            task_name: "create Kanban component"
-        }]
+                task_name: "create Kanban component"
+            },
+            {
+                task_name: "go to work"
+            },
+            {
+                task_name: "go to work"
+            }
+        ]
     },
     {
         status: "Later",
@@ -39,15 +46,23 @@ let myKanban = new Kanban({
     tasks_name: "tasks",
     task: "task_name",
     dataProvider: dp,
-    components: [{
-        ctor: Button,
-        props: {
-            id: "button",
-            classes: ["btn", "btn-primary"],
-            label: "Add"
-        }
-    }]
+
 });
+
+function addPanel() {
+    myKanban.addPanel('Now');
+}
+
+let button = {
+    ctor: Button,
+    props: {
+        id: "add_button",
+        label: "Add",
+        classes: ["btn", "btn-primary"]
+    }
+};
+
+//myKanban.addComponent(button);
 
 
 myKanban.renderPromise().then(function (cmpInstance) {

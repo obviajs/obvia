@@ -27,7 +27,8 @@ var Applet = function (_props) {
     //the behaviors implementations (ex ctl)
     let _implementation;
     let _loaded = false;
-
+    let _base = BrowserManager.getInstance().base;
+    let _furl = _base + (_url[0] == "." ? _url.substr(1) : _url);
     //Applet implementation skeleton
     let _behaviors = {
         "beginDraw": "BEGIN_DRAW",
@@ -38,9 +39,9 @@ var Applet = function (_props) {
         return (!_loaded ? coroutine(function* () {
             let rnd = _forceReload ? "?r=" + Math.random() : "";
             let r = yield Promise.all([
-                get(_url + "main.json" + rnd, _mimeType),
+                get(_furl + "main.json" + rnd, _mimeType),
                 //import uses different starting point (currrent file directory)
-                import("../../" + _url + "implementation.js" + rnd),
+                import(_furl + "implementation.js" + rnd),
                 _dataPromise ? (typeof _dataPromise == 'function' ? _dataPromise.call() : _dataPromise) : Promise.resolve(_data)
             ]).then((p) => { 
                 let module = p[1];
@@ -51,6 +52,7 @@ var Applet = function (_props) {
             });
             
             _literal = JSON.parse(r[0].response);
+            _literal.props.bindingDefaultContext = _data;
             _view = Component.fromLiteral(_literal);
             _app.addImplementation(_implementation);
             _app.addBehaviors(_view, _behaviors, false);

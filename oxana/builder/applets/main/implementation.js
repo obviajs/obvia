@@ -96,13 +96,13 @@ let Implementation = function (applet) {
             //app.behaviors["previewBtn"]["click"] = "PREVIEW";
             app.addBehaviors(workArea, waBehaviors, false);
             
-            app.addBehaviors(oxana, {
+            app.addBehaviors(app, {
                 "loadLayout": "LOAD_LAYOUT", 
                 "loadHtml": "LOAD_HTML", 
                 "keydown": {
                     "WA_UNDO": { filter: KeyboardUtils.test["CTR+Z"], onPropagation: true },
                     "WA_REDO": { filter: KeyboardUtils.test["CTR+Y"], onPropagation: true },
-                    "DELETE_CMP": { filter: (e) => { return (e.keyCode == 46);}, onPropagation: true }
+                    "DELETE_CMP": { filter: KeyboardUtils.test["DEL"], onPropagation: true }
                 }
             }, false);
         },

@@ -68,7 +68,7 @@ var uiRoute = function (applet) {
 var oxana = new App({
     applets: [
         {
-            url: "./oxana/builder/applets/main/",
+            url: "./flowerui/oxana/builder/applets/main/",
             anchor: "main",
             dataPromise: _initDP,
             port: "viewStack",

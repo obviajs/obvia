@@ -7,27 +7,27 @@
 //component definition
 let Kanban = function (_props, overrided = false) {
     let _self = this;
-    let _dataProvider, _status_name, _tasks_name, _task, _panelRepeater, _bodyRepeater, _listItems, _items;
-    let _actions = new ArrayEx();
+    let _dataProvider, _status_name, _tasks_name, _task, _panelRepeater, _bodyRepeater, _listItems, _items, _repeater;
+    //let _actions = new ArrayEx();
 
-    Object.defineProperty(this, "dataProvider", {
-        get: function dataProvider() {
-            return _dataProvider;
-        },
-        set: function dataProvider(v) {
-            if (_dataProvider !== v) {
-                _dataProvider = v;
-            }
-            if (_dataProvider && _dataProvider.forEach) {
-                _dataProvider.map(function (item) {
-                    for (let i = 0; i < item[_tasks_name].length; i++) {
-                        _actions.push(item[_tasks_name][i]);
-                    }
-                });
-            }
-        },
-        enumerable: true
-    });
+    // Object.defineProperty(this, "dataProvider", {
+    //     get: function dataProvider() {
+    //         return _dataProvider;
+    //     },
+    //     set: function dataProvider(v) {
+    //         if (_dataProvider !== v) {
+    //             _dataProvider = v;
+    //         }
+    //         if (_dataProvider && _dataProvider.forEach) {
+    //             _dataProvider.map(function (item) {
+    //                 for (let i = 0; i < item[_tasks_name].length; i++) {
+    //                     _actions.push(item[_tasks_name][i]);
+    //                 }
+    //             });
+    //         }
+    //     },
+    //     enumerable: true
+    // });
 
 
     let _defaultParams = {
@@ -39,21 +39,16 @@ let Kanban = function (_props, overrided = false) {
 
     this.beforeAttach = function (e) {
         if (e.target.id == this.domID) {
-            if (_props.dataProvider) {
-                this.dataProvider = _props.dataProvider;
-                _panelRepeater = this.container_fluid.sortable.repeater;
-                //_bodyRepeater = _panelRepeater.repeater_body;
-                _listItems = _panelRepeater.list_items;
-            }
+            //this.dataProvider = _props.dataProvider;
+            _panelRepeater = this.container_fluid.sortable.repeater;
+            //_bodyRepeater = _panelRepeater.repeater_body;
+            _listItems = _panelRepeater.list_items;
         }
     };
 
     this.afterAttach = function (e) {
         if (e.target.id == this.domID) {
-            // let kanbanCol = $('.list-items');
-            // kanbanCol.css('max-height', (window.innerHeight - 100) + 'px');
-            // var kanbanColCount = parseInt(kanbanCol.length);
-            // $('.container-fluid').css('min-width', (kanbanColCount * 350) + 'px');
+
         }
     };
 
@@ -61,163 +56,163 @@ let Kanban = function (_props, overrided = false) {
 
     let _cmps;
     let fnContainerDelayInit = function () {
+
+        _repeater = [{
+            ctor: Repeater,
+            props: {
+                id: 'repeater',
+                dataProvider: _dataProvider,
+                rendering: {
+                    direction: 'horizontal',
+                    wrap: false
+                },
+                classes: ["panel", "panel-primary", "kanban-col"],
+                components: [{
+                    ctor: Container,
+                    props: {
+                        id: "list_items",
+                        classes: ["list-items"],
+                        components: [{
+                                ctor: Heading,
+                                props: {
+                                    id: "header_label",
+                                    classes: ["panel-heading"],
+                                    type: HeadingType.h2,
+                                    align: 'center',
+                                    label: `{${_status_name}}`
+                                }
+                            },
+                            {
+                                ctor: Container,
+                                props: {
+                                    id: "tasks_container",
+                                    classes: ["panel-body"],
+                                    type: ContainerType.NONE,
+                                    dragover: function (e, ra) {
+                                        e.preventDefault();
+                                    },
+                                    dragleave: function (e, ra) {
+                                        //
+                                    },
+                                    dragenter: function (e, ra) {
+                                        e.preventDefault();
+                                    },
+                                    drop: function (e, ra) {
+                                        drop(e, ra);
+                                    },
+                                    components: [{
+                                        ctor: Repeater,
+                                        props: {
+                                            id: "repeater_body",
+                                            dataProvider: `{${_tasks_name}}`,
+                                            rendering: {
+                                                direction: 'vertical',
+                                                wrap: false
+                                            },
+                                            classes: ["kanban-centered"],
+                                            components: [{
+                                                ctor: Container,
+                                                props: {
+                                                    id: "items",
+                                                    classes: ['kanban-entry', 'grab'],
+                                                    draggable: true,
+                                                    dragstart: function (e, ra) {
+                                                        dragStart(e, ra);
+                                                    },
+                                                    dragend: function (e, ra) {
+                                                        dragEnd(e, ra);
+                                                    },
+                                                    label: `{${_task}}`
+                                                    // components: [{
+                                                    //     ctor: Label,
+                                                    //     props: {
+                                                    //         id: "action",
+                                                    //         classes: ["kanban-entry-inner", "kanban-label"],
+                                                    //         type: LabelType.h3,
+                                                    //         label: `{${_task}}`
+                                                    //     }
+                                                    // }]
+                                                }
+                                            }]
+                                        }
+                                    }]
+                                }
+                            },
+
+                        ]
+                    }
+                }]
+            }
+        }];
+
         _cmps = [{
             ctor: Container,
             props: {
                 id: "container_fluid",
                 classes: ["container-fluid"],
                 type: ContainerType.NONE,
-                classes: ['container-fluid'],
                 components: [{
                     ctor: Container,
                     props: {
                         id: "sortable",
                         type: ContainerType.ROW,
-                        classes: ["row", "sortable"],
-                        components: [{
-                            ctor: Repeater,
-                            props: {
-                                id: 'repeater',
-                                dataProvider: _dataProvider,
-                                rendering: {
-                                    direction: 'horizontal',
-                                },
-                                components: [{
-                                    ctor: Container,
-                                    props: {
-                                        id: "list_items",
-                                        classes: ["list-items"],
-                                        dragover: function (e, ra) {
-                                            dragover(e, ra);
-                                        },
-                                        dragenter: function (e, ra) {
-                                            e.preventDefault();
-                                        },
-                                        drop: function (e, ra) {
-                                            drop(e, ra);
-                                        },
-                                        components: [{
-                                                ctor: Heading,
-                                                props: {
-                                                    id: "header_label",
-                                                    classes: ["heading"],
-                                                    type: HeadingType.h2,
-                                                    label: `{${_status_name}}`
-                                                }
-                                            },
-                                            {
-                                                ctor: Repeater,
-                                                props: {
-                                                    id: "repeater_body",
-                                                    dataProvider: `{${_tasks_name}}`,
-                                                    rendering: {
-                                                        direction: 'vertical',
-                                                        wrap: false
-                                                    },
-                                                    components: [{
-                                                        ctor: Container,
-                                                        props: {
-                                                            id: "lists",
-                                                            classes: ["list"],
-                                                            components: [{
-                                                                ctor: Container,
-                                                                props: {
-                                                                    id: "items",
-                                                                    classes: ['items'],
-                                                                    draggable: true,
-                                                                    dragstart: function (e, ra) {
-
-                                                                        dragStart(e, ra);
-                                                                    },
-                                                                    dragend: function (e, ra) {
-                                                                        dragEnd(e, ra);
-                                                                    },
-                                                                    components: [{
-                                                                        ctor: Label,
-                                                                        props: {
-                                                                            id: "action",
-                                                                            type: LabelType.label,
-                                                                            label: `{${_task}}`
-                                                                        }
-                                                                    }]
-                                                                }
-                                                            }]
-                                                        }
-                                                    }]
-
-                                                }
-                                            }
-                                        ]
-                                    }
-                                }]
-                            }
-                        }]
+                        classes: ["row"],
+                        components: _repeater
                     }
                 }]
             }
         }];
     };
 
-    //TODO: Implement adding panel and tasks dynamically
+    this.addPanel = function (task_name, index) {
+        let i = index !== undefined ? index : _panelRepeater.currentIndex;
+    };
+
+
     let draggedItem = null;
     let dragStart = function (e, ra) {
-        draggedItem = e.target.parentElement.parentElement;
+        draggedItem = e.target;
+        e.originalEvent.dataTransfer.setData('text/html', draggedItem);
         draggedItem.classList.add('dragging');
         setTimeout(function () {
-            draggedItem.style.display = 'none';
+            draggedItem.style.opacity = '0.5';
         }, 0);
     };
 
     let dragEnd = function (e, ra) {
-        draggedItem = e.target.parentElement.parentElement;
         draggedItem.classList.remove('dragging');
         setTimeout(function () {
-            draggedItem.style.display = 'block';
+            draggedItem.style.opacity = '1';
             draggedItem = null;
         }, 0);
     };
 
-    let dragover = function (e, ra) {
+    let drop = function (e, ra) {
         e.preventDefault();
-        let item = e.target.parentElement;
-        console.log("item", e.target);
-        console.log(item);
-        if (item) {
-            let afterElement = draggableSort(e.clientY);
-            console.log(afterElement, "after");
-            if (afterElement == null) {
-                item.$el[0].appendChild(draggedItem);
+        let el;
+        let offset = getBoundingClientOffset(e.target, e.clientY);
+        let childCount = e.target.childElementCount;
+        if (childCount > 0) {
+            el = e.target;
+        } else {
+            el = e.target.parentElement;
+        }
+        //let index = Array.prototype.indexOf.call(e.target.parentNode.parentNode.children, e.target.parentNode);
+        if (offset < 0) {
+            el.insertBefore(draggedItem, e.target);
+        } else {
+            if (e.target.nextSibling) {
+                el.insertBefore(draggedItem, e.target.nextSibling);
             } else {
-                console.log("after element", afterElement);
-                console.log("draggedItem", draggedItem);
-                item.insertBefore(draggedItem, afterElement);
+                el.appendChild(draggedItem);
             }
         }
-    };
-
-    let drop = function (e, ra) {
-        //console.log(e.target.parentElement.parentElement.parentElement.parentElement);
-        // e.target.parentElement.parentElement.parentElement.parentElement.appendChild(draggedItem);
         draggedItem.style.display = 'block';
     };
 
-    let draggableSort = function (y) {
-        let listItem = $('.items:not(.dragging)');
-        let draggableElements = [...listItem];
-        return draggableElements.reduce((closest, child) => {
-            const box = child.getBoundingClientRect();
-            const offset = y - box.top - box.height / 2;
-            if (offset < 0 && offset > closest.offset) {
-                return {
-                    offset: offset,
-                    element: child
-                };
-            } else {
-                return closest;
-            }
-        }, {
-            offset: Number.NEGATIVE_INFINITY
-        }).element;
+    let getBoundingClientOffset = function (target, y) {
+        let box = target.getBoundingClientRect();
+        return y - box.top - box.height / 2;
     };
 
     _props = extend(false, false, _defaultParams, _props);
