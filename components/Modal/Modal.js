@@ -211,6 +211,9 @@ var Modal = function (_props) {
     this.show = function () {
         if (this.$el) {
             //this.$el.modal('show');
+            if (!this.attached) { 
+                this.appendTo.append(this.$el);
+            }
             if (!Modal.BackDrop.attached) { 
                 Modal.BackDrop.renderPromise().then(function (cmpInstance)
                 {

@@ -67,7 +67,10 @@ var Applet = function (_props) {
             }
             return _literal;
         }) : Promise.resolve(_literal)).then(((l) => { 
-            let p = uiRoute.call(_self, _self);
+            let p;
+            if (_uiRoute && typeof _uiRoute == 'function') {
+                p = _uiRoute.call(_self, _self);
+            }
             _loaded = true;
             return p;
         }));

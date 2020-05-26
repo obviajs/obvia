@@ -492,7 +492,7 @@ var Component = function (_props, overrided = false, _isSurrogate = false) {
                 if (typeof _endDraw == 'function')
                     _endDraw.apply(this.proxyMaybe, arguments);
             }
-            if (_props.applyBindings == null || _props.applyBindings == true)
+            if ((_props.applyBindings == null || _props.applyBindings == true) && _watchers.length == 0)
                 _watchers = this.applyBindings(_bindingDefaultContext);
             
             if (!_isSurrogate)
@@ -926,7 +926,7 @@ var Component = function (_props, overrided = false, _isSurrogate = false) {
     
     this.find = function (childId) {
         let r = null;
-        let paths = findMember(this, "id", ["$el", "$container", "base", "attr", "classes", "css", "spacing", "dataProvider", "parentForm", "parent"], childId, false);
+        let paths = findMember(this, "id", ["$el", "$container", "base", "attr", "classes", "css", "spacing", "dataProvider", "parentForm", "parent", "currentItem"], childId, false);
         if (paths.length > 0) { 
             paths[0].pop();
             r = getChainValue(this, paths[0]);

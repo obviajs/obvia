@@ -64,6 +64,15 @@ var uiRoute = function (applet) {
     let viewContainer = applet.parent.find(applet.port);
     return viewContainer.addChild(applet.view);
 };
+var modalRoute = function (applet) {
+    if (applet.view.attached) { 
+        applet.view.show();
+    } else {
+        applet.view.renderPromise().then(function (cmpInstance) {
+            applet.view.show();
+        });     
+    }
+};
 
 var oxana = new App({
     applets: [
@@ -73,6 +82,14 @@ var oxana = new App({
             dataPromise: _initDP,
             port: "viewStack",
             "uiRoute": uiRoute
+            //forceReload: true
+        },
+        {
+            url: "./flowerui/oxana/builder/applets/forms/",
+            anchor: "forms",
+            dataPromise: _initDP,
+            port: "viewStack",
+            "uiRoute": modalRoute
             //forceReload: true
         }
     ],
