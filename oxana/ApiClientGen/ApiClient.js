@@ -319,6 +319,7 @@ var ApiClient = function (_props) {
         if (url[url.length - 1] != '/') {
             url = url + '/';
         }
+        let r = true;
         url = url.replace(/\{([\w-]+)\}/g, (fullMatch, key) => {
             var value;
             if (pathParams.hasOwnProperty(key)) {
@@ -326,10 +327,16 @@ var ApiClient = function (_props) {
             } else {
                 value = fullMatch;
             }
-
+            r = false;
             return encodeURIComponent(value);
         });
-
+        if (r) { 
+            let values = Object.values(pathParams);
+            let len = values.length;
+            for (let i = 0; i < len; i++) { 
+                url += values[i] + (i == len-1 ? "" : "/"); 
+            }
+        }
         return url;
     };
     
