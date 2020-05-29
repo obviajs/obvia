@@ -159,6 +159,7 @@ var App = function(_props){
         applet.app = applet.parent = r;
         _applets.push(applet);
         let appletInst = _appletsMap[applet.anchor] = new Applet(applet);
+        return appletInst;
     };
 
     let _implementations = {};
@@ -400,7 +401,7 @@ var App = function(_props){
         {
             return _loader;
         }
-        });
+    });
     
     Object.defineProperty(this, "idleInterval", 
     {
@@ -409,6 +410,7 @@ var App = function(_props){
             return _idleInterval;
         }
     });
+    
     Object.defineProperty(this, "inactivityInterval", 
     {
         get: function inactivityInterval() 
@@ -416,7 +418,15 @@ var App = function(_props){
             return _inactivityInterval;
         }
     });
-
+    
+    Object.defineProperty(this, "appletsMap", 
+    {
+        get: function appletsMap() 
+        {
+            return _appletsMap;
+        }
+    });
+    
     let r = Container.call(this, _props);
     window.id = _self.domID;
     

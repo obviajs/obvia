@@ -830,10 +830,9 @@ let Implementation = function (applet) {
     
         "SAVE_LAYOUT_REMOTE": {
             do: function (e) {
-                let lit = workAreaColumn.literalLite;
-                stripHandle(lit);
-                let jsonLayout = JSON.stringify(lit, null, "\t");
-                download("workAreaColumn.json.txt", jsonLayout);
+                app.appletsMap["forms"].init().then(() => { 
+                    console.log('Applet forms inited.');
+                });
             },
             stopPropagation: true
         },
