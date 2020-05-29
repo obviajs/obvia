@@ -33,6 +33,8 @@ var ViewStack = function(_props)
                         {
                             if(i==v){
                                 this.$container.append(c.$el);
+                                event = jQuery.Event("changed");
+                                this.trigger(event, [_selectedIndex, v]);
                             }else if(c.$el.parent().length > 0){
                                 c.$el.detach();
                             }
@@ -87,7 +89,20 @@ var ViewStack = function(_props)
             _props.components[i].props.attach = (i == _selectedIndex);
         }
     }
-
+    if (!_props.attr) { 
+        _props.attr = {};
+    }
+    let myDtEvts = ["change", "changed"];
+    if (!Object.isEmpty(_props.attr) && _props.attr["data-triggers"] && !Object.isEmpty(_props.attr["data-triggers"]))
+    {
+        let dt = _props.attr["data-triggers"].split(" ");
+        for (let i = 0; i < dt.length; i++)
+        {   
+            myDtEvts.pushUnique(dt[i]);
+        }
+    }
+    _props.attr["data-triggers"] = myDtEvts.join(" ");
+    
     let r = Container.call(this, _props, true);
     
     // this.addComponents = function (cmps)

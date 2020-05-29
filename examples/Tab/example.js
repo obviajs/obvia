@@ -11,12 +11,8 @@ var myTabNavigator = new TabNavigator({
                         ctor: TextInput,
                         props: {
                             id: 'text',
-                            colspan: '6',
                             label: 'Text Label',
                             spacing: { mb: '5' },
-                            versionStyle: '',
-                            blockProcessAttr: false,
-                            required: true,
                             value: "1000"
                         }
                     }

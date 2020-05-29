@@ -138,21 +138,31 @@ var Parent = function (_props, overrided = false, _isSurrogate = false) {
     };
 
     Object.defineProperty(this, "sortChildren",
-        {
-            get: function sortChildren() {
-                return _sortChildren;
-            },
-            enumerable: true
-        });
+    {
+        get: function sortChildren() {
+            return _sortChildren;
+        },
+        enumerable: true
+    });
 
     Object.defineProperty(this, "renderPromises",
-        {
-            get: function renderPromises() {
-                return _compRenderPromises;
-            },
-            enumerable: false,
-            configurable: true
-        });
+    {
+        get: function renderPromises() {
+            return _compRenderPromises;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    
+    Object.defineProperty(this, "csorted",
+    {
+        get: function csorted() {
+            return _csorted;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    
     let _ccRelation = {}, _csorted = [];    
     this.getChildDefinedProperties = function (c) {
         return _ccRelation[c.id];

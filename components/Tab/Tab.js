@@ -25,25 +25,26 @@ var Tab = function(_props)
         }
     });
     
-    this.template = function () 
-    { 
-        return  '<div id="' + this.domID + '" class="tab-pane container fade"></div>'; 
-    }
-    var _defaultParams = {
+    this.beforeAttach = function (e) 
+    {
+        if (e.target.id == this.domID) {
+            this.$container = this.$el;
+            this.$anchor = $('<a class="nav-link" data-toggle="tab" href="#' + this.domID + '">' + _label + '</a>');
+            this.$header = $('<li class="nav-item"></li>');
+            this.$header.append(this.$anchor);
+        }
+    };
+    
+    this.template = function ()
+    {
+        return '<div id="' + this.domID + '" class="tab-pane container fade"></div>';
+    };
+    
+    let _defaultParams = {
     };
     _props = extend(false, false, _defaultParams, _props);
-    var _label = _props.label;
-    Parent.call(this, _props, true);
-    var base = this.base;
-
-    this.beforeAttach = function () 
-    {
-        this.$container = this.$el;
-        this.$anchor = $('<a class="nav-link" data-toggle="tab" href="#' + this.domID + '">'+_label+'</a>');
-        this.$header = $('<li class="nav-item"></li>');
-        this.$header.append(this.$anchor);
-        base.beforeAttach();
-    };
-
+    let _label = _props.label;
+    let r = Parent.call(this, _props);
+    return r;
 };
 Tab.prototype.ctor = 'Tab';
