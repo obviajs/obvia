@@ -282,7 +282,7 @@ var ApiClient = function (_props) {
                 let value = params[key];
                 if (BinUtils.isFile(value) || BinUtils.isBlob(value) || Array.isArray(value)) {
                     newParams[key] = value;
-                } if (isObject(value)) { 
+                } else if (isObject(value)) { 
                     newParams[key] = _normalizeParams(value);
                 }
                 else {

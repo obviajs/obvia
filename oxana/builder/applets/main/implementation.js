@@ -830,9 +830,26 @@ let Implementation = function (applet) {
     
         "SAVE_LAYOUT_REMOTE": {
             do: function (e) {
+                data.forms.filterData = {
+                    "condition": "AND",
+                    "rules": [
+                      {
+                        "id": "form_name",
+                        "field": "form_name",
+                        "type": "string",
+                        "input": "text",
+                        "operator": "contains",
+                        "value": "Lista"
+                      }
+                    ],
+                    "valid": true
+                  }; //pra objekti JSON nga QueryBuilder
+                data.forms.filter();
+                /*
                 app.appletsMap["forms"].init().then(() => { 
                     console.log('Applet forms inited.');
                 });
+                */
             },
             stopPropagation: true
         },

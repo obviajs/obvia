@@ -38,6 +38,9 @@ var _initDP = function () {
                     currentRecord: p.startPage * p.recordsPerPage,
                     recordsPerPage: p.recordsPerPage
                 });
+                if(p.filterData){
+                    dvInp.advancedSqlFilters = p.filterData;  
+                }
                 return api_dv_forms.dataview_pid_1Client.post(dvInp);
             }
         }
