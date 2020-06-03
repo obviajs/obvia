@@ -3,7 +3,7 @@ let Implementation = function (applet) {
     let app = applet.app;
     let data = applet.data;
 
-    let modal, formsFilter, formsList, cmpForm, formField;
+    let modal, formsFilter, formsList, cmpForm;
    
     let imp = {
         "BEGIN_DRAW": function (e) {
