@@ -10,7 +10,8 @@ let Implementation = function (applet) {
     let propertyEditorViewStack, propertyEditorContainer, fileSelectModal, browseFile, componentsContainer,
         rightSideNav, listHistorySteps, workArea, workAreaColumn,
         cmpSearchTextInput, undoButton, redoButton, cmpTrash, toggleSideNavLeft, toggleSideNavRight,
-        splitHorizontal, splitVertical, uploadIcon, saveLayout, selectBtn, componentList;
+        splitHorizontal, splitVertical, uploadIcon, saveLayout, selectBtn, componentList, 
+        openUploadForms;
 
     let imp = {
         "BEGIN_DRAW": function (e) { 
@@ -46,6 +47,7 @@ let Implementation = function (applet) {
             app.addBehaviors(cmpSearchTextInput, {
                 "keyup": "SEARCH_CMP",
             }, false);
+
             undoButton = app.viewStack.mainContainer.nav.middleNav.undoButton;
             app.addBehaviors(undoButton, {
                 "click": "WA_UNDO",
@@ -70,14 +72,23 @@ let Implementation = function (applet) {
             app.addBehaviors(splitHorizontal, {
                 "click": "SPLIT_HOR",
             }, false);
+
             splitVertical = app.viewStack.mainContainer.nav.middleNav.splitVertical;
             app.addBehaviors(splitVertical, {
                 "click": "SPLIT_VERT",
             }, false);
+
             uploadIcon = app.viewStack.mainContainer.nav.middleNav.uploadIcon;
             app.addBehaviors(uploadIcon, {
+                // "click": "OPEN_MODAL_FOR_SAVE",
                 "click": "SAVE_LAYOUT_REMOTE",
             }, false);
+            
+            openUploadForms = app.viewStack.mainContainer.nav.middleNav.openUploadForms;
+            app.addBehaviors(openUploadForms, {
+                "click": "UPLOAD_FORMS"
+            }, false);
+
             saveLayout = app.viewStack.mainContainer.nav.middleNav.saveLayout;
             app.addBehaviors(saveLayout, {
                 "click": "SAVE_LAYOUT",
@@ -93,6 +104,7 @@ let Implementation = function (applet) {
             app.addBehaviors(listHistorySteps, {
                 "change": "HISTORY_STEP_DETAILS",
             }, false);
+
             //app.behaviors["previewBtn"]["click"] = "PREVIEW";
             app.addBehaviors(workArea, waBehaviors, false);
             
@@ -275,6 +287,16 @@ let Implementation = function (applet) {
             console.log("called FILE_SELECT_MODAL.");
             fileSelectModal.show();
         },
+
+        "UPLOAD_FORMS": function(e) {
+            app.appletsMap["formsModal"].init().then(() => {
+                console.log("Applet formsModal inited");
+                app.addBehaviors(app.appletsMap["formsModal"].view, {
+                    "loadLayout": "LOAD_LAYOUT"
+                });
+            });
+        },
+
         "FILE_SELECTED": function (e) {
             console.log("called FILE_SELECTED.");
             if (browseFile.value.length > 0) {
@@ -312,7 +334,7 @@ let Implementation = function (applet) {
             e.originalEvent.dataTransfer.setDragImage($elem, 0, 0);
         },
     
-        "SEARCH_CMP": function (e) {
+        "SEARCH_CMP": function (e) { // filter components
             console.log("search box change");
             let value = e.target.value.toLowerCase();
             _cmpList.undoAll();

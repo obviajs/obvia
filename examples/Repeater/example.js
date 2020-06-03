@@ -1,4 +1,4 @@
-var ra =new RemoteArray({url:"http://192.168.64.2/rca/index.php", post:{"testKey":"testValue"}, recordsPerPage:5})
+var ra = new RemoteArray({url:"http://192.168.64.2/rca/index.php", post:{"testKey":"testValue"}, recordsPerPage:5})
 var dp = new ArrayEx(ra);
 var myRepeater = new Repeater({
     id: 'repeater',

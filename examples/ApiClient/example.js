@@ -1,11 +1,11 @@
-let url = "http://flower-gaia/api/forms/yaml";
+let url = "https://gaia.oxana.io/api/forms/yaml";
    
 let arr = url.split("/");
 let title = arr[4];
 let gen = new ApiClientGen({
     "url": url,
     requestBodyParamMode: 1,
-    "title": "_" + title  
+    "title": "_" + title
 });
 
 gen.generate().then(function (r) { 
@@ -14,6 +14,7 @@ gen.generate().then(function (r) {
 }).then(function () { 
     console.log();
 });
+
 /*
  GaiaAPI_Utils.generateAndLoadDataView(url, 10).then(function (aex) { 
     console.log(aex);

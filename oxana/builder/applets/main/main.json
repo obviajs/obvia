@@ -169,6 +169,19 @@
                                      "navIcons"
                                   ]
                                }
+                            }, 
+                            {
+                              "ctor":"Label",
+                              "props":{
+                                 "id":"openUploadForms",
+                                 "labelType":"i",
+                                 "label":"",
+                                 "classes":[
+                                    "fas",
+                                    "fa-cloud-download-alt",
+                                    "navIcons"
+                                 ]
+                              }
                             }
                          ]
                       }
@@ -508,8 +521,18 @@
                             }
                          ]
                       }
-                   }
-                ]
+                   },
+                   {   
+                     "ctor": "Modal",
+                     "props": {
+                         "id": "formsModal",
+                         "size": "ModalSize.LARGE",
+                         "title": "Select File",
+                         "components": [ 
+                        ]
+                     }  
+                  }
+               ]
              }
           }
        ]

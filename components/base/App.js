@@ -203,7 +203,7 @@ var App = function(_props){
         {
             let cmpBehaviors = _self.behaviors[currentTarget.id][e.type];
             for (var prop in cmpBehaviors) { 
-                if (cmpBehaviors[prop].onPropagation) { 
+                if (cmpBehaviors[prop] && cmpBehaviors[prop].onPropagation) { 
                     behaviorObj[prop] = cmpBehaviors[prop];
                 }
             }

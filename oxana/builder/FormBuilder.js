@@ -17,7 +17,7 @@ var _initDP = function () {
 
     let raDvs = new RemoteArray(
         {
-            recordsPerPage: Builder.recordsPerPage,
+            recordsPerPage: Builder.recordsPerPage, // pagination
             fetchPromise: function (p) {
                 let dvInp = new dvInput();
                 dvInp.tableData = new tableData({
@@ -31,7 +31,7 @@ var _initDP = function () {
     
     let raFrms = new RemoteArray(
         {
-            recordsPerPage: Builder.recordsPerPage,
+            recordsPerPage: 5, // pagination
             fetchPromise: function (p) {
                 let dvInp = new dvInput();
                 dvInp.tableData = new tableData({
@@ -57,6 +57,31 @@ var _initDP = function () {
         return Builder;
     });
 }();
+
+var _initDpForms = function(){
+    let api_dv_forms = new GaiaAPI_DV_forms();
+    let raFrms = new RemoteArray(
+        {
+            recordsPerPage: 13, // pagination
+            fetchPromise: function (p) { 
+                let dvInp = new dvInput();
+                dvInp.tableData = new tableData({
+                    currentRecord: p.startPage * p.recordsPerPage,
+                    recordsPerPage: p.recordsPerPage
+                });
+                if (p.filterData) {
+                    dvInp.advancedSqlFilters = p.filterData;
+                }
+                return api_dv_forms.dataview_pid_1Client.post(dvInp);
+            }
+        }
+    );
+    Builder.formList = new ArrayEx(raFrms);
+
+    return Promise.all([Builder.formList.init()]).then(function (result) {
+        return Builder;
+    });
+};
 
 //this function will decide where the view will go in the GUI on endDraw
 //principles to follow
@@ -91,6 +116,14 @@ var oxana = new App({
             url: "./flowerui/oxana/builder/applets/forms/",
             anchor: "forms",
             dataPromise: _initDP,
+            port: "viewStack",
+            "uiRoute": modalRoute
+            //forceReload: true
+        },
+        {
+            url: "./flowerui/oxana/builder/applets/formsModal/",
+            anchor: "formsModal",
+            dataPromise: _initDpForms,
             port: "viewStack",
             "uiRoute": modalRoute
             //forceReload: true

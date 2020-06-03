@@ -317,7 +317,7 @@ var Repeater = function(_props)
     let _dpMemberChanged = function (e) {
         e.stopPropagation();
         e.stopImmediatePropagation();
-        if (_creationFinished && ["length", "guid"].indexOf(e.property) == -1) {
+        if (_creationFinished && ["length", "guid", "filterData"].indexOf(e.property) == -1) {
             if (!_dataProvider[parseInt(e.property)][_guidField])
                 _dataProvider[parseInt(e.property)][_guidField] = StringUtils.guid();
             let toAdd = { a1_indices: [], result: [] };

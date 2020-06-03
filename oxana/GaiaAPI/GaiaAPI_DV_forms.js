@@ -178,17 +178,17 @@ var response = function()
     };
 
 var GaiaAPI_DV_forms = function(){
-        let _server = "https://gaia.oxana.io/api";
-        Object.defineProperty(this, "server", {
-            get: function server() {
-                return _server;
-            },
-            set: function server(x) {
-                if (_server != x) {
-                    _server = x;
-                }
+    let _server = "https://gaia.oxana.io/api";
+    Object.defineProperty(this, "server", {
+        get: function server() {
+            return _server;
+        },
+        set: function server(x) {
+            if (_server != x) {
+                _server = x;
             }
-        });
+        }
+    });
 	var dataview_pid_1 = function(apiClient) { 
         apiClient = apiClient || new ApiClient();
         /*{typeMap}*/
