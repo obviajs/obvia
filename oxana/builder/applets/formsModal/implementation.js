@@ -3,14 +3,21 @@ let Implementation = function (applet) {
     let app = applet.app;
     let data = applet.data;
 
-    let modal, formsFilter, formsList, cmpForm;
+    let modal, formsFilter, formsList;
    
     let imp = {
+
         "BEGIN_DRAW": function (e) {
         },
+
         "END_DRAW": function (e) {
             modal = applet.view;
             let modalBody = modal.modalDialog.modalContent.modalBody;
+
+            let itemList = modal.find("formsList");
+            app.addBehaviors(itemList, {
+                "rowAdd": "PREPARE_ITEM",
+            }, false);
 
             formsFilter = modalBody.formsFilter;
             app.addBehaviors(formsFilter, {
@@ -21,16 +28,26 @@ let Implementation = function (applet) {
             formsList = modalBody.formsList;
             formsList.dataProvider = data.formList;
 
-            cmpForm = formsList.cmpForm;
-            cmpForm.forEach(cmp => {
-                app.addBehaviors(cmp, {
-                    "click": "DOWNLOAD_FORM"
-                }, false);
+        },
 
-                app.addBehaviors(cmp.children.lblForms, {
-                    "click": "DOWNLOAD_FORM"
+        "PREPARE_ITEM": function (e, r, ra) {
+            if (ra) {
+                app.addBehaviors(ra.currentRow.cmpForm, {
+                    "click": "ITEM_SELECT",
                 }, false);
-            });
+            }
+        },
+
+        "ITEM_SELECT": async function (e, ra) {
+            let gaiaForm = new GaiaAPI_forms();
+            let form = gaiaForm.formsClient.get(arguments[1].currentItem.form_id);
+            let resolve = await Promise.all([form]);
+            let lit = resolve[0][0].literal;
+            modal.hide();
+            
+            let evt = new jQuery.Event("loadLayout");
+            evt.content = lit;
+            modal.trigger(evt);
         },
 
         "SEARCH_FORMS": function(e) { // filter forms
@@ -49,30 +66,6 @@ let Implementation = function (applet) {
                 "valid": true
             };
             data.formList.filter();
-        },
-        
-        "DOWNLOAD_FORM": async function(e) {
-            let fname = e.target.textContent;
-            e.stopPropagation();
-            e.preventDefault();
-            let found;
-            let len = data.formList.length
-            for (let i = 0; i < len; i++) {
-                let f = data.formList[i];
-                if (f.form_name === fname) {
-                    found = f;
-                    break;
-                }
-            }
-            let gaiaForm = new GaiaAPI_forms();
-            let form = gaiaForm.formsClient.get(found.form_id);
-            let resolve = await Promise.all([form]);
-            let lit = resolve[0][0].literal;
-            modal.hide();
-            
-            let evt = new jQuery.Event("loadLayout");
-            evt.content = lit;
-            applet.view.trigger(evt);
         },
     };
 
