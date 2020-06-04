@@ -1,6 +1,10 @@
 var Applet = function (_props) {
     let _defaultParams = {
-        forceReload: false
+        forceReload: false,
+        behaviors: {
+            "beginDraw": "BEGIN_DRAW",
+            "endDraw": "END_DRAW"
+        }
     };
     _props = extend(false, false, _defaultParams, _props);
     let _self = this;
@@ -30,10 +34,7 @@ var Applet = function (_props) {
     let _base = BrowserManager.getInstance().base;
     let _furl = _base + (_url[0] == "." ? _url.substr(1) : _url);
     //Applet implementation skeleton
-    let _behaviors = {
-        "beginDraw": "BEGIN_DRAW",
-        "endDraw": "END_DRAW"
-    };
+    let _behaviors = _props.behaviors;
     
     this.init = function () {
         return (!_loaded ? coroutine(function* () {
