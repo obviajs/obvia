@@ -40,9 +40,9 @@ var Applet = function (_props) {
         return (!_loaded ? coroutine(function* () {
             let rnd = _forceReload ? "?r=" + Math.random() : "";
             let r = yield Promise.all([
-                get(_furl + "main.json" + rnd, _mimeType),
+                get(_furl + _anchor + ".json" + rnd, _mimeType),
                 //import uses different starting point (currrent file directory)
-                import(_furl + "implementation.js" + rnd),
+                import(_furl + _anchor + ".js" + rnd),
                 _dataPromise ? (typeof _dataPromise == 'function' ? _dataPromise.call() : _dataPromise) : Promise.resolve(_data)
             ]).then((p) => { 
                 let module = p[1];
