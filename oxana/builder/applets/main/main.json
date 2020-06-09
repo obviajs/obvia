@@ -486,10 +486,10 @@
                                                              "id":"cmpTrashIcon",
                                                              "labelType":"i",
                                                              "classes":[
-                                                                "fas",
-                                                                "fa-trash",
-                                                                "trash-icon"
-                                                             ]
+                                                               "fas",
+                                                               "fa-trash",
+                                                               "trash-icon"
+                                                            ]
                                                           }
                                                        }
                                                     ]

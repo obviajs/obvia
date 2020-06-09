@@ -40,13 +40,11 @@ rjs.define("./components/base/Spacing.js", "Spacing");
 rjs.define("./components/base/AutoObject.js", "AutoObject");
 rjs.define("lib/TwoWayMap.js", "TwoWayMap");
 rjs.define("./oxana/builder/SpacingEditor.js", "SpacingEditor");
-rjs.define("./oxana/builder/css/builder.css", "Builder_Css")
 rjs.define("./oxana/AutoBrowse.js", "AutoBrowse");
 rjs.define("./components/base/Attr.js", "Attr");
 rjs.define("./components/base/Css.js", "Css");
 rjs.define("./components/base/Parent.js", "Parent");
-rjs.define("./components/base/css/parent-default.css", "parent_default_css");
-rjs.define("./components/base/css/collapse.css", "collapse_css");
+
 rjs.define("./components/base/NavParent.js", "NavParent");
 rjs.define("./components/base/ContainerType.js", "ContainerType");
 rjs.define("./components/base/ViewStack.js", "ViewStack");
@@ -88,8 +86,6 @@ rjs.define("./components/base/ScrollPane.js", "ScrollPane");
 //SideNav
 rjs.define("./components/SideNav/SideNavSide.js", "SideNavSide");
 rjs.define("./components/SideNav/SideNav.js", "SideNav");
-rjs.define("./components/SideNav/css/sidenav-default.css", "sidenav_default_css");
-rjs.define("./components/SideNav/css/sideNav.css", "sideNav_css")
 //Tab
 rjs.define("./components/Tab/TabNavigator.js", "TabNavigator");
 rjs.define("./components/Tab/Tab.js", "Tab");
@@ -99,7 +95,6 @@ rjs.define("./components/Link/Link.js", "Link");
 //Repeater
 rjs.define("./components/Repeater/Repeater.js", "Repeater");
 rjs.define("./components/Repeater/RepeaterEx.js", "RepeaterEx");
-rjs.define("./components/Repeater/css/repeater-default.css", "repeater_default_css");
 //List
 rjs.define("./components/List.js", "List");
 //CheckBox
@@ -119,24 +114,20 @@ rjs.define("./components/Image.js", "Image");
 rjs.define("./components/TextArea.js", "TextArea");
 //TextEditor
 rjs.define("./components/TextEditor.js", "TextEditor");
-rjs.define("lib/dependencies/summernote/summernote.css", "SummerNoteCSS");
 rjs.define("lib/dependencies/summernote/summernote.min.js", "SummerNoteScript");
 //Select
 rjs.define("./components/Select/Option.js", "Option");
 rjs.define("./components/Select/Select.js", "Select");
 //Tree
-rjs.define("./components/Tree/css/tree-default.css", "tree_default_css");
 rjs.define("./components/Tree/Li.js", "Li");
 rjs.define("./components/Tree/Tree.js", "Tree");
 //HierarchicalTree
 rjs.define("./oxana/HierarchialTree/HierarchialTree.js", "HierarchialTree");
-rjs.define("./oxana/HierarchialTree/css/HierarchialTree-default.css", "HierarchialTree_css");
 //CreditCard
 rjs.define('./oxana/CreditCard/CreditCard.js', "CreditCard");
-rjs.define('oxana/CreditCard/css/creditCard-default.css', 'creditCard-default_css');
 //DateTime
 rjs.define("./components/DateTime/DateTime.js", "DateTime");
-rjs.define("./components/DateTime/css/dateTime_default.css", "DateTime_Default_css");
+
 rjs.define("./components/DateTime/DateTimeFormat.js", "DateTimeFormat");
 rjs.define("lib/dependencies/scripts/moment.js", "MomentJS");
 //DateTimeCb
@@ -147,7 +138,7 @@ rjs.define("./components/Modal/ModalSize.js", "ModalSize");
 rjs.define("./components/Modal/Modal.js", "Modal");
 //AutoComplete
 rjs.define("./components/AutoComplete/AutoCompleteEx.js", "AutoCompleteEx");
-rjs.define("./components/AutoComplete/AutoCompleteEx.css", "AutoCompleteExCSS");
+
 rjs.define("./components/AutoComplete/TokenRenderer.js", "TokenRenderer");
 rjs.define("./components/AutoComplete/SuggestionRenderer.js", "SuggestionRenderer");
 
@@ -158,7 +149,6 @@ rjs.define("./components/Map/MapLocationPicker.js", "MapLocationPicker");
 //Toggle
 rjs.define("./components/Toggle/ToggleBgStyle.js", "ToggleBgStyle");
 rjs.define("./components/Toggle/Toggle.js", "Toggle");
-rjs.define("./components/Toggle/toggle-default.css", "toggle_default_css");
 //MultiSwitch
 rjs.define("./components/MultiSwitch.js", "MultiSwitch");
 //Upload
@@ -171,7 +161,6 @@ rjs.define("./components/MultiUpload.js", "MultiUpload");
 //DataGrid
 rjs.define("./components/DataGrid/DataGridCellRenderer.js", "DataGridCellRenderer");
 rjs.define("./components/DataGrid/DataGridColumn.js", "DataGridColumn");
-rjs.define("./components/DataGrid/css/datagrid-default.css", "datagrid_default_css");
 rjs.define("./components/DataGrid/DataGrid.js", "DataGrid");
 
 rjs.define("./oxana/accounting/components/CurrencyExRate.js", "CurrencyExRate");
@@ -189,23 +178,35 @@ rjs.define("./components/DropDown/DropSplitType.js", "DropSplitType");
 //Calendar
 rjs.define("./components/Calendar/CalendarBase.js", "CalendarBase");
 rjs.define("./components/Calendar/Calendar.js", "Calendar");
-rjs.define("./components/Calendar/css/calendar-default.css", "calendar_default_css");
 //CalendarDay
 rjs.define("./components/Calendar/CalendarDay.js", "CalendarDay");
-rjs.define("./components/Calendar/css/calendarDay-default.css", "calendarDay_default_css");
 rjs.define("./components/Calendar/CalendarConstants.js", "CalendarConstants");
 //CalendarWeek
 rjs.define("./components/Calendar/CalendarWeek.js", "CalendarWeek");
-rjs.define("./components/Calendar/css/calendarWeek-default.css", "calendarWeek_default_css");
-
 rjs.define("./components/Calendar/CalendarMonth.js", "CalendarMonth");
-rjs.define("./components/Calendar/css/calendarMonth-default.css", "calendarMonth_default_css");
-
 rjs.define("./oxana/Wizard/Wizard.js", "Wizard");
-rjs.define("./oxana/Wizard/css/wizard-default.css", "wizard_default_css");
 rjs.define("lib/KeyboardUtils.js", "KeyboardUtils");
-//TextInput
-//rjs.define("./components/TextInput.js", "TextInput")
+
+rjs.define("./components/Calendar/css/calendarMonth-default.css", "calendarMonth_default_css");
+rjs.define("./components/Calendar/css/calendarWeek-default.css", "calendarWeek_default_css");
+rjs.define("./components/Calendar/css/calendarDay-default.css", "calendarDay_default_css");
+rjs.define("./components/Calendar/css/calendar-default.css", "calendar_default_css");
+rjs.define('oxana/CreditCard/css/creditCard-default.css', 'creditCard-default_css');
+rjs.define("./components/Repeater/css/repeater-default.css", "repeater_default_css");
+rjs.define("./components/DataGrid/css/datagrid-default.css", "datagrid_default_css");
+rjs.define("./components/Toggle/toggle-default.css", "toggle_default_css");
+rjs.define("./components/DateTime/css/dateTime_default.css", "DateTime_Default_css");
+rjs.define("./components/AutoComplete/AutoCompleteEx.css", "AutoCompleteExCSS");
+rjs.define("lib/dependencies/summernote/summernote.css", "SummerNoteCSS");
+rjs.define("./components/base/css/parent-default.css", "parent_default_css");
+rjs.define("./components/base/css/collapse.css", "collapse_css");
+rjs.define("./oxana/HierarchialTree/css/HierarchialTree-default.css", "HierarchialTree_css");
+rjs.define("./components/SideNav/css/sidenav-default.css", "sidenav_default_css");
+
+rjs.define("./oxana/Wizard/css/wizard-default.css", "wizard_default_css");
+rjs.define("./components/Tree/css/tree-default.css", "tree_default_css");
+rjs.define("./components/SideNav/css/sideNav.css", "sideNav_css");
+rjs.define("./oxana/builder/css/builder.css", "Builder_Css");
 rjs.require(["EventDispatcher"]).then(function () {
     rjs.require([
         "AutoObject",
@@ -254,16 +255,12 @@ rjs.require(["EventDispatcher"]).then(function () {
         "Attr",
         "Css",
         "Parent",
-        "parent_default_css",
-        "collapse_css",
         "ContainerType",
         "NavParent",
         "Container",
         "ScrollPane",
         "SideNav",
         "SideNavSide",
-        "sidenav_default_css",
-        "sideNav_css",
         "Nav",
         "Header",
         "Footer",
@@ -279,7 +276,6 @@ rjs.require(["EventDispatcher"]).then(function () {
         "BootBox",
         "Repeater",
         "RepeaterEx",
-        "repeater_default_css",
         "List",
         "Amount",
         "Button",
@@ -296,11 +292,9 @@ rjs.require(["EventDispatcher"]).then(function () {
         "TextArea",
         "Option",
         "Select",
-        "SummerNoteCSS",
         "SummerNoteScript",
         "TextEditor",
         "DateTime",
-        "DateTime_Default_css",
         "DateTimeFormat",
         "MomentJS",
         "CheckBox",
@@ -311,10 +305,8 @@ rjs.require(["EventDispatcher"]).then(function () {
         "DateTimeMode",
         "DateTimeCb",
         "TokenRenderer",
-        "Builder_Css",
         "SuggestionRenderer",
         "AutoCompleteEx",
-        "AutoCompleteExCSS",
         "ModalSize",
         "Modal",
         "LeafletJS",
@@ -322,14 +314,12 @@ rjs.require(["EventDispatcher"]).then(function () {
         "MapLocationPicker",
         "ToggleBgStyle",
         "Toggle",
-        "toggle_default_css",
         "MultiSwitch",
         "Upload",
         "SlimScroll",
         "UploadEx",
         "DataGridCellRenderer",
         "DataGridColumn",
-        "datagrid_default_css",
         "DataGrid",
         "HRule",
         "Color",
@@ -337,30 +327,42 @@ rjs.require(["EventDispatcher"]).then(function () {
         "ProgressBarStyle",
         "ProgressBar",
         "CurrencyExRate",
-        "tree_default_css",
         "Li",
         "Tree",
         "HierarchialTree",
-        "HierarchialTree_css",
         "CreditCard",
-        "creditCard-default_css",
         "DropDown",
         "ButtonSize",
         "DropMenuDirection",
         "DropSplitType",
         "CalendarBase",
         "Calendar",
-        "calendar_default_css",
         "CalendarDay",
         "CalendarConstants",
-        "calendarDay_default_css",
         "CalendarWeek",
-        "calendarWeek_default_css",
         "CalendarMonth",
-        "calendarMonth_default_css",
         "Wizard",
+        "KeyboardUtils",
+        "calendarMonth_default_css",
+        "calendarWeek_default_css",
+        "calendarDay_default_css",
+        "calendar_default_css",
+        "creditCard-default_css",
+        "repeater_default_css",
+        "datagrid_default_css",
+        "toggle_default_css",
+        "AutoCompleteExCSS",
+        "DateTime_Default_css",
+        "SummerNoteCSS",        
+        "collapse_css",
+        "parent_default_css",
+        "HierarchialTree_css",
+        "sidenav_default_css",
+        
         "wizard_default_css",
-        "KeyboardUtils"
+        "tree_default_css",
+        "sideNav_css",
+        "Builder_Css",
     ], function () {
         window.main();
     }, flowerCM);

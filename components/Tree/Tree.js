@@ -37,20 +37,18 @@ var Tree = function (_props, overrided = false) {
     });
 
     let _dpWatcher;
-    let _dpLengthChanged = function(e)
-    {
+    let _dpLengthChanged = function (e) {
         e.stopPropagation();
         e.stopImmediatePropagation();
-        if(_creationFinished)
+        if (_creationFinished)
             _self.dataProviderChanged();
-    }
-    let _dpMemberChanged = function(e)
-    {
+    };
+    let _dpMemberChanged = function (e) {
         e.stopPropagation();
         e.stopImmediatePropagation();
-        if(_creationFinished && ["length","guid"].indexOf(e.property)==-1)
+        if (_creationFinished && ["length", "guid"].indexOf(e.property) == -1)
             _self.dataProviderChanged();
-    }
+    };
 
     this.dataProviderChanged = function () 
     {
@@ -135,16 +133,16 @@ var Tree = function (_props, overrided = false) {
         }
     });
 
-    this.switchFasIcon = function (oldIcon, newIcon){
-        for(let cmdId in this.children){
-            if(this.children[cmdId].components.length >0){
+    this.switchFasIcon = function (oldIcon, newIcon) {
+        for (let cmdId in this.children) {
+            if (this.children[cmdId].components.length > 0) {
                 let li = this.children[cmdId];
                 let liIcon = li.children[li.components[0].props.id];
                 let liIconClasses = liIcon.classes.slice(0);
                 let ind = liIconClasses.indexOf(oldIcon);
-                if(ind>-1){
+                if (ind > -1) {
                     liIconClasses.splice(ind, 1);
-                    if(newIcon!=null && newIcon!=""){
+                    if (newIcon != null && newIcon != "") {
                         liIconClasses.pushUnique(newIcon);
                     }
                 }
@@ -153,7 +151,7 @@ var Tree = function (_props, overrided = false) {
                 tree.switchFasIcon(oldIcon, newIcon);
             }
         }
-    }
+    };
 
     this.beforeAttach = function (e) {
         if (e.target.id == this.domID) 
@@ -176,11 +174,11 @@ var Tree = function (_props, overrided = false) {
     };
 
     this.afterAttach = function (e) {
-        if(_selectedItem){
+        if (_selectedItem) {
             this.select(_selectedItem);
         }
         _creationFinished = true;
-    }
+    };
 
     let _defaultParams = {
         dataProvider:[],
@@ -188,7 +186,6 @@ var Tree = function (_props, overrided = false) {
         valueField: "guid",
         classesField: undefined,
         componentsField: undefined,
-        liComponents: undefined,
         childrenField: "children",
         expandIcon: 'fa-chevron-circle-right',
         collapseIcon: 'fa-chevron-circle-down',
@@ -197,7 +194,6 @@ var Tree = function (_props, overrided = false) {
         selectedClassesField: undefined,
         classes: ["list-group"],
         guidField: "guid",
-        
         liClasses: [],
         liClassesField: undefined,
         ulClasses: [],
@@ -217,6 +213,11 @@ var Tree = function (_props, overrided = false) {
     let _valueField = _props.valueField;
     let _childrenField = _props.childrenField;
     let _componentsField = _props.componentsField;
+    let _components;
+    if (_props.components != null && _props.components.forEach) {
+        _components = _props.components.slice(0);
+        _props.components = [];
+    }
     let _selectedClasses = _props.selectedClasses;
     let _iconField = _props.iconField;
     let _selectedClassesField = _props.selectedClassesField;
@@ -312,11 +313,14 @@ var Tree = function (_props, overrided = false) {
         }
     };
     
-    if (_componentsField)
-    {
+    if (_componentsField) {
         _componentTree.props.componentsField = _componentsField;
         _componentLi.props.components = '{?' + _componentsField + '}';
+    } else if (_components) {
+        _componentTree.props.components = _components;
+        _componentLi.props.components = _components;
     }
+
     if (_liClassesField)
     { 
         _componentTree.props.liClassesField = _liClassesField;
@@ -375,30 +379,24 @@ var Tree = function (_props, overrided = false) {
         }
     };
 
-    this.buildTree = function(dp)
-    {
+    this.buildTree = function (dp) {
         var dp = dp || _dataProvider;
         let components = [];
-        if(dp && dp.forEach)
-        {
+        if (dp && dp.forEach) {
             console.log("buildTree: ", dp[_guidField]);
-            if(dp.length>0)
-            {
-                for(let i=0;i<dp.length;i++)
-                {
-                    if(!dp[i][_guidField])
-                    dp[i][_guidField] = StringUtils.guid();
+            if (dp.length > 0) {
+                for (let i = 0; i < dp.length; i++) {
+                    if (!dp[i][_guidField])
+                        dp[i][_guidField] = StringUtils.guid();
                     let cmpLi = extend(true, _componentLi);
                     cmpLi.props.bindingDefaultContext = dp[i];
                     cmpLi.props.id = "li";
                     cmpLi.props.attr = {};
                     cmpLi.props.attr[_guidField] = dp[i][_guidField];
                     let cmps = [];
-                    if (dp[i][_childrenField] && dp[i][_childrenField].length > 0)
-                    {
+                    if (dp[i][_childrenField] && dp[i][_childrenField].length > 0) {
                         let tree = extend(true, _componentTree);
-                        if (_collapseIcon || _expandIcon)
-                        { 
+                        if (_collapseIcon || _expandIcon) {
                             let cmpIcon = extend(true, _componentIconLbl);
                             cmps.push(cmpIcon);
                         }
@@ -408,38 +406,39 @@ var Tree = function (_props, overrided = false) {
                         tree.props.dataProvider = dp[i][_childrenField];
                         cmps.push(tree);
                         cmpLi.props.components = cmps;
-                    } else
-                    { 
-                        if (_iconField)
-                        {
+                    } else {
+                        if (_iconField) {
                             
                             let cmpIcon = extend(true, _nodeIconLbl);
                             cmpIcon.props.bindingDefaultContext = dp[i];
                             cmpIcon.props.classes = '{?' + _iconField + '}';
                             cmps.push(cmpIcon);
                         }
-                        if ((_componentLbl || _iconField) && !_componentsField) {
+                        if ((_componentLbl || _iconField) && !_componentsField && !_components) {
                             let cmpLbl = extend(true, _componentLbl);
                             cmpLbl.props.bindingDefaultContext = dp[i];
                             cmps.push(cmpLbl);
                             cmpLi.props.components = cmps;
-                        } else if (_componentsField) { 
+                        } else if (_componentsField) {
                             cmps.splicea(cmps.length, 0, dp[i][_componentsField]);
                             cmpLi.props.components = cmps;
-                        } else
+                        } else if (_components) { 
+                            cmps.splicea(cmps.length, 0, _components);
+                            cmpLi.props.components = cmps;
+                        }else
                             cmpLi.props.label = '{?' + _labelField + '}';
-                    }	
+                    }
                     components.push(cmpLi);
                 }
-            }else{
+            } else {
                 _creationFinished = true;
             }
             _oldDataProvider = acExtend(_dataProvider);
         }
         return components;
-    }
+    };
 
-    _props.click=function(){
+    _props.click = function(){
         //toggleChildren
         if(typeof _click=='function')
         _click.apply(this,arguments);
@@ -489,6 +488,8 @@ var Tree = function (_props, overrided = false) {
         });
         if(_props.dataProvider)
             this.dataProvider = _props.dataProvider;
+        else
+            this.dataProvider = new ArrayEx([]);
         return _rPromise;
     };
     return r;

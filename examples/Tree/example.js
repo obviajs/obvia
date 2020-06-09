@@ -8,10 +8,11 @@ var myTree = new Tree({
         {title: "Folder 2", key: "2", children: new ArrayEx([
           {title: "Node 2.1", key: "3", myOwnAttr: "abc"},
           {
-            title: "Node 2.2", key: "4"
-            , children: new ArrayEx([
-            {title: "Node 2.2.1", key: "7", myOwnAttr: "abc"},
-            {title: "Node 2.2.2", key: "9"}])
+            title: "Node 2.2", key: "4", children: new ArrayEx(
+              [
+                {title: "Node 2.2.1", key: "7", myOwnAttr: "abc"},
+                { title: "Node 2.2.2", key: "9" }
+              ])
           }
         ])}
       ]),
