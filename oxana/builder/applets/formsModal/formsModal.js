@@ -13,7 +13,7 @@ let Implementation = function (applet) {
         "END_DRAW": function (e) {
             modal = applet.view;
             let modalBody = modal.modalDialog.modalContent.modalBody;
-
+            
             let itemList = modal.find("formsList");
             app.addBehaviors(itemList, {
                 "rowAdd": "PREPARE_ITEM",
@@ -27,7 +27,6 @@ let Implementation = function (applet) {
             }, false);
             formsList = modalBody.formsList;
             formsList.dataProvider = data.formList;
-
         },
 
         "PREPARE_ITEM": function (e, r, ra) {
@@ -40,13 +39,16 @@ let Implementation = function (applet) {
 
         "ITEM_SELECT": async function (e, ra) {
             let gaiaForm = new GaiaAPI_forms();
-            let form = gaiaForm.formsClient.get(arguments[1].currentItem.form_id);
+            let currentItem = arguments[1].currentItem;
+            let form = gaiaForm.formsClient.get(currentItem.form_id);
             let resolve = await Promise.all([form]);
-            let lit = resolve[0][0].literal;
+            let f = resolve[0][0];
+            let lit = f.literal;
             modal.hide();
             
             let evt = new jQuery.Event("loadLayout");
             evt.content = lit;
+            data.selectedForm = new FormProperties(f);
             modal.trigger(evt);
         },
 

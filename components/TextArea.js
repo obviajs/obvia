@@ -15,10 +15,18 @@ var TextArea = function (_props, overrided = false) {
         set: function value(v) {
             if (_value != v) {
                 _value = v;
-                if (this.$input) {
-                    this.$input.val(_value);
-                    this.trigger('change');
+                if (_value != null) {
+                    if (this.$el) {
+                        this.$el.attr('value', _value);
+                        this.$el.val(_value);
+                    }
+                } else {
+                    if (this.$el) {
+                        this.$el.removeAttr('value');
+                        this.$el.val("");
+                    }
                 }
+                //this.trigger('change');
             }
         },
         enumerable: true
@@ -78,7 +86,7 @@ var TextArea = function (_props, overrided = false) {
     };
 
     this.changeHandler = function (e) {
-        this.validate();
+        _value = this.$el.val();
     };
 
     this.template = function () {
@@ -105,6 +113,15 @@ var TextArea = function (_props, overrided = false) {
 
         var e = arguments[0];
         if (!e.isDefaultPrevented()) {}
+    };
+
+    _props.change = function () {
+        let e = arguments[0];
+        if (!e.isDefaultPrevented()) {
+            _self.changeHandler(e);
+        }
+        if (typeof _change == 'function')
+            _change.apply(this, arguments);
     };
 
     Component.call(this, _props);

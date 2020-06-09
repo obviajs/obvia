@@ -23,7 +23,7 @@ var ObjectEditor = function (_props, overrided = false) {
     });
 
     this.initFields = function (inst, fld) {
-        props = fld != null && fld != "" ? inst[fld] : inst;
+        props = (fld != null && fld != "") ? inst[fld] : inst;
         let rows = [];
         for (let prop in props) {
             //let propsMeta = extend(true, Builder.metaProps[inst.ctor] && Builder.metaProps[inst.ctor][prop] ? Builder.metaProps[inst.ctor][prop] : Builder.metaProps[prop]);

@@ -10,6 +10,7 @@ var _initDP = function () {
     
     Builder.providerValueField = "dataview_id";
     Builder.providerLabelField = "description";
+    Builder.selectedForm = new FormProperties();
     
     let api_dv_dataviews = new GaiaAPI_DV_dataviews();
     let api_dv_forms = new GaiaAPI_DV_forms();
@@ -62,7 +63,7 @@ var _initDpForms = function(){
     let api_dv_forms = new GaiaAPI_DV_forms();
     let raFrms = new RemoteArray(
         {
-            recordsPerPage: 13, // pagination
+            recordsPerPage: 15, // pagination
             fetchPromise: function (p) { 
                 let dvInp = new dvInput();
                 dvInp.tableData = new tableData({
@@ -139,7 +140,6 @@ var oxana = new App({
     }]
 });
 
-let selectedForm = new FormProperties();
 let formField;
 
 let containers = ["Container", "Form", "Header", "Footer"];

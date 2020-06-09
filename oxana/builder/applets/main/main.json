@@ -531,6 +531,17 @@
                          "components": [ 
                         ]
                      }  
+                  },
+                  {   
+                     "ctor": "Modal",
+                     "props": {
+                         "id": "formsServerModal",
+                         "size": "ModalSize.LARGE",
+                         "title": "Save Form",
+                         "components": [ 
+                           
+                        ]
+                     }  
                   }
                ]
              }

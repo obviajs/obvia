@@ -11,7 +11,7 @@ let Implementation = function (applet) {
         rightSideNav, listHistorySteps, workArea, workAreaColumn,
         cmpSearchTextInput, undoButton, redoButton, cmpTrash, toggleSideNavLeft, toggleSideNavRight,
         splitHorizontal, splitVertical, uploadIcon, saveLayout, selectBtn, componentList, 
-        openUploadForms;
+        openUploadForms, formsServerModal;
 
     let imp = {
         "BEGIN_DRAW": function (e) { 
@@ -30,6 +30,7 @@ let Implementation = function (applet) {
             propertyEditorViewStack = app.viewStack.mainContainer.container.rightSideNav.rightSideContainer.propertyEditorViewStack;
             propertyEditorContainer = propertyEditorViewStack.propertyEditorContainerWrap.propertyEditorContainer;
             fileSelectModal = app.viewStack.mainContainer.container.children.fileSelectModal;
+            formsServerModal = app.viewStack.mainContainer.container.children.formsServerModal;
             browseFile = fileSelectModal.modalDialog.modalContent.modalBody.browseFile;
             componentsContainer = app.viewStack.mainContainer.container.componentsContainer;
             rightSideNav = app.viewStack.mainContainer.container.rightSideNav;
@@ -80,8 +81,11 @@ let Implementation = function (applet) {
 
             uploadIcon = app.viewStack.mainContainer.nav.middleNav.uploadIcon;
             app.addBehaviors(uploadIcon, {
-                // "click": "OPEN_MODAL_FOR_SAVE",
-                "click": "SAVE_LAYOUT_REMOTE",
+                "click": "OPEN_MODAL_FORM_FOR_SAVE"
+            }, false);
+
+            app.addBehaviors(formsServerModal, {
+                "accept": "SEND_FORM_TO_SERVER"
             }, false);
             
             openUploadForms = app.viewStack.mainContainer.nav.middleNav.openUploadForms;
@@ -297,6 +301,28 @@ let Implementation = function (applet) {
             });
         },
 
+        "OPEN_MODAL_FORM_FOR_SAVE": function(e) {
+            formsServerModal.show();
+            let modalBody = formsServerModal.modalDialog.modalContent.modalBody;
+            let selectedForm = data.selectedForm;
+            
+            let oeLit = {
+                ctor: ObjectEditor,
+                "props": {
+                    id: "objectEditor",
+                    instance: selectedForm
+                }
+            };
+            modalBody.components = [oeLit];
+            selectedForm.form_literal = workAreaColumn.literalLite;
+        },
+
+        "SEND_FORM_TO_SERVER": function(e) {
+            e.stopPropagation();
+            var gaiaForm = new GaiaAPI_forms();
+            gaiaForm.formsClient.post(data.selectedForm);
+        },
+
         "FILE_SELECTED": function (e) {
             console.log("called FILE_SELECTED.");
             if (browseFile.value.length > 0) {
@@ -419,7 +445,7 @@ let Implementation = function (applet) {
                             ctor: ObjectEditor,
                             "props": {
                                 id: "objectEditor",
-                                instance: selectedForm,
+                                instance: data.selectedForm,
                                 field: "props"
                             }
                         };
@@ -708,7 +734,7 @@ let Implementation = function (applet) {
                         ctor: ObjectEditor,
                         "props": {
                             id: "objectEditor",
-                            instance: selectedForm,
+                            instance: data.selectedForm,
                             field: "props"
                         }
                     };
