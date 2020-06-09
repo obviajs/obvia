@@ -114,8 +114,8 @@ var oxana = new App({
             //forceReload: true
         },
         {
-            url: "./flowerui/oxana/builder/applets/forms/",
-            anchor: "forms",
+            url: "./flowerui/oxana/builder/applets/saveForm/",
+            anchor: "saveForm",
             dataPromise: _initDP,
             port: "viewStack",
             "uiRoute": modalRoute

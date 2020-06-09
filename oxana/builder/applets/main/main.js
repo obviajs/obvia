@@ -11,7 +11,7 @@ let Implementation = function (applet) {
         rightSideNav, listHistorySteps, workArea, workAreaColumn,
         cmpSearchTextInput, undoButton, redoButton, cmpTrash, toggleSideNavLeft, toggleSideNavRight,
         splitHorizontal, splitVertical, uploadIcon, saveLayout, selectBtn, componentList, 
-        openUploadForms, formsServerModal;
+        openUploadForms;
 
     let imp = {
         "BEGIN_DRAW": function (e) { 
@@ -30,7 +30,6 @@ let Implementation = function (applet) {
             propertyEditorViewStack = app.viewStack.mainContainer.container.rightSideNav.rightSideContainer.propertyEditorViewStack;
             propertyEditorContainer = propertyEditorViewStack.propertyEditorContainerWrap.propertyEditorContainer;
             fileSelectModal = app.viewStack.mainContainer.container.children.fileSelectModal;
-            formsServerModal = app.viewStack.mainContainer.container.children.formsServerModal;
             browseFile = fileSelectModal.modalDialog.modalContent.modalBody.browseFile;
             componentsContainer = app.viewStack.mainContainer.container.componentsContainer;
             rightSideNav = app.viewStack.mainContainer.container.rightSideNav;
@@ -83,14 +82,10 @@ let Implementation = function (applet) {
             app.addBehaviors(uploadIcon, {
                 "click": "OPEN_MODAL_FORM_FOR_SAVE"
             }, false);
-
-            app.addBehaviors(formsServerModal, {
-                "accept": "SEND_FORM_TO_SERVER"
-            }, false);
             
             openUploadForms = app.viewStack.mainContainer.nav.middleNav.openUploadForms;
             app.addBehaviors(openUploadForms, {
-                "click": "UPLOAD_FORMS"
+                "click": "OPEN_MODAL_FORMS"
             }, false);
 
             saveLayout = app.viewStack.mainContainer.nav.middleNav.saveLayout;
@@ -292,7 +287,7 @@ let Implementation = function (applet) {
             fileSelectModal.show();
         },
 
-        "UPLOAD_FORMS": function(e) {
+        "OPEN_MODAL_FORMS": function(e) {
             app.appletsMap["formsModal"].init().then(() => {
                 console.log("Applet formsModal inited");
                 app.addBehaviors(app.appletsMap["formsModal"].view, {
@@ -302,25 +297,10 @@ let Implementation = function (applet) {
         },
 
         "OPEN_MODAL_FORM_FOR_SAVE": function(e) {
-            formsServerModal.show();
-            let modalBody = formsServerModal.modalDialog.modalContent.modalBody;
-            let selectedForm = data.selectedForm;
-            
-            let oeLit = {
-                ctor: ObjectEditor,
-                "props": {
-                    id: "objectEditor",
-                    instance: selectedForm
-                }
-            };
-            modalBody.components = [oeLit];
-            selectedForm.form_literal = workAreaColumn.literalLite;
-        },
-
-        "SEND_FORM_TO_SERVER": function(e) {
-            e.stopPropagation();
-            var gaiaForm = new GaiaAPI_forms();
-            gaiaForm.formsClient.post(data.selectedForm);
+            app.appletsMap["saveForm"].init().then(() => { 
+                console.log('Applet saveForm inited.');
+            });
+            data.selectedForm.form_literal = workAreaColumn.literalLite;
         },
 
         "FILE_SELECTED": function (e) {
@@ -872,32 +852,6 @@ let Implementation = function (applet) {
                 stripHandle(lit);
                 let jsonLayout = JSON.stringify(lit, null, "\t");
                 download("workAreaColumn.json.txt", jsonLayout);
-            },
-            stopPropagation: true
-        },
-    
-        "SAVE_LAYOUT_REMOTE": {
-            do: function (e) {
-                /*data.forms.filterData = {
-                    "condition": "AND",
-                    "rules": [
-                      {
-                        "id": "form_name",
-                        "field": "form_name",
-                        "type": "string",
-                        "input": "text",
-                        "operator": "contains",
-                        "value": "Lista"
-                      }
-                    ],
-                    "valid": true
-                  }; //pra objekti JSON nga QueryBuilder
-                data.forms.filter();
-                */
-                app.appletsMap["forms"].init().then(() => { 
-                    console.log('Applet forms inited.');
-                });
-                
             },
             stopPropagation: true
         },

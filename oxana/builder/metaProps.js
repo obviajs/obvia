@@ -18,7 +18,7 @@ Builder.initMetaProps = function () {
             ctor: "Label", label: "Date Created", required: false, index: 1, props: {
             }
         },
-        author: {
+        author_id_user: {
             ctor: "Label", label: "Author", required: false, index: 1, props: {
             }
         },

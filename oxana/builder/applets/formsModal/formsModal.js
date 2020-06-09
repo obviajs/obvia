@@ -43,7 +43,7 @@ let Implementation = function (applet) {
             let form = gaiaForm.formsClient.get(currentItem.form_id);
             let resolve = await Promise.all([form]);
             let f = resolve[0][0];
-            let lit = f.literal;
+            let lit = f.form_literal;
             modal.hide();
             
             let evt = new jQuery.Event("loadLayout");

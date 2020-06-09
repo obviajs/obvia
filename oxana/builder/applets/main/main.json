@@ -521,28 +521,7 @@
                             }
                          ]
                       }
-                   },
-                   {   
-                     "ctor": "Modal",
-                     "props": {
-                         "id": "formsModal",
-                         "size": "ModalSize.LARGE",
-                         "title": "Select File",
-                         "components": [ 
-                        ]
-                     }  
-                  },
-                  {   
-                     "ctor": "Modal",
-                     "props": {
-                         "id": "formsServerModal",
-                         "size": "ModalSize.LARGE",
-                         "title": "Save Form",
-                         "components": [ 
-                           
-                        ]
-                     }  
-                  }
+                   }
                ]
              }
           }
