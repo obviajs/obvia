@@ -15,12 +15,12 @@ let Implementation = function (applet) {
             let modalBody = modal.modalDialog.modalContent.modalBody;
             
             let itemList = modal.find("formsList");
-            app.addBehaviors(itemList, {
+            applet.addBehaviors(itemList, {
                 "rowAdd": "PREPARE_ITEM",
             }, false);
 
             formsFilter = modalBody.formsFilter;
-            app.addBehaviors(formsFilter, {
+            applet.addBehaviors(formsFilter, {
                 "keyup": {
                     "SEARCH_FORMS": { filter: KeyboardUtils.test["ENTER"] }
                 }
@@ -31,7 +31,7 @@ let Implementation = function (applet) {
 
         "PREPARE_ITEM": function (e, r, ra) {
             if (ra) {
-                app.addBehaviors(ra.currentRow.cmpForm, {
+                applet.addBehaviors(ra.currentRow.cmpForm, {
                     "click": "ITEM_SELECT",
                 }, false);
             }

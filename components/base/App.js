@@ -4,7 +4,8 @@ var App = function(_props){
         inactivityInterval: 60000,
         components:[],
         historyProps: { enabled: true },
-        type: ContainerType.NONE
+        type: ContainerType.NONE,
+        guid: StringUtils.guid()
     };
 
     _props = extend(false, false, _defaultParams, _props);
@@ -17,7 +18,8 @@ var App = function(_props){
     let _history;
     let _applets = _props.applets;
     let _browserManager = BrowserManager.getInstance();
-    
+    let _guid = _props.guid;
+
     if(_style)
     {
         $("<style id='"+_self.domID+"_style' type='text/css'>"+_style+"</style>").appendTo("head");
@@ -34,7 +36,9 @@ var App = function(_props){
         _idleTime = _idleTime + _idleInterval;
         if (_idleTime >= _inactivityInterval) {
             let idleCount = Math.floor(_idleTime / _inactivityInterval);
-            _self.trigger("InactivityDetected", [_idleTime, idleCount]);
+            let evt = jQuery.Event("InactivityDetected");
+            evt.guid = _guid;
+            _self.trigger(evt, [_idleTime, idleCount]);
         }
     };
     let t = setInterval(timerIncrement, _idleInterval); 
@@ -46,12 +50,16 @@ var App = function(_props){
             if (document.hidden || document.webkitHidden || document.mozHidden || document.msHidden) {
                 if (_visible){
                     _visible = false;
-                    _self.trigger("WindowHide", []);
+                    let evt = jQuery.Event("WindowHide");
+                    evt.guid = _guid;
+                    _self.trigger(evt, []);
                 }
             } else {
                 if (!_visible){
                     _visible = true;
-                    _self.trigger("WindowShow", []);
+                    let evt = jQuery.Event("WindowShow");
+                    evt.guid = _guid;
+                    _self.trigger(evt, []);
                 }
             }
         });
@@ -70,7 +78,7 @@ var App = function(_props){
             }
         }
     });
-    let _behaviorimplementations = {};
+    let _behaviorimplementations = new AutoObject();
     Object.defineProperty(this, 'behaviorimplementations',
     {
         get: function () {
@@ -97,44 +105,17 @@ var App = function(_props){
             _self.addBehaviors(_history, historyBehaviors, false);
         }
         let defaultBehaviors = {
-            "beginDraw": "BEGIN_DRAW",
-            "endDraw": "END_DRAW",
             "InactivityDetected": "APP_INACTIVE",
             "ActivityDetected": "APP_ACTIVE",
             "WindowHide": "APP_WINDOW_HIDDEN",
             "WindowShow": "APP_WINDOW_SHOWN",
-            "beforeunload": "APP_UNLOADED",
-            "idChanged": {
-                "UPDATE_BEHAVIOR_BINDINGS": {
-                    onPropagation: true
-                }
-            }
+            "beforeunload": "APP_UNLOADED"
         };
    
         _self.addBehaviors(_self, defaultBehaviors, false);
     };
-    _behaviorimplementations["UPDATE_BEHAVIOR_BINDINGS"] = {
-        do: function (e) {
-            console.log("UPDATE_BEHAVIOR_BINDINGS");
-            _behaviors[e.newValue] = _behaviors[e.oldValue];
-            delete _behaviors[e.oldValue];
-        }
-        /**
-         * catch events thrown by children
-        */
-       
-    };
 
-    _behaviorimplementations["BEGIN_DRAW"] = function (e) {
-        if (!_loader.attached) 
-            _self.$el.append(_loader.render());
-        _loader.show();
-    };
-    //default behavior is to hide loader on endDraw
-    _behaviorimplementations["END_DRAW"] = function(e) {
-        _loader.hide(); 
-    };
-    _behaviorimplementations["APP_UNLOADED"] = function(e) {
+    _behaviorimplementations[_guid]["APP_UNLOADED"] = function(e) {
         //window.open("http://google.com/");
         //return "You have unsaved changes";
         let len = BrowserWindow.all.length;
@@ -142,16 +123,16 @@ var App = function(_props){
             BrowserWindow.all[i].close();
         }
     };
-    _behaviorimplementations["APP_INACTIVE"] = function(e, idleTime, idleCount) {
+    _behaviorimplementations[_guid]["APP_INACTIVE"] = function(e, idleTime, idleCount) {
         console.log("App became Inactive, Launch a cool screensaver here");
     };
-    _behaviorimplementations["APP_ACTIVE"] = function(e, idleTime, idleCount) {
+    _behaviorimplementations[_guid]["APP_ACTIVE"] = function(e, idleTime, idleCount) {
         console.log("App became Active, Disable screensaver and show login if session expired here");
     };
-    _behaviorimplementations["APP_WINDOW_HIDDEN"] = function(e, idleTime, idleCount) {
+    _behaviorimplementations[_guid]["APP_WINDOW_HIDDEN"] = function(e, idleTime, idleCount) {
         console.log("App Window was minimized, you may want to stop network traffic or do sth cpu intensive here.");
     };
-    _behaviorimplementations["APP_WINDOW_SHOWN"] = function(e, idleTime, idleCount) {
+    _behaviorimplementations[_guid]["APP_WINDOW_SHOWN"] = function(e, idleTime, idleCount) {
         console.log("App Window was maximized, you may want to greet the user.");
     };
 
@@ -166,13 +147,13 @@ var App = function(_props){
     this.addImplementation = function (imps) { 
         if (!_implementations[imps.guid]) {
             for (let behavior in imps) {
-                if (_behaviorimplementations[behavior] == null || imps[behavior].override) {
-                    _behaviorimplementations[behavior] = imps[behavior];
+                if (_behaviorimplementations[imps.guid][behavior] == null || imps[behavior].override) {
+                    _behaviorimplementations[imps.guid][behavior] = imps[behavior];
                 } else {
-                    if (!_behaviorimplementations[behavior].forEach) {
-                        _behaviorimplementations[behavior] = new ArrayEx([_behaviorimplementations[behavior]]);
+                    if (!_behaviorimplementations[imps.guid][behavior].forEach) {
+                        _behaviorimplementations[imps.guid][behavior] = new ArrayEx([_behaviorimplementations[imps.guid][behavior]]);
                     }
-                    _behaviorimplementations[behavior].push(imps[behavior]);
+                    _behaviorimplementations[imps.guid][behavior].push(imps[behavior]);
                 }
             }
             _implementations[imps.guid] = imps;
@@ -181,12 +162,13 @@ var App = function(_props){
         }
     };
 
-    let _loader = new Loader({ id: 'loader' });
     let _event2behavior = function(e) {
         if(e.type != "InactivityDetected" && e.type != "ActivityDetected" && e.type != "WindowHide" && e.type != "WindowShow"){
             if(_idleTime >= _inactivityInterval){
-                let idleCount = Math.floor(_idleTime/_inactivityInterval);
-                _self.trigger("ActivityDetected", [_idleTime, idleCount]);
+                let idleCount = Math.floor(_idleTime / _inactivityInterval);
+                let evt = jQuery.Event("ActivityDetected");
+                evt.guid = _guid;
+                _self.trigger(evt, [_idleTime, idleCount]);
             }
             _idleTime = 0;
         }
@@ -235,7 +217,7 @@ var App = function(_props){
                 behaviorName = behaviorNameArr[b];
                 behaviorFilter = behaviorFilterArr[b];
 
-                let behavior = _self.behaviorimplementations[behaviorName];
+                let behavior = _self.behaviorimplementations[e.guid][behaviorName];
                 let qualifies = true, extraArgs = [];
                 if(behavior && typeof behaviorFilter == 'function') {
                     qualifies = behaviorFilter.apply(manifestor, arguments);
@@ -329,13 +311,15 @@ var App = function(_props){
 
     this.beginDraw = function (e) {
         if (e.target.id == this.domID) {
-            $(this.ownerDocument).on("keydown keyup", function (e) { 
+            $(this.ownerDocument.body).on("keydown keyup", function (e) { 
                 //target is always body
-                if (e.guid != _self.guid) { 
+                if (e.target == _self.ownerDocument.body) { 
                     if (!e.guid) {
-                        e.guid = _self.guid;
+                        _self.trigger(e);     
+                        if (!e.guid) {
+                            e.guid = _guid;
+                        }
                     }
-                    _self.trigger(e);
                 }
             });
 
@@ -378,7 +362,7 @@ var App = function(_props){
         cmp.on(_eventTypesJoined, _event2behavior);
         if (recurse) {
             for (let cid in cmp.children) {
-                this.addBehaviors(cmp.children[cid], behaviors);
+                _eventTypesJoined += " " + this.addBehaviors(cmp.children[cid], behaviors);
             }
         }
     };
@@ -394,14 +378,6 @@ var App = function(_props){
             }
         }
     };
-
-    Object.defineProperty(this, "loader", 
-    {
-        get: function loader() 
-        {
-            return _loader;
-        }
-    });
     
     Object.defineProperty(this, "idleInterval", 
     {

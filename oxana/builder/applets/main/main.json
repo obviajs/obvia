@@ -4,9 +4,16 @@
        "id":"mainContainer",
        "type":"",
        "props":{
-          "height":"100%"
+          "height":"100%",
+          "visible": true
        },
        "components":[
+          {
+             "ctor": "Loader",
+             "props": {
+               "id": "appLoader"
+             }
+          },
           {
              "ctor":"Container",
              "props":{

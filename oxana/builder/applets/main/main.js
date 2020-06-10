@@ -11,7 +11,7 @@ let Implementation = function (applet) {
         rightSideNav, listHistorySteps, workArea, workAreaColumn,
         cmpSearchTextInput, undoButton, redoButton, cmpTrash, toggleSideNavLeft, toggleSideNavRight,
         splitHorizontal, splitVertical, uploadIcon, saveLayout, selectBtn, componentList, 
-        openUploadForms;
+        openUploadForms, appLoader;
 
     let imp = {
         "BEGIN_DRAW": function (e) { 
@@ -27,6 +27,9 @@ let Implementation = function (applet) {
             propsComponentList.dataProvider = _cmpList;
         },
         "END_DRAW": function (e) {
+            appLoader = app.viewStack.mainContainer.appLoader;
+            appLoader.hide();
+
             propertyEditorViewStack = app.viewStack.mainContainer.container.rightSideNav.rightSideContainer.propertyEditorViewStack;
             propertyEditorContainer = propertyEditorViewStack.propertyEditorContainerWrap.propertyEditorContainer;
             fileSelectModal = app.viewStack.mainContainer.container.children.fileSelectModal;
@@ -37,77 +40,87 @@ let Implementation = function (applet) {
             workAreaColumn = app.viewStack.mainContainer.container.workArea.workAreaRow.workAreaColumn;
             workArea = workAreaColumn.workAreaCell.workAreaRowL2.workAreaColumnL2;
             componentList = componentsContainer.componentList;
-            app.addBehaviors(componentList, {
+
+            applet.addBehaviors(applet.view,
+                {
+                    "idChanged": {
+                        "UPDATE_BEHAVIOR_BINDINGS": {
+                            onPropagation: true
+                        }
+                    }
+                }, false);
+
+            applet.addBehaviors(componentList, {
                 "rowAdd": "PREPARE_CMP",
             }, false);
             
-            app.addBehaviors(propertyEditorContainer, vspewbehaviors, false);
+            applet.addBehaviors(propertyEditorContainer, vspewbehaviors, false);
     
             cmpSearchTextInput = app.viewStack.mainContainer.container.componentsContainer.container.cmpSearchTextInput;
-            app.addBehaviors(cmpSearchTextInput, {
+            applet.addBehaviors(cmpSearchTextInput, {
                 "keyup": "SEARCH_CMP",
             }, false);
 
             undoButton = app.viewStack.mainContainer.nav.middleNav.undoButton;
-            app.addBehaviors(undoButton, {
+            applet.addBehaviors(undoButton, {
                 "click": "WA_UNDO",
             }, false);
             redoButton = app.viewStack.mainContainer.nav.middleNav.redoButton;
-            app.addBehaviors(redoButton, {
+            applet.addBehaviors(redoButton, {
                 "click": "WA_REDO",
             }, false);
             cmpTrash = app.viewStack.mainContainer.container.rightSideNav.rightSideContainer.propertyEditorViewStack.cmpTrash;
-            app.addBehaviors(cmpTrash, daBehaviors, false);
+            applet.addBehaviors(cmpTrash, daBehaviors, false);
             
             toggleSideNavLeft = app.viewStack.mainContainer.nav.leftNav.toggleSideNavLeft;
-            app.addBehaviors(toggleSideNavLeft, {
+            applet.addBehaviors(toggleSideNavLeft, {
                 "click": "TOGGLE_VISIBILITY_LEFT",
             }, false);
             toggleSideNavRight = app.viewStack.mainContainer.nav.rightNav.toggleSideNavRight;
-            app.addBehaviors(toggleSideNavRight, {
+            applet.addBehaviors(toggleSideNavRight, {
                 "click": "TOGGLE_VISIBILITY_RIGHT",
             }, false);
     
             splitHorizontal = app.viewStack.mainContainer.nav.middleNav.splitHorizontal;
-            app.addBehaviors(splitHorizontal, {
+            applet.addBehaviors(splitHorizontal, {
                 "click": "SPLIT_HOR",
             }, false);
 
             splitVertical = app.viewStack.mainContainer.nav.middleNav.splitVertical;
-            app.addBehaviors(splitVertical, {
+            applet.addBehaviors(splitVertical, {
                 "click": "SPLIT_VERT",
             }, false);
 
             uploadIcon = app.viewStack.mainContainer.nav.middleNav.uploadIcon;
-            app.addBehaviors(uploadIcon, {
+            applet.addBehaviors(uploadIcon, {
                 "click": "OPEN_MODAL_FORM_FOR_SAVE"
             }, false);
             
             openUploadForms = app.viewStack.mainContainer.nav.middleNav.openUploadForms;
-            app.addBehaviors(openUploadForms, {
+            applet.addBehaviors(openUploadForms, {
                 "click": "OPEN_MODAL_FORMS"
             }, false);
 
             saveLayout = app.viewStack.mainContainer.nav.middleNav.saveLayout;
-            app.addBehaviors(saveLayout, {
+            applet.addBehaviors(saveLayout, {
                 "click": "SAVE_LAYOUT",
             }, false);
             selectBtn = app.viewStack.mainContainer.nav.middleNav.selectBtn;
-            app.addBehaviors(selectBtn, {
+            applet.addBehaviors(selectBtn, {
                 "click": "FILE_SELECT_MODAL",
             }, false);
     
-            app.addBehaviors(browseFile, {
+            applet.addBehaviors(browseFile, {
                 "change": "FILE_SELECTED",
             }, false);
-            app.addBehaviors(listHistorySteps, {
+            applet.addBehaviors(listHistorySteps, {
                 "change": "HISTORY_STEP_DETAILS",
             }, false);
 
             //app.behaviors["previewBtn"]["click"] = "PREVIEW";
-            app.addBehaviors(workArea, waBehaviors, false);
+            applet.addBehaviors(workArea, waBehaviors, false);
             
-            app.addBehaviors(app, {
+            applet.addBehaviors(app, {
                 "loadLayout": "LOAD_LAYOUT", 
                 "loadHtml": "LOAD_HTML", 
                 "keydown": {
@@ -116,6 +129,16 @@ let Implementation = function (applet) {
                     "DELETE_CMP": { filter: KeyboardUtils.test["DEL"], onPropagation: true }
                 }
             }, false);
+        },
+        "UPDATE_BEHAVIOR_BINDINGS": {
+            do: function (e) {
+                console.log("UPDATE_BEHAVIOR_BINDINGS");
+                app.behaviors[e.newValue] = app.behaviors[e.oldValue];
+                delete app.behaviors[e.oldValue];
+            }
+            /**
+             * catch events thrown by children
+            */
         },
         "ALLOW_DROP": function (e) {
             console.log("ALLOW_DROP ", this.domID);
@@ -172,9 +195,9 @@ let Implementation = function (applet) {
                         lit.props.classes.push("selected-component");
                     }
                     inst = workArea.addComponent(lit);
-                    app.addBehaviors(inst, cmpBehaviors, false);
+                    applet.addBehaviors(inst, cmpBehaviors, false);
                     if (containers.indexOf(inst.ctor) > -1) { 
-                        app.addBehaviors(inst, cmpWaBehaviors, false);
+                        applet.addBehaviors(inst, cmpWaBehaviors, false);
                         inst.attr.isNotWa = true;
                     }
                     inst.attr.isCmp = true;
@@ -193,7 +216,7 @@ let Implementation = function (applet) {
                         if (inst.ctor == "FormField" && workArea.ctor != "Form") {
                             // inst = inst.children[inst.component.props.id];
                             inst.draggable = true;
-                            app.addBehaviors(inst, cmpBehaviors, false);
+                            applet.addBehaviors(inst, cmpBehaviors, false);
                             let classes = inst.classes.slice(0);
                             classes.pushUnique("selected-component");
                             inst.classes = classes;
@@ -217,9 +240,9 @@ let Implementation = function (applet) {
                             inst = workArea.addComponent(ff);
                             //inst.addChild(inst);
                             //inst = instF;
-                            app.addBehaviors(inst, cmpBehaviors, false);
+                            applet.addBehaviors(inst, cmpBehaviors, false);
                             // if (parents.indexOf(ctor) > -1) {
-                            //     app.addBehaviors(instF, cntBehaviors, false);
+                            //     applet.addBehaviors(instF, cntBehaviors, false);
                             // }
                         }
                         workArea.addChild(inst);
@@ -290,7 +313,7 @@ let Implementation = function (applet) {
         "OPEN_MODAL_FORMS": function(e) {
             app.appletsMap["formsModal"].init().then(() => {
                 console.log("Applet formsModal inited");
-                app.addBehaviors(app.appletsMap["formsModal"].view, {
+                applet.addBehaviors(app.appletsMap["formsModal"].view, {
                     "loadLayout": "LOAD_LAYOUT"
                 });
             });
@@ -325,7 +348,7 @@ let Implementation = function (applet) {
         },
         "PREPARE_CMP": function (e, r, ra) {
             if (ra) {
-                app.addBehaviors(ra.currentRow.component, {
+                applet.addBehaviors(ra.currentRow.component, {
                     "dragstart": "INITIAL_DRAGSTART",
                 }, false);
             }
@@ -376,12 +399,12 @@ let Implementation = function (applet) {
                 let was = objectHierarchyGetMatchingMember(inst, "attr.isWa", true, "children", true);
                 for (let wi = 0; wi < was.length; wi++)
                 {
-                    app.addBehaviors(was[wi].match, cmpWaBehaviors, false);
+                    applet.addBehaviors(was[wi].match, cmpWaBehaviors, false);
                 }
                 let cmps = objectHierarchyGetMatchingMember(inst, "attr.isCmp", true, "children", true);
                 for (let ci = 0; ci < cmps.length; ci++)
                 {
-                    app.addBehaviors(cmps[ci].match, cmpBehaviors, false);
+                    applet.addBehaviors(cmps[ci].match, cmpBehaviors, false);
                 }
             }
         },
@@ -510,7 +533,7 @@ let Implementation = function (applet) {
                 }
                 
                 let newWorkArea = newRowInstance.children[newRowInstance.components[0].props.id];
-                app.addBehaviors(newWorkArea, waBehaviors, false);
+                applet.addBehaviors(newWorkArea, waBehaviors, false);
                 // app.behaviors[newWorkArea.id]["mousemove"]["WA_RESIZE_EW"] = isMouseMoveEW;
                 //{filter: isMouseMoveEw, otherProperties...}
     
@@ -525,7 +548,7 @@ let Implementation = function (applet) {
                     }
     
                     let newWorkArea2 = newRowInstance2.children[newRowInstance2.components[0].props.id];
-                    app.addBehaviors(newWorkArea2, waBehaviors, false);
+                    applet.addBehaviors(newWorkArea2, waBehaviors, false);
                     ret.child2 = newRowInstance2;
                 }
     
@@ -661,7 +684,7 @@ let Implementation = function (applet) {
                             row.children[childID].spacing.colSpan = colSpan;
                         let workArea = row.children[childID];
                         //let workArea = cell.children[cell.components[0].props.id];
-                        app.addBehaviors(workArea, waBehaviors, false);
+                        applet.addBehaviors(workArea, waBehaviors, false);
                     }
                     ret.parent = parent;
                     ret.child = newInstance;

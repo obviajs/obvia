@@ -56,8 +56,9 @@ var Applet = function (_props) {
             _literal.props.bindingDefaultContext = _data;
             _view = Component.fromLiteral(_literal);
             _app.addImplementation(_implementation);
-            _app.addBehaviors(_view, _behaviors, false);
-
+            
+            _self.addBehaviors(_view, _behaviors, false);
+            
             let len = _applets;
             for (let i = 0; i < len; i++) {
                 let applet = _applets[i];
@@ -75,6 +76,20 @@ var Applet = function (_props) {
             _loaded = true;
             return p;
         }));
+    };
+    
+    this.addBehaviors = function (cmp, behaviors, recurse = true) {
+        let eventTypesJoined = "";
+        for (let b in behaviors) {
+            eventTypesJoined += " " + b;
+        }
+        cmp.on(eventTypesJoined, _proxyHandler);
+        _app.addBehaviors(cmp, behaviors, recurse);
+    };
+    
+    let _proxyHandler = function (e) {
+        //add implementation guid so App.js will know which behavior implementation to execute
+        e.guid = _implementation.guid;        
     };
 
     Object.defineProperty(this, "url", {

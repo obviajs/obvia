@@ -9,7 +9,7 @@ var Loader = function(_props)
 { 
     this.template = function () 
     {
-        return  "<div id='" + this.domID + "' style='display: none;'>" +
+        return  "<div id='" + this.domID + "'>" +
                     "<style>" +
                         ".se-pre-con {" +
                             "position: fixed;" +
@@ -25,6 +25,12 @@ var Loader = function(_props)
                     "<div class='se-pre-con'></div>" +                    
                 "</div>";
     };
+    var _defaultParams = {
+        visible: true
+    };
+
+    _props = extend(false, false, _defaultParams, _props);
+
     Component.call(this, _props);
 };
 
