@@ -186,7 +186,10 @@ var Parent = function (_props, overrided = false, _isSurrogate = false) {
                 cmpLit = component;
             let cmp = Component.fromLiteral(cmpLit);
             //component.props.id = cmp.id;
-            _children[cmp.id] = cmp;
+            if (_children[cmp.id])
+                throw new Error("Child id: " + cmp.id + " is already used in Parent with id: " + _self.id + ". Components ids should be unique within their parent.");
+            else
+                _children[cmp.id] = cmp;
             _ccRelation[cmp.id] = component;
             _csorted.splice(index, 0, cmp.id);
             cmp.parent = _proxy;
