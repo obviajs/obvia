@@ -73,11 +73,10 @@ var List = function (_props, overrided = false) {
 			direction: 'horizontal',
             separator: false
         },
-        attr:{"data-triggers":"rowAdd endDraw rowEdit beforeRowAdd rowDelete beforeRowDelete beginDraw change itemClick itemDblClick"},
+        attr:{"data-triggers":"rowAdd rowEdit beforeRowAdd rowDelete beforeRowDelete change itemClick itemDblClick"},
         multiselect: false,
         valueField: "id",
-        labelField: "",
-        classField: "",
+        classesField: "",
         defaultClasses: ["btn btn-sm btn-default"],
         selectedClasses: ["btn btn-sm btn-success"],
         value: []

@@ -24,7 +24,7 @@ var Tree = function (_props, overrided = false) {
                     _dpWatcher.reset();
                     _dataProvider.off("propertyChange", _dpMemberChanged);
                 }
-                _dataProvider = !ArrayEx.isArrayEx(v)?new ArrayEx(v):v;
+                _dataProvider = !ArrayEx.isArrayEx(v)?new ArrayEx(v?v:[]):v;
                 _dpWatcher = ChangeWatcher.getInstance(_dataProvider);
                 _dpWatcher.watch(_dataProvider, "length", _dpLengthChanged);
                 _dataProvider.on("propertyChange", _dpMemberChanged);

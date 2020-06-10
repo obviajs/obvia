@@ -367,13 +367,14 @@ var Repeater = function(_props)
             for(var cIndex=0;cIndex<len;cIndex++)
             {
                 let component = {};
-                if (_components[cIndex].props.id) {
-                    shallowCopy(_components[cIndex], component, ["props"]);
-                    component.props = {};
-                    shallowCopy(_components[cIndex].props, component.props, ["id", "bindingDefaultContext"]);
-                    component.props.id = _components[cIndex].props.id + "_" + index + "_" + cIndex;
-                    component.props.bindingDefaultContext = data;
+                if (!_components[cIndex].props.id) {
+                    _components[cIndex].props.id = _components[cIndex].ctor + "_" + Component[_components[cIndex].ctor].instanceInc;
                 }
+                shallowCopy(_components[cIndex], component, ["props"]);
+                component.props = {};
+                shallowCopy(_components[cIndex].props, component.props, ["id", "bindingDefaultContext"]);
+                component.props.id = _components[cIndex].props.id + "_" + index + "_" + cIndex;
+                component.props.bindingDefaultContext = data;
                 
                 component.props.ownerDocument = _props.ownerDocument;
                 let el = Component.fromLiteral(component, data);
