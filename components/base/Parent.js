@@ -181,7 +181,7 @@ var Parent = function (_props, overrided = false, _isSurrogate = false) {
                 shallowCopy(component, cmpLit, ["props"]);
                 cmpLit.props = {};
                 shallowCopy(component.props, cmpLit.props, ["id"]);
-                cmpLit.props.id = component.props.id + '_' + _components.length;
+                cmpLit.props.id = component.props.id + '_' + Object.keys(_children).length;
             } else
                 cmpLit = component;
             let cmp = Component.fromLiteral(cmpLit);

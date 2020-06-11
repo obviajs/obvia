@@ -17,6 +17,7 @@ var CheckBoxEx = function (_props, overrided = false) {
                 _label = v;
                 if (this.$el)
                 {
+                    v = $(`<div>${v}</div>`).get(0).innerText;
                     let last = this.$el.children().last();
                     if(last && last.length>0)
                         if(last[0].nextSibling)

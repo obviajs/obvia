@@ -31,7 +31,7 @@ var Wizard = function (_props) {
     });
     
     let _defaultParams = {
-        type: ContainerType.NONE,
+        type: ContainerType.CONTAINER,
         stepPath: "attr.step",
         detailsPath: "attr.details",
         selectedIndex: 0
@@ -39,10 +39,10 @@ var Wizard = function (_props) {
 
     this.beforeAttach = function (e) {
         if (e.target.id == this.domID) {
-            _viewStack = this.body.rowCnt.colCnt.wizardCnt.viewStack;
-            _stepHeading = this.body.rowCnt.colCnt.wizardCnt.container_page_top_row.row_container.page_title_container.stepHeading;
+            _viewStack = this.bodyRowCnt.colCnt.wizardCnt.viewStack;
+            _stepHeading = this.bodyRowCnt.colCnt.wizardCnt.container_page_top_row.row_container.page_title_container.stepHeading;
             _detailLabel = _stepHeading.detailLabel;
-            _wizardTree = this.header.rowCnt.colCnt.wizardTree;
+            _wizardTree = this.stepsRowCnt.colCnt.wizardTree;
         }
     };
 
@@ -85,93 +85,78 @@ var Wizard = function (_props) {
             }
         }
 
-        _cmps = [{
-                    ctor: Container,
-                    props: {
-                        id: "header",
-                        type: ContainerType.NONE,
-                        classes: ["container"],
-                        components: [{
-                            ctor: Container,
-                            props: {
-                                id: "rowCnt",
-                                type: ContainerType.ROW,
-                                classes: ["row"],
-                                components: [{
-                                    ctor: Container,
-                                    props: {
-                                        id: "colCnt",
-                                        type: ContainerType.COLUMN,
-                                        classes: ["col-12"],
-                                        components: [{
-                                            ctor: Tree,
-                                            props: {
-                                                id: "wizardTree",
-                                                classes: ["wizard-steps"],
-                                                selectedClasses: ["current-step"],
-                                                componentsField: "components",
-                                                dataProvider: _steps
-                                            }
-                                        }]
-                                    }
-                                }]
-                            }
-                        }]
-                    }
-                },
-                {
-                ctor: Container,
-                    props: {
-                        id: "body",
+        _cmps = [
+                    {
                         ctor: Container,
-                        components: [
-                            {
+                        props: {
+                            id: "stepsRowCnt",
+                            type: ContainerType.ROW,
+                            classes: ["row"],
+                            components: [{
                                 ctor: Container,
                                 props: {
-                                    id: "rowCnt",
+                                    id: "colCnt",
+                                    type: ContainerType.COLUMN,
+                                    classes: ["col-12"],
+                                    components: [{
+                                        ctor: Tree,
+                                        props: {
+                                            id: "wizardTree",
+                                            classes: ["wizard-steps"],
+                                            selectedClasses: ["current-step"],
+                                            componentsField: "components",
+                                            dataProvider: _steps
+                                        }
+                                    }]
+                                }
+                            }]
+                        }
+                    },
+                    {
+                        ctor: Container,
+                        props: {
+                            id: "bodyRowCnt",
+                            type: ContainerType.NONE,
+                            classes: ["row"],
+                            components: [{
+                                ctor: Container,
+                                props: {
+                                    id: "colCnt",
                                     type: ContainerType.NONE,
-                                    classes: ["row"],
+                                    classes: ["col-12"],
                                     components: [{
                                         ctor: Container,
                                         props: {
-                                            id: "colCnt",
+                                            id: "wizardCnt",
                                             type: ContainerType.NONE,
-                                            classes: ["col-12"],
+                                            classes: ["wizard-form-wrapper"],
                                             components: [{
                                                 ctor: Container,
                                                 props: {
-                                                    id: "wizardCnt",
+                                                    id: "container_page_top_row",
                                                     type: ContainerType.NONE,
-                                                    classes: ["wizard-form-wrapper"],
+                                                    classes: ["page-top-row"],
                                                     components: [{
                                                         ctor: Container,
                                                         props: {
-                                                            id: "container_page_top_row",
-                                                            type: ContainerType.NONE,
-                                                            classes: ["page-top-row"],
+                                                            id: "row_container",
+                                                            type: ContainerType.ROW,
                                                             components: [{
                                                                 ctor: Container,
                                                                 props: {
-                                                                    id: "row_container",
-                                                                    type: ContainerType.ROW,
+                                                                    id: "page_title_container",
+                                                                    type: ContainerType.NONE,
+                                                                    classes: ["col-6"],
                                                                     components: [{
-                                                                        ctor: Container,
+                                                                        ctor: Heading,
                                                                         props: {
-                                                                            id: "page_title_container",
-                                                                            type: ContainerType.NONE,
-                                                                            classes: ["col-6"],
+                                                                            id: "stepHeading",
+                                                                            headingType: HeadingType.h3,
                                                                             components: [{
-                                                                                ctor: Heading,
+                                                                                ctor: Label,
                                                                                 props: {
-                                                                                    id: "stepHeading",
-                                                                                    headingType: HeadingType.h3,
-                                                                                    components: [{
-                                                                                        ctor: Label,
-                                                                                        props: {
-                                                                                            id: "detailLabel",
-                                                                                            labelType: LabelType.span
-                                                                                        }
-                                                                                    }]
+                                                                                    id: "detailLabel",
+                                                                                    labelType: LabelType.span
                                                                                 }
                                                                             }]
                                                                         }
@@ -179,116 +164,115 @@ var Wizard = function (_props) {
                                                                 }
                                                             }]
                                                         }
-                                                    },
-                                                    {
-                                                        ctor: ViewStack,
-                                                        props: {
-                                                            id: "viewStack",
-                                                            selectedIndex: 0,
-                                                            enabled: true,
-                                                            components: _props.components
-                                                        }
-                                                    },
-                                                    {
+                                                    }]
+                                                }
+                                            },
+                                            {
+                                                ctor: ViewStack,
+                                                props: {
+                                                    id: "viewStack",
+                                                    selectedIndex: 0,
+                                                    enabled: true,
+                                                    components: _props.components
+                                                }
+                                            },
+                                            {
+                                                ctor: Container,
+                                                props: {
+                                                    id: "wizard_footer",
+                                                    type: ContainerType.NONE,
+                                                    classes: ["wizard-form-footer"],
+                                                    components: [{
                                                         ctor: Container,
                                                         props: {
-                                                            id: "wizard_footer",
-                                                            type: ContainerType.NONE,
-                                                            classes: ["wizard-form-footer"],
+                                                            id: "row-footer",
+                                                            type: ContainerType.ROW,
+                                                            classes: ["row"],
                                                             components: [{
                                                                 ctor: Container,
                                                                 props: {
-                                                                    id: "row-footer",
-                                                                    type: ContainerType.ROW,
-                                                                    classes: ["row"],
+                                                                    id: "col-footer",
+                                                                    type: ContainerType.COLUMN,
+                                                                    classes: ["col-6"],
                                                                     components: [{
-                                                                        ctor: Container,
+                                                                        ctor: Button,
                                                                         props: {
-                                                                            id: "col-footer",
-                                                                            type: ContainerType.COLUMN,
-                                                                            classes: ["col-6"],
+                                                                            id: "left-arrow",
+                                                                            href: "#",
+                                                                            classes: ["btn", "btn-outline-primary"],
+                                                                            click: _prev,
+                                                                            label: "Kthehu",
                                                                             components: [{
-                                                                                ctor: Button,
+                                                                                ctor: Label,
                                                                                 props: {
-                                                                                    id: "left-arrow",
-                                                                                    href: "#",
-                                                                                    classes: ["btn", "btn-outline-primary"],
-                                                                                    click: _prev,
-                                                                                    label: "Kthehu",
-                                                                                    components: [{
-                                                                                        ctor: Label,
-                                                                                        props: {
-                                                                                            id: "back",
-                                                                                            labelType: LabelType.i,
-                                                                                            classes: ["fa", "fa-arrow-left"]
-                                                                                        }
-                                                                                    }]
+                                                                                    id: "back",
+                                                                                    labelType: LabelType.i,
+                                                                                    classes: ["fa", "fa-arrow-left"]
                                                                                 }
                                                                             }]
                                                                         }
+                                                                    }]
+                                                                }
+                                                            },
+                                                            {
+                                                                ctor: Container,
+                                                                props: {
+                                                                    id: "text-right",
+                                                                    type: ContainerType.COLUMN,
+                                                                    classes: ["col-6", "text-right"],
+                                                                    components: [{
+                                                                        ctor: Link,
+                                                                        props: {
+                                                                            id: "new-save",
+                                                                            href: "#",
+                                                                            classes: ["btn", "btn-primary"],
+                                                                            label: "Ruaj dhe i ri"
+                                                                        }
                                                                     },
                                                                     {
-                                                                        ctor: Container,
+                                                                        ctor: Link,
                                                                         props: {
-                                                                            id: "text-right",
-                                                                            type: ContainerType.COLUMN,
-                                                                            classes: ["col-6", "text-right"],
+                                                                            id: "clear",
+                                                                            href: "#",
+                                                                            classes: ["btn", "btn-outline-primary"],
+                                                                            label: "Pastro"
+                                                                        }
+                                                                    },
+                                                                    {
+                                                                        ctor: Button,
+                                                                        props: {
+                                                                            id: "next",
+                                                                            href: "#",
+                                                                            classes: ["btn", "btn-outline-primary"],
+                                                                            label: "Tjetra",
+                                                                            click: _next,
                                                                             components: [{
-                                                                                ctor: Link,
+                                                                                ctor: Label,
                                                                                 props: {
-                                                                                    id: "new-save",
-                                                                                    href: "#",
-                                                                                    classes: ["btn", "btn-primary"],
-                                                                                    label: "Ruaj dhe i ri"
+                                                                                    id: "arrow",
+                                                                                    labelType: LabelType.i,
+                                                                                    classes: ["fa", "fa-arrow-right"]
                                                                                 }
-                                                                            },
-                                                                            {
-                                                                                ctor: Link,
-                                                                                props: {
-                                                                                    id: "clear",
-                                                                                    href: "#",
-                                                                                    classes: ["btn", "btn-outline-primary"],
-                                                                                    label: "Pastro"
-                                                                                }
-                                                                            },
-                                                                            {
-                                                                                ctor: Button,
-                                                                                props: {
-                                                                                    id: "next",
-                                                                                    href: "#",
-                                                                                    classes: ["btn", "btn-outline-primary"],
-                                                                                    label: "Tjetra",
-                                                                                    click: _next,
-                                                                                    components: [{
-                                                                                        ctor: Label,
-                                                                                        props: {
-                                                                                            id: "arrow",
-                                                                                            labelType: LabelType.i,
-                                                                                            classes: ["fa", "fa-arrow-right"]
-                                                                                        }
-                                                                                    }]
-                                                                                }
-                                                                            }
-                                                                            ]
+                                                                            }]
                                                                         }
                                                                     }
                                                                     ]
                                                                 }
-                                                            }]
+                                                            }
+                                                            ]
                                                         }
-                                                    }
-
-                                                    ]
+                                                    }]
                                                 }
-                                            }]
+                                            }
+
+                                            ]
                                         }
                                     }]
                                 }
-                            }
-                        ]
+                            }]
+                        }
                     }
-                }
-        ];
+                ];
     };
 
     let _next = function () {

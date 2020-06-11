@@ -9,7 +9,8 @@ var Li = function (_props, overrided = false) {
             if (_label != v) {
                 _label = v;
                 if (this.$el) {
-                    var last = this.$el.children().last();
+                    v = $(`<div>${v}</div>`).get(0).innerText;
+                    let last = this.$el.children().last();
                     if (last && last.length > 0)
                         if (last[0].nextSibling)
                             last[0].nextSibling.textContent = v;
@@ -47,7 +48,7 @@ var Li = function (_props, overrided = false) {
         return "<li id='" + this.domID + "' value='"+_value+"'></li>";
     };
 
-    var _defaultParams = {
+    let _defaultParams = {
         label: "",
         value: "",
         type: ContainerType.NONE
