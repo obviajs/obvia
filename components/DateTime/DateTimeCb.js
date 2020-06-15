@@ -69,7 +69,7 @@ var DateTimeCb = function (_props, overrided = false) {
         set: function inputFormat(v) {
             if (_inputFormat !== v) {
                 _inputFormat = v;
-                this.value = _value.format(_inputFormat);;
+                this.value = _value.format(_inputFormat);
             }
         },
         enumerable: true

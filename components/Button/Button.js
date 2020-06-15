@@ -121,10 +121,11 @@ var Button = function(_props, overrided=false)
     let _value; 
     
    // Component.call(this, _props);
-    Parent.call(this, _props);
+    let r = Parent.call(this, _props);
     if(overrided)
     {
         this.keepBase();
     }
+    return r;
 };
 Button.prototype.ctor = 'Button';

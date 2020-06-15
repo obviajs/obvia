@@ -368,14 +368,16 @@ var Repeater = function(_props)
             {
                 let component = {};
                 if (!_components[cIndex].props.id) {
-                    _components[cIndex].props.id = _components[cIndex].ctor + "_" + Component[_components[cIndex].ctor].instanceInc;
+                    _components[cIndex].props.id = functionName(_components[cIndex].ctor) + "_" + (Component[_components[cIndex].ctor] ? Component[_components[cIndex].ctor].instanceInc : 0);
                 }
                 shallowCopy(_components[cIndex], component, ["props"]);
                 component.props = {};
                 shallowCopy(_components[cIndex].props, component.props, ["id", "bindingDefaultContext"]);
                 component.props.id = _components[cIndex].props.id + "_" + index + "_" + cIndex;
                 component.props.bindingDefaultContext = data;
-                
+
+                data.currentRow = rowItems;
+
                 component.props.ownerDocument = _props.ownerDocument;
                 let el = Component.fromLiteral(component, data);
                 let cmpId = _components[cIndex].props.id;

@@ -232,7 +232,7 @@ var Parent = function (_props, overrided = false, _isSurrogate = false) {
         if (e.target.id == this.domID) {
             if (typeof _beforeAttach == 'function')
                 _beforeAttach.apply(this, arguments);
-            if (_props.enabled === false)
+            if (_props.enabled !=null  && !this.getBindingExpression("enabled"))
                 this.enabled = _props.enabled;
         }
     };

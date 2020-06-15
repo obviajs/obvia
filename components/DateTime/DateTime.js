@@ -5,11 +5,11 @@
  */
 
 var DateTime = function (_props, overrided = false) {
-    var _self = this;
+    let _self = this;
 
     Object.defineProperty(this, "value", {
         get: function value() {
-            var date = moment(this.$input.val(), "YYYY-MM-DD").format(_outputFormat);
+            let date = moment(this.$input.val(), "YYYY-MM-DD").format(_outputFormat);
             return (date == "Invalid date" || date == "") ? "" : date;
         },
         set: function value(v) {
@@ -81,7 +81,7 @@ var DateTime = function (_props, overrided = false) {
         return "<input data-triggers='change' type='date' id='" + this.domID + "' value='" + _value + "'/>";
     };
 
-    var _defaultParams = {
+    let _defaultParams = {
         id: 'datetime',
         inputFormat: 'DD/MM/YYYY',
         outputFormat: 'DD/MM/YYYY',
@@ -90,18 +90,18 @@ var DateTime = function (_props, overrided = false) {
     };
 
     _props = extend(false, false, _defaultParams, _props);
-    var _inputFormat = _props.inputFormat;
-    var _outputFormat = _props.outputFormat;
-    var _displayFormat = _props.displayFormat;
-    var _value;
-    var _enabled = _props.enabled;
-    var _change = _props.change;
+    let _inputFormat = _props.inputFormat;
+    let _outputFormat = _props.outputFormat;
+    let _displayFormat = _props.displayFormat;
+    let _value;
+    let _enabled = _props.enabled;
+    let _change = _props.change;
 
     _props.change = function () {
         if (typeof _change == 'function')
             _change.apply(this, arguments);
 
-        var e = arguments[0];
+        let e = arguments[0];
         if (!e.isDefaultPrevented()) {
             _self.changeHandler();
         }

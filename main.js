@@ -203,6 +203,12 @@ rjs.define("./components/base/css/collapse.css", "collapse_css");
 rjs.define("./oxana/HierarchialTree/css/HierarchialTree-default.css", "HierarchialTree_css");
 rjs.define("./components/SideNav/css/sidenav-default.css", "sidenav_default_css");
 
+rjs.define("./components/Validation/ValidationManager.js", "ValidationManager");
+rjs.define("./components/Validation/Validator.js", "Validator");
+rjs.define("./components/Validation/RangeValidator.js", "RangeValidator");
+rjs.define("./components/Validation/RequiredFieldValidator.js", "RequiredFieldValidator");
+rjs.define("./components/Validation/RegularExpressionValidator.js", "RegularExpressionValidator");
+rjs.define("./components/Validation/CustomValidator.js", "CustomValidator");
 rjs.define("./oxana/Wizard/css/wizard-default.css", "wizard_default_css");
 rjs.define("./components/Tree/css/tree-default.css", "tree_default_css");
 rjs.define("./components/SideNav/css/sideNav.css", "sideNav_css");
@@ -343,6 +349,12 @@ rjs.require(["EventDispatcher"]).then(function () {
         "CalendarMonth",
         "Wizard",
         "KeyboardUtils",
+        "ValidationManager",
+        "Validator",
+        "RangeValidator",
+        "RequiredFieldValidator",
+        "RegularExpressionValidator",
+        "CustomValidator",
         "calendarMonth_default_css",
         "calendarWeek_default_css",
         "calendarDay_default_css",

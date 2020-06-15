@@ -143,6 +143,7 @@ var Link = function(_props)
     
     let _label, _href, _target, _title;
 
-    Parent.call(this, _props);
+    let r = Parent.call(this, _props);
+    return r;
 };
 Link.prototype.ctor = 'Link';

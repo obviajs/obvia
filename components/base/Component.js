@@ -82,6 +82,11 @@ var Component = function (_props, overrided = false, _isSurrogate = false) {
         {
             get: function attached() {
                 return _attached;
+            },
+            set: function (v) {
+                if (_attached != v){ 
+                    _attached = v;
+                }
             }
         });
     Object.defineProperty(this, "bindingDefaultContext",
@@ -617,14 +622,18 @@ var Component = function (_props, overrided = false, _isSurrogate = false) {
 
     //action methods on component
     this.show = function () {
-        if (this.$el)
+        if (this.$el) {            
             this.$el.show();
+            _visible = true;
+        }
         return this;
     };
 
     this.hide = function () {
-        if (this.$el)
+        if (this.$el) {
             this.$el.hide();
+            _visible = false;
+        }
         return this;
     };
     this.blur = function () {
@@ -640,11 +649,17 @@ var Component = function (_props, overrided = false, _isSurrogate = false) {
         }
         return this;
     };
-
+    this.focus = function(preventScroll = true)
+    {
+        if(this.$el)
+        {
+            this.$el[0].focus({ "preventScroll": preventScroll });
+        }
+    };
     this.destruct = function (mode = 1) {
         if (this.$el)
             mode == 1 ? this.$el.remove() : this.$el.detach();
-        _attached = false;
+        _self.attached = false;
     };
 
     //register outside handlers
