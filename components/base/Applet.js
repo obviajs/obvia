@@ -78,13 +78,15 @@ var Applet = function (_props) {
         }));
     };
     
-    this.addBehaviors = function (cmp, behaviors, recurse = true) {
+    this.addBehaviors = function (cmps, behaviors, recurse = true) {
+        var cmps = isObject(cmps) && !cmps.forEach?[cmps]:cmps;
         let eventTypesJoined = "";
         for (let b in behaviors) {
             eventTypesJoined += " " + b;
         }
-        cmp.on(eventTypesJoined, _proxyHandler);
-        _app.addBehaviors(cmp, behaviors, recurse);
+        EventDispatcher.listen(cmps, eventTypesJoined, _proxyHandler);
+        //cmp.on(eventTypesJoined, _proxyHandler);
+        _app.addBehaviors(cmps, behaviors, recurse);
     };
     
     let _proxyHandler = function (e) {

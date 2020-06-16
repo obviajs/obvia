@@ -335,34 +335,39 @@ var App = function(_props){
         }
     };
 
-    this.addBehaviors = function (cmp, behaviors, recurse = true) {
-        if (!cmp["id"]) {
-            cmp["id"] = StringUtils.guid();
-        }
-        let _eventTypesJoined = "";
-        for (let b in behaviors) {
-            if (_behaviors[cmp.id][b]) {
-                if (!isObject(_behaviors[cmp.id][b])) {
-                    let pb = _behaviors[cmp.id][b];
-                    _behaviors[cmp.id][b] = {};
-                    _behaviors[cmp.id][b][pb] = null;
-                } 
-                if (isObject(behaviors[b])) {
-                    for (var eb in behaviors[b]) {
-                        _behaviors[cmp.id][b][eb] = behaviors[b][eb];
+    this.addBehaviors = function (cmps, behaviors, recurse = true) {
+        var cmps = isObject(cmps) && !cmps.forEach?[cmps]:cmps;
+        let len = cmps.length;
+        for (let i = 0; i < len; i++) { 
+            let cmp = cmps[i];
+            if (!cmp["id"]) {
+                cmp["id"] = StringUtils.guid();
+            }
+            let _eventTypesJoined = "";
+            for (let b in behaviors) {
+                if (_behaviors[cmp.id][b]) {
+                    if (!isObject(_behaviors[cmp.id][b])) {
+                        let pb = _behaviors[cmp.id][b];
+                        _behaviors[cmp.id][b] = {};
+                        _behaviors[cmp.id][b][pb] = null;
+                    } 
+                    if (isObject(behaviors[b])) {
+                        for (var eb in behaviors[b]) {
+                            _behaviors[cmp.id][b][eb] = behaviors[b][eb];
+                        }
+                    } else { 
+                        _behaviors[cmp.id][b][behaviors[b]] = null;
                     }
-                } else { 
-                    _behaviors[cmp.id][b][behaviors[b]] = null;
+                }else
+                    _behaviors[cmp.id][b] = behaviors[b];
+                
+                _eventTypesJoined += " " + b;
+            }
+            cmp.on(_eventTypesJoined, _event2behavior);
+            if (recurse) {
+                for (let cid in cmp.children) {
+                    _eventTypesJoined += " " + this.addBehaviors(cmp.children[cid], behaviors);
                 }
-            }else
-                _behaviors[cmp.id][b] = behaviors[b];
-            
-            _eventTypesJoined += " " + b;
-        }
-        cmp.on(_eventTypesJoined, _event2behavior);
-        if (recurse) {
-            for (let cid in cmp.children) {
-                _eventTypesJoined += " " + this.addBehaviors(cmp.children[cid], behaviors);
             }
         }
     };
