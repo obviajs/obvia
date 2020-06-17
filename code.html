@@ -25,40 +25,35 @@
         rjs.init({
             debug: false
         });
-        var Builder = {};
-        Builder.providerValueField = "name";
-        Builder.providerLabelField = "description";
+        var CodeEditor = {};
+        // Builder.providerValueField = "name";
+        // Builder.providerLabelField = "description";
+
         function main() {
-            Builder.sources = new ArrayEx([{
-                            name: "test",
-                            description: "Test Remote Source",
-                            props: {
-                                url: "http://139.162.158.49/rca/index.php",
-                                post: {
-                                    "testKey": "testValue"
-                                },
-                                recordsPerPage: 5
-                            }
-                        },
-                        {
-                            name: "forms",
-                            description: "Forms",
-                            props: {
-                                url: "http://flower-gaia/api/forms",
-                                post: {},
-                                recordsPerPage: 5
-                            }
-                        }
-                    ]);
-            rjs.define("./oxana/builder/componentList.js", "componentList");
-            rjs.define("./oxana/builder/CollectionEditor.js", "CollectionEditor");
-            rjs.define("./oxana/builder/ObjectEditor.js", "ObjectEditor");
+            // Builder.sources = new ArrayEx([{
+            //         name: "test",
+            //         description: "Test Remote Source",
+            //         props: {
+            //             url: "http://139.162.158.49/rca/index.php",
+            //             post: {
+            //                 "testKey": "testValue"
+            //             },
+            //             recordsPerPage: 5
+            //         }
+            //     },
+            //     {
+            //         name: "forms",
+            //         description: "Forms",
+            //         props: {
+            //             url: "http://flower-gaia/api/forms",
+            //             post: {},
+            //             recordsPerPage: 5
+            //         }
+            //     }
+            // ]);
             rjs.define("./oxana/Code/Code.js", "Code");
             rjs.define("./oxana/Code/CodeMerge.js", "CodeMerge");
             rjs.require([
-                "componentList",
-                "CollectionEditor",
-                "ObjectEditor",
                 "Code",
                 "CodeMerge",
                 "yaml",
@@ -66,18 +61,11 @@
                 "ApiClientGen",
                 "OAMethod"
             ]).then(function () {
-                rjs.define("./oxana/builder/componentLiterals.js", "componentLiterals");
-                rjs.require([
-                    "componentLiterals"
-                ]).then(function () {
-                    rjs.define("./oxana/builder/metaProps.js", "metaProps");
-                    rjs.require([
-                        "metaProps"
-                    ]).then(function () {
-                        rjs.define("./examples/Code/example.js", "CodeExample");
-                    });
-                });
+                //rjs.define("./examples/Code/example.js", "CodeExample");
+                rjs.define("./oxana/Code/CodeEditor.js", "CodeEditor");
             });
+
+
             rjs.define("lib/yaml.js", "yaml");
             rjs.define("./oxana/ApiClientGen/ApiClient.js", "ApiClient");
             rjs.define("./oxana/ApiClientGen/ApiClientGen.js", "ApiClientGen");

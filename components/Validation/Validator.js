@@ -6,7 +6,9 @@
 
 //component definition
 var Validator = function (_props) {
-    let _self = this, _isValid = true, _controlToValidate, _controlToValidateInstance,
+    let _self = this,
+        _isValid = true,
+        _controlToValidate, _controlToValidateInstance,
         _validationGroup, _setFocusOnError, _errorMessage, _initialValue,
         _invalidClasses, _validClasses;
 
@@ -16,7 +18,7 @@ var Validator = function (_props) {
         },
         set: function isValid(v) {
             if (_isValid != v) {
-                _isValid = v;                
+                _isValid = v;
             }
             if (!_isValid) {
                 _self.label = _errorMessage;
@@ -46,7 +48,7 @@ var Validator = function (_props) {
         enumerable: true,
         configurable: true
     });
-    
+
     Object.defineProperty(this, "setFocusOnError", {
         get: function setFocusOnError() {
             return _setFocusOnError;
@@ -97,7 +99,7 @@ var Validator = function (_props) {
         set: function controlToValidateInstance(v) {
             if (_controlToValidateInstance != v) {
                 _controlToValidateInstance = v;
-                if (_controlToValidateInstance) { 
+                if (_controlToValidateInstance) {
                     _controlToValidate = _controlToValidateInstance.id;
                 }
             }
@@ -106,17 +108,25 @@ var Validator = function (_props) {
         configurable: true
     });
 
+    let _beforeAttach = this.beforeAttach;
     this.beforeAttach = function (e) {
         if (e.target.id == this.domID) {
+
+            if (typeof _beforeAttach == 'function')
+                _beforeAttach.apply(this, arguments);
+
             if (_props.controlToValidate && !this.getBindingExpression("controlToValidate")) {
                 this.controlToValidate = _props.controlToValidate;
             }
-            if (_props.errorMessage && !this.getBindingExpression("errorMessage")) { 
+            if (_props.errorMessage && !this.getBindingExpression("errorMessage")) {
                 this.errorMessage = _props.errorMessage;
             }
 
-            if (_props.initialValue && !this.getBindingExpression("initialValue")) { 
+            if (_props.initialValue && !this.getBindingExpression("initialValue")) {
                 this.label = _initialValue = _props.initialValue;
+            }
+            if (_props.setFocusOnError) {
+                _setFocusOnError = _props.setFocusOnError;
             }
         }
     };
@@ -133,7 +143,8 @@ var Validator = function (_props) {
         validClasses: []
     };
     _props = extend(false, false, _defaultParams, _props);
-    
+
+
     let _validationManager = ValidationManager.getInstance();
     _validationManager.add(_self);
 
@@ -141,7 +152,7 @@ var Validator = function (_props) {
     let _labelType = _props.labelType;
 
     let r = Label.call(this, _props);
-    
+
     this.destruct = function (mode = 1) {
         if (this.$el)
             mode == 1 ? this.$el.remove() : this.$el.detach();

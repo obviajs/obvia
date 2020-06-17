@@ -42,16 +42,13 @@ let dp = [{
 
 let myKanban = new Kanban({
     id: "kanban",
-    status_name: "status",
-    tasks_name: "tasks",
+    groupField: "status",
+    descriptionField: "tasks",
     task: "task_name",
     dataProvider: dp,
 
 });
 
-function addPanel() {
-    myKanban.addPanel('Now');
-}
 
 let button = {
     ctor: Button,

@@ -4,16 +4,15 @@ let Implementation = function (applet) {
     let data = applet.data;
 
     let modal, formsFilter, formsList;
-   
+
     let imp = {
 
-        "BEGIN_DRAW": function (e) {
-        },
+        "BEGIN_DRAW": function (e) {},
 
         "END_DRAW": function (e) {
             modal = applet.view;
             let modalBody = modal.modalDialog.modalContent.modalBody;
-            
+
             let itemList = modal.find("formsList");
             applet.addBehaviors(itemList, {
                 "rowAdd": "PREPARE_ITEM",
@@ -21,9 +20,8 @@ let Implementation = function (applet) {
 
             formsFilter = modalBody.formsFilter;
             applet.addBehaviors(formsFilter, {
-                "keyup": {
-                    "SEARCH_FORMS": { filter: KeyboardUtils.test["ENTER"] }
-                }
+                "keyup": "SEARCH_FORMS"
+
             }, false);
             formsList = modalBody.formsList;
             formsList.dataProvider = data.formList;
@@ -45,26 +43,24 @@ let Implementation = function (applet) {
             let f = resolve[0][0];
             let lit = f.form_literal;
             modal.hide();
-            
+
             let evt = new jQuery.Event("loadLayout");
             evt.content = lit;
             data.selectedForm = new FormProperties(f);
             modal.trigger(evt);
         },
 
-        "SEARCH_FORMS": function(e) { // filter forms
+        "SEARCH_FORMS": function (e) { // filter forms
             data.formList.filterData = {
                 "condition": "AND",
-                "rules": [
-                  {
+                "rules": [{
                     "id": "form_name",
                     "field": "form_name",
                     "type": "string",
                     "input": "text",
                     "operator": "contains",
                     "value": e.target.value.toLowerCase()
-                  }
-                ],
+                }],
                 "valid": true
             };
             data.formList.filter();
@@ -75,4 +71,6 @@ let Implementation = function (applet) {
 };
 
 Implementation.ctor = "Implementation";
-export { Implementation };
+export {
+    Implementation
+};

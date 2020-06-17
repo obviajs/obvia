@@ -7,41 +7,17 @@
 //component definition
 let Kanban = function (_props, overrided = false) {
     let _self = this;
-    let _dataProvider, _status_name, _tasks_name, _task, _panelRepeater, _bodyRepeater, _listItems, _items, _repeater;
-    //let _actions = new ArrayEx();
-
-    // Object.defineProperty(this, "dataProvider", {
-    //     get: function dataProvider() {
-    //         return _dataProvider;
-    //     },
-    //     set: function dataProvider(v) {
-    //         if (_dataProvider !== v) {
-    //             _dataProvider = v;
-    //         }
-    //         if (_dataProvider && _dataProvider.forEach) {
-    //             _dataProvider.map(function (item) {
-    //                 for (let i = 0; i < item[_tasks_name].length; i++) {
-    //                     _actions.push(item[_tasks_name][i]);
-    //                 }
-    //             });
-    //         }
-    //     },
-    //     enumerable: true
-    // });
-
+    let _dataProvider, _groupField, _descriptionField, _task, _panelRepeater, _bodyRepeater, _listItems, _items, _repeater;
 
     let _defaultParams = {
-        dataProvider: new ArrayEx([]),
-        status_name: " ",
-        tasks_name: " ",
+        groupField: " ",
+        descriptionField: " ",
         task: " "
     };
 
     this.beforeAttach = function (e) {
         if (e.target.id == this.domID) {
-            //this.dataProvider = _props.dataProvider;
             _panelRepeater = this.container_fluid.sortable.repeater;
-            //_bodyRepeater = _panelRepeater.repeater_body;
             _listItems = _panelRepeater.list_items;
         }
     };
@@ -66,78 +42,73 @@ let Kanban = function (_props, overrided = false) {
                     direction: 'horizontal',
                     wrap: false
                 },
-                classes: ["panel", "panel-primary", "kanban-col"],
+                classes: ["panel", "panel-primary", "kanban-col", "col-sm-3", "col-md-4", "col-xl-12"],
                 components: [{
                     ctor: Container,
                     props: {
                         id: "list_items",
-                        classes: ["list-items"],
+                        classes: ["card bg-light", "list-items"], //list-items
                         components: [{
-                                ctor: Heading,
-                                props: {
-                                    id: "header_label",
-                                    classes: ["panel-heading"],
-                                    type: HeadingType.h2,
-                                    align: 'center',
-                                    label: `{${_status_name}}`
-                                }
-                            },
-                            {
                                 ctor: Container,
                                 props: {
-                                    id: "tasks_container",
-                                    classes: ["panel-body"],
+                                    id: "card_body",
                                     type: ContainerType.NONE,
-                                    dragover: function (e, ra) {
-                                        e.preventDefault();
-                                    },
-                                    dragleave: function (e, ra) {
-                                        //
-                                    },
-                                    dragenter: function (e, ra) {
-                                        e.preventDefault();
-                                    },
-                                    drop: function (e, ra) {
-                                        drop(e, ra);
-                                    },
+                                    classes: ["card-body"],
                                     components: [{
-                                        ctor: Repeater,
-                                        props: {
-                                            id: "repeater_body",
-                                            dataProvider: `{${_tasks_name}}`,
-                                            rendering: {
-                                                direction: 'vertical',
-                                                wrap: false
-                                            },
-                                            classes: ["kanban-centered"],
-                                            components: [{
-                                                ctor: Container,
-                                                props: {
-                                                    id: "items",
-                                                    classes: ['kanban-entry', 'grab'],
-                                                    draggable: true,
-                                                    dragstart: function (e, ra) {
-                                                        dragStart(e, ra);
-                                                    },
-                                                    dragend: function (e, ra) {
-                                                        dragEnd(e, ra);
-                                                    },
-                                                    label: `{${_task}}`
-                                                    // components: [{
-                                                    //     ctor: Label,
-                                                    //     props: {
-                                                    //         id: "action",
-                                                    //         classes: ["kanban-entry-inner", "kanban-label"],
-                                                    //         type: LabelType.h3,
-                                                    //         label: `{${_task}}`
-                                                    //     }
-                                                    // }]
-                                                }
-                                            }]
+                                            ctor: Heading,
+                                            props: {
+                                                id: "header_label",
+                                                classes: ["card-title", "text-uppercase", "text-truncate", "py-2", "panel-heading"], //panel-heading
+                                                type: HeadingType.h2,
+                                                align: 'center',
+                                                label: `{${_groupField}}`
+                                            }
+                                        },
+                                        {
+                                            ctor: Container,
+                                            props: {
+                                                id: "tasks_container",
+                                                classes: ["panel-body"], //panel-body
+                                                type: ContainerType.NONE,
+                                                dragover: function (e, ra) {
+                                                    e.preventDefault();
+                                                },
+                                                dragenter: function (e, ra) {
+                                                    e.preventDefault();
+                                                    //e.target.classList.add('drop');
+                                                },
+                                                drop: _drop,
+                                            
+                                                components: [{
+                                                    ctor: Repeater,
+                                                    props: {
+                                                        id: "repeater_body",
+                                                        dataProvider: `{${_descriptionField }}`,
+                                                        rendering: {
+                                                            direction: 'vertical',
+                                                            wrap: false
+                                                        },
+                                                        classes: ["kanban-centered", 'card', 'draggable', 'shadow-sm'],
+                                                        components: [{
+                                                            ctor: Container,
+                                                            props: {
+                                                                id: "items",
+                                                                classes: ['kanban-entry', 'grab'], //kanban-entry', 'grab
+                                                                draggable: true,
+                                                                type: ContainerType.NONE,
+                                                                dragstart: dragStart,
+                                                                dragend: dragEnd,
+                                                                label: `{${_task}}`
+                                                            }
+                                                        }]
+                                                    }
+                                                }]
+                                            }
                                         }
-                                    }]
+                                    ]
                                 }
                             },
+
 
                         ]
                     }
@@ -149,25 +120,20 @@ let Kanban = function (_props, overrided = false) {
             ctor: Container,
             props: {
                 id: "container_fluid",
-                classes: ["container-fluid"],
+                classes: ["container-fluid", "pt-3"],
                 type: ContainerType.NONE,
                 components: [{
                     ctor: Container,
                     props: {
                         id: "sortable",
                         type: ContainerType.ROW,
-                        classes: ["row"],
+                        classes: ["row", "flex-row", "flex-sm-nowrap", "py-3"],
                         components: _repeater
                     }
                 }]
             }
         }];
     };
-
-    this.addPanel = function (task_name, index) {
-        let i = index !== undefined ? index : _panelRepeater.currentIndex;
-    };
-
 
     let draggedItem = null;
     let dragStart = function (e, ra) {
@@ -187,38 +153,35 @@ let Kanban = function (_props, overrided = false) {
         }, 0);
     };
 
-    let drop = function (e, ra) {
+    let _drop = function (e, ra) {
         e.preventDefault();
-        let el;
-        let offset = getBoundingClientOffset(e.target, e.clientY);
-        let childCount = e.target.childElementCount;
-        if (childCount > 0) {
-            el = e.target;
-        } else {
-            el = e.target.parentElement;
-        }
-        //let index = Array.prototype.indexOf.call(e.target.parentNode.parentNode.children, e.target.parentNode);
-        if (offset < 0) {
-            el.insertBefore(draggedItem, e.target);
-        } else {
-            if (e.target.nextSibling) {
-                el.insertBefore(draggedItem, e.target.nextSibling);
-            } else {
-                el.appendChild(draggedItem);
-            }
-        }
-        draggedItem.style.display = 'block';
-    };
+        let el = e.currentTarget.firstChild;
+        let offset = getBoundingClientOffset(e.target, e.clientX, e.clientY);
+        let childCount = e.target.childElementCount - e.currentTarget.childElementCount;
 
-    let getBoundingClientOffset = function (target, y) {
-        let box = target.getBoundingClientRect();
-        return y - box.top - box.height / 2;
+        if(childCount == 0){
+            el.appendChild(draggedItem);
+        }else if(childCount < 0){
+            if(offset.y < 0){
+                el.insertBefore(draggedItem, e.target);
+            }else {
+                if (e.target.nextSibling) {
+                    el.insertBefore(draggedItem, e.target.nextSibling);
+                } else {
+                    el.appendChild(draggedItem);
+                }
+            }
+        }else {
+            el.appendChild(draggedItem);
+        }
+        
+        draggedItem.style.display = 'block';
     };
 
     _props = extend(false, false, _defaultParams, _props);
     _dataProvider = _props.dataProvider;
-    _status_name = _props.status_name;
-    _tasks_name = _props.tasks_name;
+    _groupField = _props.groupField;
+    _descriptionField = _props.descriptionField;
     _task = _props.task;
     fnContainerDelayInit();
     _props.components = _cmps;

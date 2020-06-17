@@ -1,6 +1,7 @@
 .kanban-centered {
     position: relative;
     margin-bottom: 30px;
+    width: 100%;
     transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
 }
 
@@ -14,20 +15,17 @@
 
 .kanban-centered .kanban-entry {
     position: relative;
-    /*width: 50%;
-        float: right;*/
     font-size: 15px;
-    color: rgb(255, 255, 255);
-    background-color: rgb(77, 77, 77);
+    color: #000;
     margin: 10px 8px;
-    border-radius: 4px;
     height: 50px;
+    text-align: center;
+    background-color: #fcfcfc;
+    border-radius: 4px;
     -webkit-box-shadow: 1px 1px 2px 0px rgba(50, 50, 50, 0.5);
     -moz-box-shadow: 1px 1px 2px 0px rgba(50, 50, 50, 0.5);
-    box-shadow: 1px 1px 2px 0px rgba(50, 50, 50, 0.5);
+    box-shadow: 1px 1px 2px 0px #32323280;
 }
-
-
 
 .kanban-col {
     width: 100%;
@@ -41,7 +39,7 @@
     cursor: -moz-grab;
     cursor: -webkit-grab;
     cursor: grab;
-    background-color: rgb(74, 71, 255);
+    color: #95b7ff;
     border-radius: 5px;
 }
 
@@ -50,10 +48,12 @@
     transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
 }
 
-
-
 .panel-body.drop {
-    border: 2px dashed #FFF;
+    /* border: 2px dashed #FFF; */
+}
+
+.panel-body {
+    height: 100%;
 }
 
 .panel-body.drop div {
@@ -82,4 +82,25 @@
 
 .panel-heading i {
     cursor: pointer;
+}
+
+.card {
+    margin: 0 8px;
+    padding: 0;
+    background-color: #e9e9e9;
+}
+
+.card.draggable {
+    margin-bottom: 1rem;
+    cursor: grab;
+}
+
+.card.draggable:empty {
+    opacity: 0.5;
+    height: 50px;
+}
+
+.droppable {
+    min-height: 120px;
+    margin-bottom: 1rem;
 }

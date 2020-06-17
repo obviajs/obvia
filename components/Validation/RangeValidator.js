@@ -6,12 +6,13 @@
 
 //component definition
 var RangeValidator = function (_props) {
-    let _self = this, _min, _max;
+    let _self = this,
+        _min, _max;
 
     this.validate = function () {
         let _controlToValidateInstance = _self.controlToValidateInstance;
-        if (_controlToValidateInstance) { 
-            if (!_self.enabled || (_controlToValidateInstance.value >= min && _controlToValidateInstance.value <= min)) {
+        if (_controlToValidateInstance) {
+            if (!_self.enabled || (_controlToValidateInstance.value >= _min && _controlToValidateInstance.value <= _max)) {
                 _self.isValid = true;
             } else
                 _self.isValid = false;
@@ -47,10 +48,16 @@ var RangeValidator = function (_props) {
 
     this.beforeAttach = function (e) {
         if (e.target.id == this.domID) {
+            if (_props.max) {
+                _max = _props.max;
+            }
+            if (_props.min) {
+                _min = _props.min;
+            }
             if (_props.label && !this.getBindingExpression("label")) {
                 this.label = _props.label;
             }
-            if (min > max) { 
+            if (_min > _max) {
                 throw new Error("The specified Min value is greater than the specified Max value.");
             }
         }
@@ -62,6 +69,7 @@ var RangeValidator = function (_props) {
     };
 
     _props = extend(false, false, _defaultParams, _props);
+
 
     let _label;
     let _labelType = _props.labelType;

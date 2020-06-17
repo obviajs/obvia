@@ -6,17 +6,18 @@
 
 //component definition
 var CustomValidator = function (_props) {
-    let _self = this, _validationFunction;
+    let _self = this,
+        _validationFunction;
 
     this.validate = function () {
         let _controlToValidateInstance = _self.controlToValidateInstance;
         let r = Promise.resolve(_self.isValid);
-        if (_controlToValidateInstance) { 
+        if (_controlToValidateInstance) {
             if (!_self.enabled || (_validationFunction && typeof _validationFunction == "function")) {
                 r = _validationFunction.apply(_self);
             } else
                 _self.isValid = false;
-                r = Promise.resolve(_self.isValid);
+            r = Promise.resolve(_self.isValid);
         }
         return r;
     };
@@ -36,11 +37,11 @@ var CustomValidator = function (_props) {
 
     this.beforeAttach = function (e) {
         if (e.target.id == this.domID) {
+            if (_props.validationFunction && !this.getBindingExpression("validationFunction")) {
+                _validationFunction = _props.validationFunction;
+            }
             if (_props.label && !this.getBindingExpression("label")) {
                 this.label = _props.label;
-            }
-            if (min > max) { 
-                throw new Error("The specified Min value is greater than the specified Max value.");
             }
         }
     };
@@ -50,6 +51,7 @@ var CustomValidator = function (_props) {
     };
 
     _props = extend(false, false, _defaultParams, _props);
+
 
     let _label;
     let _labelType = _props.labelType;

@@ -6,11 +6,12 @@
 
 //component definition
 var RegularExpressionValidator = function (_props) {
-    let _self = this, _validationExpression, _validationExpressionCompiled, _modifiers;
+    let _self = this,
+        _validationExpression, _validationExpressionCompiled, _modifiers;
 
     this.validate = function () {
         let _controlToValidateInstance = _self.controlToValidateInstance;
-        if (_controlToValidateInstance) { 
+        if (_controlToValidateInstance) {
             if (!_self.enabled || (_controlToValidateInstance.value && _validationExpressionCompiled.test(_controlToValidateInstance.value))) {
                 _self.isValid = true;
             } else
@@ -21,7 +22,8 @@ var RegularExpressionValidator = function (_props) {
 
     Object.defineProperty(this, "validationExpression", {
         get: function validationExpression() {
-            return _validationExpression;
+            _validationExpressionCompiled = new RegExp(_validationExpression, _modifiers);
+            return _validationExpressionCompiled;
         },
         set: function validationExpression(v) {
             if (_validationExpression != v) {
@@ -48,12 +50,14 @@ var RegularExpressionValidator = function (_props) {
 
     this.beforeAttach = function (e) {
         if (e.target.id == this.domID) {
-            if (_props.label && !this.getBindingExpression("label")) {
+            if (_props.validationExpression && !this.getBindingExpression("validationExpression"))
+                _validationExpression = _props.validationExpression;
+
+            if (_props.modifiers && !this.getBindingExpression("validationExpression"))
+                _modifiers = _props.modifiers;
+            if (_props.label && !this.getBindingExpression("label"))
                 this.label = _props.label;
-            }
-            if (min > max) { 
-                throw new Error("The specified Min value is greater than the specified Max value.");
-            }
+
         }
     };
 
@@ -63,6 +67,7 @@ var RegularExpressionValidator = function (_props) {
     };
 
     _props = extend(false, false, _defaultParams, _props);
+
 
     let _label;
     let _labelType = _props.labelType;
