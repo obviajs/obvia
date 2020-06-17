@@ -4,7 +4,8 @@ var Applet = function (_props) {
         behaviors: {
             "beginDraw": "BEGIN_DRAW",
             "endDraw": "END_DRAW"
-        }
+        },
+        attr: {}
     };
     _props = extend(false, false, _defaultParams, _props);
     let _self = this;
@@ -15,6 +16,7 @@ var Applet = function (_props) {
     let _data = _props.data;
     let _uiRoute = _props.uiRoute;
     let _port = _props.port;
+    let _attr = _props.attr;
     let _mimeType = "application/json";
     //the url after # that will bring this view to focus
     let _anchor = _props.anchor;
@@ -135,7 +137,15 @@ var Applet = function (_props) {
         },
         configurable: true
     });
-
+    
+    Object.defineProperty(this, "attr",
+    {
+        get: function attr() {
+            return _attr;
+        },
+        enumerable: true
+    });
+    
     Object.defineProperty(this, "implementation", {
         get: function implementation() {
             return _implementation;
