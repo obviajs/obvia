@@ -18,9 +18,10 @@ var CustomValidator = function (_props) {
                     _self.isValid = v;
                     return v;
                 });
-            } else
+            } else {
                 _self.isValid = false;
-            r = Promise.resolve(_self.isValid);
+                r = Promise.resolve(_self.isValid);
+            }
         }
         return r;
     };
