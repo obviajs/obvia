@@ -213,6 +213,7 @@ rjs.define("./oxana/Wizard/css/wizard-default.css", "wizard_default_css");
 rjs.define("./components/Tree/css/tree-default.css", "tree_default_css");
 rjs.define("./components/SideNav/css/sideNav.css", "sideNav_css");
 rjs.define("./oxana/builder/css/builder.css", "Builder_Css");
+rjs.define("./oxana/report_builder/css/builder.css", "Report_Builder_Css");
 rjs.require(["EventDispatcher"]).then(function () {
     rjs.require([
         "AutoObject",

@@ -15,6 +15,9 @@ var Component = function (_props, overrided = false, _isSurrogate = false) {
         attr: {},
         visible: true,
         enabled: true,
+        x  : "",
+        y  : "",
+        section : "",
         index: 0,
         appendTo: undefined,
         attach: true
@@ -30,7 +33,7 @@ var Component = function (_props, overrided = false, _isSurrogate = false) {
     let _guid = _props.guid;
     let _attr, _css;
     let _id = _props.id = ((!_props.id) || (_props.id == "")) ? _defaultParams.id : _props.id;
-    let _enabled, _draggable, _visible;
+    let _enabled, _draggable, _visible,_x,_y,_section;
     let _classes = [];
     let _parent = _props.parent;
     let _mousedown = _props.mousedown;
@@ -287,6 +290,45 @@ var Component = function (_props, overrided = false, _isSurrogate = false) {
                 return _bindings;
             }
         });
+    // Added default properties: x,y,width,height,section
+    Object.defineProperty(this, "x",
+    {
+        get: function x() {
+            return _x;
+        },
+        set: function x(v) {
+            if (_x != v) {
+                _x = v;
+            }
+        },
+        enumerable: true
+    });
+
+    Object.defineProperty(this, "y",
+    {
+        get: function y() {
+            return _y;
+        },
+        set: function y(v) {
+            if (_y != v) {
+                _y = v;
+            }
+        },
+        enumerable: true
+    });
+
+    Object.defineProperty(this, "section",
+    {
+        get: function section() {
+            return _section;
+        },
+        set: function section(v) {
+            if (_section != v) {
+                _section = v;
+            }
+        },
+        enumerable: true
+    });
 
     Object.defineProperty(this, "visible",
         {
@@ -328,6 +370,9 @@ var Component = function (_props, overrided = false, _isSurrogate = false) {
             configurable: true,
             enumerable: true
         });
+
+
+
 
     Object.defineProperty(this, "readonly",
         {
