@@ -5,17 +5,19 @@ var form = new Form({
                 id: "value",
                 value: '',
                 type: "text",
-                placeholder: "Custom"
+                placeholder: "Username"
             }
         },
         {
             ctor: CustomValidator,
             props: {
                 controlToValidate: "value",
-                errorMessage: "Error",
+                errorMessage: "Username field is required",
                 validationFunction: function () {
                     if (this.controlToValidateInstance.value == "") {
-                        throw new Error("Field Custom is required");
+                        return Promise.resolve(false);
+                    } else {
+                        return Promise.resolve(true);
                     }
                 }
 

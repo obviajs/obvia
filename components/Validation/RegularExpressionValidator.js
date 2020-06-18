@@ -22,8 +22,7 @@ var RegularExpressionValidator = function (_props) {
 
     Object.defineProperty(this, "validationExpression", {
         get: function validationExpression() {
-            _validationExpressionCompiled = new RegExp(_validationExpression, _modifiers);
-            return _validationExpressionCompiled;
+            return _validationExpression;
         },
         set: function validationExpression(v) {
             if (_validationExpression != v) {
@@ -51,12 +50,10 @@ var RegularExpressionValidator = function (_props) {
     this.beforeAttach = function (e) {
         if (e.target.id == this.domID) {
             if (_props.validationExpression && !this.getBindingExpression("validationExpression"))
-                _validationExpression = _props.validationExpression;
+                this.validationExpression = _props.validationExpression;
 
-            if (_props.modifiers && !this.getBindingExpression("validationExpression"))
+            if (_props.modifiers && !this.getBindingExpression("modifiers"))
                 _modifiers = _props.modifiers;
-            if (_props.label && !this.getBindingExpression("label"))
-                this.label = _props.label;
 
         }
     };

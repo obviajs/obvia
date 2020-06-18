@@ -14,7 +14,10 @@ var CustomValidator = function (_props) {
         let r = Promise.resolve(_self.isValid);
         if (_controlToValidateInstance) {
             if (!_self.enabled || (_validationFunction && typeof _validationFunction == "function")) {
-                r = _validationFunction.apply(_self);
+                r = _validationFunction.apply(_self).then((v) => {
+                    _self.isValid = v;
+                    return v;
+                });
             } else
                 _self.isValid = false;
             r = Promise.resolve(_self.isValid);
@@ -39,9 +42,6 @@ var CustomValidator = function (_props) {
         if (e.target.id == this.domID) {
             if (_props.validationFunction && !this.getBindingExpression("validationFunction")) {
                 _validationFunction = _props.validationFunction;
-            }
-            if (_props.label && !this.getBindingExpression("label")) {
-                this.label = _props.label;
             }
         }
     };

@@ -20,7 +20,12 @@ let Implementation = function (applet) {
 
             formsFilter = modalBody.formsFilter;
             applet.addBehaviors(formsFilter, {
-                "keyup": "SEARCH_FORMS"
+                "keyup": {
+                    "SEARCH_FORMS": {
+                        filter: KeyboardUtils.test["ENTER"]
+                    }
+                }
+
 
             }, false);
             formsList = modalBody.formsList;

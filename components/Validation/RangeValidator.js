@@ -48,14 +48,11 @@ var RangeValidator = function (_props) {
 
     this.beforeAttach = function (e) {
         if (e.target.id == this.domID) {
-            if (_props.max) {
+            if (_props.max != null) {
                 _max = _props.max;
             }
-            if (_props.min) {
+            if (_props.min != null) {
                 _min = _props.min;
-            }
-            if (_props.label && !this.getBindingExpression("label")) {
-                this.label = _props.label;
             }
             if (_min > _max) {
                 throw new Error("The specified Min value is greater than the specified Max value.");
