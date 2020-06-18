@@ -86,9 +86,63 @@ Builder.initMetaProps = function () {
                 }
             }
         },
+        fontSize: {
+            ctor: "TextInput", label: "Font Size", required: true, index: 9, props: {
+                change: function () {
+                    this.parent.parent.instance.fontSize = this.value;
+                }
+            }
+        },
+        fontStyle: {
+            ctor: "Select", label: "Font Style", required: true, index: 9, props: {
+                dataProvider: new ArrayEx(getMembersCollection(FontStyle, "value", "text")),
+                change: function () {
+                    this.parent.parent.instance.fontStyle = this.value;
+                }
+            }
+        },
+        textRotation: {
+            ctor: "Select", label: "Text Rotation", required: true, index: 9, props: {
+                dataProvider: new ArrayEx(getMembersCollection(TextRotation, "value", "text")),
+                change: function () {
+                    this.parent.parent.instance.textRotation = this.value;
+                }
+            }
+        },
+        positionType: {
+            ctor: "Select", label: "Position Type", required: true, index: 9, props: {
+                dataProvider: new ArrayEx(getMembersCollection(PositionType, "value", "text")),
+                change: function () {
+                    this.parent.parent.instance.positionType = this.value;
+                }
+            }
+        },
+        stretchType: {
+            ctor: "Select", label: "Stretch Type", required: true, index: 9, props: {
+                dataProvider: new ArrayEx(getMembersCollection(StretchType, "value", "text")),
+                change: function () {
+                    this.parent.parent.instance.stretchType = this.value;
+                }
+            }
+        },
 
+        foreground: {
+            ctor: "Color", label: "Foreground Color", index: 3, props: {
+                change: function () {
+                    this.parent.parent.instance.foreground = this.value;
+                }
+            }
+        },
+
+        background: {
+            ctor: "Color", label: "Background Colo", index: 4, props: {
+                change: function () {
+                    this.parent.parent.instance.y = this.value;
+                }
+            }
+        },
         x: {
-            ctor: "TextInput", label: "x-coordinate", index: 30, props: {
+            ctor: "TextInput", label: "x-coordinate", index: 1, props: {
                 change: function () {
                     this.parent.parent.instance.x = this.value;
                 }
@@ -96,7 +150,7 @@ Builder.initMetaProps = function () {
         },
 
         y: {
-            ctor: "TextInput", label: "y-coordinate", index: 31, props: {
+            ctor: "TextInput", label: "y-coordinate", index: 2, props: {
                 change: function () {
                     this.parent.parent.instance.y = this.value;
                 }

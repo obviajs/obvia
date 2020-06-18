@@ -65,6 +65,11 @@ rjs.define("./components/Form/Hidden.js", "Hidden");
 //Button
 rjs.define("./components/Button/Button.js", "Button");
 rjs.define("./components/Button/ButtonType.js", "ButtonType");
+//Report Props
+rjs.define("./components/StretchType.js", "StretchType");
+rjs.define("./components/PositionType.js", "PositionType");
+rjs.define("./components/TextRotation.js", "TextRotation");
+rjs.define("./components/FontStyle.js", "FontStyle");
 //Heading
 rjs.define("./components/HeadingType.js", "HeadingType");
 rjs.define("./components/Heading.js", "Heading");
@@ -287,6 +292,10 @@ rjs.require(["EventDispatcher"]).then(function () {
         "Amount",
         "Button",
         "ButtonType",
+        "StretchType",
+        "PositionType",
+        "TextRotation",
+        "FontStyle",
         "HeadingType",
         "Heading",
         "LabelType",

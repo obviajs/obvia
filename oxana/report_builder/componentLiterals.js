@@ -79,6 +79,17 @@ Builder.initComponentLiterals = function () {
             label: "HRule",
             icon: ".png"
         },
+        "Color": {
+            literal: {
+                "ctor": Color,
+                "props": {
+                    id: 'color',
+                    width: 45
+                }
+            },
+            label: "Color",
+            icon: ".png"
+        },
         "Button": {
             literal: {
                 "ctor": Button,
