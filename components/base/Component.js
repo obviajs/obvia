@@ -18,13 +18,6 @@ var Component = function (_props, overrided = false, _isSurrogate = false) {
         x  : "",
         y  : "",
         section : "",
-        fontSize:"",
-        fontStyle:"",
-        textRotation:"",
-        positionType:"",
-        stretchType:"",
-        foreground:"",
-        background:"",
         index: 0,
         appendTo: undefined,
         attach: true
@@ -40,7 +33,7 @@ var Component = function (_props, overrided = false, _isSurrogate = false) {
     let _guid = _props.guid;
     let _attr, _css;
     let _id = _props.id = ((!_props.id) || (_props.id == "")) ? _defaultParams.id : _props.id;
-    let _enabled, _draggable, _visible,_x,_y,_foreground,_background,_section,_fontSize,_fontStyle,_textRotation,_positionType,_stretchType;
+    let _enabled, _draggable, _visible,_x,_y,_section;
     let _classes = [];
     let _parent = _props.parent;
     let _mousedown = _props.mousedown;
@@ -336,91 +329,6 @@ var Component = function (_props, overrided = false, _isSurrogate = false) {
         },
         enumerable: true
     });
-    Object.defineProperty(this, "fontSize",
-        {
-            get: function fontSize() {
-                return _fontSize;
-            },
-            set: function fontSize(v) {
-                if (_fontSize != v) {
-                    _fontSize = v;
-                }
-            },
-            enumerable: true
-        });
-    Object.defineProperty(this, "fontStyle",
-        {
-            get: function fontStyle() {
-                return _fontStyle;
-            },
-            set: function fontStyle(v) {
-                if (_fontStyle != v) {
-                    _fontStyle = v;
-                }
-            },
-            enumerable: true
-        });
-    Object.defineProperty(this, "textRotation",
-        {
-            get: function textRotation() {
-                return _textRotation;
-            },
-            set: function textRotation(v) {
-                if (_textRotation != v) {
-                    _textRotation = v;
-                }
-            },
-            enumerable: true
-        });
-    Object.defineProperty(this, "positionType",
-        {
-            get: function positionType() {
-                return _positionType;
-            },
-            set: function positionType(v) {
-                if (_positionType != v) {
-                    _positionType = v;
-                }
-            },
-            enumerable: true
-        });
-    Object.defineProperty(this, "stretchType",
-        {
-            get: function stretchType() {
-                return _stretchType;
-            },
-            set: function stretchType(v) {
-                if (_stretchType != v) {
-                    _stretchType = v;
-                }
-            },
-            enumerable: true
-        });
-    
-    Object.defineProperty(this, "foreground",
-        {
-            get: function foreground() {
-                return _foreground;
-            },
-            set: function foreground(v) {
-                if (_foreground != v) {
-                    _foreground = v;
-                }
-            },
-            enumerable: true
-        });
-    Object.defineProperty(this, "background",
-        {
-            get: function background() {
-                return _background;
-            },
-            set: function background(v) {
-                if (_background != v) {
-                    _background = v;
-                }
-            },
-            enumerable: true
-        });
 
     Object.defineProperty(this, "visible",
         {
