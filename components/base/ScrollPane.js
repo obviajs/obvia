@@ -213,34 +213,5 @@ var ScrollPane = function(_props)
     let _delayScroll = debounce(_virtualScroll, 400);
 
     Container.call(this, _props, true, true);
-
-    Object.defineProperty(this, "props", {
-        get: function props() {
-            var obj = {};
-            for(var prop in _props)
-            {
-                if(typeof _props[prop] != 'function')
-                {
-                    switch(prop)
-                    {
-                        case "component":
-                            var component = {};
-                            component.ctor = _child.ctor; //_component.ctor;
-                            component.props = _child.props;
-                            obj[prop] = component;
-                            break;
-                        case "ownerDocument":
-                            break;
-                        default:
-                            if(this.hasOwnProperty(prop) && this.propertyIsEnumerable(prop))
-                                if(!isObject(this[prop]) || !Object.isEmpty(this[prop]))
-                                    obj[prop] = this[prop];
-                    }
-                }
-            }
-            return obj;
-        },
-        configurable: true
-    }); 
 };
 ScrollPane.prototype.ctor = 'ScrollPane';

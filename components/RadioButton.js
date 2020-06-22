@@ -7,7 +7,7 @@
 //component definition
 var RadioButton = function (_props, overrided = false) {
 
-    let _label, _value, _checked, _name;
+    let  _self = this, _label, _value, _checked, _name;
 
     Object.defineProperty(this, "label",
     {
@@ -32,7 +32,7 @@ var RadioButton = function (_props, overrided = false) {
             if (_checked != v) {
                 _checked = !!v;
                 if (this.$input)
-                    this.$input.prop('checked', v)
+                    this.$input.prop('checked', v);
             }
         }
     });
@@ -46,7 +46,7 @@ var RadioButton = function (_props, overrided = false) {
             if (_value != v)
                 _value = v;
             else
-                _checked = true;
+                _self.checked = true;
             if (this.$input)
                 this.$input.val(v);
         }

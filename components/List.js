@@ -94,6 +94,9 @@ var List = function (_props, overrided = false) {
     let _components = _props.components;
     let _rowAdd = _props.rowAdd;
 
+    if (_classesField) { 
+        _components[0].props.classes = `{?${_classesField}}`;
+    }
     _props.rowAdd = function(e, r, ra){
         if (e.target.id == _self.domID) 
         {

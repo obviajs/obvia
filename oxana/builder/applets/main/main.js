@@ -332,7 +332,7 @@ let Implementation = function (applet) {
             app.appletsMap["saveForm"].init().then(() => {
                 console.log('Applet saveForm inited.');
             });
-            data.selectedForm.form_literal = workAreaColumn.literalLite;
+            data.selectedForm.form_literal = workAreaColumn.literal;
             data.selectedForm.components = workArea.components;
         },
 
@@ -897,7 +897,7 @@ let Implementation = function (applet) {
 
         "SAVE_LAYOUT": {
             do: function (e) {
-                let lit = workAreaColumn.literalLite;
+                let lit = workAreaColumn.literal;
                 stripHandle(lit);
                 let jsonLayout = JSON.stringify(lit, null, "\t");
                 download("workAreaColumn.json.txt", jsonLayout);

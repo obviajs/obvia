@@ -43,6 +43,7 @@ rjs.define("./oxana/builder/SpacingEditor.js", "SpacingEditor");
 rjs.define("./oxana/AutoBrowse.js", "AutoBrowse");
 rjs.define("./components/base/Attr.js", "Attr");
 rjs.define("./components/base/Css.js", "Css");
+rjs.define("./components/base/Props.js", "Props");
 rjs.define("./components/base/Parent.js", "Parent");
 
 rjs.define("./components/base/NavParent.js", "NavParent");
@@ -260,6 +261,7 @@ rjs.require(["EventDispatcher"]).then(function () {
         "AutoBrowse",
         "Attr",
         "Css",
+        "Props",
         "Parent",
         "ContainerType",
         "NavParent",

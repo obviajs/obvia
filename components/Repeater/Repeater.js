@@ -679,14 +679,15 @@ var Repeater = function(_props)
             if(_enabled != v)
             {
                 _enabled = v;
-
-                for (var i = 0; i < this.dataProvider.length; i++)
+                let len = this.dataProvider.length;
+                for (let i = 0; i < len; i++)
                 {
-                    this.components.forEach(function (component) {
+                    let clen = this.components.length;
+                    for (let j = 0; j < clen;j++){
+                        let component = this.components[j];
                         _self[component.props.id][i].enabled = v;
-                    });
+                    }
                 }
-
             }
         }
     });
@@ -710,71 +711,14 @@ var Repeater = function(_props)
         enumerable: false,
         configurable: true
     });
-    Object.defineProperty(this, "propsLite", {
-        get: function props() {
-            let obj = {};
-            for (let prop in _props) {
-                if (typeof _props[prop] != 'function' && (this[prop]==null || !this[prop].$el)) {
-                    switch (prop) {
-                        case "components":
-                            obj[prop] = _components;
-                            break;
-                        case "dataProvider":
-                            if (this.dataProvider) {
-                                
-                                let dpCopy = acExtend(false, false, [], ["currentItem"], this.dataProvider);
-                                obj[prop] = dpCopy;
-                            }
-                            break;
-                        case "ownerDocument":
-                            break;
-                        case "rendering":
-                            obj[prop] = {};
-                            shallowCopy(_rendering, obj[prop], ["currentItem"]);
-                            break;
-                        default:
-                            if (this.hasOwnProperty(prop) && this.propertyIsEnumerable(prop))
-                                if (!isObject(this[prop]) || !Object.isEmpty(this[prop]))
-                                    obj[prop] = this[prop];
-                    }
-                }
-            }
-            return obj;
-        },
-        configurable: true
-    });
+    
     Object.defineProperty(this, "props", {
-        get: function props() {
-            let obj = {};
-            for (let prop in _props) {
-                if (typeof _props[prop] != 'function') {
-                    switch (prop) {
-                        case "components":
-                            obj[prop] = _components;
-                            break;
-                        case "dataProvider":
-                            if (this.dataProvider) {
-                                let len = this.dataProvider.length;
-                                let dpCopy = new window[this.dataProvider.constructor.name](len);
-                                for (let i = 0; i < len; i++) {
-                                    dpCopy[i] = extend(false, false, [], ["currentItem"], this.dataProvider[i]);
-                                }
-                                obj[prop] = dpCopy;
-                            }
-                            break;
-                        case "ownerDocument":
-                            break;
-                        default:
-                            if (this.hasOwnProperty(prop) && this.propertyIsEnumerable(prop))
-                                if (!isObject(this[prop]) || !Object.isEmpty(this[prop]))
-                                    obj[prop] = this[prop];
-                    }
-                }
-            }
-            return obj;
+        get: function props() {            
+            return new Props(_self, _props);
         },
         configurable: true
     });
+    
     return r;
 };
 Repeater.prototype.ctor = 'Repeater';

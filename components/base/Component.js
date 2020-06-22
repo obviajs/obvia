@@ -130,6 +130,14 @@ var Component = function (_props, overrided = false, _isSurrogate = false) {
                             } else {
                                 this.parent.children[_id] = this.parent.children[oldId];
                                 delete this.parent.children[oldId];
+
+                                this.parent.ccRelation[_id] = this.parent.ccRelation[oldId];
+                                delete this.parent.ccRelation[oldId];
+
+                                let ind = this.parent.csorted.indexOf(oldId);
+                                if (ind > -1) { 
+                                    this.parent.csorted.splice(ind, 1, _id);
+                                }
                             }
                         }
                         this.$el.attr("id", _domID);
@@ -210,43 +218,20 @@ var Component = function (_props, overrided = false, _isSurrogate = false) {
             enumerable: true
         });
     Object.defineProperty(this, "css",
-        {
-            get: function css() {
-                return _css;
-            },
-            enumerable: true
-        });
-    Object.defineProperty(this, "propsLite",
     {
-        get: function propsLite() {
-            let obj = {};
-            for (let prop in _props) {
-                if (this.hasOwnProperty(prop) && this.propertyIsEnumerable(prop) && (typeof _props[prop] != 'function') && (prop != "ownerDocument") && (this[prop]==null || !this[prop].$el))
-                    if (!isObject(this[prop]) || !Object.isEmpty(this[prop]))
-                        obj[prop] = this[prop];
-            }
-            return obj;
+        get: function css() {
+            return _css;
         },
-        configurable: true
+        enumerable: true
     });
+
     Object.defineProperty(this, "props", {
-        get: function props() {
-            let obj = {};
-            for (let prop in _props) {
-                if (this.hasOwnProperty(prop) && this.propertyIsEnumerable(prop) && (typeof _props[prop] != 'function') && (prop != "ownerDocument"))
-                    if (!isObject(this[prop]) || !Object.isEmpty(this[prop]))
-                        obj[prop] = this[prop];
-            }
-            return obj;
+        get: function props() {            
+            return new Props(_self, _props);
         },
         configurable: true
     });
-    Object.defineProperty(this, "literalLite", {
-        get: function literal() {
-            return { ctor: this.ctor, props: this.propsLite };
-        },
-        configurable: true
-    });
+
     Object.defineProperty(this, "literal", {
         get: function literal() {
             return { ctor: this.ctor, props: this.props };

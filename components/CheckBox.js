@@ -40,7 +40,7 @@ var CheckBox = function (_props, overrided = false) {
             if (_value !== v) {
                 _value = v;
             } else {
-                _checked = true;
+                _self.checked = true;
             }
             if (this.$el !== undefined)
                 this.$el.val(v);
@@ -57,7 +57,7 @@ var CheckBox = function (_props, overrided = false) {
             if (_checked != v) {
                 _checked = !!v;
                 if (this.$el)
-                    this.$el.prop('checked', v)
+                    this.$el.prop('checked', v);
             }
         },
         enumerable:true
