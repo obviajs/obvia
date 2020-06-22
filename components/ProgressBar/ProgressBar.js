@@ -1,4 +1,4 @@
-var ProgressBar=function(_props, overrided=false){
+var ProgressBar=function(_props){
 
     Object.defineProperty(this, "label",
     {

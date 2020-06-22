@@ -4,7 +4,7 @@
  * Kreatx 2019
  */
 //requires 
-var Code = function (_props, overrided = false) {
+var Code = function (_props) {
     let _self = this, _cmInst, _errors = [], _mode, _theme, _content, _readOnly, _nocursor;
     let _codeArea;
     let _cmps = [{ctor: TextArea,
@@ -221,7 +221,7 @@ var Code = function (_props, overrided = false) {
     _readOnly = _props.readOnly;
     _nocursor = _props.nocursor;
     _props.components = _cmps;
-    let r = Container.call(this, _props, overrided);
+    let r = Container.call(this, _props);
     return r;
 };
 Code.prototype.ctor = 'Code';

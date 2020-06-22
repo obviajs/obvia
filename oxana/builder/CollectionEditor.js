@@ -5,7 +5,7 @@
  */
 
 //component definition
-var CollectionEditor = function (_props, overrided = false) {
+var CollectionEditor = function (_props) {
     let _self = this;
     let _instance, _field, _memberType, _repeater, _itemLabel;
 

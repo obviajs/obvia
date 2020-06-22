@@ -5,7 +5,7 @@
  */
 
 //component definition
-var Container = function(_props, overrided=false)
+var Container = function(_props, _hideComponents=false)
 {
     let _self = this, _textAlign;
 
@@ -396,12 +396,8 @@ var Container = function(_props, overrided=false)
     //_props.afterAttach = this.afterAttach;
     let _label;
 
-    let r = Parent.call(this, _props, overrided);
-    let base = this.base;
-    if(overrided)
-    {
-        this.keepBase();
-    }
+    let r = Parent.call(this, _props, _hideComponents);
+
     if(_props.minWidth)
         this.minWidth = _props.minWidth;
     if(_props.minHeight)

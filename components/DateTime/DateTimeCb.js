@@ -4,7 +4,7 @@
  * Kreatx 2019
  */
 
-var DateTimeCb = function (_props, overrided = false) {
+var DateTimeCb = function (_props) {
     var _self = this;
     let _dpDate = DateTimeCb.dpDate, _dpMonth = DateTimeCb.dpMonth, _dpYear = DateTimeCb.dpYear, _dpHour = DateTimeCb.dpHour, _dpMinute = DateTimeCb.dpMinute, _dpSecond = DateTimeCb.dpSecond;
     let _dateSelect, _monthSelect, _yearSelect, _hourSelect, _minuteSelect, _secondSelect;
@@ -308,10 +308,6 @@ var DateTimeCb = function (_props, overrided = false) {
     _props.components = _cmps;
     
     Container.call(this, _props);
-
-    if (overrided) {
-        this.keepBase();
-    }
 };
 DateTimeCb.prototype.ctor = "DateTimeCb";
 DateTimeCb.init = false;

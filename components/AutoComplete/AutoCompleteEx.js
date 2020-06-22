@@ -589,8 +589,6 @@ var AutoCompleteEx = function(_props)
             }
         ];
     
-    
-    
     _props.components = _cmps;
     Container.call(this, _props, true);
 
@@ -628,6 +626,5 @@ var AutoCompleteEx = function(_props)
         configurable: true,
         enumerable: true
     });
-    
 };
 AutoCompleteEx.prototype.ctor = 'AutoCompleteEx';

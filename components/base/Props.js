@@ -1,9 +1,9 @@
 var Props = function (inst, _props, skip = []) {
     
-    let _oc = ["Repeater", "RepeaterEx", "Select", "List"]; 
+    let _oc = ["Repeater", "RepeaterEx", "Select", "List", "AutoCompleteEx"]; 
     
     for (let prop in _props) {
-        if (typeof _props[prop] != 'function' && (skip.indexOf(prop) < 0)) {
+        if (typeof _props[prop] != 'function' && inst.hasOwnProperty(prop) && inst.propertyIsEnumerable(prop) && (skip.indexOf(prop) < 0)) {
             switch (prop) {
                 case "component":
                     let component = {};
@@ -29,9 +29,8 @@ var Props = function (inst, _props, skip = []) {
                     }                    
                     break;
                 default:
-                    if (inst.hasOwnProperty(prop) && inst.propertyIsEnumerable(prop))
-                        if (!isObject(inst[prop]) || !Object.isEmpty(inst[prop]))
-                            this[prop] = inst[prop];
+                    if (!isObject(inst[prop]) || !Object.isEmpty(inst[prop]))
+                        this[prop] = inst[prop];
             }
         }
     }

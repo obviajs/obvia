@@ -4,7 +4,7 @@
  * Kreatx 2019
  */
 
-var UploadEx = function (_props, overrided = false) {
+var UploadEx = function (_props) {
     var _self = this;
     var _upload, _lblFileName, _btnRemove, _removeColumn, _iconLbl, _lblFileSize, _progressBar, _progressRow, _btnUpload, _btnDownload, _btnSelect;
     var _lastFileTypeIcon;
@@ -501,7 +501,7 @@ var UploadEx = function (_props, overrided = false) {
     _showProgress = _props.showProgress;
     fnContainerDelayInit();
     _props.components = _cmps;
-    Container.call(this, _props, false, true);
+    Container.call(this, _props);
     _form = _props.form;
 };
 UploadEx.prototype.ctor = 'UploadEx';

@@ -204,9 +204,7 @@ var Modal = function (_props) {
     fnContainerDelayInit();
     _props.components = _cmps;
 
-    let r = Container.call(this, _props, true);
-    let base = this.base;
-    this.keepBase();
+    let r = Container.call(this, _props);
 
     this.show = function () {
         if (this.$el) {
@@ -238,7 +236,7 @@ var Modal = function (_props) {
         }
         return this;
     };
-    
+    let _destruct = this.destruct;
     this.destruct = function (mode = 1) {
         if (mode == 1) {
             Modal.all.splice(Modal.all.indexOf(this), 1);
@@ -246,7 +244,7 @@ var Modal = function (_props) {
         for (let id in _children) {
             _children[id].destruct(mode);
         }
-        base.destruct(mode);
+        _destruct(mode);
     };
     return r;
 };

@@ -5,7 +5,7 @@
  */
 
 //component definition
-var Amount = function (_props, overrided = false) {
+var Amount = function (_props) {
     var _self = this;
 
     Object.defineProperty(this, "value", {
@@ -116,12 +116,7 @@ var Amount = function (_props, overrided = false) {
 
     fnContainerDelayInit();
     _props.components = _cmps;
-    Container.call(this, _props, true);
-
-    if (overrided) {
-        this.keepBase();
-    }
-
+    Container.call(this, _props);
 };
 
 //component prototype

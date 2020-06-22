@@ -5,7 +5,7 @@
  */
 
 //component definition
-var Footer = function(_props, overrided=false)
+var Footer = function(_props)
 {
     //is template overrided ?
     this.template = this.template || function ()
@@ -13,6 +13,6 @@ var Footer = function(_props, overrided=false)
         return  '<footer id="' + this.domID + '"></footer>'; 
     };
     _props.type = ContainerType.NONE;
-    Container.call(this, _props, overrided);
+    Container.call(this, _props);
 };
 Footer.prototype.ctor = 'Footer';

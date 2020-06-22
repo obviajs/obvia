@@ -5,7 +5,7 @@
  */
 
 //component definition
-var Nav = function(_props, overrided=false)
+var Nav = function(_props)
 {
     //is template overrided ?
     this.template = this.template || function ()
@@ -13,7 +13,7 @@ var Nav = function(_props, overrided=false)
         return  '<nav id="' + this.domID + '"></nav>'; 
     };
     _props.type = ContainerType.NONE;
-    let r = Container.call(this, _props, overrided);
+    let r = Container.call(this, _props);
     return r;
 };
 Nav.prototype.ctor = 'Nav';

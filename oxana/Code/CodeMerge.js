@@ -1,4 +1,4 @@
-var CodeMerge = function (_props, overrided = false) {
+var CodeMerge = function (_props) {
     let _self = this, _cmInst, _mode, _theme;
 
     Object.defineProperty(this, "content", {
@@ -68,7 +68,7 @@ var CodeMerge = function (_props, overrided = false) {
     _mode = _props.mode;
     _theme = _props.theme;
 
-    let r = Container.call(this, _props, overrided);
+    let r = Container.call(this, _props);
     return r;
 };
 CodeMerge.prototype.ctor = 'CodeMerge';

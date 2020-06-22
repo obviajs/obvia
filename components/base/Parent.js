@@ -1,4 +1,4 @@
-var Parent = function (_props, overrided = false, _isSurrogate = false) {
+var Parent = function (_props, _hideComponents=false) {
     let _$hadow = $("<div/>");
     let _compRenderPromises = [];
     let _self = this;
@@ -40,6 +40,7 @@ var Parent = function (_props, overrided = false, _isSurrogate = false) {
             _components = v;
             this.addComponents();
         },
+        enumerable: true && !_hideComponents,
         configurable: true
     });
 
@@ -335,11 +336,7 @@ var Parent = function (_props, overrided = false, _isSurrogate = false) {
         return _rPromise;
     };
     
-    Component.call(this, _props, true, _isSurrogate);
-    let base = this.base;
-    if (overrided) {
-        this.keepBase();
-    }
+    Component.call(this, _props);
     /*
         this.destruct = function (mode=1)
         {
@@ -349,6 +346,8 @@ var Parent = function (_props, overrided = false, _isSurrogate = false) {
             base.destruct(mode);
         }
     */
+    let objFromDesc = Object.getOwnPropertyDescriptor(this, "enabled");  
+    let _oenabled = objFromDesc['set'];
     Object.defineProperty(this, "enabled",
         {
             get: function enabled() {
@@ -357,7 +356,7 @@ var Parent = function (_props, overrided = false, _isSurrogate = false) {
             set: function enabled(v) {
                 if (_enabled != v) {
                     _enabled = v;
-                    base.enabled = v;
+                    _oenabled.call(this, v);
                     for (let childId in this.children) {
                         this.children[childId].enabled = v;
                     }

@@ -103,7 +103,7 @@ var ViewStack = function(_props)
     }
     _props.attr["data-triggers"] = myDtEvts.join(" ");
     
-    let r = Container.call(this, _props, true);
+    let r = Container.call(this, _props);
     
     // this.addComponents = function (cmps)
     // {

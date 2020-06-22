@@ -212,6 +212,6 @@ var ScrollPane = function(_props)
     }
     let _delayScroll = debounce(_virtualScroll, 400);
 
-    Container.call(this, _props, true, true);
+    Container.call(this, _props);
 };
 ScrollPane.prototype.ctor = 'ScrollPane';

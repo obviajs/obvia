@@ -129,7 +129,7 @@ var RepeaterEx = function(_props)
     fnContainerDelayInit();
     _props.components = _cmps;
     
-    let r = Container.call(this, _props, true, true);
+    let r = Container.call(this, _props);
     return r;
 };
 RepeaterEx.prototype.ctor = 'RepeaterEx';

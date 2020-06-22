@@ -209,8 +209,6 @@ var Form = function(_props)
     _action = _props.action;
     _method = _props.method;
     
-    Container.call(this, _props, true);
-
-    let base = this.base;
+    Container.call(this, _props);
 };
 Form.prototype.ctor = 'Form';

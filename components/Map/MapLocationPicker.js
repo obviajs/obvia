@@ -5,7 +5,7 @@
  */
 
 //component definition
-var MapLocationPicker = function (_props, overrided = false) {
+var MapLocationPicker = function (_props) {
     let _self = this;    
 
     let _initMap = function (e) {

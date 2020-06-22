@@ -5,7 +5,7 @@
  */
 
 //component definition
-let Kanban = function (_props, overrided = false) {
+let Kanban = function (_props) {
     let _self = this;
     let _dataProvider, _groupField, _descriptionField, _task, _panelRepeater, _bodyRepeater, _listItems, _items, _repeater;
 

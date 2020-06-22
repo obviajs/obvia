@@ -1,4 +1,4 @@
-var Li = function (_props, overrided = false) {
+var Li = function (_props) {
     var _self = this;
     
     Object.defineProperty(this, "label", {

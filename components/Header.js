@@ -5,7 +5,7 @@
  */
 
 //component definition
-var Header = function(_props, overrided=false)
+var Header = function(_props)
 {
     //is template overrided ?
     this.template = this.template || function ()
@@ -13,6 +13,6 @@ var Header = function(_props, overrided=false)
         return  '<header id="' + this.domID + '"></header>'; 
     };
     _props.type = ContainerType.NONE;
-    Container.call(this, _props, overrided);
+    Container.call(this, _props);
 };
 Header.prototype.ctor = 'Header';

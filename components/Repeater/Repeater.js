@@ -632,8 +632,7 @@ var Repeater = function(_props)
 
     let _rPromise;
     _autoUpdateDisplay = _props.autoUpdateDisplay;
-    let r = Container.call(this, _props, true, true);
-    var base = this.base;
+    let r = Container.call(this, _props);
 /*
     var click =  props.click;
     _props.click = function(e)
@@ -718,7 +717,7 @@ var Repeater = function(_props)
         },
         configurable: true
     });
-    
+
     return r;
 };
 Repeater.prototype.ctor = 'Repeater';

@@ -5,7 +5,7 @@
  */
 
 //component definition
-var ObjectEditor = function (_props, overrided = false) {
+var ObjectEditor = function (_props) {
     let _self = this, _instance, _field;
 
     Object.defineProperty(this, "instance",

@@ -5,7 +5,7 @@
  */
 
 //component definition
-var SideNav = function(_props, overrided=false)
+var SideNav = function(_props)
 {
     let _self = this, _open, _width, _side;
 
@@ -73,7 +73,7 @@ var SideNav = function(_props, overrided=false)
     };
     
     _props = extend(false, false, _defaultParams, _props);
-    let r = Container.call(this, _props, overrided);
+    let r = Container.call(this, _props);
     return r;
 };
 SideNav.prototype.ctor = 'SideNav';

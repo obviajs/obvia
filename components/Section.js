@@ -5,7 +5,7 @@
  */
 
 //component definition
-var Section = function(_props, overrided=false)
+var Section = function(_props)
 {
     //is template overrided ?
     this.template = this.template || function ()
@@ -13,6 +13,6 @@ var Section = function(_props, overrided=false)
         return  '<section id="' + this.domID + '"></section>'; 
     };
     _props.type = ContainerType.NONE;
-    Container.call(this, _props, overrided);
+    Container.call(this, _props);
 };
 Section.prototype.ctor = 'Section';

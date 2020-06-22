@@ -5,7 +5,7 @@
  */
 
 //component definition
-var AutoBrowse = function (_props, overrided = false) {
+var AutoBrowse = function (_props) {
     let _self = this;
     let _dataProvider, _valueField, _labelField, _value, _columns = [], _fields;
 

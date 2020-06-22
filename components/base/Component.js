@@ -256,7 +256,8 @@ var Component = function (_props, overrided = false, _isSurrogate = false) {
                     }
                     _parent = v;
                 }
-            }
+            },
+            enumerable: false
         });
 
     Object.defineProperty(this, "watchers",

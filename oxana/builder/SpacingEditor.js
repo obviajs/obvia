@@ -5,7 +5,7 @@
  */
 
 //component definition
-var SpacingEditor = function (_props, overrided = false) {
+var SpacingEditor = function (_props) {
     var _self = this;
     let _value;
  

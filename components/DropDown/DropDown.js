@@ -5,7 +5,7 @@
  */
 
 //component definition
-var DropDown = function (_props, overrided = false) {
+var DropDown = function (_props) {
     let _self = this;
     let _creationFinished;
     let _dataProvider, _btnDD, _componentRepeater, _label;

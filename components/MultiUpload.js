@@ -4,7 +4,7 @@
  * Kreatx 2019
  */
 
-var MultiUpload = function (_props, overrided = false) {
+var MultiUpload = function (_props) {
     var _self = this;
     let _cmps, _lblDrop, _dropContainer, _listRepeater, _progressRow, _progressBar;
     var _dataProvider;
@@ -289,14 +289,14 @@ var MultiUpload = function (_props, overrided = false) {
     
     fnContainerDelayInit();
     _props.components = _cmps;
-    Container.call(this, _props, true, true);
+    Container.call(this, _props);
 
     if(_props.accept)
         this.accept = _props.accept;  
     if(_props.showBtnRemove!=null)
         this.showBtnRemove = _props.showBtnRemove;
        
-    var base = this.base;
+    let _destruct = this.destruct;
     this.destruct = function (mode = 1) {
         $("html").off("dragover", _htmlDragOverHandler);
         $("html").off("drop", _htmlDropHandler);
@@ -307,7 +307,7 @@ var MultiUpload = function (_props, overrided = false) {
         _dropContainer.off('drop', _dropHandler);
         _dropContainer.off('dragleave', _dragLeaveHandler);
         _lblDrop.off('click', _clickHandler);
-        base.destruct(mode);
+        _destruct(mode);
     };
 };
 
