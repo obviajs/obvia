@@ -838,6 +838,14 @@ var Component = function (_props) {
         }
     };
 
+    this.implement = function (inst) {
+        for (let prop in inst) {
+            if (isGetter(inst, prop))
+                copyAccessor(prop, inst, this);
+            else
+                this[prop] = inst[prop];
+        }
+    };
     //"#" + this.$el.attr('id'), 
     this.initEvents = function (element)
     {
