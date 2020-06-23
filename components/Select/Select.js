@@ -5,7 +5,7 @@
  */
 
 //component definition
-var Select = function (_props, overrided = false) {
+var Select = function (_props) {
     let _self = this, _value, _dataProvider;
     Object.defineProperty(this, "valueField", 
     {
@@ -126,9 +126,6 @@ var Select = function (_props, overrided = false) {
 
     Repeater.call(this, _props);
     
-    if (overrided) {
-        this.keepBase();
-    }
     let propDataProvider = Object.getOwnPropertyDescriptor(this, "dataProvider");   
     Object.defineProperty(this, "dataProvider", 
     {

@@ -4,7 +4,7 @@
  * Kreatx 2019
  */
 
-var MultiSwitch = function (_props, overrided = false) {
+var MultiSwitch = function (_props) {
     let _self = this, _dataProvider;
 
     Object.defineProperty(this, "valueField", 

@@ -4,8 +4,8 @@
  * Kreatx 2019
  */
 
-var Toggle = function (_props, overrided = false) {
-    var _self = this, _checkBox, _span;
+var Toggle = function (_props) {
+    let _self = this, _checkBox, _span;
     Object.defineProperty(this, "value", {
         get: function value() {
             return _checkBox.value;
@@ -45,24 +45,21 @@ var Toggle = function (_props, overrided = false) {
         enumerable:false
     });
  
-    this.endDraw = function(e)
-    {
-        if (e.target.id == this.domID) 
-        {
+    this.endDraw = function (e) {
+        if (e.target.id == this.domID) {
             _checkBox = this.checkBoxCmp;
             _span = this.spanCmp;
-            if(_props.value)
-                _self.value=_props.value;
-            if(_props.checked)
-                _self.checked=_props.checked;
+            if (_props.value)
+                _self.value = _props.value;
+            if (_props.checked)
+                _self.checked = _props.checked;
         }
         console.log("endDraw");
-    }
-    this.afterAttach = function(e)
-    {
+    };
+    this.afterAttach = function (e) {
         
-    }
-    var _defaultParams = {
+    };
+    let _defaultParams = {
         value: 1,
         checked:false,
         components: [
@@ -93,12 +90,12 @@ var Toggle = function (_props, overrided = false) {
     if(_props.classes["self"]==null)
         _props.classes["self"] = [];
     _props.classes["self"].pushUnique("switch");
-    var _change = _props.change;
+    let _change = _props.change;
     _props.components[0].props.change = function () {
         if (typeof _change == 'function')
             _change.apply(_self, arguments);
 
-        var e = arguments[0];
+        let e = arguments[0];
         if (!e.isDefaultPrevented()) {
             //_cbChange.apply(this, arguments);
         }
@@ -109,10 +106,6 @@ var Toggle = function (_props, overrided = false) {
     _props.change = null;
 
     Label.call(this, _props);
-
-    if (overrided) {
-        this.keepBase();
-    }
 };
 
 Toggle.prototype.ctor = "Toggle";

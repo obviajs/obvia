@@ -1,4 +1,4 @@
-var Option = function (_props, overrided = false) {
+var Option = function (_props) {
     let _self = this, _label, _value;
     Object.defineProperty(this, "label", 
     {

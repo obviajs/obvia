@@ -5,7 +5,7 @@
  */
 
 //component definition
-var RadioButton = function (_props, overrided = false) {
+var RadioButton = function (_props) {
 
     let  _self = this, _label, _value, _checked, _name;
 
@@ -115,11 +115,5 @@ var RadioButton = function (_props, overrided = false) {
     _props = extend(false, false, _defaultParams, _props);
   
     Component.call(this, _props);
-
-    if (overrided) {
-        this.keepBase();
-    }
 };
-
-//component prototype
 RadioButton.prototype.ctor = 'RadioButton';

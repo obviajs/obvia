@@ -5,8 +5,8 @@
  */
 
 //component definition
-var TextArea = function (_props, overrided = false) {
-    var _self = this;
+var TextArea = function (_props) {
+    let _self = this;
 
     Object.defineProperty(this, "value", {
         get: function value() {
@@ -93,7 +93,7 @@ var TextArea = function (_props, overrided = false) {
         return "<textarea data-triggers='change' id='" + this.domID + "' " + (!this.enabled ? "disabled" : "") + "></textarea>";
     };
 
-    var _defaultParams = {
+    let _defaultParams = {
         value: "",
         spellCheck: null,
         class: "form-control",
@@ -111,7 +111,7 @@ var TextArea = function (_props, overrided = false) {
         if (typeof _dblclick == 'function')
             _dblclick.apply(this, arguments);
 
-        var e = arguments[0];
+        let e = arguments[0];
         if (!e.isDefaultPrevented()) {}
     };
 
@@ -124,12 +124,6 @@ var TextArea = function (_props, overrided = false) {
             _change.apply(this, arguments);
     };
 
-    Component.call(this, _props);
-
-    if (overrided) {
-        this.keepBase();
-    }
+    Component.call(this, _props);    
 };
-
-//component prototype
 TextArea.prototype.ctor = 'TextArea';

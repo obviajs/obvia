@@ -5,7 +5,7 @@
  */
 
 //component definition
-var Tree = function (_props, overrided = false) {
+var Tree = function (_props) {
     //inner component data
     let _self = this;
     let _creationFinished;
@@ -454,10 +454,6 @@ var Tree = function (_props, overrided = false) {
     }
     
     let r = Parent.call(this, _props);
-
-    if (overrided) {
-        this.keepBase();
-    }
     
     Object.defineProperty(this, "selectedItem", {
         get: function selectedItem() {

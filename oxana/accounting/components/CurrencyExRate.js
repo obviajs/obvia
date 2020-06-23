@@ -5,7 +5,7 @@
  */
 
 //component definition
-var CurrencyExRate = function (_props, overrided = false) {
+var CurrencyExRate = function (_props) {
     var _self = this;
 
     Object.defineProperty(this, "value",
@@ -128,13 +128,6 @@ var CurrencyExRate = function (_props, overrided = false) {
         }
     };
 
-    Component.call(this, _props, true);
-
-    if (overrided) {
-        this.keepBase();
-    }
-
+    Component.call(this, _props);
 };
-
-//component prototype
 CurrencyExRate.type = 'currencyexrate';

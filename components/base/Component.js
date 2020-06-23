@@ -1,4 +1,4 @@
-var Component = function (_props, overrided = false, _isSurrogate = false) {
+var Component = function (_props) {
     let _self = this;
     if (!Component[this.ctor]) {
         Component[this.ctor] = {};
@@ -169,8 +169,7 @@ var Component = function (_props, overrided = false, _isSurrogate = false) {
                 if (!_ownerDocument || _ownerDocument != v) {
                     _ownerDocument = v;
                     Component.ready(this, function (element) {
-                        if (!_isSurrogate)
-                            _self.trigger('afterAttach');
+                        _self.trigger('afterAttach');
                     }, _ownerDocument);
                 }
             }
@@ -187,13 +186,6 @@ var Component = function (_props, overrided = false, _isSurrogate = false) {
                 }
             },
             enumerable: true
-        });
-  
-    Object.defineProperty(this, 'isSurrogate',
-        {
-            get: function isSurrogate() {
-                return _isSurrogate;
-            }
         });
 
     Object.defineProperty(this, 'domID',
@@ -416,10 +408,6 @@ var Component = function (_props, overrided = false, _isSurrogate = false) {
     
     _attr = new Attr(_props.attr, this.$el);
     _css = new Css(_props.css, this.$el);
-    
-    if (_isSurrogate && this.$el) {
-        Component.surrogates[this.$el.attr('id')] = this.domID;
-    }
 
     let _DOMMutation = this.DOMMutation;
     this.DOMMutation = function (e) {
@@ -485,9 +473,7 @@ var Component = function (_props, overrided = false, _isSurrogate = false) {
             }
             if ((_props.applyBindings == null || _props.applyBindings == true) && _watchers.length == 0)
                 _watchers = this.applyBindings(_bindingDefaultContext);
-            
-            if (!_isSurrogate)
-                _self.trigger('beforeAttach');
+            _self.trigger('beforeAttach');
         }
     };
     
@@ -578,7 +564,6 @@ var Component = function (_props, overrided = false, _isSurrogate = false) {
         return customEvents;
     };
 
-    // let _dataTriggerEventList = _isSurrogate?_defaultHandlers:this.dataTriggerEvents();
     let _dataTriggerEventList = this.dataTriggerEvents();
     this.registerEvents = function () {
         return _dataTriggerEventList;
@@ -852,12 +837,9 @@ var Component = function (_props, overrided = false, _isSurrogate = false) {
                 this.base[prop] = this[prop];
         }
     };
-    if (overrided) {
-        this.keepBase();
-    }
 
     //"#" + this.$el.attr('id'), 
-    this.initEvents = function (element) //1:real component, 0:surrogate i.e no real DOM element 
+    this.initEvents = function (element)
     {
         //execute inner handlers if theres any registered
         let handlers = [];
@@ -920,8 +902,7 @@ var Component = function (_props, overrided = false, _isSurrogate = false) {
     //execute functions before component attached on dom
     if (_ownerDocument) {
         Component.ready(this, function (element) {
-            if (!_isSurrogate)
-                _self.trigger('afterAttach');
+            _self.trigger('afterAttach');
         }, _ownerDocument);
     }
     
@@ -1051,7 +1032,6 @@ Component.check = function (mutations) {
     }
 };
 Component.defaultContext = window;
-Component.surrogates = {};
 Component.registered = {};
 Component.instances = {};
 Component.observer = {};

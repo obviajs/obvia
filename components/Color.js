@@ -4,7 +4,7 @@
  * Kreatx 2018
  */
 
-var Color = function (_props, overrided = false) {
+var Color = function (_props) {
 
     Object.defineProperty(this, "value", {
         get: function value() {
@@ -72,11 +72,6 @@ var Color = function (_props, overrided = false) {
     var _value = _props.value;
 
     Component.call(this, _props);
-
-    if (overrided) {
-        this.keepBase();
-    }
-
 };
 
 Color.prototype.ctor = "Color";

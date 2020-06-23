@@ -271,16 +271,12 @@ var MultiUpload = function (_props) {
         _progressRow.classes = classes; 
     }
 
-    var _registerSurrogate = function(e){
-        //init events for this surrogate component.
-       _self.initEvents(this.$el, 0);
-    }
     var _defaultParams = {
         showBtnRemove: false,
         dataProvider: [],
         form: null
     };
-    var _isSurrogate = true;
+    
     var _accept, _showBtnRemove, _form;
 
     _props = extend(false, false, _defaultParams, _props);

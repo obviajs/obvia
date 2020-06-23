@@ -5,8 +5,8 @@
  */
  
 //component definition
-var Hidden = function (_props, overrided = false) {
-    var _self = this;
+var Hidden = function (_props) {
+    let _self = this;
  
     Object.defineProperty(this, "value",
     {
@@ -65,15 +65,15 @@ var Hidden = function (_props, overrided = false) {
         return  "<input data-triggers='change' type='hidden' id='" + this.domID + "'>";
     };
  
-    var _defaultParams = {
+    let _defaultParams = {
         value: "",
         name:""
     };
     _props = extend(false, false, _defaultParams, _props);
  
-    var _value; 
-    var _name; 
-    var _change = _props.change;
+    let _value; 
+    let _name; 
+    let _change = _props.change;
  
     _props.change = function (e) {
         if (typeof _change == 'function')

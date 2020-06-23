@@ -1,4 +1,4 @@
-var NavParent = function (_props, overrided = false) {
+var NavParent = function (_props) {
     let _self = this, _selectedIndex;
     
     Object.defineProperty(this, "selectedIndex", 
@@ -80,10 +80,6 @@ var NavParent = function (_props, overrided = false) {
     _props.attr["data-triggers"] = myDtEvts.join(" ");
 
     let r = Parent.call(this, _props);
-
-    if (overrided) {
-        this.keepBase();
-    }
     return r;
 };
 NavParent.prototype.ctor = 'NavParent';

@@ -4,7 +4,7 @@
  * Kreatx 2019
  */
 
-var DateTime = function (_props, overrided = false) {
+var DateTime = function (_props) {
     let _self = this;
 
     Object.defineProperty(this, "value", {
@@ -107,10 +107,5 @@ var DateTime = function (_props, overrided = false) {
         }
     };
     Component.call(this, _props);
-
-    if (overrided) {
-        this.keepBase();
-    }
 };
-
 DateTime.prototype.ctor = "DateTime";

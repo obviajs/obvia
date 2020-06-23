@@ -4,7 +4,7 @@
  * Kreatx 2019
  */
 
-var List = function (_props, overrided = false) {
+var List = function (_props) {
     var _self = this;
 
     this.beforeAttach = function () {
@@ -126,11 +126,7 @@ var List = function (_props, overrided = false) {
     };
 
     Repeater.call(this, _props);
-
-    if (overrided) {
-        this.keepBase();
-    }
-
+    
     Object.defineProperty(this, "value", {
         get: function value() {
             return _value;

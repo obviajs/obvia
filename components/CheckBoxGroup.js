@@ -4,7 +4,7 @@
  * Kreatx 2019
  */
 
-var CheckBoxGroup = function (_props, overrided = false) {
+var CheckBoxGroup = function (_props) {
     let _self = this, _dataProvider;
 
     Object.defineProperty(this, "valueField", 
@@ -107,10 +107,6 @@ var CheckBoxGroup = function (_props, overrided = false) {
     _props.components = fnContainerDelayInit();
 
     List.call(this, _props);
-
-    if (overrided) {
-        this.keepBase();
-    }
     
     Object.defineProperty(this, "components",
     {

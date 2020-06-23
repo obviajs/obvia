@@ -4,7 +4,7 @@
  * Kreatx 2019
  */
 
-var RadioGroup = function (_props, overrided = false) {
+var RadioGroup = function (_props) {
     let _self = this, _dataProvider;
 
     Object.defineProperty(this, "valueField", 
@@ -108,10 +108,6 @@ var RadioGroup = function (_props, overrided = false) {
     this.afterAttach = function (e) {
 
     };
-
-    if (overrided) {
-        this.keepBase();
-    }
     
     Object.defineProperty(this, "components",
     {

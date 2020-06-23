@@ -4,7 +4,7 @@
  * Kreatx 2019
  */
 
-var CheckBox = function (_props, overrided = false) {
+var CheckBox = function (_props) {
     let _self = this, _label, _value, _checked;
 
     Object.defineProperty(this, "label",
@@ -108,10 +108,6 @@ var CheckBox = function (_props, overrided = false) {
     };
 
     Component.call(this, _props);
-
-    if (overrided) {
-        this.keepBase();
-    }
 };
 
 CheckBox.prototype.ctor = "CheckBox";

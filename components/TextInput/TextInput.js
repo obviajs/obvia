@@ -5,7 +5,7 @@
  */
 
 //component definition
-var TextInput = function (_props, overrided = false) {
+var TextInput = function (_props) {
     let _self = this;
 
     Object.defineProperty(this, "value", {
@@ -154,10 +154,6 @@ var TextInput = function (_props, overrided = false) {
     };
 
     Component.call(this, _props);
-
-    if (overrided) {
-        this.keepBase();
-    }
 };
 
 //component prototype

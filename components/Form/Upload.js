@@ -5,9 +5,9 @@
  */
  
 //component definition
-var Upload = function (_props, overrided = false) {
-    var _self = this, _files;
-    var _changeHandler = function (e) {
+var Upload = function (_props) {
+    let _self = this, _files;
+    let _changeHandler = function (e) {
         _files = Array.fromIterator(e.target.files);
     }
 
@@ -81,21 +81,21 @@ var Upload = function (_props, overrided = false) {
         return  "<input data-triggers='change' type='file' id='" + this.domID + "'>";
     };
  
-    var _defaultParams = {
+    let _defaultParams = {
         multiple:false
     };
     _props = extend(false, false, _defaultParams, _props);
  
-    var _multiple;
-    var _accept;
-    var _promise;
-    var _change = _props.change;
+    let _multiple;
+    let _accept;
+    let _promise;
+    let _change = _props.change;
 
     _props.change = function () {
         if (typeof _change == 'function')
             _change.apply(_self, arguments);
 
-        var e = arguments[0];
+        let e = arguments[0];
         if (!e.isDefaultPrevented()) {
             _changeHandler.apply(_self, arguments);
         }
