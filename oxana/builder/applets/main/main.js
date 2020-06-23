@@ -684,6 +684,7 @@ let Implementation = function (applet) {
                     } else {
                         newInstance = parent.addComponents(toAdd);
                         newInstance[0].attr.isWa = true;
+                        applet.addBehaviors(newInstance, waBehaviors, false);
                     }
 
                     let row = notWa ? newInstance[0] : activeContainer.parent;
@@ -700,7 +701,6 @@ let Implementation = function (applet) {
                             row.children[childID].spacing.colSpan = colSpan;
                         let workArea = row.children[childID];
                         //let workArea = cell.children[cell.components[0].props.id];
-                        applet.addBehaviors(workArea, waBehaviors, false);
                     }
                     ret.parent = parent;
                     ret.child = newInstance;

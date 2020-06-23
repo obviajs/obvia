@@ -66,7 +66,7 @@ var App = function(_props){
     });
     
     let _behaviors = new AutoObject();
-    _behaviors[_self.id] = {};
+    
     Object.defineProperty(this, 'behaviors',
     {
         get: function () {
@@ -177,13 +177,13 @@ var App = function(_props){
         let manifestor;
 
         let behaviorObj = {};
-        if(target && _self.behaviors[target.id] && _self.behaviors[target.id][e.type])
+        if(target && _self.behaviors[target.domID] && _self.behaviors[target.domID][e.type])
         {
-            behaviorObj = _self.behaviors[target.id][e.type];
+            behaviorObj = _self.behaviors[target.domID][e.type];
             manifestor = target;
-        }else if(_self.behaviors[currentTarget.id] && _self.behaviors[currentTarget.id][e.type] && isObject(_self.behaviors[currentTarget.id][e.type]))
+        }else if(_self.behaviors[currentTarget.domID] && _self.behaviors[currentTarget.domID][e.type] && isObject(_self.behaviors[currentTarget.domID][e.type]))
         {
-            let cmpBehaviors = _self.behaviors[currentTarget.id][e.type];
+            let cmpBehaviors = _self.behaviors[currentTarget.domID][e.type];
             for (var prop in cmpBehaviors) { 
                 if (cmpBehaviors[prop] && cmpBehaviors[prop].onPropagation) { 
                     behaviorObj[prop] = cmpBehaviors[prop];
@@ -340,26 +340,29 @@ var App = function(_props){
         let len = cmps.length;
         for (let i = 0; i < len; i++) { 
             let cmp = cmps[i];
-            if (!cmp["id"]) {
-                cmp["id"] = StringUtils.guid();
-            }
+            let uid;
+            if (!cmp["domID"]) {
+                uid = cmp["domID"] = StringUtils.guid();
+            } else
+                uid = cmp.domID;
+            
             let _eventTypesJoined = "";
             for (let b in behaviors) {
-                if (_behaviors[cmp.id][b]) {
-                    if (!isObject(_behaviors[cmp.id][b])) {
-                        let pb = _behaviors[cmp.id][b];
-                        _behaviors[cmp.id][b] = {};
-                        _behaviors[cmp.id][b][pb] = null;
+                if (_behaviors[uid][b]) {
+                    if (!isObject(_behaviors[uid][b])) {
+                        let pb = _behaviors[uid][b];
+                        _behaviors[uid][b] = {};
+                        _behaviors[uid][b][pb] = null;
                     } 
                     if (isObject(behaviors[b])) {
                         for (var eb in behaviors[b]) {
-                            _behaviors[cmp.id][b][eb] = behaviors[b][eb];
+                            _behaviors[uid][b][eb] = behaviors[b][eb];
                         }
                     } else { 
-                        _behaviors[cmp.id][b][behaviors[b]] = null;
+                        _behaviors[uid][b][behaviors[b]] = null;
                     }
                 }else
-                    _behaviors[cmp.id][b] = behaviors[b];
+                    _behaviors[uid][b] = behaviors[b];
                 
                 _eventTypesJoined += " " + b;
             }
@@ -373,9 +376,9 @@ var App = function(_props){
     };
     
     this.removeBehaviors = function (cmp, behaviors, recurse = true) {
-        if (_behaviors[cmp.id] != null)
+        if (_behaviors[cmp.domID] != null)
             for (let b in behaviors) {
-                delete _behaviors[cmp.id][b];
+                delete _behaviors[cmp.domID][b];
             }
         if (recurse) {
             for (let cid in cmp.children) {
