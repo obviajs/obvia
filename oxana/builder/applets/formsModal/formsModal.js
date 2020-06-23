@@ -35,7 +35,11 @@ let Implementation = function (applet) {
         "PREPARE_ITEM": function (e, r, ra) {
             if (ra) {
                 applet.addBehaviors(ra.currentRow.cmpForm, {
-                    "click": "ITEM_SELECT",
+                    "click": {
+                        "ITEM_SELECT": {
+                            onPropagation: true
+                        }
+                    }
                 }, false);
             }
         },
@@ -44,13 +48,13 @@ let Implementation = function (applet) {
             let gaiaForm = new GaiaAPI_forms();
             let currentItem = arguments[1].currentItem;
             let form = gaiaForm.formsClient.get(currentItem.form_id);
-            let resolve = await Promise.all([form]);
-            let f = resolve[0][0];
+            let resolve = await form;
+            let f = resolve[0];
             let lit = f.form_literal;
             modal.hide();
 
             let evt = new jQuery.Event("loadLayout");
-            evt.content = lit;
+            evt.content = lit.props.components[0].props.components[0].props.components[0];
             data.selectedForm = new FormProperties(f);
             modal.trigger(evt);
         },
