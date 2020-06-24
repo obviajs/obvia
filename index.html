@@ -34,6 +34,7 @@
             rjs.define("./oxana/kanban/Kanban.js", "Kanban");
             rjs.define("./oxana/kanban/css/kanban_default.css", "kanban_default_css");
             rjs.define("./oxana/GaiaAPI/GaiaAPI_forms.js", "GaiaAPI_forms");
+            rjs.define("./oxana/GaiaAPI/GaiaAPI_DV_forms.js", "GaiaAPI_DV_forms");
             rjs.require([
                 "CollectionEditor",
                 "ObjectEditor",
@@ -46,15 +47,16 @@
                 "GaiaAPI_Utils",
                 "Kanban",
                 "kanban_default_css",
-                "GaiaAPI_forms"
+                "GaiaAPI_forms",
+                "GaiaAPI_DV_forms"
             ]).then(function () {
                 //rjs.define("./examples/ApiClient/example.js", "ApiClientExample");
                 //rjs.define("./examples/wizard/example.js", "wizardExample");
                 //rjs.define("./examples/Validation/example.js", "Validation");
                 //rjs.define("./examples/Validation/repeaterExample.js", "Validation");
                 //rjs.define("./examples/Validation/rangeValidationExample.js", "RangeValidation");
-                rjs.define("./examples/Validation/regularExpressionValidatorExample.js",
-                    "regularExpressionValidators");
+                // rjs.define("./examples/Validation/regularExpressionValidatorExample.js",
+                //     "regularExpressionValidators");
                 //rjs.define("./examples/Validation/customValidationExample.js", "custom");
                 //rjs.define("./examples/KanBan/example.js", "KanBanExample");
                 //let gaiaForm = new GaiaAPI_forms();
@@ -84,6 +86,7 @@
             //rjs.define("./examples/Generic/example.js","GenericExample");
             //rjs.define("./oxana/accounting/invoice.js", "Invoice");
             //rjs.define("./examples/ScrollPane/example.js", "ScrollPaneExample");
+            rjs.define("./examples/ScrollPane/exampleFixedHeader.js", "ScrollPaneExampleFixedHeader");
             //rjs.define("./examples/Select/example.js", "SelectExample");
             //rjs.define("./oxana/magnetLayout.js", "magnetLayout");
             //rjs.define("./examples/Upload/singleUploadExample.js", "singleUploadExample");

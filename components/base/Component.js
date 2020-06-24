@@ -118,6 +118,8 @@ var Component = function (_props) {
                 if (v && v.trim() && (_id != v)) {
                     if (!this.parent || !this.parent[v]) {
                         let oldId = _id;
+                        let oldomId = _domID;
+
                         delete Component.instances[this.domID];
                         _id = v;
                         _domID = _id + '_' + _guid;
@@ -143,8 +145,10 @@ var Component = function (_props) {
                         this.$el.attr("id", _domID);
                         _props.id = _id;
                         let evt = new jQuery.Event("idChanged");
-                        evt.oldValue = oldId;
-                        evt.newValue = _id;
+                        evt.oldValueId = oldId;
+                        evt.newValueId = _id;
+                        evt.oldValueDomId = oldomId;
+                        evt.newValueDomId = _domID;
                         _self.trigger(evt);
                     }
                 }
