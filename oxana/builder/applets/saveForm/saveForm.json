@@ -4,6 +4,16 @@
         "id": "saveForm",
         "size": "ModalSize.LARGE",
         "title": "Save Form",
-        "components": []
+        "components": {
+            "modalFooter": [{
+                "ctor": "Button",
+                "props": {
+                    "id": "saveNew",
+                    "label": "Save & New",
+                    "classes": ["btn", "btn-primary"]
+
+                }
+            }]
+        }
     }
 }

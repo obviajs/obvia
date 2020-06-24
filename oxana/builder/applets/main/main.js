@@ -347,7 +347,7 @@ let Implementation = function (applet) {
                             evt.content = resp.content;
                         } else if (browseFile.value[0].type === "text/plain") {
                             evt = new jQuery.Event("loadLayout");
-                            evt.content = JSON.parse(resp.content);
+                            evt.content = JSON.parse(resp.content).props.components[0].props.components[0].props.components[0];
                         }
                         app.trigger(evt);
                     })
@@ -403,8 +403,7 @@ let Implementation = function (applet) {
             }
             workArea.removeAllChildren(0);
             for (let i = 0; i < _cmp.props.components.length; i++) {
-                let wcol2 = objectHierarchyGetMatchingMember(_cmp.props.components[i], "props.id", "workAreaColumnL2", "props.components");
-                let inst = workArea.addComponent((wcol2.match) ? wcol2.match.props.components[0] : _cmp.props.components[i]);
+                let inst = workArea.addComponent(_cmp.props.components[i]);
                 let was = objectHierarchyGetMatchingMember(inst, "attr.isWa", true, "children", true);
                 for (let wi = 0; wi < was.length; wi++) {
                     applet.addBehaviors(was[wi].match, cmpWaBehaviors, false);
@@ -747,18 +746,18 @@ let Implementation = function (applet) {
                 classes.pushUnique("active-container");
                 this.classes = classes;
                 activeContainer = this;
-                // if (this.id == "workAreaColumnL2") {
-                //     //Builder.metaProps.form_name.props.change(data.selectedForm, this);
-                //     let oeLit = {
-                //         ctor: ObjectEditor,
-                //         "props": {
-                //             id: "objectEditor",
-                //             instance: data.selectedForm,
-                //             field: "props"
-                //         }
-                //     };
-                propertyEditorContainer.components = [];
-                // }
+                if (this.id == "workAreaColumnL2") {
+                    //Builder.metaProps.form_name.props.change(data.selectedForm, this);
+                    // let oeLit = {
+                    //     ctor: ObjectEditor,
+                    //     "props": {
+                    //         id: "objectEditor",
+                    //         instance: data.selectedForm,
+                    //         field: "props"
+                    //     }
+                    // };
+                    propertyEditorContainer.components = [];
+                }
             },
             stopPropagation: true
         },

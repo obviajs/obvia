@@ -16,7 +16,12 @@ let Implementation = function (applet) {
             }, false);
 
             let modalBody = modal.modalDialog.modalContent.modalBody;
+            let saveNewButton = modal.modalDialog.modalContent.modalFooter.saveNew;
             let selectedForm = data.selectedForm;
+
+            applet.addBehaviors(saveNewButton, {
+                "click": "SAVE_NEW"
+            }, false);
 
             let oeLit = {
                 ctor: ObjectEditor,
@@ -49,9 +54,40 @@ let Implementation = function (applet) {
                 }
             });
         },
+
+        "SAVE_NEW": function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            ValidationManager.getInstance().validate().then((result) => {
+                if (result[0]) {
+                    data.workArea.removeAllChildren(0);
+                    modal.hide();
+                    var gaiaForm = new GaiaAPI_forms();
+                    gaiaForm.formsClient.post(data.selectedForm);
+                    resetObjectProp(data.selectedForm);
+                    modal.modalDialog.modalContent.modalBody.find("textField").value = "";
+                    modal.modalDialog.modalContent.modalBody.find("textarea").value = "";
+
+                }
+            });
+        }
+    };
+
+    let resetObjectProp = function (obj) {
+        for (let prop in obj) {
+            if (obj.hasOwnProperty(prop)) {
+                if (typeof obj[prop] === "number") {
+                    obj[prop] = 0;
+                } else {
+                    obj[prop] = "";
+                }
+            }
+        }
+        return obj;
     };
 
     return imp;
+
 };
 Implementation.ctor = "Implementation";
 export {
