@@ -56,13 +56,11 @@ var Heading = function (_props) {
                 if (this.$el) {
                     let newCls = this.$el[0].className;
                     let drag = this.$el[0].draggable;
-                    let label = this.$el[0].innerText;
-                    let align = this.$el[0].align;
                     let $newEl = $(this.template());
                     $newEl[0].className = newCls;
                     $newEl[0].draggable = drag;
-                    $newEl[0].innerText = label;
-                    $newEl[0].align = align;
+                    $newEl[0].innerText = _label;
+                    $newEl[0].align = _align;
                     this.$el.replaceWith($newEl);
                     this.$el = $newEl;
                 }

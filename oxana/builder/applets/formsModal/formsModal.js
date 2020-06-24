@@ -52,9 +52,8 @@ let Implementation = function (applet) {
             let f = resolve[0];
             let lit = f.form_literal;
             modal.hide();
-
             let evt = new jQuery.Event("loadLayout");
-            evt.content = lit.props.components[0].props.components[0].props.components[0];
+            evt.content = lit;
             data.selectedForm = new FormProperties(f);
             modal.trigger(evt);
         },

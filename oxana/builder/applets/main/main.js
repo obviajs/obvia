@@ -141,8 +141,8 @@ let Implementation = function (applet) {
         "UPDATE_BEHAVIOR_BINDINGS": {
             do: function (e) {
                 console.log("UPDATE_BEHAVIOR_BINDINGS");
-                app.behaviors[e.newValue] = app.behaviors[e.oldValue];
-                delete app.behaviors[e.oldValue];
+                app.behaviors[e.newValueDomId] = app.behaviors[e.oldValueDomId];
+                delete app.behaviors[e.oldValueDomId];
             }
             /**
              * catch events thrown by children
@@ -332,8 +332,8 @@ let Implementation = function (applet) {
             app.appletsMap["saveForm"].init().then(() => {
                 console.log('Applet saveForm inited.');
             });
-            data.selectedForm.form_literal = workAreaColumn.literal;
-            data.selectedForm.components = workArea.components;
+            data.selectedForm.form_literal = workArea.literal;
+            data.workArea = workArea;
         },
 
         "FILE_SELECTED": function (e) {

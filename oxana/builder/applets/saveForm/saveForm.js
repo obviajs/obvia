@@ -3,6 +3,8 @@ let Implementation = function (applet) {
     let app = applet.app;
     let data = applet.data;
     let modal;
+    let modalBody;
+    let info;
 
     let imp = {
 
@@ -15,7 +17,7 @@ let Implementation = function (applet) {
                 "accept": "SAVE_FORM"
             }, false);
 
-            let modalBody = modal.modalDialog.modalContent.modalBody;
+            modalBody = modal.modalDialog.modalContent.modalBody;
             let saveNewButton = modal.modalDialog.modalContent.modalFooter.saveNew;
             let selectedForm = data.selectedForm;
 
@@ -39,51 +41,59 @@ let Implementation = function (applet) {
                 }
             };
 
+            info = {
+                ctor: Label,
+                props: {
+                    id: "info",
+                    label: "The form was not saved",
+                    css: {
+                        fontSize: "20px",
+                        color: "red"
+                    },
+                    classes: ["toast-error"]
+                }
+            };
+
             modalBody.components = [oeLit];
             modalBody.addComponent(reqFV);
         },
 
-        "SAVE_FORM": function (e) {
+        "SAVE_FORM": async function (e) {
             e.preventDefault();
             e.stopPropagation();
-            ValidationManager.getInstance().validate().then((result) => {
-                if (result[0]) {
-                    var gaiaForm = new GaiaAPI_forms();
-                    gaiaForm.formsClient.post(data.selectedForm);
+            let result = await ValidationManager.getInstance().validate();
+            if (result[0]) {
+                var gaiaForm = new GaiaAPI_forms();
+                let promise = gaiaForm.formsClient.post(data.selectedForm)
+                promise.then(function (res) {
                     modal.hide();
-                }
-            });
+                    modalBody.addComponent(info);
+                });
+                promise.catch(function (err) {
+                    modalBody.addComponent(info);
+                });
+            }
         },
 
-        "SAVE_NEW": function (e) {
+        "SAVE_NEW": async function (e) {
             e.preventDefault();
             e.stopPropagation();
-            ValidationManager.getInstance().validate().then((result) => {
-                if (result[0]) {
+            let result = await ValidationManager.getInstance().validate();
+            if (result[0]) {
+                var gaiaForm = new GaiaAPI_forms();
+                let promise = gaiaForm.formsClient.post(data.selectedForm);
+                promise.then(function (res) {
+                    data.selectedForm = new FormProperties();
                     data.workArea.removeAllChildren(0);
                     modal.hide();
-                    var gaiaForm = new GaiaAPI_forms();
-                    gaiaForm.formsClient.post(data.selectedForm);
-                    resetObjectProp(data.selectedForm);
                     modal.modalDialog.modalContent.modalBody.find("textField").value = "";
                     modal.modalDialog.modalContent.modalBody.find("textarea").value = "";
-
-                }
-            });
-        }
-    };
-
-    let resetObjectProp = function (obj) {
-        for (let prop in obj) {
-            if (obj.hasOwnProperty(prop)) {
-                if (typeof obj[prop] === "number") {
-                    obj[prop] = 0;
-                } else {
-                    obj[prop] = "";
-                }
+                });
+                promise.catch(function (err) {
+                    modalBody.addComponent(info);
+                });
             }
         }
-        return obj;
     };
 
     return imp;
