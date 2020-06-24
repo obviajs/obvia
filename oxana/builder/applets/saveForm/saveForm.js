@@ -2,9 +2,7 @@ let Implementation = function (applet) {
 
     let app = applet.app;
     let data = applet.data;
-    let modal;
-    let modalBody;
-    let info;
+    let modal, modalBody;
 
     let imp = {
 
@@ -41,7 +39,7 @@ let Implementation = function (applet) {
                 }
             };
 
-            info = {
+            let info = {
                 ctor: Label,
                 props: {
                     id: "info",
@@ -50,12 +48,14 @@ let Implementation = function (applet) {
                         fontSize: "20px",
                         color: "red"
                     },
-                    classes: ["toast-error"]
+                    classes: ["toast-error"],
+                    visible: false
                 }
             };
 
             modalBody.components = [oeLit];
             modalBody.addComponent(reqFV);
+            modalBody.addComponent(info);
         },
 
         "SAVE_FORM": async function (e) {
@@ -67,10 +67,9 @@ let Implementation = function (applet) {
                 let promise = gaiaForm.formsClient.post(data.selectedForm)
                 promise.then(function (res) {
                     modal.hide();
-                    modalBody.addComponent(info);
                 });
                 promise.catch(function (err) {
-                    modalBody.addComponent(info);
+                    modalBody.find('info').visible = true;
                 });
             }
         },
@@ -90,7 +89,7 @@ let Implementation = function (applet) {
                     modal.modalDialog.modalContent.modalBody.find("textarea").value = "";
                 });
                 promise.catch(function (err) {
-                    modalBody.addComponent(info);
+                    modalBody.find('info').visible = true;
                 });
             }
         }
