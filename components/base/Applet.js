@@ -69,14 +69,14 @@ var Applet = function (_props) {
                 let inst = new Applet(applet);
                 yield inst.init();
             }
-            return _literal;
+            return _self;
         }) : Promise.resolve(_literal)).then(((l) => { 
             let p;
             if (_uiRoute && typeof _uiRoute == 'function') {
                 p = _uiRoute.call(_self, _self);
             }
             _loaded = true;
-            return p;
+            return _self;
         }));
     };
     
