@@ -1,0 +1,8 @@
+.inputLink{ left:5px; position:relative; z-index:5; font-size: 14px;}
+/*.innerWidth() left: -(vleren e innerWidth)*/
+.wrap{
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+}

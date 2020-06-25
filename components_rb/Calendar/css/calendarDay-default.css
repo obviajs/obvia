@@ -1,0 +1,135 @@
+
+.fc-hour-day{
+    float:left;
+    margin-left:6%;
+    padding-bottom:2%;
+    border-bottom:1px solid rgb(218, 214, 214);
+    margin-bottom:1.2%;
+    /* color:black;
+    font-size:14.7px; */
+}
+.fc-hr{
+    margin-left:60px;
+}
+
+.fc-day{
+    margin-right:20px;
+    font-weight:900;
+    font-size:24;
+}
+.fc-float{
+    float:left;
+}
+.fc-week-day{
+    text-align:right;
+    padding-right:10px;
+    border-bottom-width: 1px;
+    border-color: #f56a6a;
+    font-size: 22px;
+    font-weight: 900;
+    line-height: 30px;
+    margin-left:78%;
+    margin-bottom:0.5%;
+}
+
+/* .fc-dataProvider-first{
+    /* padding-top:2%;
+    margin-top:10%; */
+    
+/*} */
+
+.fc-container-hour{
+    font-weight:800;
+    font-size:20px;
+    margin-right:5%;
+    padding-bottom:1.2%;
+}
+
+.fc-label-month{
+    margin-top: 0;
+    white-space: nowrap;
+    font-size: 32px;
+    font-weight: 100;
+    margin-bottom: 10px;
+    padding-right:8px;
+    margin-bottom:1.5%;
+    font-weight:600;
+}
+
+.fc-label-year{
+    margin-top: 0;
+    white-space: nowrap;
+    font-size: 32px;
+    font-weight: 100;
+    margin-bottom: 10px;
+    margin-bottom:1.5%;
+    margin-right:17%;
+    font-weight:600;
+}
+
+.fc-button-next {
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+    background-color: white;
+    text-align:center;
+    color: black;
+    border-color:black;
+    border: 1px solid;
+    padding-left:5%;
+    margin-bottom:1.5%
+}
+
+.fc-button-prev {
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+    background-color: white;
+    margin-right: -1px;
+    padding-left:4%;
+    margin-top:5%;
+    color: black;
+    border-color:black;
+    border: 1px solid;
+    text-align:center;
+    margin-left:25%;
+    margin-bottom:1.5%;
+}
+
+
+.fc-button-left{
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+    margin-right: -1px;
+    min-width: 67px;
+    text-align: center;
+    background-color: gray ;
+    color: #FFFFFF;
+}
+
+.fc-button-center{
+    min-width: 67px;
+    text-align: center;
+    background-color: gray ;
+    color: #FFFFFF;
+}
+.fc-button-right{
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+    margin-right: 0px;
+    min-width: 67px;
+    text-align: center;
+    background-color: gray ;
+    color: #FFFFFF;
+
+}
+
+.fc-event{
+    font-weight:800;
+    margin-right:50px;
+    margin-left:60px;
+    color:rgb(41, 43, 44);
+    font-size:16px;
+    color:rgb(41, 43, 44);
+}
+.fc-font-awsome{
+    margin-left:290%;
+}
