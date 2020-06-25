@@ -43,6 +43,7 @@ rjs.define("./oxana/builder/SpacingEditor.js", "SpacingEditor");
 rjs.define("./oxana/AutoBrowse.js", "AutoBrowse");
 rjs.define("./components/base/Attr.js", "Attr");
 rjs.define("./components/base/Css.js", "Css");
+rjs.define("./components/base/Props.js", "Props");
 rjs.define("./components/base/Parent.js", "Parent");
 
 rjs.define("./components/base/NavParent.js", "NavParent");
@@ -65,18 +66,12 @@ rjs.define("./components/Form/Hidden.js", "Hidden");
 //Button
 rjs.define("./components/Button/Button.js", "Button");
 rjs.define("./components/Button/ButtonType.js", "ButtonType");
-//Report Props
-// rjs.define("./components/StretchType.js", "StretchType");
-// rjs.define("./components/PositionType.js", "PositionType");
-// rjs.define("./components/TextRotation.js", "TextRotation");
-// rjs.define("./components/FontStyle.js", "FontStyle");
 //Heading
 rjs.define("./components/HeadingType.js", "HeadingType");
 rjs.define("./components/Heading.js", "Heading");
 //Label
 rjs.define("./components/LabelType.js", "LabelType");
 rjs.define("./components/Label.js", "Label");
-rjs.define("./components/Label.js", "JRLabel");
 //HRule
 rjs.define("./components/HRule.js", "HRule");
 // Color Picker
@@ -219,7 +214,6 @@ rjs.define("./oxana/Wizard/css/wizard-default.css", "wizard_default_css");
 rjs.define("./components/Tree/css/tree-default.css", "tree_default_css");
 rjs.define("./components/SideNav/css/sideNav.css", "sideNav_css");
 rjs.define("./oxana/builder/css/builder.css", "Builder_Css");
-rjs.define("./oxana/report_builder/css/builder.css", "Report_Builder_Css");
 rjs.require(["EventDispatcher"]).then(function () {
     rjs.require([
         "AutoObject",
@@ -267,6 +261,7 @@ rjs.require(["EventDispatcher"]).then(function () {
         "AutoBrowse",
         "Attr",
         "Css",
+        "Props",
         "Parent",
         "ContainerType",
         "NavParent",
@@ -293,15 +288,10 @@ rjs.require(["EventDispatcher"]).then(function () {
         "Amount",
         "Button",
         "ButtonType",
-        "StretchType",
-        "PositionType",
-        "TextRotation",
-        "FontStyle",
         "HeadingType",
         "Heading",
         "LabelType",
         "Label",
-        "JRLabel",
         "LinkTarget",
         "Link",
         "InputMaskBundle",
