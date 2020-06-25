@@ -13,7 +13,37 @@
                     "classes": ["btn", "btn-primary"]
 
                 }
-            }]
+            }],
+            "modalBody": [{
+                    "ctor": "ObjectEditor",
+                    "props": {
+                        "id": "objectEditor",
+                        "instance": "{selectedForm}"
+                    }
+                },
+                {
+                    "ctor": "RequiredFieldValidator",
+                    "props": {
+                        "controlToValidate": "textField",
+                        "errorMessage": "Form name is required",
+                        "setFocusOnError": true
+                    }
+                },
+                {
+                    "ctor": "Label",
+                    "props": {
+                        "id": "info",
+                        "label": "The form was not saved",
+                        "css": {
+                            "fontSize": "20px",
+                            "color": "red"
+                        },
+                        "visible": false
+                    }
+                }
+            ]
+
         }
+
     }
 }

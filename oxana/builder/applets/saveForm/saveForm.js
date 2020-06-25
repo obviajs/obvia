@@ -23,39 +23,6 @@ let Implementation = function (applet) {
                 "click": "SAVE_NEW"
             }, false);
 
-            let oeLit = {
-                ctor: ObjectEditor,
-                "props": {
-                    id: "objectEditor",
-                    instance: selectedForm
-                }
-            };
-            let reqFV = {
-                ctor: RequiredFieldValidator,
-                props: {
-                    controlToValidate: "textField",
-                    errorMessage: "Form name is required",
-                    setFocusOnError: true
-                }
-            };
-
-            let info = {
-                ctor: Label,
-                props: {
-                    id: "info",
-                    label: "The form was not saved",
-                    css: {
-                        fontSize: "20px",
-                        color: "red"
-                    },
-                    classes: ["toast-error"],
-                    visible: false
-                }
-            };
-
-            modalBody.components = [oeLit];
-            modalBody.addComponent(reqFV);
-            modalBody.addComponent(info);
         },
 
         "SAVE_FORM": async function (e) {
@@ -82,6 +49,7 @@ let Implementation = function (applet) {
                 var gaiaForm = new GaiaAPI_forms();
                 let promise = gaiaForm.formsClient.post(data.selectedForm);
                 promise.then(function (res) {
+                    modalBody.find('info').visible = false;
                     data.selectedForm = new FormProperties();
                     data.workArea.removeAllChildren(0);
                     modal.hide();

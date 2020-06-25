@@ -347,7 +347,7 @@ let Implementation = function (applet) {
                             evt.content = resp.content;
                         } else if (browseFile.value[0].type === "text/plain") {
                             evt = new jQuery.Event("loadLayout");
-                            evt.content = JSON.parse(resp.content).props.components[0].props.components[0].props.components[0];
+                            evt.content = JSON.parse(resp.content);
                         }
                         app.trigger(evt);
                     })
