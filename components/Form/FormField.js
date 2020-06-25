@@ -50,7 +50,8 @@ var FormField = function (_props) {
     {
         get: function component() {
             return _component;
-        }
+        },
+        enumerable: true
     });
 
     Object.defineProperty(this, "name",
@@ -176,7 +177,7 @@ var FormField = function (_props) {
         _props.components.push(_component);
     }
     
-    let r = Container.call(this, _props);
+    let r = Container.call(this, _props, true);
 
     let _enabled = _props.enabled;
     Object.defineProperty(this, "enabled",
