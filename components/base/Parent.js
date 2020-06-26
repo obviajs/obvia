@@ -23,12 +23,12 @@ var Parent = function (_props, _hideComponents=false) {
         });
     
     Object.defineProperty(this, "children",
-        {
-            get: function children() {
-                return _children;
-            },
-            enumerable: true
-        });
+    {
+        get: function children() {
+            return _children;
+        },
+        enumerable: true
+    });
     
     Object.defineProperty(this, "components",
     {

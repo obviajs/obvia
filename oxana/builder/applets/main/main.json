@@ -385,12 +385,12 @@
                                                                    "props":{
                                                                       "type":"",
                                                                       "spacing":{
-                                                                         "colSpan":12,
                                                                          "h":100
                                                                       },
                                                                       "id":"workAreaColumnL2",
                                                                       "classes":[
-                                                                         "border"
+                                                                         "border",
+                                                                         "col"
                                                                       ]
                                                                    }
                                                                 }

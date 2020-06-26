@@ -1,9 +1,13 @@
 var Props = function (inst, _props, skip = []) {
-    
+    let _dskip = ["props", "children"];
+    if (skip) {
+        skip.splicea(skip.length, 0, _dskip);
+    } else
+        skip = _dskip;
     let _oc = ["Repeater", "RepeaterEx", "Select", "List", "AutoCompleteEx"]; 
-    
+    var _props = Object.getOwnPropertyDescriptors(inst);
     for (let prop in _props) {
-        if (typeof _props[prop] != 'function' && inst.hasOwnProperty(prop) && inst.propertyIsEnumerable(prop) && (skip.indexOf(prop) < 0)) {
+        if ((skip.indexOf(prop) < 0) && _props[prop].enumerable && typeof inst[prop] != 'function' && inst.hasOwnProperty(prop) && (inst[prop]==null || !inst[prop].jquery)) {
             switch (prop) {
                 case "component":
                     let component = {};
@@ -58,7 +62,7 @@ var Props = function (inst, _props, skip = []) {
                         break;
                     default:
                         if (this.hasOwnProperty(prop) && this.propertyIsEnumerable(prop))
-                            if ((!isObject(this[prop]) || !Object.isEmpty(this[prop])) && (this[prop]==null || !this[prop].$el))
+                            if ((!isObject(this[prop]) || !Object.isEmpty(this[prop])) && (this[prop]==null || !this[prop].jquery))
                                 obj[prop] = this[prop];
                 }
             }

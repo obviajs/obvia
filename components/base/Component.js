@@ -33,6 +33,7 @@ var Component = function (_props) {
     let _enabled, _draggable, _visible;
     let _classes = [];
     let _parent = _props.parent;
+    let _parentForm = _props.parentForm;
     let _mousedown = _props.mousedown;
     let _mouseover = _props.mouseover;
     let _mouseout = _props.mouseout;
@@ -254,8 +255,21 @@ var Component = function (_props) {
                 }
             },
             enumerable: false
-        });
-
+    });
+    
+    Object.defineProperty(this, "parentForm",
+    {
+        get: function parentForm() {
+            return _parentForm;
+        },
+        set: function parentForm(v) {
+            if (_parentForm != v) {
+                _parentForm = v;
+            }
+        },
+        enumerable: false
+    });    
+    
     Object.defineProperty(this, "watchers",
         {
             get: function watchers() {

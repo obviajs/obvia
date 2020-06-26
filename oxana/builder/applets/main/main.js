@@ -404,7 +404,7 @@ let Implementation = function (applet) {
             workArea.removeAllChildren(0);
             for (let i = 0; i < _cmp.props.components.length; i++) {
                 let inst = workArea.addComponent(_cmp.props.components[i]);
-                let was = objectHierarchyGetMatchingMember(inst, "attr.isWa", true, "children", true);
+                let was = objectHierarchyGetMatchingMember(inst, "attr.isNotWa", true, "children", true);
                 for (let wi = 0; wi < was.length; wi++) {
                     applet.addBehaviors(was[wi].match, cmpWaBehaviors, false);
                 }
@@ -511,12 +511,8 @@ let Implementation = function (applet) {
                             ctor: Container,
                             props: {
                                 type: ContainerType.COLUMN,
-                                spacing: {
-                                    colSpan: 12,
-                                    h: 100
-                                },
                                 id: 'workArea',
-                                classes: ["border"],
+                                classes: ["border", "col"],
                                 attr: {
                                     "isWa": true
                                 }
@@ -616,12 +612,8 @@ let Implementation = function (applet) {
                                 ctor: Container,
                                 props: {
                                     type: ContainerType.COLUMN,
-                                    spacing: {
-                                        colSpan: 6,
-                                        h: 100
-                                    },
                                     id: 'workArea',
-                                    classes: ["border"],
+                                    classes: ["border", "col"],
                                     attr: {
                                         "isWa": true
                                     }
@@ -631,12 +623,8 @@ let Implementation = function (applet) {
                                 ctor: Container,
                                 props: {
                                     type: ContainerType.COLUMN,
-                                    spacing: {
-                                        colSpan: 6,
-                                        h: 100
-                                    },
                                     id: 'workArea',
-                                    classes: ["border"],
+                                    classes: ["border", "col"],
                                     attr: {
                                         "isWa": true
                                     }
@@ -650,12 +638,8 @@ let Implementation = function (applet) {
                     ctor: Container,
                     props: {
                         type: ContainerType.COLUMN,
-                        spacing: {
-                            colSpan: 12,
-                            h: 100
-                        },
                         id: 'workArea',
-                        classes: ["border"],
+                        classes: ["border", "col"],
                         attr: {
                             "isWa": true
                         }
@@ -669,9 +653,10 @@ let Implementation = function (applet) {
                     newRow.props.type = ContainerType.FORM_ROW;
                     toAdd = [newRow];
                     parent = activeContainer;
-                } else if (activeContainer.attr.isNotWa) {
-                    alert("Select an Existing Column to split Vertically.");
-                    return;
+                }
+                else if (activeContainer.attr.isNotWa) {
+                    parent = activeContainer.children[activeContainer.csorted[0]];
+
                 }
                 let children_len = parent.components.length;
 
@@ -683,24 +668,9 @@ let Implementation = function (applet) {
                     } else {
                         newInstance = parent.addComponents(toAdd);
                         newInstance[0].attr.isWa = true;
-                        applet.addBehaviors(newInstance, waBehaviors, false);
+                        applet.addBehaviors(newInstance, waBehaviors, true);
                     }
 
-                    let row = notWa ? newInstance[0] : activeContainer.parent;
-                    children_len = row.components.length;
-
-                    let colSpan = Math.floor(12 / children_len);
-                    let delta = 12 - colSpan * children_len;
-                    let i = 0;
-                    for (let childID in row.children) {
-                        ++i;
-                        if (i == children_len - 1)
-                            row.children[childID].spacing.colSpan = colSpan + delta;
-                        else
-                            row.children[childID].spacing.colSpan = colSpan;
-                        let workArea = row.children[childID];
-                        //let workArea = cell.children[cell.components[0].props.id];
-                    }
                     ret.parent = parent;
                     ret.child = newInstance;
                     ret.container = activeContainer.parent;
@@ -896,7 +866,7 @@ let Implementation = function (applet) {
 
         "SAVE_LAYOUT": {
             do: function (e) {
-                let lit = workAreaColumn.literal;
+                let lit = workArea.literal;
                 stripHandle(lit);
                 let jsonLayout = JSON.stringify(lit, null, "\t");
                 download("workAreaColumn.json.txt", jsonLayout);
