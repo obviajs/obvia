@@ -20,7 +20,8 @@ Builder.initComponentLiterals = function () {
                     name: 'formField',
                     size: FormFieldSize.SMALL,
                     //spacing:{colSpan:2},
-                    component: {}
+                    component: {},
+                    width: "100%"
                 }
             },
             label: "Form Field",
@@ -96,7 +97,7 @@ Builder.initComponentLiterals = function () {
             literal: {
                 "ctor": TextInput,
                 "props": {
-                    id: 'textField'
+                    id: 'textField',
                 }
             },
             set: null,
@@ -182,17 +183,17 @@ Builder.initComponentLiterals = function () {
                     labelField: "title",
                     label: "Click me",
                     dataProvider: new ArrayEx([{
-                        key: "#",
-                        title: "Folder 1"
-                    },
-                    {
-                        key: "#",
-                        title: "Folder 2"
-                    },
-                    {
-                        key: "#",
-                        title: "Folder 3"
-                    }
+                            key: "#",
+                            title: "Folder 1"
+                        },
+                        {
+                            key: "#",
+                            title: "Folder 2"
+                        },
+                        {
+                            key: "#",
+                            title: "Folder 3"
+                        }
                     ])
                 }
             },
@@ -232,23 +233,23 @@ Builder.initComponentLiterals = function () {
                     labelField: "title",
                     childrenField: "children",
                     dataProvider: new ArrayEx([{
-                        title: "Node 1",
-                        key: "1"
-                    },
-                    {
-                        title: "Folder 2",
-                        key: "2",
-                        children: new ArrayEx([{
-                            title: "Node 2.1",
-                            key: "3",
-                            myOwnAttr: "abc"
+                            title: "Node 1",
+                            key: "1"
                         },
                         {
-                            title: "Node 2.2",
-                            key: "4"
+                            title: "Folder 2",
+                            key: "2",
+                            children: new ArrayEx([{
+                                    title: "Node 2.1",
+                                    key: "3",
+                                    myOwnAttr: "abc"
+                                },
+                                {
+                                    title: "Node 2.2",
+                                    key: "4"
+                                }
+                            ])
                         }
-                        ])
-                    }
                     ]),
                     expandIcon: "fa-chevron-circle-right",
                     collapseIcon: "fa-chevron-circle-down",
@@ -304,23 +305,23 @@ Builder.initComponentLiterals = function () {
                 "props": {
                     id: 'radiogroup',
                     dataProvider: [{
-                        "id": "1",
-                        "text": "Option 1",
-                        "enabled": true,
-                        "buttonClass": []
-                    },
-                    {
-                        "id": "2",
-                        "text": "Option 2",
-                        "enabled": true,
-                        "buttonClass": []
-                    },
-                    {
-                        "id": "3",
-                        "text": "Option 3",
-                        "enabled": false,
-                        "buttonClass": []
-                    }
+                            "id": "1",
+                            "text": "Option 1",
+                            "enabled": true,
+                            "buttonClass": []
+                        },
+                        {
+                            "id": "2",
+                            "text": "Option 2",
+                            "enabled": true,
+                            "buttonClass": []
+                        },
+                        {
+                            "id": "3",
+                            "text": "Option 3",
+                            "enabled": false,
+                            "buttonClass": []
+                        }
                     ],
                     valueField: 'id',
                     labelField: 'text',
@@ -377,33 +378,33 @@ Builder.initComponentLiterals = function () {
                 "props": {
                     id: 'checkBoxGroup',
                     dataProvider: [{
-                        "id": "1",
-                        "text": "Option 1",
-                        "buttonClass": ['btn btn-xs btn-default'],
-                        "enabled": true,
-                        "checked": false
-                    },
-                    {
-                        "id": "2",
-                        "text": "Option 2",
-                        "buttonClass": ['btn btn-xs btn-default'],
-                        "enabled": true,
-                        "checked": false
-                    },
-                    {
-                        "id": "3",
-                        "text": "Option 3",
-                        "buttonClass": ['btn btn-xs btn-success'],
-                        "enabled": true,
-                        "checked": true
-                    },
-                    {
-                        "id": "4",
-                        "text": "Option 4",
-                        "buttonClass": ['btn btn-xs btn-default'],
-                        "enabled": true,
-                        "checked": false
-                    }
+                            "id": "1",
+                            "text": "Option 1",
+                            "buttonClass": ['btn btn-xs btn-default'],
+                            "enabled": true,
+                            "checked": false
+                        },
+                        {
+                            "id": "2",
+                            "text": "Option 2",
+                            "buttonClass": ['btn btn-xs btn-default'],
+                            "enabled": true,
+                            "checked": false
+                        },
+                        {
+                            "id": "3",
+                            "text": "Option 3",
+                            "buttonClass": ['btn btn-xs btn-success'],
+                            "enabled": true,
+                            "checked": true
+                        },
+                        {
+                            "id": "4",
+                            "text": "Option 4",
+                            "buttonClass": ['btn btn-xs btn-default'],
+                            "enabled": true,
+                            "checked": false
+                        }
                     ],
                     valueField: "id",
                     labelField: "text",
@@ -431,7 +432,8 @@ Builder.initComponentLiterals = function () {
                     formName: 'My Form',
                     action: "",
                     components: [],
-                    classes: ["default-cnt"]
+                    classes: ["default-cnt"],
+                    width: '100%'
                 }
             },
             label: "Form",
@@ -554,25 +556,25 @@ Builder.initComponentLiterals = function () {
                     id: 'list',
                     multiselect: true,
                     dataProvider: new ArrayEx([{
-                        "id": "1",
-                        "text": "Option 1",
-                        "buttonClass": ["btn-default"]
-                    },
-                    {
-                        "id": "2",
-                        "text": "Option 2",
-                        "buttonClass": ["btn-default"]
-                    },
-                    {
-                        "id": "3",
-                        "text": "Option 3",
-                        "buttonClass": ["btn-default"]
-                    },
-                    {
-                        "id": "4",
-                        "text": "Option 4",
-                        "buttonClass": ["btn-default"]
-                    }
+                            "id": "1",
+                            "text": "Option 1",
+                            "buttonClass": ["btn-default"]
+                        },
+                        {
+                            "id": "2",
+                            "text": "Option 2",
+                            "buttonClass": ["btn-default"]
+                        },
+                        {
+                            "id": "3",
+                            "text": "Option 3",
+                            "buttonClass": ["btn-default"]
+                        },
+                        {
+                            "id": "4",
+                            "text": "Option 4",
+                            "buttonClass": ["btn-default"]
+                        }
                     ]),
                     valueField: "id",
                     classesField: "buttonClass",

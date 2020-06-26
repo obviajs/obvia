@@ -31,8 +31,9 @@ let Implementation = function (applet) {
             let result = await ValidationManager.getInstance().validate();
             if (result[0]) {
                 var gaiaForm = new GaiaAPI_forms();
-                let promise = gaiaForm.formsClient.post(data.selectedForm)
+                let promise = gaiaForm.formsClient.post(data.selectedForm);
                 promise.then(function (res) {
+                    modalBody.find('info').visible = false;
                     modal.hide();
                 });
                 promise.catch(function (err) {
