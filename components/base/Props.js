@@ -38,11 +38,11 @@ var Props = function (inst, _props, skip = []) {
             }
         }
     }
-
+    let _jskip = ["ownerDocument", "input", "inputLabel"];
     this.toJSON = function () {
         let obj = {};
         for (let prop in this) {
-            if (typeof this[prop] != 'function') {
+            if ((_jskip.indexOf(prop) < 0) && typeof this[prop] != 'function') {
                 switch (prop) {
                     case "dataProvider":
                         if (this.dataProvider) {
@@ -57,8 +57,6 @@ var Props = function (inst, _props, skip = []) {
                     case "rendering":
                         obj[prop] = {};
                         shallowCopy(inst.rendering, obj[prop], ["currentItem"]);
-                        break;
-                    case "ownerDocument":
                         break;
                     default:
                         if (this.hasOwnProperty(prop) && this.propertyIsEnumerable(prop))
