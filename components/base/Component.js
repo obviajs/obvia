@@ -763,7 +763,7 @@ var Component = function (_props) {
                 window[defaultBindTo] = (currentItem || Component.defaultContext);
                 if (!("currentItem" in window[defaultBindTo])) {
                    // window[defaultBindTo]["currentItem"] = window[defaultBindTo];
-                    Object.defineProperty(window[defaultBindTo], "currentItem", { value: window[defaultBindTo], enumerable: false });
+                    Object.defineProperty(window[defaultBindTo], "currentItem", { value: window[defaultBindTo], enumerable: false, configurable: true});
                 }
                 // let context = extend(false, true, this, obj);
                 let fn = function () {
@@ -830,7 +830,7 @@ var Component = function (_props) {
             let defaultBindTo = "currentItem_" + _self.guid;
             window[defaultBindTo] = (currentItem || Component.defaultContext);
             if (!("currentItem" in window[defaultBindTo])) {
-                Object.defineProperty(window[defaultBindTo], "currentItem", { value: window[defaultBindTo], enumerable: false });
+                Object.defineProperty(window[defaultBindTo], "currentItem", { value: window[defaultBindTo], enumerable: false, configurable: true});
             }
             // let context = extend(false, true, this, obj);
             let fn = function () {

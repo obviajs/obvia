@@ -13,6 +13,12 @@ let Implementation = function (applet) {
         splitHorizontal, splitVertical, uploadIcon, saveLayout, selectBtn, componentList,
         openUploadForms, appLoader;
 
+    
+    let formField;
+
+    let containers = ["Container", "Form", "Header", "Footer"];
+    let noNeedFF = ["Button", "Label", "Container", "Link", "Header", "Footer", "Form", "SideNav", "ViewStack", "Calendar", "Tree", "Image", "HRule", "Heading", "Repeater", "RepeaterEx"];
+
     let imp = {
         "BEGIN_DRAW": function (e) {
             console.log("APPLET_BEGIN_DRAW");
@@ -117,7 +123,7 @@ let Implementation = function (applet) {
             }, false);
 
             //app.behaviors["previewBtn"]["click"] = "PREVIEW";
-            applet.addBehaviors(workArea, waBehaviors, false);
+            applet.addBehaviors(workArea, cmpWaBehaviors, false);
 
             applet.addBehaviors(app, {
                 "loadLayout": "LOAD_LAYOUT",
@@ -203,11 +209,7 @@ let Implementation = function (applet) {
                         lit.props.classes.push("selected-component");
                     }
                     inst = workArea.addComponent(lit);
-                    applet.addBehaviors(inst, cmpBehaviors, false);
-                    if (containers.indexOf(inst.ctor) > -1) {
-                        applet.addBehaviors(inst, cmpWaBehaviors, false);
-                        inst.attr.isNotWa = true;
-                    }
+                    applet.addBehaviors(inst, cmpWaBehaviors, false);
                     inst.attr.isCmp = true;
                     ret.child = lit;
                     ret.parent = workArea;
@@ -224,12 +226,12 @@ let Implementation = function (applet) {
                         if (inst.ctor == "FormField" && workArea.ctor != "Form") {
                             // inst = inst.children[inst.component.props.id];
                             inst.draggable = true;
-                            applet.addBehaviors(inst, cmpBehaviors, false);
+                            applet.addBehaviors(inst, cmpWaBehaviors, false);
                             let classes = inst.classes.slice(0);
                             classes.pushUnique("selected-component");
                             inst.classes = classes;
                         } else if (workArea.ctor == "Form" && noNeedFF.indexOf(inst.ctor) == -1) {
-                            app.removeBehaviors(inst, cmpBehaviors, false);
+                            app.removeBehaviors(inst, cmpWaBehaviors, false);
                             let classes = inst.classes.slice(0);
                             let ind = classes.indexOf("default-component");
                             if (id > -1) {
@@ -248,7 +250,7 @@ let Implementation = function (applet) {
                             inst = workArea.addComponent(ff);
                             //inst.addChild(inst);
                             //inst = instF;
-                            applet.addBehaviors(inst, cmpBehaviors, false);
+                            applet.addBehaviors(inst, cmpWaBehaviors, false);
                             // if (parents.indexOf(ctor) > -1) {
                             //     applet.addBehaviors(instF, cntBehaviors, false);
                             // }
@@ -397,21 +399,14 @@ let Implementation = function (applet) {
 
         "LOAD_LAYOUT": function (e) {
             let _cmp = e.content;
-            let res = objectHierarchyGetMatchingMember(_cmp, "props.id", "workArea", "props.components");
+            let res = objectHierarchyGetMatchingMember(_cmp, "props.id", "workAreaColumnL2", "props.components");
             if (res.match) {
                 _cmp = res.match;
             }
             workArea.removeAllChildren(0);
             for (let i = 0; i < _cmp.props.components.length; i++) {
                 let inst = workArea.addComponent(_cmp.props.components[i]);
-                let was = objectHierarchyGetMatchingMember(inst, "attr.isNotWa", true, "children", true);
-                for (let wi = 0; wi < was.length; wi++) {
-                    applet.addBehaviors(was[wi].match, cmpWaBehaviors, false);
-                }
-                let cmps = objectHierarchyGetMatchingMember(inst, "attr.isCmp", true, "children", true);
-                for (let ci = 0; ci < cmps.length; ci++) {
-                    applet.addBehaviors(cmps[ci].match, cmpBehaviors, false);
-                }
+                applet.addBehaviors(inst, cmpWaBehaviors, true);
             }
         },
 
@@ -537,7 +532,7 @@ let Implementation = function (applet) {
                 }
 
                 let newWorkArea = newRowInstance.children[newRowInstance.components[0].props.id];
-                applet.addBehaviors(newWorkArea, waBehaviors, false);
+                applet.addBehaviors(newWorkArea, cmpWaBehaviors, false);
                 // app.behaviors[newWorkArea.id]["mousemove"]["WA_RESIZE_EW"] = isMouseMoveEW;
                 //{filter: isMouseMoveEw, otherProperties...}
 
@@ -552,7 +547,7 @@ let Implementation = function (applet) {
                     }
 
                     let newWorkArea2 = newRowInstance2.children[newRowInstance2.components[0].props.id];
-                    applet.addBehaviors(newWorkArea2, waBehaviors, false);
+                    applet.addBehaviors(newWorkArea2, cmpWaBehaviors, false);
                     ret.child2 = newRowInstance2;
                 }
 
@@ -668,7 +663,7 @@ let Implementation = function (applet) {
                     } else {
                         newInstance = parent.addComponents(toAdd);
                         newInstance[0].attr.isWa = true;
-                        applet.addBehaviors(newInstance, waBehaviors, true);
+                        applet.addBehaviors(newInstance, cmpWaBehaviors, true);
                     }
 
                     ret.parent = parent;
@@ -895,6 +890,12 @@ let Implementation = function (applet) {
     /**
      * Behavior Filters below
      */
+    let isContainer = function (e) {
+        return containers.indexOf(this.ctor) > -1;
+    };
+    let isNotContainer = function (e) {
+        return !isContainer.call(this, e);
+    };
     //filter to determine if mousemove is an "WA_RESIZE_NS" behavior
     let debouncedDragNS;
     let d0;
@@ -1056,8 +1057,8 @@ let Implementation = function (applet) {
         "mouseover": "WA_HOVER",
         "mouseout": "WA_HOVER",
         "drop": {
-            "DELETE_CMP": undefined,
-            "TOGGLE_BIN": undefined
+            "DELETE_CMP": { filter: undefined,  onPropagation: true },
+            "TOGGLE_BIN": { filter: undefined, onPropagation: true }
         },
         "dragover": "ALLOW_DROP",
         "dragleave": "TOGGLE_BIN"
@@ -1067,45 +1068,43 @@ let Implementation = function (applet) {
         "dragover": "TOGGLE_BIN",
     };
 
-    let waBehaviors = {
-        "click": "BECOME_ACTIVE",
-        "mousedown": "WA_PREVENT_DRAGSTART",
-        "mouseover": "WA_HOVER",
-        "mouseout": "WA_HOVER",
-        "mousemove": {
-            "IS_WA_RESIZE_NS": isMouseMoveNS
-        },
-        "resize": "WA_RESIZE",
-        "contextmenu": "WA_REMOVE",
-        "drop": "ADD_COMPONENT",
-        "dragover": "ALLOW_DROP",
-    };
-
     let cmpWaBehaviors = {
         "mousedown": {
-            "WA_PREVENT_DRAGSTART": undefined,
-            "BECOME_ACTIVE": undefined
-        },
-        "mouseover": "WA_HOVER",
-        "mouseout": "WA_HOVER",
-        "mousemove": {
-            "IS_WA_RESIZE_NS": isMouseMoveNS
-        },
-        "resize": "WA_RESIZE",
-        "contextmenu": "WA_REMOVE",
-        "drop": "ADD_COMPONENT",
-        "dragover": "ALLOW_DROP",
-    };
-
-    let cmpBehaviors = {
-        "mousedown": {
+            "WA_PREVENT_DRAGSTART": isContainer,
+            "BECOME_ACTIVE": isContainer,
             "SELECT_COMPONENT": (e) => {
                 return ((e.which && e.which == 1) || (e.buttons && e.buttons == 1));
             }
         },
-        "dragstart": "DRAGSTART_COMPONENT",
-        "dropped": "SELECT_COMPONENT"
+        "mouseover": {
+            "WA_HOVER": isContainer
+        },
+        "mouseout": {
+            "WA_HOVER": isContainer
+        },
+        "mousemove": {
+            "IS_WA_RESIZE_NS": isMouseMoveNS
+        },
+        "resize": {
+            "WA_RESIZE": isContainer
+        },
+        "contextmenu": {
+            "WA_REMOVE": isContainer
+        },
+        "drop": {
+            "ADD_COMPONENT": isContainer
+        },
+        "dragover": {
+            "ALLOW_DROP": isContainer
+        },
+        "dragstart": {
+            "DRAGSTART_COMPONENT": isNotContainer
+        },
+        "dropped": {
+            "SELECT_COMPONENT": isNotContainer
+        }
     };
+
     return imp;
 };
 Implementation.ctor = "Implementation";

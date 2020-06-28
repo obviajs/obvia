@@ -140,11 +140,6 @@ var oxana = new App({
     }]
 });
 
-let formField;
-
-let containers = ["Container", "Form", "Header", "Footer"];
-let noNeedFF = ["Button", "Label", "Container", "Link", "Header", "Footer", "Form", "SideNav", "ViewStack", "Calendar", "Tree", "Image", "HRule", "Heading", "Repeater", "RepeaterEx"];
-
 //data should be loaded before calling renderPromise so that the current applet (the one in the url) implementation can access it
 oxana.renderPromise().then(function (cmpInstance) {
     $(document.body).append(cmpInstance.$el);
