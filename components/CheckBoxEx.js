@@ -105,8 +105,7 @@ var CheckBoxEx = function (_props) {
         label: 'CheckBox Label',
         value: null,
         enabled: true,
-        checked: false,
-        embedded: false
+        checked: false
     };
 
     _props = extend(false, false, _defaultParams, _props);

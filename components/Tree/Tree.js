@@ -77,7 +77,7 @@ var Tree = function (_props) {
         }
         
         for(let i = 0; i<toRefresh.length;i++){
-            let cmp = this.children[this.components[toRefresh[i]].props.id];
+            let cmp = this.children[this.csorted[toRefresh[i]].props.id];
             cmp.refreshBindings(this.dataProvider[toRefresh[i]]);
             cmp.$el.attr(_guidField, this.dataProvider[toRefresh[i]][_guidField]);
             cmp.attr[_guidField] = this.dataProvider[toRefresh[i]][_guidField];

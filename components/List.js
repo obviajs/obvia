@@ -5,7 +5,7 @@
  */
 
 var List = function (_props) {
-    var _self = this;
+    let _self = this;
 
     this.beforeAttach = function () {
         _states = _states == null ?
@@ -13,9 +13,9 @@ var List = function (_props) {
                 {dataProviderField: _classesField, states: {on: _selectedClasses, off: _defaultClasses}}
             ] : _states;
         
-        var lookUpValues = _value ? (!Array.isArray(_value) ? (_value=[_value], true):true):false;
-        var ind = -1;
-        for(var i=0;i<this.dataProvider.length;i++)
+        let lookUpValues = _value ? (!Array.isArray(_value) ? (_value=[_value], true):true):false;
+        let ind = -1;
+        for(let i=0;i<this.dataProvider.length;i++)
         {
             if(lookUpValues){
                 ind = indexOfObject(_value, _valueField,  this.dataProvider[i][_valueField]);
@@ -34,14 +34,14 @@ var List = function (_props) {
     };
 
     this.selectComponent = function (e, repeaterEventArgs) {
-        var componentID = this.id;
-        var clickedComponent = repeaterEventArgs.currentRow[componentID];
-        var index = repeaterEventArgs.currentIndex;
+        let componentID = this.id;
+        let clickedComponent = repeaterEventArgs.currentRow[componentID];
+        let index = repeaterEventArgs.currentIndex;
 
-        var v = repeaterEventArgs.currentItem;
-        var arrDpIndex = -1;
-        var arrValueIndex = indexOfObject(_self.value, _valueField, v[_valueField]);
-        var newValue = _self.value.slice();
+        let v = repeaterEventArgs.currentItem;
+        let arrDpIndex = -1;
+        let arrValueIndex = indexOfObject(_self.value, _valueField, v[_valueField]);
+        let newValue = _self.value.slice();
         if (arrValueIndex == -1) {
             if (_multiselect) {
                 newValue.push(v);
@@ -58,17 +58,17 @@ var List = function (_props) {
 
     this.addRow = function (item, index, isPreventable = false, focusOnRowAdd = false) {
         if (index == undefined)
-            index = this.repeater.currentIndex;
+            index = _self.dataProvider.length;
         this.repeater.addRow(item, index, isPreventable, focusOnRowAdd);
     };
 
     this.removeRow = function (index, isPreventable = false, focusOnRowDelete = false) {
         if (index == undefined)
-            index = this.repeater.currentIndex;
+            index = _self.dataProvider.length - 1;
         this.repeater.removeRow(index, isPreventable, focusOnRowDelete);
     };
 
-    var _defaultParams = {
+    let _defaultParams = {
         rendering: {
 			direction: 'horizontal',
             separator: false
@@ -133,7 +133,7 @@ var List = function (_props) {
         },
         set: function (value) {
             if((!_value && value) || (_value && !_value.equals(value))){
-               var v = {};
+               let v = {};
                 if (value == undefined || value == null) {
                     value = [];
                 } else if (typeof value === "string") {
@@ -146,10 +146,10 @@ var List = function (_props) {
                     value = [v];
                 }
                 _value = intersectOnKeyMatch(this.dataProvider, value, _valueField); //value;
-                var unselect = this.dataProvider.difference(_value);
+                let unselect = this.dataProvider.difference(_value);
 
                 unselect.forEach(function (v) {
-                    var arrDpIndex = (v == undefined || v == null || v[_valueField] == undefined) ? -1 : indexOfObject(this.dataProvider, _valueField, v[_valueField]);
+                    let arrDpIndex = (v == undefined || v == null || v[_valueField] == undefined) ? -1 : indexOfObject(this.dataProvider, _valueField, v[_valueField]);
                     if (arrDpIndex != -1) {
                         _states.forEach(function (state) {
                             this.dataProvider[arrDpIndex][state.dataProviderField] = state.states.off;
@@ -158,7 +158,7 @@ var List = function (_props) {
                 }.bind(this));
 
                 this.value.slice(0).forEach(function (v, i) {
-                    var arrDpIndex = (v == null || v[_valueField] == null) ? -1 : indexOfObject(this.dataProvider, _valueField, v[_valueField]);
+                    let arrDpIndex = (v == null || v[_valueField] == null) ? -1 : indexOfObject(this.dataProvider, _valueField, v[_valueField]);
                     if (arrDpIndex != -1) {
                         _states.forEach(function (state) {
                             this.dataProvider[arrDpIndex][state.dataProviderField] = state.states.on;

@@ -7,8 +7,7 @@
 //component definition
 var Repeater = function(_props)
 {
-    this.currentIndex = 1;
-    this.rowItems = [];
+    let _rowItems = [], _rows = [];
     let _self = this;
     let _creationFinished = false;
     let _$hadow = $("<div/>");
@@ -32,25 +31,25 @@ var Repeater = function(_props)
             //             break;
             //         case 40: //  
             //             console.log("Repeater DOWN Arrow");
-            //             this.focusComponent(++this.focusedRow, this.focusedComponent);
+            //             this.focusComponent(++_focusedRow, _focusedComponent);
             //             e.preventDefault();
                
             //             break;
             //         case 39: // 
             //             console.log("Repeater Right Arrow");
-            //             this.focusComponent(this.focusedRow, ++this.focusedComponent);
+            //             this.focusComponent(_focusedRow, ++_focusedComponent);
             //             e.preventDefault();
                
             //             break;
             //         case 38: // 
             //             console.log("Repeater Up Arrow");
-            //             this.focusComponent(--this.focusedRow, this.focusedComponent);
+            //             this.focusComponent(--_focusedRow, _focusedComponent);
             //             e.preventDefault();
                
             //             break;
             //         case 37: // 
             //             console.log("Repeater Left Arrow");
-            //             this.focusComponent(this.focusedRow, --this.focusedComponent);
+            //             this.focusComponent(_focusedRow, --_focusedComponent);
             //             e.preventDefault();
                
             //             break;
@@ -58,8 +57,8 @@ var Repeater = function(_props)
             // }
     }; 
 
-    this.focusedRow = 0;
-    this.focusedComponent = 0;
+    let _focusedRow = 0;
+    let _focusedComponent = 0;
 
     this.focusComponent = function(rowIndex, cIndex)
     {
@@ -102,8 +101,8 @@ var Repeater = function(_props)
         this.createRows = function () {
             _self.trigger('beginDraw');
             //this.$container.empty();
-            _self.focusedRow = 0;
-            _self.focusedComponent = 0;
+            _focusedRow = 0;
+            _focusedComponent = 0;
             if (_dataProvider && _dataProvider.forEach) {
                 let len = _dataProvider.length;
                 if (len > 0) {
@@ -111,7 +110,7 @@ var Repeater = function(_props)
                         let data = _dataProvider[i];
                         if (data != null) {
                             if (!data[_guidField])
-                                data[_guidField] = StringUtils.guid();
+                                Object.defineProperty(data, _guidField, { value: StringUtils.guid(), enumerable: false, configurable: true});
                             _compRenderPromises.splicea(_compRenderPromises.length, 0, _self.addRow(data, i));
                         }
                     }
@@ -173,8 +172,8 @@ var Repeater = function(_props)
        
         for(let i = 0; i<toRefresh.length;i++){
             let ri = toRefresh[i];
-            for(let cmpID in _self.rowItems[ri]){
-                let cmp = _self.rowItems[ri][cmpID];
+            for(let cmpID in _rowItems[ri]){
+                let cmp = _rowItems[ri][cmpID];
                 cmp.refreshBindings(_self.dataProvider[ri]);
                 cmp.$el.attr(_guidField, _self.dataProvider[ri][_guidField]);
                 cmp.attr[_guidField] = _self.dataProvider[ri][_guidField];
@@ -226,7 +225,7 @@ var Repeater = function(_props)
                     let delta = (v.length ? v.length : 0) - (_oldDataProvider.length ? _oldDataProvider.length : 0);
                     for (let ri = 0; ri < Math.min(v.length, _oldDataProvider.length); ri++) {
                         if (v[ri] != null && !v[ri][_guidField])
-                            v[ri][_guidField] = StringUtils.guid();
+                            Object.defineProperty(v[ri], _guidField, { value: StringUtils.guid(), enumerable: false, configurable: true});
                         for (let cmpID in this.rowItems[ri]) {
                             let cmp = this.rowItems[ri][cmpID];
                             cmp.refreshBindings(v[ri]);
@@ -238,7 +237,7 @@ var Repeater = function(_props)
                     if (delta > 0) {
                         for (let i = _oldDataProvider.length; i < v.length; i++) {
                             if (v[i] != null && !v[i][_guidField])
-                                v[i][_guidField] = StringUtils.guid();
+                                Object.defineProperty(v[i], _guidField, { value: StringUtils.guid(), enumerable: false, configurable: true});
                             _compRenderPromises.splicea(_compRenderPromises.length, 0, this.addRow(v[i], i));
                         }
                         if (_compRenderPromises.length > 0) {
@@ -286,7 +285,7 @@ var Repeater = function(_props)
         
         for (let i = 0; i < len; i++) {
             if (!_dataProvider[i][_guidField])
-                _dataProvider[i][_guidField] = StringUtils.guid();
+                Object.defineProperty(_dataProvider[i], _guidField, { value: StringUtils.guid(), enumerable: false, configurable: true});
         }
         if (_creationFinished) {
             let toAdd = { result: [], a1_indices: [] };
@@ -319,7 +318,7 @@ var Repeater = function(_props)
         e.stopImmediatePropagation();
         if (_creationFinished && ["length", "guid", "filterData"].indexOf(e.property) == -1) {
             if (!_dataProvider[parseInt(e.property)][_guidField])
-                _dataProvider[parseInt(e.property)][_guidField] = StringUtils.guid();
+                Object.defineProperty(_dataProvider[parseInt(e.property)], _guidField, { value: StringUtils.guid(), enumerable: false, configurable: true});
             let toAdd = { a1_indices: [], result: [] };
             let toRemove = { a1_indices: [], result: [] };
            
@@ -353,13 +352,13 @@ var Repeater = function(_props)
     this.addRow = function (data, index, isPreventable = false, focusOnRowAdd = true) 
     {
         let rp = [];
-        index = index==null?this.rows.length:index;
+        index = index == null ? _rows.length : index;
         let renderedRow = $('<div/>');
         var ccComponents = [];
         var rowItems = {};
 
         let beforeRowAddEvent = jQuery.Event("beforeRowAdd");
-        this.trigger(beforeRowAddEvent, [_self, new RepeaterEventArgs(_self.rowItems, data, index)]);
+        this.trigger(beforeRowAddEvent, [_self, new RepeaterEventArgs(_rowItems, data, index)]);
 
         if (!isPreventable || (isPreventable && !beforeRowAddEvent.isDefaultPrevented())) 
         {
@@ -376,15 +375,16 @@ var Repeater = function(_props)
                 component.props.id = _components[cIndex].props.id + "_" + index + "_" + cIndex;
                 component.props.bindingDefaultContext = data;
 
-                data.currentRow = rowItems;
-
+                Object.defineProperty(data, "currentRow", { value: rowItems, enumerable: false, configurable: true});
+               
                 component.props.ownerDocument = _props.ownerDocument;
                 let el = Component.fromLiteral(component, data);
                 let cmpId = _components[cIndex].props.id;
 
                 //build components properties, check bindings
-                if (_self[cmpId] == undefined)
-                    _self[cmpId] = [];
+                if (_self[cmpId] == undefined) { 
+                    Object.defineProperty(_self, cmpId, { value: [], enumerable: false, configurable: true});
+                }
 
                 el.parent = _self;
                 el.parentType = 'repeater';
@@ -402,7 +402,7 @@ var Repeater = function(_props)
                 
                 _self[cmpId].splice(index, 0, el);
                 rowItems[cmpId] = el;
-                _self.rowItems.splice(index, 0, rowItems);
+                _rowItems.splice(index, 0, rowItems);
 
                 //handle component change event and delegate it to repeater
                 let ci = index+1;
@@ -415,11 +415,8 @@ var Repeater = function(_props)
                         //trigger row add event
                         let era = jQuery.Event("rowAdd");
                         era.row = renderedRow;
-                        _self.trigger(era, [_self, new RepeaterEventArgs(_self.rowItems[ci-1], data, ci-1)]);
+                        _self.trigger(era, [_self, new RepeaterEventArgs(_rowItems[ci-1], data, ci-1)]);
                         //duhet te shtojme nje flag qe ne rast se metoda addRow eshte thirrur nga addRowHangler te mos e exec kodin meposhte
-                        
-                        //manage dp
-                        _self.currentIndex <= ci ? _self.currentIndex = ci : _self.currentIndex = _self.currentIndex;
                         
                         //skip dp if it already exist
                         var addRowFlag = false;
@@ -438,7 +435,7 @@ var Repeater = function(_props)
 
                         //animate
                         if (addRowFlag && focusOnRowAdd) {
-                            _self.rowItems[_self.rowItems.length - 1][_components[0].props.id].scrollTo();
+                            _rowItems[_rowItems.length - 1][_components[0].props.id].scrollTo();
                         }         
                     
                     }
@@ -449,9 +446,9 @@ var Repeater = function(_props)
                 }
                 
                 el.on('focus', function (e, repeaterEventArgs) {
-                    _self.focusedRow = repeaterEventArgs.currentIndex;
-                    _self.focusedComponent = Object.keys(repeaterEventArgs.currentRow).indexOf(this.id);
-                    console.log("focused repeated component", _self.focusedRow , _self.focusedComponent);
+                    _focusedRow = repeaterEventArgs.currentIndex;
+                    _focusedComponent = Object.keys(repeaterEventArgs.currentRow).indexOf(this.id);
+                    console.log("focused repeated component", _focusedRow , _focusedComponent);
                 });
                 
                 el.on('change', function (e, rargs) {
@@ -505,23 +502,20 @@ var Repeater = function(_props)
                     rp.push(cp);
                 }
             }
-            _self.rows.push(renderedRow); 
+            _rows.push(renderedRow); 
         }
         return rp;
     };
 
-    this.watchers = [];
-    this.rows = [];
-    this.mode = "append"; //TODO: prepend will add rows to the beginning, but if we are about to iterate the rows or use rowIndex we need to take this into consideration (using reverse of array is the easiest solution)
     this.removeAllRows = function(dpRemove = true)
     {
-        var i=this.rows.length-1;
+        let i = _self.rows.length-1;
         while(i>=0)
         {
             this.removeRow(i, false, false, dpRemove);
             i--;
         }
-        this.rows = [];
+        _self.rows.splice(0, _self.rows.length);
     };
 
     this.removeRow = function (index, isPreventable = false, focusOnRowDelete = true, dpRemove = true) 
@@ -564,11 +558,9 @@ var Repeater = function(_props)
                 this[component.props.id].splice(index, 1);
                 
             }
-            //manage dp
-            this.currentIndex--;
             this.trigger('rowDelete', [this, new RepeaterEventArgs(rowItems, this.dataProvider[index], index)]);
             this.rowItems.splice(index, 1);
-            this.rows.splice(index, 1);
+            _rows.splice(index, 1);
             //animate
             if (focusOnRowDelete && (index-1)>=0)
                 this.rowItems[index - 1][_components[0].props.id].scrollTo();
@@ -599,7 +591,8 @@ var Repeater = function(_props)
         rendering: {
 			direction: 'vertical',
             separator: false,
-            wrap: true
+            wrap: true,
+            mode: "append" //prepend
         },
         autoUpdateDisplay: true,
         type: ContainerType.NONE,
@@ -702,6 +695,27 @@ var Repeater = function(_props)
         }, 
         enumerable:true
     });
+    
+    Object.defineProperty(this, "rowItems", 
+    {
+        get: function rowItems() 
+        {
+            return _rowItems;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    
+    Object.defineProperty(this, "rows", 
+    {
+        get: function rows() 
+        {
+            return _rows;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    
     Object.defineProperty(this, "renderPromises",
     {
         get:function renderPromises(){

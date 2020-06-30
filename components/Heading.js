@@ -69,12 +69,17 @@ var Heading = function (_props) {
         enumerable: true
     });
 
-    this.beforeAttach = function (e) {
+    this.init = function (e) {
         if (e.target.id == this.domID) {
             if (_props.align != null)
                 this.align = _props.align;
             if (_props.label)
                 this.label = _props.label;
+        }
+    };
+
+    this.beforeAttach = function (e) {
+        if (e.target.id == this.domID) {
         }
     };
 

@@ -579,7 +579,6 @@ var AutoCompleteEx = function(_props)
                         separator: _separator || false,
                         actions: false
                     },
-                    embedded: true,
                     dataProvider: _suggestions,
                     components: [_suggestionRenderer],
                     parent: _self,

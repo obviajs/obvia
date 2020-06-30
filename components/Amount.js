@@ -6,7 +6,7 @@
 
 //component definition
 var Amount = function (_props) {
-    var _self = this;
+    let _self = this;
 
     Object.defineProperty(this, "value", {
         get: function value() {
@@ -26,59 +26,54 @@ var Amount = function (_props) {
 
     this.changeHandler = function (e) {
         if (_mask.groupSeparator) {
-            var regex = new RegExp(_mask.groupSeparator, 'g');
-            _value.amount = this.children.Container_80.amountInput.value.replace(regex, '');
+            let regex = new RegExp(_mask.groupSeparator, 'g');
+            _value.amount = this.children.amountInput.value.replace(regex, '');
         } else {
-            _value.amount = this.children.Container_80.amountInput.value;
+            _value.amount = this.children.amountInput.value;
         }
-        _value.currency = this.children.Container_80.currencySelect.value;
+        _value.currency = this.children.currencySelect.value;
     };
 
     let _cmps;
     let fnContainerDelayInit = function () {
-        _cmps = [{
-            ctor: Container,
-            props: {
-                id: "Container_80",
-                type: ContainerType.NONE,
-                components: [{
-                        ctor: TextInput,
-                        props: {
-                            id: "amountInput",
-                            type: TextInputType.NUMBER,
-                            mask: _mask,
-                            value: _value.amount,
-                            css: {
-                                width: '80%',
-                                float: 'left'
-                            }
-                        }
-                    },
-                    {
-                        ctor: Select,
-                        props: {
-                            id: "currencySelect",
-                            dataProvider: _currencyList,
-                            labelField: _labelField,
-                            valueField: _valueField,
-                            value: _value.currency,
-                            css: {
-                                width: '20%',
-                                float: 'left'
-                            }
-                        }
+        _cmps = [
+            {
+                ctor: TextInput,
+                props: {
+                    id: "amountInput",
+                    type: TextInputType.NUMBER,
+                    mask: _mask,
+                    value: _value.amount,
+                    css: {
+                        width: '80%',
+                        float: 'left'
                     }
-                ]
-            }
+                }
+            },
+            {
+                ctor: Select,
+                props: {
+                    id: "currencySelect",
+                    dataProvider: _currencyList,
+                    labelField: _labelField,
+                    valueField: _valueField,
+                    value: _value.currency,
+                    css: {
+                        width: '20%',
+                        float: 'left'
+                    }
+                }
+            }   
+        ];
+    };
 
-        }]
-    }
-
-    var _defaultParams = {
+    let _defaultParams = {
         value: {
             amount: "",
             currency: "1"
         },
+        classes: ["d-flex"],
+        type: ContainerType.NONE,
         currencyList: [],
         labelField: 'text',
         valueField: 'id',
@@ -94,21 +89,21 @@ var Amount = function (_props) {
     };
     _props = extend(false, false, _defaultParams, _props);
 
-    var _value = _props.value;
-    var _currencyList = _props.currencyList;
-    var _labelField = _props.labelField;
-    var _valueField = _props.valueField;
-    var _mask = _props.mask;
+    let _value = _props.value;
+    let _currencyList = _props.currencyList;
+    let _labelField = _props.labelField;
+    let _valueField = _props.valueField;
+    let _mask = _props.mask;
     if (_mask.groupSeparator == '.') {
         _mask.groupSeparator = ',';
     }
-    var _change = _props.change;
+    let _change = _props.change;
 
     _props.change = function () {
         if (typeof _change == 'function')
             _change.apply(this, arguments);
 
-        var e = arguments[0];
+        let e = arguments[0];
         if (!e.isDefaultPrevented()) {
             _self.changeHandler();
         }
@@ -116,7 +111,7 @@ var Amount = function (_props) {
 
     fnContainerDelayInit();
     _props.components = _cmps;
-    Container.call(this, _props);
+    Container.call(this, _props, true);
 };
 
 //component prototype

@@ -202,13 +202,12 @@ let Implementation = function (applet) {
                         this.trigger(evt);
                     };
                     lit.props.draggable = true;
-                    if (isObject(lit.props.classes))
-                        lit.props.classes["self"].push("selected-component");
-                    else {
-                        lit.props.classes = !Array.isArray(lit.props.classes) ? [] : lit.props.classes;
-                        lit.props.classes.push("selected-component");
-                    }
+                 
                     inst = workArea.addComponent(lit);
+                    let classes = inst.classes.slice(0);
+                    classes.pushUnique("selected-component");
+                    inst.classes = classes;
+                    
                     applet.addBehaviors(inst, cmpWaBehaviors, false);
                     inst.attr.isCmp = true;
                     ret.child = lit;

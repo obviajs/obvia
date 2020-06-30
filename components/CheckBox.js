@@ -90,8 +90,7 @@ var CheckBox = function (_props) {
         label: '',
         value: null,
         enabled: true,
-        checked: false,
-        embedded: false
+        checked: false
     };
 
     _props = extend(false, false, _defaultParams, _props);

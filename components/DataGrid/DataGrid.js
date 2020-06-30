@@ -18,14 +18,6 @@ var DataGrid = function(_props)
             return _currentIndex;
         }
     });
-
-    Object.defineProperty(this, "rowItems",
-    {
-        get: function rowItems()
-        {
-            return _rowItems;
-        }
-    });
     
     Object.defineProperty(this, "rowCount",
     {
@@ -55,7 +47,6 @@ var DataGrid = function(_props)
     });  
 
     let _currentItem = {};
-    let _rowItems = [];
     
     let _prevScrollTop = 0;
     let _avgRowHeight;
@@ -537,15 +528,6 @@ var DataGrid = function(_props)
         return r;
     };
     
-    this.removeAllRows = function()
-    {
-        for(let i=this.rows.length-1;i>=0;i--)
-        {
-            this.removeRow(i, false, false, false);
-        }
-        this.rows = [];
-    };
-
     this.removeRow = function (index, isPreventable = false, focusOnRowDelete = true, removeFromDp = false) 
     {
         let rowItems = {};
@@ -572,7 +554,7 @@ var DataGrid = function(_props)
             }
             this.rows[index].remove();
             this.rows.splice(index, 1);
-            _rowItems.splice(index, 1);
+            _self.rowItems.splice(index, 1);
             this.cells.splice(index, 1);
             this.cellItemRenderers.splice(index, 1);
             
@@ -764,7 +746,6 @@ var DataGrid = function(_props)
     
     this.components = _props.components;
     let _columns = _props.columns;
-    this.rows = [];
     this.cellItemRenderers = [[]];
     this.cellItemEditors = [];
     this.cells = [];// matrix
@@ -816,18 +797,18 @@ var DataGrid = function(_props)
             let columnIndex = 0;
             renderedRow.click(function(evt)
             {
-                let rargs = new RepeaterEventArgs(_rowItems, _self.dataProvider[index + _virtualIndex], index + _virtualIndex);
+                let rargs = new RepeaterEventArgs(_self.rowItems, _self.dataProvider[index + _virtualIndex], index + _virtualIndex);
                 rargs.virtualIndex = _virtualIndex;
                 _self.trigger("rowClick",  [_self, rargs]);
             });
 
             renderedRow.on('dblclick', function(evt)
             {
-                let rargs = new RepeaterEventArgs(_rowItems, _self.dataProvider[index + _virtualIndex], index + _virtualIndex);
+                let rargs = new RepeaterEventArgs(_self.rowItems, _self.dataProvider[index + _virtualIndex], index + _virtualIndex);
                 rargs.virtualIndex = _virtualIndex;
                 _self.trigger("rowDblClick", [_self, rargs]);
             });
-            let rargs = new RepeaterEventArgs(_rowItems, _self.dataProvider[index + _virtualIndex], index + _virtualIndex);
+            let rargs = new RepeaterEventArgs(_self.rowItems, _self.dataProvider[index + _virtualIndex], index + _virtualIndex);
             rargs.virtualIndex = _virtualIndex;
             let rsEvt = jQuery.Event('rowStyling', [_self, rargs]);
 
@@ -875,11 +856,11 @@ var DataGrid = function(_props)
 
                 _self.cellItemRenderers[index][columnIndex] = el; 
                 rowItems[column.name] = el;
-                _rowItems[index] = rowItems;
+                _self.rowItems[index] = rowItems;
                 
                 //
                 
-                let csEvt = jQuery.Event('cellStyling', [_self, index, columnIndex, _rowItems, column, data]);
+                let csEvt = jQuery.Event('cellStyling', [_self, index, columnIndex, _self.rowItems, column, data]);
                 
                 if(column.editable){
                     el.on('dblclick', (function(rowIndex, columnIndex, column, data){
@@ -898,7 +879,7 @@ var DataGrid = function(_props)
                     //console.log("creation Complete", this.id);
                     if (ccComponents.length == _self.columns.length) {
                         //trigger row add event
-                        _self.$el.trigger('rowAdd', [_self, new RepeaterEventArgs(_rowItems, data, index)]);
+                        _self.$el.trigger('rowAdd', [_self, new RepeaterEventArgs(_self.rowItems, data, index)]);
                         //duhet te shtojme nje flag qe ne rast se metoda addRow eshte thirrur nga addRowHangler te mos e exec kodin meposhte
                         
                         //manage dp
@@ -920,7 +901,7 @@ var DataGrid = function(_props)
 
                         //animate
                         if (addRowFlag && focusOnRowAdd) {
-                            _rowItems[index][_self.components[0].props.id].scrollTo();
+                            _self.rowItems[index][_self.components[0].props.id].scrollTo();
                         }         
                     
                     }

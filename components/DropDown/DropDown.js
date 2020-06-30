@@ -189,6 +189,6 @@ var DropDown = function (_props) {
         _dataProvider = new ArrayEx();
     _props.components = fnContainerDelayInit();
 
-    Container.call(this, _props);
+    Container.call(this, _props, true);
 };
 DropDown.prototype.ctor = 'DropDown' ;

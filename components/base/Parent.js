@@ -237,6 +237,14 @@ var Parent = function (_props, _hideComponents=false) {
             return cmp;
         }
     };
+    let _init = this.init;
+    this.init = function (e) {
+        if (e.target.id == this.domID) {
+            if (typeof _init == 'function')
+                _init.apply(this, arguments);
+        }
+    };
+
     let _beforeAttach = this.beforeAttach;
     this.beforeAttach = function (e) {
         if (e.target.id == this.domID) {
@@ -324,15 +332,17 @@ var Parent = function (_props, _hideComponents=false) {
     
     let _rPromise;
     this.renderPromise = function () {
-        this.$container = this.$el;
-        _rPromise = new Promise((resolve, reject) => {
-            _self.on("endDraw", function (e) {
-                if (e.target.id == _self.domID) {
-                    resolve(_proxy);
-                }
+        if (_rPromise == null) {
+            this.$container = this.$el;
+            _rPromise = new Promise((resolve, reject) => {
+                _self.on("endDraw", function (e) {
+                    if (e.target.id == _self.domID) {
+                        resolve(_proxy);
+                    }
+                });
             });
-        });
-        this.addComponents();
+            this.addComponents();
+        }
         return _rPromise;
     };
     

@@ -415,8 +415,6 @@ var Component = function (_props) {
     };
     
     this.$el = null;
-    this.embedded = false;
-
     
     let tpl = this.template();
     if ('jquery' in Object(tpl))

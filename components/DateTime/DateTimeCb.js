@@ -5,36 +5,36 @@
  */
 
 var DateTimeCb = function (_props) {
-    var _self = this;
+    let _self = this;
     let _dpDate = DateTimeCb.dpDate, _dpMonth = DateTimeCb.dpMonth, _dpYear = DateTimeCb.dpYear, _dpHour = DateTimeCb.dpHour, _dpMinute = DateTimeCb.dpMinute, _dpSecond = DateTimeCb.dpSecond;
     let _dateSelect, _monthSelect, _yearSelect, _hourSelect, _minuteSelect, _secondSelect;
     let _cmps, _tpl;
-    var _initDP = function()
+    let _initDP = function()
     {
         if(!DateTimeCb.init){
-            for (var i = 1; i < 32; i++) {
+            for (let i = 1; i < 32; i++) {
                 _dpDate[i-1] = {"value": i, "label": i};
             }
-            for (var i = 0; i < 13; i++) {
+            for (let i = 0; i < 13; i++) {
                 _dpMonth[i] = {"value": i, "label": CalendarConstants.Months[i]};
             }
         
-            for (var i = _startYear; i < _endYear; i++) {
+            for (let i = _startYear; i < _endYear; i++) {
                 _dpYear.push({"value": i, "label": i});
             }
             
-            for (var i = 0; i < 24; i++) {
+            for (let i = 0; i < 24; i++) {
                 _dpHour[i] = {"value": i, "label": i};
             }
             
-            for (var i = 0; i < 60; i++) {
+            for (let i = 0; i < 60; i++) {
                 _dpMinute[i] = _dpSecond[i] = {"value": i, "label": i};
             }
             DateTimeCb.init = true;
         }else{
             if(_dpYear[0] != _startYear || _dpYear[_dpYear.length-1]!=_endYear){
                 _dpYear = [];
-                for (var i = _startYear; i < _endYear; i++) {
+                for (let i = _startYear; i < _endYear; i++) {
                     _dpYear.push({"value": i, "label": i});
                 }
             }
@@ -46,7 +46,7 @@ var DateTimeCb = function (_props) {
             return _value;
         },
         set: function (v) {
-            var date = moment(v).format(_inputFormat);
+            let date = moment(v).format(_inputFormat);
             let m = moment(date);
             _value = m.format(_outputFormat);
 
@@ -108,38 +108,34 @@ var DateTimeCb = function (_props) {
         }
     };
     //TODO: ti kapim me dot notation, gjithashtu edhe te 
-    this.endDraw = function(e)
-    {
-        if (e.target.id == this.domID) 
-        {
+    this.endDraw = function (e) {
+        if (e.target.id == this.domID) {
             _dateSelect = this.cntDs.dateSelect;
             _monthSelect = this.cntMs.monthSelect;
             _yearSelect = this.cntYs.yearSelect;
-            if(this.components[3])
+            if (this.components[3])
                 _hourSelect = this.cntHs.hourSelect;
-            if(this.components[4])
+            if (this.components[4])
                 _minuteSelect = this.cntIs.minuteSelect;
-            if(this.components[5])
+            if (this.components[5])
                 _secondSelect = this.cntSs.secondSelect;
 
            
             EventDispatcher.listen([_dateSelect, _monthSelect, _yearSelect, _hourSelect, _minuteSelect, _secondSelect], "change", _change);
         }
         console.log("endDraw");
-    }
+    };
     
-    this.afterAttach = function(e)
-    {
-        if (e.target.id == this.domID) 
-        {  
-            if(_props.value){
+    this.afterAttach = function (e) {
+        if (e.target.id == this.domID) {
+            if (_props.value) {
                 this.value = _props.value;
             }
         }
-    }
+    };
     
-    var _change = function (e) {
-        var date = moment();
+    let _change = function (e) {
+        let date = moment();
         date.date(_dateSelect.value);
         date.month(_monthSelect.value);
         date.year(_yearSelect.value);
@@ -152,8 +148,8 @@ var DateTimeCb = function (_props) {
         _value = date.format(_outputFormat);
     };
     
-    var fnContainerDelayInit = function(){
-        _cmps = 
+    let fnContainerDelayInit = function () {
+        _cmps =
             [
                 {
                     "ctor": "Container",
@@ -166,8 +162,8 @@ var DateTimeCb = function (_props) {
                                 "props": {
                                     "id": "dateSelect",
                                     "dataProvider": _dpDate,
-                                    labelField:"label",
-                                    valueField:"value"
+                                    labelField: "label",
+                                    valueField: "value"
                                 }
                             }
                         ]
@@ -184,8 +180,8 @@ var DateTimeCb = function (_props) {
                                 "props": {
                                     "id": "monthSelect",
                                     "dataProvider": _dpMonth,
-                                    labelField:"label",
-                                    valueField:"value"
+                                    labelField: "label",
+                                    valueField: "value"
                                 }
                             }
                         ]
@@ -202,8 +198,8 @@ var DateTimeCb = function (_props) {
                                 "props": {
                                     "id": "yearSelect",
                                     "dataProvider": _dpYear,
-                                    labelField:"label",
-                                    valueField:"value"
+                                    labelField: "label",
+                                    valueField: "value"
                                 }
                             }
                         ]
@@ -214,77 +210,77 @@ var DateTimeCb = function (_props) {
                 "{{?second}}"
             ];
 
-            let hour = {
-                "ctor": "Container",
-                "props": {
-                    type: ContainerType.NONE,
-                    "id": "cntHs",
-                    classes:["pl-1"],
-                    "components": [
-                        {
-                            "ctor": "Select",
-                            "props": {
-                                "id": "hourSelect",
-                                "dataProvider": _dpHour,
-                                labelField:"label",
-                                valueField:"value"
-                            }
+        let hour = {
+            "ctor": "Container",
+            "props": {
+                type: ContainerType.NONE,
+                "id": "cntHs",
+                classes: ["pl-1"],
+                "components": [
+                    {
+                        "ctor": "Select",
+                        "props": {
+                            "id": "hourSelect",
+                            "dataProvider": _dpHour,
+                            labelField: "label",
+                            valueField: "value"
                         }
-                    ]
-                }
-            };
-            let minute = {
-                "ctor": "Container",
-                "props": {
-                    type: ContainerType.NONE,
-                    "id": "cntIs",
-                    "components": [
-                        {
-                            "ctor": "Select",
-                            "props": {
-                                "id": "minuteSelect",
-                                "dataProvider": _dpMinute,
-                                labelField:"label",
-                                valueField:"value"
-                            }
+                    }
+                ]
+            }
+        };
+        let minute = {
+            "ctor": "Container",
+            "props": {
+                type: ContainerType.NONE,
+                "id": "cntIs",
+                "components": [
+                    {
+                        "ctor": "Select",
+                        "props": {
+                            "id": "minuteSelect",
+                            "dataProvider": _dpMinute,
+                            labelField: "label",
+                            valueField: "value"
                         }
-                    ]
-                }
-            };
-            let second = {
-                "ctor": "Container",
-                "props": {
-                    type: ContainerType.NONE,
-                    "id": "cntSs",
-                    "components": [
-                        {
-                            "ctor": "Select",
-                            "props": {
-                                "id": "secondSelect",
-                                "dataProvider": _dpSecond,
-                                labelField:"label",
-                                valueField:"value" 
-                            }
+                    }
+                ]
+            }
+        };
+        let second = {
+            "ctor": "Container",
+            "props": {
+                type: ContainerType.NONE,
+                "id": "cntSs",
+                "components": [
+                    {
+                        "ctor": "Select",
+                        "props": {
+                            "id": "secondSelect",
+                            "dataProvider": _dpSecond,
+                            labelField: "label",
+                            valueField: "value"
                         }
-                    ]
-                }
-            };
+                    }
+                ]
+            }
+        };
         let parts = {};
-        if(_mode & 1 > 0){
+        if (_mode & 1 > 0) {
             parts.hour = hour;
         }
-        if(_mode & 2 > 0){
+        if (_mode & 2 > 0) {
             parts.minute = minute;
         }
-        if(_mode & 3 > 0){
+        if (_mode & 3 > 0) {
             parts.second = second;
         }
-        _tpl = new JTemplate({template:_cmps}, parts);
+        _tpl = new JTemplate({ template: _cmps }, parts);
         _tpl.parse();
         _cmps = (_tpl.now()).template;
-    }
+    };
 
-    var _defaultParams = {
+    let _defaultParams = {
         id: 'dayMonthYear',
         mode: DateTimeMode.DATE,
         inputFormat: 'DD/MM/YYYY',
@@ -292,7 +288,8 @@ var DateTimeCb = function (_props) {
         value: '06/06/2006',
         startYear: 1900,
         endYear: 2100,
-        type:ContainerType.ROW
+        type: ContainerType.NONE,
+        classes: ["d-flex"]
     };
 
     _props = extend(false, false, _defaultParams, _props);
@@ -300,14 +297,14 @@ var DateTimeCb = function (_props) {
     let _outputFormat = _props.outputFormat;
     let _mode = _props.mode;
     let _value = _props.value;
-    let _startYear = _props.startYear
+    let _startYear = _props.startYear;
     let _endYear = _props.endYear;
     
     _initDP();
     fnContainerDelayInit();
     _props.components = _cmps;
     
-    Container.call(this, _props);
+    Container.call(this, _props, true);
 };
 DateTimeCb.prototype.ctor = "DateTimeCb";
 DateTimeCb.init = false;

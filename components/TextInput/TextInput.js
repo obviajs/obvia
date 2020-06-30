@@ -152,8 +152,8 @@ var TextInput = function (_props) {
         if (typeof _change == 'function')
             _change.apply(this, arguments);
     };
-
-    Component.call(this, _props);
+    let r = Parent.call(this, _props);
+    return r;
 };
 
 //component prototype
