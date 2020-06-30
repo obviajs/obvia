@@ -13,7 +13,7 @@ let Implementation = function (applet) {
         splitHorizontal, splitVertical, uploadIcon, saveLayout, selectBtn, componentList,
         openUploadForms, appLoader;
 
-    
+
     let formField;
 
     let containers = ["Container", "Form", "Header", "Footer"];
@@ -209,6 +209,10 @@ let Implementation = function (applet) {
                     inst.classes = classes;
                     
                     applet.addBehaviors(inst, cmpWaBehaviors, false);
+                    let isCont = isContainer.call(inst);
+                    if (isCont) {
+                        inst.attr.isNotWa = true;
+                    }
                     inst.attr.isCmp = true;
                     ret.child = lit;
                     ret.parent = workArea;
@@ -442,17 +446,8 @@ let Implementation = function (applet) {
                     let inst = Component.instances[domID];
                     let c = confirm("Do you want to delete " + inst.id.toUpperCase() + "?");
                     if (c) {
-
                         inst.parent.removeChild(inst, 2);
-                        // let oeLit = {
-                        //     ctor: ObjectEditor,
-                        //     "props": {
-                        //         id: "objectEditor",
-                        //         instance: data.selectedForm,
-                        //         field: "props"
-                        //     }
-                        // };
-                        // propertyEditorContainer.components = [oeLit];
+                        propertyEditorContainer.components = [];
                     }
                     activeComponent = null;
                 } else {
@@ -647,8 +642,7 @@ let Implementation = function (applet) {
                     newRow.props.type = ContainerType.FORM_ROW;
                     toAdd = [newRow];
                     parent = activeContainer;
-                }
-                else if (activeContainer.attr.isNotWa) {
+                } else if (activeContainer.attr.isNotWa) {
                     parent = activeContainer.children[activeContainer.csorted[0]];
 
                 }
@@ -895,6 +889,14 @@ let Implementation = function (applet) {
     let isNotContainer = function (e) {
         return !isContainer.call(this, e);
     };
+
+    let isNotDraggableContainer = function (e) {
+        return containers.indexOf(this.ctor) > -1 && this.draggable == false;
+    };
+
+    let isDraggable = function (e) {
+        return this.draggable == true;
+    }
     //filter to determine if mousemove is an "WA_RESIZE_NS" behavior
     let debouncedDragNS;
     let d0;
@@ -1056,8 +1058,14 @@ let Implementation = function (applet) {
         "mouseover": "WA_HOVER",
         "mouseout": "WA_HOVER",
         "drop": {
-            "DELETE_CMP": { filter: undefined,  onPropagation: true },
-            "TOGGLE_BIN": { filter: undefined, onPropagation: true }
+            "DELETE_CMP": {
+                filter: undefined,
+                onPropagation: true
+            },
+            "TOGGLE_BIN": {
+                filter: undefined,
+                onPropagation: true
+            }
         },
         "dragover": "ALLOW_DROP",
         "dragleave": "TOGGLE_BIN"
@@ -1069,7 +1077,7 @@ let Implementation = function (applet) {
 
     let cmpWaBehaviors = {
         "mousedown": {
-            "WA_PREVENT_DRAGSTART": isContainer,
+            "WA_PREVENT_DRAGSTART": isNotDraggableContainer,
             "BECOME_ACTIVE": isContainer,
             "SELECT_COMPONENT": (e) => {
                 return ((e.which && e.which == 1) || (e.buttons && e.buttons == 1));
@@ -1097,11 +1105,10 @@ let Implementation = function (applet) {
             "ALLOW_DROP": isContainer
         },
         "dragstart": {
-            "DRAGSTART_COMPONENT": isNotContainer
+            "DRAGSTART_COMPONENT": isDraggable
         },
-        "dropped": {
-            "SELECT_COMPONENT": isNotContainer
-        }
+        "dropped": "SELECT_COMPONENT"
+
     };
 
     return imp;

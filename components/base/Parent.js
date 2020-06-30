@@ -61,7 +61,7 @@ var Parent = function (_props, _hideComponents=false) {
                 let component = { ctor: child.ctor, props: child.props };
                 _components.splice(index, 0, component);
                 _children[child.id] = child;
-                _csorted.splice(index, child.id);
+                _csorted.splice(index, 0, child.id);
                 _ccRelation[child.id] = component;
                 child.parent = _proxy;
                 child.parentType = this.type;
