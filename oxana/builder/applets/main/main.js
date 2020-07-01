@@ -8,7 +8,7 @@ let Implementation = function (applet) {
     let _cmpList = new ArrayEx(data.componentList);
 
     let propertyEditorViewStack, propertyEditorContainer, fileSelectModal, browseFile, componentsContainer,
-        rightSideNav, listHistorySteps, workArea, workAreaColumn,
+        rightSideNav, listHistorySteps, workArea, workAreaColumn, workAreaRowL2,
         cmpSearchTextInput, undoButton, redoButton, cmpTrash, toggleSideNavLeft, toggleSideNavRight,
         splitHorizontal, splitVertical, uploadIcon, saveLayout, selectBtn, componentList,
         openUploadForms, appLoader;
@@ -44,7 +44,8 @@ let Implementation = function (applet) {
             rightSideNav = app.viewStack.mainContainer.container.rightSideNav;
             listHistorySteps = app.viewStack.mainContainer.nav.children.middleNav.listHistorySteps;
             workAreaColumn = app.viewStack.mainContainer.container.workArea.workAreaRow.workAreaColumn;
-            workArea = workAreaColumn.workAreaCell.workAreaRowL2.workAreaColumnL2;
+            workAreaRowL2 = workAreaColumn.workAreaCell.workAreaRowL2;
+            workArea = workAreaRowL2.workAreaColumnL2;
             componentList = componentsContainer.componentList;
 
             applet.addBehaviors(applet.view, {
@@ -202,12 +203,12 @@ let Implementation = function (applet) {
                         this.trigger(evt);
                     };
                     lit.props.draggable = true;
-                 
+
                     inst = workArea.addComponent(lit);
                     let classes = inst.classes.slice(0);
                     classes.pushUnique("selected-component");
                     inst.classes = classes;
-                    
+
                     applet.addBehaviors(inst, cmpWaBehaviors, false);
                     let isCont = isContainer.call(inst);
                     if (isCont) {
@@ -294,7 +295,7 @@ let Implementation = function (applet) {
                 let oeLit = {
                     ctor: ObjectEditor,
                     "props": {
-                        id: "objectEditor1objectEditor1",
+                        id: "objectEditor",
                         instance: this,
                         field: "props"
                     }
@@ -337,7 +338,7 @@ let Implementation = function (applet) {
             app.appletsMap["saveForm"].init().then(() => {
                 console.log('Applet saveForm inited.');
             });
-            data.selectedForm.form_literal = workArea.literal;
+            data.selectedForm.form_literal = workAreaRowL2.literal;
             data.workArea = workArea;
         },
 
@@ -402,13 +403,13 @@ let Implementation = function (applet) {
 
         "LOAD_LAYOUT": function (e) {
             let _cmp = e.content;
-            let res = objectHierarchyGetMatchingMember(_cmp, "props.id", "workAreaColumnL2", "props.components");
+            let res = objectHierarchyGetMatchingMember(_cmp, "props.id", "workAreaRowL2", "props.components");
             if (res.match) {
                 _cmp = res.match;
             }
-            workArea.removeAllChildren(0);
+            workAreaRowL2.removeAllChildren(0);
             for (let i = 0; i < _cmp.props.components.length; i++) {
-                let inst = workArea.addComponent(_cmp.props.components[i]);
+                let inst = workAreaRowL2.addComponent(_cmp.props.components[i]);
                 applet.addBehaviors(inst, cmpWaBehaviors, true);
             }
         },
@@ -854,7 +855,7 @@ let Implementation = function (applet) {
 
         "SAVE_LAYOUT": {
             do: function (e) {
-                let lit = workArea.literal;
+                let lit = workAreaRowL2.literal;
                 stripHandle(lit);
                 let jsonLayout = JSON.stringify(lit, null, "\t");
                 download("workAreaColumn.json.txt", jsonLayout);
@@ -1043,12 +1044,20 @@ let Implementation = function (applet) {
         }
     };
 
+    let noNeedClasses = ["selected-component", "default-component"];
+
     let stripHandle = function (lit) {
         if (lit.props["components"] && Array.isArray(lit.props["components"]))
             for (let i = 0; i < lit.props.components.length; i++) {
                 if (lit.props.components[i].props["attr"] && lit.props.components[i].props.attr["handle"]) {
                     lit.props.components[i] = lit.props.components[i].props.components[0];
                 }
+
+                if (lit.props.components[i].props["classes"] && lit.props.components[i].props.classes.length > 0) {
+                    let diffClasses = lit.props.components[i].props.classes.difference(noNeedClasses);
+                    lit.props.components[i].props.classes = diffClasses;
+                }
+
                 if (lit.props.components[i].props["components"] && Array.isArray(lit.props.components[i].props["components"]))
                     stripHandle(lit.props.components[i]);
             }
