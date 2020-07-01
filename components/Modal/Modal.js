@@ -130,7 +130,6 @@ var Modal = function (_props) {
 
     this.endDraw = function (e) {
         if (e.target.id == this.domID) {
-            this.appendTo = $(this.ownerDocument.body);
             _modalDialog = this.modalDialog;
             _modalContent = _modalDialog.modalContent;
             _modalHeader = _modalContent.modalHeader;
@@ -203,8 +202,14 @@ var Modal = function (_props) {
 
     fnContainerDelayInit();
     _props.components = _cmps;
-
+    
+    this.init = function (e) {
+        if (e.target.id == this.domID) {
+            this.appendTo = $(this.ownerDocument.body);
+        }
+    };
     let r = Container.call(this, _props);
+   
 
     this.show = function () {
         if (this.$el) {
