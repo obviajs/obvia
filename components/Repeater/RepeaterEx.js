@@ -1,5 +1,6 @@
 var RepeaterEx = function(_props)
 {
+    let _self = this;
     Object.defineProperty(this, "dataProvider", 
     {
         get: function dataProvider() 
@@ -118,13 +119,27 @@ var RepeaterEx = function(_props)
         guidField:"guid"
     };
     _props = extend(false, false, _defaultParams, _props);
+
+    if (!_props.attr) { 
+        _props.attr = {};
+    }
+    let myDtEvts = ["rowAdd", "rowEdit", "beforeRowAdd", "rowDelete", "beforeRowDelete", "dataProviderLengthChanged"];
+    if (!Object.isEmpty(_props.attr) && _props.attr["data-triggers"] && !Object.isEmpty(_props.attr["data-triggers"]))
+    {
+        let dt = _props.attr["data-triggers"].split(" ");
+        for (let i = 0; i < dt.length; i++)
+        {   
+            myDtEvts.pushUnique(dt[i]);
+        }
+    }
+    _props.attr["data-triggers"] = myDtEvts.join(" ");
+
     let _dataProvider;
     let _rendering = _props.rendering;
     let _enabled = _props.enabled;
     let _guidField = _props.guidField;
-    let _propsRepeater = {};
+    let _propsRepeater = { "dataProvider": _props.dataProvider, "rendering": _props.rendering, "id": "internalRepeater", "components": _props.components.slice(0) };
     //avoid circular reference, by shallow copying, and later adding components to _props
-    shallowCopy(_props, _propsRepeater);
     _propsRepeater.minHeight = 40;
     fnContainerDelayInit();
     _props.components = _cmps;

@@ -420,22 +420,49 @@ Builder.initMetaProps = function () {
                                     direction: 'vertical',
                                     separator: false,
                                 },
-                                components: [{
-                                    ctor: TextInput,
-                                    props: {
-                                        id: "textInput",
-                                        value: "{cssclass}",
-                                        change: function (e, ra) {
-                                            console.log(ra);
-                                            let classes = oe.instance.classes.slice(0);
-                                            if (ra.currentIndex < classes.length)
-                                                classes[ra.currentIndex] = this.value;
-                                            else
-                                                classes.push(this.value);
-                                            oe.instance.classes = classes;
+                                rowDelete: (e, r, ra) => { 
+                                    let classes = oe.instance.classes.slice(0);
+                                    classes.splice(ra.currentIndex, 1);
+                                    oe.instance.classes = classes;
+                                },
+                                rowAdd: (e, r, ra) => {
+                                    console.log(ra);
+                                },
+                                components: [
+                                    {
+                                        ctor: TextInput,
+                                        props: {
+                                            id: "textInput",
+                                            value: "{cssclass}",
+                                            change: function (e, ra) {
+                                                let classes = oe.instance.classes.slice(0);
+                                                if (ra.currentIndex < classes.length)
+                                                    classes[ra.currentIndex] = this.value;
+                                                else
+                                                    classes.push(this.value);
+                                                oe.instance.classes = classes;
+                                            }
+                                        }
+                                    },
+                                    {
+                                        ctor: Button,
+                                        props: {
+                                            id: 'removeButton',
+                                            type: "button",
+                                            components: [{
+                                                ctor: Label,
+                                                props: {
+                                                    id: 'fa',
+                                                    labelType: LabelType.i,
+                                                    classes: ["fas", "fa-minus-circle"]
+                                                }
+                                            }],
+                                            click: function(e, ra) { 
+                                                this.parent.removeRow(ra.currentIndex);
+                                            }
                                         }
                                     }
-                                }]
+                                ]
                             }
                         }];
 

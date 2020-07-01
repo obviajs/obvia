@@ -133,7 +133,8 @@ var Repeater = function(_props)
         {
             //var ind = this.rowItems.length + i;
             if(toRefresh.indexOf(toRemove.a1_indices[i])==-1 && toAdd.a1_indices.indexOf(toRemove.a1_indices[i])==-1)
-                this.removeRow(toRemove.a1_indices[i], false, true, dpRemove = false); 
+                if(toRemove.a1_indices[i] < _rows.length)
+                    this.removeRow(toRemove.a1_indices[i], false, true, dpRemove = false); 
                 //this.removeChildAtIndex(toRemove.a1_indices[i]);
         }
         if (toAdd.a1_indices.length > 0)
@@ -355,7 +356,7 @@ var Repeater = function(_props)
         index = index == null ? _rows.length : index;
         let renderedRow = $('<div/>');
         var ccComponents = [];
-        var rowItems = {};
+        let rowItems = {};
 
         let beforeRowAddEvent = jQuery.Event("beforeRowAdd");
         this.trigger(beforeRowAddEvent, [_self, new RepeaterEventArgs(_rowItems, data, index)]);
@@ -522,7 +523,7 @@ var Repeater = function(_props)
     {
         var rowItems = {};
         let beforeRowDeleteEvent = jQuery.Event("beforeRowDelete");
-        this.trigger(beforeRowDeleteEvent, [_self, new RepeaterEventArgs(_self.rowItems, _oldDataProvider[index], index)]);
+        this.trigger(beforeRowDeleteEvent, [_self, new RepeaterEventArgs(_self.rowItems[index], _oldDataProvider[index], index)]);
 
         if (!isPreventable || (isPreventable && !beforeRowDeleteEvent.isDefaultPrevented())) 
         {

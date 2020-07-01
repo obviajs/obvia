@@ -16,3 +16,4 @@ var myRepeater = new RepeaterEx({
 myRepeater.renderPromise().then(function (cmpInstance) {
     $('#root').append(cmpInstance.$el);
 });
+//myRepeater.on("rowDelete", () => { alert("rowDelete");});
