@@ -400,13 +400,13 @@ Builder.initMetaProps = function () {
                     let oe = this.parent.parent;
                     let win = this.parent.parent.classesEditModal;
                     if (!win) {
-                        let dp = new ArrayEx(oe.instance.classes);
-                        // let classes = Object.values(oe.instance.classes);
-                        // for (let i = 0; i < classes.length; i++) {
-                        //     dp.push({
-                        //         "classes": oe.instance.classes[i]
-                        //     });
-                        // }
+                        let dp = new ArrayEx(oe.instance.classes.length);
+                        let classes = Object.values(oe.instance.classes);
+                        for (let i = 0; i < classes.length; i++) {
+                            dp[i] = {
+                                "cssclass": oe.instance.classes[i]
+                            };
+                        }
 
                         let lit = extend(true, Builder.components.Modal.literal);
                         lit.props.id = "ClassesEditModal";
@@ -423,9 +423,16 @@ Builder.initMetaProps = function () {
                                 components: [{
                                     ctor: TextInput,
                                     props: {
-                                        id: "text",
+                                        id: "textInput",
+                                        value: "{cssclass}",
                                         change: function (e, ra) {
                                             console.log(ra);
+                                            let classes = oe.instance.classes.slice(0);
+                                            if (ra.currentIndex < classes.length)
+                                                classes[ra.currentIndex] = this.value;
+                                            else
+                                                classes.push(this.value);
+                                            oe.instance.classes = classes;
                                         }
                                     }
                                 }]
