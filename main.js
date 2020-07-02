@@ -210,10 +210,9 @@ rjs.define("./components/Validation/RangeValidator.js", "RangeValidator");
 rjs.define("./components/Validation/RequiredFieldValidator.js", "RequiredFieldValidator");
 rjs.define("./components/Validation/RegularExpressionValidator.js", "RegularExpressionValidator");
 rjs.define("./components/Validation/CustomValidator.js", "CustomValidator");
-rjs.define("./oxana/Wizard/css/wizard-default.css", "wizard_default_css");
+//rjs.define("./oxana/Wizard/css/wizard-default.css", "wizard_default_css");
 rjs.define("./components/Tree/css/tree-default.css", "tree_default_css");
 rjs.define("./components/SideNav/css/sideNav.css", "sideNav_css");
-rjs.define("./oxana/builder/css/builder.css", "Builder_Css");
 rjs.require(["EventDispatcher"]).then(function () {
     rjs.require([
         "AutoObject",
@@ -372,11 +371,9 @@ rjs.require(["EventDispatcher"]).then(function () {
         "parent_default_css",
         "HierarchialTree_css",
         "sidenav_default_css",
-        
-        "wizard_default_css",
+        //"wizard_default_css",
         "tree_default_css",
         "sideNav_css",
-        "Builder_Css",
     ], function () {
         window.main();
     }, flowerCM);

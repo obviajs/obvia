@@ -192,7 +192,7 @@ var Tree = function (_props) {
         iconField: undefined,
         selectedClasses: ["active-node"],
         selectedClassesField: undefined,
-        classes: ["list-group"],
+        classes: ["tree", "list-group"],
         guidField: "guid",
         liClasses: [],
         liClassesField: undefined,

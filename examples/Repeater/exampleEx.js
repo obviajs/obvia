@@ -10,7 +10,8 @@ var myRepeater = new RepeaterEx({
                 label: "{first_name+' '+last_name}",
             }
         }
-    ]
+    ],
+    "rowDelete": () => { alert("rowDelete");}
 });
 
 myRepeater.renderPromise().then(function (cmpInstance) {

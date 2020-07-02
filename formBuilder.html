@@ -25,6 +25,7 @@
         });
         var Builder = {};
         function main() {
+            rjs.define("./oxana/builder/css/builder.css", "Builder_Css");
             rjs.define("lib/yaml.js", "yaml");
             rjs.define("./oxana/ApiClientGen/OAMethod.js", "OAMethod");
             rjs.define("./oxana/ApiClientGen/ApiClient.js", "ApiClient");
@@ -33,6 +34,7 @@
             rjs.define("./oxana/builder/CollectionEditor.js", "CollectionEditor");
             rjs.define("./oxana/builder/ObjectEditor.js", "ObjectEditor");
             rjs.require([
+                "Builder_Css",
                 "yaml",
                 "OAMethod",
                 "ApiClient",
