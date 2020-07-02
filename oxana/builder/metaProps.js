@@ -428,6 +428,11 @@ Builder.initMetaProps = function () {
                                 rowAdd: (e, r, ra) => {
                                     console.log(ra);
                                 },
+                                beforeAttach: function (e) { 
+                                    if (this.internalRepeater["removeButton"] && this.internalRepeater["removeButton"].length > 0) { 
+                                        this.internalRepeater["removeButton"][0].enabled = false;
+                                    }
+                                },
                                 components: [
                                     {
                                         ctor: TextInput,
