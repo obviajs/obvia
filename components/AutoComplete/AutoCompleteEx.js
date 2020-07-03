@@ -5,14 +5,11 @@
  */
 
 //component definition
-var AutoCompleteEx = function(_props)
-{
+var AutoCompleteEx = function (_props) {
     let _separator, _tokenContainer, _tokenRepeater, _suggestionsRepeater, _input, _maxSuggestionsCount, _dpWatcher;
-    
-    Object.defineProperty(this, "dataProvider", 
-    {
-        get: function dataProvider() 
-        {
+
+    Object.defineProperty(this, "dataProvider", {
+        get: function dataProvider() {
             return _dataProvider;
         },
         set: function dataProvider(v) {
@@ -22,38 +19,32 @@ var AutoCompleteEx = function(_props)
         },
         enumerable: true
     });
-    
+
     let _dpLengthChanged = function (e) {
         e.stopPropagation();
         e.stopImmediatePropagation();
         _tokenInputReSize();
     };
 
-    Object.defineProperty(this, "valueField", 
-    {
-        get: function valueField() 
-        {
+    Object.defineProperty(this, "valueField", {
+        get: function valueField() {
             return _valueField;
         },
-        set: function valueField(v) 
-        {
+        set: function valueField(v) {
             _valueField = v;
         },
-        enumerable:true
+        enumerable: true
     });
-    Object.defineProperty(this, "labelField", 
-    {
-        get: function labelField() 
-        {
+    Object.defineProperty(this, "labelField", {
+        get: function labelField() {
             return _labelField;
         },
-        set: function labelField(v) 
-        {
+        set: function labelField(v) {
             _labelField = v;
         },
-        enumerable:true
+        enumerable: true
     });
-    
+
     this.endDraw = function (e) {
         if (e.target.id == this.domID) {
             this.dataProvider = _props.dataProvider;
@@ -66,10 +57,9 @@ var AutoCompleteEx = function(_props)
             _suggestionsRepeater.css.position = "relative";
         }
     };
-    
-    this.beforeAttach = function () 
-    {
-       
+
+    this.beforeAttach = function () {
+
     };
 
     this.afterAttach = function (e) {
@@ -78,43 +68,42 @@ var AutoCompleteEx = function(_props)
         }
     };
 
-    let _tokenRendererClickHandler = function (e) {
-    };
-    
-    let _tokenRendererDoubleClickHandler = function (e) {
-    };
-    
-    let _tokenRendererMouseDownHandler = function (e) {
-    };
-    
+    let _tokenRendererClickHandler = function (e) {};
+
+    let _tokenRendererDoubleClickHandler = function (e) {};
+
+    let _tokenRendererMouseDownHandler = function (e) {};
+
     let _tokenInputReSize = function () {
         //_tokenRepeater.token[0].$el.width()
         if (_tokenRepeater) {
-            let tokenCount = _tokenRepeater.dataProvider==null?0:_tokenRepeater.dataProvider.length;
-            let tokenWidth = 0, rowTop = 0;
-            for(let i=0;i<tokenCount;i++){
+            let tokenCount = _tokenRepeater.dataProvider == null ? 0 : _tokenRepeater.dataProvider.length;
+            let tokenWidth = 0,
+                rowTop = 0;
+            for (let i = 0; i < tokenCount; i++) {
                 let tokenPos = _tokenRepeater.token[i].$el.position();
-                if(tokenPos.top != rowTop){
+                if (tokenPos.top != rowTop) {
                     tokenTop = tokenPos.top;
                     tokenWidth = _tokenRepeater.token[i].$el.width();
-                }else{
+                } else {
                     tokenWidth += _tokenRepeater.token[i].$el.width();
                 }
             }
             if (_self.$el.width() > 0 && tokenWidth >= 0) {
                 let tokenInputWidth = Math.max(_self.$el.width() - tokenWidth - 2, 0);
-                tokenInputWidth = Math.max((tokenInputWidth-tokenInputWidth*0.3).toFixed(0), 0);
-                _input.$el.css({"width": tokenInputWidth+"px"});
+                tokenInputWidth = Math.max((tokenInputWidth - tokenInputWidth * 0.3).toFixed(0), 0);
+                _input.$el.css({
+                    "width": tokenInputWidth + "px"
+                });
             }
         }
-    }; 
-   
-    let _suggestionsDropDownKeyDown = function(e)
-    {
+    };
+
+    let _suggestionsDropDownKeyDown = function (e) {
         if (typeof _self.suggestionsdropdownkeydown == 'function')
             _self.suggestionsdropdownkeydown.apply(this, arguments);
 
-        if(!e.isDefaultPrevented()){
+        if (!e.isDefaultPrevented()) {
             switch (e.keyCode) {
                 case 9:
                 case 13: // ENTER - apply value
@@ -141,7 +130,7 @@ var AutoCompleteEx = function(_props)
                 } else {
                     _self.value = repeaterEventArgs.currentItem;
                 }
-    
+
                 _self.removeSuggestionItemAt(repeaterEventArgs.currentIndex);
                 // acEx.closeSuggestionsList();
                 _closeSuggestionsList();
@@ -150,308 +139,283 @@ var AutoCompleteEx = function(_props)
         }
     };
 
-    let _tokenInputKeyDown = function(e)
-    {
+    let _tokenInputKeyDown = function (e) {
         if (typeof _inputkeydown == 'function')
             _inputkeydown.apply(_self, arguments);
-    
-            if(!e.isDefaultPrevented()){
-                switch (e.keyCode) {
-                    case 13: // ENTER - apply value
-                        console.log("ENTER");
-                        break;
-                    case 27: // ESC - get back to old value
-                        console.log("ESCAPE");
-                        _closeSuggestionsList();
-                        e.preventDefault();
-                        break;
-                    case 9: // TAB - apply and move to next column on the same row 
-                        console.log("TAB");
-                        break;
-                    case 40: // TAB - apply and move to next column on the same row 
-                        console.log("DOWN Arrow");
-                        _suggestions = differenceOnKeyMatch (_dataProvider, _value, _valueField);
-                        _openSuggestionsList();
-                        e.preventDefault();
-                        break;
-                }
+
+        if (!e.isDefaultPrevented()) {
+            switch (e.keyCode) {
+                case 13: // ENTER - apply value
+                    console.log("ENTER");
+                    break;
+                case 27: // ESC - get back to old value
+                    console.log("ESCAPE");
+                    _closeSuggestionsList();
+                    e.preventDefault();
+                    break;
+                case 9: // TAB - apply and move to next column on the same row 
+                    console.log("TAB");
+                    break;
+                case 40: // TAB - apply and move to next column on the same row 
+                    console.log("DOWN Arrow");
+                    _suggestions = differenceOnKeyMatch(_dataProvider, _value, _valueField);
+                    _openSuggestionsList();
+                    e.preventDefault();
+                    break;
             }
+        }
     };
-    let _tokenInputKeyUp = function(e)
-    {
-        if(!e.isDefaultPrevented())
-        {
+    let _tokenInputKeyUp = function (e) {
+        if (!e.isDefaultPrevented()) {
             let inp = String.fromCharCode(e.keyCode);
-            if (/[a-zA-Z0-9-_ ]/.test(inp)){
+            if (/[a-zA-Z0-9-_ ]/.test(inp)) {
                 let t = _delayQuerySuggestions(_input.value);
                 //clearTimeout(t);
-            }else if(e.keyCode == 8) {
-                if(_input.value == ""){
-                    _delayRemoveTokenItemAt(_self.value.length-1);
+            } else if (e.keyCode == 8) {
+                if (_input.value == "") {
+                    _delayRemoveTokenItemAt(_self.value.length - 1);
                 }
 
             }
         }
     };
-    let _querySuggestions = function(toMatch){
+    let _querySuggestions = function (toMatch) {
         console.log("querySuggestions for: ", toMatch);
-        let ac = differenceOnKeyMatch (_dataProvider, _value, _valueField);
+        let ac = differenceOnKeyMatch(_dataProvider, _value, _valueField);
         _suggestions = new ArrayEx(sortBestMatch(ac, toMatch, _self.matchType, _labelField, _maxSuggestionsCount));
         _openSuggestionsList();
     };
     /*
     <a href="#" class="inputLink">Did you mean xxyYY?</a>
     */
-   
-    let _openSuggestionsList = function(){
+
+    let _openSuggestionsList = function () {
         //suggestions found
-        if(_suggestions.length>0)
-        {
+        if (_suggestions.length > 0) {
             _suggestionsRepeater.dataProvider = _suggestions;
             let cls = _suggestionsRepeater.classes.slice(0);
             cls.pushUnique('show');
             _suggestionsRepeater.classes = cls;
             _suggestionsRepeater.attr["aria-expanded"] = true;
-        }else
-        {
-            _input.$el.attr('placeholder','No results found :(').delay(1000).queue(function(n) {$(this).attr('placeholder','Type something...');n();});
+        } else {
+            _input.$el.attr('placeholder', 'No results found :(').delay(1000).queue(function (n) {
+                $(this).attr('placeholder', 'Type something...');
+                n();
+            });
             _self.trigger("noSuggestionsFound", [_input.value]);
         }
-       // myAutoComplete.suggestionsRepeater.rowItems[0]['suggestion'].$el.focus();
+        // myAutoComplete.suggestionsRepeater.rowItems[0]['suggestion'].$el.focus();
     };
-    let _closeSuggestionsList = function()
-    {
+    let _closeSuggestionsList = function () {
         _suggestionsRepeater.attr["aria-expanded"] = false;
         let cls = _suggestionsRepeater.classes.slice(0);
         let ind = cls.indexOf("show");
-        if (ind > -1)
-        {
+        if (ind > -1) {
             cls.splice(ind, 1);
         }
         _suggestionsRepeater.classes = cls;
         _input.$el.focus();
     };
-    let _tokenRendererCloseIconClickHandler = function(e, repeaterEventArgs)
-    {
-        if(_enabled)
-        {
+    let _tokenRendererCloseIconClickHandler = function (e, repeaterEventArgs) {
+        if (_enabled) {
             console.log(repeaterEventArgs);
             //"this" refers to the components in the repeater
             this.removeTokenItemAt(repeaterEventArgs.currentIndex);
             _input.$el.focus();
         }
     };
-    let _suggestionRendererClickHandler = function(e, repeaterEventArgs)
-    {
+    let _suggestionRendererClickHandler = function (e, repeaterEventArgs) {
         console.log(repeaterEventArgs);
         //this.parent.parent.addTokenItems(repeaterEventArgs.currentItem);
-        if(_self.multiSelect){
+        if (_self.multiSelect) {
             //TODO:check because concat will return a new value
-            _self.value = _self.value.splicea(_self.value.length, 0, [repeaterEventArgs.currentItem]);
-        }else{
+            // _self.value = _self.value.splicea(_self.value.length, 0, [repeaterEventArgs.currentItem]);
+            _self.value.splice(_self.value.length, 0, repeaterEventArgs.currentItem);
+        } else {
             _self.value = repeaterEventArgs.currentItem;
         }
 
         _self.removeSuggestionItemAt(repeaterEventArgs.currentIndex);
-       // acEx.closeSuggestionsList();
+        // acEx.closeSuggestionsList();
         _closeSuggestionsList();
         _input.$el.focus();
     };
-    let _suggestionRendererDoubleClickHandler = function(e, repeaterEventArgs)
-    {
+    let _suggestionRendererDoubleClickHandler = function (e, repeaterEventArgs) {
         console.log(repeaterEventArgs);
     };
-    let _suggestionRendererMouseDownHandler = function(e, repeaterEventArgs)
-    {
+    let _suggestionRendererMouseDownHandler = function (e, repeaterEventArgs) {
         console.log(repeaterEventArgs);
     };
-    let _addTokenItems = function(items) 
-    {
-        if(typeof(items)==="object" && !(items instanceof Array)){
+    let _addTokenItems = function (items) {
+        if (typeof (items) === "object" && !(items instanceof Array)) {
             items = [items];
         }
         let itemsToAdd = [];
-        for(let i=0;i<items.length;i++){
+        for (let i = 0; i < items.length; i++) {
             let item = items[i];
-            if(item != null && item[_valueField] != undefined && item[_labelField]!= undefined)
-            {
+            if (item != null && item[_valueField] != undefined && item[_labelField] != undefined) {
                 let itemToAdd = [item];
-                if(!this.allowNewItem)
-                {
+                if (!this.allowNewItem) {
                     itemToAdd = intersectOnKeyMatch(_dataProvider, itemToAdd, _valueField); //value;
-                    if(itemToAdd.length==0){
+                    if (itemToAdd.length == 0) {
                         itemToAdd = intersectOnKeyMatch(_suggestions, itemToAdd, _valueField); //value;
-                        if(itemToAdd.length==0){
+                        if (itemToAdd.length == 0) {
                             console.log("This value was not found in the dataProvider and you are not allowed to add new items.");
                             continue;
                         }
                     }
                 }
                 itemsToAdd.push(itemToAdd[0]);
-            }else
-                console.log("Please specify a valid object on row: "+i+". The provided one is either null or doesn`t have '"+_valueField+"' and '"+_labelField+"' properties.");
+            } else
+                console.log("Please specify a valid object on row: " + i + ". The provided one is either null or doesn`t have '" + _valueField + "' and '" + _labelField + "' properties.");
         }
         //TODO:If Repeating will be allowed we need to add condition below based on a new property to control this setting
-        itemsToAdd = differenceOnKeyMatch (itemsToAdd, _value, _valueField);
-        for(let j=0;j<itemsToAdd.length;j++)
-        {
+        itemsToAdd = differenceOnKeyMatch(itemsToAdd, _value, _valueField);
+        for (let j = 0; j < itemsToAdd.length; j++) {
             _value.push(itemsToAdd[j]);
         }
-        
+
     };
-    this.removeSuggestionItemAt = function(index){
+    this.removeSuggestionItemAt = function (index) {
         //TODO: If we are going to keep item ordering in the view the save as in value
-        if(index>=0 && index<_suggestions.length){
+        if (index >= 0 && index < _suggestions.length) {
             _suggestions.splice(index, 1);
             //this._value.splice(index, 1);
-        }else
+        } else
             console.log("Index out of range. No item will be removed.");
     };
-    this.removeTokenItemAt = function(index)
-    {
+    this.removeTokenItemAt = function (index) {
         //TODO: If we are going to keep item ordering in the view the save as in value
-        if(index>=0 && index<_value.length){
+        if (index >= 0 && index < _value.length) {
             _value.splice(index, 1);
-        }else
+        } else
             console.log("Index out of range. No item will be removed.");
     };
-    this.removeTokenItems = function(items)
-    {
-        if(typeof(items)==="object" && !(items instanceof Array)){
+    this.removeTokenItems = function (items) {
+        if (typeof (items) === "object" && !(items instanceof Array)) {
             items = [items];
         }
-        for(let i=0;i<items.length;i++){
+        for (let i = 0; i < items.length; i++) {
             //TODO: Add Validation of the item from the Selectable base behavior
-            let matches = getMatching(_value, _valueField,  items[i][_valueField]);
-            for(let j=0;j<matches.indices.length;j++){
-                _value.splice(matches.indices[j], 1);   
+            let matches = getMatching(_value, _valueField, items[i][_valueField]);
+            for (let j = 0; j < matches.indices.length; j++) {
+                _value.splice(matches.indices[j], 1);
             }
-        }    
-        
+        }
+
     };
-    
-    this.removeAllTokenItems = function()
-    {
+
+    this.removeAllTokenItems = function () {
         //_tokenRepeater.removeAllRows();
         _value.splice(0, _value.length);
     };
-    Object.defineProperty(this, "multiSelect", 
-    {
-        get: function multiSelect() 
-        {
+    Object.defineProperty(this, "multiSelect", {
+        get: function multiSelect() {
             return _multiSelect;
         },
-        set: function multiSelect(v) 
-        {
-            if(_multiSelect != v)
+        set: function multiSelect(v) {
+            if (_multiSelect != v)
                 _multiSelect = v;
-        }
+        },
+        enumerable: true
     });
-    Object.defineProperty(this, "value", 
-    {
-        get: function value() 
-        {
+    Object.defineProperty(this, "value", {
+        get: function value() {
             return _value;
         },
-        set: function value(v) 
-        {
-            if(v)
-            {
-                if(isString(v) || isNumber(v))
-                {
+        set: function value(v) {
+            if (v) {
+                if (isString(v) || isNumber(v)) {
                     let vo = {};
                     vo[_labelField] = v;
-                    vo[_valueField] = v;    
+                    vo[_valueField] = v;
                     v = vo;
                 }
-                if(typeof(v)==="object" && !(v instanceof Array)){
+                if (typeof (v) === "object" && !(v instanceof Array)) {
                     v = [v];
                 }
-                if(!_value.equals(v))
-                {
+                if (!_value.equals(v)) {
                     //is the tokenRepeater rendered yet ? 
-                    if(_tokenRepeater && _tokenRepeater.$container)
-                    {
-                        if(_dpWatcher && _value){
+                    if (_tokenRepeater && _tokenRepeater.$container) {
+                        if (_dpWatcher && _value) {
                             _dpWatcher.reset();
                             _value.off("propertyChange", _dpLengthChanged);
-                        } 
+                        }
                         _tokenRepeater.dataProvider = _value = new ArrayEx(v);
-                        _input.value = ""; 
+                        _input.value = "";
                         this.trigger('change');
                         _tokenInputReSize();
-                        if(_value){
+                        if (_value) {
                             _dpWatcher = ChangeWatcher.getInstance(_value);
                             _dpWatcher.watch(_value, "length", _dpLengthChanged);
                             _value.on("propertyChange", _dpLengthChanged);
                         }
-                    }else
+                    } else
                         _value.splicea(0, _value.length, v);
                 }
-            }else
-            {
+            } else {
                 this.removeAllTokenItems();
             }
         }
     });
-   
-    this.focus = function()
-    {
-        if(_input)
-        {
-            _input.$el[0].focus({preventScroll:true});
+
+    this.focus = function () {
+        if (_input) {
+            _input.$el[0].focus({
+                preventScroll: true
+            });
         }
     };
-/*
-    destruct: function () {
-        //TODO: Destruct ? 
-     },
-    changeHandler : function(e){
-        if (typeof this.onchange == 'function')
-            this.onchange.apply(this, arguments);
-    },
-    mouseDownHandler: function (e) {
-        if (typeof this.onmousedown == 'function')
-            this.onmousedown.apply(this, arguments);
-        
-        // f(!e.isDefaultPrevented()){
-        //     this.handleComponentMouseDown.apply(this, arguments);
-        // }
-    },    
+    /*
+        destruct: function () {
+            //TODO: Destruct ? 
+         },
+        changeHandler : function(e){
+            if (typeof this.onchange == 'function')
+                this.onchange.apply(this, arguments);
+        },
+        mouseDownHandler: function (e) {
+            if (typeof this.onmousedown == 'function')
+                this.onmousedown.apply(this, arguments);
+            
+            // f(!e.isDefaultPrevented()){
+            //     this.handleComponentMouseDown.apply(this, arguments);
+            // }
+        },    
 
-    tokenRendererClickHandler: function (e, repeaterEventArgs) {
-    },
-    tokenRendererDoubleClickHandler: function (e, repeaterEventArgs) {
-    },
-    tokenRendererMouseDownHandler: function (e, repeaterEventArgs) {
-    },
-    clickHandler: function (e) {
-        if (typeof this.onclick == 'function')
-            this.onclick.apply(this, arguments);
-        
-        if(!e.isDefaultPrevented()){
-            this.handleComponentClick.apply(this, arguments);
-        }
-    },
+        tokenRendererClickHandler: function (e, repeaterEventArgs) {
+        },
+        tokenRendererDoubleClickHandler: function (e, repeaterEventArgs) {
+        },
+        tokenRendererMouseDownHandler: function (e, repeaterEventArgs) {
+        },
+        clickHandler: function (e) {
+            if (typeof this.onclick == 'function')
+                this.onclick.apply(this, arguments);
+            
+            if(!e.isDefaultPrevented()){
+                this.handleComponentClick.apply(this, arguments);
+            }
+        },
 
-    doubleClickHandler: function (e) {
-        if (typeof this.ondblclick == 'function')
-            this.ondblclick.apply(this, arguments);
+        doubleClickHandler: function (e) {
+            if (typeof this.ondblclick == 'function')
+                this.ondblclick.apply(this, arguments);
 
-        if (!e.isDefaultPrevented()) {
-            this.handleComponentClick.apply(this, arguments);
-        }
-    },
+            if (!e.isDefaultPrevented()) {
+                this.handleComponentClick.apply(this, arguments);
+            }
+        },
 
-    handleComponentClick: function (e, repeaterEventArgs) {
-        let componentID = _tokenRepeater.components[0].props.id;
-        let clickedComponent = repeaterEventArgs.currentRow[componentID];
-        let index = repeaterEventArgs.currentIndex;
-        
-        let v = repeaterEventArgs.currentItem;
-    },    
-*/
-        
+        handleComponentClick: function (e, repeaterEventArgs) {
+            let componentID = _tokenRepeater.components[0].props.id;
+            let clickedComponent = repeaterEventArgs.currentRow[componentID];
+            let index = repeaterEventArgs.currentIndex;
+            
+            let v = repeaterEventArgs.currentItem;
+        },    
+    */
+
     let _defaultParams = {
         closeIconSide: "left",
         dataProvider: new ArrayEx([]),
@@ -461,43 +425,43 @@ var AutoCompleteEx = function(_props)
         maxSuggestionsCount: 10,
         "type": ContainerType.NONE,
         classes: ["no-form-control"],
-        valueField: "id", 
+        valueField: "id",
         labelField: "text"
     };
-    
+
     _props = extend(false, false, _defaultParams, _props);
-    if (!_props.attr) { 
+    if (!_props.attr) {
         _props.attr = {};
     }
-    if (!_props.value) { 
+    if (!_props.value) {
         _props.value = new ArrayEx([]);
     }
     _maxSuggestionsCount = _props.maxSuggestionsCount;
     _props.attr["data-triggers"] = "noSuggestionsFound";
-    
+
     let _valueField = _props.valueField;
     let _labelField = _props.labelField;
     let _dataProvider;
-    
+
     let _allowNewItem = _props.allowNewItem;
-    let _label = _props.label;  
+    let _label = _props.label;
     let _closeIconSide = _props.closeIconSide;
-    let  _suggestions = new ArrayEx([]);
+    let _suggestions = new ArrayEx([]);
     let _enabled = true;
-    
+
     let _delayQuerySuggestions = debounce(_querySuggestions, 400);
     let _delayRemoveTokenItemAt = debounce.call(this, this.removeTokenItemAt, 200);
     let _multiSelect = _props.multiSelect;
     let _self = this;
     let _value = getBindingExp(_props.value) ? new ArrayEx([]) : _props.value;
-    
-    
-    
+
+
+
     let _suggestionRenderer = {
         ctor: SuggestionRenderer,
         props: {
             id: 'suggestion',
-            label: '{'+_labelField+'}',
+            label: '{' + _labelField + '}',
             value: '{' + _valueField + '}',
             click: _suggestionRendererClickHandler,
             dblclick: _suggestionRendererDoubleClickHandler,
@@ -506,101 +470,103 @@ var AutoCompleteEx = function(_props)
         }
     };
     //TODO: we are overriding those handlers, we should exec them after our internal handlers
-   
-    
-    
+
+
+
     let _tokenRenderer = {
         ctor: TokenRenderer,
         props: {
             id: 'token',
-            label: '{?'+_labelField+'}',
-            value: '{?'+_valueField+'}',
+            label: '{?' + _labelField + '}',
+            value: '{?' + _valueField + '}',
             closeiconclick: _tokenRendererCloseIconClickHandler.bind(this),
             closeIconSide: _closeIconSide,
             click: _tokenRendererClickHandler,
             dblclick: _tokenRendererDoubleClickHandler,
             mousedown: _tokenRendererMouseDownHandler,
-            css: {"float": "left"}
+            css: {
+                "float": "left"
+            }
         }
     };
-    
-    let _cmps =
-        [
-            {
-                ctor: "Container",
-                "props": {
-                    id: "tokenContainer",
-                    "type": ContainerType.NONE,
-                    classes: ["border"],
-                    attr: { "role": "menu" },
-                    "components": [
-                         {
-                            ctor: Repeater,
-                            props: {
-                                id: 'tokenRepeater',
-                                defaultItem: this.defaultItem,
-                                rendering: {
-                                    direction: 'horizontal',
-                                    separator: _separator || false,
-                                    wrap: false
-                                },
-                                width:"100%",
-                                ownerDocument: this.ownerDocument,
-                                dataProvider: _value,
-                                components: [_tokenRenderer],
-                                endDraw: _tokenInputReSize
-                            }
-                        },
-                        {
-                            ctor: TextInput,
-                            props: {
-                                id: 'tokenInput',
-                                attr: { "placeholder": 'Type something...' },
-                                versionStyle: '',
-                                keydown: _tokenInputKeyDown,
-                                keyup: _tokenInputKeyUp,
-                                classes: ['border-0', 'ellipsis'],
-                                ownerDocument: this.ownerDocument,
-                                css: { "outline": "none", "font-size": "14px"}
+
+    let _cmps = [{
+            ctor: "Container",
+            "props": {
+                id: "tokenContainer",
+                "type": ContainerType.NONE,
+                classes: ["border"],
+                attr: {
+                    "role": "menu"
+                },
+                "components": [{
+                        ctor: Repeater,
+                        props: {
+                            id: 'tokenRepeater',
+                            defaultItem: this.defaultItem,
+                            rendering: {
+                                direction: 'horizontal',
+                                separator: _separator || false,
+                                wrap: false
+                            },
+                            width: "100%",
+                            ownerDocument: this.ownerDocument,
+                            dataProvider: _value,
+                            components: [_tokenRenderer],
+                            endDraw: _tokenInputReSize
+                        }
+                    },
+                    {
+                        ctor: TextInput,
+                        props: {
+                            id: 'tokenInput',
+                            attr: {
+                                "placeholder": 'Type something...'
+                            },
+                            versionStyle: '',
+                            keydown: _tokenInputKeyDown,
+                            keyup: _tokenInputKeyUp,
+                            classes: ['border-0', 'ellipsis'],
+                            ownerDocument: this.ownerDocument,
+                            css: {
+                                "outline": "none",
+                                "font-size": "14px"
                             }
                         }
-                    ]
-                }
-            },
-            {   
-                ctor: Repeater,
-                props: {
-                    id: 'suggestionsRepeater',
-                    "type": ContainerType.NONE,
-                    classes: ["dropdown-menu", "position-absolute"],
-                    defaultItem: this.defaultItem,
-                    rendering: {
-                        direction: 'vertical',
-                        separator: _separator || false,
-                        actions: false
-                    },
-                    dataProvider: _suggestions,
-                    components: [_suggestionRenderer],
-                    parent: _self,
-                    ownerDocument: this.ownerDocument,
-                    keydown: _suggestionsDropDownKeyDown.bind(this)
-                }  
+                    }
+                ]
             }
-        ];
-    
+        },
+        {
+            ctor: Repeater,
+            props: {
+                id: 'suggestionsRepeater',
+                "type": ContainerType.NONE,
+                classes: ["dropdown-menu", "position-absolute"],
+                defaultItem: this.defaultItem,
+                rendering: {
+                    direction: 'vertical',
+                    separator: _separator || false,
+                    actions: false
+                },
+                dataProvider: _suggestions,
+                components: [_suggestionRenderer],
+                parent: _self,
+                ownerDocument: this.ownerDocument,
+                keydown: _suggestionsDropDownKeyDown.bind(this)
+            }
+        }
+    ];
+
     _props.components = _cmps;
     Container.call(this, _props, true);
 
-    Object.defineProperty(this, "enabled", 
-    {
-        get: function enabled() 
-        {
+    Object.defineProperty(this, "enabled", {
+        get: function enabled() {
             return _enabled;
         },
-        set: function enabled(v) 
-        {
-            if(_enabled != v)
-            {
+        set: function enabled(v) {
+            if (_enabled != v) {
                 _enabled = v;
                 this.$input.prop('disabled', !v);
             }
@@ -609,16 +575,12 @@ var AutoCompleteEx = function(_props)
         enumerable: true
     });
 
-    Object.defineProperty(this, "maxSuggestionsCount", 
-    {
-        get: function maxSuggestionsCount() 
-        {
+    Object.defineProperty(this, "maxSuggestionsCount", {
+        get: function maxSuggestionsCount() {
             return _maxSuggestionsCount;
         },
-        set: function maxSuggestionsCount(v) 
-        {
-            if(_maxSuggestionsCount != v)
-            {
+        set: function maxSuggestionsCount(v) {
+            if (_maxSuggestionsCount != v) {
                 _maxSuggestionsCount = v;
             }
         },

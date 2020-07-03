@@ -11,7 +11,7 @@ let Implementation = function (applet) {
         rightSideNav, listHistorySteps, workArea, workAreaColumn, workAreaRowL2,
         cmpSearchTextInput, undoButton, redoButton, cmpTrash, toggleSideNavLeft, toggleSideNavRight,
         splitHorizontal, splitVertical, uploadIcon, saveLayout, selectBtn, componentList,
-        openUploadForms, appLoader;
+        openUploadForms, appLoader, middleNav, desktopPreview, tabletPreview, mobilePreview;
 
 
     let formField;
@@ -41,8 +41,9 @@ let Implementation = function (applet) {
             fileSelectModal = app.viewStack.mainContainer.container.children.fileSelectModal;
             browseFile = fileSelectModal.modalDialog.modalContent.modalBody.browseFile;
             componentsContainer = app.viewStack.mainContainer.container.componentsContainer;
+            middleNav = app.viewStack.mainContainer.nav.middleNav;
             rightSideNav = app.viewStack.mainContainer.container.rightSideNav;
-            listHistorySteps = app.viewStack.mainContainer.nav.children.middleNav.listHistorySteps;
+            listHistorySteps = middleNav.listHistorySteps;
             workAreaColumn = app.viewStack.mainContainer.container.workArea.workAreaRow.workAreaColumn;
             workAreaRowL2 = workAreaColumn.workAreaCell.workAreaRowL2;
             workArea = workAreaRowL2.workAreaColumnL2;
@@ -67,11 +68,11 @@ let Implementation = function (applet) {
                 "keyup": "SEARCH_CMP",
             }, false);
 
-            undoButton = app.viewStack.mainContainer.nav.middleNav.undoButton;
+            undoButton = middleNav.undoButton;
             applet.addBehaviors(undoButton, {
                 "click": "WA_UNDO",
             }, false);
-            redoButton = app.viewStack.mainContainer.nav.middleNav.redoButton;
+            redoButton = middleNav.redoButton;
             applet.addBehaviors(redoButton, {
                 "click": "WA_REDO",
             }, false);
@@ -87,31 +88,36 @@ let Implementation = function (applet) {
                 "click": "TOGGLE_VISIBILITY_RIGHT",
             }, false);
 
-            splitHorizontal = app.viewStack.mainContainer.nav.middleNav.splitHorizontal;
+            splitHorizontal = middleNav.splitHorizontal;
             applet.addBehaviors(splitHorizontal, {
                 "click": "SPLIT_HOR",
             }, false);
 
-            splitVertical = app.viewStack.mainContainer.nav.middleNav.splitVertical;
+            splitVertical = middleNav.splitVertical;
             applet.addBehaviors(splitVertical, {
                 "click": "SPLIT_VERT",
             }, false);
 
-            uploadIcon = app.viewStack.mainContainer.nav.middleNav.uploadIcon;
+            uploadIcon = middleNav.uploadIcon;
             applet.addBehaviors(uploadIcon, {
                 "click": "OPEN_MODAL_FORM_FOR_SAVE"
             }, false);
 
-            openUploadForms = app.viewStack.mainContainer.nav.middleNav.openUploadForms;
+            openUploadForms = middleNav.openUploadForms;
             applet.addBehaviors(openUploadForms, {
                 "click": "OPEN_MODAL_FORMS"
             }, false);
 
-            saveLayout = app.viewStack.mainContainer.nav.middleNav.saveLayout;
+            desktopPreview = middleNav.desktop;
+            applet.addBehaviors(desktopPreview, {
+                "click": "DESKTOP_PREVIEW"
+            }, false);
+
+            saveLayout = middleNav.saveLayout;
             applet.addBehaviors(saveLayout, {
                 "click": "SAVE_LAYOUT",
             }, false);
-            selectBtn = app.viewStack.mainContainer.nav.middleNav.selectBtn;
+            selectBtn = middleNav.selectBtn;
             applet.addBehaviors(selectBtn, {
                 "click": "FILE_SELECT_MODAL",
             }, false);
@@ -362,6 +368,16 @@ let Implementation = function (applet) {
                     });
             }
         },
+
+        "DESKTOP_PREVIEW": function (e) {
+            let browser = new BrowserWindow({
+                id: "browser",
+                components: workAreaRowL2.components
+            });
+            browser.show();
+            browser.renderPromise();
+        },
+
         "PREPARE_CMP": function (e, r, ra) {
             if (ra) {
                 applet.addBehaviors(ra.currentRow.component, {

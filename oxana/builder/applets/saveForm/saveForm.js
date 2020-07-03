@@ -2,7 +2,7 @@ let Implementation = function (applet) {
 
     let app = applet.app;
     let data = applet.data;
-    let modal, modalBody;
+    let modal, modalBody, info, formName, formDescription;
 
     let imp = {
 
@@ -17,7 +17,10 @@ let Implementation = function (applet) {
 
             modalBody = modal.modalDialog.modalContent.modalBody;
             let saveNewButton = modal.modalDialog.modalContent.modalFooter.saveNew;
-            let selectedForm = data.selectedForm;
+            info = modalBody.find('info');
+            formName = modalBody.find("textField");
+            formDescription = modalBody.find("textarea");
+
 
             applet.addBehaviors(saveNewButton, {
                 "click": "SAVE_NEW"
@@ -33,11 +36,11 @@ let Implementation = function (applet) {
                 var gaiaForm = new GaiaAPI_forms();
                 let promise = gaiaForm.formsClient.post(data.selectedForm);
                 promise.then(function (res) {
-                    modalBody.find('info').visible = false;
+                    info.visible = false;
                     modal.hide();
                 });
                 promise.catch(function (err) {
-                    modalBody.find('info').visible = true;
+                    info.visible = true;
                 });
             }
         },
@@ -50,15 +53,15 @@ let Implementation = function (applet) {
                 var gaiaForm = new GaiaAPI_forms();
                 let promise = gaiaForm.formsClient.post(data.selectedForm);
                 promise.then(function (res) {
-                    modalBody.find('info').visible = false;
+                    info.visible = false;
                     data.selectedForm = new FormProperties();
                     data.workArea.removeAllChildren(0);
                     modal.hide();
-                    modal.modalDialog.modalContent.modalBody.find("textField").value = "";
-                    modal.modalDialog.modalContent.modalBody.find("textarea").value = "";
+                    formName.value = "";
+                    formDescription.value = "";
                 });
                 promise.catch(function (err) {
-                    modalBody.find('info').visible = true;
+                    info.visible = true;
                 });
             }
         }
