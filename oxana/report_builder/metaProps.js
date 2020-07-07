@@ -99,9 +99,10 @@ Builder.initMetaProps = function () {
       
         x: {
             ctor: "TextInput", label: "x-coordinate", index: 1, props: {
-                // change: function () {
-                //     this.parent.parent.instance.x = this.value;
-                // }
+                change: function () {
+                    this.parent.parent.instance.x = this.value;
+                    this.parent.parent.instance.$el[0].style.left = this.value + 'px' ;
+                }
             }
         },
 
@@ -109,6 +110,7 @@ Builder.initMetaProps = function () {
             ctor: "TextInput", label: "y-coordinate", index: 2, props: {
                 change: function () {
                     this.parent.parent.instance.y = this.value;
+                    this.parent.parent.instance.$el[0].style.top = this.value + 'px' ;
                 }
             }
         },

@@ -192,7 +192,7 @@ let Implementation = function (applet) {
                 }
                 console.log('CREATED_');
                 e.preventDefault();
-                // let workArea = Component.instances[e.target.id];
+                let workArea = Component.instances[e.target.id];
                 let domID = e.originalEvent.dataTransfer.getData("domID");
                 let ctor = e.originalEvent.dataTransfer.getData("ctor");
                 let move = e.originalEvent.dataTransfer.getData("move");
@@ -236,13 +236,16 @@ let Implementation = function (applet) {
                 {
                     console.log("MOVED_", domID, workArea.domID);
                     inst = Component.instances[domID];
-					console.log("MOVED_", domID, workArea.domID);
-                    inst = Component.instances[domID];
                     console.log("Moved component",inst);
                     var offset = event.dataTransfer.getData("text/plain").split(',');
-                    inst.$el[0].style.left = (event.clientX + parseInt(offset[0], 10)) + 'px';
-                    inst.$el[0].style.top = (event.clientY + parseInt(offset[1], 10)) + 'px';								
-		
+                    var x_drag = (event.clientX + parseInt(offset[0], 10)) + 'px';
+                    var y_drag = (event.clientY + parseInt(offset[1], 10)) + 'px';
+                    inst.$el[0].style.left = x_drag;
+                    inst.$el[0].style.top = y_drag;
+                    inst.x = x_drag;
+                    inst.y = y_drag;
+
+                    
                     // let lit = Builder.components[ctor].literal;
                     // if (inst.parent && (inst.parent != workArea) && (domID != workArea.domID)) {
                     //     inst.parent.removeChild(inst, 0);
@@ -1205,7 +1208,7 @@ let Implementation = function (applet) {
             "WA_REMOVE": isContainer
         },
         "drop": {
-            "BECOME_ACTIVE": isContainer,
+            // "BECOME_ACTIVE": isContainer,
             "ADD_COMPONENT": isContainer
         },
         "dragover": {
