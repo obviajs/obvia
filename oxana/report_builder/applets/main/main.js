@@ -8,19 +8,24 @@ let Implementation = function (applet) {
     let _cmpList = new ArrayEx(data.componentList);
 
     let propertyEditorViewStack, propertyEditorContainer, fileSelectModal, browseFile, componentsContainer,
-        rightSideNav, listHistorySteps, workArea, workAreaColumn,
+        rightSideNav, listHistorySteps, workArea,title,detail,summary,workAreaColumn, workAreaRowL2,
         cmpSearchTextInput, undoButton, redoButton, cmpTrash, toggleSideNavLeft, toggleSideNavRight,
-        splitHorizontal, splitVertical, uploadIcon, saveLayout, selectBtn, componentList, 
-        openUploadForms, appLoader;
+        splitHorizontal, splitVertical, uploadIcon, saveLayout, selectBtn, componentList,
+        openUploadForms, appLoader, middleNav, desktopPreview, tabletPreview, mobilePreview;
+
+    let formField;
+
+    let containers = ["Container", "Form", "Header", "Footer","JRBand"];
+    let noNeedFF = ["Button", "Label", "Container", "Link", "Header", "Footer", "Form", "SideNav", "ViewStack", "Calendar", "Tree", "Image", "HRule", "Heading", "Repeater", "RepeaterEx"];
 
     let imp = {
-        "BEGIN_DRAW": function (e) { 
+        "BEGIN_DRAW": function (e) {
             console.log("APPLET_BEGIN_DRAW");
             let paths = findMember(applet.literal, "id", [], "listHistorySteps", false);
             paths[0].pop();
             let propsListHistorySteps = getChainValue(applet.literal, paths[0]);
             propsListHistorySteps.dataProvider = app.history.steps;
-    
+
             paths = findMember(applet.literal, "id", [], "componentList", false);
             paths[0].pop();
             let propsComponentList = getChainValue(applet.literal, paths[0]);
@@ -28,7 +33,6 @@ let Implementation = function (applet) {
         },
         "END_DRAW": function (e) {
             appLoader = app.viewStack.mainContainer.appLoader;
-           
             appLoader.hide();
 
             propertyEditorViewStack = app.viewStack.mainContainer.container.rightSideNav.rightSideContainer.propertyEditorViewStack;
@@ -36,44 +40,47 @@ let Implementation = function (applet) {
             fileSelectModal = app.viewStack.mainContainer.container.children.fileSelectModal;
             browseFile = fileSelectModal.modalDialog.modalContent.modalBody.browseFile;
             componentsContainer = app.viewStack.mainContainer.container.componentsContainer;
+            middleNav = app.viewStack.mainContainer.nav.middleNav;
             rightSideNav = app.viewStack.mainContainer.container.rightSideNav;
-            listHistorySteps = app.viewStack.mainContainer.nav.children.middleNav.listHistorySteps;
+            listHistorySteps = middleNav.listHistorySteps;
             workAreaColumn = app.viewStack.mainContainer.container.workArea.workAreaRow.workAreaColumn;
-            workArea = workAreaColumn.workAreaCell.workAreaRowL2.workAreaColumnL2;
-            console.log("WORK AREAA---->",workArea)
+            workAreaRowL2 = workAreaColumn.workAreaCell.workAreaRowL2;
+            workArea = workAreaRowL2.workAreaColumnL2;
+            title = workArea.titleBand;
+            detail = workArea.detailBand;
+            summary = workArea.summaryBand;
             componentList = componentsContainer.componentList;
 
-            applet.addBehaviors(applet.view,
-                {
-                    "idChanged": {
-                        "UPDATE_BEHAVIOR_BINDINGS": {
-                            onPropagation: true
-                        }
+            applet.addBehaviors(applet.view, {
+                "idChanged": {
+                    "UPDATE_BEHAVIOR_BINDINGS": {
+                        onPropagation: true
                     }
-                }, false);
+                }
+            }, false);
 
             applet.addBehaviors(componentList, {
                 "rowAdd": "PREPARE_CMP",
             }, false);
-            
+
             applet.addBehaviors(propertyEditorContainer, vspewbehaviors, false);
-    
+
             cmpSearchTextInput = app.viewStack.mainContainer.container.componentsContainer.container.cmpSearchTextInput;
             applet.addBehaviors(cmpSearchTextInput, {
                 "keyup": "SEARCH_CMP",
             }, false);
 
-            undoButton = app.viewStack.mainContainer.nav.middleNav.undoButton;
+            undoButton = middleNav.undoButton;
             applet.addBehaviors(undoButton, {
                 "click": "WA_UNDO",
             }, false);
-            redoButton = app.viewStack.mainContainer.nav.middleNav.redoButton;
+            redoButton = middleNav.redoButton;
             applet.addBehaviors(redoButton, {
                 "click": "WA_REDO",
             }, false);
             cmpTrash = app.viewStack.mainContainer.container.rightSideNav.rightSideContainer.propertyEditorViewStack.cmpTrash;
             applet.addBehaviors(cmpTrash, daBehaviors, false);
-            
+
             toggleSideNavLeft = app.viewStack.mainContainer.nav.leftNav.toggleSideNavLeft;
             applet.addBehaviors(toggleSideNavLeft, {
                 "click": "TOGGLE_VISIBILITY_LEFT",
@@ -82,36 +89,41 @@ let Implementation = function (applet) {
             applet.addBehaviors(toggleSideNavRight, {
                 "click": "TOGGLE_VISIBILITY_RIGHT",
             }, false);
-    
-            splitHorizontal = app.viewStack.mainContainer.nav.middleNav.splitHorizontal;
+
+            splitHorizontal = middleNav.splitHorizontal;
             applet.addBehaviors(splitHorizontal, {
                 "click": "SPLIT_HOR",
             }, false);
 
-            splitVertical = app.viewStack.mainContainer.nav.middleNav.splitVertical;
+            splitVertical = middleNav.splitVertical;
             applet.addBehaviors(splitVertical, {
                 "click": "SPLIT_VERT",
             }, false);
 
-            uploadIcon = app.viewStack.mainContainer.nav.middleNav.uploadIcon;
+            uploadIcon = middleNav.uploadIcon;
             applet.addBehaviors(uploadIcon, {
                 "click": "OPEN_MODAL_FORM_FOR_SAVE"
             }, false);
-            
-            openUploadForms = app.viewStack.mainContainer.nav.middleNav.openUploadForms;
+
+            openUploadForms = middleNav.openUploadForms;
             applet.addBehaviors(openUploadForms, {
                 "click": "OPEN_MODAL_FORMS"
             }, false);
 
-            saveLayout = app.viewStack.mainContainer.nav.middleNav.saveLayout;
+            desktopPreview = middleNav.desktop;
+            applet.addBehaviors(desktopPreview, {
+                "click": "DESKTOP_PREVIEW"
+            }, false);
+
+            saveLayout = middleNav.saveLayout;
             applet.addBehaviors(saveLayout, {
                 "click": "SAVE_LAYOUT",
             }, false);
-            selectBtn = app.viewStack.mainContainer.nav.middleNav.selectBtn;
+            selectBtn = middleNav.selectBtn;
             applet.addBehaviors(selectBtn, {
                 "click": "FILE_SELECT_MODAL",
             }, false);
-    
+
             applet.addBehaviors(browseFile, {
                 "change": "FILE_SELECTED",
             }, false);
@@ -120,18 +132,31 @@ let Implementation = function (applet) {
             }, false);
 
             //app.behaviors["previewBtn"]["click"] = "PREVIEW";
-            applet.addBehaviors(workArea, waBehaviors, false);
-            
+            // applet.addBehaviors(workArea, cmpWaBehaviors, false);
+            applet.addBehaviors(title, cmpWaBehaviors, false);
+            console.log("Title",title);
+            applet.addBehaviors(detail, cmpWaBehaviors, false);
+            applet.addBehaviors(summary, cmpWaBehaviors, false);
             applet.addBehaviors(app, {
-                "loadLayout": "LOAD_LAYOUT", 
-                "loadHtml": "LOAD_HTML", 
+                "loadLayout": "LOAD_LAYOUT",
+                "loadHtml": "LOAD_HTML",
                 "keydown": {
-                    "WA_UNDO": { filter: KeyboardUtils.test["CTR+Z"], onPropagation: true },
-                    "WA_REDO": { filter: KeyboardUtils.test["CTR+Y"], onPropagation: true },
-                    "DELETE_CMP": { filter: KeyboardUtils.test["DEL"], onPropagation: true }
+                    "WA_UNDO": {
+                        filter: KeyboardUtils.test["CTR+Z"],
+                        onPropagation: true
+                    },
+                    "WA_REDO": {
+                        filter: KeyboardUtils.test["CTR+Y"],
+                        onPropagation: true
+                    },
+                    "DELETE_CMP": {
+                        filter: KeyboardUtils.test["DEL"],
+                        onPropagation: true
+                    }
                 }
             }, false);
         },
+        
         "UPDATE_BEHAVIOR_BINDINGS": {
             do: function (e) {
                 console.log("UPDATE_BEHAVIOR_BINDINGS");
@@ -162,12 +187,12 @@ let Implementation = function (applet) {
         "ADD_COMPONENT": {
             description: "Add component ",
             do: function (e) {
-                if (!formField) { 
+                if (!formField) {
                     formField = data.components["FormField"].literal;
                 }
                 console.log('CREATED_');
                 e.preventDefault();
-                let workArea = Component.instances[e.target.id];
+                // let workArea = Component.instances[e.target.id];
                 let domID = e.originalEvent.dataTransfer.getData("domID");
                 let ctor = e.originalEvent.dataTransfer.getData("ctor");
                 let move = e.originalEvent.dataTransfer.getData("move");
@@ -183,105 +208,104 @@ let Implementation = function (applet) {
                         ff.props.component = lit;
                         lit = ff;
                     }
-    
+
                     lit = extend(true, lit);
                     lit.props.afterAttach = function (e) {
                         let evt = new jQuery.Event("dropped");
                         this.trigger(evt);
                     };
                     lit.props.draggable = true;
-                    if (isObject(lit.props.classes))
-                        lit.props.classes["self"].push("selected-component");
-                    else {
-                        lit.props.classes = !Array.isArray(lit.props.classes) ? [] : lit.props.classes;
-                        lit.props.classes.push("selected-component");
-                    }
                     inst = workArea.addComponent(lit);
-                    
-                    applet.addBehaviors(inst, cmpBehaviors, false);
-                    if (containers.indexOf(inst.ctor) > -1) { 
-                        applet.addBehaviors(inst, cmpWaBehaviors, false);
+                    let classes = inst.classes.slice(0);
+                    classes.pushUnique("selected-component");
+                    inst.classes = classes;
+
+                    applet.addBehaviors(inst, cmpWaBehaviors, false);
+                    let isCont = isContainer.call(inst);
+                    if (isCont) {
                         inst.attr.isNotWa = true;
                     }
                     inst.attr.isCmp = true;
-                    lit.props.src = "Dropped again"; // no update for the props
                     ret.child = lit;
                     ret.parent = workArea;
                     ret.container = workArea;
-                    ret.track = true;
-                    console.log("Rendered Component",ret);
+                    ret.track = true;											 
                     return ret;
-                } else {
-    
+                } 
+                else 
+                {
                     console.log("MOVED_", domID, workArea.domID);
                     inst = Component.instances[domID];
-                    let lit = Builder.components[ctor].literal;
-                    if (inst.parent && (inst.parent != workArea) && (domID != workArea.domID)) {
-                        inst.parent.removeChild(inst, 0);
-                        if (inst.ctor == "FormField" && workArea.ctor != "Form") {
-                            // inst = inst.children[inst.component.props.id];
-                            inst.draggable = true;
-                            applet.addBehaviors(inst, cmpBehaviors, false);
-                            let classes = inst.classes.slice(0);
-                            classes.pushUnique("selected-component");
-                            inst.classes = classes;
-                        } else if (workArea.ctor == "Form" && noNeedFF.indexOf(inst.ctor) == -1) {
-                            app.removeBehaviors(inst, cmpBehaviors, false);
-                            let classes = inst.classes.slice(0);
-                            let ind = classes.indexOf("default-component");
-                            if(id > -1){
-                                classes.splice(ind, 1);
-                            }
-                            ind = classes.indexOf("selected-component");
-                            if (ind > -1)
-                                classes.splice(ind, 1);
-                            inst.classes = classes;
-                            inst.draggable = false;
-                            let ff = extend(true, formField);
-                            ff.props.component = inst.literal;
-                            ff.props.draggable = true;
-                            ff.props.classes = !Array.isArray(ff.props.classes) ? [] : ff.props.classes;
-                            ff.props.classes.push("selected-component");
-                            inst = workArea.addComponent(ff);
-                            //inst.addChild(inst);
-                            //inst = instF;
-                            applet.addBehaviors(inst, cmpBehaviors, false);
-                            // if (parents.indexOf(ctor) > -1) {
-                            //     applet.addBehaviors(instF, cntBehaviors, false);
-                            // }
-                        }
-                        workArea.addChild(inst);
-                        let evt = new jQuery.Event("dropped");
-                        inst.trigger(evt);
-                    }
+					console.log("MOVED_", domID, workArea.domID);
+                    inst = Component.instances[domID];
+                    console.log("Moved component",inst);
+                    var offset = event.dataTransfer.getData("text/plain").split(',');
+                    inst.$el[0].style.left = (event.clientX + parseInt(offset[0], 10)) + 'px';
+                    inst.$el[0].style.top = (event.clientY + parseInt(offset[1], 10)) + 'px';								
+		
+                    // let lit = Builder.components[ctor].literal;
+                    // if (inst.parent && (inst.parent != workArea) && (domID != workArea.domID)) {
+                    //     inst.parent.removeChild(inst, 0);
+                    //     if (inst.ctor == "FormField" && workArea.ctor != "Form") {
+                    //         // inst = inst.children[inst.component.props.id];
+                    //         inst.draggable = true;
+                    //         applet.addBehaviors(inst, cmpWaBehaviors, false);
+                    //         let classes = inst.classes.slice(0);
+                    //         classes.pushUnique("selected-component");
+                    //         inst.classes = classes;
+                    //     } else if (workArea.ctor == "Form" && noNeedFF.indexOf(inst.ctor) == -1) {
+                    //         app.removeBehaviors(inst, cmpWaBehaviors, false);
+                    //         let classes = inst.classes.slice(0);
+                    //         let ind = classes.indexOf("default-component");
+                    //         if (id > -1) {
+                    //             classes.splice(ind, 1);
+                    //         }
+                    //         ind = classes.indexOf("selected-component");
+                    //         if (ind > -1)
+                    //             classes.splice(ind, 1);
+                    //         inst.classes = classes;
+                    //         inst.draggable = false;
+                    //         let ff = extend(true, formField);
+                    //         ff.props.component = inst.literal;
+                    //         ff.props.draggable = true;
+                    //         ff.props.classes = !Array.isArray(ff.props.classes) ? [] : ff.props.classes;
+                    //         ff.props.classes.push("selected-component");
+                    //         inst = workArea.addComponent(ff);
+                    //         //inst.addChild(inst);
+                    //         //inst = instF;
+                    //         applet.addBehaviors(inst, cmpWaBehaviors, false);
+                    //         // if (parents.indexOf(ctor) > -1) {
+                    //         //     applet.addBehaviors(instF, cntBehaviors, false);
+                    //         // }
+                    //     }
+                    //     workArea.addChild(inst);
+                    //     let evt = new jQuery.Event("dropped");
+                    //     inst.trigger(evt);
+                    // }
                 }
-    
+
             },
             undo: function () {},
             stopPropagation: true,
         },
         "SELECT_COMPONENT": {
             description: "Select Component",
-            do: function (e) {
-                console.log("SELECT_COMPONENT "+this.id);
-                //this will hold the instance of the component who manifested this behavior (the manifestor)
-                if (activeComponent && activeComponent != this && ((isObject(activeComponent.classes) && activeComponent.classes["self"].indexOf("selected-component")) || activeComponent.classes.indexOf("selected-component") > -1)) {
-                    let classes = isObject(activeComponent.classes) ? activeComponent.classes["self"].slice(0) : activeComponent.classes.slice(0);
-                    let ind = classes.indexOf("selected-component");
-                    if (ind > -1)
-                        classes.splice(ind, 1);
-                    classes.pushUnique("default-component");
-                    if (isObject(activeComponent.classes))
-                        activeComponent.classes["self"] = classes;
-                    else
-                        activeComponent.classes = classes;
+            do: function(e) {
+                console.log("SELECT_COMPONENT " + this.id);
+                if(this.ctor != "JRBand") {
+                    if(activeComponent && activeComponent != this && ((isObject(activeComponent.classes) && activeComponent.classes["self"].indexOf("selected-component")) || activeComponent.classes.indexOf("selected-component") > -1)) {
+                        let classes = isObject(activeComponent.classes) ? activeComponent.classes["self"].slice(0) : activeComponent.classes.slice(0);
+                        let ind = classes.indexOf("selected-component");
+                        if(ind > -1) classes.splice(ind, 1);
+                        classes.pushUnique("default-component");
+                        if(isObject(activeComponent.classes)) activeComponent.classes["self"] = classes;
+                        else activeComponent.classes = classes;
+                    }
+                    let classes = isObject(this.classes) ? this.classes["self"].slice(0) : this.classes.slice(0);
+                    classes.pushUnique("selected-component");
+                    if(isObject(this.classes)) this.classes["self"] = classes;
+                    else this.classes = classes;
                 }
-                let classes = isObject(this.classes) ? this.classes["self"].slice(0) : this.classes.slice(0);
-                classes.pushUnique("selected-component");
-                if (isObject(this.classes))
-                    this.classes["self"] = classes;
-                else
-                    this.classes = classes;
                 activeComponent = this;
                 let oeLit = {
                     ctor: ObjectEditor,
@@ -299,12 +323,16 @@ let Implementation = function (applet) {
         "DRAGSTART_COMPONENT": {
             description: "Drag Component",
             do: function (e) {
+                console.log("I keep on moving...");
                 console.log("DRAGSTART_COMPONENT", this.domID);
+
+                var style = window.getComputedStyle(e.target, null);
                 e.originalEvent.dataTransfer.setData("domID", this.domID);
                 e.originalEvent.dataTransfer.setData("ctor", this.ctor);
-                e.originalEvent.dataTransfer.setData("move", 1);
                 let $elem = app.viewStack.mainContainer.dragImage.$el[0];
                 e.originalEvent.dataTransfer.setDragImage($elem, 0, 0);
+                e.originalEvent.dataTransfer.setData("move", 1);
+                e.originalEvent.dataTransfer.setData("text/plain",(parseInt(style.getPropertyValue("left"), 10) - event.clientX) + ',' + (parseInt(style.getPropertyValue("top"), 10) - event.clientY));
             }
         },
         "HISTORY_STEP_DETAILS": function (e) {
@@ -314,7 +342,6 @@ let Implementation = function (applet) {
             console.log("called FILE_SELECT_MODAL.");
             fileSelectModal.show();
         },
-
         "OPEN_MODAL_FORMS": function(e) {
             app.appletsMap["formsModal"].init().then(() => {
                 console.log("Applet formsModal inited");
@@ -391,26 +418,38 @@ let Implementation = function (applet) {
             app.trigger(evt);
         },
         
-        "LOAD_LAYOUT": function (e) {
+        // "LOAD_LAYOUT": function (e) {
+        //     let _cmp = e.content;
+        //     let res = objectHierarchyGetMatchingMember(_cmp, "props.id", "workArea", "props.components");
+        //     if (res.match) { 
+        //         _cmp = res.match;
+        //     }
+        //     workArea.removeAllChildren(0);
+        //     for (let i = 0; i < _cmp.props.components.length; i++)
+        //     {
+        //         let inst = workArea.addComponent(_cmp.props.components[i]);
+        //         let was = objectHierarchyGetMatchingMember(inst, "attr.isWa", true, "children", true);
+        //         for (let wi = 0; wi < was.length; wi++)
+        //         {
+        //             applet.addBehaviors(was[wi].match, cmpWaBehaviors, false);
+        //         }
+        //         let cmps = objectHierarchyGetMatchingMember(inst, "attr.isCmp", true, "children", true);
+        //         for (let ci = 0; ci < cmps.length; ci++)
+        //         {
+        //             applet.addBehaviors(cmps[ci].match, cmpBehaviors, false);
+        //         }
+        //     }
+        // },
+         "LOAD_LAYOUT": function (e) {
             let _cmp = e.content;
-            let res = objectHierarchyGetMatchingMember(_cmp, "props.id", "workArea", "props.components");
-            if (res.match) { 
+            let res = objectHierarchyGetMatchingMember(_cmp, "props.id", "workAreaRowL2", "props.components");
+            if (res.match) {
                 _cmp = res.match;
             }
-            workArea.removeAllChildren(0);
-            for (let i = 0; i < _cmp.props.components.length; i++)
-            {
-                let inst = workArea.addComponent(_cmp.props.components[i]);
-                let was = objectHierarchyGetMatchingMember(inst, "attr.isWa", true, "children", true);
-                for (let wi = 0; wi < was.length; wi++)
-                {
-                    applet.addBehaviors(was[wi].match, cmpWaBehaviors, false);
-                }
-                let cmps = objectHierarchyGetMatchingMember(inst, "attr.isCmp", true, "children", true);
-                for (let ci = 0; ci < cmps.length; ci++)
-                {
-                    applet.addBehaviors(cmps[ci].match, cmpBehaviors, false);
-                }
+            workAreaRowL2.removeAllChildren(0);
+            for (let i = 0; i < _cmp.props.components.length; i++) {
+                let inst = workAreaRowL2.addComponent(_cmp.props.components[i]);
+                applet.addBehaviors(inst, cmpWaBehaviors, true);
             }
         },
     
@@ -484,7 +523,6 @@ let Implementation = function (applet) {
         },
     
         "SPLIT_HOR": {
-            //description: "Split selected container horizontally",
             description: "Ndaje horizontalisht",
             do: function (e) {
                 let retFromRedoMaybe = arguments[arguments.length - 1];
@@ -493,6 +531,7 @@ let Implementation = function (applet) {
                     console.log("called SPLIT_HOR from History(REDO).");
                 }
                 console.log("Split Selected Container Horizontally");
+
                 let ret = {
                     track: false
                 };
@@ -540,7 +579,7 @@ let Implementation = function (applet) {
                 applet.addBehaviors(newWorkArea, waBehaviors, false);
                 // app.behaviors[newWorkArea.id]["mousemove"]["WA_RESIZE_EW"] = isMouseMoveEW;
                 //{filter: isMouseMoveEw, otherProperties...}
-    
+
                 if (activeContainer.components.length == 1) 
                 {
                     let newRowInstance2;
@@ -720,14 +759,14 @@ let Implementation = function (applet) {
             }
         },
     
+
         "BECOME_ACTIVE": {
             do: function (e) {
                 console.log("Container Became active");
-                //this will holde the instance of the component who manifested this behavior (the manifestor)
                 if (activeContainer && activeContainer != this && activeContainer.classes.indexOf("active-container") > -1) {
                     let classes = activeContainer.classes.slice(0);
                     let ind = classes.indexOf("active-container");
-                    if(id > -1){
+                    if (ind > -1) {
                         classes.splice(ind, 1);
                     }
                     activeContainer.classes = classes;
@@ -736,22 +775,24 @@ let Implementation = function (applet) {
                 classes.pushUnique("active-container");
                 this.classes = classes;
                 activeContainer = this;
-                if (this.id == "workAreaColumnL2")
-                {
-                    let oeLit = {
-                        ctor: ObjectEditor,
-                        "props": {
-                            id: "objectEditor",
-                            instance: data.selectedForm,
-                            field: "props"
-                        }
-                    };
-                    propertyEditorContainer.components = [oeLit];
+                if (this.id == "titleBand" || this.id == "detailBand" ||  this.id == "summaryBand") {
+                    //Builder.metaProps.form_name.props.change(data.selectedForm, this);
+                    // let oeLit = {
+                    //     ctor: ObjectEditor,
+                    //     "props": {
+                    //         id: "objectEditor",
+                    //         instance: data.selectedForm,
+                    //         field: "props"
+                    //     }
+                    // };
+                    propertyEditorContainer.components = [];
                 }
             },
             stopPropagation: true
         },
     
+
+
         "WA_HOVER": {
             do: function (e) {
                 console.log("Container hovered " + this.id);
@@ -912,9 +953,25 @@ let Implementation = function (applet) {
     };
 
 
-    /**
+   /**
      * Behavior Filters below
-    */
+     */
+    let isContainer = function (e) {
+
+        console.log("CNT????",this.ctor);
+        return containers.indexOf(this.ctor) > -1;
+    };
+    let isNotContainer = function (e) {
+        return !isContainer.call(this, e);
+    };
+
+    let isNotDraggableContainer = function (e) {
+        return containers.indexOf(this.ctor) > -1 && this.draggable == false;
+    };
+
+    let isDraggable = function (e) {
+        return this.draggable == true;
+    }
     //filter to determine if mousemove is an "WA_RESIZE_NS" behavior
     let debouncedDragNS;
     let d0;
@@ -996,7 +1053,7 @@ let Implementation = function (applet) {
 
 
     //utility functions
-    
+
 
     let childrenAutoWidth = function (container) {
         let children_len = container.components.length;
@@ -1061,17 +1118,24 @@ let Implementation = function (applet) {
         }
     };
 
+    let noNeedClasses = ["selected-component", "default-component"];
+
     let stripHandle = function (lit) {
         if (lit.props["components"] && Array.isArray(lit.props["components"]))
             for (let i = 0; i < lit.props.components.length; i++) {
                 if (lit.props.components[i].props["attr"] && lit.props.components[i].props.attr["handle"]) {
                     lit.props.components[i] = lit.props.components[i].props.components[0];
                 }
+
+                if (lit.props.components[i].props["classes"] && lit.props.components[i].props.classes.length > 0) {
+                    let diffClasses = lit.props.components[i].props.classes.difference(noNeedClasses);
+                    lit.props.components[i].props.classes = diffClasses;
+                }
+
                 if (lit.props.components[i].props["components"] && Array.isArray(lit.props.components[i].props["components"]))
                     stripHandle(lit.props.components[i]);
             }
     };
-
     let daBehaviors = {
         "mouseover": "WA_HOVER",
         "mouseout": "WA_HOVER",
@@ -1087,43 +1151,79 @@ let Implementation = function (applet) {
         "dragover": "TOGGLE_BIN",
     };
 
-    let waBehaviors = {
-        "click": "BECOME_ACTIVE",
-        "mousedown": "WA_PREVENT_DRAGSTART",
-        "mouseover": "WA_HOVER",
-        "mouseout": "WA_HOVER",
-        "mousemove": {
-            "IS_WA_RESIZE_NS": isMouseMoveNS
-        },
-        "resize": "WA_RESIZE",
-        "contextmenu": "WA_REMOVE",
-        "drop": "ADD_COMPONENT",
-        "dragover": "ALLOW_DROP",
-    };
+    // let waBehaviors = {
+    //     "click": "BECOME_ACTIVE",
+    //     "mousedown": "WA_PREVENT_DRAGSTART",
+    //     "mouseover": "WA_HOVER",
+    //     "mouseout": "WA_HOVER",
+    //     "mousemove": {
+    //         "IS_WA_RESIZE_NS": isMouseMoveNS
+    //     },
+    //     "resize": "WA_RESIZE",
+    //     "contextmenu": "WA_REMOVE",
+    //     "drop": "ADD_COMPONENT",
+    //     "dragover": "ALLOW_DROP",
+    // };
+
+    // let cmpWaBehaviors = {
+    //     "mousedown": {
+    //         "WA_PREVENT_DRAGSTART": undefined,
+    //         "BECOME_ACTIVE": undefined
+    //     },
+    //     "mouseover": "WA_HOVER",
+    //     "mouseout": "WA_HOVER",
+    //     "mousemove": {
+    //         "IS_WA_RESIZE_NS": isMouseMoveNS
+    //     },
+    //     "resize": "WA_RESIZE",
+    //     "contextmenu": "WA_REMOVE",
+    //     "drop": "ADD_COMPONENT",
+    //     "dragover": "ALLOW_DROP",
+    // };
 
     let cmpWaBehaviors = {
         "mousedown": {
-            "WA_PREVENT_DRAGSTART": undefined,
-            "BECOME_ACTIVE": undefined
+            "WA_PREVENT_DRAGSTART": isNotDraggableContainer,
+            "BECOME_ACTIVE": isContainer,
+            "SELECT_COMPONENT": (e) => {
+                return ((e.which && e.which == 1) || (e.buttons && e.buttons == 1));
+            }
         },
-        "mouseover": "WA_HOVER",
-        "mouseout": "WA_HOVER",
+        "mouseover": {
+            "WA_HOVER": isContainer
+        },
+        "mouseout": {
+            "WA_HOVER": isContainer
+        },
         "mousemove": {
             "IS_WA_RESIZE_NS": isMouseMoveNS
         },
-        "resize": "WA_RESIZE",
-        "contextmenu": "WA_REMOVE",
-        "drop": "ADD_COMPONENT",
-        "dragover": "ALLOW_DROP",
-    };
-
-    let cmpBehaviors = {
-        "mousedown": {
-            "SELECT_COMPONENT": (e) => { return ((e.which && e.which == 1) || (e.buttons && e.buttons == 1));}
+        "resize": {
+            "WA_RESIZE": isContainer
         },
-        "dragstart": "DRAGSTART_COMPONENT",
+        "contextmenu": {
+            "WA_REMOVE": isContainer
+        },
+        "drop": {
+            "BECOME_ACTIVE": isContainer,
+            "ADD_COMPONENT": isContainer
+        },
+        "dragover": {
+            "ALLOW_DROP": isContainer
+        },
+        "dragstart": {
+            "DRAGSTART_COMPONENT": isDraggable
+        },
         "dropped": "SELECT_COMPONENT"
     };
+
+    // let cmpBehaviors = {
+    //     "mousedown": {
+    //         "SELECT_COMPONENT": (e) => { return ((e.which && e.which == 1) || (e.buttons && e.buttons == 1));}
+    //     },
+    //     "dragstart": "DRAGSTART_COMPONENT",
+    //     "dropped": "SELECT_COMPONENT"
+    // };
     return imp;
 };
 Implementation.ctor = "Implementation";

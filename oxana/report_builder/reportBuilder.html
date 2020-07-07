@@ -49,6 +49,8 @@
                 rjs.define("./oxana/GaiaAPI/GaiaAPI_DV_forms.js", "GaiaAPI_DV_forms");
                 rjs.define("./oxana/GaiaAPI/GaiaAPI_DV_dataviews.js", "GaiaAPI_DV_dataviews");
                 rjs.define("./oxana/report_builder/components/JRLabel.js", "JRLabel");
+                rjs.define("./oxana/report_builder/components/JRBand.js", "JRBand");
+                rjs.define("./oxana/report_builder/css/builder.css", "Report_Builder_Css");
                 rjs.require([
                     "metaProps",
                     "componentLiterals",
@@ -56,7 +58,9 @@
                     "GaiaAPI_Utils",
                     "GaiaAPI_DV_forms",
                     "GaiaAPI_DV_dataviews",
-                    "JRLabel"
+                    "JRLabel",
+                    "JRBand",
+                    "Report_Builder_Css"
                 ]).then(function () {
                     rjs.define("./oxana/report_builder/ReportBuilder.js", "ReportBuilder");
                 });

@@ -4,6 +4,9 @@ Builder.initComponentList = function () {
         {
             "label": "JRLabel", "ctor": "JRLabel"
         },
+        {
+            "label": "JRBand", "ctor": "JRBand"
+        },
        
     ]);
 };
