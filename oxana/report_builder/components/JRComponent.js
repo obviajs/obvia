@@ -53,4 +53,4 @@ var JRComponent = function(_props){
  
 
 };
-JRComponent.prototype.ctor = 'JRComponent';
+// JRComponent.prototype.ctor = 'JRComponent';

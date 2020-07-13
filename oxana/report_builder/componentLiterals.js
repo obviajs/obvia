@@ -49,6 +49,18 @@ Builder.initComponentLiterals = function () {
             label: "JRLabel",
             icon: ".png"
         },
+        "JRBand": {
+            literal: {
+                ctor: JRBand,
+                props: {
+                    id: 'jrband',
+                    type: ContainerType.ROW,
+                    classes: ["default-component","band"]
+                }
+            },
+            label: "JRBand",
+            icon: ".png"
+        },
 
         "Heading": {
             literal: {

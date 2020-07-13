@@ -58,6 +58,28 @@ Builder.initMetaProps = function () {
                 }
             }
         },
+        width: {
+            ctor: "TextInput",
+            label: "Width",
+            required: true,
+            index: 9,
+            props: {
+                change: function () {
+                    this.parent.parent.instance.width = this.value;
+                }
+            }
+        },
+        height: {
+            ctor: "TextInput",
+            label: "Height",
+            required: true,
+            index: 10,
+            props: {
+                change: function () {
+                    this.parent.parent.instance.height = this.value;
+                }
+            }
+        },
 
         visible: {
             ctor: "Toggle", label: "Visible", index: 4, props: {
@@ -77,9 +99,10 @@ Builder.initMetaProps = function () {
       
         x: {
             ctor: "TextInput", label: "x-coordinate", index: 1, props: {
-                // change: function () {
-                //     this.parent.parent.instance.x = this.value;
-                // }
+                change: function () {
+                    this.parent.parent.instance.x = this.value;
+                    this.parent.parent.instance.$el[0].style.left = this.value + 'px' ;
+                }
             }
         },
 
@@ -87,6 +110,7 @@ Builder.initMetaProps = function () {
             ctor: "TextInput", label: "y-coordinate", index: 2, props: {
                 change: function () {
                     this.parent.parent.instance.y = this.value;
+                    this.parent.parent.instance.$el[0].style.top = this.value + 'px' ;
                 }
             }
         },
@@ -299,6 +323,102 @@ Builder.initMetaProps = function () {
                     } else {
                         alert("Please Select DataProvider");
                     }
+                }
+            }
+        },
+        classes: {
+            ctor: "Button",
+            label: "Classes",
+            index: 18,
+            props: {
+                id: "editClasses",
+                label: "Edit Classes",
+                classes: ["btn", "btn-secondary"],
+                components: [],
+                click: function (e) {
+                    let oe = this.parent.parent;
+                    let win = this.parent.parent.classesEditModal;
+                    if (!win) {
+                        let dp = new ArrayEx(oe.instance.classes.length);
+                        let classes = Object.values(oe.instance.classes);
+                        for (let i = 0; i < classes.length; i++) {
+                            dp[i] = {
+                                "cssclass": oe.instance.classes[i]
+                            };
+                        }
+
+                        let lit = extend(true, Builder.components.Modal.literal);
+                        lit.props.id = "ClassesEditModal";
+                        lit.props.title = "Edit Classes";
+                        lit.props.components = [{
+                            ctor: RepeaterEx,
+                            props: {
+                                id: "classesEditor",
+                                dataProvider: dp,
+                                rendering: {
+                                    direction: 'vertical',
+                                    separator: false,
+                                },
+                                rowDelete: (e, r, ra) => { 
+                                    let classes = oe.instance.classes.slice(0);
+                                    classes.splice(ra.currentIndex, 1);
+                                    oe.instance.classes = classes;
+                                },
+                                rowAdd: (e, r, ra) => {
+                                    console.log(ra);
+                                },
+                                beforeAttach: function (e) { 
+                                    if (this.internalRepeater["removeButton"] && this.internalRepeater["removeButton"].length > 0) { 
+                                        this.internalRepeater["removeButton"][0].enabled = false;
+                                    }
+                                },
+                                components: [
+                                    {
+                                        ctor: TextInput,
+                                        props: {
+                                            id: "textInput",
+                                            value: "{cssclass}",
+                                            change: function (e, ra) {
+                                                let classes = oe.instance.classes.slice(0);
+                                                if (ra.currentIndex < classes.length)
+                                                    classes[ra.currentIndex] = this.value;
+                                                else
+                                                    classes.push(this.value);
+                                                oe.instance.classes = classes;
+                                            }
+                                        }
+                                    },
+                                    {
+                                        ctor: Button,
+                                        props: {
+                                            id: 'removeButton',
+                                            type: "button",
+                                            components: [{
+                                                ctor: Label,
+                                                props: {
+                                                    id: 'fa',
+                                                    labelType: LabelType.i,
+                                                    classes: ["fas", "fa-minus-circle"]
+                                                }
+                                            }],
+                                            click: function(e, ra) { 
+                                                this.parent.removeRow(ra.currentIndex);
+                                            }
+                                        }
+                                    }
+                                ]
+                            }
+                        }];
+
+                        win = this.parent.parent.addComponent(lit);
+                    }
+                    let classesInstances = win.modalDialog.modalContent.modalBody.classesEditor;
+                    if (classesInstances) {
+                        win.attached = true;
+                        win.show();
+                    }
+
+
                 }
             }
         },
@@ -683,7 +803,9 @@ Builder.initMetaProps = function () {
 
     Builder.metaProps.Container = {
         type: {
-            ctor: "Select", label: "Type", props: {
+            ctor: "Select",
+            label: "Type",
+            props: {
                 dataProvider: new ArrayEx(getMembersCollection(ContainerType, "text", "value")),
                 change: function () {
                     this.parent.parent.instance.type = this.value;
@@ -691,13 +813,16 @@ Builder.initMetaProps = function () {
             }
         },
         role: {
-            ctor: "TextInput", label: "Role", props: {
+            ctor: "TextInput",
+            label: "Role",
+            props: {
                 change: function () {
                     this.parent.parent.instance.role = this.value;
                 }
             }
         }
     };
+
     Builder.metaProps.WizardStep = {
         stepHeading: {
             ctor: "TextInput", label: "Step heading", required: true, index: 1, props: {
