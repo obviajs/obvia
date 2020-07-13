@@ -134,7 +134,6 @@ let Implementation = function (applet) {
             //app.behaviors["previewBtn"]["click"] = "PREVIEW";
             // applet.addBehaviors(workArea, cmpWaBehaviors, false);
             applet.addBehaviors(title, cmpWaBehaviors, false);
-            console.log("Title",title);
             applet.addBehaviors(detail, cmpWaBehaviors, false);
             applet.addBehaviors(summary, cmpWaBehaviors, false);
             applet.addBehaviors(app, {
@@ -190,36 +189,48 @@ let Implementation = function (applet) {
                 if (!formField) {
                     formField = data.components["FormField"].literal;
                 }
-                console.log('CREATED_');
                 e.preventDefault();
-                let workArea = Component.instances[e.target.id];
+                // let workArea = Component.instances[e.target.id];
+                let targetBand = Component.instances[e.target.id];
                 let domID = e.originalEvent.dataTransfer.getData("domID");
                 let ctor = e.originalEvent.dataTransfer.getData("ctor");
                 let move = e.originalEvent.dataTransfer.getData("move");
                 let inst;
+
+                //Activate the band
+                if(activeContainer && activeContainer != targetBand && activeContainer.classes.indexOf("active-container") > -1) {
+                    let classes = activeContainer.classes.slice(0);
+                    let ind = classes.indexOf("active-container");
+                    if (ind > -1) {
+                        classes.splice(ind, 1);
+                    }
+                    activeContainer.classes = classes;
+                }
+                let classes = targetBand.classes.slice(0);
+                classes.pushUnique("active-container");
+                targetBand.classes = classes;
+                activeContainer = targetBand;
                 let ret = {
                     track: false
                 };
                 if (move == "") {
                     console.log("ADD_COMPONENT_ " + domID);
                     let lit = data.components[ctor].literal;
-                    if (noNeedFF.indexOf(ctor) == -1 && (workArea.ctor == "Form" || (objectHierarchyGetMatching(workArea, "ctor", "Form", "parent", 1))["match"] !=null)) {
+                    if (noNeedFF.indexOf(ctor) == -1 && (targetBand.ctor == "Form" || (objectHierarchyGetMatching(targetBand, "ctor", "Form", "parent", 1))["match"] !=null)) {
                         let ff = extend(true, formField);
                         ff.props.component = lit;
                         lit = ff;
                     }
-
                     lit = extend(true, lit);
                     lit.props.afterAttach = function (e) {
                         let evt = new jQuery.Event("dropped");
                         this.trigger(evt);
                     };
                     lit.props.draggable = true;
-                    inst = workArea.addComponent(lit);
+                    inst = targetBand.addComponent(lit);
                     let classes = inst.classes.slice(0);
                     classes.pushUnique("selected-component");
                     inst.classes = classes;
-
                     applet.addBehaviors(inst, cmpWaBehaviors, false);
                     let isCont = isContainer.call(inst);
                     if (isCont) {
@@ -227,64 +238,33 @@ let Implementation = function (applet) {
                     }
                     inst.attr.isCmp = true;
                     ret.child = lit;
-                    ret.parent = workArea;
-                    ret.container = workArea;
+                    ret.parent = targetBand;
+                    ret.container = targetBand;
                     ret.track = true;											 
                     return ret;
-                } 
+                }
                 else 
                 {
-                    console.log("MOVED_", domID, workArea.domID);
                     inst = Component.instances[domID];
-                    console.log("Moved component",inst);
-                    var offset = event.dataTransfer.getData("text/plain").split(',');
-                    var x_drag = (event.clientX + parseInt(offset[0], 10)) + 'px';
-                    var y_drag = (event.clientY + parseInt(offset[1], 10)) + 'px';
-                    inst.$el[0].style.left = x_drag;
-                    inst.$el[0].style.top = y_drag;
-                    inst.x = x_drag;
-                    inst.y = y_drag;
+                    var instParentID = inst.$el[0].parentElement.id.substring(0,inst.$el[0].parentElement.id.indexOf("_"));
 
-                    
-                    // let lit = Builder.components[ctor].literal;
-                    // if (inst.parent && (inst.parent != workArea) && (domID != workArea.domID)) {
-                    //     inst.parent.removeChild(inst, 0);
-                    //     if (inst.ctor == "FormField" && workArea.ctor != "Form") {
-                    //         // inst = inst.children[inst.component.props.id];
-                    //         inst.draggable = true;
-                    //         applet.addBehaviors(inst, cmpWaBehaviors, false);
-                    //         let classes = inst.classes.slice(0);
-                    //         classes.pushUnique("selected-component");
-                    //         inst.classes = classes;
-                    //     } else if (workArea.ctor == "Form" && noNeedFF.indexOf(inst.ctor) == -1) {
-                    //         app.removeBehaviors(inst, cmpWaBehaviors, false);
-                    //         let classes = inst.classes.slice(0);
-                    //         let ind = classes.indexOf("default-component");
-                    //         if (id > -1) {
-                    //             classes.splice(ind, 1);
-                    //         }
-                    //         ind = classes.indexOf("selected-component");
-                    //         if (ind > -1)
-                    //             classes.splice(ind, 1);
-                    //         inst.classes = classes;
-                    //         inst.draggable = false;
-                    //         let ff = extend(true, formField);
-                    //         ff.props.component = inst.literal;
-                    //         ff.props.draggable = true;
-                    //         ff.props.classes = !Array.isArray(ff.props.classes) ? [] : ff.props.classes;
-                    //         ff.props.classes.push("selected-component");
-                    //         inst = workArea.addComponent(ff);
-                    //         //inst.addChild(inst);
-                    //         //inst = instF;
-                    //         applet.addBehaviors(inst, cmpWaBehaviors, false);
-                    //         // if (parents.indexOf(ctor) > -1) {
-                    //         //     applet.addBehaviors(instF, cntBehaviors, false);
-                    //         // }
-                    //     }
-                    //     workArea.addChild(inst);
-                    //     let evt = new jQuery.Event("dropped");
-                    //     inst.trigger(evt);
-                    // }
+                    if(instParentID != activeContainer.id)
+                    {
+                        inst.$el.appendTo(activeContainer.$el[0]);
+                        inst.parent = activeContainer;
+                        inst.$el[0].style.left = 420 +'px';
+                        inst.$el[0].style.top = 70 + 'px';         
+                    }
+                    else 
+                    {
+                        var offset = event.dataTransfer.getData("text/plain").split(',');
+                        var x_drag = (event.clientX + parseInt(offset[0], 10)) + 'px';
+                        var y_drag = (event.clientY + parseInt(offset[1], 10)) + 'px';
+                        inst.$el[0].style.left = x_drag;
+                        inst.$el[0].style.top = y_drag;
+                        inst.x = x_drag;
+                        inst.y = y_drag;
+                    }
                 }
 
             },
@@ -794,8 +774,6 @@ let Implementation = function (applet) {
             stopPropagation: true
         },
     
-
-
         "WA_HOVER": {
             do: function (e) {
                 console.log("Container hovered " + this.id);
@@ -817,6 +795,7 @@ let Implementation = function (applet) {
     
         "WA_RESIZE": {
             do: function (e) {
+                console.log("Resize Event",e);
                 let retFromRedoMaybe = arguments[arguments.length - 1];
                 if (retFromRedoMaybe.container) {
                     console.log("called WA_RESIZE from History(REDO).");
@@ -984,7 +963,6 @@ let Implementation = function (applet) {
             let manifestor = this;
             let classes = manifestor.classes.slice(0);
             classes = classes.difference(["ns-resize", "ew-resize"]);
-
             if (d0 && !debouncedDragNS) {
                 if (Math.abs(d0.y - e.pageY) > Math.abs(d0.x - e.pageX)) {
                     classes.pushUnique("ns-resize");
@@ -1016,10 +994,11 @@ let Implementation = function (applet) {
                     let dy = p1.y - p0.y;
                     let dx = p1.x - p0.x;
                     let evt = new jQuery.Event("resize");
-                    if (dy != 0 && manifestor.parent.parent.components.length >= 2) {
+                    if (dy != 0 && manifestor.parent.components.length >= 2) {
                         dy = -dy;
                         evt.dy = dy;
                     }
+                    //no need to resize in x direction
                     if (dx != 0 && manifestor.parent.components.length >= 2) {
                         dx = -dx;
                         evt.dx = dx;
@@ -1048,7 +1027,6 @@ let Implementation = function (applet) {
             //classes.splice(i, 1);
             this.classes = classes;
             //}
-
         }
     };
 
@@ -1087,8 +1065,8 @@ let Implementation = function (applet) {
     };
 
     let containerResize = function (container, dx, dy) {
-        if (dy && !isNaN(dy) && dy != 0 && container.parent.parent.components.length >= 2) {
-            let mpi = indexOfObject(container.parent.parent.components, "props.id", container.parent.id);
+        if (dy && !isNaN(dy) && dy != 0 && container.parent.components.length >= 2) {
+            let mpi = indexOfObject(container.parent.components, "props.id", container.parent.id);
             if (mpi == container.parent.parent.components.length - 1) {
                 dy = -dy;
                 --mpi;
@@ -1110,7 +1088,6 @@ let Implementation = function (applet) {
                 --mpi;
             } else
                 ++mpi;
-
             let wa = container.parent.$el.width();
             let s = dx / Math.abs(dx);
             let wa_rel = Math.floor(Math.abs(dx * 12 / wa)) * s;
