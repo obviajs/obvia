@@ -35,17 +35,18 @@ var CollectionEditor = function (_props) {
         }
     };
     let _rowAdd = function (e, r, ra) {
-        console.log("rowAdd", e);
-        for (let p in ra.currentRow) {
-            ra.currentRow[p].scrollTo();
-            break;
+        if (e.target.id == this.children.internalRepeater.domID) {
+            console.log("rowAdd", e);
+            for (let p in ra.currentRow) {
+                ra.currentRow[p].scrollTo();
+                break;
+            }
+            for (let i = 0; i < this.children.internalRepeater.itemLabel.length; i++) {
+                this.children.internalRepeater.itemLabel[i].attr["data-toggle"] = "collapse";
+                this.children.internalRepeater.itemLabel[i].attr["data-target"] = "#" + this.children.internalRepeater.objectEditor[i].domID;
+            }
+            this.children.internalRepeater.focusComponent(ra.currentIndex, 0);
         }
-        for (let i = 0; i < this.itemLabel.length; i++){
-            this.itemLabel[i].attr["data-toggle"] = "collapse";
-            this.itemLabel[i].attr["data-target"] = "#" + this.objectEditor[i].domID;
-        }
-        
-        this.focusComponent(ra.currentIndex, 0);
     };
 
     this.beforeAttach = function (e) {

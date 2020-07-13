@@ -359,7 +359,7 @@ Builder.initMetaProps = function () {
                                 }];
                                 win = this.parent.parent.addComponent(lit);
                             }
-                            let colOEInstances = win.modalDialog.modalContent.modalBody.columnEditor.repeater.repeater.objectEditor;
+                            let colOEInstances = win.modalDialog.modalContent.modalBody.columnEditor.repeater.internalRepeater.objectEditor;
                             if (colOEInstances) {
                                 let dpFieldNames = Object.keys(Builder.data[dpName][0]);
                                 let len = dpFieldNames.length;

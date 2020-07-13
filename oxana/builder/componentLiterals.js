@@ -284,7 +284,6 @@ Builder.initComponentLiterals = function () {
                     labelField: Builder.providerLabelField,
                     valueField: Builder.providerValueField,
                     dataProvider: Builder.sources,
-                    classes: ["ml-0"],
                     fields: [{
                         "field": Builder.providerValueField,
                         "description": Builder.providerValueField,

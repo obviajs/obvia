@@ -98,8 +98,7 @@ var AutoBrowse = function (_props) {
                     dataProvider: _dataProvider,
                     value: _value,
                     multiSelect: false,
-                    matchType: StringMatchType.STARTS_WITH,
-                    width: "90%"
+                    matchType: StringMatchType.STARTS_WITH
                 }
             },
             {
@@ -188,7 +187,7 @@ var AutoBrowse = function (_props) {
         fields:[],
         attr:{"data-triggers":"browse"},   
         value:new ArrayEx([]),
-        classes:["wrap"],
+        classes:["d-inline-flex"],
         valueField: "",
         allowNewItem: false
     };
@@ -198,9 +197,9 @@ var AutoBrowse = function (_props) {
         _props.attr = {};
     }
     if (!_props.classes) { 
-        _props.classes = ["wrap"];
+        _props.classes = ["d-flex"];
     } else
-        _props.classes.pushUnique("wrap");
+        _props.classes.pushUnique("d-flex");
 
     let myDtEvts = ["browse"];
     if (!Object.isEmpty(_props.attr) && _props.attr["data-triggers"] && !Object.isEmpty(_props.attr["data-triggers"]))

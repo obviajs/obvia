@@ -40,17 +40,14 @@ var DataGridColumn = function (_props) {
     this.visible = _props.visible;
     this.oncellstyling = _props.oncellstyling;
     this.oncelleditfinished = _props.oncelleditfinished;
+    let _self = this;
 
     Object.defineProperty(this, "props", {
-        get: function props() {
-            let obj = {};
-            for (let prop in _props) {
-                if (this.hasOwnProperty(prop) && this.propertyIsEnumerable(prop) && (typeof _props[prop] != 'function') && (prop != "ownerDocument"))
-                    obj[prop] = this[prop];
-            }
-            return obj;
+        get: function props() {            
+            return new Props(_self, _props);
         },
         configurable: true
     });
+    Props.call(this, this, _props);
 };
 DataGridColumn.prototype.ctor = 'DataGridColumn';
