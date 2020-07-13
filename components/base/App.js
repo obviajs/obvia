@@ -5,7 +5,8 @@ var App = function(_props){
         components:[],
         historyProps: { enabled: true },
         type: ContainerType.NONE,
-        guid: StringUtils.guid()
+        guid: StringUtils.guid(),
+        defaultAppletIndex: 0
     };
 
     _props = extend(false, false, _defaultParams, _props);
@@ -19,11 +20,25 @@ var App = function(_props){
     let _applets = _props.applets;
     let _browserManager = BrowserManager.getInstance();
     let _guid = _props.guid;
+    let _title;
+    let _defaultAppletIndex = _props.defaultAppletIndex;
 
     if(_style)
     {
         $("<style id='"+_self.domID+"_style' type='text/css'>"+_style+"</style>").appendTo("head");
     }
+
+    Object.defineProperty(this, "title", {
+        get: function title() {
+            return _title;
+        },
+        set: function title(v) { 
+            if (title != v) { 
+                _browserManager.title = _title = v;
+            }
+        },
+        configurable: true
+    });
 
     Object.defineProperty(this, 'history',
     {
@@ -266,6 +281,14 @@ var App = function(_props){
         }
     };
 
+    this.init = function (e) {
+        if (e.target.id == this.domID) {
+            if (_props.title) { 
+                _self.title = _props.title;
+            }
+        }     
+    };
+
     this.endDraw = function (e) {
         if (e.target.id == this.domID) {
             
@@ -289,20 +312,17 @@ var App = function(_props){
     let _route = function (hash) {
         let m = BrowserUtils.parse(hash);
         if (m.hash && m.hash != "") { 
-             let appletInst = _appletsMap[m.hash];
-            //p.map
-
-            appletInst.init().then((literal) => {
-                // let paths = findMember(_context, "id", [], appletInst.appendTo, false);
-                // paths[0].pop();
-                // let appendTo = getChainValue(_context, paths[0]);
-                // let arrInst = appendTo.addComponents([literal]);
-            });
-            for (let aphash in _appletsMap)
-            {
-                //_appletsMap[aphash].post();
+            let appletInst = _appletsMap[m.hash];
+            if (appletInst) {
+                appletInst.route(m.map);
+            } else { 
+                if (_applets && _applets.length > 0) {
+                    appletInst = _appletsMap[_applets[_defaultAppletIndex].anchor];
+                    appletInst.route(m.map);
+                }
             }
-            //postoja kete mesazh m te gjithe Apleteve 
+            // appletInst.init(m.map).then((literal) => {
+            // });
         }
     };
 
@@ -328,12 +348,26 @@ var App = function(_props){
                 for (let i = 0; i < len; i++) { 
                     _applets[i].app = _applets[i].parent = r;
                     let appletInst = _appletsMap[_applets[i].anchor] = new Applet(_applets[i]);
+                    appletInst.on("appletInit", _appletInit);
                 }
             }
             _browserManager.init();
             _route(_browserManager.hash);
         }
     };
+
+    let _appletInit = function (e) {
+        //compare with Proxy of myself
+        if(e.target.parent == r)
+            console.log("App.js Appletinit", e.map);
+        //_delayUpdateHash.apply(this, arguments);
+    };
+
+    let _updateHash = function (e) {
+        console.log("App.js Appletinit", e.map);
+        return e;
+    };
+    let _delayUpdateHash = debounce(_updateHash, 2000);
 
     this.addBehaviors = function (cmps, behaviors, recurse = true) {
         var cmps = isObject(cmps) && !cmps.forEach?[cmps]:cmps;

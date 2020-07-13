@@ -42,6 +42,8 @@ let Implementation = function (applet) {
                 promise.catch(function (err) {
                     info.visible = true;
                 });
+            } else { 
+                info.visible = true;
             }
         },
 
