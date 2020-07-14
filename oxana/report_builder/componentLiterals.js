@@ -61,7 +61,32 @@ Builder.initComponentLiterals = function () {
             label: "JRBand",
             icon: ".png"
         },
-
+        "JRTextInput": {
+            literal: {
+                ctor: JRTextInput,
+                props: {
+                    id: 'jrtextinput',
+                }
+            },
+            set: null,
+            get: null,
+            valueField: null,
+            label: "JRTextInput",
+            icon: "horizontal-line.png"
+        },
+        "JRHRule": {
+            literal: {
+                "ctor": JRHRule,
+                "props": {
+                    id: 'jrhrule',
+                    align: "center",
+                    size: 5,
+                    width: 1000,
+                }
+            },
+            label: "JRHRule",
+            icon: ".png"
+        },
         "Heading": {
             literal: {
                 "ctor": Heading,
@@ -194,6 +219,20 @@ Builder.initComponentLiterals = function () {
                 }
             },
             label: "Image",
+            icon: ".png"
+        },
+        "JRImage": {
+            literal: {
+                "ctor": JRImage,
+                "props": {
+                    id: 'jrimage',
+                    src: 'https://d28hgpri8am2if.cloudfront.net/book_images/cvr9781451648539_9781451648539_hr.jpg',
+                    alt: "Steve Jobs",
+                    height: 100,
+                    width: 100
+                }
+            },
+            label: "JRImage",
             icon: ".png"
         },
         "Select": {
@@ -514,6 +553,18 @@ Builder.initComponentLiterals = function () {
                 }
             },
             label: "Container",
+            icon: ".png"
+        },
+        "JRContainer": {
+            literal: {
+                ctor: JRContainer,
+                props: {
+                    id: 'jrcontainer',
+                    type: ContainerType.NONE,
+                    classes: ["default-component", "default-cnt"]
+                }
+            },
+            label: "JRContainer",
             icon: ".png"
         },
         "ViewStack": {

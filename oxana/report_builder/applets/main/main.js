@@ -237,6 +237,7 @@ let Implementation = function (applet) {
                     console.log("MOVED_", domID, workArea.domID);
                     inst = Component.instances[domID];
                     console.log("Moved component",inst);
+                    
                     var offset = event.dataTransfer.getData("text/plain").split(',');
                     var x_drag = (event.clientX + parseInt(offset[0], 10)) + 'px';
                     var y_drag = (event.clientY + parseInt(offset[1], 10)) + 'px';
@@ -329,13 +330,13 @@ let Implementation = function (applet) {
                 console.log("I keep on moving...");
                 console.log("DRAGSTART_COMPONENT", this.domID);
 
-                var style = window.getComputedStyle(e.target, null);
-                e.originalEvent.dataTransfer.setData("domID", this.domID);
-                e.originalEvent.dataTransfer.setData("ctor", this.ctor);
-                let $elem = app.viewStack.mainContainer.dragImage.$el[0];
-                e.originalEvent.dataTransfer.setDragImage($elem, 0, 0);
-                e.originalEvent.dataTransfer.setData("move", 1);
-                e.originalEvent.dataTransfer.setData("text/plain",(parseInt(style.getPropertyValue("left"), 10) - event.clientX) + ',' + (parseInt(style.getPropertyValue("top"), 10) - event.clientY));
+                var style = window.getComputedStyle(event.target, null);
+               e.originalEvent.dataTransfer.setData("domID", this.domID);
+               e.originalEvent.dataTransfer.setData("ctor", this.ctor);
+                //let $elem = app.viewStack.mainContainer.dragImage.$el[0];
+               // e.originalEvent.dataTransfer.setDragImage($elem, 0, 0);
+               e.originalEvent.dataTransfer.setData("move", 1);
+               e.originalEvent.dataTransfer.setData("text/plain",(parseInt(style.getPropertyValue("left"), 10) - event.clientX) + ',' + (parseInt(style.getPropertyValue("top"), 10) - event.clientY));
             }
         },
         "HISTORY_STEP_DETAILS": function (e) {

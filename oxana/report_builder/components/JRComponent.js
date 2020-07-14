@@ -20,6 +20,15 @@ var JRComponent = function(_props){
         set: function x(v) {
             if (_x != v) {
                 _x = v;
+                if (this.$el) {
+                    if (_x){
+                        this.show();
+
+                    }
+                        
+                    else
+                        this.hide();
+                }
             }
         },
         enumerable: true

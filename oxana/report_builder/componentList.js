@@ -7,6 +7,17 @@ Builder.initComponentList = function () {
         {
             "label": "JRBand", "ctor": "JRBand"
         },
-       
+        {
+            "label": "JRTextInput", "ctor": "JRTextInput"
+        },
+        {
+            "label": "JRHRule", "ctor": "JRHRule"
+        },
+        {
+            "label": "JRImage", "ctor": "JRImage"
+        },
+        {
+            "label": "Container", "ctor": "Container"
+        },
     ]);
 };

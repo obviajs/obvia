@@ -7,6 +7,12 @@
     width: 100px ;
     height: 30px ;	
 }
+.dragged-component {
+    position: relative !important;
+    border: 1px dashed #3987d9 !important;
+    width: 100px ;
+    height: 30px ;	
+}
 .default-component {
     background-color: rgba(204, 22, 22, 0)!important;
     width: 100px ;
