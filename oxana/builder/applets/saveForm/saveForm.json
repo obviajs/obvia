@@ -22,14 +22,6 @@
                     }
                 },
                 {
-                    "ctor": "RequiredFieldValidator",
-                    "props": {
-                        "controlToValidate": "textField",
-                        "errorMessage": "Form name is required",
-                        "setFocusOnError": true
-                    }
-                },
-                {
                     "ctor": "Label",
                     "props": {
                         "id": "info",

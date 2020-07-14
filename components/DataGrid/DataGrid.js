@@ -18,6 +18,22 @@ var DataGrid = function(_props)
             return _currentIndex;
         }
     });
+    Object.defineProperty(this, "cellItemRenderers",
+    {
+        get: function cellItemRenderers()
+        {
+            return _cellItemRenderers;
+        },
+        enumerable: false
+    });
+    Object.defineProperty(this, "cellItemEditors",
+    {
+        get: function cellItemEditors()
+        {
+            return _cellItemEditors;
+        },
+        enumerable: false
+    });
     
     Object.defineProperty(this, "rowCount",
     {
@@ -94,7 +110,7 @@ var DataGrid = function(_props)
                         
                             if (_self.editPosition.event == 1) {
                                 _self.cellEditFinished(_self.editPosition.rowIndex, _self.editPosition.columnIndex, false);
-                                _self.cellItemRenderers[_self.editPosition.rowIndex][_self.editPosition.columnIndex].show();
+                                _cellItemRenderers[_self.editPosition.rowIndex][_self.editPosition.columnIndex].show();
                             }
                             
                             _self.editPosition.rowIndex = newEditPosition;
@@ -170,7 +186,7 @@ var DataGrid = function(_props)
     this.setCellsWidth = function()
     {
         //at least one row ?
-        if(this.cells.length>0){
+        if(_cells.length>0){
             let definedWidth = 0; let autoWidthColumns = [];
             for (let columnIndex=0;columnIndex<_columns.length;columnIndex++) {
                 let column = _columns[columnIndex];
@@ -185,8 +201,8 @@ var DataGrid = function(_props)
                 let column = autoWidthColumns[columnIndex];
                 column.calculatedWidth = autoWidth;
             }
-            for (let columnIndex=0;columnIndex<this.cells[0].length;columnIndex++) {
-                this.cells[0][columnIndex].css({"width":(_columns[columnIndex].calculatedWidth)+"px"}); 
+            for (let columnIndex=0;columnIndex<_cells[0].length;columnIndex++) {
+                _cells[0][columnIndex].css({"width":(_columns[columnIndex].calculatedWidth)+"px"}); 
             }
         }
     };
@@ -243,11 +259,11 @@ var DataGrid = function(_props)
         {
             for(let columnIndex=0;columnIndex<_columns.length;columnIndex++)
             {
-                let itemRenderer = this.cellItemRenderers[rowIndex][columnIndex];
-                this.cellItemRenderers[rowIndex][columnIndex].repeaterIndex = rowIndex + virtualIndex;
+                let itemRenderer = _cellItemRenderers[rowIndex][columnIndex];
+                _cellItemRenderers[rowIndex][columnIndex].repeaterIndex = rowIndex + virtualIndex;
                 itemRenderer.refreshBindings(_self.dataProvider[rowIndex + virtualIndex]);
             }
-            this.cells[rowIndex][0].prev().text(rowIndex + virtualIndex + 1);
+            _cells[rowIndex][0].prev().text(rowIndex + virtualIndex + 1);
         }
     };
 
@@ -313,7 +329,7 @@ var DataGrid = function(_props)
                     return;
                 }
                 this.editPosition.event = 1;
-                this.cellItemRenderers[this.editPosition.rowIndex][this.editPosition.columnIndex].show();
+                _cellItemRenderers[this.editPosition.rowIndex][this.editPosition.columnIndex].show();
             }
 
             if(columnIndex > _columns.length-1)
@@ -361,8 +377,8 @@ var DataGrid = function(_props)
 
             this.editPosition = {"rowIndex":rowIndex, "columnIndex":columnIndex, "column":column, "data":data, "event":1}; 
             
-            this.cellItemRenderers[rowIndex][columnIndex].hide();
-            let itemEditorInfo = this.cellItemEditors[columnIndex];
+            _cellItemRenderers[rowIndex][columnIndex].hide();
+            let itemEditorInfo = _cellItemEditors[columnIndex];
             let itemEditor;
             if(itemEditorInfo == undefined)
             {
@@ -380,11 +396,11 @@ var DataGrid = function(_props)
                 itemEditor.parentType = 'repeater';
                 itemEditor.parentForm = this.parentForm;
                 itemEditor.$el.css("margin","0px");
-            // let itemEditorWidth = column.calculatedWidth-(this.cells[rowIndex][columnIndex].outerWidth() - this.cells[rowIndex][columnIndex].innerWidth()) - 2;
+            // let itemEditorWidth = column.calculatedWidth-(_cells[rowIndex][columnIndex].outerWidth() - _cells[rowIndex][columnIndex].innerWidth()) - 2;
                 let itemEditorWidth = column.calculatedWidth-46;
                 itemEditor.$el.css({"outline":"none", "font-size":"14px", "width":itemEditorWidth+"px"});
 
-                this.cellItemEditors[columnIndex] = {"itemEditor":itemEditor, "rowIndex":rowIndex}; 
+                _cellItemEditors[columnIndex] = {"itemEditor":itemEditor, "rowIndex":rowIndex}; 
 
                 itemEditor.on('creationComplete', function(){
 
@@ -454,14 +470,14 @@ var DataGrid = function(_props)
             if (column.itemEditor.props["value"]!=null && column.itemEditor.props["value"][0] == '{' && column.itemEditor.props["value"][column.itemEditor.props["value"].length - 1] == '}') 
             {
                 let dataProviderField = column.itemEditor.props["value"].slice(1, -1);
-                this.cellItemEditors[columnIndex]["dataProviderValueField"] = dataProviderField;
+                _cellItemEditors[columnIndex]["dataProviderValueField"] = dataProviderField;
                 itemEditor.value = data[dataProviderField];
             }else
                 itemEditor.value = column.itemEditor.props["value"] || data[column.field];
             */
             itemEditor.renderPromise().then(function (cmpInstance)
             {
-                _self.cells[rowIndex][columnIndex].append(cmpInstance.$el);
+                _cells[rowIndex][columnIndex].append(cmpInstance.$el);
                 itemEditor.show();
                 if(itemEditorInfo != null)
                 {
@@ -486,7 +502,7 @@ var DataGrid = function(_props)
             let column = _columns[columnIndex];
             let data = _self.dataProvider[rowIndex+_virtualIndex];
             let value = null, calledHandler = false;
-            let itemEditorInfo = this.cellItemEditors[columnIndex];
+            let itemEditorInfo = _cellItemEditors[columnIndex];
             let itemEditor = itemEditorInfo.itemEditor;
         
 
@@ -503,7 +519,7 @@ var DataGrid = function(_props)
             
             if(!applyEdit || !e.isDefaultPrevented()){           
                 itemEditor.hide();
-                this.cellItemRenderers[rowIndex][columnIndex].show();
+                _cellItemRenderers[rowIndex][columnIndex].show();
                 if(applyEdit){
                     if(!calledHandler){
                         value = itemEditor.value;
@@ -515,7 +531,7 @@ var DataGrid = function(_props)
                                 setChainValue(_self.dataProvider[rowIndex+_virtualIndex], exp, value);
                             }
                         }
-                        this.cellItemRenderers[rowIndex][columnIndex].refreshBindings(_self.dataProvider[rowIndex+_virtualIndex]);
+                        _cellItemRenderers[rowIndex][columnIndex].refreshBindings(_self.dataProvider[rowIndex+_virtualIndex]);
                         
                     }
                     //TODO:dataProviderChanged or integrate Binding ? 
@@ -541,10 +557,10 @@ var DataGrid = function(_props)
             if(removeFromDp){
                 _self.dataProvider.splice(index, 1);
             }
-            for(let i=index;i<this.cellItemRenderers.length;i++){
+            for(let i=index;i<_cellItemRenderers.length;i++){
                 
-                this.cellItemRenderers[i].repeaterIndex -= 1;
-                this.cells[i][0].prev().text(i);
+                _cellItemRenderers[i].repeaterIndex -= 1;
+                _cells[i][0].prev().text(i);
             }
             //manage dp
             _currentIndex--;
@@ -555,13 +571,13 @@ var DataGrid = function(_props)
             this.rows[index].remove();
             this.rows.splice(index, 1);
             _self.rowItems.splice(index, 1);
-            this.cells.splice(index, 1);
-            this.cellItemRenderers.splice(index, 1);
+            _cells.splice(index, 1);
+            _cellItemRenderers.splice(index, 1);
             
             this.$el.trigger('rowDelete', [this, new RepeaterEventArgs([], _currentItem, index, rowItems)]);
             //animate
             if (focusOnRowDelete)
-                this.cellItemRenderers[index-1][0].scrollTo();
+                _cellItemRenderers[index-1][0].scrollTo();
             return removedItem;
         }  
     };   
@@ -746,9 +762,9 @@ var DataGrid = function(_props)
     
     this.components = _props.components;
     let _columns = _props.columns;
-    this.cellItemRenderers = [[]];
-    this.cellItemEditors = [];
-    this.cells = [];// matrix
+    let _cellItemRenderers = [[]];
+    let _cellItemEditors = [];
+    let _cells = [];// matrix
     this.editPosition = null;
     this.bindingExpressions = []; //array of bindings arrays (bindings for each column)
     let r = Repeater.call(this, _props, true);
@@ -813,7 +829,7 @@ var DataGrid = function(_props)
             let rsEvt = jQuery.Event('rowStyling', [_self, rargs]);
 
             let rowBindingFunctions = [], bIndex = 0;
-            _self.cellItemRenderers.splice(index, 0, []);
+            _cellItemRenderers.splice(index, 0, []);
             for (let columnIndex=0;columnIndex<_self.columns.length;columnIndex++) 
             {
                 let column = _self.columns[columnIndex];
@@ -835,7 +851,7 @@ var DataGrid = function(_props)
                 let dataProviderField = column.field;
                 //might not be wanted
                 
-                let cmp = _self.cellItemRenderers[index];               
+                let cmp = _cellItemRenderers[index];               
 
                 /*
                 cmp[columnIndex]["label"] = data[dataProviderField];
@@ -854,7 +870,7 @@ var DataGrid = function(_props)
                 el.parentForm = _self.parentForm;
                 el.repeaterIndex = index;
 
-                _self.cellItemRenderers[index][columnIndex] = el; 
+                _cellItemRenderers[index][columnIndex] = el; 
                 rowItems[column.name] = el;
                 _self.rowItems[index] = rowItems;
                 
@@ -920,9 +936,9 @@ var DataGrid = function(_props)
                 });
                 //width='"+column.calculatedWidth+"'
                 let cell = $("<td id='cell_"+(index)+"_"+columnIndex+"'></td>");
-                if(_self.cells[index]== undefined)
-                    _self.cells[index] = [];
-                _self.cells[index][columnIndex] = cell;
+                if(_cells[index]== undefined)
+                    _cells[index] = [];
+                _cells[index][columnIndex] = cell;
                 //render component in row
                 let cp = el.renderPromise().then(function (cmpInstance)
                 {

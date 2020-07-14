@@ -2,10 +2,11 @@
 .ns-resize {cursor: ns-resize !important;}
 
 .selected-component {
-    position: relative !important;
-    border: 1px dashed #3987d9 !important;
+    position: absolute !important;
+    border: 1px dashed #3987d9;
     width: 100px ;
     height: 30px ;	
+
 }
 .dragged-component {
     position: relative !important;
@@ -14,7 +15,7 @@
     height: 30px ;	
 }
 .default-component {
-    background-color: rgba(204, 22, 22, 0)!important;
+    background-color: rgba(204, 22, 22, 0);
     width: 100px ;
     height: 30px ;
     border:  1px solid #3987d9;

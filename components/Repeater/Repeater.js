@@ -5,7 +5,7 @@
  */
 
 //component definition
-var Repeater = function(_props)
+var Repeater = function(_props, _hideComponents=false)
 {
     let _rowItems = [], _rows = [];
     let _self = this;
@@ -626,7 +626,7 @@ var Repeater = function(_props)
 
     let _rPromise;
     _autoUpdateDisplay = _props.autoUpdateDisplay;
-    let r = Container.call(this, _props);
+    let r = Container.call(this, _props, _hideComponents);
 /*
     var click =  props.click;
     _props.click = function(e)

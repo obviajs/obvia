@@ -8,7 +8,7 @@ var Props = function (inst, _props, skip = []) {
     var _props = Object.getOwnPropertyDescriptors(inst);
     for (let prop in _props) {
         if ((skip.indexOf(prop) < 0) && _props[prop].enumerable && typeof inst[prop] != 'function' && inst.hasOwnProperty(prop) && (inst[prop]==null || !inst[prop].jquery)) {
-            let bindingExp = inst.getBindingExpression(prop);
+            let bindingExp = inst.getBindingExpression && inst.getBindingExpression(prop);
             if (!bindingExp) {
                 switch (prop) {
                     case "component":
@@ -42,30 +42,31 @@ var Props = function (inst, _props, skip = []) {
                 this[prop] = bindingExp.expression;
         }
     }
-    let _jskip = ["ownerDocument", "input", "inputLabel"];
+    let _jskip = ["ownerDocument", "input", "inputLabel", "currentItem", "currentRow"];
     this.toJSON = function () {
         let obj = {};
         for (let prop in this) {
-            if ((_jskip.indexOf(prop) < 0) && typeof this[prop] != 'function') {
+            if ((_jskip.indexOf(prop) < 0) && typeof this[prop] != 'function' &&  (inst[prop]==null || !this[prop].jquery)) {
                 switch (prop) {
                     case "dataProvider":
                         if (this.dataProvider) {
                             let len = this.dataProvider.length;
                             let dpCopy = new window[this.dataProvider.constructor.name](len);
                             for (let i = 0; i < len; i++) {
-                                dpCopy[i] = extend(false, false, [], ["currentItem"], this.dataProvider[i]);
+                                dpCopy[i] = extend(false, false, [], ["currentItem", "currentRow"], this.dataProvider[i]);
                             }
                             obj[prop] = dpCopy;
                         }
                         break;
                     case "rendering":
                         obj[prop] = {};
-                        shallowCopy(inst.rendering, obj[prop], ["currentItem"]);
+                        shallowCopy(inst.rendering, obj[prop], ["currentItem", "currentRow"]);
                         break;
                     default:
                         if (this.hasOwnProperty(prop) && this.propertyIsEnumerable(prop))
-                            if ((!isObject(this[prop]) || !Object.isEmpty(this[prop])) && (this[prop]==null || !this[prop].jquery))
+                            if (!isObject(this[prop]) || !Object.isEmpty(this[prop]) || this[prop]==null)
                                 obj[prop] = this[prop];
+                                
                 }
             }
         }

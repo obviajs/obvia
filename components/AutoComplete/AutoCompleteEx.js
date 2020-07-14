@@ -495,7 +495,7 @@ var AutoCompleteEx = function (_props) {
             "props": {
                 id: "tokenContainer",
                 "type": ContainerType.NONE,
-                classes: ["border"],
+                classes: ["border", "d-flex"],
                 attr: {
                     "role": "menu"
                 },
@@ -509,7 +509,7 @@ var AutoCompleteEx = function (_props) {
                                 separator: _separator || false,
                                 wrap: false
                             },
-                            width: "100%",
+                            classes: ["d-flex"],
                             ownerDocument: this.ownerDocument,
                             dataProvider: _value,
                             components: [_tokenRenderer],

@@ -10,7 +10,7 @@ var Component = function (_props) {
         id: this.ctor + "_" + Component[this.ctor].instanceInc,
         classes: [],
         guid: StringUtils.guid(),
-        bindingDefaultContext: Component.defaultContext,
+        bindingDefaultContext: this,
         ownerDocument: document,
         attr: {},
         visible: true,
@@ -758,7 +758,7 @@ var Component = function (_props) {
                 
                 //this here refers to window context
                 let defaultBindTo = "currentItem_" + _self.guid;
-                window[defaultBindTo] = (currentItem || Component.defaultContext);
+                window[defaultBindTo] = (currentItem || this);
                 if (!("currentItem" in window[defaultBindTo])) {
                    // window[defaultBindTo]["currentItem"] = window[defaultBindTo];
                     Object.defineProperty(window[defaultBindTo], "currentItem", { value: window[defaultBindTo], enumerable: false, configurable: true});
@@ -826,7 +826,7 @@ var Component = function (_props) {
             
             //this here refers to window context
             let defaultBindTo = "currentItem_" + _self.guid;
-            window[defaultBindTo] = (currentItem || Component.defaultContext);
+            window[defaultBindTo] = (currentItem || this);
             if (!("currentItem" in window[defaultBindTo])) {
                 Object.defineProperty(window[defaultBindTo], "currentItem", { value: window[defaultBindTo], enumerable: false, configurable: true});
             }
@@ -932,7 +932,7 @@ var Component = function (_props) {
     
     this.find = function (childId) {
         let r = null;
-        let paths = findMember(this, "id", ["$el", "$container", "base", "attr", "classes", "css", "spacing", "dataProvider", "parentForm", "parent", "currentItem"], childId, false);
+        let paths = findMember(this, "id", ["$el", "$container", "base", "attr", "classes", "css", "spacing", "dataProvider", "parentForm", "parent", "currentItem", "props", "components"], childId, false);
         if (paths.length > 0) { 
             paths[0].pop();
             r = getChainValue(this, paths[0]);
@@ -953,7 +953,10 @@ Component.processPropertyBindings = function (props) {
             //check for binding
             let b = getBindingExp(props[prop]);
             if (b) {
-                _bindings.push({ "expression": b.expression, "property": prop, "nullable": b.nullable });
+                if (prop != "bindingDefaultContext") { 
+                    _bindings.push({ "expression": b.expression, "property": prop, "nullable": b.nullable });
+                }else
+                    _bindings.unshift({ "expression": b.expression, "property": prop, "nullable": b.nullable });
             } else {
                 //no binding
                 _processedProps[prop] = props[prop];

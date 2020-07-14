@@ -144,7 +144,7 @@ var RepeaterEx = function(_props)
     fnContainerDelayInit();
     _props.components = _cmps;
     
-    let r = Container.call(this, _props);
-    return r;
+    Container.call(this, _props);
+    return _self.proxy;
 };
 RepeaterEx.prototype.ctor = 'RepeaterEx';
