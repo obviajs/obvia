@@ -1,34 +1,32 @@
-var BrowserWindow = function(_props)
-{
-    let _self = this, _win;
+var BrowserWindow = function (_props) {
+    let _self = this,
+        _win;
     let _defaultParams = {
         tile: "",
-        status:"",
-        url:"",
+        status: "",
+        url: "",
         name: "_blank",
-        height:500,
-        width:600,
-        left:400,
-        top:200,
-        menubar:0,
-        status:0,
-        titlebar:1,
-        location:0,
-        toolbar:0,
-        resizable:0,
-        replace:false,
+        height: 500,
+        width: 600,
+        left: 400,
+        top: 200,
+        menubar: 0,
+        status: 0,
+        titlebar: 1,
+        location: 0,
+        toolbar: 0,
+        resizable: 0,
+        replace: false,
         ownerDocument: null
     };
-    
+
     this.endDraw = function (e) {
-        if (e.target.id == this.domID) {
-        }
+        if (e.target.id == this.domID) {}
     };
-    
-    this.template = function ()
-    {
-        _win = window.open(_url, _name, "width="+_width+",height="+_height+",top="+_top+",left="+_left+",status="+_status+",location="+_location+",toolbar="+_toolbar+",resizable"+_resizable);     
-        _win.addEventListener('beforeunload', function(e){
+
+    this.template = function () {
+        _win = window.open(_url, _name, "width=" + _width + ",height=" + _height + ",top=" + _top + ",left=" + _left + ",status=" + _status + ",location=" + _location + ",toolbar=" + _toolbar + ",resizable" + _resizable);
+        _win.addEventListener('beforeunload', function (e) {
             _self.removeAllChildren();
             _win = null;
             BrowserWindow.all.splice(BrowserWindow.all.indexOf(_self), 1);
@@ -39,7 +37,7 @@ var BrowserWindow = function(_props)
         BrowserWindow.all.push(this);
         CSSUtils.copyStyles(document, _win.document);
         this.ownerDocument = _win.document;
-        
+
         this.$el = $("<div/>");
         this.$el.attr('id', this.domID);
         this.appendTo = $(_win.document.body);
@@ -67,19 +65,20 @@ var BrowserWindow = function(_props)
     let _toolbar = _props.toolbar;
     let _resizable = _props.resizable;
 
-    let r = Parent.call(this, _props, false, true); 
-    
+    let r = Parent.call(this, _props, false, true);
+
     this.show = function () {
+        if (!this.parent) {
+            this.appendTo.append(this.$el);
+        }
         if (!_win || _win.closed) {
             let c = _win && _win.closed;
-        }
-        else {
+        } else {
             _win.focus();
         }
-    }; 
+    };
 
-    Object.defineProperty(this, 'window',
-    {
+    Object.defineProperty(this, 'window', {
         get: function () {
             return _win;
         }

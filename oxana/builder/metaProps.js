@@ -8,7 +8,16 @@ Builder.initMetaProps = function () {
             props: {
                 change: function () {
                     this.parent.parent.instance.form_name = this.value;
-                }
+                },
+                components: [{
+                    "ctor": "RequiredFieldValidator",
+                    "props": {
+                        "bindingDefaultContext": "{currentItem}",
+                        "controlToValidate": "{?parent.id}",
+                        "errorMessage": "Form name is required",
+                        "setFocusOnError": true
+                    }
+                }]
             }
         },
         description: {
@@ -160,16 +169,24 @@ Builder.initMetaProps = function () {
             props: {
                 valueField: Builder.providerValueField,
                 labelField: Builder.providerLabelField,
-                dataProvider: Builder.sources,
+                dataProvider: Builder.dataviews,
                 classes: ["no-form-control"],
                 change: function () {
                     //propsForm.children["dataProvider"].value
                     //get the fields for the selected datProvider and 
                     //assign them to the labelField and valueField editor`s dataProvider property
                     if (this.value && this.value.length > 0) {
+                        let _self = this;
+                        let gaiaForm = new GaiaAPI_forms();
+                        let form_id = this.value[0].id_form;
+                        if (form_id) {
+                            let form = gaiaForm.formsClient.get(form_id).then(function (res) {
+                                if (res && res.length > 0)
+                                    _self.parent.parent.children.components.input.value = res;
+                            });
+                        }
                         //let url = "http://flower-gaia/api/dataview_pid_1/yaml";
                         let url = "https://gaia.oxana.io/api/" + this.value[0].name + "/yaml";
-                        let _self = this;
                         if (!Builder.data[_self.value[0][Builder.providerValueField]]) {
                             GaiaAPI_Utils.generateAndLoadDataView(url, Builder.recordsPerPage).then(function (aex) {
                                 console.log(aex);
@@ -420,7 +437,7 @@ Builder.initMetaProps = function () {
                                     direction: 'vertical',
                                     separator: false,
                                 },
-                                rowDelete: (e, r, ra) => { 
+                                rowDelete: (e, r, ra) => {
                                     let classes = oe.instance.classes.slice(0);
                                     classes.splice(ra.currentIndex, 1);
                                     oe.instance.classes = classes;
@@ -428,13 +445,12 @@ Builder.initMetaProps = function () {
                                 rowAdd: (e, r, ra) => {
                                     console.log(ra);
                                 },
-                                beforeAttach: function (e) { 
-                                    if (this.internalRepeater["removeButton"] && this.internalRepeater["removeButton"].length > 0) { 
+                                beforeAttach: function (e) {
+                                    if (this.internalRepeater["removeButton"] && this.internalRepeater["removeButton"].length > 0) {
                                         this.internalRepeater["removeButton"][0].enabled = false;
                                     }
                                 },
-                                components: [
-                                    {
+                                components: [{
                                         ctor: TextInput,
                                         props: {
                                             id: "textInput",
@@ -462,7 +478,7 @@ Builder.initMetaProps = function () {
                                                     classes: ["fas", "fa-minus-circle"]
                                                 }
                                             }],
-                                            click: function(e, ra) { 
+                                            click: function (e, ra) {
                                                 this.parent.removeRow(ra.currentIndex);
                                             }
                                         }
@@ -991,6 +1007,19 @@ Builder.initMetaProps = function () {
                 dataProvider: new ArrayEx(getMembersCollection(DateTimeMode, "text", "value")),
                 change: function () {
                     this.parent.parent.instance.mode = this.value;
+                }
+            }
+        }
+    };
+
+    Builder.metaProps.AutoCompleteEx = {
+        multiSelect: {
+            ctor: "Toggle",
+            label: "Multi Select",
+            index: 19,
+            props: {
+                change: function () {
+                    this.parent.parent.instance.multiSelect = this.value;
                 }
             }
         }

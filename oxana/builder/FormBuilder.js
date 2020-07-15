@@ -7,51 +7,63 @@ var _initDP = function () {
 
     Builder.componentValueField = "ctor";
     Builder.componentLabelField = "label";
-    
+
     Builder.providerValueField = "dataview_id";
     Builder.providerLabelField = "description";
     Builder.selectedForm = new FormProperties();
-    
+
     let api_dv_dataviews = new GaiaAPI_DV_dataviews();
     let api_dv_forms = new GaiaAPI_DV_forms();
+    let api_frmsDv_dataviews = new GaiaAPI_FrmsDv_dataview(); //frm dv
     Builder.recordsPerPage = 5;
 
-    let raDvs = new RemoteArray(
-        {
-            recordsPerPage: Builder.recordsPerPage, // pagination
-            fetchPromise: function (p) {
-                let dvInp = new dvInput();
-                dvInp.tableData = new tableData({
-                    currentRecord: p.startPage * p.recordsPerPage,
-                    recordsPerPage: p.recordsPerPage
-                });
-                return api_dv_dataviews.dataview_pid_2Client.post(dvInp);
-            }
+    let raDvs = new RemoteArray({
+        recordsPerPage: Builder.recordsPerPage, // pagination
+        fetchPromise: function (p) {
+            let dvInp = new dvInput();
+            dvInp.tableData = new tableData({
+                currentRecord: p.startPage * p.recordsPerPage,
+                recordsPerPage: p.recordsPerPage
+            });
+            return api_dv_dataviews.dataview_pid_2Client.post(dvInp);
         }
-    );
-    
-    let raFrms = new RemoteArray(
-        {
-            recordsPerPage: 5, // pagination
-            fetchPromise: function (p) {
-                let dvInp = new dvInput();
-                dvInp.tableData = new tableData({
-                    currentRecord: p.startPage * p.recordsPerPage,
-                    recordsPerPage: p.recordsPerPage
-                });
-                if(p.filterData){
-                    dvInp.advancedSqlFilters = p.filterData;  
-                }
-                return api_dv_forms.dataview_pid_1Client.post(dvInp);
+    });
+
+    let raFrms = new RemoteArray({
+        recordsPerPage: 5, // pagination
+        fetchPromise: function (p) {
+            let dvInp = new dvInput();
+            dvInp.tableData = new tableData({
+                currentRecord: p.startPage * p.recordsPerPage,
+                recordsPerPage: p.recordsPerPage
+            });
+            if (p.filterData) {
+                dvInp.advancedSqlFilters = p.filterData;
             }
+            return api_dv_forms.dataview_pid_1Client.post(dvInp);
         }
-    );
+    });
+
+    let raFrmsDataview = new RemoteArray({
+        recordsPerPage: 5, // pagination
+        fetchPromise: function (p) {
+            let dvInp = new dvInput();
+            dvInp.tableData = new tableData({
+                currentRecord: p.startPage * p.recordsPerPage,
+                recordsPerPage: p.recordsPerPage
+            });
+
+            return api_frmsDv_dataviews.dataview_pid_7Client.post(dvInp);
+        }
+    });
+
 
     Builder.sources = new ArrayEx(raDvs);
     Builder.forms = new ArrayEx(raFrms);
+    Builder.dataviews = new ArrayEx(raFrmsDataview);
     Builder.data = {};
 
-    return Promise.all([Builder.forms.init(), Builder.sources.init()]).then(function (result) {
+    return Promise.all([Builder.forms.init(), Builder.sources.init(), Builder.dataviews.init()]).then(function (result) {
         Builder.initComponentList();
         Builder.initComponentLiterals();
         Builder.initMetaProps();
@@ -59,24 +71,22 @@ var _initDP = function () {
     });
 }();
 
-var _initDpForms = function(){
+var _initDpForms = function () {
     let api_dv_forms = new GaiaAPI_DV_forms();
-    let raFrms = new RemoteArray(
-        {
-            recordsPerPage: 15, // pagination
-            fetchPromise: function (p) { 
-                let dvInp = new dvInput();
-                dvInp.tableData = new tableData({
-                    currentRecord: p.startPage * p.recordsPerPage,
-                    recordsPerPage: p.recordsPerPage
-                });
-                if (p.filterData) {
-                    dvInp.advancedSqlFilters = p.filterData;
-                }
-                return api_dv_forms.dataview_pid_1Client.post(dvInp);
+    let raFrms = new RemoteArray({
+        recordsPerPage: 15, // pagination
+        fetchPromise: function (p) {
+            let dvInp = new dvInput();
+            dvInp.tableData = new tableData({
+                currentRecord: p.startPage * p.recordsPerPage,
+                recordsPerPage: p.recordsPerPage
+            });
+            if (p.filterData) {
+                dvInp.advancedSqlFilters = p.filterData;
             }
+            return api_dv_forms.dataview_pid_1Client.post(dvInp);
         }
-    );
+    });
     Builder.formList = new ArrayEx(raFrms);
 
     return Promise.all([Builder.formList.init()]).then(function (result) {
@@ -94,18 +104,17 @@ var uiRoute = function (applet) {
     return viewContainer.addChild(applet.view);
 };
 var modalRoute = function (applet) {
-    if (applet.view.attached) { 
+    if (applet.view.attached) {
         applet.view.show();
     } else {
         applet.view.renderPromise().then(function (cmpInstance) {
             applet.view.show();
-        });     
+        });
     }
 };
 
 var oxana = new App({
-    applets: [
-        {
+    applets: [{
             url: "./flowerui/oxana/builder/applets/main/",
             anchor: "main",
             dataPromise: _initDP,

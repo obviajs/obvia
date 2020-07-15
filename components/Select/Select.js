@@ -6,55 +6,49 @@
 
 //component definition
 var Select = function (_props) {
-    let _self = this, _value, _dataProvider;
-    Object.defineProperty(this, "valueField", 
-    {
-        get: function valueField() 
-        {
+    let _self = this,
+        _value, _dataProvider;
+    Object.defineProperty(this, "valueField", {
+        get: function valueField() {
             return _valueField;
         },
-        set: function valueField(v) 
-        {
-            if (_valueField != v) { 
+        set: function valueField(v) {
+            if (_valueField != v) {
                 _valueField = v;
                 this.components = fnContainerDelayInit();
                 this.removeAllRows(false);
-                if (_dataProvider && _dataProvider.length > 0) { 
+                if (_dataProvider && _dataProvider.length > 0) {
                     let dpFields = Object.keys(_dataProvider[0]);
-                    if (propDataProvider && dpFields.includes(_labelField) && dpFields.includes(_valueField)) { 
+                    if (propDataProvider && dpFields.includes(_labelField) && dpFields.includes(_valueField)) {
                         propDataProvider['set'].call(_self, _dataProvider);
                     }
                 }
             }
         },
-        enumerable:true
+        enumerable: true
     });
-    
-    Object.defineProperty(this, "labelField", 
-    {
-        get: function labelField() 
-        {
+
+    Object.defineProperty(this, "labelField", {
+        get: function labelField() {
             return _labelField;
         },
-        set: function labelField(v) 
-        {
-            if (_labelField != v) { 
+        set: function labelField(v) {
+            if (_labelField != v) {
                 _labelField = v;
-                this.components  = fnContainerDelayInit();
+                this.components = fnContainerDelayInit();
                 this.removeAllRows(false);
-                if (_dataProvider && _dataProvider.length > 0) { 
+                if (_dataProvider && _dataProvider.length > 0) {
                     let dpFields = Object.keys(_dataProvider[0]);
-                    if (propDataProvider && dpFields.includes(_labelField) && dpFields.includes(_valueField)) { 
+                    if (propDataProvider && dpFields.includes(_labelField) && dpFields.includes(_valueField)) {
                         propDataProvider['set'].call(_self, _dataProvider);
                     }
-                } 
+                }
             }
         },
-        enumerable:true
+        enumerable: true
     });
-    
-    Object.defineProperty(this, "value",
-    {
+
+    Object.defineProperty(this, "value", {
         get: function value() {
             return _value;
         },
@@ -68,7 +62,7 @@ var Select = function (_props) {
             }
         }
     });
-    
+
     let _changeHandler = function (e) {
         _value = this.$el.val();
     };
@@ -77,24 +71,22 @@ var Select = function (_props) {
         return "<select data-triggers='change' id='" + this.domID + "'></select>";
     };
 
-    this.afterAttach = function(e) 
-    {
-        if (e.target.id == this.domID) 
-        {
-            if(_props.value && !this.getBindingExpression("value")){
-                _value = _props.value;
+    this.afterAttach = function (e) {
+        if (e.target.id == this.domID) {
+            if (_props.value && !this.getBindingExpression("value")) {
+                this.value = _props.value;
             }
         }
     };
     let fnContainerDelayInit = function () {
         return [{
             ctor: Option,
-            props:{
-                id:"opt",
-                value: '{'+_valueField+'}',
-                label: '{'+_labelField+'}'
+            props: {
+                id: "opt",
+                value: '{' + _valueField + '}',
+                label: '{' + _labelField + '}'
             }
-        }]; 
+        }];
     };
 
     let _defaultParams = {
@@ -106,53 +98,49 @@ var Select = function (_props) {
             wrap: false
         }
     };
-    
+
     shallowCopy(extend(false, false, _defaultParams, _props), _props);
-    _props.applyBindings = false;
+    _props.applyBindings = true;
     let _labelField = _props.labelField;
     let _valueField = _props.valueField;
 
     _props.components = fnContainerDelayInit();
-   
+
     let _change = _props.change;
     _props.change = function () {
         let e = arguments[0];
-        if(!e.isDefaultPrevented()) {
+        if (!e.isDefaultPrevented()) {
             _changeHandler.apply(_self, arguments);
         }
-        if(typeof _change == 'function')
+        if (typeof _change == 'function')
             _change.apply(_self, arguments);
     };
 
     Repeater.call(this, _props);
-    
-    let propDataProvider = Object.getOwnPropertyDescriptor(this, "dataProvider");   
-    Object.defineProperty(this, "dataProvider", 
-    {
-        get: function dataProvider() 
-        {
+
+    let propDataProvider = Object.getOwnPropertyDescriptor(this, "dataProvider");
+    Object.defineProperty(this, "dataProvider", {
+        get: function dataProvider() {
             return propDataProvider['get'].call(_self);
         },
-        set: function dataProvider(v)
-        { 
+        set: function dataProvider(v) {
             _dataProvider = v;
             this.removeAllRows(false);
-                    
-            if (v.length > 0) { 
+
+            if (v.length > 0) {
                 let dpFields = Object.keys(v[0]);
-                if (dpFields.includes(_labelField) && dpFields.includes(_valueField))
-                { 
+                if (dpFields.includes(_labelField) && dpFields.includes(_valueField)) {
                     propDataProvider['set'].call(_self, _dataProvider);
                 }
             } else {
                 propDataProvider['set'].call(_self, _dataProvider);
-            }  
+            }
         },
         enumerable: true
     });
-    
+
     Object.defineProperty(this, "props", {
-        get: function props() {            
+        get: function props() {
             return new Props(_self, _props, ["components", "rendering"]);
         },
         configurable: true

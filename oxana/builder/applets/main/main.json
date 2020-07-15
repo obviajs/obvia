@@ -53,7 +53,7 @@
                               ],
                               "css": {
                                  "marginTop": "15px",
-                                 "marginLeft": "335px"
+                                 "marginLeft": "200px"
                               }
                            }
                         }]
@@ -104,6 +104,19 @@
                                  "classes": [
                                     "fas",
                                     "fa-arrow-right",
+                                    "navIcons"
+                                 ]
+                              }
+                           },
+                           {
+                              "ctor": "Label",
+                              "props": {
+                                 "id": "duplicateButton",
+                                 "labelType": "i",
+                                 "label": "",
+                                 "classes": [
+                                    "fas",
+                                    "fa-copy",
                                     "navIcons"
                                  ]
                               }

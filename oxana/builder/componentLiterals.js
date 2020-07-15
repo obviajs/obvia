@@ -122,10 +122,12 @@ Builder.initComponentLiterals = function () {
                 "ctor": DateTime,
                 "props": {
                     id: 'datetime',
-                    inputFormat: 'DD/MM/YYYY',
-                    outputFormat: 'DD-MM-YYYY',
-                    displayFormat: 'MM/DD/YYYY',
-                    value: String(new Date().getDate()).padStart(2, '0') + '/' + String(new Date().getMonth() + 1).padStart(2, '0') + '/' + new Date().getFullYear()
+                    inputFormat: 'YYYY/MM/DD',
+                    outputFormat: 'YYYY/MM/DD',
+                    displayFormat: 'DD/MM/YYYY',
+                    //value: String(new Date().getDate()).padStart(2, '0') + '/' + String(new Date().getMonth() + 1).padStart(2, '0') + '/' + new Date().getFullYear()
+                    value: moment().format('YYYY/MM/DD')
+
                 }
             },
             label: "DateTime",
@@ -284,6 +286,7 @@ Builder.initComponentLiterals = function () {
                     labelField: Builder.providerLabelField,
                     valueField: Builder.providerValueField,
                     dataProvider: Builder.sources,
+                    classes: ["ml-0"],
                     fields: [{
                         "field": Builder.providerValueField,
                         "description": Builder.providerValueField,
@@ -432,7 +435,8 @@ Builder.initComponentLiterals = function () {
                     action: "",
                     components: [],
                     classes: ["default-cnt"],
-                    width: '100%'
+                    width: '100%',
+                    height: "100%"
                 }
             },
             label: "Form",
@@ -475,7 +479,8 @@ Builder.initComponentLiterals = function () {
                 props: {
                     id: 'container',
                     type: ContainerType.NONE,
-                    classes: ["default-component", "default-cnt"]
+                    classes: ["default-component", "default-cnt"],
+                    height: "100%"
                 }
             },
             label: "Container",

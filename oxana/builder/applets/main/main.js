@@ -9,7 +9,7 @@ let Implementation = function (applet) {
 
     let propertyEditorViewStack, propertyEditorContainer, fileSelectModal, browseFile, componentsContainer,
         rightSideNav, listHistorySteps, workArea, workAreaColumn, workAreaRowL2,
-        cmpSearchTextInput, undoButton, redoButton, cmpTrash, toggleSideNavLeft, toggleSideNavRight,
+        cmpSearchTextInput, undoButton, redoButton, duplicateButton, cmpTrash, toggleSideNavLeft, toggleSideNavRight,
         splitHorizontal, splitVertical, uploadIcon, saveLayout, selectBtn, componentList,
         openUploadForms, appLoader, middleNav, desktopPreview, tabletPreview, mobilePreview;
 
@@ -17,7 +17,7 @@ let Implementation = function (applet) {
     let formField;
 
     let containers = ["Container", "Form", "Header", "Footer"];
-    let noNeedFF = ["Button", "Label", "Container", "Link", "Header", "Footer", "Form", "SideNav", "ViewStack", "Calendar", "Tree", "Image", "HRule", "Heading", "Repeater", "RepeaterEx"];
+    let noNeedFF = ["Button", "Label", "Container", "Link", "Header", "Footer", "Form", "SideNav", "ViewStack", "Calendar", "Tree", "Image", "HRule", "Heading", "Repeater", "RepeaterEx", "DataGrid"];
 
     let imp = {
         "BEGIN_DRAW": function (e) {
@@ -76,6 +76,10 @@ let Implementation = function (applet) {
             applet.addBehaviors(redoButton, {
                 "click": "WA_REDO",
             }, false);
+            duplicateButton = middleNav.duplicateButton;
+            applet.addBehaviors(duplicateButton, {
+                "click": "DUPLICATE_CMP"
+            });
             cmpTrash = app.viewStack.mainContainer.container.rightSideNav.rightSideContainer.propertyEditorViewStack.cmpTrash;
             applet.addBehaviors(cmpTrash, daBehaviors, false);
 
@@ -111,6 +115,16 @@ let Implementation = function (applet) {
             desktopPreview = middleNav.desktop;
             applet.addBehaviors(desktopPreview, {
                 "click": "DESKTOP_PREVIEW"
+            }, false);
+
+            mobilePreview = middleNav.mobile;
+            applet.addBehaviors(mobilePreview, {
+                "click": "MOBILE_PREVIEW"
+            }, false);
+
+            tabletPreview = middleNav.tablet;
+            applet.addBehaviors(tabletPreview, {
+                "click": "TABLET_PREVIEW"
             }, false);
 
             saveLayout = middleNav.saveLayout;
@@ -272,7 +286,11 @@ let Implementation = function (applet) {
                 }
 
             },
-            undo: function () {},
+            undo: function (e) {
+                let ret = arguments[arguments.length - 1];
+                ret.parent.removeChild(ret.child.props, 0);
+
+            },
             stopPropagation: true,
         },
         "SELECT_COMPONENT": {
@@ -372,7 +390,31 @@ let Implementation = function (applet) {
         "DESKTOP_PREVIEW": function (e) {
             let browser = new BrowserWindow({
                 id: "browser",
-                components: workAreaRowL2.components
+                components: workAreaRowL2.props.components,
+                width: "1000",
+                height: "800"
+            });
+            browser.show();
+            browser.renderPromise();
+        },
+
+        "MOBILE_PREVIEW": function (e) {
+            let browser = new BrowserWindow({
+                id: "browser",
+                components: workAreaRowL2.parent.components,
+                width: "400",
+                height: "500"
+            });
+            browser.show();
+            browser.renderPromise();
+        },
+
+        "TABLET_PREVIEW": function (e) {
+            let browser = new BrowserWindow({
+                id: "browser",
+                components: workAreaRowL2.parent.components,
+                width: "600",
+                height: "800"
             });
             browser.show();
             browser.renderPromise();
@@ -700,8 +742,8 @@ let Implementation = function (applet) {
                  * ret.container = container;
                             ret.child = this.parent; */
                 let ret = arguments[arguments.length - 1];
-                ret.parent.removeChild(ret.child, 0);
-                childrenAutoWidth(ret.parent);
+                ret.parent.removeChild(ret.child[0], 0);
+                //childrenAutoWidth(ret.parent);
             }
         },
 
@@ -893,6 +935,22 @@ let Implementation = function (applet) {
                 app.history.redo();
             },
             stopPropagation: false
+        },
+
+        "DUPLICATE_CMP": function (e) {
+            if (activeComponent && activeComponent.attr.isCmp) {
+                let lit = activeComponent.literal;
+                lit = extend(true, lit);
+                let inst = activeComponent.parent.addComponent(lit);
+                applet.addBehaviors(inst, cmpWaBehaviors, false);
+                inst.draggable = true;
+                let isCont = isContainer.call(inst);
+                if (isCont) {
+                    inst.attr.isNotWa = true;
+                }
+            } else {
+                console.log("Nothing to duplicate");
+            }
         }
     };
 
