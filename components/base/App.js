@@ -323,6 +323,11 @@ var App = function(_props){
             }
             // appletInst.init(m.map).then((literal) => {
             // });
+        } else { 
+            if (_applets && _applets.length > 0) {
+                appletInst = _appletsMap[_applets[_defaultAppletIndex].anchor];
+                appletInst.route(m.map);
+            }
         }
     };
 
