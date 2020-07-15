@@ -3,17 +3,14 @@ var JRComponent = function(_props){
     let _defaultParams = {
         x  : "",
         y  : "",
-        section : "",
-        width : "",
-        height : ""
+        section : ""
     };
     var _props = extend(false, false, _defaultParams, _props);
     
     let _x = _props.x; 
     let _y = _props.y;
     let _section = _props.section;
-    let _width = _props.width;
-    let _height = _props.height;
+    
 
     Object.defineProperty(this, "x",
     {
@@ -61,33 +58,7 @@ var JRComponent = function(_props){
             }
         },
         enumerable: true
-    });
-    Object.defineProperty(this, "width",
-    {
-        get: function width() {
-            return _width;
-        },
-        set: function width(v) {
-            if (_width != v != v) {
-                _width = v;
-            }
-        },
-        enumerable: true
-    });
-
-    Object.defineProperty(this, "height",
-    {
-        get: function height() {
-            return _height;
-        },
-        set: function height(v) {
-            if (_height != v != v) {
-                _height = v;
-            }
-        },
-        enumerable: true
-    });
- 
+    }); 
 
 };
 // JRComponent.prototype.ctor = 'JRComponent';

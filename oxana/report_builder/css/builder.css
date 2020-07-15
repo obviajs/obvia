@@ -62,7 +62,7 @@
 }
 
 .propertyEditor {
-    height: calc(100vh + 50px) !important;
+    height: calc(100vh + 199px) !important;
 }
 .propertyEditorTrash {
     height: calc(30vh - 80px) !important;
