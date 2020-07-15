@@ -13,11 +13,11 @@ Builder.initComponentList = function () {
         {
             "label": "JRHRule", "ctor": "JRHRule"
         },
-        {
-            "label": "JRImage", "ctor": "JRImage"
-        },
-        {
-            "label": "Container", "ctor": "Container"
-        },
+        // {
+        //     "label": "JRImage", "ctor": "JRImage"
+        // },
+        // {
+        //     "label": "JRContainer", "ctor": "JRContainer"
+        // },
     ]);
 };

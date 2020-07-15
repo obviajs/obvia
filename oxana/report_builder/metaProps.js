@@ -43,6 +43,7 @@ Builder.initMetaProps = function () {
                 }
             }
         },
+	
         href: {
             ctor: "TextInput", label: "URL", required: true, index: 3, props: {
                 change: function () {
@@ -66,6 +67,7 @@ Builder.initMetaProps = function () {
             props: {
                 change: function () {
                     this.parent.parent.instance.width = this.value;
+                    this.parent.parent.instance.$el[0].style.width = this.value + 'px' ;
                 }
             }
         },
@@ -76,7 +78,8 @@ Builder.initMetaProps = function () {
             index: 5,
             props: {
                 change: function () {
-                    this.parent.parent.instance.height = this.value;
+                   this.parent.parent.instance.height = this.value;
+                    this.parent.parent.instance.$el[0].style.height = this.value + 'px' ;
                 }
             }
         },
@@ -118,7 +121,7 @@ Builder.initMetaProps = function () {
         section: {
             ctor: "TextInput", label: "section", index: 9, props: {
                 change: function () {
-                    this.parent.parent.instance.section = this.value;
+                     this.parent.parent.instance.section = this.value;
                 }
             }
         },
