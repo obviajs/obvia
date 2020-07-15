@@ -37,7 +37,7 @@ Builder.initMetaProps = function () {
             }
         },
         label: {
-            ctor: "TextInput", label: "Label", required: true, index: 3, props: {
+            ctor: "TextInput", label: "Label", required: true, index: 6, props: {
                 change: function () {
                     this.parent.parent.instance.label = this.value;
                 }
@@ -62,7 +62,7 @@ Builder.initMetaProps = function () {
             ctor: "TextInput",
             label: "Width",
             required: true,
-            index: 9,
+            index: 4,
             props: {
                 change: function () {
                     this.parent.parent.instance.width = this.value;
@@ -73,7 +73,7 @@ Builder.initMetaProps = function () {
             ctor: "TextInput",
             label: "Height",
             required: true,
-            index: 10,
+            index: 5,
             props: {
                 change: function () {
                     this.parent.parent.instance.height = this.value;
@@ -82,14 +82,14 @@ Builder.initMetaProps = function () {
         },
 
         visible: {
-            ctor: "Toggle", label: "Visible", index: 4, props: {
+            ctor: "Toggle", label: "Visible", index: 7, props: {
                 change: function () {
                     this.parent.parent.instance.visible = this.value;
                 }
             }
         },
         enabled: {
-            ctor: "Toggle", label: "Enabled", index: 5, props: {
+            ctor: "Toggle", label: "Enabled", index: 8, props: {
                 change: function () {
                     this.parent.parent.instance.enabled = this.value;
                 }
@@ -98,7 +98,7 @@ Builder.initMetaProps = function () {
 
       
         x: {
-            ctor: "TextInput", label: "x-coordinate", index: 1, props: {
+            ctor: "TextInput", label: "x-coordinate", index: 2, props: {
                 change: function () {
                     this.parent.parent.instance.x = this.value;
                    this.parent.parent.instance.$el[0].style.left = this.value + 'px' ;
@@ -107,7 +107,7 @@ Builder.initMetaProps = function () {
         },
 
         y: {
-            ctor: "TextInput", label: "y-coordinate", index: 2, props: {
+            ctor: "TextInput", label: "y-coordinate", index: 3, props: {
                 change: function () {
                     this.parent.parent.instance.y = this.value;
                     this.parent.parent.instance.$el[0].style.top = this.value + 'px' ;
@@ -116,7 +116,7 @@ Builder.initMetaProps = function () {
         },
 
         section: {
-            ctor: "TextInput", label: "section", index: 32, props: {
+            ctor: "TextInput", label: "section", index: 9, props: {
                 change: function () {
                     this.parent.parent.instance.section = this.value;
                 }

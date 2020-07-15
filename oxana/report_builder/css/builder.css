@@ -52,7 +52,15 @@
 }
 
 .propertyEditor {
-    height: calc(100vh - 50px) !important;
+    height: calc(100vh + 50px) !important;
+}
+.propertyEditorTrash {
+    height: calc(30vh - 80px) !important;
+    margin: 27%;
+    padding: 20%;
+    border: 1px dashed blue;
+    border-radius: 50%;
+    background-color: #f8f8f9;
 }
 
 i:hover {

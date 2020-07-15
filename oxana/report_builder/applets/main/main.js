@@ -7,8 +7,8 @@ let Implementation = function (applet) {
     let activeContainer;
     let _cmpList = new ArrayEx(data.componentList);
 
-    let propertyEditorViewStack, propertyEditorContainer, fileSelectModal, browseFile, componentsContainer,
-        rightSideNav, listHistorySteps, workArea,title,detail,summary,workAreaColumn, workAreaRowL2,
+    let propertyEditorViewStack, propertyEditorContainer, propertyEditorContainerTrash,fileSelectModal, browseFile, componentsContainer,
+        rightSideNav, listHistorySteps, workArea,title,detail,summary,workAreaColumn, workAreaRowL2,targetBand,
         cmpSearchTextInput, undoButton, redoButton, cmpTrash, toggleSideNavLeft, toggleSideNavRight,
         splitHorizontal, splitVertical, uploadIcon, saveLayout, selectBtn, componentList,
         openUploadForms, appLoader, middleNav, desktopPreview, tabletPreview, mobilePreview;
@@ -37,6 +37,7 @@ let Implementation = function (applet) {
 
             propertyEditorViewStack = app.viewStack.mainContainer.container.rightSideNav.rightSideContainer.propertyEditorViewStack;
             propertyEditorContainer = propertyEditorViewStack.propertyEditorContainerWrap.propertyEditorContainer;
+            propertyEditorContainerTrash = propertyEditorViewStack.propertyEditorContainerWrap.propertyEditorContainerTrash;
             fileSelectModal = app.viewStack.mainContainer.container.children.fileSelectModal;
             browseFile = fileSelectModal.modalDialog.modalContent.modalBody.browseFile;
             componentsContainer = app.viewStack.mainContainer.container.componentsContainer;
@@ -64,6 +65,7 @@ let Implementation = function (applet) {
             }, false);
 
             applet.addBehaviors(propertyEditorContainer, vspewbehaviors, false);
+            applet.addBehaviors(propertyEditorContainerTrash, vspewbehaviors, false);
 
             cmpSearchTextInput = app.viewStack.mainContainer.container.componentsContainer.container.cmpSearchTextInput;
             applet.addBehaviors(cmpSearchTextInput, {
@@ -246,7 +248,6 @@ let Implementation = function (applet) {
                 else 
                 {
                     inst = Component.instances[domID];
-<<<<<<< HEAD
                     console.log("Moved component",inst);
                     
                     var offset = event.dataTransfer.getData("text/plain").split(',');
@@ -297,27 +298,6 @@ let Implementation = function (applet) {
                     //     let evt = new jQuery.Event("dropped");
                     //     inst.trigger(evt);
                     // }
-=======
-                    var instParentID = inst.$el[0].parentElement.id.substring(0,inst.$el[0].parentElement.id.indexOf("_"));
-
-                    if(instParentID != activeContainer.id)
-                    {
-                        inst.$el.appendTo(activeContainer.$el[0]);
-                        inst.parent = activeContainer;
-                        inst.$el[0].style.left = 420 +'px';
-                        inst.$el[0].style.top = 70 + 'px';         
-                    }
-                    else 
-                    {
-                        var offset = event.dataTransfer.getData("text/plain").split(',');
-                        var x_drag = (event.clientX + parseInt(offset[0], 10)) + 'px';
-                        var y_drag = (event.clientY + parseInt(offset[1], 10)) + 'px';
-                        inst.$el[0].style.left = x_drag;
-                        inst.$el[0].style.top = y_drag;
-                        inst.x = x_drag;
-                        inst.y = y_drag;
-                    }
->>>>>>> 303cca48cb94b8c076e4e6c14fbd5631e4fd91da
                 }
 
             },
@@ -962,10 +942,11 @@ let Implementation = function (applet) {
     
         "SAVE_LAYOUT": {
             do: function (e) {
-                let lit = workAreaColumn.literalLite;
+                // let lit = workAreaColumn.literalLite;
+                let lit = workAreaRowL2.literal;
                 stripHandle(lit);
                 let jsonLayout = JSON.stringify(lit, null, "\t");
-                download("workAreaColumn.json.txt", jsonLayout);
+                download("targetBand.json.txt", jsonLayout);
             },
             stopPropagation: true
         },
@@ -1173,8 +1154,14 @@ let Implementation = function (applet) {
         "mouseover": "WA_HOVER",
         "mouseout": "WA_HOVER",
         "drop": {
-            "DELETE_CMP": undefined,
-            "TOGGLE_BIN": undefined
+            "DELETE_CMP": {
+                filter: undefined,
+                onPropagation: true
+            },
+            "TOGGLE_BIN": {
+                filter: undefined,
+                onPropagation: true
+            }
         },
         "dragover": "ALLOW_DROP",
         "dragleave": "TOGGLE_BIN"
