@@ -3,14 +3,14 @@ var JRComponent = function(_props){
     let _defaultParams = {
         x  : "",
         y  : "",
-        section : "",
+        section : ""
     };
-    
     var _props = extend(false, false, _defaultParams, _props);
     
     let _x = _props.x; 
     let _y = _props.y;
     let _section = _props.section;
+    
 
     Object.defineProperty(this, "x",
     {
@@ -58,8 +58,7 @@ var JRComponent = function(_props){
             }
         },
         enumerable: true
-    });
- 
+    }); 
 
 };
 // JRComponent.prototype.ctor = 'JRComponent';
