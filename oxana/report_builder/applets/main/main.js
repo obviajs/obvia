@@ -13,6 +13,11 @@ let Implementation = function (applet) {
         splitHorizontal, splitVertical, uploadIcon, saveLayout, selectBtn, componentList,
         openUploadForms, appLoader, middleNav, desktopPreview, tabletPreview, mobilePreview;
 
+    //component resize
+    let resizable = false;
+    let x,y;
+
+
     let formField;
 
     let containers = ["Container", "Form", "Header", "Footer","JRBand"];
@@ -229,6 +234,7 @@ let Implementation = function (applet) {
                         this.trigger(evt);
                     };
                     lit.props.draggable = true;
+
                     inst = targetBand.addComponent(lit);
                     let classes = inst.classes.slice(0);
                     classes.pushUnique("selected-component");
@@ -240,7 +246,7 @@ let Implementation = function (applet) {
                         inst.attr.isNotWa = true;
                     }
                     inst.attr.isCmp = true;
-					inst.section = targetBand.id;
+                    inst.section = targetBand.id;
                     ret.child = lit;
                     ret.parent = targetBand;
                     ret.container = targetBand;
@@ -256,8 +262,8 @@ let Implementation = function (applet) {
                     {
                         inst.$el.appendTo(activeContainer.$el[0]);
                         inst.parent = activeContainer;
-                        inst.$el[0].style.left = 420 +'px';
-                        inst.$el[0].style.top = 70 + 'px';         
+                        // inst.$el[0].style.left = 420 +'px';
+                        // inst.$el[0].style.top = 70 + 'px';    
                     }
                     else 
                     {
@@ -936,6 +942,36 @@ let Implementation = function (applet) {
                 app.history.redo();
             },
             stopPropagation: false
+        },
+
+        "INITIAL_RESIZE" : {
+            do: function (e) {
+                resizable = true;
+                let bounds = e.currentTarget.parentElement.parentElement.getBoundingClientRect();
+                x = e.clientX - bounds.left;
+                y = e.clientY - bounds.top;
+                console.log("X",x);
+                console.log("Y",y);   
+            },
+            stopPropagation: false
+        },
+        "CMP_RESIZE": {
+            do: function (e) {
+                activeComponent.css.width =  e.pageX - activeComponent.$el[0].getBoundingClientRect().left + 'px';
+                activeComponent.css.height =  e.pageY - activeComponent.$el[0].getBoundingClientRect().top + 'px';
+
+                activeComponent.width = activeComponent.css.width;
+                activeComponent.height = activeComponent.css.height;
+            },
+            stopPropagation: false
+        },
+
+        "STOP_RESIZING": {
+            do: function (e) {
+                resizable = false;
+                console.log("Stop Resize")
+            },
+            stopPropagation: false
         }
     };
 
@@ -948,10 +984,12 @@ let Implementation = function (applet) {
         console.log("CNT????",this.ctor);
         return containers.indexOf(this.ctor) > -1;
     };
+    let isResizable = function(e){
+        return resizable == true; 
+    }
     let isNotContainer = function (e) {
         return !isContainer.call(this, e);
     };
-
     let isNotDraggableContainer = function (e) {
         return containers.indexOf(this.ctor) > -1 && this.draggable == false;
     };
@@ -1142,36 +1180,6 @@ let Implementation = function (applet) {
         "dragover": "TOGGLE_BIN",
     };
 
-    // let waBehaviors = {
-    //     "click": "BECOME_ACTIVE",
-    //     "mousedown": "WA_PREVENT_DRAGSTART",
-    //     "mouseover": "WA_HOVER",
-    //     "mouseout": "WA_HOVER",
-    //     "mousemove": {
-    //         "IS_WA_RESIZE_NS": isMouseMoveNS
-    //     },
-    //     "resize": "WA_RESIZE",
-    //     "contextmenu": "WA_REMOVE",
-    //     "drop": "ADD_COMPONENT",
-    //     "dragover": "ALLOW_DROP",
-    // };
-
-    // let cmpWaBehaviors = {
-    //     "mousedown": {
-    //         "WA_PREVENT_DRAGSTART": undefined,
-    //         "BECOME_ACTIVE": undefined
-    //     },
-    //     "mouseover": "WA_HOVER",
-    //     "mouseout": "WA_HOVER",
-    //     "mousemove": {
-    //         "IS_WA_RESIZE_NS": isMouseMoveNS
-    //     },
-    //     "resize": "WA_RESIZE",
-    //     "contextmenu": "WA_REMOVE",
-    //     "drop": "ADD_COMPONENT",
-    //     "dragover": "ALLOW_DROP",
-    // };
-
     let cmpWaBehaviors = {
         "mousedown": {
             "WA_PREVENT_DRAGSTART": isNotDraggableContainer,
@@ -1180,6 +1188,7 @@ let Implementation = function (applet) {
                 return ((e.which && e.which == 1) || (e.buttons && e.buttons == 1));
             }
         },
+
         "mouseover": {
             "WA_HOVER": isContainer
         },
@@ -1187,16 +1196,20 @@ let Implementation = function (applet) {
             "WA_HOVER": isContainer
         },
         "mousemove": {
-            "IS_WA_RESIZE_NS": isMouseMoveNS
+            //fix this so we can tell the difference between container resize and component resize
+            // "IS_WA_RESIZE_NS": isMouseMoveNS,
+            "CMP_RESIZE" : isResizable
+        },
+        "mouseup": {
+            "STOP_RESIZING": isResizable
         },
         "resize": {
-            "WA_RESIZE": isContainer
+            "WA_RESIZE": isContainer,
         },
         "contextmenu": {
             "WA_REMOVE": isContainer
         },
         "drop": {
-            // "BECOME_ACTIVE": isContainer,
             "ADD_COMPONENT": isContainer
         },
         "dragover": {
@@ -1209,7 +1222,10 @@ let Implementation = function (applet) {
     };
 
 	let cmpResizeBehaviors = {
-
+        "mousedown": {
+            "WA_PREVENT_DRAGSTART": true,
+            "INITIAL_RESIZE": true,
+        }  
     }
 						  
     // let cmpBehaviors = {

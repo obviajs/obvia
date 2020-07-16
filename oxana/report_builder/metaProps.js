@@ -66,8 +66,7 @@ Builder.initMetaProps = function () {
             index: 4,
             props: {
                 change: function () {
-                    this.parent.parent.instance.width = this.value;
-                    this.parent.parent.instance.$el[0].style.width = this.value + 'px' ;
+                    this.parent.parent.instance.css.width = this.value;
                 }
             }
         },
@@ -78,8 +77,7 @@ Builder.initMetaProps = function () {
             index: 5,
             props: {
                 change: function () {
-                   this.parent.parent.instance.height = this.value;
-                    this.parent.parent.instance.$el[0].style.height = this.value + 'px' ;
+                    this.parent.parent.instance.css.height = this.value;
                 }
             }
         },
