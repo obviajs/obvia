@@ -364,7 +364,7 @@ var Repeater = function(_props, _hideComponents=false)
         if (!isPreventable || (isPreventable && !beforeRowAddEvent.isDefaultPrevented())) 
         {
             let len = _components.length;
-            for(var cIndex=0;cIndex<len;cIndex++)
+            for(let cIndex=0;cIndex<len;cIndex++)
             {
                 let component = {};
                 if (!_components[cIndex].props.id) {
@@ -479,7 +479,7 @@ var Repeater = function(_props, _hideComponents=false)
                             // }else{
                             //     _$hadow.prepend(cmpInstance.$el);
                             // }
-                            _$hadow.insertAt(cmpInstance.$el, index);
+                            _$hadow.insertAt(cmpInstance.$el, index*len + cIndex);
                         }else   
                         {
                             renderedRow
@@ -496,7 +496,7 @@ var Repeater = function(_props, _hideComponents=false)
                             // }else{
                             //     _$hadow.prepend(renderedRow);
                             // }
-                            _$hadow.insertAt(renderedRow, index);
+                            _$hadow.insertAt(renderedRow, index*len + cIndex);
                         }                     
                                                    
                     });
