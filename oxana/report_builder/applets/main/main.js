@@ -8,21 +8,17 @@ let Implementation = function (applet) {
     let _cmpList = new ArrayEx(data.componentList);
 
     let propertyEditorViewStack, propertyEditorContainer, propertyEditorContainerTrash,fileSelectModal, browseFile, componentsContainer,
-        rightSideNav, listHistorySteps, workArea,title,detail,summary,workAreaColumn, workAreaRowL2,targetBand,
+        rightSideNav, listHistorySteps,workArea,title,pageHeader,detail, pageFooter,summary,workAreaColumn, sectionList,workAreaRowL2,targetBand,
         cmpSearchTextInput, undoButton, redoButton, cmpTrash, toggleSideNavLeft, toggleSideNavRight,
         splitHorizontal, splitVertical, uploadIcon, saveLayout, selectBtn, componentList,
         openUploadForms, appLoader, middleNav, desktopPreview, tabletPreview, mobilePreview;
-
+     
     //component resize
     let resizable = false;
-    let x,y;
-
-
     let formField;
-
     let containers = ["Container", "Form", "Header", "Footer","JRBand"];
     let noNeedFF = ["Button", "Label", "Container", "Link", "Header", "Footer", "Form", "SideNav", "ViewStack", "Calendar", "Tree", "Image", "HRule", "Heading", "Repeater", "RepeaterEx"];
-
+    
     let imp = {
         "BEGIN_DRAW": function (e) {
             console.log("APPLET_BEGIN_DRAW");
@@ -52,11 +48,15 @@ let Implementation = function (applet) {
             workAreaColumn = app.viewStack.mainContainer.container.workArea.workAreaRow.workAreaColumn;
             workAreaRowL2 = workAreaColumn.workAreaCell.workAreaRowL2;
             workArea = workAreaRowL2.workAreaColumnL2;
-            title = workArea.titleBand;
-            detail = workArea.detailBand;
-            summary = workArea.summaryBand;
+            console.log("WA Components",workArea)
+            title = workArea.title;
+            pageHeader = workArea.pageHeader;
+            detail = workArea.detail;
+            pageFooter = workArea.pageFooter;
+            summary = workArea.summary;
             componentList = componentsContainer.componentList;
-
+            sectionList = propertyEditorViewStack.propertyEditorContainerWrap.sectionsList.checkBox;
+            console.log("SECTIONS",sectionList);
             applet.addBehaviors(applet.view, {
                 "idChanged": {
                     "UPDATE_BEHAVIOR_BINDINGS": {
@@ -139,10 +139,13 @@ let Implementation = function (applet) {
             }, false);
 
             //app.behaviors["previewBtn"]["click"] = "PREVIEW";
-            // applet.addBehaviors(workArea, cmpWaBehaviors, false);
+            //applet.addBehaviors(workArea, cmpWaBehaviors, false);
             applet.addBehaviors(title, cmpWaBehaviors, false);
+            applet.addBehaviors(pageHeader, cmpWaBehaviors, false);
             applet.addBehaviors(detail, cmpWaBehaviors, false);
+            applet.addBehaviors(pageFooter, cmpWaBehaviors, false);
             applet.addBehaviors(summary, cmpWaBehaviors, false);
+            applet.addBehaviors(sectionList,sectionListBehaviors,false);
             applet.addBehaviors(app, {
                 "loadLayout": "LOAD_LAYOUT",
                 "loadHtml": "LOAD_HTML",
@@ -768,7 +771,7 @@ let Implementation = function (applet) {
                 classes.pushUnique("active-container");
                 this.classes = classes;
                 activeContainer = this;
-                if (this.id == "titleBand" || this.id == "detailBand" ||  this.id == "summaryBand") {
+                if (this.id == "title" || this.id == "detail" ||  this.id == "summary") {
                     //Builder.metaProps.form_name.props.change(data.selectedForm, this);
                     // let oeLit = {
                     //     ctor: ObjectEditor,
@@ -946,22 +949,18 @@ let Implementation = function (applet) {
 
         "INITIAL_RESIZE" : {
             do: function (e) {
-                resizable = true;
-                let bounds = e.currentTarget.parentElement.parentElement.getBoundingClientRect();
-                x = e.clientX - bounds.left;
-                y = e.clientY - bounds.top;
-                console.log("X",x);
-                console.log("Y",y);   
+                resizable = true;  
             },
             stopPropagation: false
         },
         "CMP_RESIZE": {
             do: function (e) {
-                activeComponent.css.width =  e.pageX - activeComponent.$el[0].getBoundingClientRect().left + 'px';
-                activeComponent.css.height =  e.pageY - activeComponent.$el[0].getBoundingClientRect().top + 'px';
-
-                activeComponent.width = activeComponent.css.width;
-                activeComponent.height = activeComponent.css.height;
+                if(containers.indexOf(activeComponent.ctor) == -1 ){
+                    activeComponent.css.width =  e.pageX - activeComponent.$el[0].getBoundingClientRect().left + 'px';
+                    activeComponent.css.height =  e.pageY - activeComponent.$el[0].getBoundingClientRect().top + 'px';
+                    activeComponent.width = activeComponent.css.width;
+                    activeComponent.height = activeComponent.css.height;
+                }
             },
             stopPropagation: false
         },
@@ -972,13 +971,73 @@ let Implementation = function (applet) {
                 console.log("Stop Resize")
             },
             stopPropagation: false
+        },
+        "UPDATE_SECTION_LIST" : {
+            do: function (e) {
+                let inst;
+                let currentSection = arguments[2].currentItem;
+                var sectionName = currentSection.text;
+                var sectionId = currentSection.id;
+                var sectionOrder = currentSection.bandOrder;
+                if(currentSection.checked == true){
+                    workArea.components.forEach(function(item,index){
+                        if(item.props.id == sectionId) {
+                            workArea.removeChildAtIndex(index);
+                        }
+                    })
+                }
+                else {
+                    let newSection = {
+                        ctor: JRBand,
+                        props: {
+                            id: sectionId,
+                            bandOrder : sectionOrder, 
+                            type: "ContainerType.ROW",
+                            classes: [
+                              "band",
+                              "border",
+                              "col"
+                            ],
+                            components : [
+                                {
+                                  ctor : "Label",
+                                  props: {
+                                    id: sectionId + "Label",
+                                    label: sectionName,
+                                    classes: [
+                                      "bandName"
+                                    ]
+                                  }
+                                }
+                            ]
+                        }
+                    }
+                    workArea.addComponent(newSection);
+                    let sortedComponents = [...workArea.components.sort(compare)];
+                    workArea.removeAllChildren(0);
+                    sortedComponents.forEach(function(item){
+                        inst = workArea.addComponent(item);
+                        applet.addBehaviors(inst, cmpWaBehaviors, false);
+                        
+                    })  
+                } 
+            },
         }
     };
-
-
    /**
      * Behavior Filters below
      */
+    function compare(a, b) {
+        const sectionA = a.props.bandOrder;
+        const sectionB = b.props.bandOrder;
+        let comparison = 0;
+        if (sectionA > sectionB) {
+          comparison = 1;
+        } else if (sectionA < sectionB) {
+          comparison = -1;
+        }
+        return comparison;
+    }
     let isContainer = function (e) {
 
         console.log("CNT????",this.ctor);
@@ -1188,7 +1247,6 @@ let Implementation = function (applet) {
                 return ((e.which && e.which == 1) || (e.buttons && e.buttons == 1));
             }
         },
-
         "mouseover": {
             "WA_HOVER": isContainer
         },
@@ -1227,7 +1285,10 @@ let Implementation = function (applet) {
             "INITIAL_RESIZE": true,
         }  
     }
-						  
+	let sectionListBehaviors = {
+        "itemClick": "UPDATE_SECTION_LIST"
+    }
+
     // let cmpBehaviors = {
     //     "mousedown": {
     //         "SELECT_COMPONENT": (e) => { return ((e.which && e.which == 1) || (e.buttons && e.buttons == 1));}

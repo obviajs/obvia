@@ -447,7 +447,8 @@
                                                  {
                                                    "ctor": "JRBand",
                                                    "props": {
-                                                     "id": "titleBand",
+                                                     "id": "title",
+                                                     "bandOrder" : 0,
                                                      "type": "ContainerType.ROW",
                                                      "classes": [
                                                        "band",
@@ -469,9 +470,35 @@
                                                    }
                                                  },
                                                  {
+                                                  "ctor": "JRBand",
+                                                  "props": {
+                                                    "id": "pageHeader",
+                                                    "bandOrder" : 1,
+                                                    "type": "ContainerType.ROW",
+                                                    "classes": [
+                                                      "band",
+                                                      "border",
+                                                      "col"
+                                                    ],
+                                                    "components": [
+                                                      {
+                                                        "ctor": "Label",
+                                                        "props": {
+                                                          "id": "pageHeaderLabel",
+                                                          "label": "Page Header",
+                                                          "classes": [
+                                                            "bandName"
+                                                          ]
+                                                        }
+                                                      }
+                                                    ]
+                                                  }
+                                                },
+                                                 {
                                                    "ctor": "JRBand",
                                                    "props": {
-                                                     "id": "detailBand",
+                                                     "id": "detail",
+                                                     "bandOrder" : 2,
                                                      "type": "ContainerType.ROW",
                                                      "classes": [
                                                        "band",
@@ -492,10 +519,36 @@
                                                      ]
                                                    }
                                                  },
+                                                {
+                                                  "ctor": "JRBand",
+                                                  "props": {
+                                                    "id": "pageFooter",
+                                                    "bandOrder" : 3,
+                                                    "type": "ContainerType.ROW",
+                                                    "classes": [
+                                                      "band",
+                                                      "border",
+                                                      "col"
+                                                    ],
+                                                    "components": [
+                                                      {
+                                                        "ctor": "Label",
+                                                        "props": {
+                                                          "id": "pageFooterLabel",
+                                                          "label": "Page Footer",
+                                                          "classes": [
+                                                            "bandName"
+                                                          ]
+                                                        }
+                                                      }
+                                                    ]
+                                                  }
+                                                },
                                                  {
                                                    "ctor": "JRBand",
                                                    "props": {
-                                                     "id": "summaryBand",
+                                                     "id": "summary",
+                                                     "bandOrder" : 4,
                                                      "type": "ContainerType.ROW",
                                                      "classes": [
                                                        "band",
@@ -584,11 +637,47 @@
                                          "width": 600,
                                          "align": "center",
                                          "css": {
-                                           "margin": 0
+                                           "margin-bottom": 20 
                                          }
                                        }
                                      },
                                      {
+                                      "ctor": "Label",
+                                      "props": {
+                                        "id": "label",
+                                        "label": "Report Sections ",
+                                        "css": {
+                                          "marginLeft": "0",
+                                          "classes":[]
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "ctor":"CheckBoxGroup",
+                                      "props":{
+                                        "id": "sectionsList",
+                                        "dataProvider": [
+                                            { "id": "title", "bandOrder": 0,"text": "Title", "buttonClass": ["btn", "btn-xs", "btn-default"], "enabled":true, "checked":true},
+                                            { "id": "pageHeader", "bandOrder": 1,"text": "Page Header", "buttonClass": ["btn", "btn-xs", "btn-default"], "enabled":true, "checked":true},
+                                            { "id": "detail", "bandOrder": 2,"text": "Detail", "buttonClass": ["btn", "btn-xs", "btn-default"], "enabled":true, "checked":true},
+                                            { "id": "pageFooter", "bandOrder": 3,"text": "Page Footer", "buttonClass": ["btn", "btn-xs", "btn-default"], "enabled":true, "checked":true},
+                                            { "id": "summary", "bandOrder": 4,"text": "Summary", "buttonClass": ["btn", "btn-xs", "btn-default"], "enabled":true, "checked":true}
+                                        ],
+                                        "valueField": "id",
+                                        "labelField": "text",
+                                        "classesField": "buttonClass",
+                                        "defaultClasses": ["btn", "btn-xs", "btn-default"],
+                                        "selectedClasses": ["btn", "btn-xs", "btn-default"],
+                                        "enabledField": "enabled",
+                                        "checkedField": "checked",
+                                        "value": [
+                                          { "id": "title"}, { "id": "pageHeader"},
+                                          { "id": "detail"},{ "id": "pageFooter"},
+                                          { "id": "summary"}
+                                        ]
+                                      }
+                                    },
+                                    {
                                        "ctor": "Container",
                                        "props": {
                                          "id": "propertyEditorContainer",
@@ -598,7 +687,7 @@
                                            "propertyEditor"
                                          ]
                                        }
-                                     },
+                                    },
                                      {
                                       "ctor": "Container",
                                       "props": {

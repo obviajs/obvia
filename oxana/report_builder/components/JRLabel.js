@@ -1,9 +1,15 @@
 var JRLabel = function(_props){
 
+    // _props.components = {ctor: JRBand, props: {
+    //     id: 'jr_resizer',
+    //     type : "CONTAINER_FLUID",
+    //     classes: ["resizable"]
+    // }}
     let _defaultParams = {
         width : "",
         height : ""
     };
+
     _props = extend(false, false, _defaultParams, _props);
     let _width = _props.width;
     let _height = _props.height;
@@ -33,21 +39,12 @@ var JRLabel = function(_props){
         },
         enumerable: true
     });
-
-
     let r = Label.call(this, _props);
-    
-
     let resizeBtn = new JRBand({
         id: 'jr_resizer',
         type : "CONTAINER_FLUID",
         classes: ["resizable"]
     });
-
-
-    // let $label = $(this.template());
-    // let $newLabel = $label.append("<div id = resizable> </div>")
-    // this.$el = $newLabel;
     this.implement(new JRComponent(_props));
     this.add(resizeBtn,0);
     
