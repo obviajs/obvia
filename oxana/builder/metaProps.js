@@ -182,16 +182,6 @@ Builder.initMetaProps = function () {
                 }
             }
         },
-        controlToValidateInstance: {
-            ctor: "TextInput",
-            label: "Control To Validate Instance",
-            index: 10,
-            props: {
-                change: function () {
-                    this.parent.parent.instance.controlToValidateInstance = this.value;
-                }
-            }
-        },
         setFocusOnError: {
             ctor: "Toggle",
             label: "Set Focus On Error",

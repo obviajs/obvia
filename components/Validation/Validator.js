@@ -117,7 +117,6 @@ var Validator = function (_props) {
                 }
             }
         },
-        enumerable: true,
         configurable: true
     });
 
