@@ -598,7 +598,21 @@
                                            "propertyEditor"
                                          ]
                                        }
-                                     }
+                                     },
+                                     {
+                                      "ctor": "Container",
+                                      "props": {
+                                        "id": "propertyEditorContainerTrash",
+                                        "type": "",
+                                        "components": [],
+                                        "classes": [
+                                          "propertyEditorTrash",
+                                          "fas",
+                                          "fa-trash",
+                                          "trash-icon"
+                                        ]
+                                      }
+                                    }
                                    ]
                                  }
                                },

@@ -8,12 +8,12 @@
     height: 30px ;	
 
 }
-.dragged-component {
+/* .dragged-component {
     position: relative !important;
     border: 1px dashed #3987d9 !important;
     width: 100px ;
     height: 30px ;	
-}
+} */
 .default-component {
     background-color: rgba(204, 22, 22, 0);
     width: 100px ;
@@ -39,6 +39,16 @@
     font-size:18px !important;
     }
 
+.resizable {
+    background-color: #727272;
+    width: 7px;
+    height: 7px;
+    cursor: se-resize;
+    position:absolute;
+    right: 0;
+    bottom: 0;
+}
+
 .active-container{
     border: 1px dashed #3987d9 !important;
 }
@@ -52,7 +62,15 @@
 }
 
 .propertyEditor {
-    height: calc(100vh - 50px) !important;
+    height: calc(100vh + 199px) !important;
+}
+.propertyEditorTrash {
+    height: calc(30vh - 80px) !important;
+    margin: 27%;
+    padding: 20%;
+    border: 1px dashed blue;
+    border-radius: 50%;
+    background-color: #f8f8f9;
 }
 
 i:hover {

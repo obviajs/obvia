@@ -7,11 +7,16 @@ let Implementation = function (applet) {
     let activeContainer;
     let _cmpList = new ArrayEx(data.componentList);
 
-    let propertyEditorViewStack, propertyEditorContainer, fileSelectModal, browseFile, componentsContainer,
-        rightSideNav, listHistorySteps, workArea,title,detail,summary,workAreaColumn, workAreaRowL2,
+    let propertyEditorViewStack, propertyEditorContainer, propertyEditorContainerTrash,fileSelectModal, browseFile, componentsContainer,
+        rightSideNav, listHistorySteps, workArea,title,detail,summary,workAreaColumn, workAreaRowL2,targetBand,
         cmpSearchTextInput, undoButton, redoButton, cmpTrash, toggleSideNavLeft, toggleSideNavRight,
         splitHorizontal, splitVertical, uploadIcon, saveLayout, selectBtn, componentList,
         openUploadForms, appLoader, middleNav, desktopPreview, tabletPreview, mobilePreview;
+
+    //component resize
+    let resizable = false;
+    let x,y;
+
 
     let formField;
 
@@ -37,6 +42,7 @@ let Implementation = function (applet) {
 
             propertyEditorViewStack = app.viewStack.mainContainer.container.rightSideNav.rightSideContainer.propertyEditorViewStack;
             propertyEditorContainer = propertyEditorViewStack.propertyEditorContainerWrap.propertyEditorContainer;
+            propertyEditorContainerTrash = propertyEditorViewStack.propertyEditorContainerWrap.propertyEditorContainerTrash;
             fileSelectModal = app.viewStack.mainContainer.container.children.fileSelectModal;
             browseFile = fileSelectModal.modalDialog.modalContent.modalBody.browseFile;
             componentsContainer = app.viewStack.mainContainer.container.componentsContainer;
@@ -64,6 +70,7 @@ let Implementation = function (applet) {
             }, false);
 
             applet.addBehaviors(propertyEditorContainer, vspewbehaviors, false);
+            applet.addBehaviors(propertyEditorContainerTrash, vspewbehaviors, false);
 
             cmpSearchTextInput = app.viewStack.mainContainer.container.componentsContainer.container.cmpSearchTextInput;
             applet.addBehaviors(cmpSearchTextInput, {
@@ -227,85 +234,36 @@ let Implementation = function (applet) {
                         this.trigger(evt);
                     };
                     lit.props.draggable = true;
+
                     inst = targetBand.addComponent(lit);
                     let classes = inst.classes.slice(0);
                     classes.pushUnique("selected-component");
                     inst.classes = classes;
                     applet.addBehaviors(inst, cmpWaBehaviors, false);
+					applet.addBehaviors(inst.children.jr_resizer, cmpResizeBehaviors, false);
                     let isCont = isContainer.call(inst);
                     if (isCont) {
                         inst.attr.isNotWa = true;
                     }
                     inst.attr.isCmp = true;
+                    inst.section = targetBand.id;
                     ret.child = lit;
                     ret.parent = targetBand;
                     ret.container = targetBand;
                     ret.track = true;											 
                     return ret;
                 }
-                else 
+				else 
                 {
                     inst = Component.instances[domID];
-<<<<<<< HEAD
-                    console.log("Moved component",inst);
-                    
-                    var offset = event.dataTransfer.getData("text/plain").split(',');
-                    var x_drag = (event.clientX + parseInt(offset[0], 10)) + 'px';
-                    var y_drag = (event.clientY + parseInt(offset[1], 10)) + 'px';
-                    inst.$el[0].style.left = x_drag;
-                    inst.$el[0].style.top = y_drag;
-                    inst.x = x_drag;
-                    inst.y = y_drag;
-
-                    
-                    // let lit = Builder.components[ctor].literal;
-                    // if (inst.parent && (inst.parent != workArea) && (domID != workArea.domID)) {
-                    //     inst.parent.removeChild(inst, 0);
-                    //     if (inst.ctor == "FormField" && workArea.ctor != "Form") {
-                    //         // inst = inst.children[inst.component.props.id];
-                    //         inst.draggable = true;
-                    //         applet.addBehaviors(inst, cmpWaBehaviors, false);
-                    //         let classes = inst.classes.slice(0);
-                    //         classes.pushUnique("selected-component");
-                    //         inst.classes = classes;
-                    //     } else if (workArea.ctor == "Form" && noNeedFF.indexOf(inst.ctor) == -1) {
-                    //         app.removeBehaviors(inst, cmpWaBehaviors, false);
-                    //         let classes = inst.classes.slice(0);
-                    //         let ind = classes.indexOf("default-component");
-                    //         if (id > -1) {
-                    //             classes.splice(ind, 1);
-                    //         }
-                    //         ind = classes.indexOf("selected-component");
-                    //         if (ind > -1)
-                    //             classes.splice(ind, 1);
-                    //         inst.classes = classes;
-                    //         inst.draggable = false;
-                    //         let ff = extend(true, formField);
-                    //         ff.props.component = inst.literal;
-                    //         ff.props.draggable = true;
-                    //         ff.props.classes = !Array.isArray(ff.props.classes) ? [] : ff.props.classes;
-                    //         ff.props.classes.push("selected-component");
-                    //         inst = workArea.addComponent(ff);
-                    //         //inst.addChild(inst);
-                    //         //inst = instF;
-                    //         applet.addBehaviors(inst, cmpWaBehaviors, false);
-                    //         // if (parents.indexOf(ctor) > -1) {
-                    //         //     applet.addBehaviors(instF, cntBehaviors, false);
-                    //         // }
-                    //     }
-                    //     workArea.addChild(inst);
-                    //     let evt = new jQuery.Event("dropped");
-                    //     inst.trigger(evt);
-                    // }
-=======
                     var instParentID = inst.$el[0].parentElement.id.substring(0,inst.$el[0].parentElement.id.indexOf("_"));
-
+                    inst.section = targetBand.id;
                     if(instParentID != activeContainer.id)
                     {
                         inst.$el.appendTo(activeContainer.$el[0]);
                         inst.parent = activeContainer;
-                        inst.$el[0].style.left = 420 +'px';
-                        inst.$el[0].style.top = 70 + 'px';         
+                        // inst.$el[0].style.left = 420 +'px';
+                        // inst.$el[0].style.top = 70 + 'px';    
                     }
                     else 
                     {
@@ -317,9 +275,8 @@ let Implementation = function (applet) {
                         inst.x = x_drag;
                         inst.y = y_drag;
                     }
->>>>>>> 303cca48cb94b8c076e4e6c14fbd5631e4fd91da
+                  
                 }
-
             },
             undo: function () {},
             stopPropagation: true,
@@ -962,10 +919,11 @@ let Implementation = function (applet) {
     
         "SAVE_LAYOUT": {
             do: function (e) {
-                let lit = workAreaColumn.literalLite;
+                // let lit = workAreaColumn.literalLite;
+                let lit = workAreaRowL2.literal;
                 stripHandle(lit);
                 let jsonLayout = JSON.stringify(lit, null, "\t");
-                download("workAreaColumn.json.txt", jsonLayout);
+                download("targetBand.json.txt", jsonLayout);
             },
             stopPropagation: true
         },
@@ -984,6 +942,36 @@ let Implementation = function (applet) {
                 app.history.redo();
             },
             stopPropagation: false
+        },
+
+        "INITIAL_RESIZE" : {
+            do: function (e) {
+                resizable = true;
+                let bounds = e.currentTarget.parentElement.parentElement.getBoundingClientRect();
+                x = e.clientX - bounds.left;
+                y = e.clientY - bounds.top;
+                console.log("X",x);
+                console.log("Y",y);   
+            },
+            stopPropagation: false
+        },
+        "CMP_RESIZE": {
+            do: function (e) {
+                activeComponent.css.width =  e.pageX - activeComponent.$el[0].getBoundingClientRect().left + 'px';
+                activeComponent.css.height =  e.pageY - activeComponent.$el[0].getBoundingClientRect().top + 'px';
+
+                activeComponent.width = activeComponent.css.width;
+                activeComponent.height = activeComponent.css.height;
+            },
+            stopPropagation: false
+        },
+
+        "STOP_RESIZING": {
+            do: function (e) {
+                resizable = false;
+                console.log("Stop Resize")
+            },
+            stopPropagation: false
         }
     };
 
@@ -996,10 +984,12 @@ let Implementation = function (applet) {
         console.log("CNT????",this.ctor);
         return containers.indexOf(this.ctor) > -1;
     };
+    let isResizable = function(e){
+        return resizable == true; 
+    }
     let isNotContainer = function (e) {
         return !isContainer.call(this, e);
     };
-
     let isNotDraggableContainer = function (e) {
         return containers.indexOf(this.ctor) > -1 && this.draggable == false;
     };
@@ -1173,8 +1163,14 @@ let Implementation = function (applet) {
         "mouseover": "WA_HOVER",
         "mouseout": "WA_HOVER",
         "drop": {
-            "DELETE_CMP": undefined,
-            "TOGGLE_BIN": undefined
+            "DELETE_CMP": {
+                filter: undefined,
+                onPropagation: true
+            },
+            "TOGGLE_BIN": {
+                filter: undefined,
+                onPropagation: true
+            }
         },
         "dragover": "ALLOW_DROP",
         "dragleave": "TOGGLE_BIN"
@@ -1184,36 +1180,6 @@ let Implementation = function (applet) {
         "dragover": "TOGGLE_BIN",
     };
 
-    // let waBehaviors = {
-    //     "click": "BECOME_ACTIVE",
-    //     "mousedown": "WA_PREVENT_DRAGSTART",
-    //     "mouseover": "WA_HOVER",
-    //     "mouseout": "WA_HOVER",
-    //     "mousemove": {
-    //         "IS_WA_RESIZE_NS": isMouseMoveNS
-    //     },
-    //     "resize": "WA_RESIZE",
-    //     "contextmenu": "WA_REMOVE",
-    //     "drop": "ADD_COMPONENT",
-    //     "dragover": "ALLOW_DROP",
-    // };
-
-    // let cmpWaBehaviors = {
-    //     "mousedown": {
-    //         "WA_PREVENT_DRAGSTART": undefined,
-    //         "BECOME_ACTIVE": undefined
-    //     },
-    //     "mouseover": "WA_HOVER",
-    //     "mouseout": "WA_HOVER",
-    //     "mousemove": {
-    //         "IS_WA_RESIZE_NS": isMouseMoveNS
-    //     },
-    //     "resize": "WA_RESIZE",
-    //     "contextmenu": "WA_REMOVE",
-    //     "drop": "ADD_COMPONENT",
-    //     "dragover": "ALLOW_DROP",
-    // };
-
     let cmpWaBehaviors = {
         "mousedown": {
             "WA_PREVENT_DRAGSTART": isNotDraggableContainer,
@@ -1222,6 +1188,7 @@ let Implementation = function (applet) {
                 return ((e.which && e.which == 1) || (e.buttons && e.buttons == 1));
             }
         },
+
         "mouseover": {
             "WA_HOVER": isContainer
         },
@@ -1229,16 +1196,20 @@ let Implementation = function (applet) {
             "WA_HOVER": isContainer
         },
         "mousemove": {
-            "IS_WA_RESIZE_NS": isMouseMoveNS
+            //fix this so we can tell the difference between container resize and component resize
+            // "IS_WA_RESIZE_NS": isMouseMoveNS,
+            "CMP_RESIZE" : isResizable
+        },
+        "mouseup": {
+            "STOP_RESIZING": isResizable
         },
         "resize": {
-            "WA_RESIZE": isContainer
+            "WA_RESIZE": isContainer,
         },
         "contextmenu": {
             "WA_REMOVE": isContainer
         },
         "drop": {
-            // "BECOME_ACTIVE": isContainer,
             "ADD_COMPONENT": isContainer
         },
         "dragover": {
@@ -1250,6 +1221,13 @@ let Implementation = function (applet) {
         "dropped": "SELECT_COMPONENT"
     };
 
+	let cmpResizeBehaviors = {
+        "mousedown": {
+            "WA_PREVENT_DRAGSTART": true,
+            "INITIAL_RESIZE": true,
+        }  
+    }
+						  
     // let cmpBehaviors = {
     //     "mousedown": {
     //         "SELECT_COMPONENT": (e) => { return ((e.which && e.which == 1) || (e.buttons && e.buttons == 1));}

@@ -17,7 +17,7 @@ Builder.initComponentList = function () {
             "label": "JRImage", "ctor": "JRImage"
         },
         {
-            "label": "Container", "ctor": "Container"
+            "label": "JRContainer", "ctor": "JRContainer"
         },
     ]);
 };

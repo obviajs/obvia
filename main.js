@@ -185,7 +185,7 @@ rjs.define("./components/Calendar/CalendarConstants.js", "CalendarConstants");
 //CalendarWeek
 rjs.define("./components/Calendar/CalendarWeek.js", "CalendarWeek");
 rjs.define("./components/Calendar/CalendarMonth.js", "CalendarMonth");
-rjs.define("./oxana/Wizard/Wizard.js", "Wizard");
+rjs.define("./oxana/wizard/Wizard.js", "Wizard");
 rjs.define("lib/KeyboardUtils.js", "KeyboardUtils");
 
 rjs.define("./components/Calendar/css/calendarMonth-default.css", "calendarMonth_default_css");
