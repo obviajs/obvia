@@ -388,6 +388,7 @@ let Implementation = function (applet) {
         },
 
         "FILE_SELECTED": function (e) {
+            let jsonMimes = ["application/json", "text/plain"];
             console.log("called FILE_SELECTED.");
             if (browseFile.value.length > 0) {
                 readFile(browseFile.value[0]).then(function (resp) {
@@ -396,7 +397,7 @@ let Implementation = function (applet) {
                         if (browseFile.value[0].type === "text/html") {
                             evt = new jQuery.Event("loadHtml");
                             evt.content = resp.content;
-                        } else if (browseFile.value[0].type === "text/plain") {
+                        } else if (jsonMimes.indexOf(browseFile.value[0].type) > -1) {
                             evt = new jQuery.Event("loadLayout");
                             evt.content = JSON.parse(resp.content);
                         }
