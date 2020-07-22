@@ -92,6 +92,19 @@ var Validator = function (_props) {
         configurable: true
     });
 
+    Object.defineProperty(this, "setFocusOnError", {
+        get: function setFocusOnError() {
+            return _setFocusOnError;
+        },
+        set: function setFocusOnError(v) {
+            if (_setFocusOnError != v) {
+                _setFocusOnError = v;
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+
     Object.defineProperty(this, "controlToValidateInstance", {
         get: function controlToValidateInstance() {
             return _controlToValidateInstance;
@@ -126,7 +139,7 @@ var Validator = function (_props) {
                 this.label = _initialValue = _props.initialValue;
             }
             if (_props.setFocusOnError) {
-                _setFocusOnError = _props.setFocusOnError;
+                this.setFocusOnError = _props.setFocusOnError;
             }
         }
     };

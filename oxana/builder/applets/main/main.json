@@ -394,57 +394,76 @@
                      "props": {
                         "id": "workArea",
                         "components": [{
-                           "ctor": "Container",
-                           "props": {
-                              "id": "workAreaRow",
-                              "type": "row",
-                              "height": "100%",
-                              "components": [{
-                                 "ctor": "Container",
-                                 "props": {
-                                    "type": "",
-                                    "spacing": {
-                                       "colSpan": 12
-                                    },
-                                    "id": "workAreaColumn",
-                                    "components": [{
-                                       "ctor": "Container",
-                                       "props": {
-                                          "spacing": {
-                                             "h": 100
-                                          },
-                                          "id": "workAreaCell",
-                                          "type": "",
-                                          "components": [{
-                                             "ctor": "Container",
-                                             "props": {
-                                                "id": "workAreaRowL2",
-                                                "type": "row",
-                                                "spacing": {
-                                                   "h": 100
-                                                },
-                                                "components": [{
+                              "ctor": "Container",
+                              "props": {
+                                 "id": "workAreaRow",
+                                 "type": "row",
+                                 "height": "100%",
+                                 "components": [{
+                                    "ctor": "Container",
+                                    "props": {
+                                       "type": "",
+                                       "spacing": {
+                                          "colSpan": 12
+                                       },
+                                       "id": "workAreaColumn",
+                                       "components": [{
+                                          "ctor": "Container",
+                                          "props": {
+                                             "spacing": {
+                                                "h": 100
+                                             },
+                                             "id": "workAreaCell",
+                                             "type": "",
+                                             "components": [{
                                                    "ctor": "Container",
                                                    "props": {
-                                                      "type": "",
+                                                      "id": "workAreaRowL2",
+                                                      "type": "row",
                                                       "spacing": {
                                                          "h": 100
                                                       },
-                                                      "id": "workAreaColumnL2",
-                                                      "classes": [
-                                                         "border",
-                                                         "col"
-                                                      ]
+                                                      "components": [{
+                                                         "ctor": "Container",
+                                                         "props": {
+                                                            "type": "",
+                                                            "spacing": {
+                                                               "h": 100
+                                                            },
+                                                            "id": "workAreaColumnL2",
+                                                            "classes": [
+                                                               "border",
+                                                               "col"
+                                                            ]
+                                                         }
+                                                      }]
                                                    }
-                                                }]
-                                             }
-                                          }]
-                                       }
-                                    }]
-                                 }
-                              }]
+                                                },
+                                                {
+                                                   "ctor": "Footer",
+                                                   "props": {
+                                                      "id": "footer",
+                                                      "type": "row",
+                                                      "css": {
+                                                         "width": "100%",
+                                                         "maxWidth": "1140px",
+                                                         "height": "2.5rem",
+                                                         "position": "absolute",
+                                                         "backgroundColor": "#A1AAFF",
+                                                         "bottom": 0,
+                                                         "left": 0
+                                                      }
+                                                   }
+                                                }
+                                             ]
+                                          }
+                                       }]
+                                    }
+                                 }]
+                              }
                            }
-                        }]
+
+                        ]
                      }
                   },
                   {
@@ -560,6 +579,7 @@
                ]
             }
          }
+
       ]
    }
 }

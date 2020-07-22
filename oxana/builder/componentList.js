@@ -1,121 +1,173 @@
 Builder.initComponentList = function () {
-    Builder.componentList = new ArrayEx([
-        {
-            "label": "Label", "ctor": "Label"
+    Builder.componentList = new ArrayEx([{
+            "label": "Label",
+            "ctor": "Label"
         },
         {
-            "label": "Heading", "ctor": "Heading"
+            "label": "Heading",
+            "ctor": "Heading"
         },
         {
-            "label": "Link", "ctor": "Link"
+            "label": "Link",
+            "ctor": "Link"
         },
         {
-            "label": "HRule", "ctor": "HRule"
+            "label": "HRule",
+            "ctor": "HRule"
         },
         {
-            "label": "Button", "ctor": "Button"
+            "label": "Button",
+            "ctor": "Button"
         },
         {
-            "label": "TextInput", "ctor": "TextInput"
+            "label": "TextInput",
+            "ctor": "TextInput"
         },
         {
-            "label": "TextArea", "ctor": "TextArea"
+            "label": "TextArea",
+            "ctor": "TextArea"
         },
         {
-            "label": "DateTime", "ctor": "DateTime"
+            "label": "DateTime",
+            "ctor": "DateTime"
         },
         {
-            "label": "DateTimeCb", "ctor": "DateTimeCb"
+            "label": "DateTimeCb",
+            "ctor": "DateTimeCb"
         },
         {
-            "label": "Image", "ctor": "Image"
+            "label": "Image",
+            "ctor": "Image"
         },
         {
-            "label": "Select", "icon": "drop-down-list.png", "ctor": "Select"
+            "label": "Select",
+            "icon": "drop-down-list.png",
+            "ctor": "Select"
         },
         {
-            "label": "DropDown", "icon": "drop-down-list.png", "ctor": "DropDown"
+            "label": "DropDown",
+            "icon": "drop-down-list.png",
+            "ctor": "DropDown"
         },
         {
-            "label": "Amount", "ctor": "Amount"
+            "label": "Amount",
+            "ctor": "Amount"
         },
         {
-            "label": "Tree", "ctor": "Tree"
+            "label": "Tree",
+            "ctor": "Tree"
         },
         {
-            "label": "AutoComplete", "ctor": "AutoCompleteEx"
+            "label": "AutoComplete",
+            "ctor": "AutoCompleteEx"
         },
         {
-            "label": "AutoBrowse", "ctor": "AutoBrowse"
+            "label": "AutoBrowse",
+            "ctor": "AutoBrowse"
         },
         {
-            "label": "RadioGroup", "ctor": "RadioGroup"
+            "label": "RadioGroup",
+            "ctor": "RadioGroup"
         },
         {
-            "label": "Toggle", "ctor": "Toggle"
+            "label": "Toggle",
+            "ctor": "Toggle"
         },
         {
-            "label": "CheckBox", "ctor": "CheckBox"
+            "label": "CheckBox",
+            "ctor": "CheckBox"
         },
         {
-            "label": "CheckBoxGroup", "ctor": "CheckBoxGroup"
+            "label": "CheckBoxGroup",
+            "ctor": "CheckBoxGroup"
         },
         {
-            "label": "Form", "ctor": "Form"
+            "label": "Form",
+            "ctor": "Form"
         },
         {
-            "label": "Header", "ctor": "Header"
+            "label": "Header",
+            "ctor": "Header"
         },
         {
-            "label": "Footer", "ctor": "Footer"
+            "label": "Footer",
+            "ctor": "Footer"
         },
         {
-            "label": "SideNav", "ctor": "SideNav"
+            "label": "SideNav",
+            "ctor": "SideNav"
         },
         {
-            "label": "Container", "ctor": "Container"
+            "label": "Container",
+            "ctor": "Container"
         },
         {
-            "label": "ViewStack", "ctor": "ViewStack"
+            "label": "ViewStack",
+            "ctor": "ViewStack"
         },
         {
-            "label": "Upload", "ctor": "UploadEx"
+            "label": "Upload",
+            "ctor": "UploadEx"
         },
         {
-            "label": "MultiUpload", "ctor": "MultiUpload"
+            "label": "MultiUpload",
+            "ctor": "MultiUpload"
         },
         {
-            "label": "MapLocationPicker", "ctor": "MapLocationPicker"
+            "label": "MapLocationPicker",
+            "ctor": "MapLocationPicker"
         },
         {
-            "label": "Repeater", "ctor": "Repeater"
+            "label": "Repeater",
+            "ctor": "Repeater"
         },
         {
-            "label": "RepeaterEx", "ctor": "RepeaterEx"
+            "label": "RepeaterEx",
+            "ctor": "RepeaterEx"
         },
         {
-            "label": "List", "ctor": "List"
+            "label": "List",
+            "ctor": "List"
         },
         {
-            "label": "DataGrid", "ctor": "DataGrid"
+            "label": "DataGrid",
+            "ctor": "DataGrid"
         },
         {
-            "label": "CalendarDay", "ctor": "CalendarDay"
+            "label": "CalendarDay",
+            "ctor": "CalendarDay"
         },
         {
-            "label": "CalendarWeek", "ctor": "CalendarWeek"
+            "label": "CalendarWeek",
+            "ctor": "CalendarWeek"
         },
         {
-            "label": "CalendarMonth", "ctor": "CalendarMonth"
+            "label": "CalendarMonth",
+            "ctor": "CalendarMonth"
         },
         {
-            "label": "Calendar", "ctor": "Calendar"
+            "label": "Calendar",
+            "ctor": "Calendar"
         },
         {
-            "label": "CreditCard", "ctor": "CreditCard"
+            "label": "CreditCard",
+            "ctor": "CreditCard"
         },
         {
-            "label": "Wizard", "ctor": "Wizard"
+            "label": "Wizard",
+            "ctor": "Wizard"
+        },
+        {
+            "label": "RequiredFieldValidator",
+            "ctor": "RequiredFieldValidator"
+        },
+        {
+            "label": "RangeValidator",
+            "ctor": "RangeValidator"
+        },
+        {
+            "label": "RegularExpressionValidator",
+            "ctor": "RegularExpressionValidator"
         }
     ]);
 };

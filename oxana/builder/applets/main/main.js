@@ -11,13 +11,16 @@ let Implementation = function (applet) {
         rightSideNav, listHistorySteps, workArea, workAreaColumn, workAreaRowL2,
         cmpSearchTextInput, undoButton, redoButton, duplicateButton, cmpTrash, toggleSideNavLeft, toggleSideNavRight,
         splitHorizontal, splitVertical, uploadIcon, saveLayout, selectBtn, componentList,
-        openUploadForms, appLoader, middleNav, desktopPreview, tabletPreview, mobilePreview;
+        openUploadForms, appLoader, middleNav, desktopPreview, tabletPreview, mobilePreview, footer;
 
 
     let formField;
 
     let containers = ["Container", "Form", "Header", "Footer"];
     let noNeedFF = ["Button", "Label", "Container", "Link", "Header", "Footer", "Form", "SideNav", "ViewStack", "Calendar", "Tree", "Image", "HRule", "Heading", "Repeater", "RepeaterEx", "DataGrid"];
+    let nonShownComponent = [];
+    let needValidator = ["TextInput", "DateTime", "Amount", "DateTimeCb"];
+
 
     let imp = {
         "BEGIN_DRAW": function (e) {
@@ -48,6 +51,7 @@ let Implementation = function (applet) {
             workAreaRowL2 = workAreaColumn.workAreaCell.workAreaRowL2;
             workArea = workAreaRowL2.workAreaColumnL2;
             componentList = componentsContainer.componentList;
+            footer = app.viewStack.mainContainer.container.workArea.workAreaRow.workAreaColumn.workAreaCell.footer;
 
             applet.addBehaviors(applet.view, {
                 "idChanged": {
@@ -145,6 +149,7 @@ let Implementation = function (applet) {
 
             //app.behaviors["previewBtn"]["click"] = "PREVIEW";
             applet.addBehaviors(workArea, cmpWaBehaviors, false);
+            applet.addBehaviors(footer, cmpWaBehaviors, false);
 
             applet.addBehaviors(app, {
                 "loadLayout": "LOAD_LAYOUT",
@@ -223,7 +228,20 @@ let Implementation = function (applet) {
                         this.trigger(evt);
                     };
                     lit.props.draggable = true;
-
+                    // if (nonShownComponent.indexOf(ctor) > -1) {
+                    //     if (activeComponent && needValidator.indexOf(activeComponent.ctor) > -1) {
+                    //         activeComponent.addComponent(lit);
+                    //         //activeComponent.props.components.push(lit);
+                    //         workArea = footer;
+                    //         lit.props.controlToValidate = activeComponent.id;
+                    //     } else {
+                    //         console.log(`Selected component can not have validator. Please select another component`);
+                    //         return;
+                    //     }
+                    // } else if (workArea == footer) {
+                    //     console.log("Can not add other components at footer except validators.");
+                    //     return;
+                    // }
                     inst = workArea.addComponent(lit);
                     let classes = inst.classes.slice(0);
                     classes.pushUnique("selected-component");
@@ -241,7 +259,6 @@ let Implementation = function (applet) {
                     ret.track = true;
                     return ret;
                 } else {
-
                     console.log("MOVED_", domID, workArea.domID);
                     inst = Component.instances[domID];
                     let lit = Builder.components[ctor].literal;
@@ -280,6 +297,7 @@ let Implementation = function (applet) {
                             // }
                         }
                         workArea.addChild(inst);
+
                         let evt = new jQuery.Event("dropped");
                         inst.trigger(evt);
                     }
