@@ -228,6 +228,9 @@ let Implementation = function (applet) {
                         this.trigger(evt);
                     };
                     lit.props.draggable = true;
+                    if (activeComponent && needValidator.indexOf(activeComponent.ctor) > -1) {
+                        lit.props.controlToValidate = activeComponent.id;
+                    }
                     // if (nonShownComponent.indexOf(ctor) > -1) {
                     //     if (activeComponent && needValidator.indexOf(activeComponent.ctor) > -1) {
                     //         activeComponent.addComponent(lit);
