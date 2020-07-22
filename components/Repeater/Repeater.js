@@ -190,7 +190,8 @@ var Repeater = function(_props, _hideComponents=false)
         {
             return _rendering;
         },
-        enumerable:true
+        enumerable: true,
+        configurable: true
     });
     
     Object.defineProperty(this, "$hadow", 
@@ -219,7 +220,7 @@ var Repeater = function(_props, _hideComponents=false)
                 if (v == null || v.length == 0) {
                     if (_oldDataProvider && _oldDataProvider.length > 0)
                         this.removeAllRows(false);
-                    _dataProvider = v;
+                    _dataProvider = !ArrayEx.isArrayEx(v) ? new ArrayEx(v) : v;
                     _creationFinished = true;
                     this.createRows();
                 } else if (_oldDataProvider && _oldDataProvider.length > 0 && _oldDataProvider.length == this.rowItems.length) {

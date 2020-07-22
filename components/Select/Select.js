@@ -145,6 +145,16 @@ var Select = function (_props) {
         },
         configurable: true
     });
+
+    Object.defineProperty(this, "rendering", 
+    {
+        get: function rendering() 
+        {
+            return _rendering;
+        },
+        enumerable: false,
+        configurable: true
+    });
 };
 
 //component prototype
