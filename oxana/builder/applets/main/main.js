@@ -17,7 +17,7 @@ let Implementation = function (applet) {
     let formField;
 
     let containers = ["Container", "Form", "Header", "Footer"];
-    let noNeedFF = ["Button", "Label", "Container", "Link", "Header", "Footer", "Form", "SideNav", "ViewStack", "Calendar", "Tree", "Image", "HRule", "Heading", "Repeater", "RepeaterEx", "DataGrid"];
+    let noNeedFF = ["Button", "Label", "Container", "Link", "Header", "Footer", "Form", "SideNav", "ViewStack", "Calendar", "Tree", "Image", "HRule", "Heading", "Repeater", "RepeaterEx", "DataGrid", "RequiredFieldValidator", "RangeValidator", "RegularExpressionValidator"];
     let nonShownComponent = [];
     let needValidator = ["TextInput", "DateTime", "Amount", "DateTimeCb"];
 
