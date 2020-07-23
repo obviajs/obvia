@@ -98,7 +98,11 @@ var RepeaterEx = function (_props) {
     };
 
     let _add = function (e) {
-        _props.dataProvider.splice(_props.dataProvider.length, 0, buildDefaultObject(_props.dataProvider[0]));
+        _self.addRow();
+    };
+
+    this.addRow = function () {
+        _props.dataProvider.splice(_props.dataProvider.length, 0, _props.dataProvider.length > 0 ? buildDefaultObject(_props.dataProvider[0]) : {});
     };
 
     let _defaultParams = {
@@ -132,11 +136,12 @@ var RepeaterEx = function (_props) {
     let _rendering = _props.rendering;
     let _enabled = _props.enabled;
     let _guidField = _props.guidField;
+    let _components = _props.components ? _props.components.slice(0) : new ArrayEx();
     let _propsRepeater = {
         "dataProvider": _props.dataProvider,
         "rendering": _props.rendering,
         "id": "internalRepeater",
-        "components": _props.components ? _props.components.slice(0) : new ArrayEx()
+        "components": _components
     };
     //avoid circular reference, by shallow copying, and later adding components to _props
     _propsRepeater.minHeight = 40;

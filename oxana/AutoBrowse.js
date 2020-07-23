@@ -224,6 +224,6 @@ var AutoBrowse = function (_props) {
     fnContainerDelayInit();
     _props.components = _cmps;
     
-    Container.call(this, _props);
+    Container.call(this, _props, true);
 };
 AutoBrowse.prototype.ctor = 'AutoBrowse';

@@ -202,7 +202,8 @@ var Form = function(_props)
     };
 
     let _defaultParams = {
-        method: "POST"
+        method: "POST",
+        type: ""
     };
     _props = extend(false, false, _defaultParams, _props);
     _formData = null;

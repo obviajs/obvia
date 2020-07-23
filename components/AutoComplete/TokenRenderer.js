@@ -96,7 +96,8 @@ var TokenRenderer = function(_props)
             id: "linkCmp",
             classes: ["badge", "badge-info", "d-inline"],
             click: _closeIconClick,
-            label: "x"
+            label: "x",
+            href: "javascript:void()"
         }
     };
     
