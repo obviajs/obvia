@@ -122,11 +122,10 @@ Builder.initComponentLiterals = function () {
                 "ctor": DateTime,
                 "props": {
                     id: 'datetime',
-                    inputFormat: 'YYYY/MM/DD',
-                    outputFormat: 'YYYY/MM/DD',
+                    inputFormat: 'YYYY-MM-DD',
+                    outputFormat: 'YYYY-MM-DD',
                     displayFormat: 'DD/MM/YYYY',
-                    //value: String(new Date().getDate()).padStart(2, '0') + '/' + String(new Date().getMonth() + 1).padStart(2, '0') + '/' + new Date().getFullYear()
-                    value: moment().format('YYYY/MM/DD')
+                    value: moment().format('YYYY-MM-DD')
 
                 }
             },
@@ -697,6 +696,33 @@ Builder.initComponentLiterals = function () {
                     stepPath: "attr.step",
                     detailsPath: "attr.details",
                     components: []
+                }
+            }
+        },
+        "RequiredFieldValidator": {
+            "literal": {
+                "ctor": RequiredFieldValidator,
+                "props": {
+                    "id": "requiredFieldValidator",
+                    "label": "Required Field Validation"
+                }
+            }
+        },
+        "RangeValidator": {
+            "literal": {
+                "ctor": "RangeValidator",
+                "props": {
+                    "id": "rangeValidator",
+                    "label": "Range Validation"
+                }
+            }
+        },
+        "RegularExpressionValidator": {
+            "literal": {
+                "ctor": "RegularExpressionValidator",
+                "props": {
+                    "id": "regularExpressionValidator",
+                    "label": "Regular Expression Validation"
                 }
             }
         }

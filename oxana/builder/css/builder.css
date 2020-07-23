@@ -1,23 +1,32 @@
-.ew-resize {cursor: ew-resize !important;}
-.ns-resize {cursor: ns-resize !important;}
+.ew-resize {
+    cursor: ew-resize !important;
+}
+
+.ns-resize {
+    cursor: ns-resize !important;
+}
+
 .selected-component {
     border: 1px black solid !important;
     border-right: 10px black solid !important;
     padding-bottom: 10px;
 }
+
 .default-component {
     border: 1px grey solid;
     border-right: 10px grey solid;
     padding-bottom: 10px;
 }
-.default-cnt{
-    min-height:50px
+
+.default-cnt {
+    min-height: 50px
 }
-.active-container{
+
+.active-container {
     border: 1px dashed #3987d9 !important;
 }
 
-.nav{
+.nav {
     background-color: #2d3238;
 }
 
@@ -35,6 +44,29 @@ i:hover {
 
 .trash-icon {
     color: blue;
+}
+
+/* width */
+::-webkit-scrollbar {
+    width: 5px;
+    /* display: none; */
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
 }
 
 .cmpTrash {
@@ -79,18 +111,21 @@ i:hover {
 .right-addon input {
     padding-right: 40px;
 }
+
 /* collapsible panel  */
-label[data-toggle="collapse"][aria-expanded=true]:before{
+label[data-toggle="collapse"][aria-expanded=true]:before {
     content: "\f107";
     font-weight: 900;
     font-family: "Font Awesome 5 Pro";
 }
-label[data-toggle="collapse"][aria-expanded=false]:before{
+
+label[data-toggle="collapse"][aria-expanded=false]:before {
     content: "\f105";
     font-weight: 900;
     font-family: "Font Awesome 5 Pro";
 }
-label[data-toggle="collapse"]:not([aria-expanded]):before{
+
+label[data-toggle="collapse"]:not([aria-expanded]):before {
     content: "\f105";
     font-weight: 900;
     font-family: "Font Awesome 5 Pro";

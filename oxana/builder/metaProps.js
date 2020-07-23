@@ -162,6 +162,37 @@ Builder.initMetaProps = function () {
                 }
             }
         },
+        errorMessage: {
+            ctor: "TextInput",
+            label: "Error Message",
+            index: 8,
+            props: {
+                change: function () {
+                    this.parent.parent.instance.errorMessage = this.value;
+                }
+            }
+        },
+        controlToValidate: {
+            ctor: "TextInput",
+            label: "Control To Validate",
+            index: 9,
+            props: {
+                change: function () {
+                    this.parent.parent.instance.controlToValidate = this.value;
+                }
+            }
+        },
+        setFocusOnError: {
+            ctor: "Toggle",
+            label: "Set Focus On Error",
+            index: "11",
+            props: {
+                change: function () {
+                    this.parent.parent.instance.setFocusOnError = this.value;
+                }
+            }
+
+        },
         dataProvider: {
             ctor: "AutoBrowse",
             label: "Data Provider",
@@ -1190,6 +1221,34 @@ Builder.initMetaProps = function () {
                     win.show();
                 }
             }
+        }
+    };
+
+    Builder.metaProps.RangeValidator = {
+        min: {
+            ctor: "TextInput",
+            label: "Min",
+            required: true,
+            index: 10,
+            props: {
+                change: function () {
+                    this.parent.parent.instance.min = this.value;
+                }
+            }
+
+        },
+
+        max: {
+            ctor: "TextInput",
+            label: "Max",
+            required: true,
+            index: 10,
+            props: {
+                change: function () {
+                    this.parent.parent.instance.max = this.value;
+                }
+            }
+
         }
     };
 };

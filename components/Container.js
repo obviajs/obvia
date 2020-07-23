@@ -359,10 +359,11 @@ var Container = function(_props, _hideComponents=false)
     {
         if (e.target.id == this.domID) 
         {
-            if(!_width)
+            /*if(!_width)
                 _width = this.$el.width();
             if(!_height)     
                 _height = this.$el.height();
+                */
             if (typeof _afterAttach == 'function')
                 _afterAttach.apply(this, arguments);
             if (!e.isDefaultPrevented()) {

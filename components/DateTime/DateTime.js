@@ -55,7 +55,7 @@ var DateTime = function (_props) {
             if (_displayFormat !== v) {
                 _displayFormat = v;
                 //this.value = _value;
-                this.trigger('change')
+                this.trigger('change');
             }
         },
         enumerable: true
@@ -106,6 +106,7 @@ var DateTime = function (_props) {
             _self.changeHandler();
         }
     };
-    Component.call(this, _props);
+    let r = Parent.call(this, _props);
+    return r;
 };
 DateTime.prototype.ctor = "DateTime";
