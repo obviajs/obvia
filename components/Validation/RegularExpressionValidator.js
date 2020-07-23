@@ -41,6 +41,7 @@ var RegularExpressionValidator = function (_props) {
         set: function modifiers(v) {
             if (_modifiers != v) {
                 _modifiers = v;
+                _validationExpressionCompiled = new RegExp(_validationExpression, _modifiers);
             }
         },
         enumerable: true,
