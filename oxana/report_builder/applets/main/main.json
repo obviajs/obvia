@@ -448,6 +448,7 @@
                                                    "ctor": "JRBand",
                                                    "props": {
                                                      "id": "titleBand",
+                                                     "name":"title",
                                                      "type": "ContainerType.ROW",
                                                      "classes": [
                                                        "band",
@@ -472,6 +473,7 @@
                                                    "ctor": "JRBand",
                                                    "props": {
                                                      "id": "detailBand",
+                                                     "name":"detail",
                                                      "type": "ContainerType.ROW",
                                                      "classes": [
                                                        "band",
@@ -496,6 +498,7 @@
                                                    "ctor": "JRBand",
                                                    "props": {
                                                      "id": "summaryBand",
+                                                     "name":"summary",
                                                      "type": "ContainerType.ROW",
                                                      "classes": [
                                                        "band",

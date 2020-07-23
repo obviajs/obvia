@@ -54,6 +54,13 @@
                 rjs.define("./oxana/report_builder/components/JRHRule.js", "JRHRule");
                 rjs.define("./oxana/report_builder/components/JRImage.js", "JRImage");
                 rjs.define("./oxana/report_builder/components/JRContainer.js", "JRContainer");
+                rjs.define("./oxana/report_builder/factory/ReportFactory.js", "ReportFactory");
+                rjs.define("./oxana/report_builder/factory/SectionFactory.js", "SectionFactory");
+                rjs.define("./oxana/report_builder/factory/BandFactory.js", "BandFactory");
+                rjs.define("./oxana/report_builder/factory/StaticTextFactory.js", "StaticTextFactory");
+                rjs.define("./oxana/report_builder/factory/TextFieldFactory.js", "TextFieldFactory");
+                rjs.define("./oxana/report_builder/factory/ImageFactory.js", "ImageFactory");
+                rjs.define("./oxana/report_builder/factory/HRuleFactory.js", "HRuleFactory");
                 rjs.define("./oxana/report_builder/css/builder.css", "Report_Builder_Css");
                 rjs.require([
                     "metaProps",
@@ -67,6 +74,13 @@
                     "JRImage",
                     "JRContainer",
                     "JRTextInput",
+                    "ReportFactory",
+                    "SectionFactory",
+                    "BandFactory",
+                    "StaticTextFactory",
+                    "TextFieldFactory",
+                    "ImageFactory",
+                    "HRuleFactory",
                     "JRBand",
                     "Report_Builder_Css"
                 ]).then(function () {

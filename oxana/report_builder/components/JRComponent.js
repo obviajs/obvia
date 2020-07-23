@@ -23,7 +23,6 @@ var JRComponent = function(_props){
                 if (this.$el) {
                     if (_x){
                         this.show();
-
                     }
                         
                     else

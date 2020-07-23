@@ -25,7 +25,7 @@ let Implementation = function (applet) {
 
     let imp = {
         "BEGIN_DRAW": function (e) {
-            console.log("APPLET_BEGIN_DRAW");
+            //console.log("APPLET_BEGIN_DRAW");
             let paths = findMember(applet.literal, "id", [], "listHistorySteps", false);
             paths[0].pop();
             let propsListHistorySteps = getChainValue(applet.literal, paths[0]);
@@ -240,17 +240,35 @@ let Implementation = function (applet) {
                     classes.pushUnique("selected-component");
                     inst.classes = classes;
                     applet.addBehaviors(inst, cmpWaBehaviors, false);
-					applet.addBehaviors(inst.children.jr_resizer, cmpResizeBehaviors, false);
+                    if(typeof inst.children != 'undefined'){
+                        if(typeof inst.children.jr_resizer != 'undefined'){
+                        
+                            applet.addBehaviors(inst.children.jr_resizer, cmpResizeBehaviors, false);
+                        }
+                    }
+					
                     let isCont = isContainer.call(inst);
                     if (isCont) {
                         inst.attr.isNotWa = true;
                     }
                     inst.attr.isCmp = true;
                     inst.section = targetBand.id;
+
+                    inst.$el[0].style.left = '0px';
+                    inst.$el[0].style.top = '0px';
+                    inst.x = "0";
+                    inst.y = "0";
+
+                    inst.css.width = '100px';
+                    inst.css.height = '30px';
+                    inst.width = "100";
+                    inst.height = "30";
+
                     ret.child = lit;
                     ret.parent = targetBand;
                     ret.container = targetBand;
-                    ret.track = true;											 
+                    ret.track = true;
+
                     return ret;
                 }
 				else 
@@ -268,12 +286,41 @@ let Implementation = function (applet) {
                     else 
                     {
                         var offset = event.dataTransfer.getData("text/plain").split(',');
-                        var x_drag = (event.clientX + parseInt(offset[0], 10)) + 'px';
-                        var y_drag = (event.clientY + parseInt(offset[1], 10)) + 'px';
-                        inst.$el[0].style.left = x_drag;
-                        inst.$el[0].style.top = y_drag;
+                        var x_drag = (event.clientX + parseInt(offset[0], 10));
+                        var y_drag = (event.clientY + parseInt(offset[1], 10));
+                        inst.$el[0].style.left = x_drag + 'px';
+                        inst.$el[0].style.top = y_drag + 'px';
                         inst.x = x_drag;
                         inst.y = y_drag;
+
+                        if(inst.ctor != "JRBand") {
+                            if(activeComponent && activeComponent != inst && ((isObject(activeComponent.classes) && activeComponent.classes["self"].indexOf("selected-component")) || activeComponent.classes.indexOf("selected-component") > -1)) {
+                                let classes = isObject(activeComponent.classes) ? activeComponent.classes["self"].slice(0) : activeComponent.classes.slice(0);
+                                let ind = classes.indexOf("selected-component");
+                                if(ind > -1) classes.splice(ind, 1);
+                                classes.pushUnique("default-component");
+                                if(isObject(activeComponent.classes)) activeComponent.classes["self"] = classes;
+                                else activeComponent.classes = classes;
+                            }
+                            let classes = isObject(inst.classes) ? inst.classes["self"].slice(0) : inst.classes.slice(0);
+                            classes.pushUnique("selected-component");
+                            if(isObject(inst.classes)) inst.classes["self"] = classes;
+                            else inst.classes = classes;
+                        }
+
+                        activeComponent = inst;
+                        let oeLit = {
+                            ctor: ObjectEditor,
+                            "props": {
+                                id: "objectEditor",
+                                instance: inst,
+                                field: "props"
+                            }
+                        };
+                        propertyEditorContainer.removeAllChildren();
+                        propertyEditorContainer.components = [oeLit];
+
+                        changeFieldProperties(e,inst);
                     }
                   
                 }
@@ -283,8 +330,9 @@ let Implementation = function (applet) {
         },
         "SELECT_COMPONENT": {
             description: "Select Component",
-            do: function(e) {
-                console.log("SELECT_COMPONENT " + this.id);
+            do: function(e){
+
+                //console.log("SELECT_COMPONENT " + this.id);
                 if(this.ctor != "JRBand") {
                     if(activeComponent && activeComponent != this && ((isObject(activeComponent.classes) && activeComponent.classes["self"].indexOf("selected-component")) || activeComponent.classes.indexOf("selected-component") > -1)) {
                         let classes = isObject(activeComponent.classes) ? activeComponent.classes["self"].slice(0) : activeComponent.classes.slice(0);
@@ -299,17 +347,8 @@ let Implementation = function (applet) {
                     if(isObject(this.classes)) this.classes["self"] = classes;
                     else this.classes = classes;
                 }
-                activeComponent = this;
-                let oeLit = {
-                    ctor: ObjectEditor,
-                    "props": {
-                        id: "objectEditor",
-                        instance: this,
-                        field: "props"
-                    }
-                };
-                propertyEditorContainer.removeAllChildren();
-                propertyEditorContainer.components = [oeLit];
+
+                changeFieldProperties(e,this);
             },
             stopPropagation: true
         },
@@ -922,8 +961,17 @@ let Implementation = function (applet) {
                 // let lit = workAreaColumn.literalLite;
                 let lit = workAreaRowL2.literal;
                 stripHandle(lit);
+
+                var sections = lit.props.components[0].props.components;
+                
                 let jsonLayout = JSON.stringify(lit, null, "\t");
-                download("targetBand.json.txt", jsonLayout);
+                var reportFactory = new ReportFactory();
+                var xml = reportFactory.toXml(sections);
+
+console.log("Json Layout",xml);
+
+
+                //download("targetBand.json.txt", jsonLayout);
             },
             stopPropagation: true
         },
@@ -957,11 +1005,14 @@ let Implementation = function (applet) {
         },
         "CMP_RESIZE": {
             do: function (e) {
-                activeComponent.css.width =  e.pageX - activeComponent.$el[0].getBoundingClientRect().left + 'px';
-                activeComponent.css.height =  e.pageY - activeComponent.$el[0].getBoundingClientRect().top + 'px';
+                var width_temp = e.pageX - activeComponent.$el[0].getBoundingClientRect().left;
+                var height_temp = e.pageY - activeComponent.$el[0].getBoundingClientRect().top;
+                activeComponent.css.width = width_temp + 'px';
+                activeComponent.css.height = height_temp + 'px';
 
-                activeComponent.width = activeComponent.css.width;
-                activeComponent.height = activeComponent.css.height;
+                activeComponent.width = width_temp;
+                activeComponent.height = height_temp;
+                changeFieldProperties(e,activeComponent);
             },
             stopPropagation: false
         },
@@ -981,7 +1032,7 @@ let Implementation = function (applet) {
      */
     let isContainer = function (e) {
 
-        console.log("CNT????",this.ctor);
+        //console.log("CNT????",this.ctor);
         return containers.indexOf(this.ctor) > -1;
     };
     let isResizable = function(e){
@@ -996,6 +1047,22 @@ let Implementation = function (applet) {
 
     let isDraggable = function (e) {
         return this.draggable == true;
+    }
+
+    let changeFieldProperties = function(e,cmp){
+
+        activeComponent = cmp;
+        let oeLit = {
+            ctor: ObjectEditor,
+            "props": {
+                id: "objectEditor",
+                instance: cmp,
+                field: "props"
+            }
+        };
+        propertyEditorContainer.removeAllChildren();
+        propertyEditorContainer.components = [oeLit];
+
     }
     //filter to determine if mousemove is an "WA_RESIZE_NS" behavior
     let debouncedDragNS;
@@ -1211,6 +1278,7 @@ let Implementation = function (applet) {
         },
         "drop": {
             "ADD_COMPONENT": isContainer
+            // "SELECT_COMPONENT": true,
         },
         "dragover": {
             "ALLOW_DROP": isContainer
