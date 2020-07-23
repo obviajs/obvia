@@ -121,14 +121,7 @@
                             "ctor": "Container",
                             "props": {
                                 "type": "ContainerType.NONE",
-                                "width": 250,
-                                "components": [{
-                                    "ctor": "Label",
-                                    "props": {
-                                        "id": "mySideNavToggle",
-                                        "label": "Code"
-                                    }
-                                }]
+                                "width": 250
                             }
                         },
                         {
@@ -139,6 +132,7 @@
                                 "components": [{
                                     "ctor": "Link",
                                     "props": {
+                                        "id": "myCollapseIcon",
                                         "classes": ["fas", "fa-bars"]
                                     }
                                 }]
