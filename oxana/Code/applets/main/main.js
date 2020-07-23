@@ -36,35 +36,39 @@ let Implementation = function (applet) {
             todosRepeater = todosCnt.todosRepeater;
             code = ideContainer.myCode;
 
-            app.addBehaviors(collapseBtn, {
-                "click": "SIDE_NAV_TOGGLE_VISIBILITY"
+            applet.addBehaviors(collapseBtn, {
+                "click": {
+                    "SIDE_NAV_TOGGLE_VISIBILITY": {
+                        onPropagation: true
+                    }
+                }
             }, false);
 
-            app.addBehaviors(code, {
+            applet.addBehaviors(code, {
                 "changes": "CHANGES_MADE"
             }, false);
 
-            app.addBehaviors(todosRepeater, {
+            applet.addBehaviors(todosRepeater, {
                 "rowAdd": "TODOS"
             });
 
-            app.addBehaviors(componentModelTree, {
+            applet.addBehaviors(componentModelTree, {
                 "click": "COMPONENT_MODEL_TREE_CLICK"
             }, false);
 
-            app.addBehaviors(modal, {
+            applet.addBehaviors(modal, {
                 "displayListUpdated": "DRAW_GRID"
             }, false);
 
-            app.addBehaviors(modal, {
+            applet.addBehaviors(modal, {
                 "accept": "SELECT_VERSION"
             }, false);
             dataGrid = modal.modalDialog.modalContent.modalBody.dataGrid;
-            app.addBehaviors(dataGrid, {
+            applet.addBehaviors(dataGrid, {
                 "rowDblClick": "SELECT_VERSION"
             }, false);
             diffButton = modal.modalDialog.modalContent.modalFooter.diffButton;
-            app.addBehaviors(diffButton, {
+            applet.addBehaviors(diffButton, {
                 "click": "DIFF_WITH_SELECT"
             }, false);
 
@@ -83,7 +87,7 @@ let Implementation = function (applet) {
 
         "TODOS": function (e, r, ra) {
             if (ra) {
-                app.addBehaviors(ra.currentRow.todoItem, {
+                applet.addBehaviors(ra.currentRow.todoItem, {
                     "click": "TODO_ITEM_CLICK"
                 });
             }

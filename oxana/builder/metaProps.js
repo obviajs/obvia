@@ -208,14 +208,6 @@ Builder.initMetaProps = function () {
                     //assign them to the labelField and valueField editor`s dataProvider property
                     if (this.value && this.value.length > 0) {
                         let _self = this;
-                        let gaiaForm = new GaiaAPI_forms();
-                        let form_id = this.value[0].id_form;
-                        if (form_id) {
-                            let form = gaiaForm.formsClient.get(form_id).then(function (res) {
-                                if (res && res.length > 0)
-                                    _self.parent.parent.children.components.input.value = res;
-                            });
-                        }
                         //let url = "http://flower-gaia/api/dataview_pid_1/yaml";
                         let url = "https://gaia.oxana.io/api/" + this.value[0].name + "/yaml";
                         if (!Builder.data[_self.value[0][Builder.providerValueField]]) {
@@ -743,6 +735,34 @@ Builder.initMetaProps = function () {
             label: "Rendering",
             required: false,
             props: {}
+        },
+        dataProvider: {
+            ctor: "AutoBrowse",
+            label: "Data Provider",
+            required: true,
+            index: 4,
+            props: {
+                valueField: Builder.providerValueField,
+                labelField: Builder.providerLabelField,
+                dataProvider: Builder.dataviews,
+                classes: ["no-form-control"],
+                change: function () {
+                    //propsForm.children["dataProvider"].value
+                    //get the fields for the selected datProvider and 
+                    //assign them to the labelField and valueField editor`s dataProvider property
+                    if (this.value && this.value.length > 0) {
+                        let _self = this;
+                        let gaiaForm = new GaiaAPI_forms();
+                        let form_id = this.value[0].id_form;
+                        if (form_id) {
+                            let form = gaiaForm.formsClient.get(form_id).then(function (res) {
+                                if (res && res.length > 0)
+                                    _self.parent.parent.children.components.input.value = res;
+                            });
+                        }
+                    }
+                }
+            }
         }
 
     };
@@ -1246,6 +1266,41 @@ Builder.initMetaProps = function () {
             props: {
                 change: function () {
                     this.parent.parent.instance.max = this.value;
+                }
+            }
+
+        }
+    };
+
+    Builder.metaProps.RegularExpressionValidator = {
+        validationExpression: {
+            ctor: "TextInput",
+            label: "Validation Expression",
+            required: true,
+            index: 7,
+            props: {
+                change: function () {
+                    this.parent.parent.instance.validationExpression = this.value;
+                }
+            }
+        },
+        modifiers: {
+            ctor: "Select",
+            label: "Modifiers",
+            index: 8,
+            props: {
+                dataProvider: new ArrayEx([{
+                    value: "/g",
+                    text: "Global"
+                }, {
+                    value: "/i",
+                    text: "Case Insensitive"
+                }, {
+                    value: "/m",
+                    text: "multi-line mode"
+                }]),
+                change: function () {
+                    this.parent.parent.instance.modifiers = this.value;
                 }
             }
 
