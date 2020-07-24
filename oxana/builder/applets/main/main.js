@@ -988,11 +988,11 @@ let Implementation = function (applet) {
     };
 
     let isNotDraggableContainer = function (e) {
-        return containers.indexOf(this.ctor) > -1 && this.draggable == false;
+        return this.attr.isWa || (containers.indexOf(this.ctor) > -1 && this.draggable == false);
     };
 
     let isDraggable = function (e) {
-        return this.draggable == true;
+        return this.draggable == true && !this.attr.isWa;
     }
     //filter to determine if mousemove is an "WA_RESIZE_NS" behavior
     let debouncedDragNS;
@@ -1210,7 +1210,10 @@ let Implementation = function (applet) {
             "ALLOW_DROP": isContainer
         },
         "dragstart": {
-            "DRAGSTART_COMPONENT": isDraggable
+            "DRAGSTART_COMPONENT": {
+                filter: isDraggable,
+                onPropagation: false
+            }
         },
         "dropped": "SELECT_COMPONENT"
 
