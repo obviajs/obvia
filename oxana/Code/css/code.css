@@ -1,0 +1,89 @@
+.component__model {
+    font-size: large;
+}
+
+.component__model::before {
+    color: #fff;
+}
+
+.buttons__sideNav {
+    padding-top: 10px;
+    background-color: #C2C2C2;
+    height: calc(100vh - 50px) !important;
+}
+
+.height {
+    height: calc(100vh - 50px) !important;
+}
+
+.buttons {
+    padding-left: 20px;
+    margin: 0;
+    width: 80px;
+    height: 80px;
+    font-size: 30px;
+    height: 50px;
+    width: 50px;
+    outline: none;
+}
+
+.buttons:hover {
+    border-left: 1px solid whitesmoke;
+}
+
+.fa-bars:before {
+    color: #ACACAC;
+}
+
+.fa-bars:hover:before {
+    color: #EFEFEF;
+    text-decoration: none;
+}
+
+.fa-rocket:before {
+    color: #ACACAC
+}
+
+.fa-rocket:hover:before {
+    color: #EFEFEF;
+    text-decoration: none;
+}
+
+.fa-list-ol:before {
+    color: #ACACAC;
+}
+
+.fa-list-ol:hover:before {
+    color: #EFEFEF;
+    text-decoration: none;
+}
+
+.fa-cloud-upload-alt:before {
+    color: #ACACAC;
+}
+
+.fa-cloud-upload-alt:hover:before {
+    color: #EFEFEF;
+    text-decoration: none;
+}
+
+.fa-trash:before {
+    color: #ACACAC;
+}
+
+.fa-trash:hover:before {
+    color: #EFEFEF;
+    text-decoration: none;
+}
+
+
+
+
+.forms__list {
+    width: 10rem;
+    margin-left: 390px;
+    margin-top: 4px;
+    background-color: #BBBBBB;
+    border: 1px solid whitesmoke;
+    color: white;
+}

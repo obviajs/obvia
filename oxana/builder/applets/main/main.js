@@ -461,6 +461,14 @@ let Implementation = function (applet) {
         "SEARCH_CMP": function (e) { // filter components
             console.log("search box change");
             let value = e.target.value.toLowerCase();
+            if (value.length > 0) {
+                this.parent.button.css.display = "none";
+                this.parent.buttonDel.css.display = "block";
+            } else {
+                this.parent.button.css.display = "block";
+                this.parent.button.css.top = 0;
+                this.parent.buttonDel.css.display = "none";
+            }
             _cmpList.undoAll();
             if (value.length > 0) {
                 _cmpList.filter(function (el) {

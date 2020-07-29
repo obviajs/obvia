@@ -338,7 +338,33 @@
                                                    "fa-search"
                                                 ],
                                                 "css": {
+                                                   "marginTop": "0",
+                                                   "top": 0
+                                                }
+                                             }
+                                          }]
+                                       }
+                                    },
+                                    {
+                                       "ctor": "Button",
+                                       "props": {
+                                          "id": "buttonDel",
+                                          "type": "button",
+                                          "label": "",
+                                          "classes": ["remove_button", "btn"],
+                                          "components": [{
+                                             "ctor": "Label",
+                                             "props": {
+                                                "id": "i",
+                                                "label": "",
+                                                "type": "i",
+                                                "classes": [
+                                                   "fas",
+                                                   "fa-times"
+                                                ],
+                                                "css": {
                                                    "marginTop": "0"
+
                                                 }
                                              }
                                           }]

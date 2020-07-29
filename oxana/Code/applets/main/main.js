@@ -2,17 +2,13 @@ let Implementation = function (applet) {
     let app = applet.app;
     let data = applet.data;
 
-    let ideContainer, sideNav, cmCnt, cmCollapse, componentModelTree, todosCnt, todosCollapse, todosRepeater, code, collapseBtn, deployBtn, todoComponent, todoItem, modal, dataGrid, diffButton;
-
+    let ideContainer, sideNav, cmCnt, cmCollapse, componentModelTree, todosCnt, todosCollapse, todosRepeater, code, collapseBtn, deployBtn, todoComponent, todoItem, modal, dataGrid, diffButton, formsList, formsComponentsList, eventsList;
+    let _processForms = new ArrayEx(data.processForms);
     let imp = {
-        "BEGIN_DRAW": function (e) {
+        "BEGIN_DRAW": async function (e) {
             console.log("APPLET_BEGIN_DRAW");
-            let paths = findMember(applet.literal, "id", [], "componentModelTree", false);
-            paths[0].pop();
-            let propsComponentTree = getChainValue(applet.literal, paths[0]);
-            propsComponentTree.dataProvider = new ArrayEx([]);
 
-            paths = findMember(applet.literal, "id", [], "todosRepeater", false);
+            let paths = findMember(applet.literal, "id", [], "todosRepeater", false);
             paths[0].pop();
             let propsTodosRepeater = getChainValue(applet.literal, paths[0]);
             propsTodosRepeater.dataProvider = new ArrayEx([]);
@@ -21,12 +17,17 @@ let Implementation = function (applet) {
             paths[0].pop();
             let dataGridDataProvider = getChainValue(applet.literal, paths[0]);
             dataGridDataProvider.dataProvider = new ArrayEx([]);
+
+            paths = findMember(applet.literal, "id", [], "forms", false);
+            paths[0].pop();
+            let formsDataProvider = getChainValue(applet.literal, paths[0]);
+            formsDataProvider.dataProvider = _processForms;
         },
         "END_DRAW": function (e) {
             modal = app.container.mainContainer.versionSelectModal;
             ideContainer = app.container.mainContainer.ideContainer;
-            collapseBtn = app.container.mainContainer.mainNav.myCollapseBtn;
-            deployBtn = app.container.mainContainer.mainNav.deployBtn;
+            collapseBtn = ideContainer.buttonsSide.myCollapseBtn;
+            deployBtn = ideContainer.buttonsSide.deployBtn;
             sideNav = ideContainer.mySideNav;
             cmCnt = sideNav.cmCnt;
             cmCollapse = cmCnt.cmCollapse;
@@ -35,6 +36,9 @@ let Implementation = function (applet) {
             todosCollapse = todosCnt.todosCollapse;
             todosRepeater = todosCnt.todosRepeater;
             code = ideContainer.myCode;
+            formsList = app.container.mainContainer.mainNav.forms;
+            formsComponentsList = app.container.mainContainer.mainNav.formsComponentsList;
+            eventsList = app.container.mainContainer.mainNav.eventsList;
 
             applet.addBehaviors(collapseBtn, {
                 "click": {
@@ -48,9 +52,17 @@ let Implementation = function (applet) {
                 "changes": "CHANGES_MADE"
             }, false);
 
+            applet.addBehaviors(formsList, {
+                "change": "PROCESS_FORMS_COMPONENTS"
+            }, false);
+
+            applet.addBehaviors(formsComponentsList, {
+                "change": "EVENTS_LIST"
+            }, false);
+
             applet.addBehaviors(todosRepeater, {
                 "rowAdd": "TODOS"
-            });
+            }, false);
 
             applet.addBehaviors(componentModelTree, {
                 "click": "COMPONENT_MODEL_TREE_CLICK"
@@ -92,6 +104,25 @@ let Implementation = function (applet) {
                 });
             }
         },
+
+        "PROCESS_FORMS_COMPONENTS": async function (e) {
+            let form_id = this.value;
+            let gaiaForm = new GaiaAPI_forms();
+            let form = await gaiaForm.formsClient.get(form_id);
+            let cmInstance = Component.fromLiteral(form[0].form_literal);
+            formsComponentsList.dataProvider.splicea(0, formsComponentsList.dataProvider.length, new ArrayEx());
+            cmInstance.renderPromise().then(function (instance) {
+                let cmDp = initComponentModel(instance.workAreaColumnL2);
+                let frmsDP = initComponentList(instance.workAreaColumnL2.children);
+                componentModelTree.dataProvider = cmDp;
+                formsComponentsList.dataProvider.splicea(0, 0, frmsDP);
+            });
+        },
+
+        'EVENTS_LIST': function (e) {
+            console.log("here");
+        },
+
 
         "SIDE_NAV_TOGGLE_VISIBILITY": {
             do: function (e) {
@@ -227,6 +258,50 @@ let Implementation = function (applet) {
     let diffWithSelected = function (e) {
 
     };
+
+    function initComponentModel(cmInstance) {
+        let nonDisplayEvents = ["beginDraw", "endDraw", "init", "beforeAttach", "afterAttach", "DOMMutation"];
+        let dp = new ArrayEx();
+        let node = {};
+        node.nodeType = 1; //component
+        node.label = cmInstance.props.id;
+        node.ctor = cmInstance.ctor;
+        node.children = new ArrayEx();
+
+        for (let i = 0; i < cmInstance.events.length; i++) {
+            for (let evt in cmInstance.events[i].events) {
+                if (nonDisplayEvents.indexOf(evt) == -1) {
+                    let cNode = {
+                        "nodeType": 2,
+                        "label": evt,
+                        "iconClasses": ["fas", "fa-code"]
+                    };
+                    node.children.push(cNode);
+                }
+            }
+
+        }
+
+        for (let cid in cmInstance.children) {
+            node.children.splicea(node.children.length, 0, initComponentModel(cmInstance.children[cid]));
+        }
+        dp.push(node);
+        return dp;
+    }
+
+    function initComponentList(cmInstance) {
+        let dp = new ArrayEx();
+        let node = {};
+        for (let cid in cmInstance) {
+            node = {
+                "ctor": cmInstance[cid].id,
+                "label": cid,
+                "forms_literal": cmInstance[cid]
+            }
+            dp.push(node);
+        }
+        return dp;
+    }
 
     return imp;
 

@@ -130,3 +130,26 @@ label[data-toggle="collapse"]:not([aria-expanded]):before {
     font-weight: 900;
     font-family: "Font Awesome 5 Pro";
 }
+
+.search_button {
+    transition: display 0.5s ease-in-out;
+    display: none;
+}
+
+.remove_button {
+    margin-top: 0px;
+    padding-top: 0px;
+    margin-bottom: 0px;
+    padding-bottom: 2px;
+    font-size: 20px;
+    top: 0;
+    border-top-width: 0px;
+    font-weight: bold;
+    color: black;
+    font-family: revert;
+    display: none;
+}
+
+.remove_button>label {
+    font-size: 20px;
+}

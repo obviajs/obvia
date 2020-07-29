@@ -107,8 +107,7 @@
                                 "rowDblClick": "selectVersion"
                             }
                         }]
-                    },
-                    "displayListUpdated": "drawGrid"
+                    }
                 }
             },
             {
@@ -117,97 +116,48 @@
                     "id": "mainNav",
                     "height": 40,
                     "classes": ["d-flex"],
+                    "css": {
+                        "backgroundColor": "#616161"
+                    },
                     "components": [{
-                            "ctor": "Container",
+                            "ctor": "Select",
                             "props": {
-                                "type": "ContainerType.NONE",
-                                "width": 250
+                                "id": "forms",
+                                "classes": ["form-control", "form-control-sm", "forms__list"],
+                                "labelField": "form_name",
+                                "valueField": "form_id",
+                                "value": 0
+
                             }
                         },
                         {
-                            "ctor": "Container",
+                            "ctor": "Select",
                             "props": {
-                                "id": "myCollapseBtn",
-                                "type": "ContainerType.NONE",
-                                "components": [{
-                                    "ctor": "Link",
-                                    "props": {
-                                        "id": "myCollapseIcon",
-                                        "classes": ["fas", "fa-bars"]
-                                    }
-                                }]
-                            }
-                        },
-                        {
-                            "ctor": "Link",
-                            "props": {
-                                "id": "deployBtn",
-                                "label": "Deploy",
-                                "spacing": {
-                                    "mr": 1
+                                "id": "formsComponentsList",
+                                "classes": ["form-control", "form-control-sm", "forms__list"],
+                                "css": {
+                                    "marginLeft": "15px"
                                 },
-                                "components": [{
-                                    "ctor": "Label",
-                                    "props": {
-                                        "id": "fa",
-                                        "labelType": "LabelType.i",
-                                        "classes": ["fas", "fa-rocket"]
-                                    }
-                                }]
+                                "dataProvider": "{?componentList}",
+                                "labelField": "ctor",
+                                "valueField": "label",
+                                "value": 0
+
                             }
                         },
                         {
-                            "ctor": "Link",
+                            "ctor": "Select",
                             "props": {
-                                "id": "versionsBtn",
-                                "label": "Versions",
-                                "spacing": {
-                                    "mr": 1
+                                "id": "eventsList",
+                                "classes": ["form-control", "form-control-sm", "forms__list"],
+                                "css": {
+                                    "marginLeft": "15px"
                                 },
-                                "components": [{
-                                    "ctor": "Label",
-                                    "props": {
-                                        "id": "fa",
-                                        "labelType": "LabelType.i",
-                                        "classes": ["fas", "fa-list-ol"]
-                                    }
-                                }]
-                            }
-                        },
-                        {
-                            "ctor": "Link",
-                            "props": {
-                                "id": "uploadBtn",
-                                "label": "Save",
-                                "spacing": {
-                                    "mr": 1
-                                },
-                                "components": [{
-                                    "ctor": "Label",
-                                    "props": {
-                                        "id": "fa",
-                                        "labelType": "LabelType.i",
-                                        "classes": ["fas", "fa-cloud-upload-alt"]
-                                    }
-                                }]
-                            }
-                        },
-                        {
-                            "ctor": "Link",
-                            "props": {
-                                "id": "removeBtn",
-                                "label": "Delete",
-                                "spacing": {
-                                    "mr": 1
-                                },
-                                "components": [{
-                                    "ctor": "Label",
-                                    "props": {
-                                        "id": "fa",
-                                        "labelType": "LabelType.i",
-                                        "classes": ["fas", "fa-trash"]
-                                    }
-                                }]
+                                "dataProvider": "{?eventsList}",
+                                "labelField": "ctor",
+                                "valueField": "label",
+                                "value": 0
+
                             }
                         }
                     ]
@@ -224,9 +174,137 @@
                     "components": [{
                             "ctor": "SideNav",
                             "props": {
+                                "id": "buttonsSide",
+                                "width": 65,
+                                "classes": ["buttons__sideNav"],
+                                "components": [{
+                                        "ctor": "Container",
+                                        "props": {
+                                            "id": "myCollapseBtn",
+                                            "type": "ContainerType.NONE",
+                                            "classes": ["buttons"],
+                                            "attr": {
+                                                "data-toggle": "tooltip",
+                                                "data-placement": "right",
+                                                "title": "Collapse"
+                                            },
+                                            "components": [{
+                                                "ctor": "Link",
+                                                "props": {
+                                                    "id": "myCollapseIcon",
+                                                    "classes": ["fas", "fa-bars"],
+                                                    "css": {
+                                                        "textDecoration": "none"
+                                                    }
+                                                }
+                                            }]
+                                        }
+                                    },
+                                    {
+                                        "ctor": "Container",
+                                        "props": {
+                                            "id": "deployBtn",
+                                            "spacing": {
+                                                "mr": 1
+                                            },
+                                            "classes": ["buttons"],
+                                            "attr": {
+                                                "data-toggle": "tooltip",
+                                                "data-placement": "right",
+                                                "title": "Deploy"
+                                            },
+                                            "components": [{
+                                                "ctor": "Label",
+                                                "props": {
+                                                    "id": "fa",
+                                                    "labelType": "LabelType.i",
+                                                    "classes": ["fas", "fa-rocket"]
+                                                }
+                                            }]
+                                        }
+                                    },
+                                    {
+                                        "ctor": "Container",
+                                        "props": {
+                                            "id": "versionsBtn",
+                                            "spacing": {
+                                                "mr": 1
+                                            },
+                                            "classes": ["buttons"],
+                                            "attr": {
+                                                "data-toggle": "tooltip",
+                                                "data-placement": "right",
+                                                "title": "Versions"
+                                            },
+                                            "components": [{
+                                                "ctor": "Label",
+                                                "props": {
+                                                    "id": "fa",
+                                                    "labelType": "LabelType.i",
+                                                    "classes": ["fas", "fa-list-ol"]
+                                                }
+                                            }]
+                                        }
+                                    },
+                                    {
+                                        "ctor": "Container",
+                                        "props": {
+                                            "id": "uploadBtn",
+                                            "spacing": {
+                                                "mr": 1
+                                            },
+                                            "classes": ["buttons"],
+                                            "attr": {
+                                                "data-toggle": "tooltip",
+                                                "data-placement": "right",
+                                                "title": "Upload"
+                                            },
+                                            "components": [{
+                                                "ctor": "Label",
+                                                "props": {
+                                                    "id": "fa",
+                                                    "labelType": "LabelType.i",
+                                                    "classes": ["fas", "fa-cloud-upload-alt"]
+                                                }
+                                            }]
+                                        }
+                                    },
+                                    {
+                                        "ctor": "Container",
+                                        "props": {
+                                            "id": "removeBtn",
+                                            "spacing": {
+                                                "mr": 1
+                                            },
+                                            "classes": ["buttons"],
+                                            "attr": {
+                                                "data-toggle": "tooltip",
+                                                "data-placement": "right",
+                                                "title": "Delete"
+                                            },
+                                            "components": [{
+                                                "ctor": "Label",
+                                                "props": {
+                                                    "id": "fa",
+                                                    "labelType": "LabelType.i",
+                                                    "classes": ["fas", "fa-trash"]
+                                                }
+                                            }]
+                                        }
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "ctor": "SideNav",
+                            "props": {
                                 "id": "mySideNav",
                                 "width": 250,
-                                "classes": ["sidenav"],
+                                "classes": ["sidenav", "height"],
+                                "css": {
+                                    "backgroundColor": "#616161",
+                                    "paddingTop": "20px"
+                                },
                                 "components": [{
                                         "ctor": "Container",
                                         "props": {
@@ -239,7 +317,10 @@
                                                             "data-toggle": "collapse"
                                                         },
                                                         "label": "Component Model",
-                                                        "classes": ["collapse_icon"],
+                                                        "classes": ["collapse_icon", "component__model"],
+                                                        "css": {
+                                                            "color": "#fff"
+                                                        },
                                                         "components": [{
                                                             "ctor": "Label",
                                                             "props": {
@@ -280,6 +361,9 @@
                                                         },
                                                         "label": "TODOs",
                                                         "classes": ["collapse_icon"],
+                                                        "css": {
+                                                            "color": "#fff"
+                                                        },
                                                         "components": [{
                                                             "ctor": "Label",
                                                             "props": {
@@ -320,21 +404,12 @@
                             "props": {
                                 "id": "myCode",
                                 "type": "ContainerType.NONE",
-                                "height": "100vh",
+                                "height": "calc(100vh - 50px) !important",
                                 "changes": "changesMade",
                                 "creationComplete": "_focusEditor"
                             }
                         }
                     ]
-                }
-            },
-            {
-                "ctor": "Footer",
-                "props": {
-                    "id": "footer",
-                    "height": 30,
-                    "classes": ["d-flex"],
-                    "components": []
                 }
             }
         ]
