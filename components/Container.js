@@ -327,7 +327,8 @@ var Container = function(_props, _hideComponents=false)
                 }
             }
         },
-        enumerable:true
+        enumerable: true,
+        configurable: true
     });
     //is template overrided ?
     this.template = this.template || function ()

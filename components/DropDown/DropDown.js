@@ -125,7 +125,8 @@ var DropDown = function (_props) {
                     "data-toggle": 'dropdown',
                     "aria-haspopup": "true",
                     "aria-expanded": "false"
-                }
+                },
+                width: "100%"
             }
         };
     

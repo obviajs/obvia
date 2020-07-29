@@ -5,7 +5,7 @@
  */
 
 //component definition
-var Button = function(_props, overrided=false)
+var Button = function(_props)
 {  
     Object.defineProperty(this, "label", 
     {
@@ -31,35 +31,6 @@ var Button = function(_props, overrided=false)
                         //this.$el.appendText(v);
                         this.$el.text(v);
                 }
-            }
-        },
-        enumerable:true
-    });
-
-    Object.defineProperty(this, "type", 
-    {
-        get: function type() 
-        {
-            return _type;
-        },
-        set: function type(v) 
-        {
-            if(_type != v)
-            {
-                _type = v;
-                if(_type)
-                {
-                    if(this.$el)
-                    {
-                        this.$el.attr('type', _type);
-                    }
-                }else
-                {
-                    if(this.$el)
-                    {
-                        this.$el.removeAttr('_type');
-                    }
-                }                    
             }
         },
         enumerable:true
@@ -121,11 +92,36 @@ var Button = function(_props, overrided=false)
     let _value; 
     
    // Component.call(this, _props);
-    let r = Parent.call(this, _props);
-    if(overrided)
+    let r = Container.call(this, _props);
+
+    Object.defineProperty(this, "type", 
     {
-        this.keepBase();
-    }
+        get: function type() 
+        {
+            return _type;
+        },
+        set: function type(v) 
+        {
+            if(_type != v)
+            {
+                _type = v;
+                if(_type)
+                {
+                    if(this.$el)
+                    {
+                        this.$el.attr('type', _type);
+                    }
+                }else
+                {
+                    if(this.$el)
+                    {
+                        this.$el.removeAttr('_type');
+                    }
+                }                    
+            }
+        },
+        enumerable:true
+    });
     return r;
 };
 Button.prototype.ctor = 'Button';

@@ -5,7 +5,7 @@
  */
 
 //component definition
-var Label = function (_props) {
+var Label = function (_props, _hideComponents=false) {
     Object.defineProperty(this, "label", {
         get: function label() {
             return _label;
@@ -83,7 +83,7 @@ var Label = function (_props) {
     let _label;
     let _labelType = _props.labelType;
 
-    let r = Parent.call(this, _props);
+    let r = Parent.call(this, _props, _hideComponents);
     return r;
 };
 Label.prototype.ctor = 'Label';

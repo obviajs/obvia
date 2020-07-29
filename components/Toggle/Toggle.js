@@ -105,7 +105,7 @@ var Toggle = function (_props) {
     };
     _props.change = null;
 
-    Label.call(this, _props);
+    Label.call(this, _props, true);
 };
 
 Toggle.prototype.ctor = "Toggle";
