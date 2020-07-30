@@ -92,22 +92,19 @@ var DropEdit = function (_props) {
             _afterAttach.apply(this, arguments);
         _creationFinished = true;
     };
-    let fnInitCmpLink = function () {
-        let _componentLink = {
-            ctor: Link,
+    let fnInitCmpLabel = function () {
+        let _componentLabel = {
+            ctor: Label,
             props: {
-                id: "link",
+                id: "label",
                 classes: ['dropdown-item'],
                 "click": _clickHandler,
             }
         };
-        if (_hrefField) {
-            _componentLink.props.href = '{' + _hrefField + '}';
-        }
         if (_labelField) {
-            _componentLink.props.label = '{' + _labelField + '}';
+            _componentLabel.props.label = '{' + _labelField + '}';
         }
-        return _componentLink;
+        return _componentLabel;
     };
     let fnContainerDelayInit = function () {
 
@@ -133,14 +130,14 @@ var DropEdit = function (_props) {
             }
         };
 
-        let _componentLink = fnInitCmpLink();
+        let _componentLink = fnInitCmpLabel();
 
         let _componentRepeaterLit = {
             ctor: Repeater,
             props: {
                 id: "repeater",
                 type: ContainerType.NONE,
-                classes: ["dropdown-menu", "drop__edit"],
+                classes: ["dropdown-menu", "drop-edit"],
                 components: [_componentLink],
                 dataProvider: _dataProvider
             }

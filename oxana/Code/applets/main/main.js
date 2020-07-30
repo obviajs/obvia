@@ -175,6 +175,9 @@ let Implementation = function (applet) {
 
         "UPLOAD_EVENT": async function (e) {
             if (code.errors.length == 0) {
+                // let id_form = formsList.value;
+                // let fields_id = new GaiaAPI_forms();
+                // let field_id = await fields_id.getFormFieldsClient.get(id_form);
                 let apiEvents = new GaiaAPI_events();
                 let event = {
                     form_id: formsList.value,

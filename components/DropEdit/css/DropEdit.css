@@ -7,7 +7,7 @@
     background-color: #eeeeee;
 }
 
-.drop__edit {
+.drop-edit {
     position: absolute;
     transform: translate3d(930px, 35px, 0px);
     top: 0px;
