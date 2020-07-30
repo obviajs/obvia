@@ -4,113 +4,6 @@
         "id": "mainContainer",
         "type": "ContainerType.NONE",
         "components": [{
-                "ctor": "Modal",
-                "props": {
-                    "id": "versionSelectModal",
-                    "size": "ModalSize.LARGE",
-                    "title": "Versions",
-                    "accept": "selectVersion",
-                    "components": {
-                        "modalFooter": [{
-                            "ctor": "Button",
-                            "props": {
-                                "id": "diffButton",
-                                "type": "button",
-                                "classes": ["close", "no-form-control"],
-                                "attr": {
-                                    "data-dismiss": "modal",
-                                    "aria-label": "Dismiss"
-                                },
-                                "components": [{
-                                    "ctor": "Label",
-                                    "props": {
-                                        "id": "fa",
-                                        "labelType": "LabelType.i",
-                                        "classes": ["fas", "fa-code-fork"]
-                                    }
-                                }],
-                                "click": "diffWithSelected"
-                            }
-                        }],
-                        "modalBody": [{
-                            "ctor": "DataGrid",
-                            "props": {
-                                "id": "dataGrid",
-                                "rowCount": 5,
-                                "multiSelect": true,
-                                "columns": [{
-                                        "width": 400,
-                                        "field": "name",
-                                        "description": "Name",
-                                        "visible": true,
-                                        "sortable": true,
-                                        "sortInfo": {
-                                            "sortOrder": 0,
-                                            "sortDirection": "ASC"
-                                        }
-                                    },
-                                    {
-                                        "width": 400,
-                                        "field": "user",
-                                        "description": "Author",
-                                        "visible": true,
-                                        "sortable": true,
-                                        "sortInfo": {
-                                            "sortOrder": 0,
-                                            "sortDirection": "ASC"
-                                        }
-                                    },
-                                    {
-                                        "width": 400,
-                                        "field": "date",
-                                        "description": "Date",
-                                        "visible": true,
-                                        "sortable": true,
-                                        "sortInfo": {
-                                            "sortOrder": 0,
-                                            "sortDirection": "ASC"
-                                        }
-                                    },
-                                    {
-                                        "width": 400,
-                                        "field": "size",
-                                        "description": "Size",
-                                        "visible": true,
-                                        "sortable": true,
-                                        "sortInfo": {
-                                            "sortOrder": 0,
-                                            "sortDirection": "ASC"
-                                        }
-                                    },
-                                    {
-                                        "width": 400,
-                                        "field": "deployed",
-                                        "description": "Deployed",
-                                        "visible": true,
-                                        "sortable": true,
-                                        "itemRenderer": {
-                                            "ctor": "Label",
-                                            "props": {
-                                                "id": "fa",
-                                                "labelType": "LabelType.i",
-                                                "classes": ["fas", "fa-rocket", "text-info"],
-                                                "visible": "{deployed}",
-                                                "label": ""
-                                            }
-                                        },
-                                        "sortInfo": {
-                                            "sortOrder": 0,
-                                            "sortDirection": "ASC"
-                                        }
-                                    }
-                                ],
-                                "rowDblClick": "selectVersion"
-                            }
-                        }]
-                    }
-                }
-            },
-            {
                 "ctor": "Nav",
                 "props": {
                     "id": "mainNav",
@@ -154,10 +47,23 @@
                                     "marginLeft": "15px"
                                 },
                                 "dataProvider": "{?eventsList}",
-                                "labelField": "ctor",
+                                "labelField": "label",
                                 "valueField": "label",
                                 "value": 0
 
+                            }
+                        },
+                        {
+                            "ctor": "DropEdit",
+                            "props": {
+                                "id": "behaviorsDropEdit",
+                                "classes": ["behaviors__list"],
+                                "css": {
+                                    "marginLeft": "15px"
+                                },
+                                "hrefField": "form_id",
+                                "labelField": "form_name",
+                                "label": "Select Behavior"
                             }
                         }
                     ]
@@ -405,7 +311,6 @@
                                 "id": "myCode",
                                 "type": "ContainerType.NONE",
                                 "height": "calc(100vh - 50px) !important",
-                                "changes": "changesMade",
                                 "creationComplete": "_focusEditor"
                             }
                         }

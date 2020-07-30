@@ -2,7 +2,7 @@ let Implementation = function (applet) {
     let app = applet.app;
     let data = applet.data;
 
-    let ideContainer, sideNav, cmCnt, cmCollapse, componentModelTree, todosCnt, todosCollapse, todosRepeater, code, collapseBtn, deployBtn, todoComponent, todoItem, modal, dataGrid, diffButton, formsList, formsComponentsList, eventsList;
+    let ideContainer, sideNav, cmCnt, cmCollapse, componentModelTree, todosCnt, todosCollapse, todosRepeater, code, collapseBtn, deployBtn, versionsBtn, removeBtn, uploadBtn, todoComponent, todoItem, modal, dataGrid, diffButton, formsList, formsComponentsList, eventsList, behaviorsDropEdit;
     let _processForms = new ArrayEx(data.processForms);
     let imp = {
         "BEGIN_DRAW": async function (e) {
@@ -13,21 +13,28 @@ let Implementation = function (applet) {
             let propsTodosRepeater = getChainValue(applet.literal, paths[0]);
             propsTodosRepeater.dataProvider = new ArrayEx([]);
 
-            paths = findMember(applet.literal, "id", [], "dataGrid", false);
-            paths[0].pop();
-            let dataGridDataProvider = getChainValue(applet.literal, paths[0]);
-            dataGridDataProvider.dataProvider = new ArrayEx([]);
+            // paths = findMember(applet.literal, "id", [], "dataGrid", false);
+            // paths[0].pop();
+            // let dataGridDataProvider = getChainValue(applet.literal, paths[0]);
+            // dataGridDataProvider.dataProvider = new ArrayEx([]);
 
             paths = findMember(applet.literal, "id", [], "forms", false);
             paths[0].pop();
             let formsDataProvider = getChainValue(applet.literal, paths[0]);
             formsDataProvider.dataProvider = _processForms;
+
+            paths = findMember(applet.literal, "id", [], "behaviorsDropEdit", false);
+            paths[0].pop();
+            let behaviorsDataProvider = getChainValue(applet.literal, paths[0]);
+            behaviorsDataProvider.dataProvider = _processForms;
         },
         "END_DRAW": function (e) {
             modal = app.container.mainContainer.versionSelectModal;
             ideContainer = app.container.mainContainer.ideContainer;
             collapseBtn = ideContainer.buttonsSide.myCollapseBtn;
-            deployBtn = ideContainer.buttonsSide.deployBtn;
+            versionsBtn = ideContainer.buttonsSide.versionsBtn;
+            removeBtn = ideContainer.buttonsSide.removeBtn;
+            uploadBtn = ideContainer.buttonsSide.uploadBtn;
             sideNav = ideContainer.mySideNav;
             cmCnt = sideNav.cmCnt;
             cmCollapse = cmCnt.cmCollapse;
@@ -39,6 +46,7 @@ let Implementation = function (applet) {
             formsList = app.container.mainContainer.mainNav.forms;
             formsComponentsList = app.container.mainContainer.mainNav.formsComponentsList;
             eventsList = app.container.mainContainer.mainNav.eventsList;
+            behaviorsDropEdit = app.container.mainContainer.mainNav.behaviorsDropEdit;
 
             applet.addBehaviors(collapseBtn, {
                 "click": {
@@ -49,8 +57,16 @@ let Implementation = function (applet) {
             }, false);
 
             applet.addBehaviors(code, {
+                "creationComplete": "FOCUS_EDITOR"
+            }, false);
+
+            applet.addBehaviors(code, {
                 "changes": "CHANGES_MADE"
             }, false);
+
+            applet.addBehaviors(eventsList, {
+                "change": "INIT_BEHAVIOR_CODE"
+            }, false)
 
             applet.addBehaviors(formsList, {
                 "change": "PROCESS_FORMS_COMPONENTS"
@@ -60,6 +76,27 @@ let Implementation = function (applet) {
                 "change": "EVENTS_LIST"
             }, false);
 
+            applet.addBehaviors(versionsBtn, {
+                click: {
+                    "SHOW_VERSIONS": {
+                        onPropagation: true
+                    }
+                }
+            }, false);
+
+            applet.addBehaviors(uploadBtn, {
+                "click": {
+                    "UPLOAD_EVENT": {
+                        onPropagation: true
+                    }
+                }
+            }, false);
+
+            applet.addBehaviors(removeBtn, {
+                click: "DELETE_EVENT"
+            }, false);
+
+
             applet.addBehaviors(todosRepeater, {
                 "rowAdd": "TODOS"
             }, false);
@@ -68,21 +105,6 @@ let Implementation = function (applet) {
                 "click": "COMPONENT_MODEL_TREE_CLICK"
             }, false);
 
-            applet.addBehaviors(modal, {
-                "displayListUpdated": "DRAW_GRID"
-            }, false);
-
-            applet.addBehaviors(modal, {
-                "accept": "SELECT_VERSION"
-            }, false);
-            dataGrid = modal.modalDialog.modalContent.modalBody.dataGrid;
-            applet.addBehaviors(dataGrid, {
-                "rowDblClick": "SELECT_VERSION"
-            }, false);
-            diffButton = modal.modalDialog.modalContent.modalFooter.diffButton;
-            applet.addBehaviors(diffButton, {
-                "click": "DIFF_WITH_SELECT"
-            }, false);
 
             componentModelTree.afterAttach = function () {
                 cmCollapse.href = "#" + this.domID;
@@ -105,12 +127,26 @@ let Implementation = function (applet) {
             }
         },
 
+        "FOCUS_EDITOR": function (e) {
+            code.cmInst.focus();
+        },
+
+        "INIT_BEHAVIOR_CODE": function (e) {
+            let ex_tem = `function form_${formsList.value}_${formsComponentsList.value}_${eventsList.value} (e) {
+                //your code here;
+            }`;
+
+            code.content = ex_tem;
+        },
+
+
         "PROCESS_FORMS_COMPONENTS": async function (e) {
             let form_id = this.value;
             let gaiaForm = new GaiaAPI_forms();
             let form = await gaiaForm.formsClient.get(form_id);
             let cmInstance = Component.fromLiteral(form[0].form_literal);
             formsComponentsList.dataProvider.splicea(0, formsComponentsList.dataProvider.length, new ArrayEx());
+            eventsList.dataProvider.splicea(0, eventsList.dataProvider.length, new ArrayEx());
             cmInstance.renderPromise().then(function (instance) {
                 let cmDp = initComponentModel(instance.workAreaColumnL2);
                 let frmsDP = initComponentList(instance.workAreaColumnL2.children);
@@ -120,9 +156,44 @@ let Implementation = function (applet) {
         },
 
         'EVENTS_LIST': function (e) {
-            console.log("here");
+            eventsList.dataProvider.splicea(0, eventsList.dataProvider.length, new ArrayEx());
+            for (let i = 0; i < this.dataProvider.length; i++) {
+                if (this.dataProvider[i].ctor === this.value) {
+                    let dpEv = initComponentModel(this.dataProvider[i].forms_literal);
+                    eventsList.dataProvider.splicea(0, 0, dpEv[0].children)
+                    break;
+                }
+            }
         },
 
+
+        "SHOW_VERSIONS": function (e) {
+            app.appletsMap["versions"].init().then(() => {
+                console.log("versions modal init");
+            });
+        },
+
+        "UPLOAD_EVENT": async function (e) {
+            if (code.errors.length == 0) {
+                let apiEvents = new GaiaAPI_events();
+                let event = {
+                    form_id: formsList.value,
+                    field_id: 1,
+                    event_id: 1,
+                    content: code.content,
+                    id_process: 1,
+                    file_name: ` form_${formsList.value}_${formsComponentsList.value}_${eventsList.value}`,
+                };
+                let result = await apiEvents.saveScriptFileClient.post(event);
+                console.log(result);
+            } else {
+                console.log("Your code contains errors. Fix them and then save");
+            }
+        },
+
+        "DELETE_EVENT": function (e) {
+            console.log("DELETE_EVENT");
+        },
 
         "SIDE_NAV_TOGGLE_VISIBILITY": {
             do: function (e) {
@@ -145,18 +216,6 @@ let Implementation = function (applet) {
         "COMPONENT_MODEL_TREE_CLICK": {
             do: function (e) {
                 componentModelTree_click(e);
-            }
-        },
-
-        "DRAW_GRID": {
-            do: function (e) {
-                drawGrid(e);
-            }
-        },
-
-        "SELECT_VERSION": {
-            do: function (e) {
-                selectVersion(e);
             }
         },
 
@@ -241,20 +300,6 @@ let Implementation = function (applet) {
         });
     };
 
-    let drawGrid = function (e) {
-        modal.modalDialog.modalContent.modalBody.dataGrid.updateDisplayList();
-    };
-
-    let selectedEventVersion;
-
-    let selectVersion = function (e) {
-        if (modal.modalDialog.modalContent.modalBody.dataGrid.selectedItems.length > 0) {
-            selectedEventVersion = modal.modalDialog.modalContent.modalBody.dataGrid.selectedItems[0];
-        } else {
-            alert("Nothing selected.");
-        }
-    };
-
     let diffWithSelected = function (e) {
 
     };
@@ -297,7 +342,7 @@ let Implementation = function (applet) {
                 "ctor": cmInstance[cid].id,
                 "label": cid,
                 "forms_literal": cmInstance[cid]
-            }
+            };
             dp.push(node);
         }
         return dp;

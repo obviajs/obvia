@@ -173,6 +173,7 @@ rjs.define("./components/ProgressBar/ProgressBarStyle.js", "ProgressBarStyle");
 
 //DropDown
 rjs.define("./components/DropDown/DropDown.js", "DropDown");
+rjs.define("./components/DropEdit/DropEdit.js", "DropEdit");
 rjs.define("./components/DropDown/ButtonSize.js", "ButtonSize");
 rjs.define("./components/DropDown/DropMenuDirection.js", "DropMenuDirection");
 rjs.define("./components/DropDown/DropSplitType.js", "DropSplitType");
@@ -212,6 +213,7 @@ rjs.define("./components/Validation/RequiredFieldValidator.js", "RequiredFieldVa
 rjs.define("./components/Validation/RegularExpressionValidator.js", "RegularExpressionValidator");
 rjs.define("./components/Validation/CustomValidator.js", "CustomValidator");
 //rjs.define("./oxana/Wizard/css/wizard-default.css", "wizard_default_css");
+rjs.define("./components/DropEdit/css/DropEdit.css", "DropEdit_css");
 rjs.define("./components/Tree/css/tree-default.css", "tree_default_css");
 rjs.define("./components/SideNav/css/sideNav.css", "sideNav_css");
 rjs.require(["EventDispatcher"]).then(function () {
@@ -341,6 +343,7 @@ rjs.require(["EventDispatcher"]).then(function () {
         "HierarchialTree",
         "CreditCard",
         "DropDown",
+        "DropEdit",
         "ButtonSize",
         "DropMenuDirection",
         "DropSplitType",
@@ -360,6 +363,7 @@ rjs.require(["EventDispatcher"]).then(function () {
         "CustomValidator",
         "calendarMonth_default_css",
         "calendarWeek_default_css",
+        "DropEdit_css",
         "calendarDay_default_css",
         "calendar_default_css",
         "creditCard-default_css",

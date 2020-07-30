@@ -1,5 +1,5 @@
-let url = "https://gaia.oxana.io/api/forms/yaml";
-   
+let url = "https://gaia.oxana.io/api/events/yaml";
+
 let arr = url.split("/");
 let title = arr[4];
 let gen = new ApiClientGen({
@@ -8,10 +8,10 @@ let gen = new ApiClientGen({
     "title": "_" + title
 });
 
-gen.generate().then(function (r) { 
-    download(r.apiTitle + ".js", r.apiSrc); 
-    
-}).then(function () { 
+gen.generate().then(function (r) {
+    download(r.apiTitle + ".js", r.apiSrc);
+
+}).then(function () {
     console.log();
 });
 

@@ -6,6 +6,26 @@
     color: #fff;
 }
 
+.behaviors__list input[type="text"] {
+    display: inline-block;
+    width: 10rem;
+    margin-left: 390px;
+    margin-top: 4px;
+    background-color: #BBBBBB;
+    border: 1px solid whitesmoke;
+    color: white;
+    height: calc(1.5em + .5rem + 2px);
+    padding: .25rem .5rem;
+    font-size: .875rem;
+    line-height: 1.5;
+    border-radius: .2rem;
+    margin-left: 15px;
+}
+
+.behaviors__list button[type="button"] {
+    margin-bottom: 5px;
+}
+
 .buttons__sideNav {
     padding-top: 10px;
     background-color: #C2C2C2;
