@@ -20,7 +20,7 @@ Please make sure to read the Issue Reporting Checklist before opening an issue. 
 Detailed changes for each release are documented in the release notes.
 
 ## Stay In Touch
-Blog\
+Blog
 
 ## Contribution
 Thank you to everyone who has contributed to ***OxanaUI***!
