@@ -4,27 +4,27 @@ Oxana user interface javascript library.
 ## Introduction
 Oxana (pronounced /oksanaː/) is a compact and easy to use framework for building user interfaces for primarily business solutions. It helps the developer to create  beautiful and sleek user interfaces even on complex and special purpose web applications. 
 
-### Browser Compatibility
+## Browser Compatibility
 OxanaUI supports all browsers that are ES5-compliant (IE8 and below are not supported).
 
-### Documentation
+## Documentation
 To check out live examples and docs, visit oxanaui.com.
 
-### Questions
+## Questions
 For questions and support please use the official forum or community chat. The issue list of this repo is exclusively for bug reports and feature requests.
 
-### Issues
+## Issues
 Please make sure to read the Issue Reporting Checklist before opening an issue. Issues not conforming to the guidelines may be closed immediately.
 
-### Changelog
+## Changelog
 Detailed changes for each release are documented in the release notes.
 
-### Stay In Touch
+## Stay In Touch
 Blog\
 
-### Contribution
+## Contribution
 Thank you to everyone who has contributed to ***OxanaUI***!
 
-### License
+## License
 MIT\
 Copyright (c) 2020-present, Kreatx shpk 
