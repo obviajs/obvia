@@ -20,9 +20,11 @@ Please make sure to read the Issue Reporting Checklist before opening an issue. 
 Detailed changes for each release are documented in the release notes.
 
 ### Stay In Touch
-Twitter\
 Blog\
-Job Board
 
 ### Contribution
 Thank you to everyone who has contributed to ***OxanaUI***!
+
+### License
+MIT\
+Copyright (c) 2020-present, Kreatx shpk 
