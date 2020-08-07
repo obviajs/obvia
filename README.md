@@ -20,8 +20,8 @@ Please make sure to read the Issue Reporting Checklist before opening an issue. 
 Detailed changes for each release are documented in the release notes.
 
 ### Stay In Touch
-Twitter
-Blog
+Twitter\
+Blog\
 Job Board
 
 ### Contribution
