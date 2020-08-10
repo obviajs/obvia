@@ -57,7 +57,6 @@ rjs.define("./components/TextInput/TextInput.js", "TextInput");
 rjs.define("./components/TextInput/TextInputType.js", "TextInputType");
 
 //Form
-rjs.define("lib/dependencies/scripts/bootstrap-bootbox.js", "BootBox");
 rjs.define("./components/Form/Form.js", "Form");
 rjs.define("./components/Form/FormEventType.js", "FormEventType");
 rjs.define("./components/Form/FormField.js", "FormField");
@@ -284,7 +283,6 @@ rjs.require(["EventDispatcher"]).then(function () {
         "App",
         "Applet",
         "Hidden",
-        "BootBox",
         "Repeater",
         "RepeaterEx",
         "List",
