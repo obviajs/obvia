@@ -15,6 +15,13 @@ var Parent = function (_props, _hideComponents=false) {
         }
     });
     
+    Object.defineProperty(this, "hasInternalComponents",
+    {
+        get: function hasInternalComponents() {
+            return _hideComponents;
+        }
+    });
+    
     Object.defineProperty(this, "proxy",
         {
             get: function proxy() {

@@ -1,6 +1,0 @@
- 
-    table.KeyTable th.focus,
-    table.KeyTable td.focus {
-	outline: 3px solid #BD77DC;
-	outline-offset: -3px;
-}

@@ -406,7 +406,7 @@ var App = function(_props){
                 _eventTypesJoined += " " + b;
             }
             cmp.on(_eventTypesJoined, _event2behavior);
-            if (recurse) {
+            if (recurse && !cmp.hasInternalComponents) {
                 for (let cid in cmp.children) {
                     _eventTypesJoined += " " + this.addBehaviors(cmp.children[cid], behaviors);
                 }

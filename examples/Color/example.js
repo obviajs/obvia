@@ -1,4 +1,10 @@
 var myColor = new Color({
     id: 'color1',
+    change: function (e) {
+        console.log("Color changed to: " + this.value);
+    }
 });
-$('#root').append(myColor.render());
+
+myColor.renderPromise().then(function (cmpInstance) {
+    $('#root').append(cmpInstance.$el);
+});

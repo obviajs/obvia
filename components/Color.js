@@ -6,70 +6,61 @@
 
 var Color = function (_props) {
 
+    let _self = this, _value;
+
     Object.defineProperty(this, "value", {
         get: function value() {
             return _value;
         },
         set: function value(v) {
             if (_value != v) {
-                if (typeof v == "object") {
-                    v = JSON.stringify(v);
-                }
                 _value = v;
+                this.$el.val(_value);
             }
         }
     });
 
-
-    this.beforeAttach = function () {
-        this.$input = this.$el.attr('id') == this.domID ? this.$el : this.$el.find("#" + this.domID);
+    this.beforeAttach = function (e) {
+        if (e.target.id == this.domID) {
+            if (_props.value != null)
+                this.value = _props.value;
+        }
     };
 
     this.afterAttach = function (e) {
         if (e.target.id == this.$el.attr('id') && !this.attached) {
-            //init input mask
-            if (this.hasOwnProperty('mask')) {
-                var mask;
-                try {
-                    mask = JSON.parse(this.mask);
-                } catch (error) {
-                    mask = this.mask;
-                }
 
-                this.$input.inputmask(mask);
-            }
-
-            if (typeof this.onafterAttach == 'function'){
-                this.onafterAttach.apply(this, arguments);
-            }
         }
     };
 
     this.changeHandler = function () {
-        if (typeof this.onchange == 'function')
-            this.onchange.apply(this, arguments);
-    };
-
-    this.focus = function(){
-        if(this.$input != null)
-        {
-            this.$input.focus();
-        }
+        _value = this.$el.val();
     };
 
     this.template = function () {
-        return '<input data-triggers="change" type="color" id="' + this.domID + '" style = "width:20px;height:20px">';
+        return '<input data-triggers="change" type="color" id="' + this.domID + '" >';
     };
 
-    var _defaultParams = {
+    let _defaultParams = {
         id: 'color1',
-        afterAttach: this.afterAttach
+        css: {
+            "width": "20px",
+            "height": "20px"
+        }
     };
 
     _props = extend(false, false, _defaultParams, _props);
 
-    var _id = _props.id;
-    var _value = _props.value;
+    let _change = _props.change;
+
+    _props.change = function () {
+        let e = arguments[0];
+        if (!e.isDefaultPrevented()) {
+            _self.changeHandler(e);
+        }
+        if (typeof _change == 'function')
+            _change.apply(this, arguments);
+    };
 
     Component.call(this, _props);
 };
