@@ -341,7 +341,8 @@ var Component = function (_props) {
                 else
                     this.$el.prop('draggable', 'true');
             }
-        }
+        },
+        enumerable: true
     });
     Object.defineProperty(this, "classes", {
         get: function classes() {
