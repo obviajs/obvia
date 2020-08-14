@@ -153,3 +153,11 @@ label[data-toggle="collapse"]:not([aria-expanded]):before {
 .remove_button>label {
     font-size: 20px;
 }
+.middleNav {
+    width: calc(100% - 715px);
+}
+@media only screen and (max-width: 1366px) {
+    .middleNav {
+        width: calc(100% - 650px);
+    }
+}

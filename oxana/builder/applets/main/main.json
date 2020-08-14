@@ -39,7 +39,9 @@
                      "ctor": "Container",
                      "props": {
                         "id": "leftNav",
-                        "width": "350px",
+                        "css": {
+                           "width": "350px"
+                        },
                         "type": "",
                         "components": [{
                            "ctor": "Label",
@@ -53,7 +55,7 @@
                               ],
                               "css": {
                                  "marginTop": "15px",
-                                 "marginLeft": "200px"
+                                 "marginLeft": "340px"
                               }
                            }
                         }]
@@ -69,6 +71,7 @@
                            "marginRight": "0",
                            "paddingLeft": "40px"
                         },
+                        "classes": ["middleNav"],
                         "components": [{
                               "ctor": "Label",
                               "props": {
@@ -268,9 +271,7 @@
                                  "navIcons"
                               ],
                               "css": {
-                                 "marginTop": "15px",
-                                 "marginRight": "0",
-                                 "paddingLeft": "100px"
+                                 "marginTop": "15px"
                               }
                            }
                         }]
