@@ -14,20 +14,7 @@ var SuggestionRenderer = function(_props)
         if(_value)
             this.$el.data('value', _value);
     };
-/*
-    registerEvents: function () {
-        return [
-            {
-                registerTo: this.$el, events: {
-                    'afterAttach': this.afterAttach.bind(this),
-                    'mousedown' : this.mouseDownHandler.bind(this),
-                    'click': this.clickHandler.bind(this),
-                    'dblclick': this.doubleClickHandler.bind(this)
-                }
-            }
-        ]
-    }
-*/
+    
     Object.defineProperty(this, "value", 
     {
         get: function value() 

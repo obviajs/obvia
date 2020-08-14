@@ -192,7 +192,7 @@ var App = function(_props){
         let manifestor;
 
         let behaviorObj = {};
-        if(target && _self.behaviors[target.domID] && _self.behaviors[target.domID][e.type])
+        if(target && _self.behaviors[target.domID] && _self.behaviors[target.domID][e.type] && currentTarget == target)
         {
             behaviorObj = _self.behaviors[target.domID][e.type];
             manifestor = target;

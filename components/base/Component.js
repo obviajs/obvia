@@ -168,6 +168,8 @@ var Component = function (_props) {
                 _ownerDocument = v;
                 Component.ready(this, function (element) {
                     _self.trigger('afterAttach');
+                }, function (element) {
+                    _self.trigger('detached');
                 }, _ownerDocument);
             }
         }
@@ -494,6 +496,19 @@ var Component = function (_props) {
         }
     };
 
+    let _detached = this.detached;
+    this.detached = function (e) {
+        if (e.target.id == this.domID) {
+            _self.attached = false;
+            if (typeof _props.detached == 'function')
+                _props.detached.apply(this.proxyMaybe, arguments);
+            if (!e.isDefaultPrevented()) {
+                if (typeof _detached == 'function')
+                    _detached.apply(this.proxyMaybe, arguments);
+            }
+        }
+    };
+
     let _defaultHandlers = [{
         registerTo: this.$el,
         events: {
@@ -517,6 +532,7 @@ var Component = function (_props) {
             'idChanged': _idChanged && typeof _idChanged == 'function' ? _idChanged.bind(_self) : undefined,
             'DOMMutation': this.DOMMutation && typeof this.DOMMutation == 'function' ? this.DOMMutation.bind(_self) : undefined,
             'afterAttach': this.afterAttach && typeof this.afterAttach == 'function' ? this.afterAttach.bind(_self) : undefined,
+            'detached': this.detached && typeof this.detached == 'function' ? this.detached.bind(_self) : undefined,
             'beforeAttach': this.beforeAttach && typeof this.beforeAttach == 'function' ? this.beforeAttach.bind(_self) : undefined,
             'init': this.init && typeof this.init == 'function' ? this.init.bind(_self) : undefined,
             'beginDraw': this.beginDraw && typeof this.beginDraw == 'function' ? this.beginDraw.bind(_self) : undefined,
@@ -626,7 +642,7 @@ var Component = function (_props) {
     this.destruct = function (mode = 1) {
         if (this.$el)
             mode == 1 ? this.$el.remove() : this.$el.detach();
-        _self.attached = false;
+        //_self.attached = false;
     };
 
     //register outside handlers
@@ -640,31 +656,33 @@ var Component = function (_props) {
                     let eventTypeArr = eventType.split(" ");
                     for (let t = 0; t < eventTypeArr.length; t++) {
                         eventType = eventTypeArr[t];
-                        if (_handlers[eventType] == null)
-                            _handlers[eventType] = [];
-                        let proxyHandler = function () {
-                            let args = [];
-                            for (let i = 0; i < arguments.length; i++) {
-                                args.push(arguments[i]);
-                            }
+                        if (eventType.trim() != "") {
+                            if (_handlers[eventType] == null)
+                                _handlers[eventType] = [];
+                            let proxyHandler = function () {
+                                let args = [];
+                                for (let i = 0; i < arguments.length; i++) {
+                                    args.push(arguments[i]);
+                                }
 
-                            if (_self.parentType == 'repeater') {
-                                args = args.concat([
-                                    new RepeaterEventArgs(
-                                        _self.parent.rowItems[_self.repeaterIndex],
-                                        _self.parent.dataProvider[_self.repeaterIndex],
-                                        _self.repeaterIndex
-                                    )
-                                ]);
-                            }
-                            //console.log(_self.$el.attr('id'), arguments[0]);
-                            return fnc.apply(_self.proxyMaybe, args);
-                        };
-                        _handlers[eventType].push({
-                            "proxyHandler": proxyHandler,
-                            "originalHandler": fnc
-                        });
-                        this.$el.on(eventType, proxyHandler);
+                                if (_self.parentType == 'repeater') {
+                                    args = args.concat([
+                                        new RepeaterEventArgs(
+                                            _self.parent.rowItems[_self.repeaterIndex],
+                                            _self.parent.dataProvider[_self.repeaterIndex],
+                                            _self.repeaterIndex
+                                        )
+                                    ]);
+                                }
+                                //console.log(_self.$el.attr('id'), arguments[0]);
+                                return fnc.apply(_self.proxyMaybe, args);
+                            };
+                            _handlers[eventType].push({
+                                "proxyHandler": proxyHandler,
+                                "originalHandler": fnc
+                            });
+                            this.$el.on(eventType, proxyHandler);
+                        }
                     }
                 } else
                     console.log("$el in not defined");
@@ -922,6 +940,8 @@ var Component = function (_props) {
     if (_ownerDocument) {
         Component.ready(this, function (element) {
             _self.trigger('afterAttach');
+        }, function (element) {
+            _self.trigger('detached');
         }, _ownerDocument);
     }
 
@@ -990,7 +1010,7 @@ Component.listeners = {};
 Component.objListeners = {};
 Component.MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
 
-Component.ready = function (cmp, fn, ownerDocument = document) {
+Component.ready = function (cmp, fn, fnDetached, ownerDocument = document) {
     // Store the selector and callback to be monitored
     if (!ownerDocument["id"]) {
         ownerDocument["id"] = StringUtils.guid();
@@ -1001,15 +1021,15 @@ Component.ready = function (cmp, fn, ownerDocument = document) {
         }
         Component.listeners[ownerDocument["id"]].push({
             element: cmp,
-            fn: fn
+            "fn": fn,
+            "fnDetached": fnDetached
         });
-        if (Component.objListeners[cmp.domID] == null) {
-            Component.objListeners[cmp.domID] = [];
-        }
-        Component.objListeners[cmp.domID].push({
+      
+        Component.objListeners[cmp.domID] = {
             "element": cmp,
-            "fn": fn
-        });
+            "fn": fn,
+            "fnDetached": fnDetached
+        };
     }
     if (!Component.observer[ownerDocument["id"]]) {
         Component.observer[ownerDocument["id"]] = new MutationObserver(Component.check);
@@ -1035,31 +1055,24 @@ Component.check = function (mutations) {
                 evt.mutation = mutations[g];
                 Component.instances[mutations[g].target.id].trigger(evt);
             }
-            if (mutations[g].type == "childList") {
-                for (let h = 0; h < mutations[g].addedNodes.length; h++) {
+            if (mutations[g].type == "childList") {   
+                let len = mutations[g].removedNodes.length;
+                for (let h = 0; h < len; h++) {
+                    let DOMNode = mutations[g].removedNodes[h];
+                    if (DOMNode.querySelectorAll) {
+                        if (Component.listeners[DOMNode.ownerDocument.id]) {
+                            Component.ch(DOMNode, "fnDetached");
+                        }
+                    }
+                }
+
+                len = mutations[g].addedNodes.length;
+                for (let h = 0; h < len; h++) {
                     let DOMNode = mutations[g].addedNodes[h];
                     if (DOMNode.querySelectorAll) {
                         // Check the DOM for elements matching a stored selector
                         if (Component.listeners[DOMNode.ownerDocument.id]) {
-                            for (let i = 0, len = Component.listeners[DOMNode.ownerDocument.id].length, listener, elements; i < len; i++) {
-                                listener = Component.listeners[DOMNode.ownerDocument.id][i];
-                                if (!listener.element.attached) {
-                                    let $el = listener.element.$el;
-                                    let id = $el[0].id;
-                                    //console.log(DOMNode.id);
-                                    let resultNodes = DOMNode.id == id ? [DOMNode] : DOMNode.querySelectorAll("#" + id);
-
-                                    // Make sure the callback isn't invoked with the 
-                                    // same element more than once
-                                    // if (mutations.addedNodes[h]==element && !element.ready) 
-                                    if (resultNodes.length > 0 && !resultNodes[0].ready) {
-                                        resultNodes[0].ready = true;
-                                        // Invoke the callback with the element
-                                        //listener.element.addedOnDOM();
-                                        listener.fn.call(listener.element, $el);
-                                    }
-                                }
-                            }
+                            Component.ch(DOMNode);
                         }
                     }
                 }
@@ -1067,6 +1080,22 @@ Component.check = function (mutations) {
         }
     }
 };
+Component.ch = function (domNode, operation = "fn") {
+    
+    let listener = Component.objListeners[domNode.id];
+    let len = domNode.children.length;
+    for (let i = 0; i < len; i++) {
+        Component.ch(domNode.children[i], operation);
+    }
+    if (listener) {
+        if ((!listener.element.attached &&  operation == "fn") || (listener.element.attached &&  operation == "fnDetached")) {
+            listener[operation].call(listener.element, listener.element.$el);
+        }
+    }
+    else
+        console.log("DOMNode not registered as a component", domNode);
+};
+
 Component.defaultContext = window;
 Component.registered = {};
 Component.instances = {};

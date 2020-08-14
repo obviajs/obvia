@@ -4,7 +4,11 @@ var Applet = function (_props) {
         forceReload: false,
         behaviors: {
             "beginDraw": "BEGIN_DRAW",
-            "endDraw": "END_DRAW"
+            "endDraw": "END_DRAW",
+            "afterAttach": "AFTER_ATTACH",
+            "beforeAttach": "BEFORE_ATTACH",
+            "detached": "DETACHED",
+            "init": "INIT"
         },
         attr: {},
         lazy: true

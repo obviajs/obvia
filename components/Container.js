@@ -409,11 +409,7 @@ var Container = function(_props, _hideComponents=false)
 
     if(_props.type && _props.type !="")
         this.type = _props.type; 
-    /*
-    this.registerEvents = function () 
-    {
-        return [];
-    }*/
+    
     return r;
 };
 Container.prototype.ctor = 'Container';

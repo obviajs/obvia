@@ -65,6 +65,14 @@ let Implementation = function (applet) {
                 "rowAdd": "PREPARE_CMP",
             }, false);
 
+            let len = componentList.rowItems.length;
+            for (let i = 0; i < len; i++) { 
+                let currentRow = componentList.rowItems[i];
+                applet.addBehaviors(currentRow.component, {
+                    "dragstart": "INITIAL_DRAGSTART",
+                }, false);
+            }
+
             applet.addBehaviors(propertyEditorContainer, vspewbehaviors, false);
 
             cmpSearchTextInput = app.viewStack.mainContainer.container.componentsContainer.container.cmpSearchTextInput;

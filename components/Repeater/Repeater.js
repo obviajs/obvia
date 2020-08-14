@@ -111,7 +111,11 @@ var Repeater = function(_props, _hideComponents=false)
                         if (data != null) {
                             if (!data[_guidField])
                                 Object.defineProperty(data, _guidField, { value: StringUtils.guid(), enumerable: false, configurable: true});
-                            _compRenderPromises.splicea(_compRenderPromises.length, 0, _self.addRow(data, i));
+                            let rowComponentsPromises = _self.addRow(data, i);
+                            Promise.all(rowComponentsPromises).then(function () {
+                                _rowAdded(i, data);
+                            });
+                            _compRenderPromises.splicea(_compRenderPromises.length, 0, rowComponentsPromises);
                         }
                     }
                 } else
@@ -125,6 +129,23 @@ var Repeater = function(_props, _hideComponents=false)
             });
         };
     }
+    
+    let _rowAdded = function (index, data) {
+        ++_createdRows;
+        //trigger row add event
+        let era = jQuery.Event("rowAdd");
+        _self.trigger(era, [_self, new RepeaterEventArgs(_rowItems[index], data, index)]);
+        
+        if (_createdRows == _self.dataProvider.length) {
+            if(!_creationFinished){
+                _creationFinished = true;
+                _self.trigger('creationComplete');
+            }
+        }
+        if (index+1 == _self.dataProvider.length) {
+            _rowItems[_rowItems.length - 1][_components[0].props.id].scrollTo();
+        }
+    };
 
     this.dataProviderChanged = function (toAdd, toRemove, toRefresh) 
     {
@@ -151,7 +172,11 @@ var Repeater = function(_props, _hideComponents=false)
                         transferNodes = true;
                     }
                     let ind = toAdd.a1_indices[i];
-                    _compRenderPromises.splicea(_compRenderPromises.length, 0, this.addRow(this.dataProvider[ind], ind));
+                    let rowComponentsPromises = this.addRow(this.dataProvider[ind], ind);
+                    Promise.all(rowComponentsPromises).then(function () {
+                        _rowAdded(ind, _self.dataProvider[ind]);
+                    });
+                    _compRenderPromises.splicea(_compRenderPromises.length, 0, rowComponentsPromises);
                 }
             }
             if (_compRenderPromises.length > 0)
@@ -240,7 +265,12 @@ var Repeater = function(_props, _hideComponents=false)
                         for (let i = _oldDataProvider.length; i < v.length; i++) {
                             if (v[i] != null && !v[i][_guidField])
                                 Object.defineProperty(v[i], _guidField, { value: StringUtils.guid(), enumerable: false, configurable: true});
-                            _compRenderPromises.splicea(_compRenderPromises.length, 0, this.addRow(v[i], i));
+                            
+                            let rowComponentsPromises = this.addRow(v[i], i);
+                            Promise.all(rowComponentsPromises).then(function () {
+                                _rowAdded(i, v[i]);
+                            });                            
+                            _compRenderPromises.splicea(_compRenderPromises.length, 0, rowComponentsPromises);
                         }
                         if (_compRenderPromises.length > 0) {
                             Promise.all(_compRenderPromises).then(function () {
@@ -356,7 +386,6 @@ var Repeater = function(_props, _hideComponents=false)
         let rp = [];
         index = index == null ? _rows.length : index;
         let renderedRow = $('<div/>');
-        var ccComponents = [];
         let rowItems = {};
 
         let beforeRowAddEvent = jQuery.Event("beforeRowAdd");
@@ -364,7 +393,7 @@ var Repeater = function(_props, _hideComponents=false)
 
         if (!isPreventable || (isPreventable && !beforeRowAddEvent.isDefaultPrevented())) 
         {
-            let len = _components.length;
+            let len = _components.length; 
             for(let cIndex=0;cIndex<len;cIndex++)
             {
                 let component = {};
@@ -407,41 +436,6 @@ var Repeater = function(_props, _hideComponents=false)
                 _rowItems.splice(index, 0, rowItems);
 
                 //handle component change event and delegate it to repeater
-                let ci = index+1;
-                el.on('creationComplete', function(e) { // a closure is created
-                    e.stopImmediatePropagation();
-                    e.stopPropagation();
-                    ccComponents.push(el.id);
-                    _createdRows++;
-                    if (ccComponents.length == _components.length) {
-                        //trigger row add event
-                        let era = jQuery.Event("rowAdd");
-                        era.row = renderedRow;
-                        _self.trigger(era, [_self, new RepeaterEventArgs(_rowItems[ci-1], data, ci-1)]);
-                        //duhet te shtojme nje flag qe ne rast se metoda addRow eshte thirrur nga addRowHangler te mos e exec kodin meposhte
-                        
-                        //skip dp if it already exist
-                        var addRowFlag = false;
-                        if (ci > _self.dataProvider.length) {
-                            _self.dataProvider.push(data);
-                            addRowFlag = true;
-                        }
-                        
-                        if (_createdRows == _self.dataProvider.length && !addRowFlag) {
-                            if(!_creationFinished){
-                                _creationFinished = true;
-                                _self.trigger('creationComplete');
-                            }
-                            //_self.focusComponent(0, 0);
-                        }
-
-                        //animate
-                        if (addRowFlag && focusOnRowAdd) {
-                            _rowItems[_rowItems.length - 1][_components[0].props.id].scrollTo();
-                        }         
-                    
-                    }
-                });	
 
                 if (_rendering.direction == 'vertical') {
                     renderedRow.addClass("wrap");
@@ -471,7 +465,8 @@ var Repeater = function(_props, _hideComponents=false)
                 
                 //render component in row
                 if(el.renderPromise){
-                    let cp = el.renderPromise().then(function(cmpInstance){
+                    let cp = el.renderPromise().then(function (cmpInstance) {
+
                         if(!_rendering.wrap)
                         {
                             // if(_self.mode =="append")

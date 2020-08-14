@@ -124,32 +124,30 @@ var Image = function(_props)
     };
 
     _props = extend(false, false, _defaultParams, _props);
+    if (!_props.attr) { 
+        _props.attr = {};
+    }
+    let myDtEvts = ["load"];
+    if (!Object.isEmpty(_props.attr) && _props.attr["data-triggers"] && !Object.isEmpty(_props.attr["data-triggers"]))
+    {
+        let dt = _props.attr["data-triggers"].split(" ");
+        for (let i = 0; i < dt.length; i++)
+        {   
+            myDtEvts.pushUnique(dt[i]);
+        }
+    }
+    _props.attr["data-triggers"] = myDtEvts.join(" ");
     let _width, _height, _alt, _title;
     let _src = _props.src;
     let _load = _props.load;
 
     Component.call(this, _props, true);
-    var base = this.base;
 
-    this.registerEvents = function () 
-    {
-        return base.registerEvents().concat(
-        [
-            {
-                registerTo: this.$el, events: {
-                    'load' : _load && typeof _load == 'function'? _load.bind(this) : undefined
-                }
-            }
-        ]);
-    };
-
-    this.render = function () 
-    {
-        if(this.$el.complete)
-        {
+    this.render = function () {
+        if (this.$el.complete) {
             this.trigger('load');
         }
         return this.$el;
-    }
+    };
 };
 Image.prototype.ctor = 'Image';
