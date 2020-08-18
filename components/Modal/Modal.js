@@ -225,7 +225,6 @@ var Modal = function (_props) {
             }
             Modal.BackDrop.show();
             this.css.display = "block";
-            this.$el.fadeIn();
             //$(this.$el[0].ownerDocument.body).addClass('modal-open');
         }
         return this;
@@ -235,7 +234,6 @@ var Modal = function (_props) {
         if (this.$el) {
             //this.$el.modal('hide');
             Modal.BackDrop.destruct();
-            this.$el.fadeOut();
             delete this.css["display"];
             //$(this.$el[0].ownerDocument.body).removeClass('modal-open');
         }

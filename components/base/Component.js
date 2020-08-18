@@ -626,9 +626,7 @@ var Component = function (_props) {
     };
     this.scrollTo = function () {
         if (this.$el) {
-            $(this.ownerDocument.body).animate({
-                scrollTop: this.$el.offset().top - 100
-            }, 1200);
+            this.$el[0].scrollTop = this.$el.offset().top - 100;
         }
         return this;
     };
@@ -881,36 +879,36 @@ var Component = function (_props) {
         if (_self['registerEvents'] && (typeof _self.registerEvents == 'function')) {
             handlers = _self.registerEvents();
             //call inner event
-            handlers.forEach(function (handler, i) {
+            let len = handlers.length;
+            for (let h = 0; h < len; h++) {
+                let handler = handlers[h];
                 for (let innerEventIn in handler.events) {
                     if (typeof handler.events[innerEventIn] == 'function') {
                         if (handler.registerTo != null) {
                             if (_handlers[innerEventIn] == null)
                                 _handlers[innerEventIn] = [];
+                            let proxyHandler = function () {
+                                let args = [];
+                                for (let i = 0; i < arguments.length; i++) {
+                                    args.push(arguments[i]);
+                                }
 
-                            let proxyHandler = (function (innerEventIn, component) { // a closure is created
-                                return function () {
-                                    let args = [];
-                                    for (let i = 0; i < arguments.length; i++) {
-                                        args.push(arguments[i]);
-                                    }
-
-                                    //append RepeaterEventArgs to event
-                                    if (component.parentType && component.parentType == 'repeater') {
-                                        args = args.concat(
-                                            [
-                                                new RepeaterEventArgs(
-                                                    component.parent.rowItems[component.repeaterIndex],
-                                                    component.parent.dataProvider[component.repeaterIndex],
-                                                    component.repeaterIndex
-                                                )
-                                            ]
-                                        );
-                                    }
-                                    args[0].originalContext = this;
-                                    handler.events[innerEventIn].apply(component.proxyMaybe, args);
-                                };
-                            })(innerEventIn, _self);
+                                //append RepeaterEventArgs to event
+                                if (_self.parentType && _self.parentType == 'repeater') {
+                                    args = args.concat(
+                                        [
+                                            new RepeaterEventArgs(
+                                                _self.parent.rowItems[_self.repeaterIndex],
+                                                _self.parent.dataProvider[_self.repeaterIndex],
+                                                _self.repeaterIndex
+                                            )
+                                        ]
+                                    );
+                                }
+                                args[0].originalContext = this;
+                                handler.events[innerEventIn].apply(_self.proxyMaybe, args);
+                            };
+                            
                             _handlers[innerEventIn].push({
                                 "proxyHandler": proxyHandler,
                                 "originalHandler": handler.events[innerEventIn]
@@ -922,7 +920,7 @@ var Component = function (_props) {
                         }
                     }
                 }
-            });
+            }
         }
     };
 
