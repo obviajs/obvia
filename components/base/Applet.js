@@ -143,7 +143,16 @@ var Applet = function (_props) {
         }
         EventDispatcher.listen(cmps, eventTypesJoined, _proxyHandler);
         //cmp.on(eventTypesJoined, _proxyHandler);
-        _app.addBehaviors(cmps, behaviors, recurse);
+        let len = cmps.length;
+        for (let i = 0; i < len; i++) {
+            let cmp = cmps[i];
+            _app.addBehaviors(cmp, behaviors, recurse);
+            if (recurse && !cmp.hasInternalComponents) {
+                for (let cid in cmp.children) {
+                    this.addBehaviors(cmp.children[cid], behaviors);
+                }
+            }
+        }
     };
     
     let _proxyHandler = function (e) {
