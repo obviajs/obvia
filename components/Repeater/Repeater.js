@@ -357,7 +357,7 @@ var Repeater = function(_props, _hideComponents=false)
             if (e.oldValue != null && e.newValue != null) {
                 //toRefresh = [parseInt(e.property)];
                 //te shtohet param e
-                _debouncedLengthChanged();
+                _debouncedLengthChanged(e);
             }
         }
     };
