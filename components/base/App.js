@@ -117,7 +117,7 @@ var App = function(_props){
             historyBehaviors[HistoryEventType.HISTORY_UNDONE] = "HISTORY_UNDONE";
             historyBehaviors[HistoryEventType.HISTORY_REDONE] = "HISTORY_REDONE";
             historyBehaviors[HistoryEventType.HISTORY_STEP_ADDED] = "HISTORY_STEP_ADDED";
-            _self.addBehaviors(_history, historyBehaviors, false);
+            _self.addBehaviors(_history, historyBehaviors);
         }
         let defaultBehaviors = {
             "InactivityDetected": "APP_INACTIVE",
@@ -127,7 +127,7 @@ var App = function(_props){
             "beforeunload": "APP_UNLOADED"
         };
    
-        _self.addBehaviors(_self, defaultBehaviors, false);
+        _self.addBehaviors(_self, defaultBehaviors);
     };
 
     _behaviorimplementations[_guid]["APP_UNLOADED"] = function(e) {
@@ -374,7 +374,7 @@ var App = function(_props){
     };
     let _delayUpdateHash = debounce(_updateHash, 2000);
 
-    this.addBehaviors = function (cmps, behaviors, recurse = true) {
+    this.addBehaviors = function (cmps, behaviors) {
         var cmps = isObject(cmps) && !cmps.forEach?[cmps]:cmps;
         let len = cmps.length;
         for (let i = 0; i < len; i++) { 
@@ -406,23 +406,22 @@ var App = function(_props){
                 _eventTypesJoined += " " + b;
             }
             cmp.on(_eventTypesJoined, _event2behavior);
-            if (recurse && !cmp.hasInternalComponents) {
-                for (let cid in cmp.children) {
-                    _eventTypesJoined += " " + this.addBehaviors(cmp.children[cid], behaviors);
-                }
-            }
         }
     };
     
-    this.removeBehaviors = function (cmp, behaviors, recurse = true) {
-        if (_behaviors[cmp.domID] != null)
-            for (let b in behaviors) {
-                delete _behaviors[cmp.domID][b];
-            }
-        if (recurse) {
-            for (let cid in cmp.children) {
-                this.removeBehaviors(cmp.children[cid], behaviors);
-            }
+    this.removeBehaviors = function (cmps, behaviors) {
+        var cmps = isObject(cmps) && !cmps.forEach?[cmps]:cmps;
+        let len = cmps.length;
+        for (let i = 0; i < len; i++) {
+            let cmp = cmps[i];
+            if (_behaviors[cmp.domID] != null) {
+                let _eventTypesJoined = "";
+                for (let b in behaviors) {
+                    delete _behaviors[cmp.domID][b];
+                    _eventTypesJoined += " " + b;
+                }
+                //cmp.off(_eventTypesJoined.trim().split(" "), _event2behavior);
+            } 
         }
     };
     

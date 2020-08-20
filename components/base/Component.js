@@ -167,9 +167,9 @@ var Component = function (_props) {
             if (!_ownerDocument || _ownerDocument != v) {
                 _ownerDocument = v;
                 Component.ready(this, function (element) {
-                    _self.trigger('afterAttach');
+                    _self.proxyMaybe.trigger('afterAttach');
                 }, function (element) {
-                    _self.trigger('detached');
+                    _self.proxyMaybe.trigger('detached');
                 }, _ownerDocument);
             }
         }
@@ -646,6 +646,7 @@ var Component = function (_props) {
     //register outside handlers
     //event handling
     this.on = function (eventType, fnc) {
+        eventType = eventType.trim();
         if (typeof fnc !== 'function') {
             throw Error("The specified parameter is not a callback");
         } else {
@@ -657,29 +658,33 @@ var Component = function (_props) {
                         if (eventType.trim() != "") {
                             if (_handlers[eventType] == null)
                                 _handlers[eventType] = [];
-                            let proxyHandler = function () {
-                                let args = [];
-                                for (let i = 0; i < arguments.length; i++) {
-                                    args.push(arguments[i]);
-                                }
+                            if (!this.hasListener(eventType, fnc)) {
+                                let proxyHandler = function () {
+                                    let args = [];
+                                    for (let i = 0; i < arguments.length; i++) {
+                                        args.push(arguments[i]);
+                                    }
 
-                                if (_self.parentType == 'repeater') {
-                                    args = args.concat([
-                                        new RepeaterEventArgs(
-                                            _self.parent.rowItems[_self.repeaterIndex],
-                                            _self.parent.dataProvider[_self.repeaterIndex],
-                                            _self.repeaterIndex
-                                        )
-                                    ]);
-                                }
-                                //console.log(_self.$el.attr('id'), arguments[0]);
-                                return fnc.apply(_self.proxyMaybe, args);
-                            };
-                            _handlers[eventType].push({
-                                "proxyHandler": proxyHandler,
-                                "originalHandler": fnc
-                            });
-                            this.$el.on(eventType, proxyHandler);
+                                    if (_self.parentType == 'repeater') {
+                                        args = args.concat([
+                                            new RepeaterEventArgs(
+                                                _self.parent.rowItems[_self.repeaterIndex],
+                                                _self.parent.dataProvider[_self.repeaterIndex],
+                                                _self.repeaterIndex
+                                            )
+                                        ]);
+                                    }
+                                    //console.log(_self.$el.attr('id'), arguments[0]);
+                                    return fnc.apply(_self.proxyMaybe, args);
+                                };
+                                _handlers[eventType].push({
+                                    "proxyHandler": proxyHandler,
+                                    "originalHandler": fnc
+                                });
+                                this.$el.on(eventType, proxyHandler);
+                            } else { 
+                                console.log("Tried to add a listener that was previously added.");
+                            }                            
                         }
                     }
                 } else
@@ -722,6 +727,11 @@ var Component = function (_props) {
         }
     };
 
+    this.hasListener = function (eventType, fnc) {
+        let found = getMatching(_handlers[eventType], "originalHandler", fnc, true);
+        return found.objects.length > 0;
+    };
+    
     this.getBindingExpression = function (property) {
         let match = getMatching(_bindings, "property", property, true);
         let expression = null;
@@ -937,9 +947,9 @@ var Component = function (_props) {
     //execute functions before component attached on dom
     if (_ownerDocument) {
         Component.ready(this, function (element) {
-            _self.trigger('afterAttach');
+            _self.proxyMaybe.trigger('afterAttach');
         }, function (element) {
-            _self.trigger('detached');
+            _self.proxyMaybe.trigger('detached');
         }, _ownerDocument);
     }
 
