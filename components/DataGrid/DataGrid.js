@@ -287,34 +287,34 @@ var DataGrid = function(_props)
         alert("stub for columnSort :"+columnIndex);
     };
 
-    this.createHeader = function () 
-    {
+    this.createHeader = function () {
         let headerHtml = "<tr>";
         let hi = 0;
-        if(_showRowIndex){
+        if (_showRowIndex) {
             headerHtml += "<th>#</th>";
         }
         headerHtml += "</tr>";
         let $header = $(headerHtml);
-        let sortDirFADic = {"asc":"down", "desc":"up"};
+        let sortDirFADic = { "asc": "down", "desc": "up" };
         let colElements = new Array(_columns.length);
-        for (let columnIndex=0;columnIndex<_columns.length;columnIndex++) {
+        for (let columnIndex = 0; columnIndex < _columns.length; columnIndex++) {
             let column = _columns[columnIndex] = new DataGridColumn(_columns[columnIndex]);
             
-            $th = $("<th id='head_"+hi+"'>"+column.description+(column.sortable ? "<span class='fa fa-caret-"+(sortDirFADic[column.sortDirection.toLowerCase()])+"'></span></a>":"")+"</th>");    
-            $th.bind('click', 
-            (function(hIndex, column){
-                return (function(e) { // a closure is created
-                    _self.headerClickHandler.call(_self, e, hIndex, column);
-                    });	
-            })(hi, column));
+            $th = $("<th id='head_" + hi + "'>" + column.description + (column.sortable ? "<span class='fa fa-caret-" + (sortDirFADic[column.sortDirection.toLowerCase()]) + "'></span></a>" : "") + "</th>");
+            $th.bind('click',
+                (function (hIndex, column) {
+                    return (function (e) { // a closure is created
+                        _self.headerClickHandler.call(_self, e, hIndex, column);
+                    });
+                })(hi, column));
             //put elements in an array so jQuery will use documentFragment which is faster
             colElements[columnIndex] = $th;
-            ++hi;  
+            ++hi;
         }
         $header.append(colElements);
         this.$header.append($header);
-    },
+    };
+    
     this.cellEdit = function(rowIndex, columnIndex)
     {
         let e = jQuery.Event('cellEdit');

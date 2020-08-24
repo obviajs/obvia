@@ -181,6 +181,10 @@ var Modal = function (_props) {
                                 id: "modalBody",
                                 type: ContainerType.NONE,
                                 classes: ["modal-body"],
+                                css: {
+                                    "overflow-y": "auto",
+                                    "height": "80vh"
+                                },
                                 components: _props.components.modalBody
                             }
                         },
