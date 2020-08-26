@@ -50,7 +50,8 @@
                 "GaiaAPI_forms",
                 "GaiaAPI_DV_forms"
             ]).then(function () {
-                rjs.define("./examples/ApiClient/example.js", "ApiClientExample");
+                rjs.define("./examples/cache/example.js", "api_client_cache");
+                //rjs.define("./examples/ApiClient/example.js", "ApiClientExample");
                 //rjs.define("./examples/wizard/example.js", "wizardExample");
                 //rjs.define("./examples/Validation/example.js", "Validation");
                 //rjs.define("./examples/Validation/repeaterExample.js", "Validation");
@@ -107,10 +108,8 @@
             // rjs.define("./examples/HierachicalTree/example.js", "HierachicalTree");
             rjs.define("lib/yaml.js", "yaml");
             rjs.define("./oxana/ApiClientGen/ApiClient.js", "ApiClient");
-            rjs
-                .define("./oxana/ApiClientGen/ApiClientGen.js", "ApiClientGen");
-            rjs.define(
-                "./oxana/ApiClientGen/OAMethod.js", "OAMethod");
+            rjs.define("./oxana/ApiClientGen/ApiClientGen.js", "ApiClientGen");
+            rjs.define("./oxana/ApiClientGen/OAMethod.js", "OAMethod");
             rjs.define("./oxana/GaiaAPI/GaiaAPI_Utils.js",
                 "GaiaAPI_Utils");
             //rjs.define('./examples/CreditCard/example.js', "CreditCard");

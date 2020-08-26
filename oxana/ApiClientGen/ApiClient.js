@@ -2,13 +2,15 @@ var ApiClient = function (_props) {
     this.$el = $(this);
     let _defaultParams = {
         url: "https://cors-anywhere.herokuapp.com/pastebin.com/raw/tSKLhXA5",
-        timeout: 50000,
+        timeout: 1000,
         sendCookies: false,
         cache: false,
         queryParams: {},
         headers: {},
         batching: false,
-        batchUrl: ""
+        batchUrl: "",
+        retry: true,
+        retryProps: { base: 2, exponent: 2, factor: 100, maxRetries: 2}
     };
     _props = extend(false, false, _defaultParams, _props);
     let _timeout = _props.timeout;
@@ -24,6 +26,17 @@ var ApiClient = function (_props) {
     let _body = {};
     let _tbody = null;
     let _self = this;
+
+    let _base = _props.retryProps.base;
+	let _exponent = _props.retryProps.exponent;
+	let _factor = _props.retryProps.factor;
+	let _retryTimeOut;
+	let _retriesCount = 0;
+    let _timeDisconnected;
+    let _maxRetries = _props.retryProps.maxRetries;
+    //we might want to persist/send to server this for later inspection/statistics
+    let _connTimeLine = [];
+    let _retry = _props.retry;
 
     let _batchRequests = [];
     let _batchBody = [];
@@ -173,7 +186,21 @@ var ApiClient = function (_props) {
             _pathParams = p;
         return this;
     };
+    
+    let _resetRetry = function () {
+        if (_retry && _retriesCount > 0) {
+            _base = _props.retryProps.base;
+            if (_retryTimeOut != null) {
+                clearTimeout(_retryTimeOut);
+            }
+            _retriesCount = 0;
+            _connTimeLine.push({ disconnectedAt: _timeDisconnected, connectedAt: new Date() });
+            _timeDisconnected = null;
+        }    
+    };
+
     let _request = function (url, method, responseType = "json") {
+        let originalRequestArgs = arguments;
         return new Promise((resolve, reject) => {
             if (method.toUpperCase() === 'GET' && _cache === false) {
                 _queryParams['r'] = Math.random();
@@ -186,6 +213,7 @@ var ApiClient = function (_props) {
             _xhr.timeout = _timeout;
             // listen for `onload` event
             _xhr.onload = () => {
+                _resetRetry();
                 // process response
                 let ro = { "status": _xhr.status, "response": _xhr.response || _xhr.responseText };
                 resolve(ro);
@@ -212,10 +240,26 @@ var ApiClient = function (_props) {
                 // event.total is only available if server sends `Content-Length` header
                 console.log(`Downloaded ${event.loaded} of ${event.total}`);
             };
-            _xhr.ontimeout = () => reject({
-                status: -1,
-                statusText: "request timeout"
-            });
+            
+            _xhr.ontimeout = () => {
+                if (_timeDisconnected == null) {
+                    _timeDisconnected = new Date();
+                }
+                if (_retry && _retriesCount < _maxRetries) {
+                    ++_retriesCount;
+                    _base = Math.pow(_base, _exponent);
+                    _retryTimeOut = setTimeout(function () {
+                        _request.apply(_self, originalRequestArgs).then((ro)=>resolve(ro)).catch((ro)=>reject(ro));
+                    }, _base * _factor);
+                } else {
+                    _resetRetry();
+                    reject({
+                        status: -1,
+                        statusText: "Request timed out."
+                    });
+                }
+            };
+           
             _xhr.onreadystatechange = function () {
                 if (_xhr.readyState == 1) {
                     console.log('Request started.');
@@ -340,6 +384,22 @@ var ApiClient = function (_props) {
         return url;
     };
     
+    Object.defineProperty(this, "connTimeLine",
+	{
+		get: function connTimeLine() {
+			return _connTimeLine;
+		}
+    });
+    
+    Object.defineProperty(this, "retry",
+    {
+        get: function retry() {
+            return _retry;
+        },
+        set: function retry(v) {
+            _retry = v;
+        }
+    });
     //getResponseHeader('Content-Type');
     //xhr.getAllResponseHeaders();
 };
