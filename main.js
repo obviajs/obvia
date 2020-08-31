@@ -1,5 +1,6 @@
 var flowerCM = window.flowerCM || {};
 //base Components
+rjs.define("lib/Poolable.js", "Poolable");
 rjs.define("lib/EventDispatcher.js", "EventDispatcher");
 rjs.define("lib/NumberUtils.js", "NumberUtils");
 rjs.define("./components/base/EnvType.js", "EnvType");
@@ -217,6 +218,7 @@ rjs.define("./components/Tree/css/tree-default.css", "tree_default_css");
 rjs.define("./components/SideNav/css/sideNav.css", "sideNav_css");
 rjs.require(["EventDispatcher"]).then(function () {
     rjs.require([
+        "Poolable",
         "AutoObject",
         "TwoWayMap",
         "NumberUtils",

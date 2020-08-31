@@ -36,7 +36,8 @@ var ApiClientGen = function (_props) {
         });
 {paths}
 {pathInstances}
-    }`;
+    };
+    Poolable.call({apiTitle});`;
     let pathTemplate = `\tvar {path} = function(apiClient) { 
         apiClient = apiClient || new ApiClient();
         /*{typeMap}*/
@@ -143,8 +144,9 @@ var ApiClientGen = function (_props) {
                                     let memberTypeInfo = typeInfo.properties[prop];
                                     if (typeNames.indexOf(memberTypeInfo.title) < 0) {
                                         let t = _parseType(oas, memberTypeInfo);
-                                        if (t.typeNames.length > 0)
+                                        if (t.typeNames.length > 0) {                                            
                                             typeNames.splicea(typeNames.length, 0, t.typeNames);
+                                        }
                                         types += t.types;
                                     }
                                     methodDoc += "\t\t* @param {" + memberTypeInfo.title + "} " + prop + " " + typeInfo.properties[prop].description + "\r\n";                              
@@ -166,13 +168,16 @@ var ApiClientGen = function (_props) {
                                 wrapParams += "\"" + prop + "\":" + prop;
                             }
                             objBody = wrapParams = "{" + wrapParams + "}";
-                        } else if (requestBodyParamMode == 1) {
-                            let props = Object.keys(typeInfo.properties);
-                            if (props.length == 1 && 1==2) {
+                        } else if (requestBodyParamMode == 1 || typeInfo.type == "array") {
+                            let props;
+                            if (isObject(typeInfo.properties))
+                                props = Object.keys(typeInfo.properties);
+                            
+                            if (props !=null && props.length == 1) {
                                 typeInfo = typeInfo.properties[props[0]];
                                 typeInfo.title = typeInfo.title || props[0];
                                 objBody = '{"'+typeInfo.title+'":'+ typeInfo.title +'}';
-                            } else if (((typeInfo.type == "object" && typeDefined) || typeInfo.type == "array") && 1==2) {
+                            } else if (((typeInfo.type == "object" && typeDefined) || typeInfo.type == "array")) {
                                 objBody = '{"'+typeInfo.title+'":'+ typeInfo.title +'}';
                             }
                             else { 
@@ -246,7 +251,8 @@ var ApiClientGen = function (_props) {
     let r = ArrayEx.apply(this, arguments);
     r.memberType = {allowedTypes}; 
     return r;
-}`;
+};`;
+    let subTypes = {};
     //TODO: Add Validation Ex:minimum, maximum for number & pattern for string
     /**
      * 
@@ -277,8 +283,10 @@ var ApiClientGen = function (_props) {
                         myTypeNames.splicea(myTypeNames.length, 0, r.typeNames);
                     }
                 }
+                subTypes[propName] = myTypeNames;
                 types += _typeTemplate.formatUnicorn({ "jsDoc": jsDoc, "typeName": propName, "properties": properties }) + "\r\n";
-            }
+            } else
+                myTypeNames = subTypes[propName];
         } else if (typeInfo.type == "array") {
             let allowedTypes = [];
             if (typeInfo.items.oneOf) {
@@ -312,13 +320,15 @@ var ApiClientGen = function (_props) {
             typeInfo = getChainValue(oas, typeChain);
             description = typeInfo.description;
             jsType = typeChain.last();
+            propName = propName || typeInfo.title;
+            
+            let r = _parseType(oas, typeInfo, propName);
+            if (r.typeNames.length > 0) {
+                myTypeNames.splicea(myTypeNames.length, 0, r.typeNames);
+            }
             if (typeNames.indexOf(propName) < 0) {
-                let r = _parseType(oas, typeInfo, propName);
                 types += r.types.length > 0 ? r.types + "\r\n" : "";
-                //+ _typeTemplate.formatUnicorn({"jsDoc":r.jsDoc, "typeName": propName, "properties":r.properties});
-                if (r.typeNames.length > 0) {
-                    myTypeNames.splicea(myTypeNames.length, 0, r.typeNames);
-                }
+                //+ _typeTemplate.formatUnicorn({"jsDoc":r.jsDoc, "typeName": propName, "properties":r.properties});               
             }
         }
         properties = _propTemplate.formatUnicorn({ "prop": propName });
