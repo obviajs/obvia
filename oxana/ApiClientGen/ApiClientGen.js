@@ -22,7 +22,7 @@ var ApiClientGen = function (_props) {
         });
     };    
     
-    let apiTemplate = `var {apiTitle} = function(){
+    let apiTemplate = `\tvar {apiTitle} = function(){
         let _server = "{server}";
         Object.defineProperty(this, "server", {
             get: function server() {
@@ -176,9 +176,11 @@ var ApiClientGen = function (_props) {
                             if (props !=null && props.length == 1) {
                                 typeInfo = typeInfo.properties[props[0]];
                                 typeInfo.title = typeInfo.title || props[0];
-                                objBody = '{"'+typeInfo.title+'":'+ typeInfo.title +'}';
+                                //objBody = '{"'+typeInfo.title+'":'+ typeInfo.title +'}';
+                                objBody = typeInfo.title;
                             } else if (((typeInfo.type == "object" && typeDefined) || typeInfo.type == "array")) {
-                                objBody = '{"'+typeInfo.title+'":'+ typeInfo.title +'}';
+                                //objBody = '{"'+typeInfo.title+'":'+ typeInfo.title +'}';
+                                objBody = typeInfo.title;
                             }
                             else { 
                                 objBody = typeInfo.title;
@@ -230,7 +232,7 @@ var ApiClientGen = function (_props) {
             let pathName = arrPath.last();
             let basePath = (url[url.length - 1] != '/' && path[0] != '/' ? '/' : '') + path;
             strClosures += pathTemplate.formatUnicorn({ "path": pathName, "methods": strMethods, "basePath": basePath }) + "\r\n";
-            pathInstances += `\t this.${pathName}Client = new ${pathName}();\r\n`;
+            pathInstances += `\t\tthis.${pathName}Client = new ${pathName}();\r\n`;
         }
         let apiSrc = types +"\r\n" + apiTemplate.formatUnicorn({ "apiTitle": apiTitle.replace(/ /g, ''), "paths": strClosures, "pathInstances": pathInstances, "server": url});
         return { "apiTitle": apiTitle.replace(/ /g, ''), "apiSrc": apiSrc };
@@ -244,6 +246,7 @@ var ApiClientGen = function (_props) {
         _props = _props || {};
 {properties}
     };`;
+
     let _propDocTemplate = "\t* @property {{jsType}}  {prop}               - {description}\r\n";
     let _propTemplate = "\t\tthis.{prop} = _props.{prop};\r\n";
     let _arrTypeTemplate = `var {typeName} = function()
@@ -253,6 +256,22 @@ var ApiClientGen = function (_props) {
     return r;
 };`;
     let subTypes = {};
+
+    let _freeFormTemplate = `
+    /**
+{freeFormDoc}
+{jsDoc}
+    */
+    var {typeName} = function(_props){
+        _props = _props || {};
+{properties}
+        for(let prop in _props){
+            if(!this.hasOwnProperty(prop)){
+                this[prop] = _props[prop];
+            }
+        }
+    };`;
+    let freeFormDoc = "\t* @typedef {Object.<string, {childType}>} {type}";
     //TODO: Add Validation Ex:minimum, maximum for number & pattern for string
     /**
      * 
@@ -262,7 +281,7 @@ var ApiClientGen = function (_props) {
     let _parseType = function (oas, typeInfo, propName) {
         let jsDoc = "";
         let properties = "";
-        
+        let freeFormDocInst = "";
         let jsType = _oasjsMap[typeInfo.type];
         if (!jsType)
             jsType = typeInfo.type;
@@ -283,8 +302,21 @@ var ApiClientGen = function (_props) {
                         myTypeNames.splicea(myTypeNames.length, 0, r.typeNames);
                     }
                 }
+                if (typeInfo.additionalProperties) {
+                    for (let prop in typeInfo.additionalProperties) {
+                        if (prop == "$ref") {
+                            let r = _parseType(oas, typeInfo.additionalProperties);
+                            //jsDoc += r.jsDoc;
+                            types += r.types.length > 0 ? r.types + "\r\n" : "";
+                            if (r.typeNames.length > 0) {
+                                myTypeNames.splicea(myTypeNames.length, 0, r.typeNames);
+                            }
+                            freeFormDocInst = freeFormDoc.formatUnicorn({ "childType": r.typeName, "type": propName});
+                        }
+                    }                    
+                }
                 subTypes[propName] = myTypeNames;
-                types += _typeTemplate.formatUnicorn({ "jsDoc": jsDoc, "typeName": propName, "properties": properties }) + "\r\n";
+                types += (typeInfo.additionalProperties ? _freeFormTemplate : _typeTemplate).formatUnicorn({ "jsDoc": jsDoc, "typeName": propName, "properties": properties, "freeFormDoc": freeFormDocInst}) + "\r\n";
             } else
                 myTypeNames = subTypes[propName];
         } else if (typeInfo.type == "array") {
@@ -320,7 +352,7 @@ var ApiClientGen = function (_props) {
             typeInfo = getChainValue(oas, typeChain);
             description = typeInfo.description;
             jsType = typeChain.last();
-            propName = propName || typeInfo.title;
+            propName = propName || typeInfo.title || jsType;
             
             let r = _parseType(oas, typeInfo, propName);
             if (r.typeNames.length > 0) {
@@ -333,6 +365,6 @@ var ApiClientGen = function (_props) {
         }
         properties = _propTemplate.formatUnicorn({ "prop": propName });
         jsDoc = _propDocTemplate.formatUnicorn({ "jsType": jsType, "prop": propName, "description": description });
-        return { "properties": properties, "jsDoc": jsDoc, "types": types, "typeNames": myTypeNames };
+        return { "properties": properties, "jsDoc": jsDoc, "types": types, "typeNames": myTypeNames, "typeName": propName};
     };
 };
