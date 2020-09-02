@@ -1,10 +1,80 @@
 
     /**
-	* @property {Number}  status_code               - Response status code
-	* @property {String}  status_description               - Response description
+	* @property {Number}  can_create               - Can Create
+	* @property {Number}  can_assign               - Can Assing
+	* @property {Number}  can_delete               - Can Delete
+	* @property {Number}  can_edit               - Can Edit
+	* @property {Number}  can_view               - Can View
+	* @property {Number}  view_all               - Can View All
+	* @property {Number}  view_group_cases               - Can View Group Cases
 
     */
-   var responseStatus = function(_props){
+   var status = function(_props){
+    _props = _props || {};
+    this.can_create = _props.can_create;
+    this.can_assign = _props.can_assign;
+    this.can_delete = _props.can_delete;
+    this.can_edit = _props.can_edit;
+    this.can_view = _props.can_view;
+    this.view_all = _props.view_all;
+    this.view_group_cases = _props.view_group_cases;
+
+};
+
+
+
+/**
+* @typedef {Object.<string, status>} process_role
+
+*/
+var process_role = function(_props){
+    _props = _props || {};
+
+    for(let prop in _props){
+        if(!this.hasOwnProperty(prop)){
+            this[prop] = new status(_props[prop]);
+        }
+    }
+};
+
+
+
+/**
+* @typedef {Object.<string, process_role>} process
+
+*/
+var process = function(_props){
+    _props = _props || {};
+
+    for(let prop in _props){
+        if(!this.hasOwnProperty(prop)){
+            this[prop] = new process_role(_props[prop]);
+        }
+    }
+};
+
+
+
+/**
+* @typedef {Object.<string, process>} user_processes
+
+*/
+var user_processes = function(_props){
+    _props = _props || {};
+
+    for(let prop in _props){
+        if(!this.hasOwnProperty(prop)){
+            this[prop] = new process(_props[prop]);
+        }
+    }
+};
+
+/**
+* @property {Number}  status_code               - Response status code
+* @property {String}  status_description               - Response description
+
+*/
+var responseStatus = function(_props){
     _props = _props || {};
     this.status_code = _props.status_code;
     this.status_description = _props.status_description;
@@ -12,131 +82,61 @@
 };
 
 /**
-* @property {Number}  id_status_new               - Users Process Role New Status
+* @property {Number}  at_user_status_new               - Process Role New Status
 
 */
-var at_user_process_role_status_new = function(_props){
+var at_status_init = function(_props){
     _props = _props || {};
-    this.id_status_new = _props.id_status_new;
+    this.at_user_status_new = _props.at_user_status_new;
 
-};
-
-
-var id_status_init = function()
-{
-let r = ArrayEx.apply(this, arguments);
-r.memberType = ["at_user_process_role_status_new"]; 
-return r;
 };
 
 
 
 /**
-* @property {id_status_init}  id_status_init               - Array of User Process Role Statuses
+* @typedef {Object.<string, at_status_init>} at_process_role
 
 */
-var at_user_process_role_status_init = function(_props){
+var at_process_role = function(_props){
     _props = _props || {};
-    this.id_status_init = _props.id_status_init;
 
-};
-
-
-var id_process_role = function()
-{
-let r = ArrayEx.apply(this, arguments);
-r.memberType = ["at_user_process_role_status_init","at_user_process_role_status_new"]; 
-return r;
+    for(let prop in _props){
+        if(!this.hasOwnProperty(prop)){
+            this[prop] = new at_status_init(_props[prop]);
+        }
+    }
 };
 
 
 
 /**
-* @property {id_process_role}  id_process_role               - Array of User Process Roles
+* @typedef {Object.<string, at_process_role>} at_process
 
 */
-var at_user_process_roles = function(_props){
+var at_process = function(_props){
     _props = _props || {};
-    this.id_process_role = _props.id_process_role;
 
-};
-
-
-var id_process = function()
-{
-let r = ArrayEx.apply(this, arguments);
-r.memberType = ["at_user_process_roles","at_user_process_role_status_init","at_user_process_role_status_new"]; 
-return r;
+    for(let prop in _props){
+        if(!this.hasOwnProperty(prop)){
+            this[prop] = new at_process_role(_props[prop]);
+        }
+    }
 };
 
 
 
 /**
-* @property {id_process}  id_process               - Array of Processes
-
-*/
-var user_processes = function(_props){
-    _props = _props || {};
-    this.id_process = _props.id_process;
-
-};
-
-
-var process_user_rights = function()
-{
-let r = ArrayEx.apply(this, arguments);
-r.memberType = ["user_processes","at_user_process_roles","at_user_process_role_status_init","at_user_process_role_status_new"]; 
-return r;
-};
-
-
-
-/**
-* @property {process_user_rights}  process_user_rights               - Array of Process User Rights
-
-*/
-var process_user_rights = function(_props){
-    _props = _props || {};
-    this.process_user_rights = _props.process_user_rights;
-
-};
-var id_process = function()
-{
-let r = ArrayEx.apply(this, arguments);
-r.memberType = ["at_user_process_roles","at_user_process_role_status_init","at_user_process_role_status_new"]; 
-return r;
-};
-
-
-
-/**
-* @property {id_process}  id_process               - Array of Processes
+* @typedef {Object.<string, at_process>} at_user_processes
 
 */
 var at_user_processes = function(_props){
     _props = _props || {};
-    this.id_process = _props.id_process;
 
-};
-
-
-var allowed_transitions = function()
-{
-let r = ArrayEx.apply(this, arguments);
-r.memberType = ["at_user_processes","at_user_process_roles","at_user_process_role_status_init","at_user_process_role_status_new"]; 
-return r;
-};
-
-
-
-/**
-* @property {allowed_transitions}  allowed_transitions               - Array of Allowed Transitions
-
-*/
-var allowed_transitions = function(_props){
-    _props = _props || {};
-    this.allowed_transitions = _props.allowed_transitions;
-
+    for(let prop in _props){
+        if(!this.hasOwnProperty(prop)){
+            this[prop] = new at_process(_props[prop]);
+        }
+    }
 };
 
 /**
@@ -149,8 +149,13 @@ var responseObj = function(_props){
 
 };
 
-var GaiaAPI_process_users = function(){
-    let _server = "https://gaia.oxana.io/api";
+var GaiaAPI_process_users = function (_props) {
+    let _defaultParams = {
+        server: "https://gaia.oxana.io/api"
+    };
+
+    _props = extend(false, false, _defaultParams, _props);
+    let _server = _props.server, _apiClient = _props.apiClient ? _props.apiClient : new ApiClient();
     Object.defineProperty(this, "server", {
         get: function server() {
             return _server;
@@ -161,312 +166,239 @@ var GaiaAPI_process_users = function(){
             }
         }
     });
-var process_users = function(apiClient) { 
-    apiClient = apiClient || new ApiClient();
-    /*{typeMap}*/
-    
-    /**
-    *Get process_user
-    * @param {integer} id_user User id
-    * @returns {Promise} 
-    */
-    this.get = function(id_user){
-    let objQuery = {};
-    objQuery["id_user"] = id_user;
 
-    let objPath = {};
-
-    let objBody = null;
-    let requestContentType = "application/json";
-    let responses = {"200":{"responseType":"JSON","type":"responseStatus"},"400":{"responseType":"JSON","type":"responseStatus"},"404":{"responseType":"JSON","type":"responseStatus"},"500":{"responseType":"JSON","type":"responseStatus"}};
-    return new Promise((resolve, reject) =>
-    {
-            this.apiCall(objQuery, objBody, objPath, requestContentType, "get").then(function(resp){
-            if(responses[resp.status]){
-                let responseType = responses[resp.status].responseType.toLowerCase();
-                let ret;
-                switch(responseType)
-                {
-                    case "json":
-                        ret = JSON.parse(resp.response);
-                        break;
-                }
-                //TODO: convert to specified type
-                resolve(ret);
-            }else//unspecified http response code returned
-                reject();
-        }).catch(function(error){
-            reject(error);
-        });
+    Object.defineProperty(this, "apiClient", {
+        get: function apiClient() {
+            return _apiClient;
+        },
+        set: function apiClient(x) {
+            if (_apiClient != x) {
+                _apiClient = x;
+            }
+        }
     });
+    this.roleStatusRights = function (apiClient) {
+        apiClient = apiClient || _apiClient;
+        /*{typeMap}*/
+    
+        /**
+        *Returns all te rights (view/edit/delete/asign/create/view_all/view_group_cases)
+    for all the process's statuses the user have access.
+        * @param {integer} id_user User id
+        * @returns {Promise} 
+        */
+        this.get = function (id_user) {
+            let objQuery = {};
+
+            let objPath = {};
+            objPath["id_user"] = id_user;
+
+            let objBody = null;
+            let requestContentType = "application/json";
+            let responses = { "200": { "responseType": "JSON", "type": "user_processes" }, "404": { "responseType": "JSON", "type": "responseStatus" } };
+            return new Promise((resolve, reject) => {
+                this.apiCall(objQuery, objBody, objPath, requestContentType, "get").then(function (resp) {
+                    if (responses[resp.status]) {
+                        let responseType = responses[resp.status].responseType.toLowerCase();
+                        let ret;
+                        switch (responseType) {
+                            case "json":
+                                ret = isString(resp.response) ? JSON.parse(resp.response) : resp.response;
+                                ret = new (eval(responses[resp.status].type))(ret);
+                                break;
+                        }
+                        //TODO: convert to specified type
+                        resolve(ret);
+                    } else//unspecified http response code returned
+                        reject();
+                }).catch(function (error) {
+                    reject(error);
+                });
+            });
+        };
+    
+        OAMethod.call(this, apiClient);
+        this.basePath = _server + "/process_users/{id_user}/roleStatusRights";
     };
-    /**
-    *
-    * @param {integer} id_process_role process_role id
-    * @param {array} id_users user's id
-    * @returns {Promise} 
-    */
-    this.post = function(id_process_role,id_users){
-    let objQuery = {};
+    this.ownerStatusRights = function (apiClient) {
+        apiClient = apiClient || _apiClient;
+        /*{typeMap}*/
+    
+        /**
+        *Return data for all the processes, process's statuses and the rights
+    that role owner have in each status of processes he has access.
+        * @returns {Promise} 
+        */
+        this.get = function () {
+            let objQuery = {};
 
-    let objPath = {};
+            let objPath = {};
 
-    let objBody = {"id_process_role":id_process_role,"id_users":id_users};
-    let requestContentType = "application/x-www-form-urlencoded";
-    let responses = {"200":{"responseType":"JSON","type":"responseStatus"},"400":{"responseType":"JSON","type":"responseStatus"},"404":{"responseType":"JSON","type":"responseStatus"},"500":{"responseType":"JSON","type":"responseStatus"}};
-    return new Promise((resolve, reject) =>
-    {
-            this.apiCall(objQuery, objBody, objPath, requestContentType, "post").then(function(resp){
-            if(responses[resp.status]){
-                let responseType = responses[resp.status].responseType.toLowerCase();
-                let ret;
-                switch(responseType)
-                {
-                    case "json":
-                        ret = JSON.parse(resp.response);
-                        break;
-                }
-                //TODO: convert to specified type
-                resolve(ret);
-            }else//unspecified http response code returned
-                reject();
-        }).catch(function(error){
-            reject(error);
-        });
-    });
+            let objBody = null;
+            let requestContentType = "application/json";
+            let responses = { "200": { "responseType": "JSON", "type": "user_processes" }, "404": { "responseType": "JSON", "type": "responseStatus" } };
+            return new Promise((resolve, reject) => {
+                this.apiCall(objQuery, objBody, objPath, requestContentType, "get").then(function (resp) {
+                    if (responses[resp.status]) {
+                        let responseType = responses[resp.status].responseType.toLowerCase();
+                        let ret;
+                        switch (responseType) {
+                            case "json":
+                                ret = isString(resp.response) ? JSON.parse(resp.response) : resp.response;
+                                ret = new (eval(responses[resp.status].type))(ret);
+                                break;
+                        }
+                        //TODO: convert to specified type
+                        resolve(ret);
+                    } else//unspecified http response code returned
+                        reject();
+                }).catch(function (error) {
+                    reject(error);
+                });
+            });
+        };
+    
+        OAMethod.call(this, apiClient);
+        this.basePath = _server + "/process_users/ownerStatusRights";
     };
+    this.allowedTransitions = function (apiClient) {
+        apiClient = apiClient || _apiClient;
+        /*{typeMap}*/
     
-    OAMethod.call(this, apiClient);
-    this.basePath = _server + "/process_users";
-};
-var roleStatusRights = function(apiClient) { 
-    apiClient = apiClient || new ApiClient();
-    /*{typeMap}*/
+        /**
+        *Returns the allowed transitions of the process for the current user.
+        * @param {integer} id_user User id
+        * @returns {Promise} 
+        */
+        this.get = function (id_user) {
+            let objQuery = {};
+
+            let objPath = {};
+            objPath["id_user"] = id_user;
+
+            let objBody = null;
+            let requestContentType = "application/json";
+            let responses = { "200": { "responseType": "JSON", "type": "at_user_processes" }, "404": { "responseType": "JSON", "type": "responseStatus" } };
+            return new Promise((resolve, reject) => {
+                this.apiCall(objQuery, objBody, objPath, requestContentType, "get").then(function (resp) {
+                    if (responses[resp.status]) {
+                        let responseType = responses[resp.status].responseType.toLowerCase();
+                        let ret;
+                        switch (responseType) {
+                            case "json":
+                                ret = isString(resp.response) ? JSON.parse(resp.response) : resp.response;
+                                ret = new (eval(responses[resp.status].type))(ret);
+                                break;
+                        }
+                        //TODO: convert to specified type
+                        resolve(ret);
+                    } else//unspecified http response code returned
+                        reject();
+                }).catch(function (error) {
+                    reject(error);
+                });
+            });
+        };
     
-    /**
-    *Returns all te rights (view/edit/delete/asign/create/view_all/view_group_cases)
-for all the process's statuses the user have access.
-    * @param {integer} id_user User id
-    * @returns {Promise} 
-    */
-    this.get = function(id_user){
-    let objQuery = {};
-
-    let objPath = {};
-    objPath["id_user"] = id_user;
-
-    let objBody = null;
-    let requestContentType = "application/json";
-    let responses = {"200":{"responseType":"JSON","type":"process_user_rights"},"404":{"responseType":"JSON","type":"responseStatus"}};
-    return new Promise((resolve, reject) =>
-    {
-            this.apiCall(objQuery, objBody, objPath, requestContentType, "get").then(function(resp){
-            if(responses[resp.status]){
-                let responseType = responses[resp.status].responseType.toLowerCase();
-                let ret;
-                switch(responseType)
-                {
-                    case "json":
-                        ret = JSON.parse(resp.response);
-                        break;
-                }
-                //TODO: convert to specified type
-                resolve(ret);
-            }else//unspecified http response code returned
-                reject();
-        }).catch(function(error){
-            reject(error);
-        });
-    });
+        OAMethod.call(this, apiClient);
+        this.basePath = _server + "/process_users/{id_user}/allowedTransitions";
     };
+    this.processUserRight = function (apiClient) {
+        apiClient = apiClient || _apiClient;
+        /*{typeMap}*/
     
-    OAMethod.call(this, apiClient);
-    this.basePath = _server + "/process_users/{id_user}/roleStatusRights";
-};
-var ownerStatusRights = function(apiClient) { 
-    apiClient = apiClient || new ApiClient();
-    /*{typeMap}*/
+        /**
+        *Returns one specific right
+        * @param {integer} id_user User id
+        * @param {integer} id_process_case ID of process case
+        * @param {string} has_right User's specific role right
+        * @returns {Promise} 
+        */
+        this.get = function (id_user, id_process_case, has_right) {
+            let objQuery = {};
+            objQuery["has_right"] = has_right;
+
+            let objPath = {};
+            objPath["id_user"] = id_user;
+            objPath["id_process_case"] = id_process_case;
+
+            let objBody = null;
+            let requestContentType = "application/json";
+            let responses = { "200": { "responseType": "JSON", "type": "responseObj" }, "404": { "responseType": "JSON", "type": "responseStatus" } };
+            return new Promise((resolve, reject) => {
+                this.apiCall(objQuery, objBody, objPath, requestContentType, "get").then(function (resp) {
+                    if (responses[resp.status]) {
+                        let responseType = responses[resp.status].responseType.toLowerCase();
+                        let ret;
+                        switch (responseType) {
+                            case "json":
+                                ret = isString(resp.response) ? JSON.parse(resp.response) : resp.response;
+                                ret = new (eval(responses[resp.status].type))(ret);
+                                break;
+                        }
+                        //TODO: convert to specified type
+                        resolve(ret);
+                    } else//unspecified http response code returned
+                        reject();
+                }).catch(function (error) {
+                    reject(error);
+                });
+            });
+        };
     
-    /**
-    *Return data for all the processes, process's statuses and the rights
-that role owner have in each status of processes he has access.
-    * @returns {Promise} 
-    */
-    this.get = function(){
-    let objQuery = {};
-
-    let objPath = {};
-
-    let objBody = null;
-    let requestContentType = "application/json";
-    let responses = {"200":{"responseType":"JSON","type":"responseStatus"},"404":{"responseType":"JSON","type":"responseStatus"}};
-    return new Promise((resolve, reject) =>
-    {
-            this.apiCall(objQuery, objBody, objPath, requestContentType, "get").then(function(resp){
-            if(responses[resp.status]){
-                let responseType = responses[resp.status].responseType.toLowerCase();
-                let ret;
-                switch(responseType)
-                {
-                    case "json":
-                        ret = JSON.parse(resp.response);
-                        break;
-                }
-                //TODO: convert to specified type
-                resolve(ret);
-            }else//unspecified http response code returned
-                reject();
-        }).catch(function(error){
-            reject(error);
-        });
-    });
+        OAMethod.call(this, apiClient);
+        this.basePath = _server + "/process_users/{id_user}/{id_process_case}/processUserRight";
     };
+    this.processUserTransition = function (apiClient) {
+        apiClient = apiClient || _apiClient;
+        /*{typeMap}*/
     
-    OAMethod.call(this, apiClient);
-    this.basePath = _server + "/process_users/ownerStatusRights";
-};
-var allowedTransitions = function(apiClient) { 
-    apiClient = apiClient || new ApiClient();
-    /*{typeMap}*/
+        /**
+        *Returns one specific allowed transition
+        * @param {integer} id_user User id
+        * @param {integer} id_process_case ID of process case
+        * @returns {Promise} 
+        */
+        this.get = function (id_user, id_process_case) {
+            let objQuery = {};
+
+            let objPath = {};
+            objPath["id_user"] = id_user;
+            objPath["id_process_case"] = id_process_case;
+
+            let objBody = null;
+            let requestContentType = "application/json";
+            let responses = { "200": { "responseType": "JSON", "type": "responseObj" }, "404": { "responseType": "JSON", "type": "responseStatus" } };
+            return new Promise((resolve, reject) => {
+                this.apiCall(objQuery, objBody, objPath, requestContentType, "get").then(function (resp) {
+                    if (responses[resp.status]) {
+                        let responseType = responses[resp.status].responseType.toLowerCase();
+                        let ret;
+                        switch (responseType) {
+                            case "json":
+                                ret = isString(resp.response) ? JSON.parse(resp.response) : resp.response;
+                                ret = new (eval(responses[resp.status].type))(ret);
+                                break;
+                        }
+                        //TODO: convert to specified type
+                        resolve(ret);
+                    } else//unspecified http response code returned
+                        reject();
+                }).catch(function (error) {
+                    reject(error);
+                });
+            });
+        };
     
-    /**
-    *Returns the allowed transitions of the process for the current user.
-    * @param {integer} id_user User id
-    * @returns {Promise} 
-    */
-    this.get = function(id_user){
-    let objQuery = {};
-
-    let objPath = {};
-    objPath["id_user"] = id_user;
-
-    let objBody = null;
-    let requestContentType = "application/json";
-    let responses = {"200":{"responseType":"JSON","type":"allowed_transitions"},"404":{"responseType":"JSON","type":"responseStatus"}};
-    return new Promise((resolve, reject) =>
-    {
-            this.apiCall(objQuery, objBody, objPath, requestContentType, "get").then(function(resp){
-            if(responses[resp.status]){
-                let responseType = responses[resp.status].responseType.toLowerCase();
-                let ret;
-                switch(responseType)
-                {
-                    case "json":
-                        ret = JSON.parse(resp.response);
-                        break;
-                }
-                //TODO: convert to specified type
-                resolve(ret);
-            }else//unspecified http response code returned
-                reject();
-        }).catch(function(error){
-            reject(error);
-        });
-    });
+        OAMethod.call(this, apiClient);
+        this.basePath = _server + "/process_users/{id_user}/{id_process_case}/processUserTransition";
     };
-    
-    OAMethod.call(this, apiClient);
-    this.basePath = _server + "/process_users/{id_user}/allowedTransitions";
-};
-var processUserRight = function(apiClient) { 
-    apiClient = apiClient || new ApiClient();
-    /*{typeMap}*/
-    
-    /**
-    *Returns one specific right
-    * @param {integer} id_user User id
-    * @param {integer} id_process_case ID of process case
-    * @param {string} has_right User's specific role right
-    * @returns {Promise} 
-    */
-    this.get = function(id_user,id_process_case,has_right){
-    let objQuery = {};
-    objQuery["has_right"] = has_right;
 
-    let objPath = {};
-    objPath["id_user"] = id_user;
-    objPath["id_process_case"] = id_process_case;
-
-    let objBody = null;
-    let requestContentType = "application/json";
-    let responses = {"200":{"responseType":"JSON","type":"responseObj"},"404":{"responseType":"JSON","type":"responseStatus"}};
-    return new Promise((resolve, reject) =>
-    {
-            this.apiCall(objQuery, objBody, objPath, requestContentType, "get").then(function(resp){
-            if(responses[resp.status]){
-                let responseType = responses[resp.status].responseType.toLowerCase();
-                let ret;
-                switch(responseType)
-                {
-                    case "json":
-                        ret = JSON.parse(resp.response);
-                        break;
-                }
-                //TODO: convert to specified type
-                resolve(ret);
-            }else//unspecified http response code returned
-                reject();
-        }).catch(function(error){
-            reject(error);
-        });
-    });
-    };
-    
-    OAMethod.call(this, apiClient);
-    this.basePath = _server + "/process_users/{id_user}/{id_process_case}/processUserRight";
-};
-var processUserTransition = function(apiClient) { 
-    apiClient = apiClient || new ApiClient();
-    /*{typeMap}*/
-    
-    /**
-    *Returns one specific allowed transition
-    * @param {integer} id_user User id
-    * @param {integer} id_process_case ID of process case
-    * @returns {Promise} 
-    */
-    this.get = function(id_user,id_process_case){
-    let objQuery = {};
-
-    let objPath = {};
-    objPath["id_user"] = id_user;
-    objPath["id_process_case"] = id_process_case;
-
-    let objBody = null;
-    let requestContentType = "application/json";
-    let responses = {"200":{"responseType":"JSON","type":"responseObj"},"404":{"responseType":"JSON","type":"responseStatus"}};
-    return new Promise((resolve, reject) =>
-    {
-            this.apiCall(objQuery, objBody, objPath, requestContentType, "get").then(function(resp){
-            if(responses[resp.status]){
-                let responseType = responses[resp.status].responseType.toLowerCase();
-                let ret;
-                switch(responseType)
-                {
-                    case "json":
-                        ret = JSON.parse(resp.response);
-                        break;
-                }
-                //TODO: convert to specified type
-                resolve(ret);
-            }else//unspecified http response code returned
-                reject();
-        }).catch(function(error){
-            reject(error);
-        });
-    });
-    };
-    
-    OAMethod.call(this, apiClient);
-    this.basePath = _server + "/process_users/{id_user}/{id_process_case}/processUserTransition";
-};
-
- this.process_usersClient = new process_users();
- this.roleStatusRightsClient = new roleStatusRights();
- this.ownerStatusRightsClient = new ownerStatusRights();
- this.allowedTransitionsClient = new allowedTransitions();
- this.processUserRightClient = new processUserRight();
- this.processUserTransitionClient = new processUserTransition();
+    this.roleStatusRightsClient = new this.roleStatusRights();
+    this.ownerStatusRightsClient = new this.ownerStatusRights();
+    this.allowedTransitionsClient = new this.allowedTransitions();
+    this.processUserRightClient = new this.processUserRight();
+    this.processUserTransitionClient = new this.processUserTransition();
 
 };
 Poolable.call(GaiaAPI_process_users);

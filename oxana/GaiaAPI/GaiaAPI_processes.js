@@ -159,8 +159,13 @@ var user_team_members = function(_props){
 
 };
 
-var GaiaAPI_processes = function(){
-    let _server = "http://flower-gaia/api";
+var GaiaAPI_processes = function (_props) {
+    let _defaultParams = {
+        server: "https://gaia.oxana.io/api"
+    };
+
+    _props = extend(false, false, _defaultParams, _props);
+    let _server = _props.server, _apiClient = _props.apiClient ? _props.apiClient : new ApiClient();
     Object.defineProperty(this, "server", {
         get: function server() {
             return _server;
@@ -171,344 +176,348 @@ var GaiaAPI_processes = function(){
             }
         }
     });
-var processes = function(apiClient) { 
-    apiClient = apiClient || new ApiClient();
-    /*{typeMap}*/
+
+    Object.defineProperty(this, "apiClient", {
+        get: function apiClient() {
+            return _apiClient;
+        },
+        set: function apiClient(x) {
+            if (_apiClient != x) {
+                _apiClient = x;
+            }
+        }
+    });
+    this.processes = function (apiClient) {
+        apiClient = apiClient || _apiClient;
+        /*{typeMap}*/
     
-    /**
-    *This method returns the required process or all the processes
-    * @param {integer} id_process Process id
-    * @returns {Promise} 
-    */
-    this.get = function(id_process){
-    let objQuery = {};
-    objQuery["id_process"] = id_process;
+        /**
+        *This method returns the required process or all the processes
+        * @param {integer} id_process Process id
+        * @returns {Promise} 
+        */
+        this.get = function (id_process) {
+            let objQuery = {};
+            objQuery["id_process"] = id_process;
 
-    let objPath = {};
+            let objPath = {};
 
-    let objBody = null;
-    let requestContentType = "application/json";
-    let responses = {"200":{"responseType":"JSON","type":"response"},"404":{"responseType":"JSON","type":"responseStatus"},"500":{"responseType":"JSON","type":"responseStatus"}};
-    return new Promise((resolve, reject) =>
-    {
-            this.apiCall(objQuery, objBody, objPath, requestContentType, "get").then(function(resp){
-            if(responses[resp.status]){
-                let responseType = responses[resp.status].responseType.toLowerCase();
-                let ret;
-                switch(responseType)
-                {
-                    case "json":
-                        ret = JSON.parse(resp.response);
-                        break;
-                }
-                //TODO: convert to specified type
-                resolve(ret);
-            }else//unspecified http response code returned
-                reject();
-        }).catch(function(error){
-            reject(error);
-        });
-    });
-    };
-    /**
-    *This method creates a process
-    * @param {process} process The request body for post /processes 
-    * @returns {Promise} 
-    */
-    this.post = function(process){
-    let objQuery = {};
+            let objBody = null;
+            let requestContentType = "application/json";
+            let responses = { "200": { "responseType": "JSON", "type": "response" }, "404": { "responseType": "JSON", "type": "responseStatus" }, "500": { "responseType": "JSON", "type": "responseStatus" } };
+            return new Promise((resolve, reject) => {
+                this.apiCall(objQuery, objBody, objPath, requestContentType, "get").then(function (resp) {
+                    if (responses[resp.status]) {
+                        let responseType = responses[resp.status].responseType.toLowerCase();
+                        let ret;
+                        switch (responseType) {
+                            case "json":
+                                ret = isString(resp.response) ? JSON.parse(resp.response) : resp.response;
+                                ret = new (eval(responses[resp.status].type))(ret);
+                                break;
+                        }
+                        //TODO: convert to specified type
+                        resolve(ret);
+                    } else//unspecified http response code returned
+                        reject();
+                }).catch(function (error) {
+                    reject(error);
+                });
+            });
+        };
+        /**
+        *This method creates a process
+        * @param {process} process The request body for post /processes 
+        * @returns {Promise} 
+        */
+        this.post = function (process) {
+            let objQuery = {};
 
-    let objPath = {};
+            let objPath = {};
 
-    let objBody = {"process":process};
-    let requestContentType = "json";
-    let responses = {"200":{"responseType":"JSON","type":"process"},"404":{"responseType":"JSON","type":"responseStatus"},"500":{"responseType":"JSON","type":"responseStatus"}};
-    return new Promise((resolve, reject) =>
-    {
-            this.apiCall(objQuery, objBody, objPath, requestContentType, "post").then(function(resp){
-            if(responses[resp.status]){
-                let responseType = responses[resp.status].responseType.toLowerCase();
-                let ret;
-                switch(responseType)
-                {
-                    case "json":
-                        ret = JSON.parse(resp.response);
-                        break;
-                }
-                //TODO: convert to specified type
-                resolve(ret);
-            }else//unspecified http response code returned
-                reject();
-        }).catch(function(error){
-            reject(error);
-        });
-    });
-    };
-    /**
-    *This method deletes a process
-    * @param {integer} id_process Proces ID
-    * @returns {Promise} 
-    */
-    this.delete = function(id_process){
-    let objQuery = {};
-    objQuery["id_process"] = id_process;
+            let objBody = process;
+            let requestContentType = "json";
+            let responses = { "200": { "responseType": "JSON", "type": "process" }, "404": { "responseType": "JSON", "type": "responseStatus" }, "500": { "responseType": "JSON", "type": "responseStatus" } };
+            return new Promise((resolve, reject) => {
+                this.apiCall(objQuery, objBody, objPath, requestContentType, "post").then(function (resp) {
+                    if (responses[resp.status]) {
+                        let responseType = responses[resp.status].responseType.toLowerCase();
+                        let ret;
+                        switch (responseType) {
+                            case "json":
+                                ret = isString(resp.response) ? JSON.parse(resp.response) : resp.response;
+                                ret = new (eval(responses[resp.status].type))(ret);
+                                break;
+                        }
+                        //TODO: convert to specified type
+                        resolve(ret);
+                    } else//unspecified http response code returned
+                        reject();
+                }).catch(function (error) {
+                    reject(error);
+                });
+            });
+        };
+        /**
+        *This method deletes a process
+        * @param {integer} id_process Proces ID
+        * @returns {Promise} 
+        */
+        this.delete = function (id_process) {
+            let objQuery = {};
+            objQuery["id_process"] = id_process;
 
-    let objPath = {};
+            let objPath = {};
 
-    let objBody = null;
-    let requestContentType = "application/json";
-    let responses = {"200":{"responseType":"JSON","type":"recordsAffected"},"404":{"responseType":"JSON","type":"responseStatus"},"500":{"responseType":"JSON","type":"responseStatus"}};
-    return new Promise((resolve, reject) =>
-    {
-            this.apiCall(objQuery, objBody, objPath, requestContentType, "delete").then(function(resp){
-            if(responses[resp.status]){
-                let responseType = responses[resp.status].responseType.toLowerCase();
-                let ret;
-                switch(responseType)
-                {
-                    case "json":
-                        ret = JSON.parse(resp.response);
-                        break;
-                }
-                //TODO: convert to specified type
-                resolve(ret);
-            }else//unspecified http response code returned
-                reject();
-        }).catch(function(error){
-            reject(error);
-        });
-    });
-    };
+            let objBody = null;
+            let requestContentType = "application/json";
+            let responses = { "200": { "responseType": "JSON", "type": "recordsAffected" }, "404": { "responseType": "JSON", "type": "responseStatus" }, "500": { "responseType": "JSON", "type": "responseStatus" } };
+            return new Promise((resolve, reject) => {
+                this.apiCall(objQuery, objBody, objPath, requestContentType, "delete").then(function (resp) {
+                    if (responses[resp.status]) {
+                        let responseType = responses[resp.status].responseType.toLowerCase();
+                        let ret;
+                        switch (responseType) {
+                            case "json":
+                                ret = isString(resp.response) ? JSON.parse(resp.response) : resp.response;
+                                ret = new (eval(responses[resp.status].type))(ret);
+                                break;
+                        }
+                        //TODO: convert to specified type
+                        resolve(ret);
+                    } else//unspecified http response code returned
+                        reject();
+                }).catch(function (error) {
+                    reject(error);
+                });
+            });
+        };
     
-    OAMethod.call(this, apiClient);
-    this.basePath = _server + "/processes";
+        OAMethod.call(this, apiClient);
+        this.basePath = _server + "/processes";
+    };
+    this.getForms = function (apiClient) {
+        apiClient = apiClient || _apiClient;
+        /*{typeMap}*/
+    
+        /**
+        *This method returns the forms of the process
+        * @param {integer} id_process Proces ID
+        * @param {integer} id_role Role ID
+        * @param {integer} id_status Status ID
+        * @returns {Promise} 
+        */
+        this.get = function (id_process, id_role, id_status) {
+            let objQuery = {};
+            objQuery["id_role"] = id_role;
+            objQuery["id_status"] = id_status;
+
+            let objPath = {};
+            objPath["id_process"] = id_process;
+
+            let objBody = null;
+            let requestContentType = "application/json";
+            let responses = { "200": { "responseType": "JSON", "type": "result" }, "404": { "responseType": "JSON", "type": "responseStatus" }, "500": { "responseType": "JSON", "type": "responseStatus" } };
+            return new Promise((resolve, reject) => {
+                this.apiCall(objQuery, objBody, objPath, requestContentType, "get").then(function (resp) {
+                    if (responses[resp.status]) {
+                        let responseType = responses[resp.status].responseType.toLowerCase();
+                        let ret;
+                        switch (responseType) {
+                            case "json":
+                                ret = isString(resp.response) ? JSON.parse(resp.response) : resp.response;
+                                ret = new (eval(responses[resp.status].type))(ret);
+                                break;
+                        }
+                        //TODO: convert to specified type
+                        resolve(ret);
+                    } else//unspecified http response code returned
+                        reject();
+                }).catch(function (error) {
+                    reject(error);
+                });
+            });
+        };
+    
+        OAMethod.call(this, apiClient);
+        this.basePath = _server + "/processes/{id_process}/getForms";
+    };
+    this.getProcessRoles = function (apiClient) {
+        apiClient = apiClient || _apiClient;
+        /*{typeMap}*/
+    
+        /**
+        *This method returns the roles of the process
+        * @param {integer} id_process Proces ID
+        * @returns {Promise} 
+        */
+        this.get = function (id_process) {
+            let objQuery = {};
+
+            let objPath = {};
+            objPath["id_process"] = id_process;
+
+            let objBody = null;
+            let requestContentType = "application/json";
+            let responses = { "200": { "responseType": "JSON", "type": "result" }, "404": { "responseType": "JSON", "type": "responseStatus" }, "500": { "responseType": "JSON", "type": "responseStatus" } };
+            return new Promise((resolve, reject) => {
+                this.apiCall(objQuery, objBody, objPath, requestContentType, "get").then(function (resp) {
+                    if (responses[resp.status]) {
+                        let responseType = responses[resp.status].responseType.toLowerCase();
+                        let ret;
+                        switch (responseType) {
+                            case "json":
+                                ret = isString(resp.response) ? JSON.parse(resp.response) : resp.response;
+                                ret = new (eval(responses[resp.status].type))(ret);
+                                break;
+                        }
+                        //TODO: convert to specified type
+                        resolve(ret);
+                    } else//unspecified http response code returned
+                        reject();
+                }).catch(function (error) {
+                    reject(error);
+                });
+            });
+        };
+    
+        OAMethod.call(this, apiClient);
+        this.basePath = _server + "/processes/{id_process}/getProcessRoles";
+    };
+    this.loadStatuses = function (apiClient) {
+        apiClient = apiClient || _apiClient;
+        /*{typeMap}*/
+    
+        /**
+        *This method returns all the statuses of the process that the current
+    user can see
+        * @param {integer} id_process Proces ID
+        * @returns {Promise} 
+        */
+        this.get = function (id_process) {
+            let objQuery = {};
+
+            let objPath = {};
+            objPath["id_process"] = id_process;
+
+            let objBody = null;
+            let requestContentType = "application/json";
+            let responses = { "200": { "responseType": "JSON", "type": "response" }, "404": { "responseType": "JSON", "type": "responseStatus" }, "500": { "responseType": "JSON", "type": "responseStatus" } };
+            return new Promise((resolve, reject) => {
+                this.apiCall(objQuery, objBody, objPath, requestContentType, "get").then(function (resp) {
+                    if (responses[resp.status]) {
+                        let responseType = responses[resp.status].responseType.toLowerCase();
+                        let ret;
+                        switch (responseType) {
+                            case "json":
+                                ret = isString(resp.response) ? JSON.parse(resp.response) : resp.response;
+                                ret = new (eval(responses[resp.status].type))(ret);
+                                break;
+                        }
+                        //TODO: convert to specified type
+                        resolve(ret);
+                    } else//unspecified http response code returned
+                        reject();
+                }).catch(function (error) {
+                    reject(error);
+                });
+            });
+        };
+    
+        OAMethod.call(this, apiClient);
+        this.basePath = _server + "/processes/{id_process}/loadStatuses";
+    };
+    this.getCurrentUserProcesses = function (apiClient) {
+        apiClient = apiClient || _apiClient;
+        /*{typeMap}*/
+    
+        /**
+        *This method returns the processes of the current user
+        * @returns {Promise} 
+        */
+        this.get = function () {
+            let objQuery = {};
+
+            let objPath = {};
+
+            let objBody = null;
+            let requestContentType = "application/json";
+            let responses = { "200": { "responseType": "JSON", "type": "response" }, "404": { "responseType": "JSON", "type": "responseStatus" }, "500": { "responseType": "JSON", "type": "responseStatus" } };
+            return new Promise((resolve, reject) => {
+                this.apiCall(objQuery, objBody, objPath, requestContentType, "get").then(function (resp) {
+                    if (responses[resp.status]) {
+                        let responseType = responses[resp.status].responseType.toLowerCase();
+                        let ret;
+                        switch (responseType) {
+                            case "json":
+                                ret = isString(resp.response) ? JSON.parse(resp.response) : resp.response;
+                                ret = new (eval(responses[resp.status].type))(ret);
+                                break;
+                        }
+                        //TODO: convert to specified type
+                        resolve(ret);
+                    } else//unspecified http response code returned
+                        reject();
+                }).catch(function (error) {
+                    reject(error);
+                });
+            });
+        };
+    
+        OAMethod.call(this, apiClient);
+        this.basePath = _server + "/processes/getCurrentUserProcesses";
+    };
+    this.get_team_members = function (apiClient) {
+        apiClient = apiClient || _apiClient;
+        /*{typeMap}*/
+    
+        /**
+        *This method returns the members of the team
+        * @param {integer} id_process Proces ID
+        * @param {integer} user_id User ID
+        * @returns {Promise} 
+        */
+        this.get = function (id_process, user_id) {
+            let objQuery = {};
+            objQuery["user_id"] = user_id;
+
+            let objPath = {};
+            objPath["id_process"] = id_process;
+
+            let objBody = null;
+            let requestContentType = "application/json";
+            let responses = { "200": { "responseType": "JSON", "type": "user_team_members" }, "404": { "responseType": "JSON", "type": "responseStatus" }, "500": { "responseType": "JSON", "type": "responseStatus" } };
+            return new Promise((resolve, reject) => {
+                this.apiCall(objQuery, objBody, objPath, requestContentType, "get").then(function (resp) {
+                    if (responses[resp.status]) {
+                        let responseType = responses[resp.status].responseType.toLowerCase();
+                        let ret;
+                        switch (responseType) {
+                            case "json":
+                                ret = isString(resp.response) ? JSON.parse(resp.response) : resp.response;
+                                ret = new (eval(responses[resp.status].type))(ret);
+                                break;
+                        }
+                        //TODO: convert to specified type
+                        resolve(ret);
+                    } else//unspecified http response code returned
+                        reject();
+                }).catch(function (error) {
+                    reject(error);
+                });
+            });
+        };
+    
+        OAMethod.call(this, apiClient);
+        this.basePath = _server + "/processes/{id_process}/get_team_members";
+    };
+
+    this.processesClient = new this.processes();
+    this.getFormsClient = new this.getForms();
+    this.getProcessRolesClient = new this.getProcessRoles();
+    this.loadStatusesClient = new this.loadStatuses();
+    this.getCurrentUserProcessesClient = new this.getCurrentUserProcesses();
+    this.get_team_membersClient = new this.get_team_members();
+
 };
-var getForms = function(apiClient) { 
-    apiClient = apiClient || new ApiClient();
-    /*{typeMap}*/
-    
-    /**
-    *This method returns the forms of the process
-    * @param {integer} id_process Proces ID
-    * @param {integer} id_role Role ID
-    * @param {integer} id_status Status ID
-    * @returns {Promise} 
-    */
-    this.get = function(id_process,id_role,id_status){
-    let objQuery = {};
-    objQuery["id_role"] = id_role;
-    objQuery["id_status"] = id_status;
-
-    let objPath = {};
-    objPath["id_process"] = id_process;
-
-    let objBody = null;
-    let requestContentType = "application/json";
-    let responses = {"200":{"responseType":"JSON","type":"result"},"404":{"responseType":"JSON","type":"responseStatus"},"500":{"responseType":"JSON","type":"responseStatus"}};
-    return new Promise((resolve, reject) =>
-    {
-            this.apiCall(objQuery, objBody, objPath, requestContentType, "get").then(function(resp){
-            if(responses[resp.status]){
-                let responseType = responses[resp.status].responseType.toLowerCase();
-                let ret;
-                switch(responseType)
-                {
-                    case "json":
-                        ret = JSON.parse(resp.response);
-                        break;
-                }
-                //TODO: convert to specified type
-                resolve(ret);
-            }else//unspecified http response code returned
-                reject();
-        }).catch(function(error){
-            reject(error);
-        });
-    });
-    };
-    
-    OAMethod.call(this, apiClient);
-    this.basePath = _server + "/processes/{id_process}/getForms";
-};
-var getProcessRoles = function(apiClient) { 
-    apiClient = apiClient || new ApiClient();
-    /*{typeMap}*/
-    
-    /**
-    *This method returns the roles of the process
-    * @param {integer} id_process Proces ID
-    * @returns {Promise} 
-    */
-    this.get = function(id_process){
-    let objQuery = {};
-
-    let objPath = {};
-    objPath["id_process"] = id_process;
-
-    let objBody = null;
-    let requestContentType = "application/json";
-    let responses = {"200":{"responseType":"JSON","type":"result"},"404":{"responseType":"JSON","type":"responseStatus"},"500":{"responseType":"JSON","type":"responseStatus"}};
-    return new Promise((resolve, reject) =>
-    {
-            this.apiCall(objQuery, objBody, objPath, requestContentType, "get").then(function(resp){
-            if(responses[resp.status]){
-                let responseType = responses[resp.status].responseType.toLowerCase();
-                let ret;
-                switch(responseType)
-                {
-                    case "json":
-                        ret = JSON.parse(resp.response);
-                        break;
-                }
-                //TODO: convert to specified type
-                resolve(ret);
-            }else//unspecified http response code returned
-                reject();
-        }).catch(function(error){
-            reject(error);
-        });
-    });
-    };
-    
-    OAMethod.call(this, apiClient);
-    this.basePath = _server + "/processes/{id_process}/getProcessRoles";
-};
-var loadStatuses = function(apiClient) { 
-    apiClient = apiClient || new ApiClient();
-    /*{typeMap}*/
-    
-    /**
-    *This method returns all the statuses of the process that the current
-user can see
-    * @param {integer} id_process Proces ID
-    * @returns {Promise} 
-    */
-    this.get = function(id_process){
-    let objQuery = {};
-
-    let objPath = {};
-    objPath["id_process"] = id_process;
-
-    let objBody = null;
-    let requestContentType = "application/json";
-    let responses = {"200":{"responseType":"JSON","type":"response"},"404":{"responseType":"JSON","type":"responseStatus"},"500":{"responseType":"JSON","type":"responseStatus"}};
-    return new Promise((resolve, reject) =>
-    {
-            this.apiCall(objQuery, objBody, objPath, requestContentType, "get").then(function(resp){
-            if(responses[resp.status]){
-                let responseType = responses[resp.status].responseType.toLowerCase();
-                let ret;
-                switch(responseType)
-                {
-                    case "json":
-                        ret = JSON.parse(resp.response);
-                        break;
-                }
-                //TODO: convert to specified type
-                resolve(ret);
-            }else//unspecified http response code returned
-                reject();
-        }).catch(function(error){
-            reject(error);
-        });
-    });
-    };
-    
-    OAMethod.call(this, apiClient);
-    this.basePath = _server + "/processes/{id_process}/loadStatuses";
-};
-var getCurrentUserProcesses = function(apiClient) { 
-    apiClient = apiClient || new ApiClient();
-    /*{typeMap}*/
-    
-    /**
-    *This method returns the processes of the current user
-    * @returns {Promise} 
-    */
-    this.get = function(){
-    let objQuery = {};
-
-    let objPath = {};
-
-    let objBody = null;
-    let requestContentType = "application/json";
-    let responses = {"200":{"responseType":"JSON","type":"response"},"404":{"responseType":"JSON","type":"responseStatus"},"500":{"responseType":"JSON","type":"responseStatus"}};
-    return new Promise((resolve, reject) =>
-    {
-            this.apiCall(objQuery, objBody, objPath, requestContentType, "get").then(function(resp){
-            if(responses[resp.status]){
-                let responseType = responses[resp.status].responseType.toLowerCase();
-                let ret;
-                switch(responseType)
-                {
-                    case "json":
-                        ret = JSON.parse(resp.response);
-                        break;
-                }
-                //TODO: convert to specified type
-                resolve(ret);
-            }else//unspecified http response code returned
-                reject();
-        }).catch(function(error){
-            reject(error);
-        });
-    });
-    };
-    
-    OAMethod.call(this, apiClient);
-    this.basePath = _server + "/processes/getCurrentUserProcesses";
-};
-var get_team_members = function(apiClient) { 
-    apiClient = apiClient || new ApiClient();
-    /*{typeMap}*/
-    
-    /**
-    *This method returns the members of the team
-    * @param {integer} id_process Proces ID
-    * @param {integer} user_id User ID
-    * @returns {Promise} 
-    */
-    this.get = function(id_process,user_id){
-    let objQuery = {};
-    objQuery["user_id"] = user_id;
-
-    let objPath = {};
-    objPath["id_process"] = id_process;
-
-    let objBody = null;
-    let requestContentType = "application/json";
-    let responses = {"200":{"responseType":"JSON","type":"user_team_members"},"404":{"responseType":"JSON","type":"responseStatus"},"500":{"responseType":"JSON","type":"responseStatus"}};
-    return new Promise((resolve, reject) =>
-    {
-            this.apiCall(objQuery, objBody, objPath, requestContentType, "get").then(function(resp){
-            if(responses[resp.status]){
-                let responseType = responses[resp.status].responseType.toLowerCase();
-                let ret;
-                switch(responseType)
-                {
-                    case "json":
-                        ret = JSON.parse(resp.response);
-                        break;
-                }
-                //TODO: convert to specified type
-                resolve(ret);
-            }else//unspecified http response code returned
-                reject();
-        }).catch(function(error){
-            reject(error);
-        });
-    });
-    };
-    
-    OAMethod.call(this, apiClient);
-    this.basePath = _server + "/processes/{id_process}/get_team_members";
-};
-
- this.processesClient = new processes();
- this.getFormsClient = new getForms();
- this.getProcessRolesClient = new getProcessRoles();
- this.loadStatusesClient = new loadStatuses();
- this.getCurrentUserProcessesClient = new getCurrentUserProcesses();
- this.get_team_membersClient = new get_team_members();
-
-};
+Poolable.call(GaiaAPI_processes);

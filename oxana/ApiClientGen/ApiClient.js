@@ -67,21 +67,22 @@ var ApiClient = function (_props) {
 
         for (let i = 0; i < len; i++) { 
             let r = {
-                "id": (i + 1), "method": _batchRequests[i].method, "url": _batchRequests[i].url,
+                "id": i, "method": _batchRequests[i].method, "url": _batchRequests[i].url,
                 "body": _batchBody[i],
                 "headers": _batchHeaders[i]
             };
             ro.requests.push(r);
         }
 
-        this.body(ro)
+        let r = this.body(ro, true)
             .type()
-            .query()
-            .path()
+            // .query()
+            // .path()
             .headers({ "Accept": "application/json" })
-            .post(_batchUrl); 
+            .post(_batchUrl, "json", true); 
         
         _resetBatch();
+        return r;
     };
 
     this.get = function (url, responseType = "json") {
@@ -91,8 +92,10 @@ var ApiClient = function (_props) {
             _batchRequests.push({ "url": url, "method": "GET", "responseType": responseType });
             return new Promise((resolve, reject) => {
                 _self.on("xhrResolved", (e) => {                    
-                    let cri = indexOfObject(e.responses, "id", ci);
-                    resolve(e.responses[cri]);
+                    let cri = indexOfObject(e.responseObject.response, "id", ci);
+                    let r = e.responseObject.response[cri];
+                    let ro = { "status": r.status, "response": r.body };
+                    resolve(ro);
                 });
                 _self.on("xhrRejected", (e) => { 
                     reject(e.responseObject);
@@ -102,8 +105,8 @@ var ApiClient = function (_props) {
             return _request(url, "GET", responseType);
     };
 
-    this.post = function (url, responseType = "json") {
-        if (_batching) {
+    this.post = function (url, responseType = "json", processBatch=false) {
+        if (_batching && !processBatch) {
             _batchRequests.push({ "url": url, "method": "POST", "responseType": responseType });
         }else
             return _request(url, "POST", responseType);
@@ -163,24 +166,24 @@ var ApiClient = function (_props) {
         return this;
     };
 
-    this.body = function (b) {
-        if (_batching) { 
+    this.body = function (b, processBatch=false) {
+        if (_batching && !processBatch) { 
             _batchBody.push(_normalizeParams(b));    
         }else
             _body = _normalizeParams(b);
         return this;
     };
     
-    this.query = function (q) {
-        if (_batching) {
+    this.query = function (q, processBatch=false) {
+        if (_batching && !processBatch) {
             _batchQuery.push(_normalizeParams(q));
         } else
             _queryParams = _normalizeParams(q);
         return this;
     };
 
-    this.path = function (p) {
-        if (_batching) {
+    this.path = function (p, processBatch=false) {
+        if (_batching && !processBatch) {
             _batchPath.push(p);
         }else
             _pathParams = p;
@@ -217,10 +220,10 @@ var ApiClient = function (_props) {
                 // process response
                 let ro = { "status": _xhr.status, "response": _xhr.response || _xhr.responseText };
                 resolve(ro);
+                let xhrResolved = jQuery.Event("xhrResolved");                
                 if (_batching) { 
-                    ro.parsedResponse = JSON.parse(ro.response);
+                    //no need for JSON.parse as response property of xhr will contain the parsed json when content type is json
                 }
-                let xhrResolved = jQuery.Event("xhrResolved");
                 xhrResolved.responseObject = ro;
                 _self.trigger(xhrResolved, [_self]);
             };

@@ -2,12 +2,14 @@ var ApiClientGen = function (_props) {
     let _defaultParams = {
         url: "yaml_url",
         requestBodyParamMode:1,
-        title:""
+        title: "",
+        typeNamePrefix: "o"
     };
 
     _props = extend(false, false, _defaultParams, _props);
     _props.url += "?r=" + Math.random();
     let _title = _props.title;
+    let _typeNamePrefix = _props.typeNamePrefix;
     /**
      * When request contains more than one body parameter, we have two options:
      * 1- generated method will have only one parameter wrapping all params as type members and the type name for this object will be following method+RequestBody+path naming convention
@@ -22,8 +24,13 @@ var ApiClientGen = function (_props) {
         });
     };    
     
-    let apiTemplate = `\tvar {apiTitle} = function(){
-        let _server = "{server}";
+    let apiTemplate = `\tvar {apiTitle} = function(_props){
+        let _defaultParams = {
+            server: "{server}"
+        };
+    
+        _props = extend(false, false, _defaultParams, _props);
+        let _server = _props.server, _apiClient = _props.apiClient ? _props.apiClient : new ApiClient();
         Object.defineProperty(this, "server", {
             get: function server() {
                 return _server;
@@ -34,12 +41,23 @@ var ApiClientGen = function (_props) {
                 }
             }
         });
+
+        Object.defineProperty(this, "apiClient", {
+            get: function apiClient() {
+                return _apiClient;
+            },
+            set: function apiClient(x) {
+                if (_apiClient != x) {
+                    _apiClient = x;
+                }
+            }
+        });
 {paths}
 {pathInstances}
     };
     Poolable.call({apiTitle});`;
-    let pathTemplate = `\tvar {path} = function(apiClient) { 
-        apiClient = apiClient || new ApiClient();
+    let pathTemplate = `\tthis.{path} = function(apiClient) { 
+        apiClient = apiClient || _apiClient;
         /*{typeMap}*/
         {methods}
         
@@ -66,7 +84,8 @@ var ApiClientGen = function (_props) {
                     switch(responseType)
                     {
                         case "json":
-                            ret = JSON.parse(resp.response);
+                            ret = isString(resp.response) ? JSON.parse(resp.response) : resp.response;
+                            ret = new (eval(responses[resp.status].type))(ret);
                             break;
                     }
                     //TODO: convert to specified type
@@ -232,7 +251,7 @@ var ApiClientGen = function (_props) {
             let pathName = arrPath.last();
             let basePath = (url[url.length - 1] != '/' && path[0] != '/' ? '/' : '') + path;
             strClosures += pathTemplate.formatUnicorn({ "path": pathName, "methods": strMethods, "basePath": basePath }) + "\r\n";
-            pathInstances += `\t\tthis.${pathName}Client = new ${pathName}();\r\n`;
+            pathInstances += `\t\tthis.${pathName}Client = new this.${pathName}();\r\n`;
         }
         let apiSrc = types +"\r\n" + apiTemplate.formatUnicorn({ "apiTitle": apiTitle.replace(/ /g, ''), "paths": strClosures, "pathInstances": pathInstances, "server": url});
         return { "apiTitle": apiTitle.replace(/ /g, ''), "apiSrc": apiSrc };
@@ -267,7 +286,7 @@ var ApiClientGen = function (_props) {
 {properties}
         for(let prop in _props){
             if(!this.hasOwnProperty(prop)){
-                this[prop] = _props[prop];
+                this[prop] = new {childType}(_props[prop]);
             }
         }
     };`;
@@ -302,6 +321,7 @@ var ApiClientGen = function (_props) {
                         myTypeNames.splicea(myTypeNames.length, 0, r.typeNames);
                     }
                 }
+                let childType;
                 if (typeInfo.additionalProperties) {
                     for (let prop in typeInfo.additionalProperties) {
                         if (prop == "$ref") {
@@ -311,12 +331,13 @@ var ApiClientGen = function (_props) {
                             if (r.typeNames.length > 0) {
                                 myTypeNames.splicea(myTypeNames.length, 0, r.typeNames);
                             }
+                            childType = r.typeName;
                             freeFormDocInst = freeFormDoc.formatUnicorn({ "childType": r.typeName, "type": propName});
                         }
                     }                    
                 }
                 subTypes[propName] = myTypeNames;
-                types += (typeInfo.additionalProperties ? _freeFormTemplate : _typeTemplate).formatUnicorn({ "jsDoc": jsDoc, "typeName": propName, "properties": properties, "freeFormDoc": freeFormDocInst}) + "\r\n";
+                types += (typeInfo.additionalProperties ? _freeFormTemplate : _typeTemplate).formatUnicorn({ "jsDoc": jsDoc, "typeName": propName, "properties": properties, "freeFormDoc": freeFormDocInst, "childType": childType}) + "\r\n";
             } else
                 myTypeNames = subTypes[propName];
         } else if (typeInfo.type == "array") {
