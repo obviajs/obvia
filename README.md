@@ -1,4 +1,4 @@
-# OxanaUI
+# Obvia
 Oxana user interface javascript library.
 
 ## Introduction
