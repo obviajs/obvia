@@ -1,4 +1,4 @@
-let url = "https://gaia.oxana.io/api/process_users/yaml";
+let url = "https://gaia.oxana.io/api/processes/yaml";
     //"https://gaia.oxana.io/api/users/yaml";
 //http://flower-gaia/api/processes/yaml
 //http://flower-gaia/api/process_role_status_forms/yaml

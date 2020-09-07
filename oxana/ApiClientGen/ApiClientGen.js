@@ -24,34 +24,35 @@ var ApiClientGen = function (_props) {
         });
     };    
     
-    let apiTemplate = `\tvar {apiTitle} = function(_props){
-        let _defaultParams = {
-            server: "{server}"
-        };
-    
-        _props = extend(false, false, _defaultParams, _props);
-        let _server = _props.server, _apiClient = _props.apiClient ? _props.apiClient : new ApiClient();
-        Object.defineProperty(this, "server", {
-            get: function server() {
-                return _server;
-            },
-            set: function server(x) {
-                if (_server != x) {
-                    _server = x;
-                }
-            }
-        });
+    let apiTemplate = `var {apiTitle} = function(_props){
+    let _defaultParams = {
+        server: "{server}"
+    };
 
-        Object.defineProperty(this, "apiClient", {
-            get: function apiClient() {
-                return _apiClient;
-            },
-            set: function apiClient(x) {
-                if (_apiClient != x) {
-                    _apiClient = x;
-                }
+    _props = extend(false, false, _defaultParams, _props);
+    let _server = _props.server, _apiClient = _props.apiClient ? _props.apiClient : new ApiClient(), _self = this;
+    Object.defineProperty(this, "server", {
+        get: function server() {
+            return _server;
+        },
+        set: function server(x) {
+            if (_server != x) {
+                _server = x;
             }
-        });
+        }
+    });
+
+    Object.defineProperty(this, "apiClient", {
+        get: function apiClient() {
+            return _apiClient;
+        },
+        set: function apiClient(x) {
+            if (_apiClient != x) {
+                _apiClient = x;
+            }
+        }
+    });
+{types}
 {paths}
 {pathInstances}
     };
@@ -85,7 +86,7 @@ var ApiClientGen = function (_props) {
                     {
                         case "json":
                             ret = isString(resp.response) ? JSON.parse(resp.response) : resp.response;
-                            ret = new (eval(responses[resp.status].type))(ret);
+                            ret = new (_self[responses[resp.status].type])(ret);
                             break;
                     }
                     //TODO: convert to specified type
@@ -235,6 +236,7 @@ var ApiClientGen = function (_props) {
                                 if (t.typeNames.length > 0)
                                     typeNames.splicea(typeNames.length, 0, t.typeNames);
                                 types += t.types;
+                                responses[r].type = t.typeName;
                             }
                         }
                     }
@@ -253,7 +255,7 @@ var ApiClientGen = function (_props) {
             strClosures += pathTemplate.formatUnicorn({ "path": pathName, "methods": strMethods, "basePath": basePath }) + "\r\n";
             pathInstances += `\t\tthis.${pathName}Client = new this.${pathName}();\r\n`;
         }
-        let apiSrc = types +"\r\n" + apiTemplate.formatUnicorn({ "apiTitle": apiTitle.replace(/ /g, ''), "paths": strClosures, "pathInstances": pathInstances, "server": url});
+        let apiSrc = apiTemplate.formatUnicorn({ "apiTitle": apiTitle.replace(/ /g, ''), "paths": strClosures, "pathInstances": pathInstances, "server": url, "types": types});
         return { "apiTitle": apiTitle.replace(/ /g, ''), "apiSrc": apiSrc };
     };
     let _oasjsMap = { "integer": "Number", "string": "String" };
@@ -261,19 +263,20 @@ var ApiClientGen = function (_props) {
     /**
 {jsDoc}
     */
-    var {typeName} = function(_props){
+    this.{typeName} = function(_props){
         _props = _props || {};
 {properties}
     };`;
 
     let _propDocTemplate = "\t* @property {{jsType}}  {prop}               - {description}\r\n";
     let _propTemplate = "\t\tthis.{prop} = _props.{prop};\r\n";
-    let _arrTypeTemplate = `var {typeName} = function()
-{
-    let r = ArrayEx.apply(this, arguments);
-    r.memberType = {allowedTypes}; 
-    return r;
-};`;
+    let _arrTypeTemplate = `\tthis.{typeName} = function()
+\t{
+\t\tlet r = ArrayEx.apply(this, arguments);
+\t\tr.memberType = {allowedTypes}; 
+\t\treturn r;
+\t};
+\tthis.{typeName}.prototype = Object.create(ArrayEx.prototype);`;
     let subTypes = {};
 
     let _freeFormTemplate = `
@@ -281,12 +284,12 @@ var ApiClientGen = function (_props) {
 {freeFormDoc}
 {jsDoc}
     */
-    var {typeName} = function(_props){
+    this.{typeName} = function(_props){
         _props = _props || {};
 {properties}
         for(let prop in _props){
             if(!this.hasOwnProperty(prop)){
-                this[prop] = new {childType}(_props[prop]);
+                this[prop] = new _self.{childType}(_props[prop]);
             }
         }
     };`;
@@ -336,8 +339,10 @@ var ApiClientGen = function (_props) {
                         }
                     }                    
                 }
-                subTypes[propName] = myTypeNames;
-                types += (typeInfo.additionalProperties ? _freeFormTemplate : _typeTemplate).formatUnicorn({ "jsDoc": jsDoc, "typeName": propName, "properties": properties, "freeFormDoc": freeFormDocInst, "childType": childType}) + "\r\n";
+                if (subTypes[propName] == null) {
+                    subTypes[propName] = myTypeNames;
+                    types += (typeInfo.additionalProperties ? _freeFormTemplate : _typeTemplate).formatUnicorn({ "jsDoc": jsDoc, "typeName": propName, "properties": properties, "freeFormDoc": freeFormDocInst, "childType": childType}) + "\r\n";
+                }                
             } else
                 myTypeNames = subTypes[propName];
         } else if (typeInfo.type == "array") {
@@ -364,7 +369,11 @@ var ApiClientGen = function (_props) {
                 }
             }
             allowedTypes.splicea(allowedTypes.length, 0, myTypeNames);
-            types += _arrTypeTemplate.formatUnicorn({"typeName":propName, "allowedTypes": JSON.stringify(allowedTypes)}) + "\r\n";
+            let arrTypeName = propName = convertToCamelCase("array-" + allowedTypes.join("-"));
+            if (subTypes[arrTypeName] == null) {
+                subTypes[arrTypeName] = myTypeNames;
+                types += _arrTypeTemplate.formatUnicorn({ "typeName": arrTypeName, "allowedTypes": JSON.stringify(allowedTypes) }) + "\r\n";
+            }
         }
         else if (typeInfo.$ref) {
             let typePath = typeInfo.$ref;

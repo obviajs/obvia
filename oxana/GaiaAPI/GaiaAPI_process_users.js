@@ -1,161 +1,10 @@
-
-    /**
-	* @property {Number}  can_create               - Can Create
-	* @property {Number}  can_assign               - Can Assing
-	* @property {Number}  can_delete               - Can Delete
-	* @property {Number}  can_edit               - Can Edit
-	* @property {Number}  can_view               - Can View
-	* @property {Number}  view_all               - Can View All
-	* @property {Number}  view_group_cases               - Can View Group Cases
-
-    */
-   var status = function(_props){
-    _props = _props || {};
-    this.can_create = _props.can_create;
-    this.can_assign = _props.can_assign;
-    this.can_delete = _props.can_delete;
-    this.can_edit = _props.can_edit;
-    this.can_view = _props.can_view;
-    this.view_all = _props.view_all;
-    this.view_group_cases = _props.view_group_cases;
-
-};
-
-
-
-/**
-* @typedef {Object.<string, status>} process_role
-
-*/
-var process_role = function(_props){
-    _props = _props || {};
-
-    for(let prop in _props){
-        if(!this.hasOwnProperty(prop)){
-            this[prop] = new status(_props[prop]);
-        }
-    }
-};
-
-
-
-/**
-* @typedef {Object.<string, process_role>} process
-
-*/
-var process = function(_props){
-    _props = _props || {};
-
-    for(let prop in _props){
-        if(!this.hasOwnProperty(prop)){
-            this[prop] = new process_role(_props[prop]);
-        }
-    }
-};
-
-
-
-/**
-* @typedef {Object.<string, process>} user_processes
-
-*/
-var user_processes = function(_props){
-    _props = _props || {};
-
-    for(let prop in _props){
-        if(!this.hasOwnProperty(prop)){
-            this[prop] = new process(_props[prop]);
-        }
-    }
-};
-
-/**
-* @property {Number}  status_code               - Response status code
-* @property {String}  status_description               - Response description
-
-*/
-var responseStatus = function(_props){
-    _props = _props || {};
-    this.status_code = _props.status_code;
-    this.status_description = _props.status_description;
-
-};
-
-/**
-* @property {Number}  at_user_status_new               - Process Role New Status
-
-*/
-var at_status_init = function(_props){
-    _props = _props || {};
-    this.at_user_status_new = _props.at_user_status_new;
-
-};
-
-
-
-/**
-* @typedef {Object.<string, at_status_init>} at_process_role
-
-*/
-var at_process_role = function(_props){
-    _props = _props || {};
-
-    for(let prop in _props){
-        if(!this.hasOwnProperty(prop)){
-            this[prop] = new at_status_init(_props[prop]);
-        }
-    }
-};
-
-
-
-/**
-* @typedef {Object.<string, at_process_role>} at_process
-
-*/
-var at_process = function(_props){
-    _props = _props || {};
-
-    for(let prop in _props){
-        if(!this.hasOwnProperty(prop)){
-            this[prop] = new at_process_role(_props[prop]);
-        }
-    }
-};
-
-
-
-/**
-* @typedef {Object.<string, at_process>} at_user_processes
-
-*/
-var at_user_processes = function(_props){
-    _props = _props || {};
-
-    for(let prop in _props){
-        if(!this.hasOwnProperty(prop)){
-            this[prop] = new at_process(_props[prop]);
-        }
-    }
-};
-
-/**
-* @property {Number}  value               - Name
-
-*/
-var responseObj = function(_props){
-    _props = _props || {};
-    this.value = _props.value;
-
-};
-
 var GaiaAPI_process_users = function (_props) {
     let _defaultParams = {
         server: "https://gaia.oxana.io/api"
     };
 
     _props = extend(false, false, _defaultParams, _props);
-    let _server = _props.server, _apiClient = _props.apiClient ? _props.apiClient : new ApiClient();
+    let _server = _props.server, _apiClient = _props.apiClient ? _props.apiClient : new ApiClient(), _self = this;
     Object.defineProperty(this, "server", {
         get: function server() {
             return _server;
@@ -177,16 +26,167 @@ var GaiaAPI_process_users = function (_props) {
             }
         }
     });
+
+    /**
+	* @property {Number}  can_create               - Can Create
+	* @property {Number}  can_assign               - Can Assing
+	* @property {Number}  can_delete               - Can Delete
+	* @property {Number}  can_edit               - Can Edit
+	* @property {Number}  can_view               - Can View
+	* @property {Number}  view_all               - Can View All
+	* @property {Number}  view_group_cases               - Can View Group Cases
+
+    */
+    this.process_status = function (_props) {
+        _props = _props || {};
+        this.can_create = _props.can_create;
+        this.can_assign = _props.can_assign;
+        this.can_delete = _props.can_delete;
+        this.can_edit = _props.can_edit;
+        this.can_view = _props.can_view;
+        this.view_all = _props.view_all;
+        this.view_group_cases = _props.view_group_cases;
+
+    };
+
+
+
+    /**
+	* @typedef {Object.<string, process_status>} process_role
+
+    */
+    this.process_role = function (_props) {
+        _props = _props || {};
+
+        for (let prop in _props) {
+            if (!this.hasOwnProperty(prop)) {
+                this[prop] = new _self.process_status(_props[prop]);
+            }
+        }
+    };
+
+
+
+    /**
+	* @typedef {Object.<string, process_role>} process
+
+    */
+    this.process = function (_props) {
+        _props = _props || {};
+
+        for (let prop in _props) {
+            if (!this.hasOwnProperty(prop)) {
+                this[prop] = new _self.process_role(_props[prop]);
+            }
+        }
+    };
+
+
+
+    /**
+	* @typedef {Object.<string, process>} user_processes
+
+    */
+    this.user_processes = function (_props) {
+        _props = _props || {};
+
+        for (let prop in _props) {
+            if (!this.hasOwnProperty(prop)) {
+                this[prop] = new _self.process(_props[prop]);
+            }
+        }
+    };
+
+    /**
+	* @property {Number}  status_code               - Response status code
+	* @property {String}  status_description               - Response description
+
+    */
+    this.responseStatus = function (_props) {
+        _props = _props || {};
+        this.status_code = _props.status_code;
+        this.status_description = _props.status_description;
+
+    };
+
+    /**
+	* @property {Number}  at_user_status_new               - Process Role New Status
+
+    */
+    this.at_status_init = function (_props) {
+        _props = _props || {};
+        this.at_user_status_new = _props.at_user_status_new;
+
+    };
+
+
+
+    /**
+	* @typedef {Object.<string, at_status_init>} at_process_role
+
+    */
+    this.at_process_role = function (_props) {
+        _props = _props || {};
+
+        for (let prop in _props) {
+            if (!this.hasOwnProperty(prop)) {
+                this[prop] = new _self.at_status_init(_props[prop]);
+            }
+        }
+    };
+
+
+
+    /**
+	* @typedef {Object.<string, at_process_role>} at_process
+
+    */
+    this.at_process = function (_props) {
+        _props = _props || {};
+
+        for (let prop in _props) {
+            if (!this.hasOwnProperty(prop)) {
+                this[prop] = new _self.at_process_role(_props[prop]);
+            }
+        }
+    };
+
+
+
+    /**
+	* @typedef {Object.<string, at_process>} at_user_processes
+
+    */
+    this.at_user_processes = function (_props) {
+        _props = _props || {};
+
+        for (let prop in _props) {
+            if (!this.hasOwnProperty(prop)) {
+                this[prop] = new _self.at_process(_props[prop]);
+            }
+        }
+    };
+
+    /**
+	* @property {Number}  value               - Name
+
+    */
+    this.responseObj = function (_props) {
+        _props = _props || {};
+        this.value = _props.value;
+
+    };
+
     this.roleStatusRights = function (apiClient) {
         apiClient = apiClient || _apiClient;
         /*{typeMap}*/
-    
-        /**
-        *Returns all te rights (view/edit/delete/asign/create/view_all/view_group_cases)
-    for all the process's statuses the user have access.
-        * @param {integer} id_user User id
-        * @returns {Promise} 
-        */
+        
+    	/**
+		*Returns all te rights (view/edit/delete/asign/create/view_all/view_group_cases)
+for all the process's statuses the user have access.
+		* @param {integer} id_user User id
+		* @returns {Promise} 
+		*/
         this.get = function (id_user) {
             let objQuery = {};
 
@@ -204,7 +204,7 @@ var GaiaAPI_process_users = function (_props) {
                         switch (responseType) {
                             case "json":
                                 ret = isString(resp.response) ? JSON.parse(resp.response) : resp.response;
-                                ret = new (eval(responses[resp.status].type))(ret);
+                                ret = new (_self[responses[resp.status].type])(ret);
                                 break;
                         }
                         //TODO: convert to specified type
@@ -216,19 +216,19 @@ var GaiaAPI_process_users = function (_props) {
                 });
             });
         };
-    
+        
         OAMethod.call(this, apiClient);
         this.basePath = _server + "/process_users/{id_user}/roleStatusRights";
     };
     this.ownerStatusRights = function (apiClient) {
         apiClient = apiClient || _apiClient;
         /*{typeMap}*/
-    
-        /**
-        *Return data for all the processes, process's statuses and the rights
-    that role owner have in each status of processes he has access.
-        * @returns {Promise} 
-        */
+        
+    	/**
+		*Return data for all the processes, process's statuses and the rights
+that role owner have in each status of processes he has access.
+		* @returns {Promise} 
+		*/
         this.get = function () {
             let objQuery = {};
 
@@ -245,7 +245,7 @@ var GaiaAPI_process_users = function (_props) {
                         switch (responseType) {
                             case "json":
                                 ret = isString(resp.response) ? JSON.parse(resp.response) : resp.response;
-                                ret = new (eval(responses[resp.status].type))(ret);
+                                ret = new (_self[responses[resp.status].type])(ret);
                                 break;
                         }
                         //TODO: convert to specified type
@@ -257,19 +257,19 @@ var GaiaAPI_process_users = function (_props) {
                 });
             });
         };
-    
+        
         OAMethod.call(this, apiClient);
         this.basePath = _server + "/process_users/ownerStatusRights";
     };
     this.allowedTransitions = function (apiClient) {
         apiClient = apiClient || _apiClient;
         /*{typeMap}*/
-    
-        /**
-        *Returns the allowed transitions of the process for the current user.
-        * @param {integer} id_user User id
-        * @returns {Promise} 
-        */
+        
+    	/**
+		*Returns the allowed transitions of the process for the current user.
+		* @param {integer} id_user User id
+		* @returns {Promise} 
+		*/
         this.get = function (id_user) {
             let objQuery = {};
 
@@ -287,7 +287,7 @@ var GaiaAPI_process_users = function (_props) {
                         switch (responseType) {
                             case "json":
                                 ret = isString(resp.response) ? JSON.parse(resp.response) : resp.response;
-                                ret = new (eval(responses[resp.status].type))(ret);
+                                ret = new (_self[responses[resp.status].type])(ret);
                                 break;
                         }
                         //TODO: convert to specified type
@@ -299,21 +299,21 @@ var GaiaAPI_process_users = function (_props) {
                 });
             });
         };
-    
+        
         OAMethod.call(this, apiClient);
         this.basePath = _server + "/process_users/{id_user}/allowedTransitions";
     };
     this.processUserRight = function (apiClient) {
         apiClient = apiClient || _apiClient;
         /*{typeMap}*/
-    
-        /**
-        *Returns one specific right
-        * @param {integer} id_user User id
-        * @param {integer} id_process_case ID of process case
-        * @param {string} has_right User's specific role right
-        * @returns {Promise} 
-        */
+        
+    	/**
+		*Returns one specific right
+		* @param {integer} id_user User id
+		* @param {integer} id_process_case ID of process case
+		* @param {string} has_right User's specific role right
+		* @returns {Promise} 
+		*/
         this.get = function (id_user, id_process_case, has_right) {
             let objQuery = {};
             objQuery["has_right"] = has_right;
@@ -333,7 +333,7 @@ var GaiaAPI_process_users = function (_props) {
                         switch (responseType) {
                             case "json":
                                 ret = isString(resp.response) ? JSON.parse(resp.response) : resp.response;
-                                ret = new (eval(responses[resp.status].type))(ret);
+                                ret = new (_self[responses[resp.status].type])(ret);
                                 break;
                         }
                         //TODO: convert to specified type
@@ -345,20 +345,20 @@ var GaiaAPI_process_users = function (_props) {
                 });
             });
         };
-    
+        
         OAMethod.call(this, apiClient);
         this.basePath = _server + "/process_users/{id_user}/{id_process_case}/processUserRight";
     };
     this.processUserTransition = function (apiClient) {
         apiClient = apiClient || _apiClient;
         /*{typeMap}*/
-    
-        /**
-        *Returns one specific allowed transition
-        * @param {integer} id_user User id
-        * @param {integer} id_process_case ID of process case
-        * @returns {Promise} 
-        */
+        
+    	/**
+		*Returns one specific allowed transition
+		* @param {integer} id_user User id
+		* @param {integer} id_process_case ID of process case
+		* @returns {Promise} 
+		*/
         this.get = function (id_user, id_process_case) {
             let objQuery = {};
 
@@ -377,7 +377,7 @@ var GaiaAPI_process_users = function (_props) {
                         switch (responseType) {
                             case "json":
                                 ret = isString(resp.response) ? JSON.parse(resp.response) : resp.response;
-                                ret = new (eval(responses[resp.status].type))(ret);
+                                ret = new (_self[responses[resp.status].type])(ret);
                                 break;
                         }
                         //TODO: convert to specified type
@@ -389,7 +389,7 @@ var GaiaAPI_process_users = function (_props) {
                 });
             });
         };
-    
+        
         OAMethod.call(this, apiClient);
         this.basePath = _server + "/process_users/{id_user}/{id_process_case}/processUserTransition";
     };

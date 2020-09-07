@@ -46,11 +46,20 @@ var App = function(_props){
             return _history;
         }
     });
-
+    
+    let _active = true;
+    Object.defineProperty(this, 'active',
+    {
+        get: function () {
+            return _active;
+        }
+    });
+    
     let timerIncrement = function () {
         _idleTime = _idleTime + _idleInterval;
         if (_idleTime >= _inactivityInterval) {
             let idleCount = Math.floor(_idleTime / _inactivityInterval);
+            _active = false;
             let evt = jQuery.Event("InactivityDetected");
             evt.guid = _guid;
             _self.trigger(evt, [_idleTime, idleCount]);
@@ -181,6 +190,7 @@ var App = function(_props){
         if(e.type != "InactivityDetected" && e.type != "ActivityDetected" && e.type != "WindowHide" && e.type != "WindowShow"){
             if(_idleTime >= _inactivityInterval){
                 let idleCount = Math.floor(_idleTime / _inactivityInterval);
+                _active = true;
                 let evt = jQuery.Event("ActivityDetected");
                 evt.guid = _guid;
                 _self.trigger(evt, [_idleTime, idleCount]);
