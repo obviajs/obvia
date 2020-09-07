@@ -158,7 +158,15 @@ rjs.define("lib/dependencies/scripts/jquery.slimscroll.js", "SlimScroll");
 rjs.define("./components/Form/Upload.js", "Upload");
 rjs.define("./components/UploadEx.js", "UploadEx");
 rjs.define("./components/MultiUpload.js", "MultiUpload");
-
+//Table
+rjs.define("./components/Table/Table.js", "Table");
+rjs.define("./components/Table/TBody.js", "TBody");
+rjs.define("./components/Table/THead.js", "THead");
+rjs.define("./components/Table/TFoot.js", "TFoot");
+rjs.define("./components/Table/TCell.js", "TCell");
+rjs.define("./components/Table/Tr.js", "Tr");
+rjs.define("./components/Table/Th.js", "Th");
+rjs.define("./components/Table/Td.js", "Td");
 //DataGrid
 rjs.define("./components/DataGrid/DataGridCellRenderer.js", "DataGridCellRenderer");
 rjs.define("./components/DataGrid/DataGridColumn.js", "DataGridColumn");
@@ -329,6 +337,14 @@ rjs.require(["EventDispatcher"]).then(function () {
         "Upload",
         "SlimScroll",
         "UploadEx",
+        "Table",
+        "TBody",
+        "THead",
+        "TFoot",
+        "TCell",
+        "Tr",
+        "Th",
+        "Td",
         "DataGridCellRenderer",
         "DataGridColumn",
         "DataGrid",
