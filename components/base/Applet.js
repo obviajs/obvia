@@ -161,7 +161,7 @@ var Applet = function (_props) {
         for (let b in behaviors) {
             eventTypesJoined += " " + b;
         }
-        EventDispatcher.unlisten(cmps, eventTypesJoined.trim().split(" "), _proxyHandler);
+        EventDispatcher.unlisten(cmps, eventTypesJoined, _proxyHandler);
         //cmp.on(eventTypesJoined, _proxyHandler);
         let len = cmps.length;
         for (let i = 0; i < len; i++) {

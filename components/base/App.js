@@ -430,6 +430,7 @@ var App = function(_props){
                     delete _behaviors[cmp.domID][b];
                     _eventTypesJoined += " " + b;
                 }
+                EventDispatcher.unlisten([cmp], _eventTypesJoined, _event2behavior);
                 //cmp.off(_eventTypesJoined.trim().split(" "), _event2behavior);
             } 
         }
