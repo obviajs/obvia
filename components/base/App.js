@@ -168,6 +168,7 @@ var App = function(_props){
     };
 
     let _implementations = {};
+    let _b2imps = {};
     this.addImplementation = function (imps) { 
         if (!_implementations[imps.guid]) {
             for (let behavior in imps) {
@@ -179,6 +180,10 @@ var App = function(_props){
                     }
                     _behaviorimplementations[imps.guid][behavior].push(imps[behavior]);
                 }
+                if (!_b2imps[behavior]) { 
+                    _b2imps[behavior] = [];
+                }
+                _b2imps[behavior].push(imps.guid);
             }
             _implementations[imps.guid] = imps;
         } else { 
@@ -383,7 +388,8 @@ var App = function(_props){
         return e;
     };
     let _delayUpdateHash = debounce(_updateHash, 2000);
-
+//shtojme edhe uid e implementation si parameter
+    
     this.addBehaviors = function (cmps, behaviors) {
         var cmps = isObject(cmps) && !cmps.forEach?[cmps]:cmps;
         let len = cmps.length;
@@ -396,24 +402,24 @@ var App = function(_props){
                 uid = cmp.domID;
             
             let _eventTypesJoined = "";
-            for (let b in behaviors) {
-                if (_behaviors[uid][b]) {
-                    if (!isObject(_behaviors[uid][b])) {
-                        let pb = _behaviors[uid][b];
-                        _behaviors[uid][b] = {};
-                        _behaviors[uid][b][pb] = null;
+            for (let eventType in behaviors) {
+                if (_behaviors[uid][eventType]) {
+                    if (!isObject(_behaviors[uid][eventType])) {
+                        let pb = _behaviors[uid][eventType];
+                        _behaviors[uid][eventType] = {};
+                        _behaviors[uid][eventType][pb] = null;
                     } 
-                    if (isObject(behaviors[b])) {
-                        for (var eb in behaviors[b]) {
-                            _behaviors[uid][b][eb] = behaviors[b][eb];
+                    if (isObject(behaviors[eventType])) {
+                        for (var eb in behaviors[eventType]) {
+                            _behaviors[uid][eventType][eb] = behaviors[eventType][eb];
                         }
                     } else { 
-                        _behaviors[uid][b][behaviors[b]] = null;
+                        _behaviors[uid][eventType][behaviors[eventType]] = null;
                     }
                 }else
-                    _behaviors[uid][b] = behaviors[b];
+                    _behaviors[uid][eventType] = behaviors[eventType];
                 
-                _eventTypesJoined += " " + b;
+                _eventTypesJoined += " " + eventType;
             }
             cmp.on(_eventTypesJoined, _event2behavior);
         }
@@ -426,9 +432,9 @@ var App = function(_props){
             let cmp = cmps[i];
             if (_behaviors[cmp.domID] != null) {
                 let _eventTypesJoined = "";
-                for (let b in behaviors) {
-                    delete _behaviors[cmp.domID][b];
-                    _eventTypesJoined += " " + b;
+                for (let eventType in behaviors) {
+                    delete _behaviors[cmp.domID][eventType];
+                    _eventTypesJoined += " " + eventType;
                 }
                 EventDispatcher.unlisten([cmp], _eventTypesJoined, _event2behavior);
                 //cmp.off(_eventTypesJoined.trim().split(" "), _event2behavior);

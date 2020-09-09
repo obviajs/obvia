@@ -11,7 +11,8 @@ var Applet = function (_props) {
             "init": "INIT"
         },
         attr: {},
-        lazy: true
+        lazy: true,
+        guid: StringUtils.guid()
     };
     _props = extend(false, false, _defaultParams, _props);
     let _self = this;
@@ -25,6 +26,7 @@ var Applet = function (_props) {
     let _attr = _props.attr;
     let _mimeType = "application/json";
     let _lazy = _props.lazy;
+    let _guid = _props.guid;
     //the url after # that will bring this view to focus
     let _anchor = _props.anchor;
     //a two way map, to convert between hashparams to internal params and vice versa
@@ -95,14 +97,14 @@ var Applet = function (_props) {
                 let module = p[1];
                 _data = p[2];
                 _implementation = new module.Implementation(_self, msg);
-                _implementation.guid = StringUtils.guid();
+                _implementation.guid = _guid;                
+                _app.addImplementation(_implementation);
                 return p;
             });
             
             _literal = JSON.parse(r[0].response);
             _literal.props.bindingDefaultContext = _data;
             _view = Component.fromLiteral(_literal);
-            _app.addImplementation(_implementation);
             
             _self.addBehaviors(_view, _behaviors, false);
             
@@ -252,6 +254,13 @@ var Applet = function (_props) {
     Object.defineProperty(this, "behaviors", {
         get: function behaviors() {
             return _behaviors;
+        },
+        configurable: true
+    });
+
+    Object.defineProperty(this, "guid", {
+        get: function guid() {
+            return _guid;
         },
         configurable: true
     });
