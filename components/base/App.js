@@ -126,7 +126,7 @@ var App = function(_props){
             historyBehaviors[HistoryEventType.HISTORY_UNDONE] = "HISTORY_UNDONE";
             historyBehaviors[HistoryEventType.HISTORY_REDONE] = "HISTORY_REDONE";
             historyBehaviors[HistoryEventType.HISTORY_STEP_ADDED] = "HISTORY_STEP_ADDED";
-            _self.addBehaviors(_history, historyBehaviors);
+            _self.addBehaviors(_guid, _history, historyBehaviors);
         }
         let defaultBehaviors = {
             "InactivityDetected": "APP_INACTIVE",
@@ -136,7 +136,7 @@ var App = function(_props){
             "beforeunload": "APP_UNLOADED"
         };
    
-        _self.addBehaviors(_self, defaultBehaviors);
+        _self.addBehaviors(_guid, _self, defaultBehaviors);
     };
 
     _behaviorimplementations[_guid]["APP_UNLOADED"] = function(e) {
@@ -183,7 +183,7 @@ var App = function(_props){
                 if (!_b2imps[behavior]) { 
                     _b2imps[behavior] = [];
                 }
-                _b2imps[behavior].push(imps.guid);
+                _b2imps[behavior].pushUnique(imps.guid);
             }
             _implementations[imps.guid] = imps;
         } else { 
@@ -207,13 +207,13 @@ var App = function(_props){
         let manifestor;
 
         let behaviorObj = {};
-        if(target && _self.behaviors[target.domID] && _self.behaviors[target.domID][e.type] && currentTarget == target)
+        if(target && _self.behaviors[target.guid] && _self.behaviors[target.guid][e.type] && currentTarget == target)
         {
-            behaviorObj = _self.behaviors[target.domID][e.type];
+            behaviorObj = _self.behaviors[target.guid][e.type];
             manifestor = target;
-        }else if(_self.behaviors[currentTarget.domID] && _self.behaviors[currentTarget.domID][e.type] && isObject(_self.behaviors[currentTarget.domID][e.type]))
+        }else if(_self.behaviors[currentTarget.guid] && _self.behaviors[currentTarget.guid][e.type] && isObject(_self.behaviors[currentTarget.guid][e.type]))
         {
-            let cmpBehaviors = _self.behaviors[currentTarget.domID][e.type];
+            let cmpBehaviors = _self.behaviors[currentTarget.guid][e.type];
             for (var prop in cmpBehaviors) { 
                 if (cmpBehaviors[prop] && cmpBehaviors[prop].onPropagation) { 
                     behaviorObj[prop] = cmpBehaviors[prop];
@@ -246,48 +246,50 @@ var App = function(_props){
             {
                 behaviorName = behaviorNameArr[b];
                 behaviorFilter = behaviorFilterArr[b];
+                let impsGuidArr = _cmpListenerImps[manifestor.guid][e.type];
+                for (let ii = 0; ii < impsGuidArr.length; ii++) {
+                    let impGuid = impsGuidArr[ii];
+                    let behavior = _self.behaviorimplementations[impGuid][behaviorName];
+                    let qualifies = true, extraArgs = [];
+                    if (behavior && typeof behaviorFilter == 'function') {
+                        qualifies = behaviorFilter.apply(manifestor, arguments);
+                        if (isObject(qualifies)) {
+                            extraArgs = qualifies.extraArgs;
+                            qualifies = qualifies.qualifies;
+                        }
+                    }
+                    if (behavior && qualifies) {
+                        let args = [];
+                        for (let i = 0; i < arguments.length; i++) {
+                            args.push(arguments[i]);
+                        }
+                        if (extraArgs.length > 0) {
+                            args = args.concat(extraArgs);
+                        }
 
-                let behavior = _self.behaviorimplementations[e.guid][behaviorName];
-                let qualifies = true, extraArgs = [];
-                if(behavior && typeof behaviorFilter == 'function') {
-                    qualifies = behaviorFilter.apply(manifestor, arguments);
-                    if(isObject(qualifies)){
-                        extraArgs = qualifies.extraArgs;
-                        qualifies = qualifies.qualifies;
-                    }
-                }
-                if(behavior && qualifies) {
-                    let args = [];
-                    for (let i = 0; i < arguments.length; i++) {
-                        args.push(arguments[i]);
-                    }
-                    if(extraArgs.length>0){
-                        args = args.concat(extraArgs);
-                    }
-
-                    if(typeof behavior == 'function') {
-                        behavior.apply(manifestor, args);
-                    }else{
-                        let behavior_implementations = isObject(behavior) && !behavior.forEach?[behavior]:behavior;
-                        for(let bi=0;bi<behavior_implementations.length;bi++)
-                        {
-                            behavior = behavior_implementations[bi];
-                            if(isObject(behavior)){
-                                let ret = behavior.do.apply(manifestor, args);
-                                if(_historyProps.enabled){
-                                    _history.track(behavior, behaviorName, ret, manifestor, args);
+                        if (typeof behavior == 'function') {
+                            behavior.apply(manifestor, args);
+                        } else {
+                            let behavior_implementations = isObject(behavior) && !behavior.forEach ? [behavior] : behavior;
+                            for (let bi = 0; bi < behavior_implementations.length; bi++) {
+                                behavior = behavior_implementations[bi];
+                                if (isObject(behavior)) {
+                                    let ret = behavior.do.apply(manifestor, args);
+                                    if (_historyProps.enabled) {
+                                        _history.track(behavior, behaviorName, ret, manifestor, args);
+                                    }
+                                    if (behavior.stopPropagation) {
+                                        e.stopPropagation();
+                                    }
+                                    if (behavior.stopImmediatePropagation) {
+                                        e.stopImmediatePropagation();
+                                    }
+                                    if (behavior.preventDefault) {
+                                        e.preventDefault();
+                                    }
+                                } else if (typeof behavior == 'function') {
+                                    behavior.apply(manifestor, args);
                                 }
-                                if(behavior.stopPropagation){
-                                    e.stopPropagation();
-                                }
-                                if(behavior.stopImmediatePropagation){
-                                    e.stopImmediatePropagation();
-                                }
-                                if(behavior.preventDefault){
-                                    e.preventDefault();
-                                }
-                            }else if(typeof behavior == 'function') {
-                                behavior.apply(manifestor, args);
                             }
                         }
                     }
@@ -387,20 +389,21 @@ var App = function(_props){
         console.log("App.js Appletinit", e.map);
         return e;
     };
-    let _delayUpdateHash = debounce(_updateHash, 2000);
-//shtojme edhe uid e implementation si parameter
-    
-    this.addBehaviors = function (cmps, behaviors) {
+    let _delayUpdateHash = debounce(_updateHash, 2000);    
+    let _cmpListenerImps = {};
+    this.addBehaviors = function (impUid, cmps, behaviors) {
         var cmps = isObject(cmps) && !cmps.forEach?[cmps]:cmps;
         let len = cmps.length;
         for (let i = 0; i < len; i++) { 
             let cmp = cmps[i];
             let uid;
-            if (!cmp["domID"]) {
-                uid = cmp["domID"] = StringUtils.guid();
+            if (!cmp["guid"]) {
+                uid = cmp["guid"] = StringUtils.guid();
             } else
-                uid = cmp.domID;
-            
+                uid = cmp.guid;
+            if (!_cmpListenerImps[uid])
+                _cmpListenerImps[uid] = {};
+
             let _eventTypesJoined = "";
             for (let eventType in behaviors) {
                 if (_behaviors[uid][eventType]) {
@@ -420,24 +423,44 @@ var App = function(_props){
                     _behaviors[uid][eventType] = behaviors[eventType];
                 
                 _eventTypesJoined += " " + eventType;
+                if (!_cmpListenerImps[uid][eventType])
+                    _cmpListenerImps[uid][eventType] = [];
+                _cmpListenerImps[uid][eventType].pushUnique(impUid);
             }
             cmp.on(_eventTypesJoined, _event2behavior);
         }
     };
     
-    this.removeBehaviors = function (cmps, behaviors) {
+    this.removeBehaviors = function (impUid, cmps, behaviors) {
         var cmps = isObject(cmps) && !cmps.forEach?[cmps]:cmps;
         let len = cmps.length;
         for (let i = 0; i < len; i++) {
             let cmp = cmps[i];
-            if (_behaviors[cmp.domID] != null) {
+            if (_behaviors[cmp.guid] != null) {
                 let _eventTypesJoined = "";
                 for (let eventType in behaviors) {
-                    delete _behaviors[cmp.domID][eventType];
+                    delete _behaviors[cmp.guid][eventType];
                     _eventTypesJoined += " " + eventType;
+
+                    let ind = _cmpListenerImps[cmp.guid][eventType].indexOf(impUid);
+                    if (ind > -1) { 
+                        _cmpListenerImps[cmp.guid][eventType].splice(ind, 1);
+                    }
+                    if (isObject(behaviors[eventType])) {
+                        for (let behavior in behaviors[eventType]) { 
+                            let ind = _b2imps[behavior].indexOf(impUid);
+                            if (ind > -1) {
+                                _b2imps[behavior].splice(ind, 1);
+                            }
+                        }
+                    } else { 
+                        let ind = _b2imps[behaviors[eventType]].indexOf(impUid);
+                        if (ind > -1) {
+                            _b2imps[behaviors[eventType]].splice(ind, 1);
+                        }
+                    }
                 }
-                EventDispatcher.unlisten([cmp], _eventTypesJoined, _event2behavior);
-                //cmp.off(_eventTypesJoined.trim().split(" "), _event2behavior);
+                //EventDispatcher.unlisten([cmp], _eventTypesJoined, _event2behavior);
             } 
         }
     };

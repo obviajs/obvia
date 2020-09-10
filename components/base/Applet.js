@@ -143,12 +143,10 @@ var Applet = function (_props) {
         for (let b in behaviors) {
             eventTypesJoined += " " + b;
         }
-        EventDispatcher.listen(cmps, eventTypesJoined, _proxyHandler);
-        //cmp.on(eventTypesJoined, _proxyHandler);
         let len = cmps.length;
         for (let i = 0; i < len; i++) {
             let cmp = cmps[i];
-            _app.addBehaviors(cmp, behaviors);
+            _app.addBehaviors(_guid, cmp, behaviors);
             if (recurse && !cmp.hasInternalComponents) {
                 for (let cid in cmp.children) {
                     this.addBehaviors(cmp.children[cid], behaviors);
@@ -163,23 +161,17 @@ var Applet = function (_props) {
         for (let b in behaviors) {
             eventTypesJoined += " " + b;
         }
-        EventDispatcher.unlisten(cmps, eventTypesJoined, _proxyHandler);
-        //cmp.on(eventTypesJoined, _proxyHandler);
+
         let len = cmps.length;
         for (let i = 0; i < len; i++) {
             let cmp = cmps[i];
-            _app.removeBehaviors(cmp, behaviors);
+            _app.removeBehaviors(_guid, cmp, behaviors);
             if (recurse && !cmp.hasInternalComponents) {
                 for (let cid in cmp.children) {
                     this.removeBehaviors(cmp.children[cid], behaviors);
                 }
             }
         }
-    };
-
-    let _proxyHandler = function (e) {
-        //add implementation guid so App.js will know which behavior implementation to execute
-        e.guid = _implementation.guid;        
     };
     
     let _appletInit = function (e) {
