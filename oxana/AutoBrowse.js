@@ -7,7 +7,7 @@
 //component definition
 var AutoBrowse = function (_props) {
     let _self = this;
-    let _dataProvider, _valueField, _labelField, _value, _columns = [], _fields;
+    let _dataProvider, _bindingDefaultContext, _valueField, _labelField, _value, _columns = [], _fields;
 
     Object.defineProperty(this, "dataProvider", 
     {
@@ -96,6 +96,7 @@ var AutoBrowse = function (_props) {
                     labelField: _labelField,
                     allowNewItem: _props.allowNewItem, //allow the user to add items that are not included in the specified dataProvider
                     dataProvider: _dataProvider,
+                    bindingDefaultContext: _bindingDefaultContext,
                     value: _value,
                     multiSelect: false,
                     matchType: StringMatchType.STARTS_WITH
@@ -215,7 +216,9 @@ var AutoBrowse = function (_props) {
     if (_props.dataProvider) {
         _dataProvider = _props.dataProvider;
     }
-    
+    if (_props.bindingDefaultContext) { 
+        _bindingDefaultContext = _props.bindingDefaultContext;
+    }
     _valueField = _props.valueField;
     _labelField = _props.labelField;
     _value = _props.value;

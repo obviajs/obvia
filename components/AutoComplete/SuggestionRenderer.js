@@ -36,13 +36,12 @@ var SuggestionRenderer = function(_props)
         }
     });
 
-    var _defaultParams = {
+    let _defaultParams = {
         closeIconSide:"left",
     };
     _props = extend(false, false, _defaultParams, _props);
-    var _value = _props.value;
-    _props.href = "#";
-    var _closeIconSide = _props.closeIconSide;
+    let _value = _props.value;
+    let _closeIconSide = _props.closeIconSide;
     
     Link.call(this, _props, true);
 };

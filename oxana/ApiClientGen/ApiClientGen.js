@@ -52,11 +52,11 @@ var ApiClientGen = function (_props) {
             }
         }
     });
-{types}
 {paths}
 {pathInstances}
-    };
-    Poolable.call({apiTitle});`;
+};
+Poolable.call({apiTitle});
+{types}`;
     let pathTemplate = `\tthis.{path} = function(apiClient) { 
         apiClient = apiClient || _apiClient;
         /*{typeMap}*/
@@ -86,7 +86,7 @@ var ApiClientGen = function (_props) {
                     {
                         case "json":
                             ret = isString(resp.response) ? JSON.parse(resp.response) : resp.response;
-                            ret = new (_self[responses[resp.status].type])(ret);
+                            ret = new ({apiTitle}[responses[resp.status].type])(ret);
                             break;
                     }
                     //TODO: convert to specified type
@@ -247,7 +247,7 @@ var ApiClientGen = function (_props) {
                 let arrMethod = method.split("/");
                 let methodName = arrMethod.last();
                 
-                strMethods += methodTemplate.formatUnicorn({ "methodName": methodName, "methodDoc": methodDoc, "params": params.join(","), "requestContentType": requestContentType, "strObjQuery": strObjQuery, "objBody": objBody, "strObjPath": strObjPath, "responses": JSON.stringify(responses) });
+                strMethods += methodTemplate.formatUnicorn({ "methodName": methodName, "methodDoc": methodDoc, "params": params.join(","), "requestContentType": requestContentType, "strObjQuery": strObjQuery, "objBody": objBody, "strObjPath": strObjPath, "responses": JSON.stringify(responses), "apiTitle": apiTitle.replace(/ /g, '')});
             }
             let arrPath = path.split("/");
             let pathName = arrPath.last();
@@ -255,6 +255,7 @@ var ApiClientGen = function (_props) {
             strClosures += pathTemplate.formatUnicorn({ "path": pathName, "methods": strMethods, "basePath": basePath }) + "\r\n";
             pathInstances += `\t\tthis.${pathName}Client = new this.${pathName}();\r\n`;
         }
+        types = types.formatUnicorn({"apiTitle": apiTitle.replace(/ /g, '')});
         let apiSrc = apiTemplate.formatUnicorn({ "apiTitle": apiTitle.replace(/ /g, ''), "paths": strClosures, "pathInstances": pathInstances, "server": url, "types": types});
         return { "apiTitle": apiTitle.replace(/ /g, ''), "apiSrc": apiSrc };
     };
@@ -263,20 +264,20 @@ var ApiClientGen = function (_props) {
     /**
 {jsDoc}
     */
-    this.{typeName} = function(_props){
+   {apiTitle}.{typeName} = function(_props){
         _props = _props || {};
 {properties}
     };`;
 
     let _propDocTemplate = "\t* @property {{jsType}}  {prop}               - {description}\r\n";
     let _propTemplate = "\t\tthis.{prop} = _props.{prop};\r\n";
-    let _arrTypeTemplate = `\tthis.{typeName} = function()
+    let _arrTypeTemplate = `\t{apiTitle}.{typeName} = function()
 \t{
 \t\tlet r = ArrayEx.apply(this, arguments);
 \t\tr.memberType = {allowedTypes}; 
 \t\treturn r;
 \t};
-\tthis.{typeName}.prototype = Object.create(ArrayEx.prototype);`;
+\t{apiTitle}.{typeName}.prototype = Object.create(ArrayEx.prototype);`;
     let subTypes = {};
 
     let _freeFormTemplate = `
@@ -284,12 +285,12 @@ var ApiClientGen = function (_props) {
 {freeFormDoc}
 {jsDoc}
     */
-    this.{typeName} = function(_props){
+   {apiTitle}.{typeName} = function(_props){
         _props = _props || {};
 {properties}
         for(let prop in _props){
             if(!this.hasOwnProperty(prop)){
-                this[prop] = new _self.{childType}(_props[prop]);
+                this[prop] = new {apiTitle}.{childType}(_props[prop]);
             }
         }
     };`;

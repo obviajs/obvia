@@ -6,20 +6,32 @@
 
 //component definition
 var AutoCompleteEx = function (_props) {
-    let _separator, _tokenContainer, _tokenRepeater, _suggestionsRepeater, _input, _maxSuggestionsCount, _dpWatcher;
-
+    let _separator, _tokenContainer, _tokenRepeater, _suggestionsRepeater, _input, _maxSuggestionsCount, _valueWatcher;
+    let _dpWatcher;
     Object.defineProperty(this, "dataProvider", {
         get: function dataProvider() {
             return _dataProvider;
         },
         set: function dataProvider(v) {
             if (_dataProvider != v) {
+                if (_dpWatcher && _dataProvider) {
+                    _dpWatcher.reset();
+                    _dataProvider.off("propertyChange", _dpChanged);
+                }
                 _props.dataProvider = _dataProvider = v;
+
+                if (_dataProvider) {
+                    _dpWatcher = ChangeWatcher.getInstance(_dataProvider);
+                    _dpWatcher.watch(_dataProvider, "length", _dpChanged);
+                    _dataProvider.on("propertyChange", _dpChanged);
+                }
             }
         },
         enumerable: true
     });
-
+    let _dpChanged = function (e) {
+        _self.refreshSuggestions();
+    };
     let _dpLengthChanged = function (e) {
         e.stopPropagation();
         e.stopImmediatePropagation();
@@ -47,8 +59,9 @@ var AutoCompleteEx = function (_props) {
 
     this.endDraw = function (e) {
         if (e.target.id == this.domID) {
-            this.dataProvider = _props.dataProvider;
             _suggestionsRepeater = this.suggestionsRepeater;
+            if(!this.getBindingExpression("dataProvider"))
+                this.dataProvider = _props.dataProvider;
             _tokenContainer = this.tokenContainer;
             _input = this.tokenContainer.tokenInput;
             _tokenRepeater = this.tokenContainer.tokenRepeater;
@@ -179,6 +192,11 @@ var AutoCompleteEx = function (_props) {
             }
         }
     };
+    
+    this.refreshSuggestions = function () {
+        _querySuggestions(_input.value);
+    };
+
     let _querySuggestions = function (toMatch) {
         console.log("querySuggestions for: ", toMatch);
         let ac = differenceOnKeyMatch(_dataProvider, _value, _valueField);
@@ -198,6 +216,7 @@ var AutoCompleteEx = function (_props) {
             _suggestionsRepeater.classes = cls;
             _suggestionsRepeater.attr["aria-expanded"] = true;
         } else {
+            _closeSuggestionsList();
             _input.$el.attr('placeholder', 'No results found :(').delay(1000).queue(function (n) {
                 $(this).attr('placeholder', 'Type something...');
                 n();
@@ -337,8 +356,8 @@ var AutoCompleteEx = function (_props) {
                 if (!_value.equals(v)) {
                     //is the tokenRepeater rendered yet ? 
                     if (_tokenRepeater && _tokenRepeater.$container) {
-                        if (_dpWatcher && _value) {
-                            _dpWatcher.reset();
+                        if (_valueWatcher && _value) {
+                            _valueWatcher.reset();
                             _value.off("propertyChange", _dpLengthChanged);
                         }
                         _tokenRepeater.dataProvider = _value = new ArrayEx(v);
@@ -346,8 +365,8 @@ var AutoCompleteEx = function (_props) {
                         this.trigger('change');
                         _tokenInputReSize();
                         if (_value) {
-                            _dpWatcher = ChangeWatcher.getInstance(_value);
-                            _dpWatcher.watch(_value, "length", _dpLengthChanged);
+                            _valueWatcher = ChangeWatcher.getInstance(_value);
+                            _valueWatcher.watch(_value, "length", _dpLengthChanged);
                             _value.on("propertyChange", _dpLengthChanged);
                         }
                     } else
