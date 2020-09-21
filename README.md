@@ -1,30 +1,26 @@
 # Obvia
-Oxana user interface javascript library.
-
-## Introduction
-Oxana (pronounced /oksanaː/) is a compact and easy to use framework for building user interfaces for primarily business solutions. It helps the developer to create  beautiful and sleek user interfaces even on complex and special purpose web applications. 
+Obvia is an MIT-licensed open source Javascript framework created to make the development of single page applications as easy and obvious as possible. It is designed with the objective of being easy to work with, separating code from data, separating structural components (layout) from functional components and allowing embedded state and history management. Obvia consists of UI components, application and applets, general use libraries, and code generation utilities.
 
 ## Browser Compatibility
-OxanaUI supports all browsers that are ES5-compliant (IE8 and below are not supported).
+Obvia supports all browsers that are ES5-compliant (IE8 and below are not supported).
 
 ## Documentation
-To check out live examples and docs, visit oxanaui.com.
+To check out the documents and live examples, please visit [obviajs.com]
 
 ## Questions
-For questions and support please use the official forum or community chat. The issue list of this repo is exclusively for bug reports and feature requests.
+For questions and support, please use the community [chat]. The issue list of this repository is **exclusively** for bug reports and feature requests.
 
 ## Issues
-Please make sure to read the Issue Reporting Checklist before opening an issue. Issues not conforming to the guidelines may be closed immediately.
+Before reporting an issue, please read the [Issue Reporting Guidelines]. Issues that do not follow the guidelines may get closed.
 
-## Changelog
-Detailed changes for each release are documented in the release notes.
-
-## Stay In Touch
-Blog
+## Want to Help?
+If you would like to contribute some code or improve the documentation, please read our [Contribution Guidelines] then check out the current issues. Your work is always appreciated!
 
 ## Contribution
-Thank you to everyone who has contributed to ***OxanaUI***!
+Thank you to everyone who has contributed to ***Obvia***!
 
 ## License
 MIT\
 Copyright (c) 2020-present, Kreatx shpk 
+
+[obviajs.com]: https://obviajs.com/
