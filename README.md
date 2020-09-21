@@ -24,3 +24,5 @@ MIT\
 Copyright (c) 2020-present, Kreatx shpk 
 
 [obviajs.com]: https://obviajs.com/
+[Issue Reporting Guidelines]: https://github.com/kreatx-admin/obvia/blob/update-readme-and-contributing/.github/CONTRIBUTING.md#issue-reporting-guidelines
+[Contribution Guidelines]: https://github.com/kreatx-admin/obvia/blob/update-readme-and-contributing/.github/CONTRIBUTING.md
