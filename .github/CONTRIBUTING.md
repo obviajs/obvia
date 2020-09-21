@@ -8,7 +8,7 @@ We are really excited that you would like to contribute to Obvia and help make i
 - [Commit Message Guidelines](#commit-message-guidelines)
 
 ## Code of Conduct
-We would like to keep Obvia an open and inclusive community to everybody. Please read and follow our [Code of Conduct](https://github.com/kreatx-admin/obvia/blob/update-readme-and-contributing/.github/CODE_OF_CONDUCT.md).
+We would like to keep Obvia an open and inclusive community to everybody. Please read and follow our [Code of Conduct.](https://github.com/kreatx-admin/obvia/blob/master/.github/CODE_OF_CONDUCT.md)
 
 ## Issue Reporting Guidelines
 Before submitting an issue, please search the issue tracker, maybe an issue for your problem already exists and the discussion can help you find a solution or workaround.
