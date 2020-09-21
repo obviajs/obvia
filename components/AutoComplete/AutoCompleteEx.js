@@ -30,7 +30,8 @@ var AutoCompleteEx = function (_props) {
         enumerable: true
     });
     let _dpChanged = function (e) {
-        _self.refreshSuggestions();
+        if (_input.$el[0] == document.activeElement)
+            _self.refreshSuggestions();
     };
     let _dpLengthChanged = function (e) {
         e.stopPropagation();
@@ -60,7 +61,7 @@ var AutoCompleteEx = function (_props) {
     this.endDraw = function (e) {
         if (e.target.id == this.domID) {
             _suggestionsRepeater = this.suggestionsRepeater;
-            if(!this.getBindingExpression("dataProvider"))
+            if (!this.getBindingExpression("dataProvider"))
                 this.dataProvider = _props.dataProvider;
             _tokenContainer = this.tokenContainer;
             _input = this.tokenContainer.tokenInput;
@@ -192,7 +193,7 @@ var AutoCompleteEx = function (_props) {
             }
         }
     };
-    
+
     this.refreshSuggestions = function () {
         _querySuggestions(_input.value);
     };

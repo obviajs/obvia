@@ -49,9 +49,9 @@ var Applet = function (_props) {
     //Applet implementation skeleton
     let _behaviors = _props.behaviors;
     let _title = _props.title;
-    
-    this.route = function (msg) { 
-        if ((_parent == _app) || msg[_anchor]) { 
+
+    this.route = function (msg) {
+        if ((_parent == _app) || msg[_anchor]) {
             return coroutine(function* () {
                 let p = yield _self.init(msg[_anchor]);
 
@@ -68,11 +68,11 @@ var Applet = function (_props) {
             });
         }
     };
-    
+
     this.buildHash = function (s) {
         let inst = s ? s : _self;
 
-        return inst.parent == inst.app ? "#" + inst.anchor + "?": this.buildHash(inst.parent) + inst.anchor; 
+        return inst.parent == inst.app ? "#" + inst.anchor + "?" : this.buildHash(inst.parent) + inst.anchor;
     };
     let _amPresent = function () {
 
@@ -84,8 +84,9 @@ var Applet = function (_props) {
         //getChainValue(host, chain)
         let m = BrowserUtils.parse(BrowserManager.getInstance().hash);
         if (m.hash && m.hash != _anchor) {
-           // BrowserManager.getInstance().pushState(null, _app.title || _title, "#" + _anchor);
+            // BrowserManager.getInstance().pushState(null, _app.title || _title, "#" + _anchor);
         }
+        _backWards(m);
         return (!_loaded ? coroutine(function* () {
             let rnd = _forceReload ? "?r=" + Math.random() : "";
             let r = yield Promise.all([
@@ -93,21 +94,21 @@ var Applet = function (_props) {
                 //import uses different starting point (currrent file directory)
                 import(_furl + _anchor + ".js" + rnd),
                 _dataPromise ? (typeof _dataPromise == 'function' ? _dataPromise.call() : _dataPromise) : Promise.resolve(_data)
-            ]).then((p) => { 
+            ]).then((p) => {
                 let module = p[1];
                 _data = p[2];
                 _implementation = new module.Implementation(_self, msg);
-                _implementation.guid = _guid;                
+                _implementation.guid = _guid;
                 _app.addImplementation(_implementation);
                 return p;
             });
-            
+
             _literal = JSON.parse(r[0].response);
             _literal.props.bindingDefaultContext = _data;
             _view = Component.fromLiteral(_literal);
-            
+
             _self.addBehaviors(_view, _behaviors, false);
-            
+
             if (_applets) {
                 let len = _applets.length;
                 for (let i = 0; i < len; i++) {
@@ -119,7 +120,7 @@ var Applet = function (_props) {
                 }
             }
             return _self;
-        }) : Promise.resolve(_literal)).then(((l) => { 
+        }) : Promise.resolve(_literal)).then(((l) => {
             let evt = jQuery.Event("appletInit");
             evt.map = {};
             if (msg)
@@ -136,9 +137,19 @@ var Applet = function (_props) {
             return _self;
         }));
     };
-    
+
+    let _backWards = function (m) {
+        let chain = [],
+            p = _self.parent;
+        while (p.ctor != 'App') {
+            chain.unshift(p.anchor);
+            p = p.parent;
+        }
+        let mm = getChainValue(m.map, chain);
+    };
+
     this.addBehaviors = function (cmps, behaviors, recurse = true) {
-        var cmps = isObject(cmps) && !cmps.forEach?[cmps]:cmps;
+        var cmps = isObject(cmps) && !cmps.forEach ? [cmps] : cmps;
         let eventTypesJoined = "";
         for (let b in behaviors) {
             eventTypesJoined += " " + b;
@@ -156,7 +167,7 @@ var Applet = function (_props) {
     };
 
     this.removeBehaviors = function (cmps, behaviors, recurse = true) {
-        var cmps = isObject(cmps) && !cmps.forEach?[cmps]:cmps;
+        var cmps = isObject(cmps) && !cmps.forEach ? [cmps] : cmps;
         let eventTypesJoined = "";
         for (let b in behaviors) {
             eventTypesJoined += " " + b;
@@ -173,9 +184,9 @@ var Applet = function (_props) {
             }
         }
     };
-    
+
     let _appletInit = function (e) {
-        if (e.target != _self && _appletsMap[e.target.anchor] && e.currentTarget != _self) { 
+        if (e.target != _self && _appletsMap[e.target.anchor] && e.currentTarget != _self) {
             //extend e and trigger
             _map[_anchor][e.target.anchor] = e.map[e.target.anchor];
             e.map = _map;
@@ -227,15 +238,14 @@ var Applet = function (_props) {
         },
         configurable: true
     });
-    
-    Object.defineProperty(this, "attr",
-    {
+
+    Object.defineProperty(this, "attr", {
         get: function attr() {
             return _attr;
         },
         enumerable: true
     });
-    
+
     Object.defineProperty(this, "implementation", {
         get: function implementation() {
             return _implementation;
@@ -278,18 +288,14 @@ var Applet = function (_props) {
         configurable: true
     });
 
-    Object.defineProperty(this, "appletsMap", 
-    {
-        get: function appletsMap() 
-        {
+    Object.defineProperty(this, "appletsMap", {
+        get: function appletsMap() {
             return _appletsMap;
         }
     });
 
-    Object.defineProperty(this, "applets", 
-    {
-        get: function applets() 
-        {
+    Object.defineProperty(this, "applets", {
+        get: function applets() {
             return _applets;
         }
     });

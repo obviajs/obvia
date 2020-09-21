@@ -1,7 +1,7 @@
 var ApiClientGen = function (_props) {
     let _defaultParams = {
         url: "yaml_url",
-        requestBodyParamMode:1,
+        requestBodyParamMode: 1,
         title: "",
         typeNamePrefix: "o"
     };
@@ -22,8 +22,8 @@ var ApiClientGen = function (_props) {
             let oas = YAML.parse(r.response);
             return _generate(oas);
         });
-    };    
-    
+    };
+
     let apiTemplate = `var {apiTitle} = function(_props){
     let _defaultParams = {
         server: "{server}"
@@ -65,7 +65,7 @@ Poolable.call({apiTitle});
         OAMethod.call(this, apiClient);
         this.basePath = _server + "{basePath}";
     };`;
-    
+
     let methodTemplate = `
     {methodDoc}
     \tthis.{methodName} = function({params}){
@@ -103,7 +103,8 @@ Poolable.call({apiTitle});
     let typeNames = [];
     let types = "";
     let _generate = function (oas) {
-        let strClosures = "", pathInstances = "";
+        let strClosures = "",
+            pathInstances = "";
         let typeMap = {};
         let url = oas.servers[0].url;
         let apiTitle = oas.info.title + _title;
@@ -112,15 +113,15 @@ Poolable.call({apiTitle});
             typeMap[path] = {};
             let responses = {};
             for (let method in oas.paths[path]) {
-                if (_httpMethods.indexOf(method.toLocaleLowerCase()) < 0) { 
-                    throw new Error(method+" is not a valid http method.");
+                if (_httpMethods.indexOf(method.toLocaleLowerCase()) < 0) {
+                    throw new Error(method + " is not a valid http method.");
                 }
                 typeMap[path][method] = {};
                 let strObjQuery = "";
                 let objBody = null;
                 let strObjPath = "";
                 let params = [];
-                    
+
                 let methodDoc = "\t/**\r\n\t\t*" + oas.paths[path][method].summary + "\r\n";
                 if (oas.paths[path][method].parameters) {
                     let pLen = oas.paths[path][method].parameters.length;
@@ -150,39 +151,39 @@ Poolable.call({apiTitle});
                             let typeChain = typePath.split('/');
                             typeChain.shift();
                             typeInfo = getChainValue(oas, typeChain);
-                            typeInfo.title = typeInfo.title || typeChain.last();
+                            typeInfo.title = typeChain.last() || typeInfo.title;
                         }
                         let typeDefined = typeInfo.title != null;
                         typeInfo.title = typeInfo.title || convertToCamelCase(method + "RequestBody" + "_" + path.split("/").last());
                         typeInfo.type = typeInfo.type || "object";
-                        if ((requestBodyParamMode == 2 || !typeDefined) && typeInfo.type == "object") { 
+                        if ((requestBodyParamMode == 2 || !typeDefined) && typeInfo.type == "object") {
                             let wrapParams = "";
-                            for (let prop in typeInfo.properties) { 
+                            for (let prop in typeInfo.properties) {
                                 wrapParams = wrapParams == "" ? wrapParams : wrapParams + ",";
                                 params.push(prop);
-                                if (typeInfo.properties[prop].type == "object") { 
+                                if (typeInfo.properties[prop].type == "object") {
                                     let memberTypeInfo = typeInfo.properties[prop];
                                     if (typeNames.indexOf(memberTypeInfo.title) < 0) {
                                         let t = _parseType(oas, memberTypeInfo);
-                                        if (t.typeNames.length > 0) {                                            
+                                        if (t.typeNames.length > 0) {
                                             typeNames.splicea(typeNames.length, 0, t.typeNames);
                                         }
                                         types += t.types;
                                     }
-                                    methodDoc += "\t\t* @param {" + memberTypeInfo.title + "} " + prop + " " + typeInfo.properties[prop].description + "\r\n";                              
+                                    methodDoc += "\t\t* @param {" + memberTypeInfo.title + "} " + prop + " " + typeInfo.properties[prop].description + "\r\n";
                                 } else if (typeInfo.properties[prop].$ref) {
                                     let typePath = typeInfo.properties[prop].$ref;
                                     let typeChain = typePath.split('/');
                                     typeChain.shift();
                                     let memberTypeInfo = getChainValue(oas, typeChain);
-                                    memberTypeInfo.title = memberTypeInfo.title || typeChain.last();    
+                                    memberTypeInfo.title = typeChain.last() || memberTypeInfo.title;
                                     if (typeNames.indexOf(memberTypeInfo.title) < 0) {
                                         let t = _parseType(oas, memberTypeInfo);
                                         if (t.typeNames.length > 0)
                                             typeNames.splicea(typeNames.length, 0, t.typeNames);
                                         types += t.types;
                                     }
-                                    methodDoc += "\t\t* @param {" + memberTypeInfo.title + "} " + prop + " " + typeInfo.properties[prop].description || memberTypeInfo.description + "\r\n";                                                    
+                                    methodDoc += "\t\t* @param {" + memberTypeInfo.title + "} " + prop + " " + typeInfo.properties[prop].description || memberTypeInfo.description + "\r\n";
                                 } else
                                     methodDoc += "\t\t* @param {" + typeInfo.properties[prop].type + "} " + prop + " " + typeInfo.properties[prop].description + "\r\n";
                                 wrapParams += "\"" + prop + "\":" + prop;
@@ -192,8 +193,8 @@ Poolable.call({apiTitle});
                             let props;
                             if (isObject(typeInfo.properties))
                                 props = Object.keys(typeInfo.properties);
-                            
-                            if (props !=null && props.length == 1) {
+
+                            if (props != null && props.length == 1) {
                                 typeInfo = typeInfo.properties[props[0]];
                                 typeInfo.title = typeInfo.title || props[0];
                                 //objBody = '{"'+typeInfo.title+'":'+ typeInfo.title +'}';
@@ -201,19 +202,20 @@ Poolable.call({apiTitle});
                             } else if (((typeInfo.type == "object" && typeDefined) || typeInfo.type == "array")) {
                                 //objBody = '{"'+typeInfo.title+'":'+ typeInfo.title +'}';
                                 objBody = typeInfo.title;
-                            }
-                            else { 
+                            } else {
                                 objBody = typeInfo.title;
                             }
+                            let typeName = typeInfo.title;
                             if (typeNames.indexOf(typeInfo.title) < 0) {
                                 let t = _parseType(oas, typeInfo);
                                 if (t.typeNames.length > 0)
                                     typeNames.splicea(typeNames.length, 0, t.typeNames);
                                 types += t.types;
+                                typeName = t.typeName;
                             }
-                            methodDoc += "\t\t* @param {" + typeInfo.title + "} " + typeInfo.title + " The request body for " + method + " " + path + " \r\n";
+                            methodDoc += "\t\t* @param {" + typeName + "} " + typeInfo.title + " The request body for " + method + " " + path + " \r\n";
                             params.push(typeInfo.title);
-                           
+
                         }
                     }
                 }
@@ -228,9 +230,12 @@ Poolable.call({apiTitle});
                                 let typeChain = typePath.split('/');
                                 typeChain.shift();
                                 typeInfo = getChainValue(oas, typeChain);
-                                typeInfo.title = typeInfo.title || typeChain.last();
+                                typeInfo.title = typeChain.last() || typeInfo.title;
                             }
-                            responses[r] = { "responseType": ct, "type": typeInfo.title };
+                            responses[r] = {
+                                "responseType": ct,
+                                "type": typeInfo.title
+                            };
                             if (typeNames.indexOf(typeInfo.title) < 0) {
                                 let t = _parseType(oas, typeInfo);
                                 if (t.typeNames.length > 0)
@@ -246,20 +251,48 @@ Poolable.call({apiTitle});
                 methodDoc += "\r\n\t\t*/";
                 let arrMethod = method.split("/");
                 let methodName = arrMethod.last();
-                
-                strMethods += methodTemplate.formatUnicorn({ "methodName": methodName, "methodDoc": methodDoc, "params": params.join(","), "requestContentType": requestContentType, "strObjQuery": strObjQuery, "objBody": objBody, "strObjPath": strObjPath, "responses": JSON.stringify(responses), "apiTitle": apiTitle.replace(/ /g, '')});
+
+                strMethods += methodTemplate.formatUnicorn({
+                    "methodName": methodName,
+                    "methodDoc": methodDoc,
+                    "params": params.join(","),
+                    "requestContentType": requestContentType,
+                    "strObjQuery": strObjQuery,
+                    "objBody": objBody,
+                    "strObjPath": strObjPath,
+                    "responses": JSON.stringify(responses),
+                    "apiTitle": apiTitle.replace(/ /g, '')
+                });
             }
             let arrPath = path.split("/");
             let pathName = arrPath.last();
             let basePath = (url[url.length - 1] != '/' && path[0] != '/' ? '/' : '') + path;
-            strClosures += pathTemplate.formatUnicorn({ "path": pathName, "methods": strMethods, "basePath": basePath }) + "\r\n";
+            strClosures += pathTemplate.formatUnicorn({
+                "path": pathName,
+                "methods": strMethods,
+                "basePath": basePath
+            }) + "\r\n";
             pathInstances += `\t\tthis.${pathName}Client = new this.${pathName}();\r\n`;
         }
-        types = types.formatUnicorn({"apiTitle": apiTitle.replace(/ /g, '')});
-        let apiSrc = apiTemplate.formatUnicorn({ "apiTitle": apiTitle.replace(/ /g, ''), "paths": strClosures, "pathInstances": pathInstances, "server": url, "types": types});
-        return { "apiTitle": apiTitle.replace(/ /g, ''), "apiSrc": apiSrc };
+        types = types.formatUnicorn({
+            "apiTitle": apiTitle.replace(/ /g, '')
+        });
+        let apiSrc = apiTemplate.formatUnicorn({
+            "apiTitle": apiTitle.replace(/ /g, ''),
+            "paths": strClosures,
+            "pathInstances": pathInstances,
+            "server": url,
+            "types": types
+        });
+        return {
+            "apiTitle": apiTitle.replace(/ /g, ''),
+            "apiSrc": apiSrc
+        };
     };
-    let _oasjsMap = { "integer": "Number", "string": "String" };
+    let _oasjsMap = {
+        "integer": "Number",
+        "string": "String"
+    };
     let _typeTemplate = `
     /**
 {jsDoc}
@@ -336,28 +369,37 @@ Poolable.call({apiTitle});
                                 myTypeNames.splicea(myTypeNames.length, 0, r.typeNames);
                             }
                             childType = r.typeName;
-                            freeFormDocInst = freeFormDoc.formatUnicorn({ "childType": r.typeName, "type": propName});
+                            freeFormDocInst = freeFormDoc.formatUnicorn({
+                                "childType": r.typeName,
+                                "type": propName
+                            });
                         }
-                    }                    
+                    }
                 }
                 if (subTypes[propName] == null) {
                     subTypes[propName] = myTypeNames;
-                    types += (typeInfo.additionalProperties ? _freeFormTemplate : _typeTemplate).formatUnicorn({ "jsDoc": jsDoc, "typeName": propName, "properties": properties, "freeFormDoc": freeFormDocInst, "childType": childType}) + "\r\n";
-                }                
+                    types += (typeInfo.additionalProperties ? _freeFormTemplate : _typeTemplate).formatUnicorn({
+                        "jsDoc": jsDoc,
+                        "typeName": propName,
+                        "properties": properties,
+                        "freeFormDoc": freeFormDocInst,
+                        "childType": childType
+                    }) + "\r\n";
+                }
             } else
                 myTypeNames = subTypes[propName];
         } else if (typeInfo.type == "array") {
             let allowedTypes = [];
             if (typeInfo.items.oneOf) {
-                for (let i = 0; i < typeInfo.items.oneOf.length; i++) { 
-                    for (let prop in typeInfo.items.oneOf[i]) { 
+                for (let i = 0; i < typeInfo.items.oneOf.length; i++) {
+                    for (let prop in typeInfo.items.oneOf[i]) {
                         if (prop == "$ref" || typeInfo.items.oneOf[i][prop] == "object") {
                             let r = _parseType(oas, typeInfo.items.oneOf[i]);
                             types += r.types.length > 0 ? r.types + "\r\n" : "";
                             if (r.typeNames.length > 0) {
                                 myTypeNames.splicea(myTypeNames.length, 0, r.typeNames);
                             }
-                        } else { 
+                        } else {
                             allowedTypes.push(_oasjsMap[typeInfo.items.oneOf[i][prop]]);
                         }
                     }
@@ -373,18 +415,20 @@ Poolable.call({apiTitle});
             let arrTypeName = propName = convertToCamelCase("array-" + allowedTypes.join("-"));
             if (subTypes[arrTypeName] == null) {
                 subTypes[arrTypeName] = myTypeNames;
-                types += _arrTypeTemplate.formatUnicorn({ "typeName": arrTypeName, "allowedTypes": JSON.stringify(allowedTypes) }) + "\r\n";
+                types += _arrTypeTemplate.formatUnicorn({
+                    "typeName": arrTypeName,
+                    "allowedTypes": JSON.stringify(allowedTypes)
+                }) + "\r\n";
             }
-        }
-        else if (typeInfo.$ref) {
+        } else if (typeInfo.$ref) {
             let typePath = typeInfo.$ref;
             let typeChain = typePath.split('/');
             typeChain.shift();
             typeInfo = getChainValue(oas, typeChain);
             description = typeInfo.description;
             jsType = typeChain.last();
-            propName = propName || typeInfo.title || jsType;
-            
+            propName = jsType || propName || typeInfo.title;
+
             let r = _parseType(oas, typeInfo, propName);
             if (r.typeNames.length > 0) {
                 myTypeNames.splicea(myTypeNames.length, 0, r.typeNames);
@@ -394,8 +438,20 @@ Poolable.call({apiTitle});
                 //+ _typeTemplate.formatUnicorn({"jsDoc":r.jsDoc, "typeName": propName, "properties":r.properties});               
             }
         }
-        properties = _propTemplate.formatUnicorn({ "prop": propName });
-        jsDoc = _propDocTemplate.formatUnicorn({ "jsType": jsType, "prop": propName, "description": description });
-        return { "properties": properties, "jsDoc": jsDoc, "types": types, "typeNames": myTypeNames, "typeName": propName};
+        properties = _propTemplate.formatUnicorn({
+            "prop": propName
+        });
+        jsDoc = _propDocTemplate.formatUnicorn({
+            "jsType": jsType,
+            "prop": propName,
+            "description": description
+        });
+        return {
+            "properties": properties,
+            "jsDoc": jsDoc,
+            "types": types,
+            "typeNames": myTypeNames,
+            "typeName": propName
+        };
     };
 };

@@ -34,7 +34,6 @@
             rjs.define("./oxana/kanban/Kanban.js", "Kanban");
             rjs.define("./oxana/kanban/css/kanban_default.css", "kanban_default_css");
             rjs.define("./oxana/GaiaAPI/GaiaAPI_forms.js", "GaiaAPI_forms");
-            rjs.define("./oxana/GaiaAPI/GaiaAPI_DV_forms.js", "GaiaAPI_DV_forms");
             rjs.require([
                 "CollectionEditor",
                 "ObjectEditor",
@@ -47,8 +46,7 @@
                 "GaiaAPI_Utils",
                 "Kanban",
                 "kanban_default_css",
-                "GaiaAPI_forms",
-                "GaiaAPI_DV_forms"
+                "GaiaAPI_forms"
             ]).then(function () {
                 //rjs.define("./examples/cache/example.js", "api_client_cache");
                 rjs.define("./examples/ApiClient/example.js", "ApiClientExample");
