@@ -42,7 +42,7 @@ let Implementation = function (applet) {
                 promise.catch(function (err) {
                     info.visible = true;
                 });
-            } else { 
+            } else {
                 info.visible = true;
             }
         },
