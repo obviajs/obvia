@@ -136,64 +136,64 @@ var Repeater = function (_props, _hideComponents = false) {
                 _self.trigger('creationComplete');
             }
         }
-        if (index + 1 == _self.dataProvider.length) {
+        if (index + 1 == _self.dataProvider.length && _components.length > 0) {
             _rowItems[_rowItems.length - 1][_components[0].props.id].scrollTo();
         }
     };
-
-    this.dataProviderChanged = function (toAdd, toRemove, toRefresh) {
-        acSort(toRemove.a1_indices, null, 2);
-        for (let i = 0; i < toRemove.a1_indices.length; i++) {
-            //var ind = this.rowItems.length + i;
-            if (toRefresh.indexOf(toRemove.a1_indices[i]) == -1 && toAdd.a1_indices.indexOf(toRemove.a1_indices[i]) == -1)
-                if (toRemove.a1_indices[i] < _rows.length)
-                    this.removeRow(toRemove.a1_indices[i], false, true, dpRemove = false);
-            //this.removeChildAtIndex(toRemove.a1_indices[i]);
-        }
-        if (toAdd.a1_indices.length > 0) {
-            acSort(toAdd.a1_indices);
-            let transferNodes = false;
-            for (let i = 0; i < toAdd.a1_indices.length; i++) {
-                if (toRefresh.indexOf(toAdd.a1_indices[i]) == -1 && toRemove.a1_indices.indexOf(toAdd.a1_indices[i]) == -1) {
-                    if (!transferNodes) {
-                        _self.$container.contents().appendTo(_$hadow);
-                        transferNodes = true;
+    if (!this.hasOwnProperty("dataProviderChanged")) {
+        this.dataProviderChanged = function (toAdd, toRemove, toRefresh) {
+            acSort(toRemove.a1_indices, null, 2);
+            for (let i = 0; i < toRemove.a1_indices.length; i++) {
+                //var ind = this.rowItems.length + i;
+                if (toRefresh.indexOf(toRemove.a1_indices[i]) == -1 && toAdd.a1_indices.indexOf(toRemove.a1_indices[i]) == -1)
+                    if (toRemove.a1_indices[i] < _rows.length)
+                        this.removeRow(toRemove.a1_indices[i], false, true, dpRemove = false);
+                //this.removeChildAtIndex(toRemove.a1_indices[i]);
+            }
+            if (toAdd.a1_indices.length > 0) {
+                acSort(toAdd.a1_indices);
+                let transferNodes = false;
+                for (let i = 0; i < toAdd.a1_indices.length; i++) {
+                    if (toRefresh.indexOf(toAdd.a1_indices[i]) == -1 && toRemove.a1_indices.indexOf(toAdd.a1_indices[i]) == -1) {
+                        if (!transferNodes) {
+                            _self.$container.contents().appendTo(_$hadow);
+                            transferNodes = true;
+                        }
+                        let ind = toAdd.a1_indices[i];
+                        let rowComponentsPromises = this.addRow(this.dataProvider[ind], ind);
+                        Promise.all(rowComponentsPromises).then(function () {
+                            _rowAdded(ind, _self.dataProvider[ind]);
+                        });
+                        _compRenderPromises.splicea(_compRenderPromises.length, 0, rowComponentsPromises);
                     }
-                    let ind = toAdd.a1_indices[i];
-                    let rowComponentsPromises = this.addRow(this.dataProvider[ind], ind);
-                    Promise.all(rowComponentsPromises).then(function () {
-                        _rowAdded(ind, _self.dataProvider[ind]);
+                }
+                if (_compRenderPromises.length > 0) {
+                    let cLen = _compRenderPromises.length;
+                    Promise.all(_compRenderPromises).then(function () {
+                        if (_compRenderPromises.length > 0) {
+                            console.log('prevLength:', cLen, ' currentLength: ', _compRenderPromises.length);
+                            _$hadow.contents().appendTo(_self.$container);
+                            _compRenderPromises = [];
+
+
+                        }
                     });
-                    _compRenderPromises.splicea(_compRenderPromises.length, 0, rowComponentsPromises);
                 }
             }
-            if (_compRenderPromises.length > 0) {
-                let cLen = _compRenderPromises.length;
-                Promise.all(_compRenderPromises).then(function () {
-                    if (_compRenderPromises.length > 0) {
-                        console.log('prevLength:', cLen, ' currentLength: ', _compRenderPromises.length);
-                        _$hadow.contents().appendTo(_self.$container);
-                        _compRenderPromises = [];
 
-
-                    }
-                });
+            for (let i = 0; i < toRefresh.length; i++) {
+                let ri = toRefresh[i];
+                for (let cmpID in _rowItems[ri]) {
+                    let cmp = _rowItems[ri][cmpID];
+                    cmp.refreshBindings(_self.dataProvider[ri]);
+                    cmp.$el.attr(_guidField, _self.dataProvider[ri][_guidField]);
+                    cmp.attr[_guidField] = _self.dataProvider[ri][_guidField];
+                }
             }
-        }
-
-        for (let i = 0; i < toRefresh.length; i++) {
-            let ri = toRefresh[i];
-            for (let cmpID in _rowItems[ri]) {
-                let cmp = _rowItems[ri][cmpID];
-                cmp.refreshBindings(_self.dataProvider[ri]);
-                cmp.$el.attr(_guidField, _self.dataProvider[ri][_guidField]);
-                cmp.attr[_guidField] = _self.dataProvider[ri][_guidField];
-            }
-        }
 
 
-    };
-
+        };
+    }
     Object.defineProperty(this, "rendering", {
         get: function rendering() {
             return _rendering;

@@ -84,8 +84,8 @@ var DataGrid = function (_props) {
             }
 
             virtualIndex = (_self.rowCount + virtualIndex < _self.dataProvider.length) ? virtualIndex : (_self.dataProvider.length - _self.rowCount);
-            _prevScrollTop = scrollTop;
             if (_virtualIndex != virtualIndex) {
+                _prevScrollTop = scrollTop;
                 _self.applyVirtualBindings(virtualIndex);
                 _virtualIndex = virtualIndex;
 
@@ -124,10 +124,26 @@ var DataGrid = function (_props) {
             } else {
                 if (deltaScroll < 0) {
                     if (_self.dataProvider.nextPage && _self.dataProvider.totalRecords == Infinity) {
+                        _prevScrollTop = scrollTop;
                         _self.dataProvider.nextPage().then(function () {
+                            let vinc = Math.abs(deltaScroll / _avgRowHeight);
+                            virtualIndex += vinc;
+                            virtualIndex = (_self.rowCount + virtualIndex < _self.dataProvider.length) ? virtualIndex : (_self.dataProvider.length - _self.rowCount);
+                            if (_virtualIndex != virtualIndex) {
+                                _virtualIndex = virtualIndex;
+                                _self.applyVirtualBindings(_virtualIndex);
+                            } else {
+                                alert("ehlo");
+                            }
                             _self.$message.remove();
                         });
                     } else {
+                        _self.$table.css({
+                            "margin-top": _prevScrollTop + "px"
+                        });
+                        _self.$scrollArea.css({
+                            "margin-top": (-(_self.realHeight) - _prevScrollTop) + "px"
+                        });
                         r = false;
                         _self.$message.remove();
                     }
@@ -549,8 +565,8 @@ var DataGrid = function (_props) {
             if (_currentIndex == 1 && _allowNewItem) {
                 //model.displayRemoveButton = false;
             }
-            this.rows[index].remove();
-            this.rows.splice(index, 1);
+            _rows[index].remove();
+            _rows.splice(index, 1);
             _self.rowItems.splice(index, 1);
             _cells.splice(index, 1);
             _cellItemRenderers.splice(index, 1);
@@ -670,17 +686,17 @@ var DataGrid = function (_props) {
                 _selectedItems.splice(0, _selectedItems.length);
             }
         }
-        let len = _self.rows.length;
+        let len = _rows.length;
         for (let i = 0; i < len; i++) {
             let found = false;
             for (let j = 0; j < _selectedIndices.length; j++) {
                 if (i == _selectedIndices[j] - ra.virtualIndex) {
                     found = true;
-                    _self.rows[i].addClass("datagrid-row-selected");
+                    _rows[i].addClass("datagrid-row-selected");
                 }
             }
             if (!found) {
-                _self.rows[i].removeClass("datagrid-row-selected");
+                _rows[i].removeClass("datagrid-row-selected");
             }
         }
     };
@@ -781,11 +797,54 @@ var DataGrid = function (_props) {
             this.dataProvider = _props.dataProvider;
         return _rPromise;
     };
+
+    this.dataProviderChanged = function (toAdd, toRemove, toRefresh) {
+        console.log();
+        if (_rows.length > _self.dataProvider.length) {
+            for (let i = _rows.length - 1; i >= _self.dataProvider.length; i--) {
+                this.removeRow(i, false, true, dpRemove = false);
+            }
+            _virtualIndex = 0;            
+            _self.updateDisplayList();            
+            _self.applyVirtualBindings(0);
+        } else if (_rows.length < _self.dataProvider.length && _rows.length < _self.rowCount) { 
+            for (let i = _rows.length; i < _self.rowCount; i++) { 
+                _compRenderPromises.splicea(_compRenderPromises.length, 0, this.addRow(_self.dataProvider[i], i));
+            }
+            _virtualIndex = 0;
+            Promise.all(_compRenderPromises).then(function () {
+                _self.$hadow.contents().appendTo(_self.$table);
+                _compRenderPromises = [];
+                _self.updateDisplayList();
+                _self.applyVirtualBindings(0);
+            });
+        }
+        return;
+        acSort(toRemove.a1_indices, null, 2);
+        for (let i = 0; i < toRemove.a1_indices.length; i++) {
+            //var ind = this.rowItems.length + i;
+            if (toRefresh.indexOf(toRemove.a1_indices[i]) == -1 && toAdd.a1_indices.indexOf(toRemove.a1_indices[i]) == -1)
+                if (toRemove.a1_indices[i] < _rows.length)
+                    this.removeRow(toRemove.a1_indices[i], false, true, dpRemove = false);
+            //this.removeChildAtIndex(toRemove.a1_indices[i]);
+        }
+        return;
+        for (let i = 0; i < toRefresh.length; i++) {
+            let ri = toRefresh[i];
+            for (let cmpID in _rowItems[ri]) {
+                let cmp = _rowItems[ri][cmpID];
+                cmp.refreshBindings(_self.dataProvider[ri]);
+                cmp.$el.attr(_guidField, _self.dataProvider[ri][_guidField]);
+                cmp.attr[_guidField] = _self.dataProvider[ri][_guidField];
+            }
+        }
+    };
+    let _rows = [];
     //renders a new row, adds components in stack
     this.addRow = function (data, index, isPreventable = false, focusOnRowAdd = true) {
         let rp = [];
         let beforeRowAddEvent = jQuery.Event("beforeRowAdd");
-        let rargs = new RepeaterEventArgs(_self.rowItems, data, index - 1);
+        let rargs = new RepeaterEventArgs(_self.rowItems, data, index);
         rargs.virtualIndex = _virtualIndex;
         this.trigger(beforeRowAddEvent, [_self, rargs]);
 
@@ -931,7 +990,7 @@ var DataGrid = function (_props) {
                 });
                 rp.push(cp);
             }
-            _self.rows.push(renderedRow);
+            _rows.push(renderedRow);
         }
         return rp;
     };
