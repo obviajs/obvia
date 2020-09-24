@@ -126,7 +126,7 @@ var DataGrid = function (_props) {
                     if (_self.dataProvider.nextPage && _self.dataProvider.totalRecords == Infinity) {
                         _prevScrollTop = scrollTop;
                         _self.dataProvider.nextPage().then(function () {
-                            let vinc = Math.abs(deltaScroll / _avgRowHeight);
+                            let vinc = Math.ceil(Math.abs(deltaScroll / _avgRowHeight));
                             virtualIndex += vinc;
                             virtualIndex = (_self.rowCount + virtualIndex < _self.dataProvider.length) ? virtualIndex : (_self.dataProvider.length - _self.rowCount);
                             if (_virtualIndex != virtualIndex) {
@@ -263,27 +263,26 @@ var DataGrid = function (_props) {
         }
     };
 
-    this.headerClickHandler = function (e, hIndex, column) {
-        if (typeof this.onheaderclick == 'function')
-            this.onheaderclick.apply(this, arguments);
-        alert("headerClickHandler");
-        if (!e.isDefaultPrevented() && column.sortable) {
-            this.columnSort.call(this, hIndex, column);
+    let _headerClickHandler = function (e, columnIndex, column) {
+        let columnSortEvent = jQuery.Event("columnSort");
+        columnSortEvent.originalEvent = e;
+        this.trigger(columnSortEvent, [columnIndex, column]);
+
+        if (!columnSortEvent.isDefaultPrevented() && column.sortable) {
+            _columnSort.call(this, columnIndex, column);
         }
     };
 
-    this.columnSort = function (columnIndex, column) {
+    let _columnSort = function (columnIndex, column) {
         /*
         addClass() - Adds one or more classes to the selected elements
         removeClass() - Removes one or more classes from the selected elements
         toggleClass() - Toggles between adding/removing classes from the selected elements
         */
-        alert("stub for columnSort :" + columnIndex);
     };
 
     this.createHeader = function () {
         let headerHtml = "<tr>";
-        let hi = 0;
         if (_showRowIndex) {
             headerHtml += "<th>#</th>";
         }
@@ -297,16 +296,13 @@ var DataGrid = function (_props) {
         for (let columnIndex = 0; columnIndex < _columns.length; columnIndex++) {
             let column = _columns[columnIndex] = new DataGridColumn(_columns[columnIndex]);
 
-            $th = $("<th id='head_" + hi + "'>" + column.description + (column.sortable ? "<span class='fa fa-caret-" + (sortDirFADic[column.sortDirection.toLowerCase()]) + "'></span></a>" : "") + "</th>");
+            $th = $("<th id='head_" + columnIndex + "'>" + column.description + (column.sortable ? "<span class='fa fa-caret-" + (sortDirFADic[column.sortDirection.toLowerCase()]) + "'></span></a>" : "") + "</th>");
             $th.bind('click',
-                (function (hIndex, column) {
-                    return (function (e) { // a closure is created
-                        _self.headerClickHandler.call(_self, e, hIndex, column);
-                    });
-                })(hi, column));
+                function (e) { // a closure is created
+                    _headerClickHandler.call(_self, e, columnIndex, column);
+                });
             //put elements in an array so jQuery will use documentFragment which is faster
             colElements[columnIndex] = $th;
-            ++hi;
         }
         $header.append(colElements);
         this.$header.append($header);
@@ -608,10 +604,15 @@ var DataGrid = function (_props) {
             height: _virtualHeight + "px"
         });
 
+        this.$table.css({
+            "margin-top": "0px",
+            "position": "relative"
+        });
+
         this.$el.css({
             border: "1px solid black"
         });
-
+        this.$el.scrollTop(0);
         this.delayScroll = debouncePromise(_onScroll, 400);
 
         this.$el.on("scroll", function (e) {
@@ -624,7 +625,7 @@ var DataGrid = function (_props) {
                 "background-color": "white",
                 "z-index": 9999
             });
-            this.$el.append(this.$message);
+            this.$table.append(this.$message);
 
             this.$table.css({
                 "margin-top": e.target.scrollTop + "px"
@@ -753,7 +754,7 @@ var DataGrid = function (_props) {
         }
     };
 
-    let myDtEvts = ["cellEditFinished", "cellEdit", "rowEdit", "rowAdd", "rowDelete", "rowClick", "rowDblClick", "cellStyling", "rowStyling"];
+    let myDtEvts = ["cellEditFinished", "cellEdit", "rowEdit", "rowAdd", "rowDelete", "rowClick", "rowDblClick", "cellStyling", "rowStyling", "columnSort"];
     if (!Object.isEmpty(_props.attr) && _props.attr["data-triggers"] && !Object.isEmpty(_props.attr["data-triggers"])) {
         let dt = _props.attr["data-triggers"].split(" ");
         for (let i = 0; i < dt.length; i++) {
@@ -804,11 +805,11 @@ var DataGrid = function (_props) {
             for (let i = _rows.length - 1; i >= _self.dataProvider.length; i--) {
                 this.removeRow(i, false, true, dpRemove = false);
             }
-            _virtualIndex = 0;            
-            _self.updateDisplayList();            
+            _virtualIndex = 0;
+            _self.updateDisplayList();
             _self.applyVirtualBindings(0);
-        } else if (_rows.length < _self.dataProvider.length && _rows.length < _self.rowCount) { 
-            for (let i = _rows.length; i < _self.rowCount; i++) { 
+        } else if (_rows.length < _self.dataProvider.length && _rows.length < _self.rowCount) {
+            for (let i = _rows.length; i < _self.rowCount; i++) {
                 _compRenderPromises.splicea(_compRenderPromises.length, 0, this.addRow(_self.dataProvider[i], i));
             }
             _virtualIndex = 0;
@@ -818,6 +819,9 @@ var DataGrid = function (_props) {
                 _self.updateDisplayList();
                 _self.applyVirtualBindings(0);
             });
+        } else if (toAdd.result.length == toRemove.result.length && toRefresh.length == toRemove.result.length) {
+            _self.updateDisplayList();
+            _self.applyVirtualBindings(0);
         }
         return;
         acSort(toRemove.a1_indices, null, 2);
