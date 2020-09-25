@@ -2,6 +2,7 @@ var flowerCM = window.flowerCM || {};
 //base Components
 rjs.define("lib/Poolable.js", "Poolable");
 rjs.define("lib/EventDispatcher.js", "EventDispatcher");
+rjs.define("lib/Timer.js", "Timer");
 rjs.define("lib/NumberUtils.js", "NumberUtils");
 rjs.define("./components/base/EnvType.js", "EnvType");
 rjs.define("./components/base/Env.js", "Env");
@@ -227,6 +228,7 @@ rjs.define("./components/SideNav/css/sideNav.css", "sideNav_css");
 rjs.require(["EventDispatcher"]).then(function () {
     rjs.require([
         "Poolable",
+        "Timer",
         "AutoObject",
         "TwoWayMap",
         "NumberUtils",

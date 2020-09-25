@@ -29,6 +29,13 @@ var Modal = function (_props) {
                 _displayed = true;
                 let evt = jQuery.Event("displayListUpdated");
                 this.trigger(evt);
+
+                let e = jQuery.Event("shown");
+                this.trigger(e);
+            } else if (_displayed && (av.trim() == "" || av == "none")) {
+                _displayed = false;
+                let e = jQuery.Event("hidden");
+                this.trigger(e);
             }
         }
         //
@@ -68,7 +75,7 @@ var Modal = function (_props) {
                                 click: function (e) {
                                     let evt = jQuery.Event('dismiss');
                                     _self.trigger(evt);
-                                    if (!evt.isDefaultPrevented()){ 
+                                    if (!evt.isDefaultPrevented()) {
                                         _self.hide();
                                     }
                                 }
@@ -95,7 +102,7 @@ var Modal = function (_props) {
                                 click: function (e) {
                                     let evt = jQuery.Event('accept');
                                     _self.trigger(evt);
-                                    if (!evt.isDefaultPrevented()){ 
+                                    if (!evt.isDefaultPrevented()) {
                                         _self.hide();
                                     }
                                 }
@@ -112,7 +119,7 @@ var Modal = function (_props) {
         type: ContainerType.NONE,
         classes: ["modal", "modal-fullscreen"],
         attr: {
-            "data-triggers": "displayListUpdated accept dismiss",
+            "data-triggers": "displayListUpdated accept dismiss shown hidden",
             tabindex: -1,
             role: "dialog"
         },
@@ -142,7 +149,7 @@ var Modal = function (_props) {
     let fnContainerDelayInit = function () {
         Modal.all.push(_self);
         _props.css["z-index"] = 1040 + Modal.all.length;
-        if (!Modal.BackDrop) { 
+        if (!Modal.BackDrop) {
             Modal.BackDrop = Component.fromLiteral({
                 ctor: Container,
                 props: {
@@ -167,36 +174,36 @@ var Modal = function (_props) {
                         classes: ["modal-content"],
                         id: "modalContent",
                         components: [{
-                            ctor: Container,
-                            props: {
-                                id: "modalHeader",
-                                type: ContainerType.NONE,
-                                classes: ["modal-header"],
-                                components: _props.components.modalHeader
+                                ctor: Container,
+                                props: {
+                                    id: "modalHeader",
+                                    type: ContainerType.NONE,
+                                    classes: ["modal-header"],
+                                    components: _props.components.modalHeader
+                                }
+                            },
+                            {
+                                ctor: Container,
+                                props: {
+                                    id: "modalBody",
+                                    type: ContainerType.NONE,
+                                    classes: ["modal-body"],
+                                    css: {
+                                        "overflow-y": "auto",
+                                        "max-height": "80vh"
+                                    },
+                                    components: _props.components.modalBody
+                                }
+                            },
+                            {
+                                ctor: Container,
+                                props: {
+                                    id: "modalFooter",
+                                    type: ContainerType.NONE,
+                                    classes: ["modal-footer"],
+                                    components: _props.components.modalFooter
+                                }
                             }
-                        },
-                        {
-                            ctor: Container,
-                            props: {
-                                id: "modalBody",
-                                type: ContainerType.NONE,
-                                classes: ["modal-body"],
-                                css: {
-                                    "overflow-y": "auto",
-                                    "max-height": "80vh"
-                                },
-                                components: _props.components.modalBody
-                            }
-                        },
-                        {
-                            ctor: Container,
-                            props: {
-                                id: "modalFooter",
-                                type: ContainerType.NONE,
-                                classes: ["modal-footer"],
-                                components: _props.components.modalFooter
-                            }
-                        }
                         ]
                     }
                 }]
@@ -206,24 +213,23 @@ var Modal = function (_props) {
 
     fnContainerDelayInit();
     _props.components = _cmps;
-    
+
     this.init = function (e) {
         if (e.target.id == this.domID) {
             this.appendTo = $(this.ownerDocument.body);
         }
     };
     let r = Container.call(this, _props);
-   
+
 
     this.show = function () {
         if (this.$el) {
             //this.$el.modal('show');
-            if (!this.attached) { 
+            if (!this.attached) {
                 this.appendTo.append(this.$el);
             }
-            if (!Modal.BackDrop.attached) { 
-                Modal.BackDrop.renderPromise().then(function (cmpInstance)
-                {
+            if (!Modal.BackDrop.attached) {
+                Modal.BackDrop.renderPromise().then(function (cmpInstance) {
                     $(_self.ownerDocument.body).append(cmpInstance.$el);
                 });
             }
@@ -237,7 +243,7 @@ var Modal = function (_props) {
     this.hide = function () {
         if (this.$el) {
             //this.$el.modal('hide');
-            Modal.BackDrop.destruct();
+            Modal.BackDrop.destruct(2);
             delete this.css["display"];
             //$(this.$el[0].ownerDocument.body).removeClass('modal-open');
         }
