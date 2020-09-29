@@ -11,6 +11,6 @@ myLi.on('creationComplete', function () {
         // alert("test");
     });
 });
-myLi.renderPromise().then(function (cmpInstance) {
+myLi.render().then(function (cmpInstance) {
     $('#root').append(cmpInstance.$el);
 });

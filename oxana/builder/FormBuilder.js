@@ -107,7 +107,7 @@ var modalRoute = function (applet) {
     if (applet.view.attached) {
         applet.view.show();
     } else {
-        applet.view.renderPromise().then(function (cmpInstance) {
+        applet.view.render().then(function (cmpInstance) {
             applet.view.show();
         });
     }
@@ -149,7 +149,7 @@ var oxana = new App({
     }]
 });
 
-//data should be loaded before calling renderPromise so that the current applet (the one in the url) implementation can access it
-oxana.renderPromise().then(function (cmpInstance) {
+//data should be loaded before calling render so that the current applet (the one in the url) implementation can access it
+oxana.render().then(function (cmpInstance) {
     $(document.body).append(cmpInstance.$el);
 });

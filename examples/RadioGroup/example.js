@@ -42,6 +42,6 @@ var myRadioGroup = new RadioGroup({
     }
 });
 
-myRadioGroup.renderPromise().then(function (cmpInstance) {
+myRadioGroup.render().then(function (cmpInstance) {
     $('#root').append(cmpInstance.$el);
 });

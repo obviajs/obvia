@@ -32,10 +32,10 @@ var btn = new Button({
     click: validationTrigger
 });
 
-form.renderPromise().then(function (cmpInstance) {
+form.render().then(function (cmpInstance) {
     $('#root').append(cmpInstance.$el);
 });
 
-btn.renderPromise().then(function (cmpInstance) {
+btn.render().then(function (cmpInstance) {
     $('#root').append(cmpInstance.$el);
 });

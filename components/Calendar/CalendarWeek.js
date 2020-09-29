@@ -526,7 +526,7 @@ var CalendarWeek = function(_props)
     let r = CalendarBase.call(this, _props);
     
     let _rPromise;
-    this.renderPromise = function () 
+    this.render = function () 
     {  
         this.$container = this.$el;
         _rPromise = new Promise((resolve, reject) => {

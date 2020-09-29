@@ -229,7 +229,7 @@ var Modal = function (_props) {
                 this.appendTo.append(this.$el);
             }
             if (!Modal.BackDrop.attached) {
-                Modal.BackDrop.renderPromise().then(function (cmpInstance) {
+                Modal.BackDrop.render().then(function (cmpInstance) {
                     $(_self.ownerDocument.body).append(cmpInstance.$el);
                 });
             }

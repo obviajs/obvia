@@ -1,9 +1,11 @@
-var loader = new Loader({ id: 'loader' });
-$('#root').append(loader.render());
+var loader = new Loader({
+    id: 'loader'
+});
+$('#root').append(await loader.render().$el);
 loader.show();
 
 var pbContainer = new ProgressBar({
-    id:'progressbar',
+    id: 'progressbar',
     valueNow: 75,
     valueMin: 0,
     valueMax: 100,
@@ -15,13 +17,11 @@ var pbContainer = new ProgressBar({
     }
 });
 
-pbContainer.on('creationComplete', function(e){
+pbContainer.on('creationComplete', function (e) {
     loader.hide();
     pbContainer.valueNow = 75;
     pbContainer.label = "65%";
 });
-pbContainer.renderPromise().then(function (cmpInstance)
-{
-  $('#root').append(cmpInstance.$el);
+pbContainer.render().then(function (cmpInstance) {
+    $('#root').append(cmpInstance.$el);
 });
-

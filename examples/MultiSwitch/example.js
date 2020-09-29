@@ -77,9 +77,9 @@ var ms2 = new MultiSwitch({
         //e.preventDefault();
     }
 });
-ms.renderPromise().then(function (cmpInstance) {
+ms.render().then(function (cmpInstance) {
     $('#root').append(cmpInstance.$el);
 });
-ms2.renderPromise().then(function (cmpInstance) {
+ms2.render().then(function (cmpInstance) {
     $('#root').append(cmpInstance.$el);
 });

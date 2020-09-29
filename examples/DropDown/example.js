@@ -20,7 +20,7 @@ var myDropDown = new DropDown({
         //alert(test);
       });
     });
-myDropDown.renderPromise().then(function (cmpInstance) {
+myDropDown.render().then(function (cmpInstance) {
   $('#root').append(cmpInstance.$el);
 });
    

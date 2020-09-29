@@ -6,4 +6,4 @@ var myDayMonthYear = new DateTimeCb({
     value: '06/06/2006'
 });
 
-$('#root').append(myDayMonthYear.render());
+$('#root').append(await myDayMonthYear.render().$el);

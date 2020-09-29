@@ -150,10 +150,10 @@ var ViewStack = function(_props)
     //             })(i);
     //             let maxIndex = this.$container.children().length;
     //             if(_selectedIndex==i)
-    //                 if (cmp.renderPromise)
+    //                 if (cmp.render)
     //                 {
-    //                     _compRenderPromises.push({
-    //                         "cmp": cmp, "promise": cmp.renderPromise().then(function (cmpInstance)
+    //                     _comprenders.push({
+    //                         "cmp": cmp, "promise": cmp.render().then(function (cmpInstance)
     //                         {
     //                             if (cmpInstance.appendTo)
     //                             {

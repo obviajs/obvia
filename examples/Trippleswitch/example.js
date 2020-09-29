@@ -13,7 +13,7 @@ var myTrippleswitch = new TrippleSwitch({
     value: "1" //1,-1,0
 });
 
-myTrippleswitch.renderPromise().then(function (cmpInstance)
+myTrippleswitch.render().then(function (cmpInstance)
 {
   $('#root').append(cmpInstance.$el);
 });

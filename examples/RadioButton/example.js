@@ -3,7 +3,9 @@ var myRadio = new RadioButton({
     value: "male",
     label: "Male",
     checked: true,
-    onclick : function(e){console.log("Radio Clicked");}
+    onclick: function (e) {
+        console.log("Radio Clicked");
+    }
 });
 
-$('#root').append(myRadio.render());
+$('#root').append(await myRadio.render().$el);

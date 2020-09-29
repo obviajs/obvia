@@ -354,7 +354,7 @@ let cnt = new Container({
         }
     }  
 ]});
-cnt.renderPromise().then(function(cmpInstance){
+cnt.render().then(function(cmpInstance){
     $('#root').append(cmpInstance.$el);
 });
 function _mySideNavToggleClick(){
@@ -415,7 +415,7 @@ get("https://api.myjson.com/bins/190n0g").then(function (r)
     console.log(r.response);
     let cmInstance = Component.fromLiteral(JSON.parse(r.response));
     let hiddenDiv = $("<div style='display:none'/>");
-    cmInstance.renderPromise().then(function (instance) {
+    cmInstance.render().then(function (instance) {
         hiddenDiv.append(instance.$el);
         let cmDp = initComponentModel(instance);
         cnt.ideContainer.mySideNav.cmCnt.componentModelTree.dataProvider = cmDp;

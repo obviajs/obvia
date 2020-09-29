@@ -381,6 +381,6 @@ var myWizard = new Wizard({
     ]
 });
 
-myWizard.renderPromise().then(function (cmpInstance) {
+myWizard.render().then(function (cmpInstance) {
     $('#root').append(cmpInstance.$el);
 });

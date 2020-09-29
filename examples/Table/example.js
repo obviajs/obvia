@@ -82,7 +82,7 @@ var myTable = new Table({
     ]
 });
 
-myTable.renderPromise().then(function (cmpInstance)
+myTable.render().then(function (cmpInstance)
 {
     $('#root').append(cmpInstance.$el);
 });

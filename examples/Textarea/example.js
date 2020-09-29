@@ -1,9 +1,9 @@
 var myTextarea = new TextArea({
     id: 'textarea',
     spellCheck: {
-        defaultDictionary: 'English',//Albanian
+        defaultDictionary: 'English', //Albanian
     },
     value: ''
 });
 
-$('#root').append(myTextarea.render());
+$('#root').append(await myTextarea.render().$el);

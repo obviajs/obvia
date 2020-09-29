@@ -11,7 +11,7 @@ myCreditCard.on('creationComplete',function(){
     });
 });
 
-myCreditCard.renderPromise().then(function (cmpInstance)
+myCreditCard.render().then(function (cmpInstance)
 {
   $('#root').append(cmpInstance.$el);
 });

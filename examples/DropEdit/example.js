@@ -38,7 +38,7 @@ myDropEdit.on('creationComplete', function () {
         //alert(test);
     });
 });
-myDropEdit.renderPromise().then(function (cmpInstance) {
+myDropEdit.render().then(function (cmpInstance) {
     $('#root').append(cmpInstance.$el);
 });
 

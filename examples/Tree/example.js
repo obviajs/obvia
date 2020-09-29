@@ -26,7 +26,7 @@ myTree.on('creationComplete', function () {
    // alert("test");
   });
 });
-myTree.renderPromise().then(function (cmpInstance)
+myTree.render().then(function (cmpInstance)
 {
   $('#root').append(cmpInstance.$el);
 });

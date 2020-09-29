@@ -23,7 +23,7 @@ var myTabNavigator = new TabNavigator({
 
 });
 
-  myTabNavigator.renderPromise().then(function (cmpInstance)
+  myTabNavigator.render().then(function (cmpInstance)
   {
     $('#root').append(cmpInstance.$el);
   });

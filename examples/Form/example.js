@@ -1,5 +1,7 @@
-var loader = new Loader({ id: 'loader' });
-$('#root').append(loader.render());
+var loader = new Loader({
+    id: 'loader'
+});
+$('#root').append(await loader.render().$el);
 loader.show();
 
 var Case = {
@@ -13,14 +15,15 @@ var myForm = new Form({
     id: 'form',
     formName: 'My Form',
     viewMode: 'steps',
-    components: [
-        {
+    components: [{
             ctor: TextInput,
             props: {
                 id: 'text',
                 colspan: '6',
                 label: 'Text Label',
-                spacing: { mb: '5' },
+                spacing: {
+                    mb: '5'
+                },
                 versionStyle: '',
                 blockProcessAttr: false,
                 required: true,
@@ -35,7 +38,9 @@ var myForm = new Form({
                 id: 'number',
                 colspan: '6',
                 label: 'Number Label',
-                spacing: { mb: '5' },
+                spacing: {
+                    mb: '5'
+                },
                 versionStyle: '',
                 blockProcessAttr: false,
                 required: true,
@@ -52,12 +57,14 @@ var myForm = new Form({
                 id: 'textarea',
                 colspan: '6',
                 label: 'Textarea Label',
-                spacing: { mb: '5' },
+                spacing: {
+                    mb: '5'
+                },
                 versionStyle: '',
                 blockProcessAttr: false,
                 required: true,
                 spellCheck: {
-                    defaultDictionary: 'English',//Albanian
+                    defaultDictionary: 'English', //Albanian
                 },
                 value: ''
             }
@@ -68,12 +75,14 @@ var myForm = new Form({
                 id: 'texteditor',
                 colspan: '6',
                 label: 'TextEditor',
-                spacing: { mb: '5' },
+                spacing: {
+                    mb: '5'
+                },
                 versionStyle: '',
                 blockProcessAttr: false,
                 required: false,
                 spellCheck: {
-                    defaultDictionary: 'English',//Albanian
+                    defaultDictionary: 'English', //Albanian
                 },
                 value: 'Test'
             }
@@ -84,7 +93,9 @@ var myForm = new Form({
                 id: 'datetime',
                 colspan: '6',
                 label: 'Date',
-                spacing: { mb: '5' },
+                spacing: {
+                    mb: '5'
+                },
                 versionStyle: '',
                 blockProcessAttr: false,
                 required: true,
@@ -100,7 +111,9 @@ var myForm = new Form({
                 id: 'dayMonthYear',
                 colspan: '6',
                 label: 'Date Mode 2',
-                spacing: { mb: '5' },
+                spacing: {
+                    mb: '5'
+                },
                 versionStyle: '',
                 blockProcessAttr: false,
                 required: false,
@@ -118,7 +131,9 @@ var myForm = new Form({
                 id: 'spacer',
                 colspan: '6',
                 label: 'Spacer',
-                spacing: { mb: '5' },
+                spacing: {
+                    mb: '5'
+                },
                 required: false,
                 value: {}
             }
@@ -129,16 +144,34 @@ var myForm = new Form({
                 id: 'autocomplete',
                 colspan: '6',
                 label: 'Ministrite',
-                spacing: { mb: '5' },
+                spacing: {
+                    mb: '5'
+                },
                 blockProcessAttr: false,
                 required: false,
                 multipleSelection: false,
                 displayTable: false,
                 valueField: "id",
                 labelField: "text",
-                tableData: [["Ministria e Puneve te Jashtme"], ["Ministria e Drejtesise"], ["Ministria e Brendshme"]],
-                dataProvider: [{ "id": "1", "text": "Ministria e Puneve te Jashtme" }, { "id": "2", "text": "Ministria e Drejtesise" }, { "id": "3", "text": "Ministria e Brendshme" }],
-                value: [{ "id": "1", "text": "Ministria e Puneve te Jashtme" }]
+                tableData: [
+                    ["Ministria e Puneve te Jashtme"],
+                    ["Ministria e Drejtesise"],
+                    ["Ministria e Brendshme"]
+                ],
+                dataProvider: [{
+                    "id": "1",
+                    "text": "Ministria e Puneve te Jashtme"
+                }, {
+                    "id": "2",
+                    "text": "Ministria e Drejtesise"
+                }, {
+                    "id": "3",
+                    "text": "Ministria e Brendshme"
+                }],
+                value: [{
+                    "id": "1",
+                    "text": "Ministria e Puneve te Jashtme"
+                }]
             }
         },
         {
@@ -148,9 +181,20 @@ var myForm = new Form({
                 colspan: '6',
                 label: 'Pagesa',
                 blockProcessAttr: false,
-                spacing: { mb: '5' },
+                spacing: {
+                    mb: '5'
+                },
                 required: true,
-                currencyList: [{ "id": "1", "text": "EUR" }, { "id": "2", "text": "ALL" }, { "id": "3", "text": "GBP" }],
+                currencyList: [{
+                    "id": "1",
+                    "text": "EUR"
+                }, {
+                    "id": "2",
+                    "text": "ALL"
+                }, {
+                    "id": "3",
+                    "text": "GBP"
+                }],
                 valueField: "id",
                 labelField: "text",
                 value: {
@@ -165,8 +209,19 @@ var myForm = new Form({
                 id: 'combo',
                 colspan: '6',
                 label: 'Zgjidh Shtetin',
-                spacing: { mb: '5' },
-                dataProvider: [{ "value": "1", "text": "Shqiperi" }, { "value": "2", "text": "Greqi" }, { "value": "3", "text": "SHBA" }],
+                spacing: {
+                    mb: '5'
+                },
+                dataProvider: [{
+                    "value": "1",
+                    "text": "Shqiperi"
+                }, {
+                    "value": "2",
+                    "text": "Greqi"
+                }, {
+                    "value": "3",
+                    "text": "SHBA"
+                }],
                 valueField: "value",
                 textField: "text",
                 versionStyle: "",
@@ -178,30 +233,32 @@ var myForm = new Form({
                 value: "2"
             }
         },
-     /*   {
-            ctor: GoogleMap,
-            props: {
-                id: 'map',
-                colspan: '6',
-                label: 'Vendodhja Gjeografike',
-                spacing: { mb: '5' },
-                versionStyle: "",
-                blockProcessAttr: false,
-                required: false,
-                value: {
-                    latitude: 41.1533,
-                    longtitude: 20.1683,
-                    zoomLevel: 7
-                }
-            }
-        },*/
+        /*   {
+               ctor: GoogleMap,
+               props: {
+                   id: 'map',
+                   colspan: '6',
+                   label: 'Vendodhja Gjeografike',
+                   spacing: { mb: '5' },
+                   versionStyle: "",
+                   blockProcessAttr: false,
+                   required: false,
+                   value: {
+                       latitude: 41.1533,
+                       longtitude: 20.1683,
+                       zoomLevel: 7
+                   }
+               }
+           },*/
         {
             ctor: Toggle,
             props: {
                 id: 'checkbox',
                 colspan: '6',
                 label: 'Checkbox',
-                spacing: { mb: '5' },
+                spacing: {
+                    mb: '5'
+                },
                 blockProcessAttr: false,
                 required: false,
                 value: true,
@@ -218,9 +275,11 @@ var myForm = new Form({
                 versionStyle: "",
                 blockProcessAttr: false,
                 required: false,
-                spacing: { mb: '5' },
+                spacing: {
+                    mb: '5'
+                },
                 left: "Yes", //1
-                middle: "Somewhat",//-1
+                middle: "Somewhat", //-1
                 right: "No", //0
                 value: "1" //1,-1,0
             }
@@ -232,21 +291,38 @@ var myForm = new Form({
                 colspan: '6',
                 label: 'Ministrite',
                 fieldName: 'multiswitchInputR',
-                spacing: { mb: '5' },
+                spacing: {
+                    mb: '5'
+                },
                 blockProcessAttr: false,
                 required: true,
                 multiselect: false,
-                dataProvider: [
-                    { "id": "1", "text": "Ministria e Puneve te Jashtme", "buttonClass": 'btn btn-sm btn-default' },
-                    { "id": "2", "text": "Ministria e Drejtesise", "buttonClass": 'btn btn-sm btn-default' },
-                    { "id": "3", "text": "Ministria e Brendshme", "buttonClass": 'btn btn-sm btn-success' },
+                dataProvider: [{
+                        "id": "1",
+                        "text": "Ministria e Puneve te Jashtme",
+                        "buttonClass": 'btn btn-sm btn-default'
+                    },
+                    {
+                        "id": "2",
+                        "text": "Ministria e Drejtesise",
+                        "buttonClass": 'btn btn-sm btn-default'
+                    },
+                    {
+                        "id": "3",
+                        "text": "Ministria e Brendshme",
+                        "buttonClass": 'btn btn-sm btn-success'
+                    },
                 ],
                 valueField: "id",
                 labelField: "text",
                 classField: "buttonClass",
                 defaultClass: 'btn btn-sm btn-default',
                 selectedClass: 'btn btn-sm btn-success',
-                value: [{ "id": "3", "text": "Ministria e Brendshme", "buttonClass": 'btn btn-xs btn-success' }],
+                value: [{
+                    "id": "3",
+                    "text": "Ministria e Brendshme",
+                    "buttonClass": 'btn btn-xs btn-success'
+                }],
                 onclick: function (e) {
                     console.log("From MultiSwitch ClickAction");
                     //e.preventDefault();
@@ -260,13 +336,26 @@ var myForm = new Form({
                 colspan: '6',
                 label: 'Ministrite',
                 blockProcessAttr: false,
-                spacing: { mb: '5' },
+                spacing: {
+                    mb: '5'
+                },
                 required: true,
-                dataProvider: [
-                    { "id": "1", "text": "Ministria e Puneve te Jashtme" },
-                    { "id": "2", "text": "Ministria e Drejtesise" },
-                    { "id": "3", "text": "Ministria e Brendshme" },
-                    { "id": "4", "text": "Ministria e Mbrojtjes" }
+                dataProvider: [{
+                        "id": "1",
+                        "text": "Ministria e Puneve te Jashtme"
+                    },
+                    {
+                        "id": "2",
+                        "text": "Ministria e Drejtesise"
+                    },
+                    {
+                        "id": "3",
+                        "text": "Ministria e Brendshme"
+                    },
+                    {
+                        "id": "4",
+                        "text": "Ministria e Mbrojtjes"
+                    }
                 ],
                 valueField: "id",
                 labelField: "text",
@@ -283,15 +372,36 @@ var myForm = new Form({
             props: {
                 id: 'checkboxgroup',
                 colspan: '6',
-                spacing: { mb: '5' },
+                spacing: {
+                    mb: '5'
+                },
                 label: 'Ministrite',
                 blockProcessAttr: false,
                 required: true,
-                dataProvider: [
-                    { "id": "1", "text": "Ministria e Puneve te Jashtme", "buttonClass": 'btn btn-xs btn-default', "enabled": true },
-                    { "id": "2", "text": "Ministria e Drejtesise", "buttonClass": 'btn btn-xs btn-default', "enabled": true },
-                    { "id": "3", "text": "Ministria e Brendshme", "buttonClass": 'btn btn-xs btn-success', "enabled": true },
-                    { "id": "4", "text": "Ministria e Mbrojtjes", "buttonClass": 'btn btn-xs btn-default', "enabled": false }
+                dataProvider: [{
+                        "id": "1",
+                        "text": "Ministria e Puneve te Jashtme",
+                        "buttonClass": 'btn btn-xs btn-default',
+                        "enabled": true
+                    },
+                    {
+                        "id": "2",
+                        "text": "Ministria e Drejtesise",
+                        "buttonClass": 'btn btn-xs btn-default',
+                        "enabled": true
+                    },
+                    {
+                        "id": "3",
+                        "text": "Ministria e Brendshme",
+                        "buttonClass": 'btn btn-xs btn-success',
+                        "enabled": true
+                    },
+                    {
+                        "id": "4",
+                        "text": "Ministria e Mbrojtjes",
+                        "buttonClass": 'btn btn-xs btn-default',
+                        "enabled": false
+                    }
                 ],
                 valueField: "id",
                 labelField: "text",
@@ -309,16 +419,35 @@ var myForm = new Form({
             props: {
                 id: 'formupload',
                 colspan: '6',
-                spacing: { mb: '5' },
+                spacing: {
+                    mb: '5'
+                },
                 label: 'Dokumentat e Ministrise se Kultures',
                 blockProcessAttr: false,
                 required: true,
                 action: 'http://phptest/upload.php',
-                dataProvider: [
-                    { "id": "1", "no": "1", "file": "test.txt", "deleteAction": "http://phptest/delete.php?id=1", "downloadLink": "http://phptest/download.php?id=1" },
-                    { "id": "2", "no": "2", "file": "paga.xlsx", "deleteAction": "http://phptest/delete.php?id=1", "downloadLink": "http://phptest/download.php?id=2" }
+                dataProvider: [{
+                        "id": "1",
+                        "no": "1",
+                        "file": "test.txt",
+                        "deleteAction": "http://phptest/delete.php?id=1",
+                        "downloadLink": "http://phptest/download.php?id=1"
+                    },
+                    {
+                        "id": "2",
+                        "no": "2",
+                        "file": "paga.xlsx",
+                        "deleteAction": "http://phptest/delete.php?id=1",
+                        "downloadLink": "http://phptest/download.php?id=2"
+                    }
                 ],
-                defaultItem: { "id": "1", "no": "1", "file": "test.txt", "deleteAction": "http://phptest/delete.php", "downloadLink": "http://phptest/download.php" },
+                defaultItem: {
+                    "id": "1",
+                    "no": "1",
+                    "file": "test.txt",
+                    "deleteAction": "http://phptest/delete.php",
+                    "downloadLink": "http://phptest/download.php"
+                },
                 noLabelValue: "no",
                 nameLabelValue: "file",
                 deleteAction: "deleteAction",
@@ -361,17 +490,22 @@ var myForm = new Form({
                     formUploadProvider: []
 
                 },
-                dataProvider: [
-                    {
+                dataProvider: [{
                         comboLabel: 'Zgjidh Shtetin',
                         comboValue: "",
                         checkboxValue: true,
                         autocompleteLabel: 'Ministrite',
-                        autocompleteValue: [{ "id": "2", "text": "Ministria e Drejtesise" }],
+                        autocompleteValue: [{
+                            "id": "2",
+                            "text": "Ministria e Drejtesise"
+                        }],
                         textLabel: 'Emri',
                         textValue: 'Mateo Jovani',
                         trippleValue: "-1",
-                        multiValue: [{ "id": "3", "text": "Ministria e Brendshme" }],
+                        multiValue: [{
+                            "id": "3",
+                            "text": "Ministria e Brendshme"
+                        }],
                         mapValue: {
                             latitude: 51.1533,
                             longtitude: 30.1683,
@@ -381,13 +515,33 @@ var myForm = new Form({
                         textEditorValue: "",
                         dateValue: "10/02/2013",
                         dayMonthYearValue: "10/02/2013",
-                        amountValue: { currency: "2", amount: "33433" },
+                        amountValue: {
+                            currency: "2",
+                            amount: "33433"
+                        },
                         radioGroupValue: "2",
                         checkboxGroupValue: [],
-                        formUploadProvider: [
-                            { "id": "1", "no": "1", "file": "test.txt", "deleteAction": "http://phptest/delete.php?id=1", "downloadLink": "http://phptest/download.php?id=1" },
-                            { "id": "2", "no": "2", "file": "image.jpg", "deleteAction": "http://phptest/delete.php?id=2", "downloadLink": "http://phptest/download.php?id=2" },
-                            { "id": "3", "no": "3", "file": "doc.pdf", "deleteAction": "http://phptest/delete.php?id=3", "downloadLink": "http://phptest/download.php?id=3" },
+                        formUploadProvider: [{
+                                "id": "1",
+                                "no": "1",
+                                "file": "test.txt",
+                                "deleteAction": "http://phptest/delete.php?id=1",
+                                "downloadLink": "http://phptest/download.php?id=1"
+                            },
+                            {
+                                "id": "2",
+                                "no": "2",
+                                "file": "image.jpg",
+                                "deleteAction": "http://phptest/delete.php?id=2",
+                                "downloadLink": "http://phptest/download.php?id=2"
+                            },
+                            {
+                                "id": "3",
+                                "no": "3",
+                                "file": "doc.pdf",
+                                "deleteAction": "http://phptest/delete.php?id=3",
+                                "downloadLink": "http://phptest/download.php?id=3"
+                            },
                         ]
 
                     },
@@ -396,11 +550,20 @@ var myForm = new Form({
                         comboValue: "1",
                         checkboxValue: true,
                         autocompleteLabel: 'Ministrite',
-                        autocompleteValue: [{ "id": "3", "text": "Ministria e Brendshme" }],
+                        autocompleteValue: [{
+                            "id": "3",
+                            "text": "Ministria e Brendshme"
+                        }],
                         textLabel: 'Emri',
                         textValue: 'Lejdi Koci',
                         trippleValue: "1",
-                        multiValue: [{ "id": "3", "text": "Ministria e Brendshme" }, { "id": "2", "text": "Ministria e Drejtesise" }],
+                        multiValue: [{
+                            "id": "3",
+                            "text": "Ministria e Brendshme"
+                        }, {
+                            "id": "2",
+                            "text": "Ministria e Drejtesise"
+                        }],
                         mapValue: {
                             latitude: 41.1533,
                             longtitude: 20.1683,
@@ -412,22 +575,36 @@ var myForm = new Form({
                         dayMonthYearValue: "",
                         amountValue: {},
                         radioGroupValue: "",
-                        checkboxGroupValue: [
-                            { "id": "3", "text": "Ministria e Brendshme", "buttonClass": 'btn btn-xs btn-success', "enabled": true },
-                            { "id": "4", "text": "Ministria e Mbrojtjes", "buttonClass": 'btn btn-xs btn-success', "enabled": false }
+                        checkboxGroupValue: [{
+                                "id": "3",
+                                "text": "Ministria e Brendshme",
+                                "buttonClass": 'btn btn-xs btn-success',
+                                "enabled": true
+                            },
+                            {
+                                "id": "4",
+                                "text": "Ministria e Mbrojtjes",
+                                "buttonClass": 'btn btn-xs btn-success',
+                                "enabled": false
+                            }
                         ],
-                        formUploadProvider: [
-                            { "id": "1", "no": "1", "file": "other.txt", "deleteAction": "http://phptest/delete.php?id=1", "downloadLink": "http://phptest/download.php?id=1" }
-                        ]
+                        formUploadProvider: [{
+                            "id": "1",
+                            "no": "1",
+                            "file": "other.txt",
+                            "deleteAction": "http://phptest/delete.php?id=1",
+                            "downloadLink": "http://phptest/download.php?id=1"
+                        }]
                     }
                 ],
-                components: [
-                    {
+                components: [{
                         ctor: AutoCompleteEx,
                         props: {
                             id: 'autocompleteR',
                             colspan: '6',
-                            spacing: { mb: '5' },
+                            spacing: {
+                                mb: '5'
+                            },
                             label: '{autocompleteLabel}',
                             blockProcessAttr: false,
                             required: false,
@@ -435,8 +612,21 @@ var myForm = new Form({
                             displayTable: true,
                             valueField: "id",
                             labelField: "text",
-                            tableData: [["Ministria e Puneve te Jashtme"], ["Ministria e Drejtesise"], ["Ministria e Brendshme"]],
-                            dataProvider: [{ "id": "1", "text": "Ministria e Puneve te Jashtme" }, { "id": "2", "text": "Ministria e Drejtesise" }, { "id": "3", "text": "Ministria e Brendshme" }],
+                            tableData: [
+                                ["Ministria e Puneve te Jashtme"],
+                                ["Ministria e Drejtesise"],
+                                ["Ministria e Brendshme"]
+                            ],
+                            dataProvider: [{
+                                "id": "1",
+                                "text": "Ministria e Puneve te Jashtme"
+                            }, {
+                                "id": "2",
+                                "text": "Ministria e Drejtesise"
+                            }, {
+                                "id": "3",
+                                "text": "Ministria e Brendshme"
+                            }],
                             value: '{autocompleteValue}'
                         }
                     },
@@ -445,11 +635,22 @@ var myForm = new Form({
                         props: {
                             id: 'comboR',
                             colspan: '6',
-                            spacing: { mb: '5' },
+                            spacing: {
+                                mb: '5'
+                            },
                             label: '{comboLabel}',
                             blockProcessAttr: false,
                             required: true,
-                            dataProvider: [{ "value": "1", "text": "Shqiperi" }, { "value": "2", "text": "Greqi" }, { "value": "3", "text": "SHBA" }],
+                            dataProvider: [{
+                                "value": "1",
+                                "text": "Shqiperi"
+                            }, {
+                                "value": "2",
+                                "text": "Greqi"
+                            }, {
+                                "value": "3",
+                                "text": "SHBA"
+                            }],
                             valueField: "value",
                             textField: "text",
                             value: '{comboValue}'
@@ -460,7 +661,9 @@ var myForm = new Form({
                         props: {
                             id: 'textR',
                             colspan: '6',
-                            spacing: { mb: '5' },
+                            spacing: {
+                                mb: '5'
+                            },
                             label: '{textLabel}',
                             blockProcessAttr: false,
                             required: true,
@@ -472,11 +675,22 @@ var myForm = new Form({
                         props: {
                             id: 'amount',
                             colspan: '6',
-                            spacing: { mb: '5' },
+                            spacing: {
+                                mb: '5'
+                            },
                             label: 'Pagesa',
                             blockProcessAttr: false,
                             required: true,
-                            currencyList: [{ "id": "1", "text": "EUR" }, { "id": "2", "text": "ALL" }, { "id": "3", "text": "GBP" }],
+                            currencyList: [{
+                                "id": "1",
+                                "text": "EUR"
+                            }, {
+                                "id": "2",
+                                "text": "ALL"
+                            }, {
+                                "id": "3",
+                                "text": "GBP"
+                            }],
                             valueField: "id",
                             labelField: "text",
                             value: '{amountValue}'
@@ -487,7 +701,9 @@ var myForm = new Form({
                         props: {
                             id: 'texteditorR',
                             colspan: '6',
-                            spacing: { mb: '5' },
+                            spacing: {
+                                mb: '5'
+                            },
                             label: 'TextEditor',
                             versionStyle: '',
                             blockProcessAttr: false,
@@ -500,7 +716,9 @@ var myForm = new Form({
                         props: {
                             id: 'textareaR',
                             colspan: '6',
-                            spacing: { mb: '5' },
+                            spacing: {
+                                mb: '5'
+                            },
                             label: 'Textarea Label',
                             versionStyle: '',
                             blockProcessAttr: false,
@@ -515,7 +733,9 @@ var myForm = new Form({
                             colspan: '6',
                             label: 'Date',
                             versionStyle: '',
-                            spacing: { mb: '5' },
+                            spacing: {
+                                mb: '5'
+                            },
                             blockProcessAttr: false,
                             required: true,
                             inputFormat: 'DD/MM/YYYY',
@@ -530,7 +750,9 @@ var myForm = new Form({
                             id: 'dayMonthYear',
                             colspan: '6',
                             label: 'Date Mode 2',
-                            spacing: { mb: '5' },
+                            spacing: {
+                                mb: '5'
+                            },
                             versionStyle: '',
                             blockProcessAttr: false,
                             required: false,
@@ -546,7 +768,9 @@ var myForm = new Form({
                             id: 'checkboxR',
                             colspan: '6',
                             label: 'Aktiv',
-                            spacing: { mb: '5' },
+                            spacing: {
+                                mb: '5'
+                            },
                             blockProcessAttr: false,
                             required: false,
                             value: '{checkboxValue}',
@@ -554,34 +778,47 @@ var myForm = new Form({
                             checkedLabel: "Po"
                         }
                     },
-                  /*  {
-                        ctor: GoogleMap,
-                        props: {
-                            id: 'mapR',
-                            colspan: '6',
-                            spacing: { mb: '5' },
-                            label: 'Vendodhja Gjeografike',
-                            fieldName: 'mapFieldR',
-                            versionStyle: "",
-                            blockProcessAttr: false,
-                            required: false,
-                            value: '{mapValue}'
-                        }
-                    },*/
+                    /*  {
+                          ctor: GoogleMap,
+                          props: {
+                              id: 'mapR',
+                              colspan: '6',
+                              spacing: { mb: '5' },
+                              label: 'Vendodhja Gjeografike',
+                              fieldName: 'mapFieldR',
+                              versionStyle: "",
+                              blockProcessAttr: false,
+                              required: false,
+                              value: '{mapValue}'
+                          }
+                      },*/
                     {
                         ctor: RadioGroup,
                         props: {
                             id: 'radiogroup',
                             colspan: '6',
-                            spacing: { mb: '5' },
+                            spacing: {
+                                mb: '5'
+                            },
                             label: 'Ministrite',
                             blockProcessAttr: false,
                             required: true,
-                            dataProvider: [
-                                { "id": "1", "text": "Ministria e Puneve te Jashtme" },
-                                { "id": "2", "text": "Ministria e Drejtesise" },
-                                { "id": "3", "text": "Ministria e Brendshme" },
-                                { "id": "4", "text": "Ministria e Mbrojtjes" }
+                            dataProvider: [{
+                                    "id": "1",
+                                    "text": "Ministria e Puneve te Jashtme"
+                                },
+                                {
+                                    "id": "2",
+                                    "text": "Ministria e Drejtesise"
+                                },
+                                {
+                                    "id": "3",
+                                    "text": "Ministria e Brendshme"
+                                },
+                                {
+                                    "id": "4",
+                                    "text": "Ministria e Mbrojtjes"
+                                }
                             ],
                             valueField: "id",
                             labelField: "text",
@@ -598,15 +835,36 @@ var myForm = new Form({
                         props: {
                             id: 'checkboxgroup',
                             colspan: '6',
-                            spacing: { mb: '5' },
+                            spacing: {
+                                mb: '5'
+                            },
                             label: 'Ministrite',
                             blockProcessAttr: false,
                             required: true,
-                            dataProvider: [
-                                { "id": "1", "text": "Ministria e Puneve te Jashtme", "buttonClass": 'btn btn-xs btn-default', "enabled": true },
-                                { "id": "2", "text": "Ministria e Drejtesise", "buttonClass": 'btn btn-xs btn-default', "enabled": true },
-                                { "id": "3", "text": "Ministria e Brendshme", "buttonClass": 'btn btn-xs btn-success', "enabled": true },
-                                { "id": "4", "text": "Ministria e Mbrojtjes", "buttonClass": 'btn btn-xs btn-default', "enabled": false }
+                            dataProvider: [{
+                                    "id": "1",
+                                    "text": "Ministria e Puneve te Jashtme",
+                                    "buttonClass": 'btn btn-xs btn-default',
+                                    "enabled": true
+                                },
+                                {
+                                    "id": "2",
+                                    "text": "Ministria e Drejtesise",
+                                    "buttonClass": 'btn btn-xs btn-default',
+                                    "enabled": true
+                                },
+                                {
+                                    "id": "3",
+                                    "text": "Ministria e Brendshme",
+                                    "buttonClass": 'btn btn-xs btn-success',
+                                    "enabled": true
+                                },
+                                {
+                                    "id": "4",
+                                    "text": "Ministria e Mbrojtjes",
+                                    "buttonClass": 'btn btn-xs btn-default',
+                                    "enabled": false
+                                }
                             ],
                             valueField: "id",
                             labelField: "text",
@@ -623,17 +881,30 @@ var myForm = new Form({
                         ctor: MultiSwitch,
                         props: {
                             id: 'multiswitch',
-                            spacing: { mb: '5' },
+                            spacing: {
+                                mb: '5'
+                            },
                             colspan: '6',
                             label: 'Ministrite',
                             fieldName: 'multiswitchInputR',
                             blockProcessAttr: false,
                             required: true,
                             multiselect: true,
-                            dataProvider: [
-                                { "id": "1", "text": "Ministria e Puneve te Jashtme", "buttonClass": 'btn btn-sm btn-default' },
-                                { "id": "2", "text": "Ministria e Drejtesise", "buttonClass": 'btn btn-sm btn-default' },
-                                { "id": "3", "text": "Ministria e Brendshme", "buttonClass": 'btn btn-sm btn-success' },
+                            dataProvider: [{
+                                    "id": "1",
+                                    "text": "Ministria e Puneve te Jashtme",
+                                    "buttonClass": 'btn btn-sm btn-default'
+                                },
+                                {
+                                    "id": "2",
+                                    "text": "Ministria e Drejtesise",
+                                    "buttonClass": 'btn btn-sm btn-default'
+                                },
+                                {
+                                    "id": "3",
+                                    "text": "Ministria e Brendshme",
+                                    "buttonClass": 'btn btn-sm btn-success'
+                                },
                             ],
                             valueField: "id",
                             labelField: "text",
@@ -652,13 +923,15 @@ var myForm = new Form({
                         props: {
                             id: 'trippleswitchR',
                             colspan: '6',
-                            spacing: { mb: '5' },
+                            spacing: {
+                                mb: '5'
+                            },
                             label: 'This is a survey. Are you happy?',
                             versionStyle: "",
                             blockProcessAttr: false,
                             required: false,
                             left: "Yes", //1
-                            middle: "Somewhat",//-1
+                            middle: "Somewhat", //-1
                             right: "No", //0
                             value: "{trippleValue}" //1,-1,0
                         }
@@ -668,13 +941,21 @@ var myForm = new Form({
                         props: {
                             id: 'formupload',
                             colspan: '6',
-                            spacing: { mb: '5' },
+                            spacing: {
+                                mb: '5'
+                            },
                             label: 'Dokumentat e Ministrise se Kultures',
                             blockProcessAttr: false,
                             required: true,
                             action: 'http://phptest/upload.php',
                             dataProvider: "{formUploadProvider}",
-                            defaultItem: { "id": "1", "no": "1", "file": "test.txt", "deleteAction": "http://phptest/delete.php", "downloadLink": "http://phptest/download.php" },
+                            defaultItem: {
+                                "id": "1",
+                                "no": "1",
+                                "file": "test.txt",
+                                "deleteAction": "http://phptest/delete.php",
+                                "downloadLink": "http://phptest/download.php"
+                            },
                             noLabelValue: "no",
                             nameLabelValue: "file",
                             valueField: "id",
@@ -693,14 +974,15 @@ var myForm2 = new Form({
     id: 'form',
     formName: 'My Form 2',
     viewMode: 'steps',
-    components: [
-        {
+    components: [{
             ctor: TextInput,
             props: {
                 id: 'text',
                 colspan: '6',
                 label: 'Text Label',
-                spacing: { mb: '5' },
+                spacing: {
+                    mb: '5'
+                },
                 versionStyle: '',
                 blockProcessAttr: false,
                 required: true,
@@ -714,7 +996,9 @@ var myForm2 = new Form({
                 id: 'number',
                 colspan: '6',
                 label: 'Number Label',
-                spacing: { mb: '5' },
+                spacing: {
+                    mb: '5'
+                },
                 versionStyle: '',
                 blockProcessAttr: false,
                 required: true,
@@ -759,17 +1043,22 @@ var myForm2 = new Form({
                     formUploadProvider: []
 
                 },
-                dataProvider: [
-                    {
+                dataProvider: [{
                         comboLabel: 'Zgjidh Shtetin',
                         comboValue: "",
                         checkboxValue: true,
                         autocompleteLabel: 'Ministrite',
-                        autocompleteValue: [{ "id": "2", "text": "Ministria e Drejtesise" }],
+                        autocompleteValue: [{
+                            "id": "2",
+                            "text": "Ministria e Drejtesise"
+                        }],
                         textLabel: 'Emri',
                         textValue: 'Mateo Jovani',
                         trippleValue: "-1",
-                        multiValue: [{ "id": "3", "text": "Ministria e Brendshme" }],
+                        multiValue: [{
+                            "id": "3",
+                            "text": "Ministria e Brendshme"
+                        }],
                         mapValue: {
                             latitude: 51.1533,
                             longtitude: 30.1683,
@@ -779,13 +1068,30 @@ var myForm2 = new Form({
                         textEditorValue: "",
                         dateValue: "10/02/2013",
                         dayMonthYearValue: "10/02/2013",
-                        amountValue: { currency: "2", amount: "33433" },
+                        amountValue: {
+                            currency: "2",
+                            amount: "33433"
+                        },
                         radioGroupValue: "2",
                         checkboxGroupValue: [],
-                        formUploadProvider: [
-                            { "id": "1", "no": "1", "file": "test.txt", "deleteAction": "http://phptest/delete.php?id=1" },
-                            { "id": "2", "no": "2", "file": "image.jpg", "deleteAction": "http://phptest/delete.php?id=2" },
-                            { "id": "3", "no": "3", "file": "doc.pdf", "deleteAction": "http://phptest/delete.php?id=3" },
+                        formUploadProvider: [{
+                                "id": "1",
+                                "no": "1",
+                                "file": "test.txt",
+                                "deleteAction": "http://phptest/delete.php?id=1"
+                            },
+                            {
+                                "id": "2",
+                                "no": "2",
+                                "file": "image.jpg",
+                                "deleteAction": "http://phptest/delete.php?id=2"
+                            },
+                            {
+                                "id": "3",
+                                "no": "3",
+                                "file": "doc.pdf",
+                                "deleteAction": "http://phptest/delete.php?id=3"
+                            },
                         ]
 
                     },
@@ -794,11 +1100,20 @@ var myForm2 = new Form({
                         comboValue: "1",
                         checkboxValue: true,
                         autocompleteLabel: 'Ministrite',
-                        autocompleteValue: [{ "id": "3", "text": "Ministria e Brendshme" }],
+                        autocompleteValue: [{
+                            "id": "3",
+                            "text": "Ministria e Brendshme"
+                        }],
                         textLabel: 'Emri',
                         textValue: 'Lejdi Koci',
                         trippleValue: "1",
-                        multiValue: [{ "id": "3", "text": "Ministria e Brendshme" }, { "id": "2", "text": "Ministria e Drejtesise" }],
+                        multiValue: [{
+                            "id": "3",
+                            "text": "Ministria e Brendshme"
+                        }, {
+                            "id": "2",
+                            "text": "Ministria e Drejtesise"
+                        }],
                         mapValue: {
                             latitude: 41.1533,
                             longtitude: 20.1683,
@@ -810,22 +1125,35 @@ var myForm2 = new Form({
                         dayMonthYearValue: "",
                         amountValue: {},
                         radioGroupValue: "",
-                        checkboxGroupValue: [
-                            { "id": "3", "text": "Ministria e Brendshme", "buttonClass": 'btn btn-xs btn-success', "enabled": true },
-                            { "id": "4", "text": "Ministria e Mbrojtjes", "buttonClass": 'btn btn-xs btn-success', "enabled": false }
+                        checkboxGroupValue: [{
+                                "id": "3",
+                                "text": "Ministria e Brendshme",
+                                "buttonClass": 'btn btn-xs btn-success',
+                                "enabled": true
+                            },
+                            {
+                                "id": "4",
+                                "text": "Ministria e Mbrojtjes",
+                                "buttonClass": 'btn btn-xs btn-success',
+                                "enabled": false
+                            }
                         ],
-                        formUploadProvider: [
-                            { "id": "1", "no": "1", "file": "other.txt", "deleteAction": "http://phptest/delete.php?id=1" }
-                        ]
+                        formUploadProvider: [{
+                            "id": "1",
+                            "no": "1",
+                            "file": "other.txt",
+                            "deleteAction": "http://phptest/delete.php?id=1"
+                        }]
                     }
                 ],
-                components: [
-                    {
+                components: [{
                         ctor: AutoCompleteEx,
                         props: {
                             id: 'autocompleteR',
                             colspan: '6',
-                            spacing: { mb: '5' },
+                            spacing: {
+                                mb: '5'
+                            },
                             label: '{autocompleteLabel}',
                             blockProcessAttr: false,
                             required: false,
@@ -833,8 +1161,21 @@ var myForm2 = new Form({
                             displayTable: true,
                             valueField: "id",
                             labelField: "text",
-                            tableData: [["Ministria e Puneve te Jashtme"], ["Ministria e Drejtesise"], ["Ministria e Brendshme"]],
-                            dataProvider: [{ "id": "1", "text": "Ministria e Puneve te Jashtme" }, { "id": "2", "text": "Ministria e Drejtesise" }, { "id": "3", "text": "Ministria e Brendshme" }],
+                            tableData: [
+                                ["Ministria e Puneve te Jashtme"],
+                                ["Ministria e Drejtesise"],
+                                ["Ministria e Brendshme"]
+                            ],
+                            dataProvider: [{
+                                "id": "1",
+                                "text": "Ministria e Puneve te Jashtme"
+                            }, {
+                                "id": "2",
+                                "text": "Ministria e Drejtesise"
+                            }, {
+                                "id": "3",
+                                "text": "Ministria e Brendshme"
+                            }],
                             value: '{autocompleteValue}'
                         }
                     },
@@ -843,11 +1184,22 @@ var myForm2 = new Form({
                         props: {
                             id: 'comboR',
                             colspan: '6',
-                            spacing: { mb: '5' },
+                            spacing: {
+                                mb: '5'
+                            },
                             label: '{comboLabel}',
                             blockProcessAttr: false,
                             required: true,
-                            dataProvider: [{ "value": "1", "text": "Shqiperi" }, { "value": "2", "text": "Greqi" }, { "value": "3", "text": "SHBA" }],
+                            dataProvider: [{
+                                "value": "1",
+                                "text": "Shqiperi"
+                            }, {
+                                "value": "2",
+                                "text": "Greqi"
+                            }, {
+                                "value": "3",
+                                "text": "SHBA"
+                            }],
                             value: '{comboValue}',
                             valueField: "value",
                             textField: "text",
@@ -861,7 +1213,7 @@ var myForm2 = new Form({
 
 myForm.on('creationComplete', function () {
     loader.hide();
-    
+
     myForm.repeater.on('onBeforeRowAdd', function (e) {
         e.preventDefault();
         var repeater = this;
@@ -869,7 +1221,9 @@ myForm.on('creationComplete', function () {
         bootbox.confirm("Do you want to add row?", function (result) {
             if (result) {
                 loader.show();
-                setTimeout(function () { repeater.addRow(repeater.defaultItem, repeater.currentIndex); }, 200)
+                setTimeout(function () {
+                    repeater.addRow(repeater.defaultItem, repeater.currentIndex);
+                }, 200)
             }
         });
 
@@ -895,7 +1249,7 @@ myForm.on('creationComplete', function () {
 
 });
 
-$('#root').append(myForm.render());
-$('#root').append(myForm2.render());
+$('#root').append(await myForm.render().$el);
+$('#root').append(await myForm2.render().$el);
 
 this["myForm"] = myForm;

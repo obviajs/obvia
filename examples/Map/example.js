@@ -7,7 +7,7 @@ var myMap = new MapLocationPicker({
     zoomLevel: 7
 });
 
-myMap.renderPromise().then(function (cmpInstance)
+myMap.render().then(function (cmpInstance)
 {
   $('#root').append(cmpInstance.$el);
 });

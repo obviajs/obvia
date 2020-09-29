@@ -210,33 +210,33 @@ var DataGrid = function (_props) {
         }
     };
 
-    Object.defineProperty(this, "renderPromises", {
-        get: function renderPromises() {
-            return _compRenderPromises;
+    Object.defineProperty(this, "renders", {
+        get: function renders() {
+            return _comprenders;
         },
         enumerable: false,
         configurable: true
     });
 
-    let _compRenderPromises = [];
+    let _comprenders = [];
     this.createRows = function () {
         this.$el.trigger('beginDraw');
         if (_self.dataProvider && _self.dataProvider.length) {
             let endIndex = this.rowCount;
             // _rowItems = {}; we need this if we create Repeater instances via Object.assign
             for (let i = 0; i < endIndex; i++) {
-                _compRenderPromises.splicea(_compRenderPromises.length, 0, this.addRow(_self.dataProvider[i], i));
+                _comprenders.splicea(_comprenders.length, 0, this.addRow(_self.dataProvider[i], i));
             }
             if (_allowNewItem && endIndex == _self.dataProvider.length) {
                 let emptyObj = this.defaultItem = createEmptyObject(_columns, "field", "description");
                 _self.dataProvider.pad(emptyObj, 1);
-                _compRenderPromises.splicea(_compRenderPromises.length, 0, this.addRow(_self.dataProvider[_self.dataProvider.length - 1], _self.dataProvider.length - 1));
+                _comprenders.splicea(_comprenders.length, 0, this.addRow(_self.dataProvider[_self.dataProvider.length - 1], _self.dataProvider.length - 1));
             }
         }
-        Promise.all(_compRenderPromises).then(function () {
+        Promise.all(_comprenders).then(function () {
             _self.$hadow.contents().appendTo(_self.$table);
             _self.updateDisplayList();
-            _compRenderPromises = [];
+            _comprenders = [];
             _self.$el.trigger('endDraw');
         });
     };
@@ -244,9 +244,9 @@ var DataGrid = function (_props) {
     this.addEmptyRow = function () {
         let emptyObj = this.defaultItem = createEmptyObject(_columns, "field", "description");
         _self.dataProvider.pad(emptyObj, 1);
-        _compRenderPromises = this.addRow(_self.dataProvider[_self.dataProvider.length - 1], _self.dataProvider.length - 1);
-        return Promise.all(_compRenderPromises).then(function () {
-            _compRenderPromises = [];
+        _comprenders = this.addRow(_self.dataProvider[_self.dataProvider.length - 1], _self.dataProvider.length - 1);
+        return Promise.all(_comprenders).then(function () {
+            _comprenders = [];
             _self.$hadow.contents().appendTo(_self.$table);
         });
     };
@@ -473,7 +473,7 @@ var DataGrid = function (_props) {
             }else
                 itemEditor.value = column.itemEditor.props["value"] || data[column.field];
             */
-            itemEditor.renderPromise().then(function (cmpInstance) {
+            itemEditor.render().then(function (cmpInstance) {
                 _cells[rowIndex][columnIndex].append(cmpInstance.$el);
                 itemEditor.show();
                 if (itemEditorInfo != null) {
@@ -779,7 +779,7 @@ var DataGrid = function (_props) {
     let base = this.base;
     //overrides
     let _rPromise;
-    this.renderPromise = function () {
+    this.render = function () {
         this.$table = this.$el.find("#" + this.domID + '-table');
         this.$header = this.$el.find('#' + this.domID + '-header');
         this.$container = this.$table;
@@ -810,12 +810,12 @@ var DataGrid = function (_props) {
             _self.applyVirtualBindings(0);
         } else if (_rows.length < _self.dataProvider.length && _rows.length < _self.rowCount) {
             for (let i = _rows.length; i < _self.rowCount; i++) {
-                _compRenderPromises.splicea(_compRenderPromises.length, 0, this.addRow(_self.dataProvider[i], i));
+                _comprenders.splicea(_comprenders.length, 0, this.addRow(_self.dataProvider[i], i));
             }
             _virtualIndex = 0;
-            Promise.all(_compRenderPromises).then(function () {
+            Promise.all(_comprenders).then(function () {
                 _self.$hadow.contents().appendTo(_self.$table);
-                _compRenderPromises = [];
+                _comprenders = [];
                 _self.updateDisplayList();
                 _self.applyVirtualBindings(0);
             });
@@ -988,7 +988,7 @@ var DataGrid = function (_props) {
                     _cells[index] = [];
                 _cells[index][columnIndex] = cell;
                 //render component in row
-                let cp = el.renderPromise().then(function (cmpInstance) {
+                let cp = el.render().then(function (cmpInstance) {
                     renderedRow.append(cell.append(cmpInstance.$el));
                     _self.$hadow.append(renderedRow);
                 });

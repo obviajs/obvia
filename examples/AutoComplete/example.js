@@ -1,5 +1,7 @@
-var loader = new Loader({ id: 'loader' });
-$('#root').append(loader.render());
+var loader = new Loader({
+    id: 'loader'
+});
+$('#root').append(await loader.render().$el);
 loader.show();
 
 var myAutoComplete = new AutoCompleteEx({
@@ -18,22 +20,24 @@ var myAutoComplete = new AutoCompleteEx({
         "value": "3",
         "ministri": "Ministria e Brendshme"
     }]),
-    value: new ArrayEx([{ "value": "1", "ministri": "Ministria e Puneve te Jashtme" }]),
-    remote:{
+    value: new ArrayEx([{
+        "value": "1",
+        "ministri": "Ministria e Puneve te Jashtme"
+    }]),
+    remote: {
         getData_Action: "http://139.162.158.49/rca/index.php",
         recordsPerPage: 5
     },
     multiSelect: false,
-    matchType:StringMatchType.STARTS_WITH
+    matchType: StringMatchType.STARTS_WITH
 });
 myAutoComplete.on('creationComplete', function () {
     loader.hide();
     myAutoComplete.on('noSuggestionsFound', function (e, toMatch) {
-        console.log("Nothing found for:"+ toMatch);
+        console.log("Nothing found for:" + toMatch);
     });
 });
-myAutoComplete.renderPromise().then(function (cmpInstance)
-{
+myAutoComplete.render().then(function (cmpInstance) {
     $('#root').append(cmpInstance.$el);
 });
 

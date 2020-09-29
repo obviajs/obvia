@@ -62,6 +62,6 @@ let button = {
 //myKanban.addComponent(button);
 
 
-myKanban.renderPromise().then(function (cmpInstance) {
+myKanban.render().then(function (cmpInstance) {
     $('#root').append(cmpInstance.$el);
 });

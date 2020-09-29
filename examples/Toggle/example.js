@@ -21,6 +21,6 @@ var myToggle = new FormField({
 function changeTest(){
     console.log("Toggle ChangeTest");
 }
-myToggle.renderPromise().then(function(cmpInstance){
+myToggle.render().then(function(cmpInstance){
     $('#root').append(cmpInstance.$el);
 });

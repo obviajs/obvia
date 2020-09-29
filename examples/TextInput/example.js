@@ -10,6 +10,6 @@ var myText = new TextInput({
     placeholder: "Username"
 });
 
-myText.renderPromise().then(function (cmpInstance) {
+myText.render().then(function (cmpInstance) {
     $('#root').append(cmpInstance.$el);
 });

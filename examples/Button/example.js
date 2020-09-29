@@ -1,27 +1,26 @@
-var loader = new Loader({ id: 'loader' });
-$('#root').append(loader.render());
+var loader = new Loader({
+  id: 'loader'
+});
+$('#root').append(await loader.render().$el);
 loader.show();
 
 var myButton = new Button({
-    id: 'button',
-    type: "",
-    value: "",
-    label:"Click me",
-    classes: ["btn", "btn-success"],
-    click : function(e){console.log("From ClickAction");}
+  id: 'button',
+  type: "",
+  value: "",
+  label: "Click me",
+  classes: ["btn", "btn-success"],
+  click: function (e) {
+    console.log("From ClickAction");
+  }
 });
 myButton.on('creationComplete', function () {
-    loader.hide();
-    myButton.on('click',function (){
-        
-     // alert("test");
-    });
+  loader.hide();
+  myButton.on('click', function () {
+
+    // alert("test");
   });
-  myButton.renderPromise().then(function (cmpInstance)
-  {
-    $('#root').append(cmpInstance.$el);
-  });
-
-
-
-
+});
+myButton.render().then(function (cmpInstance) {
+  $('#root').append(cmpInstance.$el);
+});

@@ -425,7 +425,7 @@ let Implementation = function (applet) {
                 height: "800"
             });
             browser.show();
-            browser.renderPromise();
+            browser.render();
         },
 
         "MOBILE_PREVIEW": function (e) {
@@ -436,7 +436,7 @@ let Implementation = function (applet) {
                 height: "500"
             });
             browser.show();
-            browser.renderPromise();
+            browser.render();
         },
 
         "TABLET_PREVIEW": function (e) {
@@ -447,7 +447,7 @@ let Implementation = function (applet) {
                 height: "800"
             });
             browser.show();
-            browser.renderPromise();
+            browser.render();
         },
 
         "PREPARE_CMP": function (e, r, ra) {

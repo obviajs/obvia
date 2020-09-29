@@ -25,7 +25,7 @@ myHierarchialTree.on('creationComplete',function(){
         //alert("Test");
     });
 });
-myHierarchialTree.renderPromise().then(function (cmpInstance)
+myHierarchialTree.render().then(function (cmpInstance)
 {
   $('#root').append(cmpInstance.$el);
 });

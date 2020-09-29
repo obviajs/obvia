@@ -1,4 +1,4 @@
-(function (context) { 
+(function (context) {
     KxRequest
         .promise(
             $.ajax({
@@ -14,7 +14,7 @@
         .done(function (response) {
             var props = response.data;
             props.components.forEach(function (component) {
-                component.constructor = eval(component.constructor)    
+                component.constructor = eval(component.constructor)
             });
 
             var myForm = new Form(props);
@@ -23,11 +23,8 @@
                 loader.hide();
             });
 
-            $('#root').append(myForm.render());
+            $('#root').append(await myForm.render().$el);
 
             context["myForm"] = myForm;
         });
 })(this)
-
-
-

@@ -86,7 +86,7 @@ var Repeater = function (_props, _hideComponents = false) {
             this.rowItems[rowIndex][cIndex].$el.focus();
         }
     };
-    let _compRenderPromises = [];
+    let _comprenders = [];
     if (!this.hasOwnProperty("createRows")) {
         this.createRows = function () {
             _self.trigger('beginDraw');
@@ -109,16 +109,16 @@ var Repeater = function (_props, _hideComponents = false) {
                             Promise.all(rowComponentsPromises).then(function () {
                                 _rowAdded(i, data);
                             });
-                            _compRenderPromises.splicea(_compRenderPromises.length, 0, rowComponentsPromises);
+                            _comprenders.splicea(_comprenders.length, 0, rowComponentsPromises);
                         }
                     }
                 } else
                     _creationFinished = true;
             } else
                 _creationFinished = true;
-            Promise.all(_compRenderPromises).then(function () {
+            Promise.all(_comprenders).then(function () {
                 _$hadow.contents().appendTo(_self.$container);
-                _compRenderPromises = [];
+                _comprenders = [];
                 _self.trigger('endDraw');
             });
         };
@@ -164,16 +164,16 @@ var Repeater = function (_props, _hideComponents = false) {
                         Promise.all(rowComponentsPromises).then(function () {
                             _rowAdded(ind, _self.dataProvider[ind]);
                         });
-                        _compRenderPromises.splicea(_compRenderPromises.length, 0, rowComponentsPromises);
+                        _comprenders.splicea(_comprenders.length, 0, rowComponentsPromises);
                     }
                 }
-                if (_compRenderPromises.length > 0) {
-                    let cLen = _compRenderPromises.length;
-                    Promise.all(_compRenderPromises).then(function () {
-                        if (_compRenderPromises.length > 0) {
-                            console.log('prevLength:', cLen, ' currentLength: ', _compRenderPromises.length);
+                if (_comprenders.length > 0) {
+                    let cLen = _comprenders.length;
+                    Promise.all(_comprenders).then(function () {
+                        if (_comprenders.length > 0) {
+                            console.log('prevLength:', cLen, ' currentLength: ', _comprenders.length);
                             _$hadow.contents().appendTo(_self.$container);
-                            _compRenderPromises = [];
+                            _comprenders = [];
 
 
                         }
@@ -256,12 +256,12 @@ var Repeater = function (_props, _hideComponents = false) {
                             Promise.all(rowComponentsPromises).then(function () {
                                 _rowAdded(i, v[i]);
                             });
-                            _compRenderPromises.splicea(_compRenderPromises.length, 0, rowComponentsPromises);
+                            _comprenders.splicea(_comprenders.length, 0, rowComponentsPromises);
                         }
-                        if (_compRenderPromises.length > 0) {
-                            Promise.all(_compRenderPromises).then(function () {
+                        if (_comprenders.length > 0) {
+                            Promise.all(_comprenders).then(function () {
                                 _$hadow.contents().appendTo(_self.$container);
-                                _compRenderPromises = [];
+                                _comprenders = [];
                             });
                         }
 
@@ -472,8 +472,8 @@ var Repeater = function (_props, _hideComponents = false) {
                 });
 
                 //render component in row
-                if (el.renderPromise) {
-                    let cp = el.renderPromise().then(function (cmpInstance) {
+                if (el.render) {
+                    let cp = el.render().then(function (cmpInstance) {
 
                         if (!_rendering.wrap) {
                             // if(_self.mode =="append")
@@ -633,10 +633,6 @@ var Repeater = function (_props, _hideComponents = false) {
         };*/
 
     this.render = function () {
-        return this.$el;
-    };
-
-    this.renderPromise = function () {
         this.$container = this.$el;
         _rPromise = new Promise((resolve, reject) => {
             _self.on("endDraw", function (e) {
@@ -698,9 +694,9 @@ var Repeater = function (_props, _hideComponents = false) {
         configurable: true
     });
 
-    Object.defineProperty(this, "renderPromises", {
-        get: function renderPromises() {
-            return _compRenderPromises;
+    Object.defineProperty(this, "renders", {
+        get: function renders() {
+            return _comprenders;
         },
         enumerable: false,
         configurable: true

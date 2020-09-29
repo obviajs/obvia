@@ -1,10 +1,10 @@
-var Parent = function (_props, _hideComponents=false) {
+var Parent = function (_props, _hideComponents = false) {
     let _$hadow = $("<div/>");
-    let _compRenderPromises = [];
+    let _comprenders = [];
     let _self = this;
     let _children = {};
     let _enabled;
-    
+
     let _proxy = new Proxy(this, {
         get: function (target, property, receiver) {
             if (!target.hasOwnProperty(property)) {
@@ -14,31 +14,27 @@ var Parent = function (_props, _hideComponents=false) {
             return Reflect.get(...arguments);
         }
     });
-    
-    Object.defineProperty(this, "hasInternalComponents",
-    {
+
+    Object.defineProperty(this, "hasInternalComponents", {
         get: function hasInternalComponents() {
             return _hideComponents;
         }
     });
-    
-    Object.defineProperty(this, "proxy",
-        {
-            get: function proxy() {
-                return _proxy;
-            }
-        });
-    
-    Object.defineProperty(this, "children",
-    {
+
+    Object.defineProperty(this, "proxy", {
+        get: function proxy() {
+            return _proxy;
+        }
+    });
+
+    Object.defineProperty(this, "children", {
         get: function children() {
             return _children;
         },
         enumerable: true
     });
-    
-    Object.defineProperty(this, "components",
-    {
+
+    Object.defineProperty(this, "components", {
         get: function components() {
             return _components;
         },
@@ -65,7 +61,10 @@ var Parent = function (_props, _hideComponents=false) {
             index = index > -1 ? index : _components.length;
             if (index >= 0 && index <= _components.length) {
                 index = index > -1 ? index : _components.length;
-                let component = { ctor: child.ctor, props: child.props };
+                let component = {
+                    ctor: child.ctor,
+                    props: child.props
+                };
                 _components.splice(index, 0, component);
                 _children[child.id] = child;
                 _csorted.splice(index, 0, child.id);
@@ -73,8 +72,8 @@ var Parent = function (_props, _hideComponents=false) {
                 child.parent = _proxy;
                 child.parentType = this.type;
                 child.parentForm = _proxy;
-                
-                return child.renderPromise().then(function (cmpInstance) {
+
+                return child.render().then(function (cmpInstance) {
                     _self.$el.insertAt(cmpInstance.$el, index);
                     let event = jQuery.Event("childAdded");
                     event.child = child;
@@ -102,7 +101,7 @@ var Parent = function (_props, _hideComponents=false) {
             if (ind > -1) {
                 _components.splice(ind, 1);
                 ind = _csorted.indexOf(child.id);
-                if (ind > -1) { 
+                if (ind > -1) {
                     _csorted.splice(ind, 1);
                 }
                 delete _children[child.id];
@@ -125,9 +124,9 @@ var Parent = function (_props, _hideComponents=false) {
         index = index > -1 ? index : _components.length;
         _components.splice(index, 0, component);
         let cmp = this.addComponentInContainer(this.$container, component, index);
-        let cr = arrayFromKey(_compRenderPromises, "promise");
+        let cr = arrayFromKey(_comprenders, "promise");
         Promise.all(cr).then(function () {
-            _compRenderPromises = [];
+            _comprenders = [];
             for (let i = 0; i < _csorted.length; i++) {
                 let cmpInstance = _children[_csorted[i]];
                 if (cmpInstance && cmpInstance.attach) {
@@ -145,62 +144,59 @@ var Parent = function (_props, _hideComponents=false) {
         return cmp;
     };
 
-    Object.defineProperty(this, "sortChildren",
-    {
+    Object.defineProperty(this, "sortChildren", {
         get: function sortChildren() {
             return _sortChildren;
         },
         enumerable: true
     });
 
-    Object.defineProperty(this, "renderPromises",
-    {
-        get: function renderPromises() {
-            return _compRenderPromises;
+    Object.defineProperty(this, "renders", {
+        get: function renders() {
+            return _comprenders;
         },
         enumerable: false,
         configurable: true
     });
-    
-    Object.defineProperty(this, "csorted",
-    {
+
+    Object.defineProperty(this, "csorted", {
         get: function csorted() {
             return _csorted;
         },
         enumerable: false,
         configurable: true
     });
-    
-    Object.defineProperty(this, "ccRelation",
-    {
+
+    Object.defineProperty(this, "ccRelation", {
         get: function ccRelation() {
             return _ccRelation;
         },
         enumerable: false,
         configurable: true
     });
-    
-    let _ccRelation = {}, _csorted = [];    
+
+    let _ccRelation = {},
+        _csorted = [];
     this.getChildDefinedProperties = function (c) {
         return _ccRelation[c.id];
     };
 
     this.addComponentInContainer = function (container, component, index) {
         if (container) {
-            let resetBindingContext = false;
             component.props.ownerDocument = this.ownerDocument;
-            if (component.props.bindingDefaultContext == null) {
-                component.props.bindingDefaultContext = this.bindingDefaultContext;
-                resetBindingContext = true;
-            }
             let cmpLit = {};
+            shallowCopy(component, cmpLit, ["props"]);
+            cmpLit.props = {};
+            shallowCopy(component.props, cmpLit.props, ["id", "bindingDefaultContext"]);
             if (component.props.id && _children[component.props.id]) {
-                shallowCopy(component, cmpLit, ["props"]);
-                cmpLit.props = {};
-                shallowCopy(component.props, cmpLit.props, ["id"]);
                 cmpLit.props.id = component.props.id + '_' + Object.keys(_children).length;
             } else
-                cmpLit = component;
+                cmpLit.props.id = component.props.id;
+            if (component.props.bindingDefaultContext == null) {
+                cmpLit.props.bindingDefaultContext = this.bindingDefaultContext;
+            } else {
+                cmpLit.props.bindingDefaultContext = component.props.bindingDefaultContext;
+            }
             let cmp = Component.fromLiteral(cmpLit);
             //component.props.id = cmp.id;
             if (_children[cmp.id])
@@ -212,14 +208,12 @@ var Parent = function (_props, _hideComponents=false) {
             cmp.parent = _proxy;
             cmp.parentType = _self.type;
             cmp.parentForm = _proxy;
-            if (resetBindingContext) {
-                component.props.bindingDefaultContext = null;
-            }
-           
+
             index = index > -1 ? index : _components.length;
-            if (cmp.renderPromise) {
-                _compRenderPromises.push({
-                    "cmp": cmp, "promise": cmp.renderPromise().then(function (cmpInstance) {
+            if (cmp.render) {
+                _comprenders.push({
+                    "cmp": cmp,
+                    "promise": cmp.render().then(function (cmpInstance) {
                         /*if (cmpInstance.appendTo)
                         {
                             cmpInstance.appendTo.insertAt(cmpInstance.$el, index);
@@ -229,18 +223,7 @@ var Parent = function (_props, _hideComponents=false) {
                         --_countChildren;
                     })
                 });
-            } else {
-                container.insertAt(cmp.render(), index);
-                --_countChildren;
-                if (_countChildren == 0) {
-                    _$hadow.contents().appendTo(_self.$container);
-                    _self.trigger('endDraw');
-                }
             }
-            
-            //container.append(cmp.render());
-            //expose component model
-        
             return cmp;
         }
     };
@@ -257,7 +240,7 @@ var Parent = function (_props, _hideComponents=false) {
         if (e.target.id == this.domID) {
             if (typeof _beforeAttach == 'function')
                 _beforeAttach.apply(this, arguments);
-            if (_props.enabled !=null  && !this.getBindingExpression("enabled"))
+            if (_props.enabled != null && !this.getBindingExpression("enabled"))
                 this.enabled = _props.enabled;
         }
     };
@@ -266,7 +249,7 @@ var Parent = function (_props, _hideComponents=false) {
         if (e.target.id == this.domID) {
             if (typeof _afterAttach == 'function')
                 _afterAttach.apply(this, arguments);
-            
+
         }
     };
 
@@ -278,7 +261,7 @@ var Parent = function (_props, _hideComponents=false) {
     //_props = extend(false, false, _defaultParams, _props);
     shallowCopy(extend(false, false, _defaultParams, _props), _props);
     let _components = _props.components;
-    
+
     this.$container = null;
 
     let _creationFinished = false;
@@ -298,23 +281,23 @@ var Parent = function (_props, _hideComponents=false) {
         } else {
             components = this.components;
         }
-        _compRenderPromises = [];
+        _comprenders = [];
         if (components && Array.isArray(components) && components.length > 0) {
             if (_sortChildren) {
                 acSort(components, "props.index");
             }
             _countChildren = components.length;
             for (let i = 0; i < components.length; i++) {
-                if (isObject(components[i])) {          
+                if (isObject(components[i])) {
                     if (cmps) {
                         _components.splice(i, 0, components[i]);
                     }
                     arrInst.push(this.addComponentInContainer(_$hadow, components[i], i));
                 }
             }
-            let cr = arrayFromKey(_compRenderPromises, "promise");
+            let cr = arrayFromKey(_comprenders, "promise");
             Promise.all(cr).then(function () {
-                _compRenderPromises = [];
+                _comprenders = [];
                 for (let i = 0; i < _csorted.length; i++) {
                     let cmpInstance = _children[_csorted[i]];
                     if (cmpInstance && cmpInstance.attach) {
@@ -326,7 +309,7 @@ var Parent = function (_props, _hideComponents=false) {
                         console.log("Component not found " + _csorted[i]);
                     }
                 }
-                
+
                 _$hadow.contents().appendTo(_self.$container);
                 _self.trigger('endDraw');
             });
@@ -336,9 +319,9 @@ var Parent = function (_props, _hideComponents=false) {
         }
         return arrInst;
     };
-    
+
     let _rPromise;
-    this.renderPromise = function () {
+    this.render = function () {
         if (_rPromise == null) {
             this.$container = this.$el;
             _rPromise = new Promise((resolve, reject) => {
@@ -352,7 +335,7 @@ var Parent = function (_props, _hideComponents=false) {
         }
         return _rPromise;
     };
-    
+
     Component.call(this, _props);
     /*
         this.destruct = function (mode=1)
@@ -363,29 +346,28 @@ var Parent = function (_props, _hideComponents=false) {
             base.destruct(mode);
         }
     */
-    let objFromDesc = Object.getOwnPropertyDescriptor(this, "enabled");  
+    let objFromDesc = Object.getOwnPropertyDescriptor(this, "enabled");
     let _oenabled = objFromDesc['set'];
-    Object.defineProperty(this, "enabled",
-        {
-            get: function enabled() {
-                return _enabled;
-            },
-            set: function enabled(v) {
-                if (_enabled != v) {
-                    _enabled = v;
-                    _oenabled.call(this, v);
-                    for (let childId in this.children) {
-                        this.children[childId].enabled = v;
-                    }
+    Object.defineProperty(this, "enabled", {
+        get: function enabled() {
+            return _enabled;
+        },
+        set: function enabled(v) {
+            if (_enabled != v) {
+                _enabled = v;
+                _oenabled.call(this, v);
+                for (let childId in this.children) {
+                    this.children[childId].enabled = v;
                 }
-            },
-            enumerable: true,
-            configurable: true
-        });
-    
-    
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+
+
     Object.defineProperty(this, "props", {
-        get: function props() {            
+        get: function props() {
             return new Props(_self, _props);
         },
         configurable: true

@@ -471,7 +471,7 @@ var Tree = function (_props) {
         enumerable: true
     });
     let _rPromise;
-    this.renderPromise = function () 
+    this.render = function () 
     {  
         this.$container = this.$el;
         _rPromise = new Promise((resolve, reject) => {

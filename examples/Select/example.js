@@ -6,6 +6,6 @@ var mySelect = new Select({
     value: "2",
 });
 
-mySelect.renderPromise().then(function (cmpInstance) {
+mySelect.render().then(function (cmpInstance) {
     $('#root').append(cmpInstance.$el);
   });

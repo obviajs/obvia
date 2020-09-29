@@ -32,7 +32,7 @@ var modalRoute = function (applet) {
     if (applet.view.attached) {
         applet.view.show();
     } else {
-        applet.view.renderPromise().then(function (cmpInstance) {
+        applet.view.render().then(function (cmpInstance) {
             applet.view.show();
         });
     }
@@ -67,6 +67,6 @@ var codeEditor = new App({
     }]
 });
 
-codeEditor.renderPromise().then(function (cmpInstance) {
+codeEditor.render().then(function (cmpInstance) {
     $(document.body).append(cmpInstance.$el);
 });

@@ -194,7 +194,7 @@ var myRepeater = new Repeater({
     ]
 });
 */
-myRepeater.renderPromise().then(function (cmpInstance)
+myRepeater.render().then(function (cmpInstance)
 {
   $('#root').append(cmpInstance.$el);
 });

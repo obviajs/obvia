@@ -6,6 +6,6 @@ var myDate = new DateTime({
     value: '27/12/2019'
 });
 
-myDate.renderPromise().then(function (cmpInstance) {
+myDate.render().then(function (cmpInstance) {
     $('#root').append(cmpInstance.$el);
 });

@@ -5,6 +5,6 @@ var myCheckBox = new CheckBox({
     checked:false
 });
 
-myCheckBox.renderPromise().then(function (cmpInstance) {
+myCheckBox.render().then(function (cmpInstance) {
     $('#root').append(cmpInstance.$el);
 });

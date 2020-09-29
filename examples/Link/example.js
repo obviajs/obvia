@@ -1,5 +1,7 @@
-var loader = new Loader({ id: 'loader' });
-$('#root').append(loader.render());
+var loader = new Loader({
+    id: 'loader'
+});
+$('#root').append(await loader.render().$el);
 loader.show();
 
 var mySGRenderer = new SuggestionRenderer({
@@ -7,9 +9,9 @@ var mySGRenderer = new SuggestionRenderer({
     label: 'Suggestion :)',
     value: 5
 });
-mySGRenderer.on('creationComplete', function(e){
+mySGRenderer.on('creationComplete', function (e) {
     loader.hide();
     mySGRenderer.label = "Loaded";
     mySGRenderer.value = 6;
 });
-$('#root').append(mySGRenderer.render());
+$('#root').append(await mySGRenderer.render().$el);

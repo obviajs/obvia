@@ -1,5 +1,7 @@
-var loader = new Loader({ id: 'loader' });
-$('#root').append(loader.render());
+var loader = new Loader({
+    id: 'loader'
+});
+$('#root').append(await loader.render().$el);
 loader.show();
 
 var myImage = new Image({
@@ -12,13 +14,13 @@ var myImage = new Image({
 
 });
 
-myImage.on('creationComplete', function(e){
+myImage.on('creationComplete', function (e) {
     loader.hide();
-    
+
 });
 myImage.on('load', myImageLoaded);
-$('#root').append(myImage.render());
+$('#root').append(await myImage.render().$el);
 
-function myImageLoaded(e){
+function myImageLoaded(e) {
     console.log("Image Loaded");
 }

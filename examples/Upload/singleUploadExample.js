@@ -5,15 +5,17 @@ var singleUpload = new UploadEx({
 });
 $('#root').append(singleUpload.render());
 */
-var loader=new Loader({id:'loader'});
-$('#root').append(loader.render());
+var loader = new Loader({
+    id: 'loader'
+});
+$('#root').append(await loader.render().$el);
 loader.show();
 
 var myForm = new Form({
     id: 'form',
     formName: 'My Form',
     action: "http://192.168.64.2/upload.php"
-});   
+});
 
 var multiUpl = new MultiUpload({
     form: myForm
@@ -24,9 +26,9 @@ multiUpl.on('creationComplete', function () {
 });
 
 
-multiUpl.on('creationComplete', function(e){
+multiUpl.on('creationComplete', function (e) {
     loader.hide();
 });
-multiUpl.renderPromise().then(function(cmpInstance){
+multiUpl.render().then(function (cmpInstance) {
     $('#root').append(cmpInstance.$el);
 });

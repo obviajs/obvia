@@ -595,22 +595,13 @@ var Component = function (_props) {
         }
     });
 
-    let _rPromise;
-    if (!this.hasOwnProperty("renderPromise")) {
-        this.renderPromise = function () {
+    if (!this.hasOwnProperty("render")) {
+        this.render = function () {
             _self.trigger('beginDraw');
             _self.trigger('endDraw');
-            _rPromise = new Promise((resolve, reject) => {
-                resolve(this);
-            });
-            return _rPromise;
+            return Promise.resolve(this);
         };
     }
-
-    this.render = function () {
-        return this.$el;
-    };
-
     //action methods on component
     this.show = function () {
         if (this.$el) {

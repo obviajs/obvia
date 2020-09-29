@@ -42,7 +42,7 @@ var list = new List({
     }],
     change: changeTest
 });
-list.renderPromise().then(function (cmpInstance) {
+list.render().then(function (cmpInstance) {
     $('#root').append(cmpInstance.$el);
 });
 

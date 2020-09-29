@@ -5,6 +5,6 @@ var myColor = new Color({
     }
 });
 
-myColor.renderPromise().then(function (cmpInstance) {
+myColor.render().then(function (cmpInstance) {
     $('#root').append(cmpInstance.$el);
 });

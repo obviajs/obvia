@@ -159,7 +159,7 @@ function saveButton_click(e)
     }
 }
 
-myModal.renderPromise().then(function (cmpInstance)
+myModal.render().then(function (cmpInstance)
 { 
     $('#root').append(cmpInstance.$el);   
 });
@@ -216,7 +216,7 @@ myCalendar.on('creationComplete', function ()
     });
 });
 
-myCalendar.renderPromise().then(function (cmpInstance)
+myCalendar.render().then(function (cmpInstance)
 { 
     $('#root').append(cmpInstance.$el);    
 });

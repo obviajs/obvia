@@ -147,7 +147,7 @@ let Implementation = function (applet) {
             let cmInstance = Component.fromLiteral(form[0].form_literal);
             formsComponentsList.dataProvider.splicea(0, formsComponentsList.dataProvider.length, new ArrayEx());
             eventsList.dataProvider.splicea(0, eventsList.dataProvider.length, new ArrayEx());
-            cmInstance.renderPromise().then(function (instance) {
+            cmInstance.render().then(function (instance) {
                 let cmDp = initComponentModel(instance.workAreaColumnL2);
                 let frmsDP = initComponentList(instance.workAreaColumnL2.children);
                 componentModelTree.dataProvider = cmDp;

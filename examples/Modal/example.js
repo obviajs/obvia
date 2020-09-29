@@ -38,7 +38,7 @@ myModal.on('creationComplete', function (e) {
     myModal.show();
 });
 myModal.addComponent(myLabel, 0);
-myModal.renderPromise().then(function (cmpInstance) {
+myModal.render().then(function (cmpInstance) {
     $('#root').append(cmpInstance.$el);
 });
 
