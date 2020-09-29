@@ -10,7 +10,7 @@ var Component = function (_props) {
         id: this.ctor + "_" + Component[this.ctor].instanceInc,
         classes: [],
         guid: StringUtils.guid(),
-        bindingDefaultContext: this,
+        bindingDefaultContext: null,
         ownerDocument: document,
         attr: {},
         visible: true,
@@ -25,7 +25,9 @@ var Component = function (_props) {
         if (!ppb.processedProps.hasOwnProperty(prop))
             delete _props[prop];
     }
-
+    if (_props.bindingDefaultContext == null) {
+        _props.bindingDefaultContext = this;
+    }
     let _bindingDefaultContext = _props.bindingDefaultContext;
     let _guid = _props.guid;
     let _attr, _css;
@@ -91,6 +93,12 @@ var Component = function (_props) {
     Object.defineProperty(this, "bindingDefaultContext", {
         get: function bindingDefaultContext() {
             return _bindingDefaultContext;
+        },
+        set: function bindingDefaultContext(v) {
+            if (_bindingDefaultContext != v) {
+                _bindingDefaultContext = v;
+                this.refreshBindings(_bindingDefaultContext);
+            }
         },
         enumerable: false
     });
@@ -682,9 +690,9 @@ var Component = function (_props) {
                                     "originalHandler": fnc
                                 });
                                 this.$el.on(eventType, proxyHandler);
-                            } else { 
+                            } else {
                                 console.log("Tried to add a listener that was previously added.");
-                            }                            
+                            }
                         }
                     }
                 } else
@@ -731,7 +739,7 @@ var Component = function (_props) {
         let found = getMatching(_handlers[eventType], "originalHandler", fnc, true);
         return found.objects.length > 0;
     };
-    
+
     this.getBindingExpression = function (property) {
         let match = getMatching(_bindings, "property", property, true);
         let expression = null;
@@ -918,7 +926,7 @@ var Component = function (_props) {
                                 args[0].originalContext = this;
                                 handler.events[innerEventIn].apply(_self.proxyMaybe, args);
                             };
-                            
+
                             _handlers[innerEventIn].push({
                                 "proxyHandler": proxyHandler,
                                 "originalHandler": handler.events[innerEventIn]
@@ -1032,7 +1040,7 @@ Component.ready = function (cmp, fn, fnDetached, ownerDocument = document) {
             "fn": fn,
             "fnDetached": fnDetached
         });
-      
+
         Component.objListeners[cmp.domID] = {
             "element": cmp,
             "fn": fn,
@@ -1063,7 +1071,7 @@ Component.check = function (mutations) {
                 evt.mutation = mutations[g];
                 Component.instances[mutations[g].target.id].trigger(evt);
             }
-            if (mutations[g].type == "childList") {   
+            if (mutations[g].type == "childList") {
                 let len = mutations[g].removedNodes.length;
                 for (let h = 0; h < len; h++) {
                     let DOMNode = mutations[g].removedNodes[h];
@@ -1089,18 +1097,17 @@ Component.check = function (mutations) {
     }
 };
 Component.ch = function (domNode, operation = "fn") {
-    
+
     let listener = Component.objListeners[domNode.id];
     let len = domNode.children.length;
     for (let i = 0; i < len; i++) {
         Component.ch(domNode.children[i], operation);
     }
     if (listener) {
-        if ((!listener.element.attached &&  operation == "fn") || (listener.element.attached &&  operation == "fnDetached")) {
+        if ((!listener.element.attached && operation == "fn") || (listener.element.attached && operation == "fnDetached")) {
             listener[operation].call(listener.element, listener.element.$el);
         }
-    }
-    else
+    } else
         console.log("DOMNode not registered as a component", domNode);
 };
 

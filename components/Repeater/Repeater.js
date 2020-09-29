@@ -404,7 +404,9 @@ var Repeater = function (_props, _hideComponents = false) {
                 component.props = {};
                 shallowCopy(_components[cIndex].props, component.props, ["id", "bindingDefaultContext"]);
                 component.props.id = _components[cIndex].props.id + "_" + index + "_" + cIndex;
-                component.props.bindingDefaultContext = data;
+                if (_components[cIndex].props.bindingDefaultContext == null) {
+                    component.props.bindingDefaultContext = data;
+                }
 
                 Object.defineProperty(data, "currentRow", {
                     value: rowItems,
