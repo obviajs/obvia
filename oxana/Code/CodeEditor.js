@@ -1,6 +1,6 @@
 var _initDP = async function () {
 
-    let processId = 1;
+    CodeEditor.processId = 7;
     CodeEditor.recordsPerPage = 5;
 
     let frmsProcess = new GaiaAPI_processes();
@@ -8,7 +8,7 @@ var _initDP = async function () {
     let raForms = new RemoteArray({
         recordsPerPage: CodeEditor.recordsPerPage, // pagination
         fetchPromise: function (p) {
-            return frmsProcess.getFormsClient.get(processId);
+            return frmsProcess.getFormsClient.get(CodeEditor.processId);
         }
     });
 
@@ -37,6 +37,7 @@ var modalRoute = function (applet) {
         });
     }
 };
+
 
 var codeEditor = new App({
     applets: [{

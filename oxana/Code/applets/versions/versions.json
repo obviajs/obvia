@@ -4,7 +4,6 @@
         "id": "versionSelectModal",
         "size": "ModalSize.LARGE",
         "title": "Versions",
-        "accept": "selectVersion",
         "components": {
             "modalFooter": [{
                 "ctor": "Button",
@@ -89,7 +88,7 @@
                                     "id": "fa",
                                     "labelType": "LabelType.i",
                                     "classes": ["fas", "fa-rocket", "text-info"],
-                                    "visible": "{deployed}",
+                                    "visible": "{?deployed}",
                                     "label": ""
                                 }
                             },
@@ -98,8 +97,7 @@
                                 "sortDirection": "ASC"
                             }
                         }
-                    ],
-                    "rowDblClick": "selectVersion"
+                    ]
                 }
             }]
         }

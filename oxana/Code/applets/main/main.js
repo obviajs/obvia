@@ -2,8 +2,10 @@ let Implementation = function (applet) {
     let app = applet.app;
     let data = applet.data;
 
+    let formId, componentLabel;
+
     let ideContainer, sideNav, cmCnt, cmCollapse, componentModelTree, todosCnt, todosCollapse, todosRepeater, code, collapseBtn, deployBtn, versionsBtn, removeBtn, uploadBtn, todoComponent, todoItem, modal, dataGrid, diffButton, formsList, formsComponentsList, eventsList, behaviorsDropEdit;
-    let _processForms = new ArrayEx(data.processForms);
+    let _processForms = data.processForms;
     let imp = {
         "BEGIN_DRAW": async function (e) {
             console.log("APPLET_BEGIN_DRAW");
@@ -12,11 +14,6 @@ let Implementation = function (applet) {
             paths[0].pop();
             let propsTodosRepeater = getChainValue(applet.literal, paths[0]);
             propsTodosRepeater.dataProvider = new ArrayEx([]);
-
-            // paths = findMember(applet.literal, "id", [], "dataGrid", false);
-            // paths[0].pop();
-            // let dataGridDataProvider = getChainValue(applet.literal, paths[0]);
-            // dataGridDataProvider.dataProvider = new ArrayEx([]);
 
             paths = findMember(applet.literal, "id", [], "forms", false);
             paths[0].pop();
@@ -33,6 +30,7 @@ let Implementation = function (applet) {
             ideContainer = app.container.mainContainer.ideContainer;
             collapseBtn = ideContainer.buttonsSide.myCollapseBtn;
             versionsBtn = ideContainer.buttonsSide.versionsBtn;
+            deployBtn = ideContainer.buttonsSide.deployBtn;
             removeBtn = ideContainer.buttonsSide.removeBtn;
             uploadBtn = ideContainer.buttonsSide.uploadBtn;
             sideNav = ideContainer.mySideNav;
@@ -96,6 +94,14 @@ let Implementation = function (applet) {
                 click: "DELETE_EVENT"
             }, false);
 
+            applet.addBehaviors(deployBtn, {
+                "click": {
+                    "DEPLOY_EVENT": {
+                        onPropagation: true
+                    }
+                }
+            });
+
 
             applet.addBehaviors(todosRepeater, {
                 "rowAdd": "TODOS"
@@ -114,6 +120,8 @@ let Implementation = function (applet) {
                 todosCollapse.href = "#" + this.domID;
             };
 
+
+
             componentModelTree.afterAttach();
             todosRepeater.afterAttach();
 
@@ -129,21 +137,28 @@ let Implementation = function (applet) {
 
         "FOCUS_EDITOR": function (e) {
             code.cmInst.focus();
+            code.content = "//Choose an event to begin with (F11 to go fullscreen)";
+            formsComponentsList.attr.disabled = true;
+            eventsList.attr.disabled = true;
+
         },
 
-        "INIT_BEHAVIOR_CODE": function (e) {
-            let ex_tem = `function form_${formsList.value}_${formsComponentsList.value}_${eventsList.value} (e) {
-                //your code here;
-            }`;
+        "INIT_BEHAVIOR_CODE": async function (e) {
+            let ex_tem = `function form_${formId}_${componentLabel}_${eventsList.value} (e) {
+            //your code here;
+        }`;
 
+            CodeEditor.eventId = this.value;
             code.content = ex_tem;
         },
 
 
         "PROCESS_FORMS_COMPONENTS": async function (e) {
-            let form_id = this.value;
+            let form_guid = this.value;
+            CodeEditor.form_guid = form_guid;
             let gaiaForm = new GaiaAPI_forms();
-            let form = await gaiaForm.formsClient.get(form_id);
+            let form = await gaiaForm.formsClient.get(form_guid);
+            formId = form[0].form_id;
             let cmInstance = Component.fromLiteral(form[0].form_literal);
             formsComponentsList.dataProvider.splicea(0, formsComponentsList.dataProvider.length, new ArrayEx());
             eventsList.dataProvider.splicea(0, eventsList.dataProvider.length, new ArrayEx());
@@ -152,25 +167,48 @@ let Implementation = function (applet) {
                 let frmsDP = initComponentList(instance.workAreaColumnL2.children);
                 componentModelTree.dataProvider = cmDp;
                 formsComponentsList.dataProvider.splicea(0, 0, frmsDP);
+                formsComponentsList.attr.disabled = false;
             });
         },
 
-        'EVENTS_LIST': function (e) {
+        'EVENTS_LIST': async function (e) {
+            CodeEditor.formsList = formsList.value;
+            CodeEditor.formsComponentsList = formsComponentsList.value;
+            let dpEvents = new ArrayEx();
+            let events = new GaiaAPI_events();
+            let eventsForm = await events.events_cteClient.get(CodeEditor.processId, CodeEditor.form_guid);
             eventsList.dataProvider.splicea(0, eventsList.dataProvider.length, new ArrayEx());
             for (let i = 0; i < this.dataProvider.length; i++) {
-                if (this.dataProvider[i].ctor === this.value) {
-                    let dpEv = initComponentModel(this.dataProvider[i].forms_literal);
-                    eventsList.dataProvider.splicea(0, 0, dpEv[0].children)
-                    break;
+                if (this.dataProvider[i].field_guid === this.value) {
+                    componentLabel = this.dataProvider[i].label;
                 }
             }
+            let eventList = eventsForm.dedupe("eventType");
+            let objEvents = {};
+            for (let i = 0; i < eventList.result.length; i++) {
+                objEvents = {
+                    eventType: eventList.result[i].eventtype,
+                    eventId: eventList.result[i].frontendevent_id
+                };
+                dpEvents.push(objEvents);
+            }
+            eventsList.dataProvider.splicea(0, 0, dpEvents);
+            eventsList.attr.disabled = false;
         },
 
 
         "SHOW_VERSIONS": function (e) {
             app.appletsMap["versions"].init().then(() => {
-                console.log("versions modal init");
+                applet.addBehaviors(app.appletsMap["versions"].view, {
+                    "loadContent": "LOAD_CONTENT"
+                });
             });
+        },
+
+        "LOAD_CONTENT": function (e) {
+            if (e.content) {
+                code.content = e.content;
+            }
         },
 
         "UPLOAD_EVENT": async function (e) {
@@ -180,14 +218,16 @@ let Implementation = function (applet) {
                 // let field_id = await fields_id.getFormFieldsClient.get(id_form);
                 let apiEvents = new GaiaAPI_events();
                 let event = {
-                    form_id: formsList.value,
-                    field_id: 1,
-                    event_id: 1,
+                    form_guid: formsList.value,
+                    field_guid: formsComponentsList.value,
                     content: code.content,
-                    id_process: 1,
-                    file_name: ` form_${formsList.value}_${formsComponentsList.value}_${eventsList.value}`,
+                    behavior_name: `form_${formId}_${componentLabel}_${eventsList.value}`,
+                    id_process: CodeEditor.processId,
+                    file_name: `form_${formId}_${componentLabel}_${eventsList.value}`,
+                    event_id: CodeEditor.eventId
                 };
                 let result = await apiEvents.saveScriptFileClient.post(event);
+                CodeEditor.revisionId = result.versions[0].id;
                 console.log(result);
             } else {
                 console.log("Your code contains errors. Fix them and then save");
@@ -196,6 +236,16 @@ let Implementation = function (applet) {
 
         "DELETE_EVENT": function (e) {
             console.log("DELETE_EVENT");
+        },
+
+        "DEPLOY_EVENT": async function (e) {
+            if (code.errors.length > 0) {
+                console.log("Your code contains errors. Fix them and then save");
+            } else {
+                let deployEvent = new GaiaAPI_events();
+                let eventToDeploy = await deployEvent.deployScriptFileClient.post(CodeEditor.revisionId, CodeEditor.processId);
+                console.log(eventToDeploy);
+            }
         },
 
         "SIDE_NAV_TOGGLE_VISIBILITY": {
@@ -344,6 +394,7 @@ let Implementation = function (applet) {
             node = {
                 "ctor": cmInstance[cid].id,
                 "label": cid,
+                "field_guid": cmInstance[cid].guid,
                 "forms_literal": cmInstance[cid]
             };
             dp.push(node);

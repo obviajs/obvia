@@ -10,7 +10,8 @@ var FormProperties = function (_props) {
         form_help_url: '',
         id_form_type: 0,
         form_literal: '',
-        form_literal_view: ''
+        form_literal_view: '',
+        form_guid: null
     };
     _props = extend(false, false, _defaultParams, _props);
     this.form_id = _props.form_id;
@@ -24,7 +25,8 @@ var FormProperties = function (_props) {
     this.date_modified = _props.date_modified;
     this.id_form_type = _props.id_form_type;
     this.form_literal_view = _props.form_literal_view;
-    
+    this.form_guid = _props.form_guid;
+
     Object.defineProperty(this, "props", {
         get: function props() {
             let obj = {};

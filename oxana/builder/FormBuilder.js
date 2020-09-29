@@ -13,7 +13,7 @@ var _initDP = function () {
     Builder.selectedForm = new FormProperties();
 
     let api_dv_dataviews = new GaiaAPI_DV_dataviews();
-    let api_dv_forms = new GaiaAPI_DV_forms();
+    let api_dv_forms = new GaiaAPI_dataview_pid_1();
     let api_frmsDv_dataviews = new GaiaAPI_FrmsDv_dataview(); //frm dv
     Builder.recordsPerPage = 5;
 
@@ -72,7 +72,7 @@ var _initDP = function () {
 }();
 
 var _initDpForms = function () {
-    let api_dv_forms = new GaiaAPI_DV_forms();
+    let api_dv_forms = new GaiaAPI_dataview_pid_1();
     let raFrms = new RemoteArray({
         recordsPerPage: 15, // pagination
         fetchPromise: function (p) {
@@ -149,7 +149,7 @@ var oxana = new App({
     }]
 });
 
-//data should be loaded before calling render so that the current applet (the one in the url) implementation can access it
+//data should be loaded before calling renderPromise so that the current applet (the one in the url) implementation can access it
 oxana.render().then(function (cmpInstance) {
     $(document.body).append(cmpInstance.$el);
 });

@@ -44,13 +44,15 @@
                 rjs.define("./oxana/GaiaAPI/GaiaAPI_DV_process.js", "GaiaAPI_DV_process");
                 rjs.define("./oxana/GaiaAPI/GaiaAPI_forms.js", "GaiaAPI_forms");
                 rjs.define("./oxana/GaiaAPI/GaiaAPI_processes.js", "GaiaAPI_processes");
-                rjs.define("./oxana/GaiaAPI/GaiaAPI_events.js", "GaiaAPI_events")
+                rjs.define("./oxana/GaiaAPI/GaiaAPI_events.js", "GaiaAPI_events");
+                //rjs.define("./oxana/GaiaAPI/GaiaAPI_documents.js", "GaiaAPI_documents");
                 rjs.require([
                     "Code",
                     "GaiaAPI_forms",
                     "GaiaAPI_DV_process",
                     "GaiaAPI_processes",
-                    "GaiaAPI_events"
+                    "GaiaAPI_events",
+                    //"GaiaAPI_documents"
                 ]).then(function () {
                     rjs.define("./oxana/Code/CodeEditor.js", "CodeEditor");
                 });

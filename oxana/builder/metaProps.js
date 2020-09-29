@@ -712,7 +712,8 @@ Builder.initMetaProps = function () {
                     //propsForm.children["dataProvider"].value
                     //get the fields for the selected datProvider and 
                     //assign them to the labelField and valueField editor`s dataProvider property
-                    this.parent.parent.instance.attr.repeated_id_form = this.value.length > 0 ? this.value[0][this.valueField] : undefined;
+                    //this.parent.parent.instance.attr.repeated_id_form = this.value.length > 0 ? this.value[0][this.valueField] : undefined;
+                    this.parent.parent.instance.attr.repeated_id_form = this.value.length > 0 ? this.value[0].guid : undefined;
                 }
             },
             index: 7,

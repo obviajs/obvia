@@ -11,7 +11,7 @@ let Implementation = function (applet) {
         rightSideNav, listHistorySteps, workArea, workAreaColumn, workAreaRowL2,
         cmpSearchTextInput, undoButton, redoButton, duplicateButton, cmpTrash, toggleSideNavLeft, toggleSideNavRight,
         splitHorizontal, splitVertical, uploadIcon, saveLayout, selectBtn, componentList,
-        openUploadForms, appLoader, middleNav, desktopPreview, tabletPreview, mobilePreview, footer;
+        openUploadForms, appLoader, middleNav, desktopPreview, tabletPreview, mobilePreview, footer, removeSearchText;
 
 
     let formField;
@@ -52,6 +52,7 @@ let Implementation = function (applet) {
             workArea = workAreaRowL2.workAreaColumnL2;
             componentList = componentsContainer.componentList;
             footer = app.viewStack.mainContainer.container.workArea.workAreaRow.workAreaColumn.workAreaCell.footer;
+            removeSearchText = componentsContainer.container.buttonDel;
 
             applet.addBehaviors(applet.view, {
                 "idChanged": {
@@ -66,7 +67,7 @@ let Implementation = function (applet) {
             }, false);
 
             let len = componentList.rowItems.length;
-            for (let i = 0; i < len; i++) { 
+            for (let i = 0; i < len; i++) {
                 let currentRow = componentList.rowItems[i];
                 applet.addBehaviors(currentRow.component, {
                     "dragstart": "INITIAL_DRAGSTART",
@@ -154,6 +155,14 @@ let Implementation = function (applet) {
             applet.addBehaviors(listHistorySteps, {
                 "change": "HISTORY_STEP_DETAILS",
             }, false);
+
+            applet.addBehaviors(removeSearchText, {
+                "click": {
+                    "REMOVE_SEARCH_TEXT": {
+                        onPropagation: true
+                    }
+                }
+            }, true);
 
             //app.behaviors["previewBtn"]["click"] = "PREVIEW";
             applet.addBehaviors(workArea, cmpWaBehaviors, false);
@@ -472,6 +481,7 @@ let Implementation = function (applet) {
             if (value.length > 0) {
                 this.parent.button.css.display = "none";
                 this.parent.buttonDel.css.display = "block";
+                //this.parent.buttonDel.css.padding = 0;
             } else {
                 this.parent.button.css.display = "block";
                 this.parent.button.css.top = 0;
@@ -484,6 +494,10 @@ let Implementation = function (applet) {
                     return el.label.toLowerCase().match(regEx);
                 });
             }
+        },
+
+        "REMOVE_SEARCH_TEXT": function (e) {
+            console.log("object");
         },
 
         "LOAD_HTML": function (e) {
@@ -1156,7 +1170,7 @@ let Implementation = function (applet) {
         }
     };
 
-    let noNeedClasses = ["selected-component", "default-component"];
+    let noNeedClasses = ["selected-component", "default-component", "border", "active-container"];
 
     let stripHandle = function (lit) {
         if (lit.props["components"] && Array.isArray(lit.props["components"]))

@@ -333,7 +333,7 @@
                                              "props": {
                                                 "id": "i",
                                                 "label": "",
-                                                "type": "i",
+                                                "labelType": "i",
                                                 "classes": [
                                                    "fa",
                                                    "fa-search"
@@ -358,14 +358,13 @@
                                              "props": {
                                                 "id": "i",
                                                 "label": "",
-                                                "type": "i",
+                                                "labelType": "i",
                                                 "classes": [
                                                    "fas",
                                                    "fa-times"
                                                 ],
                                                 "css": {
                                                    "marginTop": "0"
-
                                                 }
                                              }
                                           }]

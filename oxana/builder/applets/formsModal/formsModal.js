@@ -47,7 +47,7 @@ let Implementation = function (applet) {
         "ITEM_SELECT": async function (e, ra) {
             let gaiaForm = new GaiaAPI_forms();
             let currentItem = arguments[1].currentItem;
-            let form = gaiaForm.formsClient.get(currentItem.form_id);
+            let form = gaiaForm.formsClient.get(currentItem.form_guid);
             let resolve = await form;
             let f = resolve[0];
             let lit = f.form_literal;
