@@ -297,20 +297,19 @@ Poolable.call({apiTitle});
     /**
 {jsDoc}
     */
-   {apiTitle}.{typeName} = function(_props){
+   {apiTitle}.{typeName} = function {typeName}(_props){
         _props = _props || {};
 {properties}
     };`;
 
     let _propDocTemplate = "\t* @property {{jsType}}  {prop}               - {description}\r\n";
     let _propTemplate = "\t\tthis.{prop} = _props.{prop};\r\n";
-    let _arrTypeTemplate = `\t{apiTitle}.{typeName} = function()
+    let _arrTypeTemplate = `\t{apiTitle}.{typeName} = function {typeName}()
 \t{
-\t\tlet r = ArrayEx.apply(this, arguments);
-\t\tr.memberType = {allowedTypes}; 
-\t\treturn r;
+\t\tthis.memberType = {allowedTypes}; 
 \t};
-\t{apiTitle}.{typeName}.prototype = Object.create(ArrayEx.prototype);`;
+\t{apiTitle}.{typeName}.prototype = Object.create(ArrayEx.prototype);
+\t{apiTitle}.{typeName}.prototype.constructor = {apiTitle}.{typeName};`;
     let subTypes = {};
 
     let _freeFormTemplate = `
@@ -318,7 +317,7 @@ Poolable.call({apiTitle});
 {freeFormDoc}
 {jsDoc}
     */
-   {apiTitle}.{typeName} = function(_props){
+   {apiTitle}.{typeName} = function {typeName}(_props){
         _props = _props || {};
 {properties}
         for(let prop in _props){

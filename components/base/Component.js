@@ -853,7 +853,7 @@ var Component = function (_props) {
                 w.splicea(w.length, 0, BindingUtils.getValue(window, bindingExp, site, site_chain, defaultBindTo));
             };
             if (nullable) {
-                let fnDelayed = whenDefined(window[defaultBindTo], bindingExp, fn);
+                let fnDelayed = whenDefined(window[defaultBindTo], BindingUtils.getIdentifier(bindingExp), fn);
                 fnDelayed();
             } else {
                 fn();
