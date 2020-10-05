@@ -18,7 +18,7 @@
                                 "id": "forms",
                                 "classes": ["form-control", "form-control-sm", "forms__list"],
                                 "labelField": "form_name",
-                                "valueField": "form_id",
+                                "valueField": "form_guid",
                                 "value": 0
 
                             }
@@ -33,7 +33,7 @@
                                 },
                                 "dataProvider": "{?componentList}",
                                 "labelField": "ctor",
-                                "valueField": "label",
+                                "valueField": "field_guid",
                                 "value": 0
 
                             }
@@ -47,8 +47,8 @@
                                     "marginLeft": "15px"
                                 },
                                 "dataProvider": "{?eventsList}",
-                                "labelField": "label",
-                                "valueField": "label",
+                                "labelField": "eventType",
+                                "valueField": "eventId",
                                 "value": 0
 
                             }
@@ -81,8 +81,8 @@
                             "ctor": "SideNav",
                             "props": {
                                 "id": "buttonsSide",
-                                "width": 65,
-                                "classes": ["buttons__sideNav"],
+                                "width": 50,
+                                "classes": ["buttons-sideNav"],
                                 "components": [{
                                         "ctor": "Container",
                                         "props": {
@@ -98,7 +98,7 @@
                                                 "ctor": "Link",
                                                 "props": {
                                                     "id": "myCollapseIcon",
-                                                    "classes": ["fas", "fa-bars"],
+                                                    "classes": ["fas", "fa-bars", "bars"],
                                                     "css": {
                                                         "textDecoration": "none"
                                                     }
@@ -124,7 +124,7 @@
                                                 "props": {
                                                     "id": "fa",
                                                     "labelType": "LabelType.i",
-                                                    "classes": ["fas", "fa-rocket"]
+                                                    "classes": ["fas", "fa-rocket", "rocket"]
                                                 }
                                             }]
                                         }
@@ -147,7 +147,7 @@
                                                 "props": {
                                                     "id": "fa",
                                                     "labelType": "LabelType.i",
-                                                    "classes": ["fas", "fa-list-ol"]
+                                                    "classes": ["fas", "fa-list-ol", "list-ol"]
                                                 }
                                             }]
                                         }
@@ -170,7 +170,7 @@
                                                 "props": {
                                                     "id": "fa",
                                                     "labelType": "LabelType.i",
-                                                    "classes": ["fas", "fa-cloud-upload-alt"]
+                                                    "classes": ["fas", "fa-cloud-upload-alt", "cloud-upload"]
                                                 }
                                             }]
                                         }
@@ -193,7 +193,7 @@
                                                 "props": {
                                                     "id": "fa",
                                                     "labelType": "LabelType.i",
-                                                    "classes": ["fas", "fa-trash"]
+                                                    "classes": ["fas", "fa-trash", "trash"]
                                                 }
                                             }]
                                         }
@@ -205,7 +205,7 @@
                             "ctor": "SideNav",
                             "props": {
                                 "id": "mySideNav",
-                                "width": 250,
+                                "width": 200,
                                 "classes": ["sidenav", "height"],
                                 "css": {
                                     "backgroundColor": "#616161",

@@ -26,7 +26,7 @@
     margin-bottom: 5px;
 }
 
-.buttons__sideNav {
+.buttons-sideNav {
     padding-top: 10px;
     background-color: #C2C2C2;
     height: calc(100vh - 50px) !important;
@@ -37,67 +37,64 @@
 }
 
 .buttons {
-    padding-left: 20px;
+    padding-left: 15px;
     margin: 0;
     width: 80px;
     height: 80px;
-    font-size: 30px;
+    font-size: 20px;
     height: 50px;
     width: 50px;
     outline: none;
 }
 
-.buttons:hover {
-    border-left: 1px solid whitesmoke;
-}
+/* .buttons:hover {
+    border-left: 1px solid #000000;
+} */
 
-.fa-bars:before {
+.bars:before {
     color: #ACACAC;
 }
 
-.fa-bars:hover:before {
+.bars:hover:before {
     color: #EFEFEF;
     text-decoration: none;
 }
 
-.fa-rocket:before {
+.rocket:before {
     color: #ACACAC
 }
 
-.fa-rocket:hover:before {
+.rocket:hover:before {
     color: #EFEFEF;
     text-decoration: none;
 }
 
-.fa-list-ol:before {
+.list-ol:before {
     color: #ACACAC;
 }
 
-.fa-list-ol:hover:before {
+.list-ol:hover:before {
     color: #EFEFEF;
     text-decoration: none;
 }
 
-.fa-cloud-upload-alt:before {
+.cloud-upload:before {
     color: #ACACAC;
 }
 
-.fa-cloud-upload-alt:hover:before {
+.cloud-upload:hover:before {
     color: #EFEFEF;
     text-decoration: none;
 }
 
-.fa-trash:before {
+.trash:before {
     color: #ACACAC;
 }
 
-.fa-trash:hover:before {
+.trash:hover:before {
     color: #EFEFEF;
     text-decoration: none;
 }
-
-
-
 
 .forms__list {
     width: 10rem;

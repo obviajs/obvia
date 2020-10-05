@@ -78,7 +78,7 @@ var GaiaAPI_process_role_status_forms = function (_props) {
         /**
          *Create or edit a process role status form
          * @param {integer} id_process Process Id
-         * @param {arrayPrsForm} data The request body for post /process_role_status_forms 
+         * @param {array} data Process Role Status Form Object
          * @returns {Promise} 
          */
         this.post = function (id_process, data) {
@@ -87,8 +87,10 @@ var GaiaAPI_process_role_status_forms = function (_props) {
 
             let objPath = {};
 
-            let objBody = data;
-            let requestContentType = "json";
+            let objBody = {
+                "data": data
+            };
+            let requestContentType = "application/x-www-form-urlencoded";
             let responses = {
                 "200": {
                     "responseType": "JSON",
@@ -240,7 +242,7 @@ Poolable.call(GaiaAPI_process_role_status_forms);
 	* @property {Number}  order               - Order
 
     */
-GaiaAPI_process_role_status_forms.prs_form = function prs_form(_props) {
+GaiaAPI_process_role_status_forms.prs_form = function (_props) {
     _props = _props || {};
     this.process_role_status_form_id = _props.process_role_status_form_id;
     this.process_role_status_form_guid = _props.process_role_status_form_guid;
@@ -255,18 +257,19 @@ GaiaAPI_process_role_status_forms.prs_form = function prs_form(_props) {
 };
 
 
-GaiaAPI_process_role_status_forms.arrayPrsForm = function arrayPrsForm() {
-    this.memberType = ["prs_form"];
+GaiaAPI_process_role_status_forms.arrayPrsForm = function () {
+    let r = ArrayEx.apply(this, arguments);
+    r.memberType = ["prs_form"];
+    return r;
 };
 GaiaAPI_process_role_status_forms.arrayPrsForm.prototype = Object.create(ArrayEx.prototype);
-GaiaAPI_process_role_status_forms.arrayPrsForm.prototype.constructor = GaiaAPI_process_role_status_forms.arrayPrsForm;
 
 /**
 	* @property {Number}  status_code               - Response status code
 	* @property {String}  status_description               - Response description
 
     */
-GaiaAPI_process_role_status_forms.responseStatus = function responseStatus(_props) {
+GaiaAPI_process_role_status_forms.responseStatus = function (_props) {
     _props = _props || {};
     this.status_code = _props.status_code;
     this.status_description = _props.status_description;
@@ -277,7 +280,7 @@ GaiaAPI_process_role_status_forms.responseStatus = function responseStatus(_prop
 	* @property {Number}  counter               - Number of records affected
 
     */
-GaiaAPI_process_role_status_forms.recordsAffected = function recordsAffected(_props) {
+GaiaAPI_process_role_status_forms.recordsAffected = function (_props) {
     _props = _props || {};
     this.counter = _props.counter;
 

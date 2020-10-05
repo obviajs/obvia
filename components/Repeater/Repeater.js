@@ -441,7 +441,7 @@ var Repeater = function (_props, _hideComponents = false) {
 
                 _self[cmpId].splice(index, 0, el);
                 rowItems[cmpId] = el;
-                _rowItems.splice(index, 0, rowItems);
+
 
                 //handle component change event and delegate it to repeater
 
@@ -470,7 +470,7 @@ var Repeater = function (_props, _hideComponents = false) {
                     }
                     _self.trigger('rowEdit', [_self, new RepeaterEventArgs(rowItems, data, index)]);
                 });
-
+                //rowItems = {};
                 //render component in row
                 if (el.render) {
                     let cp = el.render().then(function (cmpInstance) {
@@ -507,6 +507,7 @@ var Repeater = function (_props, _hideComponents = false) {
                     rp.push(cp);
                 }
             }
+            _rowItems.splice(index, 0, rowItems);
             _rows.push(renderedRow);
         }
         return rp;

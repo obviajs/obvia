@@ -92,11 +92,22 @@ i:hover {
 }
 
 /* style icon */
-.inner-addon .btn {
+.inner-addon>button[type="button"] {
     position: absolute;
     padding: 3px;
     pointer-events: none;
 }
+
+.inner-addon>button.remove_button {
+    padding: 0 10px 0 0;
+    cursor: pointer;
+}
+
+.inner-addon>button.remove_button:hover,
+.inner-addon>button.remove_button:active {
+    cursor: pointer;
+}
+
 
 /* align icon */
 .left-addon .btn {
@@ -153,9 +164,11 @@ label[data-toggle="collapse"]:not([aria-expanded]):before {
 .remove_button>label {
     font-size: 20px;
 }
+
 .middleNav {
     width: calc(100% - 715px);
 }
+
 @media only screen and (max-width: 1366px) {
     .middleNav {
         width: calc(100% - 650px);

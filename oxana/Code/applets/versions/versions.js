@@ -3,10 +3,16 @@ let Implementation = function (applet) {
     let app = applet.app;
     let data = applet.data;
     let modal, selectedEventVersion, dataGrid, diffButton;
+    let eventData;
 
 
     let imp = {
-        "BEGIN_DRAW": function (e) {},
+        "BEGIN_DRAW": async function (e) {
+            let paths = findMember(applet.literal, "id", [], "dataGrid", false);
+            paths[0].pop();
+            let propsVersionsDataGrid = getChainValue(applet.literal, paths[0]);
+            let events = new GaiaAPI_events();
+        },
 
         "END_DRAW": function (e) {
             modal = applet.view;
@@ -44,13 +50,30 @@ let Implementation = function (applet) {
         },
     };
 
-    let drawGrid = function (e) {
+    let drawGrid = async function (e) {
+        let versionsFormsEvent = new GaiaAPI_events();
+        eventData = {
+            id_process: CodeEditor.processId,
+            form_guid: CodeEditor.formsList,
+            field_guid: CodeEditor.formsComponentsList,
+        };
+
+        let result = await versionsFormsEvent.loadScriptFileClient.post(eventData);
+        let versions = new ArrayEx(result.versions);
+        dataGrid.dataProvider.splicea(0, 0, versions);
         modal.modalDialog.modalContent.modalBody.dataGrid.updateDisplayList();
     };
 
-    let selectVersion = function (e) {
-        if (modal.modalDialog.modalContent.modalBody.dataGrid.selectedItems.length > 0) {
-            selectedEventVersion = modal.modalDialog.modalContent.modalBody.dataGrid.selectedItems[0];
+    let selectVersion = async function (e) {
+        if (dataGrid.selectedItems.length > 0) {
+            selectedEventVersion = dataGrid.selectedItems[0];
+            let doc = new GaiaAPI_documents();
+            CodeEditor.revisionId = selectedEventVersion.id;
+            let eventContent = await doc.getRevisionContentClient.get(selectedEventVersion.id);
+            let baseContent = atob(eventContent.content);
+            let evt = new jQuery.Event("loadContent");
+            evt.content = baseContent;
+            modal.trigger(evt);
         } else {
             alert("Nothing selected.");
         }

@@ -7,7 +7,7 @@
 //component definition
 var Select = function (_props) {
     let _self = this,
-        _value, _dataProvider;
+        _value, _dataProvider, _rendering;
     Object.defineProperty(this, "valueField", {
         get: function valueField() {
             return _valueField;
@@ -146,10 +146,8 @@ var Select = function (_props) {
         configurable: true
     });
 
-    Object.defineProperty(this, "rendering", 
-    {
-        get: function rendering() 
-        {
+    Object.defineProperty(this, "rendering", {
+        get: function rendering() {
             return _rendering;
         },
         enumerable: false,
