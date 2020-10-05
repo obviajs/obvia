@@ -18,7 +18,7 @@
                                 "id": "forms",
                                 "classes": ["form-control", "form-control-sm", "forms__list"],
                                 "labelField": "form_name",
-                                "valueField": "guid_form",
+                                "valueField": "form_guid",
                                 "value": 0
 
                             }

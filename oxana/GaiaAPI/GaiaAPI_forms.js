@@ -191,14 +191,14 @@ var GaiaAPI_forms = function(_props){
         
     	/**
 		*Get all form fields for the requested form
-		* @param {string} guid_form Form Guid
+		* @param {string} form_guid Form Guid
 		* @returns {Promise} 
 		*/
-    	this.get = function(guid_form){
+    	this.get = function(form_guid){
         let objQuery = {};
 
         let objPath = {};
-		objPath["guid_form"] = guid_form;
+		objPath["form_guid"] = form_guid;
 
         let objBody = null;
         let requestContentType = "application/json";
@@ -227,7 +227,7 @@ var GaiaAPI_forms = function(_props){
     	};
         
         OAMethod.call(this, apiClient);
-        this.basePath = _server + "/forms/{guid_form}/getFormFields";
+        this.basePath = _server + "/forms/{form_guid}/getFormFields";
     };
 
 		this.formsClient = new this.forms();
@@ -350,7 +350,7 @@ Poolable.call(GaiaAPI_forms);
 	* @property {Number}  visible               - is Visible
 	* @property {Number}  enabled               - is Enabled
 	* @property {String}  form_field_guid               - Form Field Guid
-	* @property {String}  guid_form               - Form Guid
+	* @property {String}  form_guid               - Form Guid
 
     */
    GaiaAPI_forms.form_field = function(_props){
@@ -371,7 +371,7 @@ Poolable.call(GaiaAPI_forms);
 		this.visible = _props.visible;
 		this.enabled = _props.enabled;
 		this.form_field_guid = _props.form_field_guid;
-		this.guid_form = _props.guid_form;
+		this.form_guid = _props.form_guid;
 
     };
 

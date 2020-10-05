@@ -366,6 +366,52 @@ user can see
         OAMethod.call(this, apiClient);
         this.basePath = _server + "/processes/{id_process}/get_team_members";
     };
+	this.getProcessTeams = function(apiClient) { 
+        apiClient = apiClient || _apiClient;
+        /*{typeMap}*/
+        
+    	/**
+		*This method returns the members of the team
+		* @param {integer} id_process Proces ID
+		* @param {integer} user_id User ID
+		* @returns {Promise} 
+		*/
+    	this.get = function(id_process,user_id){
+        let objQuery = {};
+		objQuery["user_id"] = user_id;
+
+        let objPath = {};
+		objPath["id_process"] = id_process;
+
+        let objBody = null;
+        let requestContentType = "application/json";
+        let responses = {"200":{"responseType":"JSON","type":"arrayTeam"},"404":{"responseType":"JSON","type":"responseStatus"},"500":{"responseType":"JSON","type":"responseStatus"}};
+        return new Promise((resolve, reject) =>
+        {
+            	this.apiCall(objQuery, objBody, objPath, requestContentType, "get").then(function(resp){
+                if(responses[resp.status]){
+                    let responseType = responses[resp.status].responseType.toLowerCase();
+                    let ret;
+                    switch(responseType)
+                    {
+                        case "json":
+                            ret = isString(resp.response) ? JSON.parse(resp.response) : resp.response;
+                            ret = new (GaiaAPI_processes[responses[resp.status].type])(ret);
+                            break;
+                    }
+                    //TODO: convert to specified type
+                    resolve(ret);
+                }else//unspecified http response code returned
+                    reject();
+            }).catch(function(error){
+                reject(error);
+            });
+        });
+    	};
+        
+        OAMethod.call(this, apiClient);
+        this.basePath = _server + "/processes/{id_process}/getProcessTeams";
+    };
 
 		this.processesClient = new this.processes();
 		this.getFormsClient = new this.getForms();
@@ -373,6 +419,7 @@ user can see
 		this.loadStatusesClient = new this.loadStatuses();
 		this.getCurrentUserProcessesClient = new this.getCurrentUserProcesses();
 		this.get_team_membersClient = new this.get_team_members();
+		this.getProcessTeamsClient = new this.getProcessTeams();
 
 };
 Poolable.call(GaiaAPI_processes);
@@ -435,9 +482,9 @@ Poolable.call(GaiaAPI_processes);
     /**
 	* @property {Number}  process_role_status_form_id               - Process Role Status Form Id
 	* @property {String}  process_role_status_form_guid               - Process Role Status Form Guid
-	* @property {Number}  id_process               - Process ID
-	* @property {String}  guid_form               - Form Guid
+	* @property {String}  form_guid               - Form Guid
 	* @property {String}  form_name               - Form name
+	* @property {String}  form_literal_view               - Form Literal View
 	* @property {Number}  id_role               - Role ID
 	* @property {Number}  id_status               - Status ID
 	* @property {Number}  deleted               - Is Deleted
@@ -448,9 +495,9 @@ Poolable.call(GaiaAPI_processes);
         _props = _props || {};
 		this.process_role_status_form_id = _props.process_role_status_form_id;
 		this.process_role_status_form_guid = _props.process_role_status_form_guid;
-		this.id_process = _props.id_process;
-		this.guid_form = _props.guid_form;
+		this.form_guid = _props.form_guid;
 		this.form_name = _props.form_name;
+		this.form_literal_view = _props.form_literal_view;
 		this.id_role = _props.id_role;
 		this.id_status = _props.id_status;
 		this.deleted = _props.deleted;
@@ -534,3 +581,40 @@ Poolable.call(GaiaAPI_processes);
 		this.team_members = _props.team_members;
 
     };
+
+    /**
+	* @property {Number}  team_name               - The team's name
+	* @property {Number}  active               - The team is active or not
+	* @property {Number}  deleted               - The team is deleted or not
+	* @property {String}  date_created               - The team's creation date
+	* @property {String}  date_changed               - The date team was changed
+	* @property {Number}  description               - The team's description
+	* @property {String}  date_deleted               - The team's name
+	* @property {Number}  all_users               - Has all users or not
+	* @property {Number}  fullRights_allUsers               - The team's fullRights_allUsers
+	* @property {Number}  team_owner_id_user               - The team's id owner
+
+    */
+   GaiaAPI_processes.team = function(_props){
+        _props = _props || {};
+		this.team_name = _props.team_name;
+		this.active = _props.active;
+		this.deleted = _props.deleted;
+		this.date_created = _props.date_created;
+		this.date_changed = _props.date_changed;
+		this.description = _props.description;
+		this.date_deleted = _props.date_deleted;
+		this.all_users = _props.all_users;
+		this.fullRights_allUsers = _props.fullRights_allUsers;
+		this.team_owner_id_user = _props.team_owner_id_user;
+
+    };
+
+
+	GaiaAPI_processes.arrayTeam = function()
+	{
+		let r = ArrayEx.apply(this, arguments);
+		r.memberType = ["team"]; 
+		return r;
+	};
+	GaiaAPI_processes.arrayTeam.prototype = Object.create(ArrayEx.prototype);
