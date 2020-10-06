@@ -208,3 +208,4 @@ var DropDown = function (_props) {
     Container.call(this, _props, true);
 };
 DropDown.prototype.ctor = 'DropDown';
+DropDown.prototype.valueProp = 'selectedItem';

@@ -140,6 +140,9 @@ var Validator = function (_props) {
             if (_props.setFocusOnError) {
                 this.setFocusOnError = _props.setFocusOnError;
             }
+            if (_props.validationGroup) {
+                this.validationGroup = _props.validationGroup;
+            }
         }
     };
 
