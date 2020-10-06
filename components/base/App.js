@@ -169,20 +169,18 @@ var App = function (_props) {
     this.addImplementation = function (imps) {
         if (!_implementations[imps.guid]) {
             for (let behavior in imps) {
-                if (typeof imps[behavior] == 'function') {
-                    if (_behaviorimplementations[imps.guid][behavior] == null || imps[behavior].override) {
-                        _behaviorimplementations[imps.guid][behavior] = imps[behavior];
-                    } else {
-                        if (!_behaviorimplementations[imps.guid][behavior].forEach) {
-                            _behaviorimplementations[imps.guid][behavior] = new ArrayEx([_behaviorimplementations[imps.guid][behavior]]);
-                        }
-                        _behaviorimplementations[imps.guid][behavior].push(imps[behavior]);
+                if (_behaviorimplementations[imps.guid][behavior] == null || imps[behavior].override) {
+                    _behaviorimplementations[imps.guid][behavior] = imps[behavior];
+                } else {
+                    if (!_behaviorimplementations[imps.guid][behavior].forEach) {
+                        _behaviorimplementations[imps.guid][behavior] = new ArrayEx([_behaviorimplementations[imps.guid][behavior]]);
                     }
-                    if (!_b2imps[behavior]) {
-                        _b2imps[behavior] = [];
-                    }
-                    _b2imps[behavior].pushUnique(imps.guid);
+                    _behaviorimplementations[imps.guid][behavior].push(imps[behavior]);
                 }
+                if (!_b2imps[behavior]) {
+                    _b2imps[behavior] = [];
+                }
+                _b2imps[behavior].pushUnique(imps.guid);
             }
             _implementations[imps.guid] = imps;
         } else {
