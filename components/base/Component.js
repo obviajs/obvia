@@ -799,11 +799,12 @@ var Component = function (_props) {
             _watchers = this.applyBindings(data);
             if (this.children) {
                 for (let cid in this.children) {
-                    this.children[cid].refreshBindings(data);
+                    if (this.children[cid].bindingDefaultContext == _bindingDefaultContext)
+                        this.children[cid].refreshBindings(data);
                 }
             }
-
         }
+        _bindingDefaultContext = data;
     };
 
     this.applyBindings = function (data) {

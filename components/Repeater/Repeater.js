@@ -185,9 +185,11 @@ var Repeater = function (_props, _hideComponents = false) {
                 let ri = toRefresh[i];
                 for (let cmpID in _rowItems[ri]) {
                     let cmp = _rowItems[ri][cmpID];
-                    cmp.refreshBindings(_self.dataProvider[ri]);
-                    cmp.$el.attr(_guidField, _self.dataProvider[ri][_guidField]);
-                    cmp.attr[_guidField] = _self.dataProvider[ri][_guidField];
+                    if (cmp.refreshBindings) {
+                        cmp.refreshBindings(_self.dataProvider[ri]);
+                        cmp.$el.attr(_guidField, _self.dataProvider[ri][_guidField]);
+                        cmp.attr[_guidField] = _self.dataProvider[ri][_guidField];
+                    }
                 }
             }
 
@@ -314,12 +316,19 @@ var Repeater = function (_props, _hideComponents = false) {
                 a1_indices: []
             };
             toAdd = differenceOnKeyMatch(_dataProvider, _oldDataProvider, _guidField, false, true);
-
+            let swap = [];
+            for (let i = 0; i < toAdd.swap.length; i++) {
+                swap.splice(swap.length, 0, toAdd.swap[i].a1_index, toAdd.swap[i].a2_index);
+            }
             let toRemove = {
                 result: [],
                 a1_indices: []
             };
             toRemove = differenceOnKeyMatch(_oldDataProvider, _dataProvider, _guidField, false, true);
+            for (let i = 0; i < toRemove.swap.length; i++) {
+                swap.splice(swap.length, 0, toRemove.swap[i].a1_index, toRemove.swap[i].a2_index);
+            }
+            swap.dedupe();
 
             if (newValue < oldValue && toRemove.result.length != oldValue - newValue) {
                 let r = _oldDataProvider.dedupe(_guidField);
@@ -327,7 +336,10 @@ var Repeater = function (_props, _hideComponents = false) {
                 toRemove.a1_indices.splicea(toRemove.a1_indices.length, 0, r.indices);
             }
             let toRefresh = [];
-            toRefresh.splicea(toRefresh.length, 0, intersect(toAdd.a1_indices, toRemove.a1_indices));
+            let cc = intersect(toAdd.a1_indices, toRemove.a1_indices).concat(swap);
+            cc.dedupe();
+            toRefresh.splicea(toRefresh.length, 0, cc);
+
             if (_autoUpdateDisplay)
                 _self.dataProviderChanged(toAdd, toRemove, toRefresh);
             _oldDataProvider = acExtend(_dataProvider);
