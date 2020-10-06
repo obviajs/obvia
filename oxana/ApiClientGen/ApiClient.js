@@ -323,17 +323,27 @@ var ApiClient = function (_props) {
    * @returns {Object.<String, Object>} normalized parameters.
    */
     let _normalizeParams = function (params) {
-        let newParams = {};
-        for (let key in params) {
-            if (params.hasOwnProperty(key) && params[key] != undefined && params[key] != null) {
-                let value = params[key];
-                if (BinUtils.isFile(value) || BinUtils.isBlob(value) || Array.isArray(value)) {
-                    newParams[key] = value;
-                } else if (isObject(value)) { 
-                    newParams[key] = _normalizeParams(value);
-                }
-                else {
-                    newParams[key] = _paramToString(value);
+        let newParams;
+        if (params && params.forEach) {
+            let len = params.length;
+            newParams = new Array(len);
+            for (let i = 0; i < len; i++) { 
+                newParams[i] = _normalizeParams(params[i]);
+            }
+        }
+        else {
+            newParams = {};
+            for (let key in params) {
+                if (params.hasOwnProperty(key) && params[key] != undefined && params[key] != null) {
+                    let value = params[key];
+                    if (BinUtils.isFile(value) || BinUtils.isBlob(value) || Array.isArray(value)) {
+                        newParams[key] = value;
+                    } else if (isObject(value)) {
+                        newParams[key] = _normalizeParams(value);
+                    }
+                    else {
+                        newParams[key] = _paramToString(value);
+                    }
                 }
             }
         }
