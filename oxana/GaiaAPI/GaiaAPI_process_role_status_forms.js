@@ -256,6 +256,7 @@ GaiaAPI_process_role_status_forms.prs_form = function prs_form(_props) {
 
 
 GaiaAPI_process_role_status_forms.arrayPrsForm = function arrayPrsForm() {
+    ArrayEx.apply(this, arguments);
     this.memberType = ["prs_form"];
 };
 GaiaAPI_process_role_status_forms.arrayPrsForm.prototype = Object.create(ArrayEx.prototype);

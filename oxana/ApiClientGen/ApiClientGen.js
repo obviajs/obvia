@@ -306,6 +306,7 @@ Poolable.call({apiTitle});
     let _propTemplate = "\t\tthis.{prop} = _props.{prop};\r\n";
     let _arrTypeTemplate = `\t{apiTitle}.{typeName} = function {typeName}()
 \t{
+\t\tArrayEx.apply(this, arguments);    
 \t\tthis.memberType = {allowedTypes}; 
 \t};
 \t{apiTitle}.{typeName}.prototype = Object.create(ArrayEx.prototype);
