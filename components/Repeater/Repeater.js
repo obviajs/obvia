@@ -183,6 +183,11 @@ var Repeater = function (_props, _hideComponents = false) {
 
             for (let i = 0; i < toRefresh.length; i++) {
                 let ri = toRefresh[i];
+                Object.defineProperty(_self.dataProvider[ri], "currentRow", {
+                    value: _rowItems[ri],
+                    enumerable: false,
+                    configurable: true
+                });
                 for (let cmpID in _rowItems[ri]) {
                     let cmp = _rowItems[ri][cmpID];
                     if (cmp.refreshBindings) {
@@ -402,6 +407,11 @@ var Repeater = function (_props, _hideComponents = false) {
         let renderedRow = $('<div/>');
         let rowItems = {};
 
+        Object.defineProperty(data, "currentRow", {
+            value: rowItems,
+            enumerable: false,
+            configurable: true
+        });
         let beforeRowAddEvent = jQuery.Event("beforeRowAdd");
         this.trigger(beforeRowAddEvent, [_self, new RepeaterEventArgs(_rowItems, data, index)]);
 
@@ -420,11 +430,7 @@ var Repeater = function (_props, _hideComponents = false) {
                     component.props.bindingDefaultContext = data;
                 }
 
-                Object.defineProperty(data, "currentRow", {
-                    value: rowItems,
-                    enumerable: false,
-                    configurable: true
-                });
+               
 
                 component.props.ownerDocument = _props.ownerDocument;
                 let el = Component.fromLiteral(component, data);

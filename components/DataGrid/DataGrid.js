@@ -9,6 +9,7 @@ var DataGrid = function (_props) {
     let _self = this;
     let _currentIndex = 1;
     let _multiSelect;
+    let _colElements;
 
     Object.defineProperty(this, "currentIndex", {
         get: function currentIndex() {
@@ -263,24 +264,23 @@ var DataGrid = function (_props) {
         }
     };
 
+    let _twMap = new TwoWayMap({
+        "asc": "desc"
+    });
+
     let _headerClickHandler = function (e, columnIndex, column) {
         let columnSortEvent = jQuery.Event("columnSort");
         columnSortEvent.originalEvent = e;
+        _colElements[columnIndex].children().first().removeClass("fa-caret-" + _sortDirFADic[column.sortDirection.toLowerCase()]);
+        column.sortDirection = _twMap[column.sortDirection.toLowerCase()];
+        _colElements[columnIndex].children().first().addClass("fa-caret-" + _sortDirFADic[column.sortDirection.toLowerCase()]);
         this.trigger(columnSortEvent, [columnIndex, column]);
-
-        if (!columnSortEvent.isDefaultPrevented() && column.sortable) {
-            _columnSort.call(this, columnIndex, column);
-        }
     };
 
-    let _columnSort = function (columnIndex, column) {
-        /*
-        addClass() - Adds one or more classes to the selected elements
-        removeClass() - Removes one or more classes from the selected elements
-        toggleClass() - Toggles between adding/removing classes from the selected elements
-        */
+    let _sortDirFADic = {
+        "asc": "up",
+        "desc": "down"
     };
-
     this.createHeader = function () {
         let headerHtml = "<tr>";
         if (_showRowIndex) {
@@ -288,23 +288,19 @@ var DataGrid = function (_props) {
         }
         headerHtml += "</tr>";
         let $header = $(headerHtml);
-        let sortDirFADic = {
-            "asc": "down",
-            "desc": "up"
-        };
-        let colElements = new Array(_columns.length);
+        _colElements = new Array(_columns.length);
         for (let columnIndex = 0; columnIndex < _columns.length; columnIndex++) {
             let column = _columns[columnIndex] = new DataGridColumn(_columns[columnIndex]);
 
-            $th = $("<th id='head_" + columnIndex + "'>" + column.description + (column.sortable ? "<span class='fa fa-caret-" + (sortDirFADic[column.sortDirection.toLowerCase()]) + "'></span></a>" : "") + "</th>");
-            $th.bind('click',
+            let $th = $("<th id='head_" + columnIndex + "'>" + column.description + (column.sortable ? "<span class='fa fa-caret-" + (_sortDirFADic[column.sortDirection.toLowerCase()]) + "'></span></a>" : "") + "</th>");
+            $th.on('click',
                 function (e) { // a closure is created
                     _headerClickHandler.call(_self, e, columnIndex, column);
                 });
             //put elements in an array so jQuery will use documentFragment which is faster
-            colElements[columnIndex] = $th;
+            _colElements[columnIndex] = $th;
         }
-        $header.append(colElements);
+        $header.append(_colElements);
         this.$header.append($header);
     };
 

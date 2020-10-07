@@ -48,7 +48,7 @@ var GaiaAPI_process_role_status_forms = function (_props) {
             let responses = {
                 "200": {
                     "responseType": "JSON",
-                    "type": "arrayPrsForm"
+                    "type": "process_role_status_form"
                 },
                 "404": {
                     "responseType": "JSON",
@@ -78,7 +78,7 @@ var GaiaAPI_process_role_status_forms = function (_props) {
         /**
          *Create or edit a process role status form
          * @param {integer} id_process Process Id
-         * @param {arrayPrsForm} data The request body for post /process_role_status_forms 
+         * @param {arrayProcessRoleStatusForm} data The request body for post /process_role_status_forms 
          * @returns {Promise} 
          */
         this.post = function (id_process, data) {
@@ -92,7 +92,7 @@ var GaiaAPI_process_role_status_forms = function (_props) {
             let responses = {
                 "200": {
                     "responseType": "JSON",
-                    "type": "arrayPrsForm"
+                    "type": "arrayProcessRoleStatusForm"
                 },
                 "404": {
                     "responseType": "JSON",
@@ -190,7 +190,7 @@ var GaiaAPI_process_role_status_forms = function (_props) {
             let responses = {
                 "200": {
                     "responseType": "JSON",
-                    "type": "arrayPrsForm"
+                    "type": "arrayProcessRoleStatusForm"
                 },
                 "404": {
                     "responseType": "JSON",
@@ -234,33 +234,27 @@ Poolable.call(GaiaAPI_process_role_status_forms);
 	* @property {String}  form_guid               - Form Guid
 	* @property {String}  form_name               - Form name
 	* @property {String}  form_literal_view               - Form Literal View
+	* @property {Number}  id_process               - Process ID
 	* @property {Number}  id_role               - Role ID
 	* @property {Number}  id_status               - Status ID
 	* @property {Number}  deleted               - Is Deleted
 	* @property {Number}  order               - Order
 
     */
-GaiaAPI_process_role_status_forms.prs_form = function prs_form(_props) {
+GaiaAPI_process_role_status_forms.process_role_status_form = function process_role_status_form(_props) {
     _props = _props || {};
     this.process_role_status_form_id = _props.process_role_status_form_id;
     this.process_role_status_form_guid = _props.process_role_status_form_guid;
     this.form_guid = _props.form_guid;
     this.form_name = _props.form_name;
     this.form_literal_view = _props.form_literal_view;
+    this.id_process = _props.id_process;
     this.id_role = _props.id_role;
     this.id_status = _props.id_status;
     this.deleted = _props.deleted;
     this.order = _props.order;
 
 };
-
-
-GaiaAPI_process_role_status_forms.arrayPrsForm = function arrayPrsForm() {
-    ArrayEx.apply(this, arguments);
-    this.memberType = ["prs_form"];
-};
-GaiaAPI_process_role_status_forms.arrayPrsForm.prototype = Object.create(ArrayEx.prototype);
-GaiaAPI_process_role_status_forms.arrayPrsForm.prototype.constructor = GaiaAPI_process_role_status_forms.arrayPrsForm;
 
 /**
 	* @property {Number}  status_code               - Response status code
@@ -273,6 +267,12 @@ GaiaAPI_process_role_status_forms.responseStatus = function responseStatus(_prop
     this.status_description = _props.status_description;
 
 };
+GaiaAPI_process_role_status_forms.arrayProcessRoleStatusForm = function arrayProcessRoleStatusForm() {
+    ArrayEx.apply(this, arguments);
+    this.memberType = ["process_role_status_form"];
+};
+GaiaAPI_process_role_status_forms.arrayProcessRoleStatusForm.prototype = Object.create(ArrayEx.prototype);
+GaiaAPI_process_role_status_forms.arrayProcessRoleStatusForm.prototype.constructor = GaiaAPI_process_role_status_forms.arrayProcessRoleStatusForm;
 
 /**
 	* @property {Number}  counter               - Number of records affected

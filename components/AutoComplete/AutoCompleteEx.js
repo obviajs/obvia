@@ -346,10 +346,15 @@ var AutoCompleteEx = function (_props) {
         set: function value(v) {
             if (v) {
                 if (isString(v) || isNumber(v)) {
-                    let vo = {};
-                    vo[_labelField] = v;
-                    vo[_valueField] = v;
-                    v = vo;
+                    let ind = indexOfObject(_dataProvider, _valueField, v);
+                    if (ind > -1) {
+                        v = _dataProvider[ind];
+                    } else {
+                        let vo = {};
+                        vo[_labelField] = v;
+                        vo[_valueField] = v;
+                        v = vo;
+                    }
                 }
                 if (typeof (v) === "object" && !(v instanceof Array)) {
                     v = [v];
