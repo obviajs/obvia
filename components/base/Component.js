@@ -28,6 +28,8 @@ var Component = function (_props) {
     if (_props.bindingDefaultContext == null) {
         _props.bindingDefaultContext = this;
     }
+    let _parentRepeater = _props.parentRepeater;
+    let _repeaterIndex = _props.repeaterIndex;
     let _bindingDefaultContext = _props.bindingDefaultContext;
     let _guid = _props.guid;
     let _attr, _css;
@@ -644,6 +646,29 @@ var Component = function (_props) {
 
     //register outside handlers
     //event handling
+
+    Object.defineProperty(this, "repeaterIndex", {
+        get: function repeaterIndex() {
+            return _repeaterIndex;
+        },
+        set: function repeaterIndex(v) {
+            if (_repeaterIndex != v) {
+                _repeaterIndex = v;
+            }
+        }
+    });
+
+    Object.defineProperty(this, "parentRepeater", {
+        get: function parentRepeater() {
+            return _parentRepeater;
+        },
+        set: function parentRepeater(v) {
+            if (_parentRepeater != v) {
+                _parentRepeater = v;
+            }
+        }
+    });
+
     this.on = function (eventType, fnc) {
         eventType = eventType.trim();
         if (typeof fnc !== 'function') {
@@ -664,11 +689,11 @@ var Component = function (_props) {
                                         args.push(arguments[i]);
                                     }
 
-                                    if (_self.parentType == 'repeater') {
+                                    if (_self.parentRepeater) {
                                         args = args.concat([
                                             new RepeaterEventArgs(
-                                                _self.parent.rowItems[_self.repeaterIndex],
-                                                _self.parent.dataProvider[_self.repeaterIndex],
+                                                _self.parentRepeater.rowItems[_self.repeaterIndex],
+                                                _self.parentRepeater.dataProvider[_self.repeaterIndex],
                                                 _self.repeaterIndex
                                             )
                                         ]);
@@ -904,12 +929,12 @@ var Component = function (_props) {
                                 }
 
                                 //append RepeaterEventArgs to event
-                                if (_self.parentType && _self.parentType == 'repeater') {
+                                if (_self.parentRepeater) {
                                     args = args.concat(
                                         [
                                             new RepeaterEventArgs(
-                                                _self.parent.rowItems[_self.repeaterIndex],
-                                                _self.parent.dataProvider[_self.repeaterIndex],
+                                                _self.parentRepeater.rowItems[_self.repeaterIndex],
+                                                _self.parentRepeater.dataProvider[_self.repeaterIndex],
                                                 _self.repeaterIndex
                                             )
                                         ]

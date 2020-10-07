@@ -429,8 +429,8 @@ var Repeater = function (_props, _hideComponents = false) {
                 if (_components[cIndex].props.bindingDefaultContext == null) {
                     component.props.bindingDefaultContext = data;
                 }
-
-               
+                component.props.repeaterIndex = index;
+                component.props.parentRepeater = _self;
 
                 component.props.ownerDocument = _props.ownerDocument;
                 let el = Component.fromLiteral(component, data);
@@ -448,7 +448,6 @@ var Repeater = function (_props, _hideComponents = false) {
                 el.parent = _self;
                 el.parentType = 'repeater';
                 el.parentForm = _self.parentForm;
-                el.repeaterIndex = index;
 
                 //update repeaterIndex
                 if (_self[cmpId][index]) {

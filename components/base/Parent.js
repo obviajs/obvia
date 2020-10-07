@@ -72,6 +72,8 @@ var Parent = function (_props, _hideComponents = false) {
                 child.parent = _proxy;
                 child.parentType = this.type;
                 child.parentForm = _proxy;
+                child.repeaterIndex = this.repeaterIndex;
+                child.parentRepeater = this.parentRepeater;
 
                 return child.render().then(function (cmpInstance) {
                     _self.$el.insertAt(cmpInstance.$el, index);
@@ -197,6 +199,8 @@ var Parent = function (_props, _hideComponents = false) {
             } else {
                 cmpLit.props.bindingDefaultContext = component.props.bindingDefaultContext;
             }
+            cmpLit.props.repeaterIndex = _self.repeaterIndex;
+            cmpLit.props.parentRepeater = _self.parentRepeater;
             let cmp = Component.fromLiteral(cmpLit);
             //component.props.id = cmp.id;
             if (_children[cmp.id])
