@@ -70,7 +70,7 @@ var Parent = function (_props, _hideComponents = false) {
                 _csorted.splice(index, 0, child.id);
                 _ccRelation[child.id] = component;
                 child.parent = _proxy;
-                child.parentType = this.parentType || this.type;
+                child.parentType = this.type;
                 child.parentForm = _proxy;
 
                 return child.render().then(function (cmpInstance) {
@@ -206,7 +206,7 @@ var Parent = function (_props, _hideComponents = false) {
             _ccRelation[cmp.id] = component;
             _csorted.splice(index, 0, cmp.id);
             cmp.parent = _proxy;
-            cmp.parentType = _self.parentType || _self.type;
+            cmp.parentType = _self.type;
             cmp.parentForm = _proxy;
 
             index = index > -1 ? index : _components.length;
