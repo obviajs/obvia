@@ -23,10 +23,14 @@ Before you submit your Pull Request (PR), please consider the following guidelin
 1.	Search GitHub for an open or closed PR that relates to your submission, so that you do not duplicate an existing effort.
 2.	Please describe the issue you are fixing and the design for the feature you would like to add. Ideally, you should submit an issue first and have it approved before working on it.
 3.	If you are fixing a bug or special issue, please include the issue id in the title. (e.g. fix #1456)
-4.	Make your changes in a new git branch.
-5.	Make sure your code adheres to the JavaScript coding conventions. You can read [Google's JavaScript Style Guide](https://google.github.io/styleguide/jsguide.html) for more information.
-6.	Commit your changes using a descriptive commit message following our commit message conventions.
-7.	Push your branch to GitHub.
+4.	Fork the Obvia repository.
+5.	Make your changes in a new git branch.
+6.	Make sure your code adheres to the JavaScript coding conventions. You can read [Google's JavaScript Style Guide](https://google.github.io/styleguide/jsguide.html) for more information.
+7.	Commit your changes using a descriptive commit message following our commit message conventions.
+8.	Push your branch to GitHub.
+9.	Afterwards, send a pull request to Obvia's repository.
+10.	The code will be reviewed, and if necessary, you will be asked to make changes accordingly.
+
 
 ## Commit Message Guidelines
 In order to make the commit history easier to read and understand, we have specific rules on how Git commit messages must be formatted.
