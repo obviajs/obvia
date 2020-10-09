@@ -654,6 +654,11 @@ var Component = function (_props) {
         set: function repeaterIndex(v) {
             if (_repeaterIndex != v) {
                 _repeaterIndex = v;
+                if (this.children) {
+                    for (let cid in this.children) {
+                        this.children[cid].repeaterIndex = _repeaterIndex;
+                    }
+                }
             }
         }
     });
@@ -665,6 +670,11 @@ var Component = function (_props) {
         set: function parentRepeater(v) {
             if (_parentRepeater != v) {
                 _parentRepeater = v;
+                if (this.children) {
+                    for (let cid in this.children) {
+                        this.children[cid].parentRepeater = _parentRepeater;
+                    }
+                }
             }
         }
     });

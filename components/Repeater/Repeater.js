@@ -323,7 +323,10 @@ var Repeater = function (_props, _hideComponents = false) {
             toAdd = differenceOnKeyMatch(_dataProvider, _oldDataProvider, _guidField, false, true);
             let swap = [];
             for (let i = 0; i < toAdd.swap.length; i++) {
-                swap.splice(swap.length, 0, toAdd.swap[i].a1_index, toAdd.swap[i].a2_index);
+                swap.push(toAdd.swap[i].a1_index);
+                if (toAdd.swap[i].a2_index < _dataProvider.length) { 
+                    swap.push(toAdd.swap[i].a2_index);
+                }
             }
             let toRemove = {
                 result: [],
@@ -331,7 +334,10 @@ var Repeater = function (_props, _hideComponents = false) {
             };
             toRemove = differenceOnKeyMatch(_oldDataProvider, _dataProvider, _guidField, false, true);
             for (let i = 0; i < toRemove.swap.length; i++) {
-                swap.splice(swap.length, 0, toRemove.swap[i].a1_index, toRemove.swap[i].a2_index);
+                swap.push(toRemove.swap[i].a2_index);
+                if (toRemove.swap[i].a1_index < _dataProvider.length) { 
+                    swap.push(toRemove.swap[i].a1_index);
+                }
             }
             swap.dedupe();
 
@@ -341,8 +347,9 @@ var Repeater = function (_props, _hideComponents = false) {
                 toRemove.a1_indices.splicea(toRemove.a1_indices.length, 0, r.indices);
             }
             let toRefresh = [];
+            swap = swap.difference(toAdd.a1_indices);
+            swap = swap.difference(toRemove.a1_indices);
             let cc = intersect(toAdd.a1_indices, toRemove.a1_indices).concat(swap);
-            cc.dedupe();
             toRefresh.splicea(toRefresh.length, 0, cc);
 
             if (_autoUpdateDisplay)
