@@ -413,6 +413,16 @@ var ApiClient = function (_props) {
             _retry = v;
         }
     });
+
+    Object.defineProperty(this, "timeout",
+    {
+        get: function timeout() {
+            return _timeout;
+        },
+        set: function timeout(v) {
+            _timeout = v;
+        }
+    });
     //getResponseHeader('Content-Type');
     //xhr.getAllResponseHeaders();
 };
