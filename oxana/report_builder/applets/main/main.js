@@ -1,51 +1,278 @@
 let Implementation = function (applet) {
-
+    alert("Sono qui");
     let app = applet.app;
     let data = applet.data;
-
+  
     let activeComponent;
     let activeContainer;
     let _cmpList = new ArrayEx(data.componentList);
 
-    let propertyEditorViewStack, propertyEditorContainer, propertyEditorContainerTrash,fileSelectModal, browseFile, componentsContainer,
-        rightSideNav, listHistorySteps,workArea,title,pageHeader,detail, pageFooter,summary,workAreaColumn, sectionList,workAreaRowL2,targetBand,
-        cmpSearchTextInput, undoButton, redoButton, cmpTrash, toggleSideNavLeft, toggleSideNavRight,
-        splitHorizontal, splitVertical, uploadIcon, saveLayout, selectBtn, componentList,
-        openUploadForms, appLoader, middleNav, desktopPreview, tabletPreview, mobilePreview;
+    let propertyEditorViewStack,
+        propertyEditorContainer, 
+        propertyEditorContainerTrash,
+        fileSelectModal, 
+        browseFile, 
+        componentsContainer,
+        rightSideNav, 
+        listHistorySteps,
+        workArea,
+        title,
+        pageHeader,
+        detail, 
+        pageFooter,
+        summary,
+        workAreaColumn, 
+        sectionList,
+        workAreaRowL2,
+        targetBand,
+        cmpSearchTextInput, 
+        undoButton, 
+        redoButton, 
+        cmpTrash, 
+        toggleSideNavLeft, 
+        toggleSideNavRight,
+        splitHorizontal, 
+        splitVertical, 
+        uploadIcon, 
+        saveLayout, 
+        selectBtn, 
+        componentList,
+        openUploadForms, 
+        appLoader, 
+        middleNav, 
+        desktopPreview;
      
     //component resize
     let resizable = false;
     let formField;
     let containers = ["Container", "Form", "Header", "Footer","JRBand"];
-    let noNeedFF = ["Button", "Label", "Container", "Link", "Header", "Footer", "Form", "SideNav", "ViewStack", "Calendar", "Tree", "Image", "HRule", "Heading", "Repeater", "RepeaterEx"];
+    let noNeedFF = [
+        "Button", 
+        "Label", 
+        "Container", 
+        "Link", "Header", 
+        "Footer", 
+        "Form", 
+        "SideNav", 
+        "ViewStack", 
+        "Calendar", 
+        "Tree", 
+        "Image", 
+        "HRule", 
+        "Heading", 
+        "Repeater", 
+        "RepeaterEx"
+    ];
     
+
+
+
+
     let imp = {
-        "BEGIN_DRAW": function (e) {
-            //console.log("APPLET_BEGIN_DRAW");
-            let paths = findMember(applet.literal, "id", [], "listHistorySteps", false);
+        // "BEGIN_DRAW": function (e) {
+        //     //console.log("APPLET_BEGIN_DRAW");
+        //     let paths = findMember(applet.literal, "id", [], "listHistorySteps", false);
+        //     paths[0].pop();
+        //     let propsListHistorySteps = getChainValue(applet.literal, paths[0]);
+        //     propsListHistorySteps.dataProvider = app.history.steps;
+
+        //     paths = findMember(applet.literal, "id", [], "componentList", false);
+        //     paths[0].pop();
+        //     let propsComponentList = getChainValue(applet.literal, paths[0]);
+        //     propsComponentList.dataProvider = _cmpList;
+        // },
+
+        BEGIN_DRAW: function (e) {
+            console.log("APPLET_BEGIN_DRAW");
+            let paths = findMember(
+              applet.literal,
+              "id",
+              [],
+              "listHistorySteps",
+              false
+            );
             paths[0].pop();
             let propsListHistorySteps = getChainValue(applet.literal, paths[0]);
             propsListHistorySteps.dataProvider = app.history.steps;
-
+      
             paths = findMember(applet.literal, "id", [], "componentList", false);
             paths[0].pop();
             let propsComponentList = getChainValue(applet.literal, paths[0]);
             propsComponentList.dataProvider = _cmpList;
         },
-        "END_DRAW": function (e) {
+        // "END_DRAW": function (e) {
+        //     appLoader = app.viewStack.mainContainer.appLoader;
+        //     appLoader.hide();
+
+        //     propertyEditorViewStack = app.viewStack.mainContainer.container.rightSideNav.rightSideContainer.propertyEditorViewStack;
+        //     propertyEditorContainer = propertyEditorViewStack.propertyEditorContainerWrap.propertyEditorContainer;
+        //     propertyEditorContainerTrash = propertyEditorViewStack.propertyEditorContainerWrap.propertyEditorContainerTrash;
+        //     fileSelectModal = app.viewStack.mainContainer.container.children.fileSelectModal;
+        //     browseFile = fileSelectModal.modalDialog.modalContent.modalBody.browseFile;
+        //     componentsContainer = app.viewStack.mainContainer.container.componentsContainer;
+        //     middleNav = app.viewStack.mainContainer.nav.middleNav;
+        //     rightSideNav = app.viewStack.mainContainer.container.rightSideNav;
+        //     listHistorySteps = middleNav.listHistorySteps;
+        //     workAreaColumn = app.viewStack.mainContainer.container.workArea.workAreaRow.workAreaColumn;
+        //     workAreaRowL2 = workAreaColumn.workAreaCell.workAreaRowL2;
+        //     workArea = workAreaRowL2.workAreaColumnL2;
+        //     console.log("WA Components",workArea)
+        //     title = workArea.title;
+        //     pageHeader = workArea.pageHeader;
+        //     detail = workArea.detail;
+        //     pageFooter = workArea.pageFooter;
+        //     summary = workArea.summary;
+        //     componentList = componentsContainer.componentList;
+        //     sectionList = propertyEditorViewStack.propertyEditorContainerWrap.sectionsList.checkBox;
+        //     console.log("SECTIONS33333333333333333333333333333",sectionList);
+           
+           
+        //     applet.addBehaviors(applet.view, {
+        //         "idChanged": {
+        //             "UPDATE_BEHAVIOR_BINDINGS": {
+        //                 onPropagation: true
+        //             }
+        //         }
+        //     }, false);
+
+        //     // applet.addBehaviors(componentList, {
+        //     //     "rowAdd": "PREPARE_CMP",
+        //     // }, false);
+
+        //     applet.addBehaviors(
+        //         componentList,
+        //         {
+        //           rowAdd: "PREPARE_CMP",
+        //         },
+        //         false
+        //       );
+
+
+
+
+        //     applet.addBehaviors(propertyEditorContainer, vspewbehaviors, false);
+        //     applet.addBehaviors(propertyEditorContainerTrash, vspewbehaviors, false);
+
+        //     cmpSearchTextInput = app.viewStack.mainContainer.container.componentsContainer.container.cmpSearchTextInput;
+        //     applet.addBehaviors(cmpSearchTextInput, {
+        //         "keyup": "SEARCH_CMP",
+        //     }, false);
+
+        //     undoButton = middleNav.undoButton;
+        //     applet.addBehaviors(undoButton, {
+        //         "click": "WA_UNDO",
+        //     }, false);
+        //     redoButton = middleNav.redoButton;
+        //     applet.addBehaviors(redoButton, {
+        //         "click": "WA_REDO",
+        //     }, false);
+        //     cmpTrash = app.viewStack.mainContainer.container.rightSideNav.rightSideContainer.propertyEditorViewStack.cmpTrash;
+        //     applet.addBehaviors(cmpTrash, daBehaviors, false);
+
+        //     toggleSideNavLeft = app.viewStack.mainContainer.nav.leftNav.toggleSideNavLeft;
+        //     applet.addBehaviors(toggleSideNavLeft, {
+        //         "click": "TOGGLE_VISIBILITY_LEFT",
+        //     }, false);
+        //     toggleSideNavRight = app.viewStack.mainContainer.nav.rightNav.toggleSideNavRight;
+        //     applet.addBehaviors(toggleSideNavRight, {
+        //         "click": "TOGGLE_VISIBILITY_RIGHT",
+        //     }, false);
+
+        //     splitHorizontal = middleNav.splitHorizontal;
+        //     applet.addBehaviors(splitHorizontal, {
+        //         "click": "SPLIT_HOR",
+        //     }, false);
+
+        //     splitVertical = middleNav.splitVertical;
+        //     applet.addBehaviors(splitVertical, {
+        //         "click": "SPLIT_VERT",
+        //     }, false);
+
+        //     uploadIcon = middleNav.uploadIcon;
+        //     applet.addBehaviors(uploadIcon, {
+        //         "click": "OPEN_MODAL_FORM_FOR_SAVE"
+        //     }, false);
+
+        //     openUploadForms = middleNav.openUploadForms;
+        //     applet.addBehaviors(openUploadForms, {
+        //         "click": "OPEN_MODAL_FORMS"
+        //     }, false);
+
+        //     desktopPreview = middleNav.desktop;
+        //     applet.addBehaviors(desktopPreview, {
+        //         "click": "DESKTOP_PREVIEW"
+        //     }, false);
+
+        //     saveLayout = middleNav.saveLayout;
+        //     applet.addBehaviors(saveLayout, {
+        //         "click": "SAVE_LAYOUT",
+        //     }, false);
+        //     selectBtn = middleNav.selectBtn;
+        //     applet.addBehaviors(selectBtn, {
+        //         "click": "FILE_SELECT_MODAL",
+        //     }, false);
+
+        //     applet.addBehaviors(browseFile, {
+        //         "change": "FILE_SELECTED",
+        //     }, false);
+        //     applet.addBehaviors(listHistorySteps, {
+        //         "change": "HISTORY_STEP_DETAILS",
+        //     }, false);
+
+        //     //app.behaviors["previewBtn"]["click"] = "PREVIEW";
+        //     //applet.addBehaviors(workArea, cmpWaBehaviors, false);
+        //     applet.addBehaviors(title, cmpWaBehaviors, false);
+        //     applet.addBehaviors(pageHeader, cmpWaBehaviors, false);
+        //     applet.addBehaviors(detail, cmpWaBehaviors, false);
+        //     applet.addBehaviors(pageFooter, cmpWaBehaviors, false);
+        //     applet.addBehaviors(summary, cmpWaBehaviors, false);
+        //     applet.addBehaviors(sectionList,sectionListBehaviors,false);
+
+            
+        //     applet.addBehaviors(app, {
+        //         "loadLayout": "LOAD_LAYOUT",
+        //         "loadHtml": "LOAD_HTML",
+        //         "keydown": {
+        //             "WA_UNDO": {
+        //                 filter: KeyboardUtils.test["CTR+Z"],
+        //                 onPropagation: true
+        //             },
+        //             "WA_REDO": {
+        //                 filter: KeyboardUtils.test["CTR+Y"],
+        //                 onPropagation: true
+        //             },
+        //             "DELETE_CMP": {
+        //                 filter: KeyboardUtils.test["DEL"],
+        //                 onPropagation: true
+        //             }
+        //         }
+        //     }, false);
+        // },
+
+
+        
+        END_DRAW: function (e) {
             appLoader = app.viewStack.mainContainer.appLoader;
             appLoader.hide();
-
-            propertyEditorViewStack = app.viewStack.mainContainer.container.rightSideNav.rightSideContainer.propertyEditorViewStack;
-            propertyEditorContainer = propertyEditorViewStack.propertyEditorContainerWrap.propertyEditorContainer;
-            propertyEditorContainerTrash = propertyEditorViewStack.propertyEditorContainerWrap.propertyEditorContainerTrash;
-            fileSelectModal = app.viewStack.mainContainer.container.children.fileSelectModal;
-            browseFile = fileSelectModal.modalDialog.modalContent.modalBody.browseFile;
-            componentsContainer = app.viewStack.mainContainer.container.componentsContainer;
+        
+            propertyEditorViewStack =
+              app.viewStack.mainContainer.container.rightSideNav.rightSideContainer
+                .propertyEditorViewStack;
+            propertyEditorContainer =
+              propertyEditorViewStack.propertyEditorContainerWrap
+                .propertyEditorContainer;
+            fileSelectModal =
+              app.viewStack.mainContainer.container.children.fileSelectModal;
+            browseFile =
+              fileSelectModal.modalDialog.modalContent.modalBody.browseFile;
+            componentsContainer =
+              app.viewStack.mainContainer.container.componentsContainer;
             middleNav = app.viewStack.mainContainer.nav.middleNav;
             rightSideNav = app.viewStack.mainContainer.container.rightSideNav;
             listHistorySteps = middleNav.listHistorySteps;
-            workAreaColumn = app.viewStack.mainContainer.container.workArea.workAreaRow.workAreaColumn;
+            workAreaColumn =
+              app.viewStack.mainContainer.container.workArea.workAreaRow
+                .workAreaColumn;
             workAreaRowL2 = workAreaColumn.workAreaCell.workAreaRowL2;
             workArea = workAreaRowL2.workAreaColumnL2;
             console.log("WA Components",workArea)
@@ -57,143 +284,299 @@ let Implementation = function (applet) {
             componentList = componentsContainer.componentList;
             sectionList = propertyEditorViewStack.propertyEditorContainerWrap.sectionsList.checkBox;
             console.log("SECTIONS",sectionList);
-            applet.addBehaviors(applet.view, {
-                "idChanged": {
-                    "UPDATE_BEHAVIOR_BINDINGS": {
-                        onPropagation: true
-                    }
-                }
-            }, false);
-
-            applet.addBehaviors(componentList, {
-                "rowAdd": "PREPARE_CMP",
-            }, false);
-
+           
+        
+            applet.addBehaviors(
+              applet.view,
+              {
+                idChanged: {
+                  UPDATE_BEHAVIOR_BINDINGS: {
+                    onPropagation: true,
+                  },
+                },
+              },
+              false
+            );
+        
+            applet.addBehaviors(
+              componentList,
+              {
+                rowAdd: "PREPARE_CMP",
+              },
+              false
+            );
+        
+            let len = componentList.rowItems.length;
+            for (let i = 0; i < len; i++) {
+              let currentRow = componentList.rowItems[i];
+              applet.addBehaviors(
+                currentRow.component,
+                {
+                  dragstart: "INITIAL_DRAGSTART",
+                },
+                false
+              );
+            }
+        
             applet.addBehaviors(propertyEditorContainer, vspewbehaviors, false);
-            applet.addBehaviors(propertyEditorContainerTrash, vspewbehaviors, false);
-
-            cmpSearchTextInput = app.viewStack.mainContainer.container.componentsContainer.container.cmpSearchTextInput;
-            applet.addBehaviors(cmpSearchTextInput, {
-                "keyup": "SEARCH_CMP",
-            }, false);
-
+        
+            cmpSearchTextInput =
+              app.viewStack.mainContainer.container.componentsContainer.container
+                .cmpSearchTextInput;
+            applet.addBehaviors(
+              cmpSearchTextInput,
+              {
+                keyup: "SEARCH_CMP",
+              },
+              false
+            );
+        
             undoButton = middleNav.undoButton;
-            applet.addBehaviors(undoButton, {
-                "click": "WA_UNDO",
-            }, false);
+            applet.addBehaviors(
+              undoButton,
+              {
+                click: "WA_UNDO",
+              },
+              false
+            );
             redoButton = middleNav.redoButton;
-            applet.addBehaviors(redoButton, {
-                "click": "WA_REDO",
-            }, false);
-            cmpTrash = app.viewStack.mainContainer.container.rightSideNav.rightSideContainer.propertyEditorViewStack.cmpTrash;
+            applet.addBehaviors(
+              redoButton,
+              {
+                click: "WA_REDO",
+              },
+              false
+            );
+
+            // duplicateButton = middleNav.duplicateButton;
+            // applet.addBehaviors(duplicateButton, {
+            //   click: "DUPLICATE_CMP",
+            // });
+
+            cmpTrash =
+              app.viewStack.mainContainer.container.rightSideNav.rightSideContainer
+                .propertyEditorViewStack.cmpTrash;
             applet.addBehaviors(cmpTrash, daBehaviors, false);
-
-            toggleSideNavLeft = app.viewStack.mainContainer.nav.leftNav.toggleSideNavLeft;
-            applet.addBehaviors(toggleSideNavLeft, {
-                "click": "TOGGLE_VISIBILITY_LEFT",
-            }, false);
-            toggleSideNavRight = app.viewStack.mainContainer.nav.rightNav.toggleSideNavRight;
-            applet.addBehaviors(toggleSideNavRight, {
-                "click": "TOGGLE_VISIBILITY_RIGHT",
-            }, false);
-
+        
+            toggleSideNavLeft =
+              app.viewStack.mainContainer.nav.leftNav.toggleSideNavLeft;
+            applet.addBehaviors(
+              toggleSideNavLeft,
+              {
+                click: "TOGGLE_VISIBILITY_LEFT",
+              },
+              false
+            );
+            toggleSideNavRight =
+              app.viewStack.mainContainer.nav.rightNav.toggleSideNavRight;
+            applet.addBehaviors(
+              toggleSideNavRight,
+              {
+                click: "TOGGLE_VISIBILITY_RIGHT",
+              },
+              false
+            );
+        
             splitHorizontal = middleNav.splitHorizontal;
-            applet.addBehaviors(splitHorizontal, {
-                "click": "SPLIT_HOR",
-            }, false);
-
+            applet.addBehaviors(
+              splitHorizontal,
+              {
+                click: "SPLIT_HOR",
+              },
+              false
+            );
+        
             splitVertical = middleNav.splitVertical;
-            applet.addBehaviors(splitVertical, {
-                "click": "SPLIT_VERT",
-            }, false);
-
+            applet.addBehaviors(
+              splitVertical,
+              {
+                click: "SPLIT_VERT",
+              },
+              false
+            );
+        
             uploadIcon = middleNav.uploadIcon;
-            applet.addBehaviors(uploadIcon, {
-                "click": "OPEN_MODAL_FORM_FOR_SAVE"
-            }, false);
-
+            applet.addBehaviors(
+              uploadIcon,
+              {
+                click: "OPEN_MODAL_FORM_FOR_SAVE",
+              },
+              false
+            );
+        
             openUploadForms = middleNav.openUploadForms;
-            applet.addBehaviors(openUploadForms, {
-                "click": "OPEN_MODAL_FORMS"
-            }, false);
-
+            applet.addBehaviors(
+              openUploadForms,
+              {
+                click: "OPEN_MODAL_FORMS",
+              },
+              false
+            );
+        
             desktopPreview = middleNav.desktop;
-            applet.addBehaviors(desktopPreview, {
-                "click": "DESKTOP_PREVIEW"
-            }, false);
-
+            applet.addBehaviors(
+              desktopPreview,
+              {
+                click: "DESKTOP_PREVIEW",
+              },
+              false
+            );
+        
+            // mobilePreview = middleNav.mobile;
+            // applet.addBehaviors(
+            //   mobilePreview,
+            //   {
+            //     click: "MOBILE_PREVIEW",
+            //   },
+            //   false
+            // );
+        
+            // tabletPreview = middleNav.tablet;
+            // applet.addBehaviors(
+            //   tabletPreview,
+            //   {
+            //     click: "TABLET_PREVIEW",
+            //   },
+            //   false
+            // );
+        
             saveLayout = middleNav.saveLayout;
-            applet.addBehaviors(saveLayout, {
-                "click": "SAVE_LAYOUT",
-            }, false);
+            applet.addBehaviors(
+              saveLayout,
+              {
+                click: "SAVE_LAYOUT",
+              },
+              false
+            );
             selectBtn = middleNav.selectBtn;
-            applet.addBehaviors(selectBtn, {
-                "click": "FILE_SELECT_MODAL",
-            }, false);
-
-            applet.addBehaviors(browseFile, {
-                "change": "FILE_SELECTED",
-            }, false);
-            applet.addBehaviors(listHistorySteps, {
-                "change": "HISTORY_STEP_DETAILS",
-            }, false);
-
+            applet.addBehaviors(
+              selectBtn,
+              {
+                click: "FILE_SELECT_MODAL",
+              },
+              false
+            );
+        
+            applet.addBehaviors(
+              browseFile,
+              {
+                change: "FILE_SELECTED",
+              },
+              false
+            );
+            applet.addBehaviors(
+              listHistorySteps,
+              {
+                change: "HISTORY_STEP_DETAILS",
+              },
+              false
+            );
+        
+            // applet.addBehaviors(
+            //   removeSearchText,
+            //   {
+            //     click: {
+            //       REMOVE_SEARCH_TEXT: {
+            //         onPropagation: true,
+            //       },
+            //     },
+            //   },
+            //   true
+            // );
+        
             //app.behaviors["previewBtn"]["click"] = "PREVIEW";
             //applet.addBehaviors(workArea, cmpWaBehaviors, false);
+            //applet.addBehaviors(footer, cmpWaBehaviors, false);
             applet.addBehaviors(title, cmpWaBehaviors, false);
             applet.addBehaviors(pageHeader, cmpWaBehaviors, false);
             applet.addBehaviors(detail, cmpWaBehaviors, false);
             applet.addBehaviors(pageFooter, cmpWaBehaviors, false);
             applet.addBehaviors(summary, cmpWaBehaviors, false);
             applet.addBehaviors(sectionList,sectionListBehaviors,false);
-            applet.addBehaviors(app, {
-                "loadLayout": "LOAD_LAYOUT",
-                "loadHtml": "LOAD_HTML",
-                "keydown": {
-                    "WA_UNDO": {
-                        filter: KeyboardUtils.test["CTR+Z"],
-                        onPropagation: true
-                    },
-                    "WA_REDO": {
-                        filter: KeyboardUtils.test["CTR+Y"],
-                        onPropagation: true
-                    },
-                    "DELETE_CMP": {
-                        filter: KeyboardUtils.test["DEL"],
-                        onPropagation: true
-                    }
-                }
-            }, false);
-        },
+            
+            applet.addBehaviors(
+              app,
+              {
+                loadLayout: "LOAD_LAYOUT",
+                loadHtml: "LOAD_HTML",
+                keydown: {
+                  WA_UNDO: {
+                    filter: KeyboardUtils.test["CTR+Z"],
+                    onPropagation: true,
+                  },
+                  WA_REDO: {
+                    filter: KeyboardUtils.test["CTR+Y"],
+                    onPropagation: true,
+                  },
+                  DELETE_CMP: {
+                    filter: KeyboardUtils.test["DEL"],
+                    onPropagation: true,
+                  },
+                },
+              },
+              false
+            );
+          },
         
-        "UPDATE_BEHAVIOR_BINDINGS": {
+
+        // "UPDATE_BEHAVIOR_BINDINGS": {
+        //     do: function (e) {
+        //         console.log("UPDATE_BEHAVIOR_BINDINGS");
+        //         app.behaviors[e.newValue] = app.behaviors[e.oldValue];
+        //         delete app.behaviors[e.oldValue];
+        //     }
+        //     /**
+        //      * catch events thrown by children
+        //     */
+        // },
+        // "ALLOW_DROP": function (e) {
+        //     console.log("ALLOW_DROP ", this.domID);
+        //     e.preventDefault();
+        // },
+        // "WA_PREVENT_DRAGSTART": {
+        //     description: "Prevent drag start ",
+        //     do: function (e) {
+        //         console.log('WA_PREVENT_DRAGSTART');
+        //         e.preventDefault();
+        //     }
+        // },
+        // "TOGGLE_BIN": function (e) {
+        //     console.log("SHOW_BIN : ", propertyEditorViewStack.selectedIndex);
+        //     propertyEditorViewStack.selectedIndex = propertyEditorViewStack.selectedIndex == 0 ? 1 : 0; 
+        //     e.preventDefault();
+        //     e.stopPropagation();
+        // },
+
+        UPDATE_BEHAVIOR_BINDINGS: {
             do: function (e) {
-                console.log("UPDATE_BEHAVIOR_BINDINGS");
-                app.behaviors[e.newValue] = app.behaviors[e.oldValue];
-                delete app.behaviors[e.oldValue];
-            }
+              console.log("UPDATE_BEHAVIOR_BINDINGS");
+              app.behaviors[e.newValueDomId] = app.behaviors[e.oldValueDomId];
+              delete app.behaviors[e.oldValueDomId];
+            },
             /**
              * catch events thrown by children
-            */
-        },
-        "ALLOW_DROP": function (e) {
+             */
+          },
+          ALLOW_DROP: function (e) {
             console.log("ALLOW_DROP ", this.domID);
             e.preventDefault();
-        },
-        "WA_PREVENT_DRAGSTART": {
+          },
+          WA_PREVENT_DRAGSTART: {
             description: "Prevent drag start ",
             do: function (e) {
-                console.log('WA_PREVENT_DRAGSTART');
-                e.preventDefault();
-            }
-        },
-        "TOGGLE_BIN": function (e) {
+              console.log("WA_PREVENT_DRAGSTART");
+              e.preventDefault();
+            },
+          },
+          TOGGLE_BIN: function (e) {
             console.log("SHOW_BIN : ", propertyEditorViewStack.selectedIndex);
-            propertyEditorViewStack.selectedIndex = propertyEditorViewStack.selectedIndex == 0 ? 1 : 0; 
+            propertyEditorViewStack.selectedIndex =
+              propertyEditorViewStack.selectedIndex == 0 ? 1 : 0;
             e.preventDefault();
             e.stopPropagation();
-        },
-        "ADD_COMPONENT": {
+          },
+
+        ADD_COMPONENT: {
             description: "Add component ",
             do: function (e) {
                 if (!formField) {
@@ -331,7 +714,7 @@ let Implementation = function (applet) {
             undo: function () {},
             stopPropagation: true,
         },
-        "SELECT_COMPONENT": {
+        SELECT_COMPONENT: {
             description: "Select Component",
             do: function(e){
 
@@ -355,7 +738,7 @@ let Implementation = function (applet) {
             },
             stopPropagation: true
         },
-        "DRAGSTART_COMPONENT": {
+        DRAGSTART_COMPONENT: {
             description: "Drag Component",
             do: function (e) {
                 console.log("I keep on moving...");
@@ -370,14 +753,14 @@ let Implementation = function (applet) {
                e.originalEvent.dataTransfer.setData("text/plain",(parseInt(style.getPropertyValue("left"), 10) - event.clientX) + ',' + (parseInt(style.getPropertyValue("top"), 10) - event.clientY));
             }
         },
-        "HISTORY_STEP_DETAILS": function (e) {
+        HISTORY_STEP_DETAILS: function (e) {
             console.log("called HISTORY_STEP_DETAILS.");
         },
-        "FILE_SELECT_MODAL": function (e) {
+        FILE_SELECT_MODAL: function (e) {
             console.log("called FILE_SELECT_MODAL.");
             fileSelectModal.show();
         },
-        "OPEN_MODAL_FORMS": function(e) {
+        OPEN_MODAL_FORMS: function(e) {
             app.appletsMap["formsModal"].init().then(() => {
                 console.log("Applet formsModal inited");
                 applet.addBehaviors(app.appletsMap["formsModal"].view, {
@@ -386,14 +769,14 @@ let Implementation = function (applet) {
             });
         },
 
-        "OPEN_MODAL_FORM_FOR_SAVE": function(e) {
+        OPEN_MODAL_FORM_FOR_SAVE: function(e) {
             app.appletsMap["saveForm"].init().then(() => { 
                 console.log('Applet saveForm inited.');
             });
             data.selectedForm.form_literal = workAreaColumn.literalLite;
         },
 
-        "FILE_SELECTED": function (e) {
+        FILE_SELECTED: function (e) {
             console.log("called FILE_SELECTED.");
             if (browseFile.value.length > 0) {
                 readFile(browseFile.value[0]).then(function (resp) {
@@ -430,19 +813,48 @@ let Implementation = function (applet) {
             e.originalEvent.dataTransfer.setDragImage($elem, 0, 0);
         },
 
-        "SEARCH_CMP": function (e) { // filter components
+        // SEARCH_CMP: function (e) { // filter components
+        //     console.log("search box change");
+        //     let value = e.target.value.toLowerCase();
+        //     _cmpList.undoAll();
+        //     if (value.length > 0) {
+        //         _cmpList.filter(function (el) {
+        //             let regEx = new RegExp(`${value}`, "gi");
+        //             return el.label.toLowerCase().match(regEx);
+        //         });
+        //     }
+        // },
+
+        SEARCH_CMP: function (e) {
+            // filter components
             console.log("search box change");
             let value = e.target.value.toLowerCase();
+            if (value.length > 0) {
+              this.parent.button.css.display = "none";
+              this.parent.buttonDel.css.display = "block";
+              //this.parent.buttonDel.css.padding = 0;
+            } else {
+              this.parent.button.css.display = "block";
+              this.parent.button.css.top = 0;
+              this.parent.buttonDel.css.display = "none";
+            }
             _cmpList.undoAll();
             if (value.length > 0) {
-                _cmpList.filter(function (el) {
-                    let regEx = new RegExp(`${value}`, "gi");
-                    return el.label.toLowerCase().match(regEx);
-                });
+              let regEx = new RegExp(`${value}`, "gi");
+              _cmpList.filter((el) => el.label.toLowerCase().match(regEx));
+              // _cmpList.filter(function (el) {
+              //     let regEx = new RegExp(`${value}`, "gi");
+              //     return el.label.toLowerCase().match(regEx);
+              // });
             }
-        },
+          },
+      
+          REMOVE_SEARCH_TEXT: function (e) {
+            console.log("object");
+          },
+      
     
-        "LOAD_HTML": function (e) {
+        LOAD_HTML: function (e) {
             let body = BrowserUtils.body(e.content); 
             body = BrowserUtils.removeScripts(body);
             let dn = $("<div/>").append(body);
@@ -475,89 +887,139 @@ let Implementation = function (applet) {
         //         }
         //     }
         // },
-         "LOAD_LAYOUT": function (e) {
+        //  "LOAD_LAYOUT": function (e) {
+        //     let _cmp = e.content;
+        //     let res = objectHierarchyGetMatchingMember(_cmp, "props.id", "workAreaRowL2", "props.components");
+        //     if (res.match) {
+        //         _cmp = res.match;
+        //     }
+        //     workAreaRowL2.removeAllChildren(0);
+        //     for (let i = 0; i < _cmp.props.components.length; i++) {
+        //         let inst = workAreaRowL2.addComponent(_cmp.props.components[i]);
+        //         applet.addBehaviors(inst, cmpWaBehaviors, true);
+        //     }
+        // },
+        LOAD_LAYOUT: function (e) {
             let _cmp = e.content;
-            let res = objectHierarchyGetMatchingMember(_cmp, "props.id", "workAreaRowL2", "props.components");
+            let res = objectHierarchyGetMatchingMember(
+              _cmp,
+              "props.id",
+              "workAreaRowL2",
+              "props.components"
+            );
             if (res.match) {
-                _cmp = res.match;
+              _cmp = res.match;
             }
             workAreaRowL2.removeAllChildren(0);
             for (let i = 0; i < _cmp.props.components.length; i++) {
-                let inst = workAreaRowL2.addComponent(_cmp.props.components[i]);
-                applet.addBehaviors(inst, cmpWaBehaviors, true);
+              let inst = workAreaRowL2.addComponent(_cmp.props.components[i]);
+              applet.addBehaviors(inst, cmpWaBehaviors, true);
             }
-        },
+          },
     
-        "HISTORY_STEP_ADDED": function (e) {
+        HISTORY_STEP_ADDED: function (e) {
             console.log("called HISTORY_STEP_ADDED.", e.current);
             listHistorySteps.value = e.current;
         },
     
-        "HISTORY_UNDONE": function (e) {
+        HISTORY_UNDONE: function (e) {
             console.log("called HISTORY_UNDONE.");
             listHistorySteps.value = e.previous;
     
         },
     
-        "HISTORY_REDONE": function (e) {
+        HISTORY_REDONE: function (e) {
             console.log("called HISTORY_REDONE.");
             listHistorySteps.value = e.redone;
         },
     
-        "DELETE_CMP": {
-            do: function (e) {
-                console.log('delete component', this.id);
-                let domID;
-                e.preventDefault();
-                //if is pressed delete
-                if (activeComponent) {
-                    if (e.keyCode == 46) {
-                        //domId of element who should delete
-                        domID = activeComponent.domID;
-                    } else {
-                        //if drop to delete area
-                        domID = e.originalEvent.dataTransfer.getData("domID");
-                    }
-                    let inst = Component.instances[domID];
-                    let c = confirm("Do you want to delete " + inst.id.toUpperCase() + "?");
-                    if (c) {
+        // "DELETE_CMP": {
+        //     do: function (e) {
+        //         console.log('delete component', this.id);
+        //         let domID;
+        //         e.preventDefault();
+        //         //if is pressed delete
+        //         if (activeComponent) {
+        //             if (e.keyCode == 46) {
+        //                 //domId of element who should delete
+        //                 domID = activeComponent.domID;
+        //             } else {
+        //                 //if drop to delete area
+        //                 domID = e.originalEvent.dataTransfer.getData("domID");
+        //             }
+        //             let inst = Component.instances[domID];
+        //             let c = confirm("Do you want to delete " + inst.id.toUpperCase() + "?");
+        //             if (c) {
     
-                        inst.parent.removeChild(inst, 2);
-                        let oeLit = {
-                            ctor: ObjectEditor,
-                            "props": {
-                                id: "objectEditor",
-                                instance: data.selectedForm,
-                                field: "props"
-                            }
-                        };
-                        propertyEditorContainer.components = [oeLit];
-                    }
-                    activeComponent = null;
+        //                 inst.parent.removeChild(inst, 2);
+        //                 let oeLit = {
+        //                     ctor: ObjectEditor,
+        //                     "props": {
+        //                         id: "objectEditor",
+        //                         instance: data.selectedForm,
+        //                         field: "props"
+        //                     }
+        //                 };
+        //                 propertyEditorContainer.components = [oeLit];
+        //             }
+        //             activeComponent = null;
+        //         } else {
+        //             alert("Please select component you want to delete.");
+        //         }
+        //     },
+        //     undo: function () {
+        //         //undo
+        //     }
+        // },
+        DELETE_CMP: {
+            do: function (e) {
+              console.log("delete component", this.id);
+              let domID;
+              e.preventDefault();
+              //if is pressed delete
+              if (activeComponent) {
+                if (e.keyCode == 46) {
+                  //domId of element who should delete
+                  domID = activeComponent.domID;
                 } else {
-                    alert("Please select component you want to delete.");
+                  //if drop to delete area
+                  domID = e.originalEvent.dataTransfer.getData("domID");
                 }
+                let inst = Component.instances[domID];
+      
+                let c = confirm(
+                  "Do you want to delete " + inst.id.toUpperCase() + "?"
+                );
+                if (c) {
+                  inst.parent.removeChild(inst, 2);
+                  propertyEditorContainer.components = [];
+                }
+                activeComponent = null;
+              } else {
+                alert("Please select component you want to delete.");
+              }
             },
             undo: function () {
-                //undo
-            }
-        },
+              //undo
+            },
+          },
+      
     
-        "TOGGLE_VISIBILITY_LEFT": {
+        TOGGLE_VISIBILITY_LEFT: {
             do: function (e) {
                 componentsContainer.toggleVisibility();
             }
     
         },
     
-        "TOGGLE_VISIBILITY_RIGHT": {
+        TOGGLE_VISIBILITY_RIGHT: {
             do: function (e) {
                 rightSideNav.toggleVisibility();
             }
     
         },
     
-        "SPLIT_HOR": {
+        SPLIT_HOR: {
             description: "Ndaje horizontalisht",
             do: function (e) {
                 let retFromRedoMaybe = arguments[arguments.length - 1];
@@ -661,7 +1123,7 @@ let Implementation = function (applet) {
             }
         },
     
-        "SPLIT_VERT": {
+        SPLIT_VERT: {
             description: "Split selected container vertically",
             do: function (e) {
                 let retFromRedoMaybe = arguments[arguments.length - 1];
@@ -795,7 +1257,7 @@ let Implementation = function (applet) {
         },
     
 
-        "BECOME_ACTIVE": {
+        BECOME_ACTIVE: {
             do: function (e) {
                 console.log("Container Became active");
                 if (activeContainer && activeContainer != this && activeContainer.classes.indexOf("active-container") > -1) {
@@ -826,7 +1288,7 @@ let Implementation = function (applet) {
             stopPropagation: true
         },
     
-        "WA_HOVER": {
+        WA_HOVER: {
             do: function (e) {
                 console.log("Container hovered " + this.id);
                 //this will hold the instance of the component who manifested this behavior (the manifestor)
@@ -837,7 +1299,7 @@ let Implementation = function (applet) {
             stopPropagation: true
         },
     
-        "IS_WA_RESIZE_NS": {
+        IS_WA_RESIZE_NS: {
             do: function (e) {
                 console.log("Container Resize NS");
     
@@ -845,7 +1307,7 @@ let Implementation = function (applet) {
             stopPropagation: true
         },
     
-        "WA_RESIZE": {
+        WA_RESIZE: {
             do: function (e) {
                 console.log("Resize Event",e);
                 let retFromRedoMaybe = arguments[arguments.length - 1];
@@ -875,7 +1337,7 @@ let Implementation = function (applet) {
             stopPropagation: true
         },
     
-        "WA_REMOVE": {
+        WA_REMOVE: {
             description: "Container Removed",
             do: function (e) {
                 let retFromRedoMaybe = arguments[arguments.length - 1];
@@ -949,7 +1411,7 @@ let Implementation = function (applet) {
             stopPropagation: true
         },
     
-        "PREVIEW": {
+        PREVIEW: {
             do: function (e) {
                 let lit = workAreaColumn.literal;
                 stripHandle(lit);
@@ -959,7 +1421,7 @@ let Implementation = function (applet) {
             stopPropagation: true
         },
     
-        "SAVE_LAYOUT": {
+        SAVE_LAYOUT: {
             do: function (e) {
                 // let lit = workAreaColumn.literalLite;
                 let lit = workAreaRowL2.literal;
@@ -979,7 +1441,7 @@ console.log("Json Layout",xml);
             stopPropagation: true
         },
     
-        "WA_UNDO": {
+        WA_UNDO: {
             do: function (e) {
                 console.log("UNDO");
                 app.history.undo();
@@ -987,7 +1449,7 @@ console.log("Json Layout",xml);
             stopPropagation: false
         },
     
-        "WA_REDO": {
+        WA_REDO: {
             do: function (e) {
                 console.log("REDO");
                 app.history.redo();
@@ -995,13 +1457,13 @@ console.log("Json Layout",xml);
             stopPropagation: false
         },
 
-        "INITIAL_RESIZE" : {
+        INITIAL_RESIZE : {
             do: function (e) {
                 resizable = true;  
             },
             stopPropagation: false
         },
-        "CMP_RESIZE": {
+        CMP_RESIZE: {
             do: function (e) {
                 
                 if(containers.indexOf(activeComponent.ctor) == -1 ){
@@ -1018,14 +1480,14 @@ console.log("Json Layout",xml);
             stopPropagation: false
         },
 
-        "STOP_RESIZING": {
+        STOP_RESIZING: {
             do: function (e) {
                 resizable = false;
                 console.log("Stop Resize")
             },
             stopPropagation: false
         },
-        "UPDATE_SECTION_LIST" : {
+        UPDATE_SECTION_LIST : {
             do: function (e) {
                 let inst;
                 let currentSection = arguments[2].currentItem;
