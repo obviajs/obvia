@@ -21,7 +21,7 @@ Thank you to everyone who has contributed to ***Obvia***!
 If you would like to financially support Obvia's development, please consider making a donation on our [PayPal].
 
 ## License
-[MIT]
+[MIT]/
 Copyright (c) 2020-present, Kreatx shpk 
 
 [obviajs.com]: https://obviajs.com/
