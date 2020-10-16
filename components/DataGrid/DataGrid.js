@@ -305,7 +305,7 @@ var DataGrid = function (_props) {
     };
 
     this.cellEdit = function (rowIndex, columnIndex) {
-        let e = jQuery.Event('cellEdit');
+        let e = jQuery.Event('cellEditStarted');
         _self.trigger(e, [rowIndex, columnIndex]);
         if (!e.isDefaultPrevented()) {
             if (this.editPosition != null && this.editPosition.event == 1 && (this.editPosition.rowIndex != rowIndex || this.editPosition.columnIndex != columnIndex)) {
@@ -372,7 +372,7 @@ var DataGrid = function (_props) {
             let itemEditorInfo = _cellItemEditors[columnIndex];
             let itemEditor;
             if (itemEditorInfo == undefined) {
-                if (column.itemEditor.props.value == null) {
+                if (column.itemEditor.props.value == undefined || getBindingExp(column.itemEditor.props.value) == null) {
                     column.itemEditor.props.value = "{?" + column.field + "}";
                 }
                 column.itemEditor.props.bindingDefaultContext = data;
@@ -472,6 +472,8 @@ var DataGrid = function (_props) {
             itemEditor.render().then(function (cmpInstance) {
                 _cells[rowIndex][columnIndex].append(cmpInstance.$el);
                 itemEditor.show();
+                let e = jQuery.Event('cellEdit');
+                _self.trigger(e, [rowIndex, columnIndex, itemEditor]);
                 if (itemEditorInfo != null) {
                     if (typeof itemEditor.focus === "function") {
                         // safe to use the function
@@ -479,13 +481,14 @@ var DataGrid = function (_props) {
                     }
                 }
             });
+
         }
     };
 
     this.cellEditFinished = function (rowIndex, columnIndex, applyEdit) {
         let r = true;
         let e = jQuery.Event('cellEditFinished');
-        _self.trigger(e, [rowIndex, columnIndex, applyEdit]);
+
         if (!e.isDefaultPrevented()) {
             //console.trace();
             console.log("cellEditFinished:", rowIndex, " ", columnIndex);
@@ -496,25 +499,19 @@ var DataGrid = function (_props) {
             let itemEditorInfo = _cellItemEditors[columnIndex];
             let itemEditor = itemEditorInfo.itemEditor;
 
-
-            if ((typeof column.cellEditFinished == 'function') && applyEdit) {
-                let args = [];
-                for (let i = 0; i < arguments.length - 1; i++) {
-                    args.push(arguments[i]);
-                }
-                //we dont need applyEdit argument any more
-                args.push(itemEditorInfo);
-                value = column.cellEditFinished.apply(this, args);
-                calledHandler = true;
-            }
+            _self.trigger(e, [rowIndex, columnIndex, itemEditor, applyEdit]);
+            value = e.result;
 
             if (!applyEdit || !e.isDefaultPrevented()) {
                 itemEditor.hide();
                 _cellItemRenderers[rowIndex][columnIndex].show();
                 if (applyEdit) {
                     if (!calledHandler) {
-                        value = itemEditor.value;
                         let exp = itemEditor.getBindingExpression("value");
+                        if (!value) {
+                            value = itemEditor.value;
+                        }
+
                         if (exp) {
                             if (exp == "currentItem") {
                                 _self.dataProvider[rowIndex + _virtualIndex] = value;
@@ -529,7 +526,9 @@ var DataGrid = function (_props) {
                     //_self.dataProvider[rowIndex+_virtualIndex][column.field] = value;
                 }
                 this.editPosition.event = 2;
+
             }
+
         } else
             r = false;
         return r;
@@ -750,7 +749,7 @@ var DataGrid = function (_props) {
         }
     };
 
-    let myDtEvts = ["cellEditFinished", "cellEdit", "rowEdit", "rowAdd", "rowDelete", "rowClick", "rowDblClick", "cellStyling", "rowStyling", "columnSort"];
+    let myDtEvts = ["cellEditFinished", "cellEdit", "cellEditStarted", "rowEdit", "rowAdd", "rowDelete", "rowClick", "rowDblClick", "cellStyling", "rowStyling", "columnSort"];
     if (!Object.isEmpty(_props.attr) && _props.attr["data-triggers"] && !Object.isEmpty(_props.attr["data-triggers"])) {
         let dt = _props.attr["data-triggers"].split(" ");
         for (let i = 0; i < dt.length; i++) {
