@@ -29,3 +29,4 @@ Powered by Kreatx
 [Contribution Guidelines]: https://github.com/kreatx-admin/obvia/blob/master/.github/CONTRIBUTING.md
 [PayPal]: https://paypal.me/obviajs
 [MIT]: https://opensource.org/licenses/MIT
+[chat]: https://discord.gg/bYd5A2Q
