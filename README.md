@@ -22,7 +22,7 @@ If you would like to financially support Obvia's development, please consider ma
 
 ## License
 [MIT]\
-Copyright (c) 2020-present, Kreatx shpk 
+Powered by Kreatx 
 
 [obviajs.com]: https://obviajs.com/
 [Issue Reporting Guidelines]: https://github.com/kreatx-admin/obvia/blob/master/.github/CONTRIBUTING.md#issue-reporting-guidelines
