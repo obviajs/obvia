@@ -353,10 +353,10 @@ var App = function (_props) {
                 //target is always body
                 if (e.target == _self.ownerDocument.body) {
                     if (!e.guid) {
-                        _self.trigger(e);
                         if (!e.guid) {
                             e.guid = _guid;
                         }
+                        _self.trigger(e);
                     }
                 }
             });
