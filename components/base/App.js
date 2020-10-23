@@ -261,15 +261,15 @@ var App = function (_props) {
                         if (extraArgs.length > 0) {
                             args = args.concat(extraArgs);
                         }
-
+                        let ret;
                         if (typeof behavior == 'function') {
-                            behavior.apply(manifestor, args);
+                            ret = behavior.apply(manifestor, args);
                         } else {
                             let behavior_implementations = isObject(behavior) && !behavior.forEach ? [behavior] : behavior;
                             for (let bi = 0; bi < behavior_implementations.length; bi++) {
                                 behavior = behavior_implementations[bi];
                                 if (isObject(behavior)) {
-                                    let ret = behavior.do.apply(manifestor, args);
+                                    ret = behavior.do.apply(manifestor, args);
                                     if (_historyProps.enabled) {
                                         _history.track(behavior, behaviorName, ret, manifestor, args);
                                     }
@@ -287,6 +287,7 @@ var App = function (_props) {
                                 }
                             }
                         }
+                        return ret;
                     }
                 }
             }
@@ -352,10 +353,10 @@ var App = function (_props) {
                 //target is always body
                 if (e.target == _self.ownerDocument.body) {
                     if (!e.guid) {
-                        _self.trigger(e);
                         if (!e.guid) {
                             e.guid = _guid;
                         }
+                        _self.trigger(e);
                     }
                 }
             });

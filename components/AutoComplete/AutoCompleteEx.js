@@ -584,7 +584,7 @@ var AutoCompleteEx = function (_props) {
     ];
 
     _props.components = _cmps;
-    Container.call(this, _props, true);
+    let r = Container.call(this, _props, true);
 
     Object.defineProperty(this, "enabled", {
         get: function enabled() {
@@ -612,5 +612,6 @@ var AutoCompleteEx = function (_props) {
         configurable: true,
         enumerable: true
     });
+    return r;
 };
 AutoCompleteEx.prototype.ctor = 'AutoCompleteEx';

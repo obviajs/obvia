@@ -951,7 +951,7 @@ var Component = function (_props) {
                                     );
                                 }
                                 args[0].originalContext = this;
-                                handler.events[innerEventIn].apply(_self.proxyMaybe, args);
+                                return handler.events[innerEventIn].apply(_self.proxyMaybe, args);
                             };
 
                             _handlers[innerEventIn].push({
