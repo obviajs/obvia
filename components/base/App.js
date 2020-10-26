@@ -283,7 +283,7 @@ var App = function (_props) {
                                         e.preventDefault();
                                     }
                                 } else if (typeof behavior == 'function') {
-                                    behavior.apply(manifestor, args);
+                                    ret = behavior.apply(manifestor, args);
                                 }
                             }
                         }
