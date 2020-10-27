@@ -63,7 +63,7 @@ var CheckBox = function (_props) {
         enumerable:true
     });
 
-    let _changeHandler = function () {
+    let _clickHandler = function () {
         _checked = !_checked;
     };
     
@@ -95,18 +95,19 @@ var CheckBox = function (_props) {
 
     _props = extend(false, false, _defaultParams, _props);
 
-    let _change = _props.change;
+    let _click = _props.click;
 
-    _props.change = function () {
+    _props.click = function () {
         let e = arguments[0];
         if (!e.isDefaultPrevented()) {
-            _changeHandler.apply(this, arguments);
+            _clickHandler.apply(this, arguments);
         }
-        if (typeof _change == 'function')
-        _change.apply(this, arguments);
+        if (typeof _click == 'function')
+        _click.apply(this, arguments);
     };
 
     Component.call(this, _props);
+    
 };
 
 CheckBox.prototype.ctor = "CheckBox";

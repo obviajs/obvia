@@ -393,8 +393,8 @@ var Component = function (_props) {
                         for (let _cid in v) {
                             if (_cid == "self")
                                 this.classes = v[_cid];
-                            else if (this[_cid] && this[_cid]["ctor"]) {
-                                this[_cid].classes = v[_cid];
+                            else if (this.proxyMaybe[_cid] && this.proxyMaybe[_cid]["ctor"]) {
+                                this.proxyMaybe[_cid].classes = v[_cid];
                             }
                         }
                     }

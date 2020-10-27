@@ -881,8 +881,8 @@ var DataGrid = function (_props) {
                 renderedRow.append('<th scope="row">' + (index + 1) + '</th>');
             }
             let columnIndex = 0;
-            renderedRow.click(function (evt) {
-                let rargs = new RepeaterEventArgs(_self.rowItems, _self.dataProvider[index + _virtualIndex], index + _virtualIndex);
+            renderedRow.on("click", function (evt) {
+                let rargs = new RepeaterEventArgs(_self.rowItems[index], _self.dataProvider[index + _virtualIndex], index + _virtualIndex);
                 rargs.virtualIndex = _virtualIndex;
                 _self.trigger("rowClick", [_self, rargs]);
             });
@@ -939,11 +939,9 @@ var DataGrid = function (_props) {
                 el.repeaterIndex = index;
 
                 _cellItemRenderers[index][columnIndex] = el;
-                rowItems[column.name] = el;
-                _self.rowItems[index] = rowItems;
-
-                //
-
+                let columnName = column.name || `column_${columnIndex}`;
+                rowItems[columnName] = el;
+                
                 let csEvt = jQuery.Event('cellStyling', [_self, index, columnIndex, _self.rowItems, column, data]);
 
                 if (column.editable) {
@@ -1014,6 +1012,7 @@ var DataGrid = function (_props) {
                 });
                 rp.push(cp);
             }
+            _self.rowItems[index] = rowItems;
             _rows.push(renderedRow);
         }
         return rp;
