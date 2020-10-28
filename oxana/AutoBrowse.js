@@ -17,15 +17,13 @@ var AutoBrowse = function (_props) {
         },
         set: function dataProvider(v) 
         {
-            if(_dataProvider != v)
+            if (_dataProvider != v)
             {
-                if (_dataProvider != v)
-                {
-                    _dataProvider = v;
-                    _autocomplete.dataProvider = v;
-                    _dg.dataProvider = v;
-                }
+                _dataProvider = v;
+                _autocomplete.dataProvider = v;
+                _dg.dataProvider = v;
             }
+            
         },
         enumerable:true
     });
@@ -213,7 +211,7 @@ var AutoBrowse = function (_props) {
     }
     _props.attr["data-triggers"] = myDtEvts.join(" ");
     
-    if (_props.dataProvider) {
+    if (_props.dataProvider && !getBindingExp(_props.dataProvider)) {
         _dataProvider = _props.dataProvider;
     }
     if (_props.bindingDefaultContext) { 
