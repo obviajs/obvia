@@ -72,8 +72,12 @@ var AutoCompleteEx = function (_props) {
         }
     };
 
-    this.beforeAttach = function () {
-
+    this.beforeAttach = function (e) {
+        if (e.target.id == this.domID) {
+            if (_props.value && !this.getBindingExpression("value")) {
+                this.value = _props.value;
+            }
+        }
     };
 
     this.afterAttach = function (e) {
@@ -478,7 +482,7 @@ var AutoCompleteEx = function (_props) {
     let _delayRemoveTokenItemAt = debounce.call(this, this.removeTokenItemAt, 200);
     let _multiSelect = _props.multiSelect;
     let _self = this;
-    let _value = getBindingExp(_props.value) ? new ArrayEx([]) : _props.value;
+    let _value = new ArrayEx([]);
 
 
 

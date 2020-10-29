@@ -5,7 +5,7 @@
  */
 
 //component definition
-var RadioButton = function (_props) {
+var RadioButtonEx = function (_props) {
 
     let  _self = this, _label, _value, _checked, _name;
 
@@ -17,22 +17,19 @@ var RadioButton = function (_props) {
         set: function label(v) {
             if (_label != v) {
                 _label = v;
-                if (this.$input)
-                    this.$input[0].nextSibling.textContent = v;
-            }
-        }
-    });
-
-    Object.defineProperty(this, "checked",
-    {
-        get: function checked() {
-            return _checked;
-        },
-        set: function checked(v) {
-            if (_checked != v) {
-                _checked = !!v;
-                if (this.$input)
-                    this.$input.prop('checked', v);
+                if (this.$el)
+                {
+                    v = $(`<div>${v}</div>`).get(0).innerText;
+                    let last = this.$el.children().last();
+                    if(last && last.length>0)
+                        if(last[0].nextSibling)
+                            last[0].nextSibling.textContent = v;
+                        else
+                            this.$el.appendText(v);
+                    else
+                        //this.$el.appendText(v);
+                        this.$el.text(v);
+                }
             }
         }
     });
@@ -51,6 +48,20 @@ var RadioButton = function (_props) {
                 this.$input.val(v);
         }
     });
+    
+    Object.defineProperty(this, "checked",
+    {
+        get: function checked() {
+            return _checked;
+        },
+        set: function checked(v) {
+            if (_checked != v) {
+                _checked = !!v;
+                if (this.$input)
+                    this.$input.prop('checked', v);
+            }
+        }
+    });    
 
     Object.defineProperty(this, "name", {
         set: function name(v) {
@@ -64,43 +75,41 @@ var RadioButton = function (_props) {
         }
     });
     
-    this.endDraw = function (e)
-    {
-        if (e.target.id == this.domID)
-        {
+    this.endDraw = function (e) {
+        if (e.target.id == this.domID) {
             this.$input = this.$el.find("#" + this.domID + "-radio");
         }
-    }
+    };
     
     this.beforeAttach = function (e)
     {
         if (e.target.id == this.domID)
         {       
-            if (_props.name && !this.getBindingExpression("name"))
-            {
+            if (_props.name && !this.getBindingExpression("name")){
                 this.name = _props.name;
             }
-            if (_props.label && !this.getBindingExpression("label"))
-            {
+            if (_props.label && !this.getBindingExpression("label")){
                 this.label = _props.label;
             }
-            if (_props.value && !this.getBindingExpression("value"))
-            {
+            if (_props.value && !this.getBindingExpression("value")){
                 this.value = _props.value;
             }
-            if (_props.checked && !this.getBindingExpression("checked"))
-            {
+            if (_props.checked && !this.getBindingExpression("checked")){
                 this.checked = _props.checked;
             }
-            if (_props.enabled && !this.getBindingExpression("enabled"))
-            {
+            if (_props.enabled && !this.getBindingExpression("enabled")){
                 this.enabled = _props.enabled;
             }
         }
     };
     
+    let _clickHandler = function () {
+        _checked = !_checked;
+    };
+
     this.template = function () {
-        return "<input data-triggers='click' id='" + this.domID + "-radio' type='radio' class='no-form-control' >";
+        return "<label id='" + this.domID + "'>" +
+            "<input data-triggers='click' id='" + this.domID + "-radio' type='radio' class='no-form-control' ></label>";
     };
 
     let _defaultParams = {
@@ -110,7 +119,17 @@ var RadioButton = function (_props) {
         enabled: true,
     };
     _props = extend(false, false, _defaultParams, _props);
-  
+    let _click = _props.click;
+
+    _props.click = function () {
+        if (typeof _click == 'function')
+            _click.apply(this, arguments);
+
+        let e = arguments[0];
+        if (!e.isDefaultPrevented()) {
+            _clickHandler.apply(this, arguments);
+        }
+    };
     Component.call(this, _props);
 };
-RadioButton.prototype.ctor = 'RadioButton';
+RadioButtonEx.prototype.ctor = 'RadioButtonEx';

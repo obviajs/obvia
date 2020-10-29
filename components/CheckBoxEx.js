@@ -5,7 +5,7 @@
  */
 
 var CheckBoxEx = function (_props) {
-    let _self = this, _label, _value, _checked;
+    let _self = this, _label, _value, _checked, _name;
 
     Object.defineProperty(this, "label",
     {
@@ -42,7 +42,7 @@ var CheckBoxEx = function (_props) {
             } else {
                 _checked = true;
             }
-            if (this.$input !== undefined)
+            if (this.$input)
                 this.$input.val(v);
         }
     });
@@ -56,37 +56,43 @@ var CheckBoxEx = function (_props) {
             if (_checked != v) {
                 _checked = !!v;
                 if (this.$input)
-                    this.$input.prop('checked', v)
+                    this.$input.prop('checked', v);
             }
         }
     });
     
-    this.endDraw = function (e)
-    {
-        if (e.target.id == this.domID)
-        {
+    Object.defineProperty(this, "name", {
+        set: function name(v) {
+            if(_name!=v){
+                _name = v;
+                this.$input.attr("name", v);
+            }
+        },
+        get: function name() {
+            return _name;
+        }
+    });
+
+    this.endDraw = function (e) {
+        if (e.target.id == this.domID) {
             this.$input = this.$el.find("#" + this.domID + "-checkbox");
         }
-    }
+    };
             
     this.beforeAttach = function (e) 
     {
         if (e.target.id == this.domID)
         {
-            if (_props.label && !this.getBindingExpression("label"))
-            {
+            if (_props.label && !this.getBindingExpression("label")){
                 this.label = _props.label;
             }
-            if (_props.value && !this.getBindingExpression("value"))
-            {
+            if (_props.value && !this.getBindingExpression("value")){
                 this.value = _props.value;
             }
-            if (_props.checked && !this.getBindingExpression("checked"))
-            {
+            if (_props.checked && !this.getBindingExpression("checked")){
                 this.checked = _props.checked;
             }
-            if (_props.enabled && !this.getBindingExpression("enabled"))
-            {
+            if (_props.enabled && !this.getBindingExpression("enabled")){
                 this.enabled = _props.enabled;
             }
         }

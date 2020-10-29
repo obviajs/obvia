@@ -5,7 +5,7 @@
  */
 
 var CheckBox = function (_props) {
-    let _self = this, _label, _value, _checked;
+    let _self = this, _label, _value, _checked, _name;
 
     Object.defineProperty(this, "label",
     {
@@ -42,7 +42,7 @@ var CheckBox = function (_props) {
             } else {
                 _self.checked = true;
             }
-            if (this.$el !== undefined)
+            if (this.$el)
                 this.$el.val(v);
         },
         enumerable:true
@@ -63,11 +63,26 @@ var CheckBox = function (_props) {
         enumerable:true
     });
 
+    Object.defineProperty(this, "name", {
+        set: function name(v) {
+            if(_name!=v){
+                _name = v;
+                this.$el.attr("name", v);
+            }
+        },
+        get: function name() {
+            return _name;
+        }
+    });
+
     let _clickHandler = function () {
         _checked = !_checked;
     };
     
     this.beforeAttach = function () {
+        if (_props.name && !this.getBindingExpression("name")){
+            this.name = _props.name;
+        }
         if(_props.label && !this.getBindingExpression("label")){
             this.label = _props.label;
         }
@@ -83,7 +98,7 @@ var CheckBox = function (_props) {
     };
     
     this.template = function () {
-        return "<input id='" + this.domID + "' type='checkbox'/>" + _label;
+        return "<input id='" + this.domID + "' type='checkbox'/>";
     };
     
     let _defaultParams = {
@@ -109,5 +124,4 @@ var CheckBox = function (_props) {
     Component.call(this, _props);
     
 };
-
 CheckBox.prototype.ctor = "CheckBox";
