@@ -2,7 +2,7 @@ var ApiClient = function (_props) {
     this.$el = $(this);
     let _defaultParams = {
         url: "https://cors-anywhere.herokuapp.com/pastebin.com/raw/tSKLhXA5",
-        timeout: 1000,
+        timeout: 60000,
         sendCookies: false,
         cache: false,
         queryParams: {},
@@ -57,7 +57,8 @@ var ApiClient = function (_props) {
         if (url[url.length - 1] != '/') {
             url = url + '/';
         }
-        url += "?" + new URLSearchParams(queryParams).toString();
+        if(queryParams && queryParams.length>0)
+            url += "?" + new URLSearchParams(queryParams).toString();
         return url;
     };
 
@@ -145,6 +146,7 @@ var ApiClient = function (_props) {
             case 'json':
             case 'application/json':
                 _tbody = JSON.stringify(_body);
+                _headers["Content-Type"] = 'application/json';
                 break;
         }
         return this;

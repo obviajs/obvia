@@ -3,11 +3,18 @@ var ApiClientGen = function (_props) {
         url: "yaml_url",
         requestBodyParamMode: 1,
         title: "",
-        typeNamePrefix: "o"
+        typeNamePrefix: "o",
+        forceReload: false
     };
 
     _props = extend(false, false, _defaultParams, _props);
-    _props.url += "?r=" + Math.random();
+    if (_props.forceReload) { 
+        let parts = _props.url.split("/");        
+        if (parts[parts.length - 1].contains('?')) { 
+            _props.url += "&r=" + Math.random();
+        } else            
+            _props.url += "?r=" + Math.random();        
+    }
     let _title = _props.title;
     let _typeNamePrefix = _props.typeNamePrefix;
     /**
