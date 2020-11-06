@@ -73,6 +73,12 @@ var AutoBrowse = function (_props) {
             _dg = _modal.modalDialog.modalContent.modalBody.dataGrid;
         }
     };
+    this.afterAttach = function (e) {
+        if (e.target.id == this.domID) {
+          
+           this.autocomplete.width = this.$el.width() - this.workArea_53.$el.width();
+        }
+    };
     
     this.beforeAttach = function (e) {
         if (e.target.id == this.domID) {
