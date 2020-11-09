@@ -1,17 +1,21 @@
-var ra = new RemoteArray({url:"http://192.168.64.2/rca/index.php", post:{"testKey":"testValue"}, recordsPerPage:5})
+var ra = new RemoteArray({
+  url: "http://192.168.64.2/rca/index.php",
+  post: { testKey: "testValue" },
+  recordsPerPage: 5,
+});
 var dp = new ArrayEx(ra);
 var myRepeater = new Repeater({
-    id: 'repeater',
-    dataProvider:dp,
-    components: [
-        {
-            ctor: Button,
-            props: {
-                id: 'component',
-                label: "{first_name+' '+last_name}",
-            }
-        }
-    ]
+  id: "repeater",
+  dataProvider: dp,
+  components: [
+    {
+      ctor: Button,
+      props: {
+        id: "component",
+        label: "{first_name+' '+last_name}",
+      },
+    },
+  ],
 });
 /*
 var dp = new ArrayEx([{label:"test"}, {label:"anonimous", children:[{label:"hulk"}]}]);
@@ -194,7 +198,6 @@ var myRepeater = new Repeater({
     ]
 });
 */
-myRepeater.render().then(function (cmpInstance)
-{
-  $('#root').append(cmpInstance.$el);
+myRepeater.render().then(function (cmpInstance) {
+  $("#root").append(cmpInstance.$el);
 });
