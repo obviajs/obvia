@@ -154,6 +154,15 @@
                   {
                     "ctor": "Label",
                     "props": {
+                      "id": "openDatabase",
+                      "labelType": "i",
+                      "label": "",
+                      "classes": ["fas", "fa-database", "navIcons"]
+                    }
+                  },
+                  {
+                    "ctor": "Label",
+                    "props": {
                       "id": "desktop",
                       "labelType": "i",
                       "label": "",
