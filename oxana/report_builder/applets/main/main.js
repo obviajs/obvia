@@ -39,11 +39,7 @@ let Implementation = function (applet) {
     openUploadForms,
     appLoader,
     middleNav,
-    desktopPreview,
-    openDatabase,
-    dbModal,
-    dbModalDatasourceDropdown,
-    dbModalDataviewDropdown;
+    desktopPreview;
 
   //component resize
   let resizable = false;
@@ -97,7 +93,6 @@ let Implementation = function (applet) {
 
       paths = findMember(applet.literal, "id", [], "componentList", false);
       paths[0].pop();
-
       let propsComponentList = getChainValue(applet.literal, paths[0]);
       propsComponentList.dataProvider = _cmpList;
     },
@@ -257,7 +252,6 @@ let Implementation = function (applet) {
           .propertyEditorContainer;
       fileSelectModal =
         app.viewStack.mainContainer.container.children.fileSelectModal;
-      dbModal = app.viewStack.mainContainer.container.children.dbModal;
       browseFile =
         fileSelectModal.modalDialog.modalContent.modalBody.browseFile;
       componentsContainer =
@@ -410,29 +404,6 @@ let Implementation = function (applet) {
         },
         false
       );
-
-      openDatabase = middleNav.openDatabase;
-      applet.addBehaviors(
-        openDatabase,
-        {
-          click: "OPEN_MODAL_DB",
-        },
-        false
-      );
-      // applet.addBehaviors(
-      //   // openDatabase,
-      //   {
-      //     click: "CLOSE_MODAL_DB",
-      //   },
-      //   false
-      // );
-      // applet.addBehaviors(
-      //   // openDatabase,
-      //   {
-      //     click: "CLOSE_MODAL_DB",
-      //   },
-      //   false
-      // );
 
       desktopPreview = middleNav.desktop;
       applet.addBehaviors(
@@ -830,18 +801,11 @@ let Implementation = function (applet) {
     },
     OPEN_MODAL_FORMS: function (e) {
       app.appletsMap["formsModal"].init().then(() => {
-        console.log("Applet formsModal initiated");
+        console.log("Applet formsModal inited");
         applet.addBehaviors(app.appletsMap["formsModal"].view, {
           loadLayout: "LOAD_LAYOUT",
         });
       });
-    },
-
-    OPEN_MODAL_DB: function (e) {
-      app.appletsMap["dbModal"].init();
-    },
-    CLOSE_MODAL_DB: function (e) {
-      dbModal.hide();
     },
 
     OPEN_MODAL_FORM_FOR_SAVE: function (e) {
