@@ -54,6 +54,7 @@ var Modal = function (_props) {
                 ctor: Container,
                 props: {
                     type: ContainerType.BTN_GROUP,
+                    id: "headerButtonsCnt",
                     components: [{
                             ctor: Button,
                             props: {
@@ -213,9 +214,11 @@ var Modal = function (_props) {
 
     fnContainerDelayInit();
     _props.components = _cmps;
-
+    let _init = this.init;
     this.init = function (e) {
         if (e.target.id == this.domID) {
+            if (typeof _init == 'function')
+                _init.apply(this, arguments);
             this.appendTo = $(this.ownerDocument.body);
         }
     };
