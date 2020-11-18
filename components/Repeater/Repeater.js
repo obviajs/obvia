@@ -559,28 +559,25 @@ var Repeater = function (_props, _hideComponents = false) {
                 }
 
                 //delete component instances on that row
-                for (var cI = 0; cI < _components.length; cI++) {
-                    var component = _components[cI];
+                for (let cI = 0; cI < _components.length; cI++) {
+                    let component = _components[cI];
                     //remove repeated block from dom
                     if (cI == 0 && _rendering.wrap) {
                         this[component.props.id][index].$el.closest('.repeated-block').remove();
                         this[component.props.id][index].$el.closest('.repeated-block-hr').remove();
                     }
                     if (!_rendering.wrap) {
-                        for (let c = 0; c < _components.length; c++) {
-                            this[_components[c].props.id][index].destruct(1);
-                        }
+                        this[component.props.id][index].destruct(1);
                     }
                     //modify new cmp repeater indexes
-                    for (var i = 0; i < this[component.props.id].length; i++) {
-                        var item = this[component.props.id][i];
+                    for (let i = 0; i < this[component.props.id].length; i++) {
+                        let item = this[component.props.id][i];
                         if (i > index)
                             item.repeaterIndex -= 1;
                     }
 
                     rowItems[component.props.id] = [this[component.props.id][index]];
                     this[component.props.id].splice(index, 1);
-
                 }
                 this.trigger('rowDelete', [this, new RepeaterEventArgs(rowItems, this.dataProvider[index], index)]);
                 this.rowItems.splice(index, 1);

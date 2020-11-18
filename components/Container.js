@@ -285,6 +285,24 @@ var Container = function(_props, _hideComponents=false)
             enumerable:true
         });
     }
+
+    Object.defineProperty(this, "contenteditable", {
+        get: function contenteditable() {
+            return _contenteditable;
+        },
+        set: function contenteditable(v) {
+            if (_contenteditable != v) {
+                _contenteditable = v;
+                if (this.$el) {     
+                    if(v)
+                        this.$el.attr('contenteditable', v);
+                    else
+                        this.$el.removeAttr('contenteditable');
+                }
+            }
+        }
+    });
+
     Object.defineProperty(this, "role",
     {
         get:function role(){
@@ -352,7 +370,9 @@ var Container = function(_props, _hideComponents=false)
                 this.marginTop = _props.marginTop;
             if(_props.marginLeft)
                 this.marginLeft = _props.marginLeft;
-            
+            if (_props.contenteditable) { 
+                this.contenteditable = _props.contenteditable;
+            }     
         }
     };
     let _afterAttach = this.afterAttach;
@@ -386,14 +406,15 @@ var Container = function(_props, _hideComponents=false)
         height: undefined,
         minHeight: undefined,
         role: undefined,
-        textAlign: "left"
+        textAlign: "left",
+        contenteditable: false
     };
     //_props = extend(false, false, _defaultParams, _props);
     
     shallowCopy(extend(false, false, _defaultParams, _props), _props);
     let _width, _minWidth;
     let _height, _minHeight, _top, _marginTop, _marginLeft;
-    let _type, _role;
+    let _type, _role, _contenteditable;
     //let _afterAttach = _props.afterAttach;
     //_props.afterAttach = this.afterAttach;
     let _label;

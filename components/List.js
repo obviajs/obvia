@@ -56,18 +56,6 @@ var List = function (_props) {
         _self.value = newValue;
     };
 
-    this.addRow = function (item, index, isPreventable = false, focusOnRowAdd = false) {
-        if (index == undefined)
-            index = _self.dataProvider.length;
-        this.repeater.addRow(item, index, isPreventable, focusOnRowAdd);
-    };
-
-    this.removeRow = function (index, isPreventable = false, focusOnRowDelete = false) {
-        if (index == undefined)
-            index = _self.dataProvider.length - 1;
-        this.repeater.removeRow(index, isPreventable, focusOnRowDelete);
-    };
-
     let _defaultParams = {
         rendering: {
 			direction: 'horizontal',
@@ -111,16 +99,20 @@ var List = function (_props) {
         }
     }.bind(this);
 
-    let _click = function (e) {
-        this.$el.trigger("itemClick", arguments);
-        if (!e.isDefaultPrevented()) {
+    let _click = function (e, ra) {
+        let itemClickEvent = jQuery.Event("itemClick");
+        itemClickEvent.originalEvent = e;
+        this.trigger.apply(this, [itemClickEvent, ra]);
+        if (!itemClickEvent.isDefaultPrevented()) {
             _self.selectComponent.apply(this, arguments);
         }
     };
 
     let _dblclick = function (e) {
-        this.$el.trigger("itemDblClick", arguments);
-        if (!e.isDefaultPrevented()) {
+        let itemDblClickEvent = jQuery.Event("itemDblClick");
+        itemDblClickEvent.originalEvent = e;
+        this.trigger.apply(this, [itemDblClickEvent, ra]);
+        if (!itemDblClickEvent.isDefaultPrevented()) {
             _self.selectComponent.apply(this, arguments);
         }
     };

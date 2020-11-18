@@ -31,7 +31,24 @@ var Label = function (_props, _hideComponents=false) {
         enumerable: true,
         configurable: true
     });
-
+    
+    Object.defineProperty(this, "contenteditable", {
+        get: function contenteditable() {
+            return _contenteditable;
+        },
+        set: function contenteditable(v) {
+            if (_contenteditable != v) {
+                _contenteditable = v;
+                if (this.$el) {     
+                    if(v)
+                        this.$el.attr('contenteditable', v);
+                    else
+                        this.$el.removeAttr('contenteditable');
+                }
+            }
+        }
+    });
+    
     Object.defineProperty(this, "labelType", {
         get: function labelType() {
             return _labelType;
@@ -68,6 +85,9 @@ var Label = function (_props, _hideComponents=false) {
             if (_props.label) {
                 this.label = _props.label;
             }
+            if (_props.contenteditable) { 
+                this.contenteditable = _props.contenteditable;
+            }                
         }
     };
     this.template = function () {
@@ -76,11 +96,12 @@ var Label = function (_props, _hideComponents=false) {
 
     let _defaultParams = {
         label: "",
-        labelType: LabelType.label
+        labelType: LabelType.label,
+        contenteditable: false
     };
     _props = extend(false, false, _defaultParams, _props);
 
-    let _label;
+    let _label, _contenteditable;
     let _labelType = _props.labelType;
 
     let r = Parent.call(this, _props, _hideComponents);
