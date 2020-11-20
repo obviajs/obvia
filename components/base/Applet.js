@@ -22,7 +22,6 @@ var Applet = function (_props) {
     let _dataPromise = _props.dataPromise;
     let _data = _props.data;
     let _uiRoute = _props.uiRoute;
-    let _port = _props.port;
     let _attr = _props.attr;
     let _mimeType = "application/json";
     let _lazy = _props.lazy;
@@ -228,13 +227,6 @@ var Applet = function (_props) {
     Object.defineProperty(this, "parent", {
         get: function parent() {
             return _parent;
-        },
-        configurable: true
-    });
-
-    Object.defineProperty(this, "port", {
-        get: function port() {
-            return _port;
         },
         configurable: true
     });
