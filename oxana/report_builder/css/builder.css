@@ -150,6 +150,7 @@ label[data-toggle="collapse"]:not([aria-expanded]):before {
 .dbModalRepeater {
   border: 1px solid #d3d3d3;
   padding: 5px;
+  min-height: 100px;
 }
 .componentContainerMiddle {
   display: grid;

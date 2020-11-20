@@ -1,29 +1,29 @@
 var ReportProperties = function (_props) {
     let _defaultParams = {
-        form_id: 0,
-        form_name: '',
+        report_id: 0,
+        report_name: '',
         description: '',
         date_created: '',
         date_modified: '',
         deleted: 0,
         author_id_user: 0,
-        form_help_url: '',
-        id_form_type: 0,
-        form_literal: '',
-        form_literal_view: ''
+        report_help_url: '',
+        id_report_type: 0,
+        report_literal: '',
+        report_literal_view: ''
     };
     _props = extend(false, false, _defaultParams, _props);
-    this.form_id = _props.form_id;
-    this.form_name = _props.form_name;
+    this.report_id = _props.report_id;
+    this.report_name = _props.report_name;
     this.description = _props.description;
     this.date_created = _props.date_created;
     this.author_id_user = _props.author_id_user;
-    this.form_literal = _props.form_literal;
+    this.report_literal = _props.report_literal;
     this.deleted = _props.deleted;
-    this.form_help_url = _props.form_help_url;
+    this.report_help_url = _props.report_help_url;
     this.date_modified = _props.date_modified;
-    this.id_form_type = _props.id_form_type;
-    this.form_literal_view = _props.form_literal_view;
+    this.id_report_type = _props.id_report_type;
+    this.report_literal_view = _props.report_literal_view;
     
     Object.defineProperty(this, "props", {
         get: function props() {

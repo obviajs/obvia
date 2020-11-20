@@ -42,8 +42,7 @@ let Implementation = function (applet) {
     desktopPreview,
     openDatabase,
     dbModal,
-    dbModalDatasourceDropdown,
-    dbModalDataviewDropdown;
+    saveReportModal;
 
   //component resize
   let resizable = false;
@@ -258,6 +257,7 @@ let Implementation = function (applet) {
       fileSelectModal =
         app.viewStack.mainContainer.container.children.fileSelectModal;
       dbModal = app.viewStack.mainContainer.container.children.dbModal;
+      saveReportModal = app.viewStack.mainContainer.container.children.saveReportModal;
       browseFile =
         fileSelectModal.modalDialog.modalContent.modalBody.browseFile;
       componentsContainer =
@@ -397,7 +397,7 @@ let Implementation = function (applet) {
       applet.addBehaviors(
         uploadIcon,
         {
-          click: "OPEN_MODAL_FORM_FOR_SAVE",
+          click: "OPEN_MODAL_REPORT_FOR_SAVE",
         },
         false
       );
@@ -419,20 +419,6 @@ let Implementation = function (applet) {
         },
         false
       );
-      // applet.addBehaviors(
-      //   // openDatabase,
-      //   {
-      //     click: "CLOSE_MODAL_DB",
-      //   },
-      //   false
-      // );
-      // applet.addBehaviors(
-      //   // openDatabase,
-      //   {
-      //     click: "CLOSE_MODAL_DB",
-      //   },
-      //   false
-      // );
 
       desktopPreview = middleNav.desktop;
       applet.addBehaviors(
@@ -608,6 +594,8 @@ let Implementation = function (applet) {
         let domID = e.originalEvent.dataTransfer.getData("domID");
         let ctor = e.originalEvent.dataTransfer.getData("ctor");
         let move = e.originalEvent.dataTransfer.getData("move");
+        let componentWithData = e.originalEvent.dataTransfer.getData("componentWithData");
+        let newComponentValue = e.originalEvent.dataTransfer.getData("fieldName");
         let inst;
 
         //Activate the band
@@ -687,10 +675,8 @@ let Implementation = function (applet) {
           inst.width = "100";
           inst.height = "30";
 
-          //test
-          // inst.css.fontSize = "12px";
-          // inst.fontSize = "12";
-          // console.log(inst.css.fontSize, "instinstinstinst");
+          //put a value to new added items with data
+          if(componentWithData !== "undefined") inst.value = newComponentValue
 
           ret.child = lit;
           ret.parent = targetBand;
@@ -837,18 +823,13 @@ let Implementation = function (applet) {
       });
     },
 
-    OPEN_MODAL_DB: function (e) {
-      app.appletsMap["dbModal"].init();
-    },
-    CLOSE_MODAL_DB: function (e) {
-      dbModal.hide();
-    },
+    OPEN_MODAL_DB: e => app.appletsMap["dbModal"].init(),
 
-    OPEN_MODAL_FORM_FOR_SAVE: function (e) {
-      app.appletsMap["saveForm"].init().then(() => {
-        console.log("Applet saveForm inited.");
+    OPEN_MODAL_REPORT_FOR_SAVE: e => {
+      app.appletsMap["saveReportModal"].init().then(() => {
+        data.selectedReport.report_literal = workAreaColumn.literal;
+        data.workArea = workArea;
       });
-      data.selectedForm.form_literal = workAreaColumn.literalLite;
     },
 
     FILE_SELECTED: function (e) {
@@ -889,6 +870,8 @@ let Implementation = function (applet) {
       console.log(arguments);
       e.originalEvent.dataTransfer.setData("domID", e.target.id);
       e.originalEvent.dataTransfer.setData("ctor", ra.currentItem.ctor);
+      e.originalEvent.dataTransfer.setData("componentWithData", ra.currentItem.componentWithData);
+      e.originalEvent.dataTransfer.setData("fieldName", ra.currentItem.fieldName);
       let $elem = app.viewStack.mainContainer.dragImage.$el[0];
       e.originalEvent.dataTransfer.setDragImage($elem, 0, 0);
     },
@@ -1520,11 +1503,9 @@ let Implementation = function (applet) {
         stripHandle(lit);
 
         var sections = lit.props.components[0].props.components;
-
-        console.log("sectionsSAVELAYOUT", sections);
-
         var reportFactory = new ReportFactory();
-        var xml = reportFactory.toXml(sections);
+        
+        var xml = reportFactory.toXml(sections, Builder.dataviewFields[0]);
         console.log("XML Layout", xml);
         download("targetBand.xml.txt", xml);
 

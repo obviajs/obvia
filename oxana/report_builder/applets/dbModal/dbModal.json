@@ -5,14 +5,19 @@
     "title": "Choose Connection",
     "components": [
       {
-        "ctor": "Container",
+        "ctor": "Wizard",
         "props": {
           "id": "dbModalContainer",
-          "type": "",
+          "stepPath": "attr.step",
+          "detailsPath": "attr.details",
           "components": [
             {
               "ctor": "Container",
               "props": {
+                "attr": {
+                  "step": " 1",
+                  "details": "Datasource"
+                },
                 "id": "dbModalDatasourceContainer",
                 "type": "",
                 "classes": ["mb-3", "row", "dbModalDatasourceContainer"],
@@ -33,8 +38,8 @@
                     "ctor": "DropDown",
                     "props": {
                       "id": "dbModalDatasourceDropdown",
-                      "labelField": "datasource_name",
-                      "valueField": "datasource_name",
+                      "labelField": "formName",
+                      "valueField": "id",
                       "label": "Datasource",
                       "classes": [
                         "fas",
@@ -53,6 +58,10 @@
             {
               "ctor": "Container",
               "props": {
+                "attr": {
+                  "step": " 2",
+                  "details": "Dataview"
+                },
                 "id": "dbModalDataviewContainer",
                 "type": "",
                 "classes": ["mb-3", "row", "dbModalDataviewContainer"],
@@ -73,8 +82,8 @@
                     "ctor": "DropDown",
                     "props": {
                       "id": "dbModalDataviewDropdown",
-                      "labelField": "name",
-                      "valueField": "name",
+                      "labelField": "DvName",
+                      "valueField": "id",
                       "label": "Dataview",
                       "classes": [
                         "fas",
@@ -93,25 +102,53 @@
             {
               "ctor": "Container",
               "props": {
+                "attr": {
+                  "step": " 3",
+                  "details": "Fields"
+                },
                 "id": "dbModalRepeaterContainer",
                 "classes": ["dbModalRepeaterContainer", "mb-3"],
                 "components": [
                   {
-                    "ctor": "Repeater",
+                    "ctor": "Container",
                     "props": {
-                      "id": "dbModalRepeaterLeft",
-                      "classes": ["col-4", "dbModalRepeater"],
-                      "rendering": {
-                        "direction": "vertical"
+                      "id": "dbModalLeftRepeaterContainer",
+                      "css": {
+                        "display": "block"
                       },
-                      "dataProvider": [],
+                      "classes": ["col-4"],
                       "components": [
                         {
-                          "ctor": "Label",
+                          "ctor": "TextInput",
                           "props": {
-                            "id": "dbModalRepeaterLeftLabel",
-                            "labelType": "label",
-                            "label": "{description}"
+                            "id": "dbModalRepeaterLeftSearch",
+                            "type": "text",
+                            "placeholder": "Search Fields ..",
+                            "css": {
+                              "width": "100%"
+                            },
+                            "classes": ["mb-2"]
+                          }
+                        },
+                        {
+                          "ctor": "Repeater",
+                          "props": {
+                            "id": "dbModalRepeaterLeft",
+                            "classes": ["dbModalRepeater"],
+                            "rendering": {
+                              "direction": "vertical"
+                            },
+                            "dataProvider": [],
+                            "components": [
+                              {
+                                "ctor": "Label",
+                                "props": {
+                                  "id": "dbModalRepeaterLeftLabel",
+                                  "labelType": "label",
+                                  "label": "{fieldDisplay}"
+                                }
+                              }
+                            ]
                           }
                         }
                       ]
@@ -156,21 +193,45 @@
                     }
                   },
                   {
-                    "ctor": "Repeater",
+                    "ctor": "Container",
                     "props": {
-                      "id": "dbModalRepeaterRight",
-                      "classes": ["col-4", "dbModalRepeater"],
-                      "rendering": {
-                        "direction": "vertical"
+                      "id": "dbModalRightRepeaterContainer",
+                      "css": {
+                        "display": "block"
                       },
-                      "dataProvider": [],
+                      "classes": ["col-4"],
                       "components": [
                         {
-                          "ctor": "Label",
+                          "ctor": "TextInput",
                           "props": {
-                            "id": "dbModalRepeaterRightLabel",
-                            "labelType": "label",
-                            "label": "{description}"
+                            "id": "dbModalRepeaterRightSearch",
+                            "type": "text",
+                            "placeholder": "Search Fields ..",
+                            "css": {
+                              "width": "100%"
+                            },
+                            "classes": ["mb-2"]
+                          }
+                        },
+                        {
+                          "ctor": "Repeater",
+                          "props": {
+                            "id": "dbModalRepeaterRight",
+                            "classes": ["dbModalRepeater"],
+                            "rendering": {
+                              "direction": "vertical"
+                            },
+                            "dataProvider": [],
+                            "components": [
+                              {
+                                "ctor": "Label",
+                                "props": {
+                                  "id": "dbModalRepeaterRightLabel",
+                                  "labelType": "label",
+                                  "label": "{fieldDisplay}"
+                                }
+                              }
+                            ]
                           }
                         }
                       ]
@@ -182,6 +243,10 @@
             {
               "ctor": "Container",
               "props": {
+                "attr": {
+                  "step": " 4",
+                  "details": "Add"
+                },
                 "id": "dbModalAddFieldsContainer",
                 "classes": ["row", "dbModalAddFieldsContainer"],
                 "components": [

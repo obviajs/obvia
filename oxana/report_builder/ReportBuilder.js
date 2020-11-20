@@ -10,7 +10,7 @@ var _initDP = (function () {
 
   Builder.providerValueField = "dataview_id";
   Builder.providerLabelField = "description";
-  Builder.selectedForm = new ReportProperties();
+  Builder.selectedReport = new ReportProperties();
 
   let api_dv_dataviews = new GaiaAPI_DV_dataviews();
   let api_dv_forms = new GaiaAPI_dataview_pid_1();
@@ -99,29 +99,24 @@ var _initDpForms = function () {
   });
 };
 
-var _initDbModal = function () {
-  let api_dv_forms = new GaiaAPI_dataview_pid_6();
+var _initDbModal = async () => {
+  let api_rs = new GaiaAPI_report_source();
+  
+  //save to cache so you don't make the call to the api more than once for the selected time
+  let cache = Cache.getInstance();
+  let datasourceList = cache.get('datasourceList');
+  if (!datasourceList) {
+    cache.set('datasourceList', await api_rs.report_sourceClient.get());
+    cache.persist();
+    datasourceList = cache.get('datasourceList');
+  }
 
-  let raDS = new RemoteArray({
-    recordsPerPage: 5, // pagination
-    fetchPromise: function (p) {
-      let dvInp = new dvInput();
-      dvInp.tableData = new tableData({
-        currentRecord: p.startPage * p.recordsPerPage,
-        recordsPerPage: p.recordsPerPage,
-      });
-      if (p.filterData) {
-        dvInp.advancedSqlFilters = p.filterData;
-      }
-      return api_dv_forms.dataview_pid_6Client.post(dvInp);
-    },
-  });
-  Builder.datasourceList = new ArrayEx(raDS);
-
-  return Promise.all([Builder.datasourceList.init()]).then(function (result) {
-    return Builder;
-  });
+  return Promise.resolve(Builder)
 };
+
+var _initSaveReportModal = () => {
+  console.log('inside_initSaveReportModal')
+}
 
 //this function will decide where the view will go in the GUI on endDraw
 //principles to follow
@@ -144,14 +139,14 @@ var modalRoute = function (applet) {
 };
 
 var dbModalRoute = function (applet) {
-  if (applet.view.attached) {
-    applet.view.show();
-  } else {
-    applet.view.render().then(function (cmpInstance) {
-      applet.view.show();
-    });
-  }
+  if (applet.view.attached) applet.view.show();
+  else applet.view.render().then(cmpInstance => applet.view.show() );
 };
+
+var saveReportModalRoute = applet => {
+  if (applet.view.attached) applet.view.show();
+  else applet.view.render().then(cmpInstance => applet.view.show() );
+}
 
 var oxana = new App({
   applets: [
@@ -161,14 +156,6 @@ var oxana = new App({
       dataPromise: _initDP,
       port: "viewStack",
       uiRoute: uiRoute,
-      //forceReload: true
-    },
-    {
-      url: "./flowerui/oxana/report_builder/applets/saveForm/",
-      anchor: "saveForm",
-      dataPromise: _initDP,
-      port: "viewStack",
-      uiRoute: modalRoute,
       //forceReload: true
     },
     {
@@ -187,17 +174,23 @@ var oxana = new App({
       uiRoute: dbModalRoute,
       //forceReload: true
     },
-  ],
-  components: [
     {
-      ctor: ViewStack,
-      props: {
-        id: "viewStack",
-        type: ContainerType.NONE,
-        components: [],
-      },
+      url: "./flowerui/oxana/report_builder/applets/saveReportModal/",
+      anchor: "saveReportModal",
+      dataPromise: _initDP,
+      port: "viewStack",
+      uiRoute: saveReportModalRoute,
+      //forceReload: true
     },
   ],
+  components: [{
+    ctor: ViewStack,
+    props: {
+      id: "viewStack",
+      type: ContainerType.NONE,
+      components: [],
+    },
+  }, ],
 });
 
 let formField;

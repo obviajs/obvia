@@ -19,6 +19,9 @@
     <!-- <link rel="stylesheet" href="oxana/css/global.css"> -->
     <link rel="stylesheet" href="../../oxana/css/global.css" />
 
+    <!-- stepper css -->
+    <link rel="stylesheet" href="../wizard/css/wizard-default.css" />
+
     <link
       rel="icon"
       href="../oxanaui/assets/images/favicon.png"
@@ -95,6 +98,14 @@
               "./oxana/GaiaAPI/GaiaAPI_dataview_pid_6.js",
               "GaiaAPI_dataview_pid_6"
             );
+            rjs.define(
+              "./oxana/GaiaAPI/GaiaAPI_report_source.js",
+              "GaiaAPI_report_source"
+            );
+            rjs.define(
+              "./oxana/GaiaAPI/GaiaAPI_reports.js",
+              "GaiaAPI_reports"
+            );
 
             rjs.define(
               "./oxana/report_builder/components/JRLabel.js",
@@ -162,6 +173,8 @@
                 "GaiaAPI_Frms_dataview",
                 "GaiaAPI_dataview_pid_1",
                 "GaiaAPI_dataview_pid_6",
+                "GaiaAPI_report_source",
+                "GaiaAPI_reports",
                 "JRLabel",
                 "JRHRule",
                 "JRImage",

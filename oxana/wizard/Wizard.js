@@ -221,24 +221,6 @@ var Wizard = function (_props) {
                                                                     type: ContainerType.COLUMN,
                                                                     classes: ["col-6", "text-right"],
                                                                     components: [{
-                                                                        ctor: Link,
-                                                                        props: {
-                                                                            id: "new-save",
-                                                                            href: "#",
-                                                                            classes: ["btn", "btn-primary"],
-                                                                            label: "Ruaj dhe i ri"
-                                                                        }
-                                                                    },
-                                                                    {
-                                                                        ctor: Link,
-                                                                        props: {
-                                                                            id: "clear",
-                                                                            href: "#",
-                                                                            classes: ["btn", "btn-outline-primary"],
-                                                                            label: "Pastro"
-                                                                        }
-                                                                    },
-                                                                    {
                                                                         ctor: Button,
                                                                         props: {
                                                                             id: "next",
@@ -275,21 +257,26 @@ var Wizard = function (_props) {
                 ];
     };
 
-    let _next = function () {
-        if (_selectedIndex < _steps.length - 1) {
-            _self.selectedIndex += 1;
-        } else {
-            _self.selectedIndex = 0;
-        }
-    };
+    //stop loop
+    let _next = () => _selectedIndex < _steps.length - 1 && _self.selectedIndex++;
+    let _prev = () => _selectedIndex  !== 0 && _self.selectedIndex--;
 
-    let _prev = function () {
-        if (_selectedIndex == 0) {
-            _self.selectedIndex = _steps.length - 1;
-        } else {
-            _self.selectedIndex -= 1;
-        }
-    };
+    //allow loop
+    // let _next = function () {
+    //     if (_selectedIndex < _steps.length - 1) {
+    //         _self.selectedIndex += 1;
+    //     } else {
+    //         _self.selectedIndex = 0;
+    //     }
+    // };
+
+    // let _prev = function () {
+    //     if (_selectedIndex == 0) {
+    //         _self.selectedIndex = _steps.length - 1;
+    //     } else {
+    //         _self.selectedIndex -= 1;
+    //     }
+    // };
 
     _props = extend(false, false, _defaultParams, _props);
     _stepPath = _props.stepPath;

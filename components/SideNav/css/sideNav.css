@@ -90,7 +90,8 @@
 .navIcons {
     color: white;
     margin-top: 10px;
-    margin-right: 50px;
+    margin-right: 25px;
+    /* margin-right: 50px; */
     font-size: 15px;
 }
 
