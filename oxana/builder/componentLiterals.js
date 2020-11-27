@@ -669,6 +669,16 @@ Builder.initComponentLiterals = function () {
             label: "BrowserWindow",
             icon: ".png"
         },
+        "BrowseData":{
+            literal: {
+                "ctor": BrowseData,
+                "props": {
+                    id: "bdata"
+                }
+            },
+            label: "BrowseData",
+            icon: ".png"
+        },
         "DataGridCellRenderer": {
             literal: {
                 "ctor": DataGridCellRenderer,

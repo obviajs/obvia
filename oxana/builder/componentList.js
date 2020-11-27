@@ -168,6 +168,10 @@ Builder.initComponentList = function () {
         {
             "label": "RegularExpressionValidator",
             "ctor": "RegularExpressionValidator"
+        },
+        {
+            "label": "BrowseData",
+            "ctor": "BrowseData"
         }
     ]);
 };
