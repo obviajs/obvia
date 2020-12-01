@@ -25,15 +25,46 @@ var BrowseData = function (_props) {
             
         },
         enumerable:true
-    });
+        });
+    
+        Object.defineProperty(this, "value", 
+        {
+            get: function value() 
+            {
+                return  _textInput.value;
+            },
+            set: function value(v) 
+            {
+                _textInput.value = v;
+            },
+            enumerable:true
+            });
+      Object.defineProperty(this, "placeholder", 
+        {
+            get: function placeholder() 
+            {
+                return  _textInput.placeholder;
+            },
+            set: function placeholder(v) 
+            {
+                _textInput.placeholder = v;
+            },
+            enumerable:true
+        });
  
      this.endDraw = function (e) {
-        if (e.target.id == this.domID) {
+         if (e.target.id == this.domID) {
+            _textInput = this.textField;
              _modal = this.children[this.components[2].props.id];
              _dg = _modal.modalDialog.modalContent.modalBody.dataGrid;
         }
     };
-
+    this.afterAttach = function (e) {
+        if (e.target.id == this.domID) {
+          //is followed the same approach to solve the width case as AutoBrowse but it's not the exact issue
+           this.textField.offsetWidth = this.$el.width() - this.workArea_66.$el.width();
+        }
+    };
     this.beforeAttach = function (e) {
       if (e.target.id == this.domID) {
             if (_props.value) {
@@ -54,7 +85,6 @@ var BrowseData = function (_props) {
                     autocomplete: "off",
                     components: [],
                     sortChildren: false,
-                    guid: "c3428bf0-f0dc-44e5-1caa-95311cb676a9",
                     id: "textField",
                     index: 0,
                     spacing: {},
@@ -105,7 +135,7 @@ var BrowseData = function (_props) {
                                 rowCount:5, //visible rows count - virtual scrolling wil be applied on scroll
                                 dataProvider: _dataProvider,
                                 columns: _columns,
-                                //rowDblClick: _selectItem.bind(_self)
+                                rowDblClick: _selectItem.bind(_self)
                             }
                         }
                     ],
@@ -125,6 +155,11 @@ var BrowseData = function (_props) {
         if (!evt.isDefaultPrevented()) {
             _modal.show();
         }
+    };
+    let _selectItem = function (e, ra) {
+        console.log(e, "this is the event");
+        _textInput.value = ra.currentItem
+       _modal.hide();
     };
     let _initColumns = function () {
         for (let i = 0; i < _fields.length; i++) {
