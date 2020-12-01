@@ -52,22 +52,22 @@ let Implementation = function (applet) {
             modal.trigger(evt);
         },
 
-        "SEARCH_FORMS": function(e) { // filter forms
-            data.formList.filterData = {
-                "condition": "AND",
-                "rules": [
-                  {
-                    "id": "form_name",
-                    "field": "form_name",
-                    "type": "string",
-                    "input": "text",
-                    "operator": "contains",
-                    "value": e.target.value.toLowerCase()
-                  }
-                ],
-                "valid": true
-            };
-            data.formList.filter();
+        "SEARCH_FORMS": function(e) { // filter reports
+          data.formList.filterData = {
+            "condition": "AND",
+            "rules": [
+              {
+                "id": "form_name",
+                "field": "form_name",
+                "type": "string",
+                "input": "text",
+                "operator": "contains",
+                "value": e.target.value.toLowerCase()
+              }
+            ],
+            "valid": true
+          };
+          data.formList.filter();
         },
     };
 

@@ -28,6 +28,13 @@
                   "type": "text",
                   "placeholder": "Report Name"
                 }
+              },
+              {
+                "ctor": "RequiredFieldValidator",
+                "props": {
+                  "controlToValidate": "reportNameInput",
+                  "errorMessage": "Please fill this field."
+                }
               }
             ]
           }
@@ -55,6 +62,13 @@
                   "label": "Report Description",
                   "type": "text",
                   "placeholder": "Report Description"
+                }
+              },
+              {
+                "ctor": "RequiredFieldValidator",
+                "props": {
+                  "controlToValidate": "reportDescriptionInput",
+                  "errorMessage": "Please fill this field."
                 }
               }
             ]

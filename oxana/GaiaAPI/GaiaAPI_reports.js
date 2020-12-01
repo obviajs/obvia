@@ -31,18 +31,54 @@ var GaiaAPI_reports = function(_props){
         /*{typeMap}*/
         
     	/**
-		*Create or edit a report
-		* @param {reportEntity} reportEntity The request body for post /reports 
+		*Get the requested report
+		* @param {string} report_guid Report Guid
 		* @returns {Promise} 
 		*/
-    	this.post = function(reportEntity){
+    	this.get = function(report_guid){
+        let objQuery = {};
+
+        let objPath = {};
+		objPath["report_guid"] = report_guid;
+
+        let objBody = null;
+        let requestContentType = "application/json";
+        let responses = {"200":{"responseType":"JSON","type":"arrayReportEntity"},"404":{"responseType":"JSON","type":"responseStatus"}};
+        return new Promise((resolve, reject) =>
+        {
+            	this.apiCall(objQuery, objBody, objPath, requestContentType, "get").then(function(resp){
+                if(responses[resp.status]){
+                    let responseType = responses[resp.status].responseType.toLowerCase();
+                    let ret;
+                    switch(responseType)
+                    {
+                        case "json":
+                            ret = isString(resp.response) ? JSON.parse(resp.response) : resp.response;
+                            ret = new (GaiaAPI_reports[responses[resp.status].type])(ret);
+                            break;
+                    }
+                    //TODO: convert to specified type
+                    resolve(ret);
+                }else//unspecified http response code returned
+                    reject();
+            }).catch(function(error){
+                reject(error);
+            });
+        });
+    	};
+    	/**
+		*Create or edit a report
+		* @param {report_entity} report_entity The request body for post /reports 
+		* @returns {Promise} 
+		*/
+    	this.post = function(report_entity){
         let objQuery = {};
 
         let objPath = {};
 
-        let objBody = reportEntity;
+        let objBody = report_entity;
         let requestContentType = "json";
-        let responses = {"200":{"responseType":"JSON","type":"reportEntity"},"404":{"responseType":"JSON","type":"responseStatus"}};
+        let responses = {"200":{"responseType":"JSON","type":"report_entity"},"404":{"responseType":"JSON","type":"responseStatus"}};
         return new Promise((resolve, reject) =>
         {
             	this.apiCall(objQuery, objBody, objPath, requestContentType, "post").then(function(resp){
@@ -76,7 +112,7 @@ var GaiaAPI_reports = function(_props){
 Poolable.call(GaiaAPI_reports);
 
     /**
-	* @property {Number}  report_id               - Report ID
+	* @property {Number}  report_entity_id               - Report ID
 	* @property {String}  report_name               - Report Name
 	* @property {String}  description               - Report Description
 	* @property {Number}  deleted               - Is Deleted
@@ -90,9 +126,9 @@ Poolable.call(GaiaAPI_reports);
 	* @property {String}  report_guid               - Report's guid
 
     */
-   GaiaAPI_reports.reportEntity = function reportEntity(_props){
+   GaiaAPI_reports.report_entity = function report_entity(_props){
         _props = _props || {};
-		this.report_id = _props.report_id;
+		this.report_entity_id = _props.report_entity_id;
 		this.report_name = _props.report_name;
 		this.description = _props.description;
 		this.deleted = _props.deleted;
@@ -106,6 +142,15 @@ Poolable.call(GaiaAPI_reports);
 		this.report_guid = _props.report_guid;
 
     };
+
+
+	GaiaAPI_reports.arrayReportEntity = function arrayReportEntity()
+	{
+		ArrayEx.apply(this, arguments);    
+		this.memberType = ["report_entity"]; 
+	};
+	GaiaAPI_reports.arrayReportEntity.prototype = Object.create(ArrayEx.prototype);
+	GaiaAPI_reports.arrayReportEntity.prototype.constructor = GaiaAPI_reports.arrayReportEntity;
 
     /**
 	* @property {Number}  status_code               - Response status code

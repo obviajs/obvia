@@ -35,6 +35,8 @@ var StaticTextFactory = function (props) {
 
   if (props.fontSize === "") this.props.fontSize = 9;
 
+  if (!(props.label && props.label.length > 0)) this.props.label = "Static Text";
+
   this.toXml = function () {
     return this.xmlTemplate.formatUnicorn(this.props);
   };

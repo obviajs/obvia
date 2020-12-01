@@ -30,19 +30,23 @@ let Implementation = function (applet) {
     cmpTrash,
     toggleSideNavLeft,
     toggleSideNavRight,
-    splitHorizontal,
-    splitVertical,
     uploadIcon,
+    createNewReport,
     saveLayout,
     selectBtn,
     componentList,
     openUploadForms,
+    openUploadReports,
     appLoader,
     middleNav,
     desktopPreview,
     openDatabase,
     dbModal,
-    saveReportModal;
+    saveReportModal,
+    createNewReportModal;
+  
+  let component_id = 0;
+  let waLiteral = {};
 
   //component resize
   let resizable = false;
@@ -258,6 +262,7 @@ let Implementation = function (applet) {
         app.viewStack.mainContainer.container.children.fileSelectModal;
       dbModal = app.viewStack.mainContainer.container.children.dbModal;
       saveReportModal = app.viewStack.mainContainer.container.children.saveReportModal;
+      createNewReportModal = app.viewStack.mainContainer.container.children.createNewReportModal;
       browseFile =
         fileSelectModal.modalDialog.modalContent.modalBody.browseFile;
       componentsContainer =
@@ -270,6 +275,8 @@ let Implementation = function (applet) {
           .workAreaColumn;
       workAreaRowL2 = workAreaColumn.workAreaCell.workAreaRowL2;
       workArea = workAreaRowL2.workAreaColumnL2;
+      //save unedited waLiteral
+      waLiteral = JSON.stringify(workAreaRowL2.literal);
       console.log("WA Components", workArea);
       title = workArea.title;
       pageHeader = workArea.pageHeader;
@@ -375,24 +382,6 @@ let Implementation = function (applet) {
         false
       );
 
-      // splitHorizontal = middleNav.splitHorizontal;
-      // applet.addBehaviors(
-      //   splitHorizontal,
-      //   {
-      //     click: "SPLIT_HOR",
-      //   },
-      //   false
-      // );
-
-      // splitVertical = middleNav.splitVertical;
-      // applet.addBehaviors(
-      //   splitVertical,
-      //   {
-      //     click: "SPLIT_VERT",
-      //   },
-      //   false
-      // );
-
       uploadIcon = middleNav.uploadIcon;
       applet.addBehaviors(
         uploadIcon,
@@ -402,11 +391,29 @@ let Implementation = function (applet) {
         false
       );
 
-      openUploadForms = middleNav.openUploadForms;
+      createNewReport = middleNav.createNewReport;
       applet.addBehaviors(
-        openUploadForms,
+        createNewReport,
         {
-          click: "OPEN_MODAL_FORMS",
+          click: "OPEN_MODAL_CREATE_NEW_REPORT",
+        },
+        false
+      );
+
+      // openUploadForms = middleNav.openUploadForms;
+      // applet.addBehaviors(
+      //   openUploadForms,
+      //   {
+      //     click: "OPEN_MODAL_FORMS",
+      //   },
+      //   false
+      // );
+
+      openUploadReports = middleNav.openUploadReports;
+      applet.addBehaviors(
+        openUploadReports,
+        {
+          click: "OPEN_UPLOAD_REPORT_MODAL",
         },
         false
       );
@@ -428,24 +435,6 @@ let Implementation = function (applet) {
         },
         false
       );
-
-      // mobilePreview = middleNav.mobile;
-      // applet.addBehaviors(
-      //   mobilePreview,
-      //   {
-      //     click: "MOBILE_PREVIEW",
-      //   },
-      //   false
-      // );
-
-      // tabletPreview = middleNav.tablet;
-      // applet.addBehaviors(
-      //   tabletPreview,
-      //   {
-      //     click: "TABLET_PREVIEW",
-      //   },
-      //   false
-      // );
 
       saveLayout = middleNav.saveLayout;
       applet.addBehaviors(
@@ -644,19 +633,25 @@ let Implementation = function (applet) {
           lit.props.draggable = true;
 
           inst = targetBand.addComponent(lit);
+          
+          //change id generation for report components
+          component_id = parseInt(component_id) + 1
+          inst.id = inst.ctor + '_' + component_id
+  
           let classes = inst.classes.slice(0);
           classes.pushUnique("selected-component");
           inst.classes = classes;
           applet.addBehaviors(inst, cmpWaBehaviors, false);
-          if (typeof inst.children != "undefined") {
-            if (typeof inst.children.jr_resizer != "undefined") {
-              applet.addBehaviors(
-                inst.children.jr_resizer,
-                cmpResizeBehaviors,
-                false
-              );
-            }
-          }
+          //remove resize from jrlabel
+          // if (typeof inst.children != "undefined") {
+          //   if (typeof inst.children.jr_resizer != "undefined") {
+          //     applet.addBehaviors(
+          //       inst.children.jr_resizer,
+          //       cmpResizeBehaviors,
+          //       false
+          //     );
+          //   }
+          // }
 
           let isCont = isContainer.call(inst);
           if (isCont) {
@@ -676,7 +671,10 @@ let Implementation = function (applet) {
           inst.height = "30";
 
           //put a value to new added items with data
-          if(componentWithData !== "undefined") inst.value = newComponentValue
+          if (componentWithData !== "undefined") {
+            inst.value = newComponentValue;
+            inst.componentWithData = true
+          }
 
           ret.child = lit;
           ret.parent = targetBand;
@@ -829,7 +827,26 @@ let Implementation = function (applet) {
       app.appletsMap["saveReportModal"].init().then(() => {
         data.selectedReport.report_literal = workAreaColumn.literal;
         data.workArea = workArea;
+        applet.addBehaviors(app.appletsMap["saveReportModal"].view, {
+          loadLayout: "LOAD_LAYOUT_AFTER_SAVE",
+        });
       });
+    },
+
+    OPEN_MODAL_CREATE_NEW_REPORT: e => {
+      app.appletsMap["createNewReportModal"].init().then(() => {
+        applet.addBehaviors(app.appletsMap["createNewReportModal"].view, {
+          loadLayout: "LOAD_LAYOUT_NEW_REPORT"
+        })
+      })
+    },
+
+    OPEN_UPLOAD_REPORT_MODAL: e => {
+      app.appletsMap["uploadReportModal"].init().then(() => {
+        applet.addBehaviors(app.appletsMap["uploadReportModal"].view, {
+          loadLayout: "LOAD_LAYOUT_UPLOAD_REPORT"
+        })
+      })
     },
 
     FILE_SELECTED: function (e) {
@@ -979,6 +996,12 @@ let Implementation = function (applet) {
       }
     },
 
+    LOAD_LAYOUT_AFTER_SAVE: e => loadLayout('afterSave'),
+
+    LOAD_LAYOUT_NEW_REPORT: e => loadLayout('newReport'),
+
+    LOAD_LAYOUT_UPLOAD_REPORT: e => loadLayout('uploadReport', e.content),
+
     HISTORY_STEP_ADDED: function (e) {
       console.log("called HISTORY_STEP_ADDED.", e.current);
       listHistorySteps.value = e.current;
@@ -1074,259 +1097,6 @@ let Implementation = function (applet) {
     TOGGLE_VISIBILITY_RIGHT: {
       do: function (e) {
         rightSideNav.toggleVisibility();
-      },
-    },
-
-    SPLIT_HOR: {
-      description: "Ndaje horizontalisht",
-      do: function (e) {
-        let retFromRedoMaybe = arguments[arguments.length - 1];
-        if (retFromRedoMaybe.container) {
-          activeContainer = retFromRedoMaybe.container;
-          console.log("called SPLIT_HOR from History(REDO).");
-        }
-        console.log("Split Selected Container Horizontally");
-
-        let ret = {
-          track: false,
-        };
-        let newRow = {
-          ctor: Container,
-          props: {
-            id: "",
-            type: ContainerType.ROW,
-            spacing: {
-              h: 100,
-              m: "auto",
-            },
-            components: [
-              {
-                ctor: Container,
-                props: {
-                  type: ContainerType.COLUMN,
-                  spacing: {
-                    colSpan: 12,
-                    h: 100,
-                  },
-                  id: "workArea",
-                  classes: ["border"],
-                  attr: { isWa: true },
-                },
-              },
-            ],
-          },
-        };
-        let newRow2;
-        if (
-          activeContainer.ctor == "Form" ||
-          objectHierarchyGetMatching(
-            activeContainer,
-            "ctor",
-            "Form",
-            "parent",
-            1
-          )["match"] != null
-        ) {
-          newRow.props.type = ContainerType.FORM_ROW;
-        }
-        if (activeContainer.components.length == 0) {
-          newRow2 = extend(true, newRow);
-        }
-        let newRowInstance;
-        if (retFromRedoMaybe.child) {
-          newRowInstance = retFromRedoMaybe.child;
-          activeContainer.addChild(newRowInstance);
-        } else {
-          newRowInstance = activeContainer.addComponent(newRow);
-          newRowInstance.attr.isWa = true;
-        }
-
-        let newWorkArea =
-          newRowInstance.children[newRowInstance.components[0].props.id];
-        applet.addBehaviors(newWorkArea, waBehaviors, false);
-        // app.behaviors[newWorkArea.id]["mousemove"]["WA_RESIZE_EW"] = isMouseMoveEW;
-        //{filter: isMouseMoveEw, otherProperties...}
-
-        if (activeContainer.components.length == 1) {
-          let newRowInstance2;
-          if (retFromRedoMaybe.child2) {
-            newRowInstance2 = retFromRedoMaybe.child2;
-            activeContainer.addChild(newRowInstance2);
-          } else {
-            newRowInstance2 = activeContainer.addComponent(newRow2);
-            newRowInstance2.attr.isWa = true;
-          }
-
-          let newWorkArea2 =
-            newRowInstance2.children[newRowInstance2.components[0].props.id];
-          applet.addBehaviors(newWorkArea2, waBehaviors, false);
-          ret.child2 = newRowInstance2;
-        }
-
-        ret.child = newRowInstance;
-        ret.parent = activeContainer;
-        ret.container = activeContainer;
-        ret.track = true;
-        childrenAutoHeight(activeContainer);
-        return ret;
-      },
-      undo: function () {
-        console.log("Undo SPLIT_HOR ", arguments);
-        /**
-         *  Params that we get here:
-         *  p.event original parameters of the event that caused this behavior
-         *  p.filterReturn optional: return value of filter function
-         *  p.behaviorReturn return value of the behavior implementation function
-         * */
-        /**
-         * what if every component generates its undo action for every action called on its instance
-         */
-        /**
-                 * ret.container = container;
-                            ret.child = this.parent; */
-        let ret = arguments[arguments.length - 1];
-        ret.parent.removeChild(ret.child, 0);
-        if (ret.child2) {
-          ret.parent.removeChild(ret.child2, 0);
-        }
-        childrenAutoHeight(ret.parent);
-      },
-    },
-
-    SPLIT_VERT: {
-      description: "Split selected container vertically",
-      do: function (e) {
-        let retFromRedoMaybe = arguments[arguments.length - 1];
-        console.log(retFromRedoMaybe);
-        if (retFromRedoMaybe.container) {
-          activeContainer = retFromRedoMaybe.container;
-          console.log("called SPLIT_VERT from History(REDO).");
-        }
-        console.log("Split Selected Container Vertically");
-        let ret = {
-          track: false,
-        };
-        let newRow = {
-          ctor: Container,
-          props: {
-            id: "",
-            type: ContainerType.ROW,
-            spacing: {
-              h: 100,
-              m: "auto",
-            },
-            components: [
-              {
-                ctor: Container,
-                props: {
-                  type: ContainerType.COLUMN,
-                  spacing: {
-                    colSpan: 6,
-                    h: 100,
-                  },
-                  id: "workArea",
-                  classes: ["border"],
-                  attr: { isWa: true },
-                },
-              },
-              {
-                ctor: Container,
-                props: {
-                  type: ContainerType.COLUMN,
-                  spacing: {
-                    colSpan: 6,
-                    h: 100,
-                  },
-                  id: "workArea",
-                  classes: ["border"],
-                  attr: { isWa: true },
-                },
-              },
-            ],
-          },
-        };
-
-        let newCell = {
-          ctor: Container,
-          props: {
-            type: ContainerType.COLUMN,
-            spacing: {
-              colSpan: 12,
-              h: 100,
-            },
-            id: "workArea",
-            classes: ["border"],
-            attr: { isWa: true },
-          },
-        };
-        let toAdd = [newCell];
-        let parent = activeContainer.parent;
-        let notWa = false;
-        if (
-          activeContainer.attr.isNotWa &&
-          activeContainer.components.length == 0
-        ) {
-          notWa = true;
-          newRow.props.type = ContainerType.FORM_ROW;
-          toAdd = [newRow];
-          parent = activeContainer;
-        } else if (activeContainer.attr.isNotWa) {
-          alert("Select an Existing Column to split Vertically.");
-          return;
-        }
-        let children_len = parent.components.length;
-
-        if (children_len < 12) {
-          let newInstance;
-          if (retFromRedoMaybe.child) {
-            newInstance = retFromRedoMaybe.child;
-            parent.addChild(newInstance);
-          } else {
-            newInstance = parent.addComponents(toAdd);
-            newInstance[0].attr.isWa = true;
-          }
-
-          let row = notWa ? newInstance[0] : activeContainer.parent;
-          children_len = row.components.length;
-
-          let colSpan = Math.floor(12 / children_len);
-          let delta = 12 - colSpan * children_len;
-          let i = 0;
-          for (let childID in row.children) {
-            ++i;
-            if (i == children_len - 1)
-              row.children[childID].spacing.colSpan = colSpan + delta;
-            else row.children[childID].spacing.colSpan = colSpan;
-            let workArea = row.children[childID];
-            //let workArea = cell.children[cell.components[0].props.id];
-            applet.addBehaviors(workArea, waBehaviors, false);
-          }
-          ret.parent = parent;
-          ret.child = newInstance;
-          ret.container = activeContainer.parent;
-          ret.track = true;
-        } else {
-          alert("You may have up to 12 columns for each row.");
-        }
-        return ret;
-      },
-      undo: function () {
-        console.log("Undo SPLIT_VERT ", arguments);
-        /**
-         *  Params that we get here:
-         *  p.event original parameters of the event that caused this behavior
-         *  p.filterReturn optional: return value of filter function
-         *  p.behaviorReturn return value of the behavior implementation function
-         * */
-        /**
-         * what if every component generates its undo action for every action called on its instance
-         */
-        /**
-                 * ret.container = container;
-                            ret.child = this.parent; */
-        let ret = arguments[arguments.length - 1];
-        ret.parent.removeChild(ret.child, 0);
-        childrenAutoWidth(ret.parent);
       },
     },
 
@@ -1505,7 +1275,10 @@ let Implementation = function (applet) {
         var sections = lit.props.components[0].props.components;
         var reportFactory = new ReportFactory();
         
-        var xml = reportFactory.toXml(sections, Builder.dataviewFields[0]);
+        var xml =
+          Builder.dataviewFields ?
+            reportFactory.toXml(sections, Builder.dataviewFields[0]) :
+            reportFactory.toXml(sections);
         console.log("XML Layout", xml);
         download("targetBand.xml.txt", xml);
 
@@ -1843,6 +1616,29 @@ let Implementation = function (applet) {
           stripHandle(lit.props.components[i]);
       }
   };
+
+  let loadLayout = (bhv, content) => {
+    let parsedWaLiteral = JSON.parse(waLiteral);
+
+    //label comes undefined
+    ['Title', 'Page Header', 'Detail', 'Page Footer', 'Summary'].forEach((label, index) =>
+      parsedWaLiteral.props.components[0].props.components[index].props.components[0].props.label = label  
+    )
+
+    let _cmp = content ? content : parsedWaLiteral;
+    let res =
+      objectHierarchyGetMatchingMember( _cmp, "props.id", "workAreaRowL2", "props.components" );
+    if (res.match) _cmp = res.match;
+    workAreaRowL2.removeAllChildren(0);
+
+    _cmp.props.components.forEach(cmp => {
+      let inst = workAreaRowL2.addComponent(cmp)
+      applet.addBehaviors(inst, cmpWaBehaviors, true);
+    });
+
+    if(bhv === 'afterSave') data.selectedReport.report_literal = _cmp;
+  }
+
   let daBehaviors = {
     mouseover: "WA_HOVER",
     mouseout: "WA_HOVER",

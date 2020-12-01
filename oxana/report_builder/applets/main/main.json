@@ -100,24 +100,6 @@
                   {
                     "ctor": "Label",
                     "props": {
-                      "id": "splitHorizontal",
-                      "labelType": "i",
-                      "label": "",
-                      "classes": ["fas", "fa-columns fa-rotate-270", "navIcons"]
-                    }
-                  },
-                  {
-                    "ctor": "Label",
-                    "props": {
-                      "id": "splitVertical",
-                      "labelType": "i",
-                      "label": "",
-                      "classes": ["fas", "fa-columns", "navIcons"]
-                    }
-                  },
-                  {
-                    "ctor": "Label",
-                    "props": {
                       "id": "saveLayout",
                       "labelType": "i",
                       "label": "",
@@ -145,7 +127,7 @@
                   {
                     "ctor": "Label",
                     "props": {
-                      "id": "openUploadForms",
+                      "id": "openUploadReports",
                       "labelType": "i",
                       "label": "",
                       "classes": ["fas", "fa-cloud-download-alt", "navIcons"]
@@ -163,36 +145,21 @@
                   {
                     "ctor": "Label",
                     "props": {
+                      "id": "createNewReport",
+                      "labelType": "i",
+                      "label": "",
+                      "classes": ["fas", "fa-plus", "navIcons"]
+                    }
+                  },
+                  {
+                    "ctor": "Label",
+                    "props": {
                       "id": "desktop",
                       "labelType": "i",
                       "label": "",
                       "classes": ["fas", "fa-desktop", "navIcons"],
                       "css": {
                         "paddingLeft": "60px",
-                        "marginRight": "20px"
-                      }
-                    }
-                  },
-                  {
-                    "ctor": "Label",
-                    "props": {
-                      "id": "tablet",
-                      "labelType": "i",
-                      "label": "",
-                      "classes": ["fas", "fa-tablet", "navIcons"],
-                      "css": {
-                        "marginRight": "20px"
-                      }
-                    }
-                  },
-                  {
-                    "ctor": "Label",
-                    "props": {
-                      "id": "mobile",
-                      "labelType": "i",
-                      "label": "",
-                      "classes": ["fas", "fa-mobile", "navIcons"],
-                      "css": {
                         "marginRight": "20px"
                       }
                     }

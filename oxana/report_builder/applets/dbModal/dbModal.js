@@ -18,21 +18,28 @@ let Implementation = function (applet) {
     mainLeftComponentsDataProvider,
     mainLeftComponentsDataProviderLength;
   let itemsLeft = [];
+  let itemsLeftSearch = [];
   let itemsRight = [];
-  let leftSearch, rightSearch;
-  let buttonClicked = false;
+  let itemsRightSearch = [];
+  let leftSearchEvent, rightSearchEvent;
+  let foundDsIndex, foundDvIndex;
   
+  // let cache = new Cache({ ttl: 3600000 });
   let cache = Cache.getInstance();
-  let datasourceList = cache.get('datasourceList').slice(0);
+  // if (cache.get("datasourceList"))
+    let datasourceList = JSON.parse(cache.get('datasourceList'));
+  // let datasourceList = cache.get('datasourceList');
 
   let api_RB_Data = new GaiaAPI_report_source()
 
   let imp = {
-    BEGIN_DRAW: function (e) {},
+    // INIT: e => {
 
-    END_DRAW: function (e) {
+    // },
+
+    END_DRAW: e => {
       modal = applet.view;
-
+  
       //dataSource dropdown
       dsDropDown = modal.find('dbModalDatasourceDropdown');
       dsDropDown.dataProvider = datasourceList;
@@ -44,24 +51,24 @@ let Implementation = function (applet) {
 
       //left repeater search
       dbModalRepeaterLeftSearch = modal.find('dbModalRepeaterLeftSearch');
-      applet.addBehaviors(dbModalRepeaterLeftSearch, { keyup: "SEARCH" }, false);
+      applet.addBehaviors(dbModalRepeaterLeftSearch, { keyup: "SEARCH" }, true);
       
       //right repeater
       dbModalRepeaterRight = modal.find('dbModalRepeaterRight');
       
       //right repeater search
       dbModalRepeaterRightSearch = modal.find('dbModalRepeaterRightSearch');
-      applet.addBehaviors(dbModalRepeaterRightSearch, { keyup: "SEARCH" }, false);
-
-      //right arrow button click
-      dbModalContainerMiddleButtonRight = modal.find('dbModalContainerMiddleButtonRight');
-      dbModalContainerMiddleButtonRight.enabled = false;
-      applet.addBehaviors(dbModalContainerMiddleButtonRight, { click: "ADD_FIELDS" }, false);
+      applet.addBehaviors(dbModalRepeaterRightSearch, { keyup: "SEARCH" }, true);
 
       //left arrow button click
       dbModalContainerMiddleButtonLeft = modal.find('dbModalContainerMiddleButtonLeft');
       dbModalContainerMiddleButtonLeft.enabled = false;
-      applet.addBehaviors(dbModalContainerMiddleButtonLeft, { click: "ADD_FIELDS" }, false);
+      applet.addBehaviors(dbModalContainerMiddleButtonLeft, { click: "ADD_FIELDS" }, true);
+
+      //right arrow button click
+      dbModalContainerMiddleButtonRight = modal.find('dbModalContainerMiddleButtonRight');
+      dbModalContainerMiddleButtonRight.enabled = false;
+      applet.addBehaviors(dbModalContainerMiddleButtonRight, { click: "ADD_FIELDS" }, true);
 
       //add fields button click
       dbModalAddFieldsButton = modal.find('dbModalAddFieldsButton');
@@ -71,6 +78,8 @@ let Implementation = function (applet) {
       mainLeftComponents = app.viewStack.mainContainer.container.componentsContainer.componentList;
       mainLeftComponentsDataProvider = mainLeftComponents.dataProvider.slice(0);
       mainLeftComponentsDataProviderLength = mainLeftComponentsDataProvider.length;
+
+      applet.addBehaviors(modal, { "dismiss": "CANCEL_FIELD_SELECT" }, false);
 
       //mer linqet dhe vendosi behavior
       // let links = modal.modalDialog.modalContent.modalBody.dbModalContainer
@@ -88,123 +97,151 @@ let Implementation = function (applet) {
     //   console.log('insideHANDLE_LINK_CLICK')
     // },
 
-    SEARCH: function (e) {
-      //check which search is changed 
-      if (e.currentTarget.id.includes("dbModalRepeaterLeftSearch")) {
-        leftSearch = e.target.value
-
-        if (rightSearch && rightSearch.length > 0) {
-          buttonClicked = true
-        }
-
-        itemsLeft =
-          !buttonClicked
-          ? data.dataviewFields[0].fields.slice(0).difference(dbModalRepeaterRight.dataProvider)
-          : data.dataviewFields[0].fields.slice(0).difference(itemsRight)
-
-        //vendos vleren e provider-it
-        dbModalRepeaterLeft.dataProvider =
-          leftSearch.length === 0
-          ? itemsLeft
-          : itemsLeft.filter(el => el.fieldDisplay.includes(leftSearch))
-
-        //left repeater label click
-        dbModalRepeaterLeftLabel = dbModalRepeaterLeft.dbModalRepeaterLeftLabel;
-        applet.addBehaviors(dbModalRepeaterLeftLabel, {
-          click: "SELECT_ITEM"
-        }, false);
-      } else {
-        rightSearch = e.target.value
-
-        if (leftSearch && leftSearch.length > 0) {
-          buttonClicked = true
-        }
-
-        itemsRight =
-          !buttonClicked
-          ? data.dataviewFields[0].fields.slice(0).difference(dbModalRepeaterLeft.dataProvider)
-          : data.dataviewFields[0].fields.slice(0).difference(itemsLeft)
-
-        //vendos vleren e provider-it
-        dbModalRepeaterRight.dataProvider =
-          rightSearch.length === 0 ? 
-          itemsRight : 
-          itemsRight.filter(el => el.fieldDisplay.includes(rightSearch))
-
-        //right repeater label click
-        dbModalRepeaterRightLabel = dbModalRepeaterRight.dbModalRepeaterRightLabel;
-        applet.addBehaviors(dbModalRepeaterRightLabel, {
-          click: "SELECT_ITEM"
-        }, false);
+    DROPDOWN_DATASOURCE: async (e) => {
+      foundDsIndex = indexOfObject(datasourceList, "id", dsDropDown.selectedItem.id)
+      
+      //kontrollo cache nqs ekziston dataviewList per datasource-in e selektuar
+      let foundDvList = datasourceList[foundDsIndex].dataviewList
+      if (!foundDvList) {
+        foundDvList = await api_RB_Data.getDataviewOfDatasourceClient.get();    
+        datasourceList[foundDsIndex].dataviewList = foundDvList.slice(0)
+        cache.set('datasourceList', JSON.stringify(datasourceList));
+        cache.persist();
       }
+      
+      //merr dataview per datasource-in e selektuar
+      dvDropDown.dataProvider = JSON.parse(cache.get('datasourceList'))[foundDsIndex].dataviewList;
     },
 
-    SELECT_ITEM: function (e, ra) {
-      buttonClicked = false
+    DROPDOWN_DATAVIEW: async (e) => {
+      foundDvIndex = indexOfObject(dvDropDown.dataProvider, "id", dvDropDown.selectedItem.id)
+      
+      //merr fields per dataview te selektuar
+      let foundDvFields =
+        JSON.parse(cache.get('datasourceList'))[foundDsIndex].dataviewList[foundDvIndex].dvFields
+      if(!foundDvFields) {
+        foundDvFields = await api_RB_Data.getDataViewFieldsClient.get();
+        datasourceList[foundDsIndex].dataviewList[foundDvIndex].dvFields = foundDvFields.slice(0)[0].fields;
+        dvDropDown.dataProvider[foundDvIndex].dvFields = foundDvFields.slice(0)[0].fields;
+        cache.set('datasourceList', JSON.stringify(datasourceList));
+        cache.persist();
+        //add to context
+        data.dataviewFields = foundDvFields.slice(0);
+      }
+      
+      //left repeater
+      dbModalRepeaterLeft = modal.find('dbModalRepeaterLeft');
+      dbModalRepeaterLeft.dataProvider = dvDropDown.dataProvider[foundDvIndex].dvFields;
+      itemsLeftSearch = dvDropDown.dataProvider[foundDvIndex].dvFields;
+      addLabelLeft();
+
+    },
+
+    SELECT_ITEM: (e, ra) => {
+      let attributes = [
+        { name: 'Left', className: 'selectedItem', arr: itemsLeft },
+        { name: 'Right', className: 'deselectedItem', arr: itemsRight }
+      ]
+      
+      let checkLabel = ra.currentRow.dbModalRepeaterLeftLabel
+
+      let selAttr = checkLabel ? attributes[0] : attributes[1]
       
       //bej toggle klasat perkatese
-      if (ra.currentRow.dbModalRepeaterRightLabel) {
-        let newClasses = ra.currentRow.dbModalRepeaterRightLabel.classes.slice(0)
-        newClasses.toggle("deselectedItem")
-        ra.currentRow.dbModalRepeaterRightLabel.classes = newClasses
-      } else {
-        let newClasses = ra.currentRow.dbModalRepeaterLeftLabel.classes.slice(0)
-        newClasses.toggle("selectedItem")
-        ra.currentRow.dbModalRepeaterLeftLabel.classes = newClasses
-      }
-
-      //bej enable butonin perkates
-      dbModalContainerMiddleButtonRight.enabled = !ra.currentRow.dbModalRepeaterRightLabel;
-      dbModalContainerMiddleButtonLeft.enabled = ra.currentRow.dbModalRepeaterRightLabel;
+      let label = `dbModalRepeater${selAttr.name}Label`
+      let newClasses = ra.currentRow[label].classes.slice(0)
+      newClasses.toggle(selAttr.className)
+      ra.currentRow[label].classes = newClasses
 
       //shto ose hiq element nga array perkates
-      if (!(leftSearch && leftSearch.length > 0 && rightSearch && rightSearch.length > 0)) {
-        [itemsLeft, itemsRight].forEach((dir) => {
-          dir.toggle(ra.currentItem, "fieldName");
-          acSort(dir, "fieldName");
-        });
+      selAttr.arr.toggle(ra.currentItem, "fieldName");
+      acSort(selAttr.arr, "fieldName");
+
+      //bej enable butonin perkates
+      dbModalContainerMiddleButtonRight.enabled = checkLabel;
+      dbModalContainerMiddleButtonLeft.enabled = !checkLabel;
+
+      if (selAttr) {
+        if (ra.currentRow.dbModalRepeaterLeftLabel) emptyRight(e);
+        else emptyLeft(e);
       }
     },
 
-    ADD_FIELDS: function (e) {
-      buttonClicked = true
+    ADD_FIELDS: e => {
+      let attributes = [
+        { name: 'Left', arr: itemsLeft, arrSearch: itemsLeftSearch, rep: dbModalRepeaterLeft },
+        { name: 'Right', arr: itemsRight, arrSearch: itemsRightSearch, rep: dbModalRepeaterRight }
+      ]
 
-      // vendos dataProvider-at e Repeater-ave perkates
-      dbModalRepeaterLeft.dataProvider =
-        leftSearch && leftSearch.length !== 0 ?
-        data.dataviewFields[0].fields.slice(0).difference(itemsRight)
-        .filter(item => item.fieldDisplay.includes(leftSearch)) :
-        data.dataviewFields[0].fields.slice(0).difference(itemsRight)
+      let selAttr = e.target.id.includes('Left') ? attributes[0] : attributes[1]
+      let notSelAttr = selAttr.name === 'Left'? attributes[1] : attributes[0]
 
-      dbModalRepeaterRight.dataProvider =
-        rightSearch && rightSearch.length !== 0 ?
-        data.dataviewFields[0].fields.slice(0).difference(itemsLeft)
-        .filter(item => item.fieldDisplay.includes(rightSearch)) :
-        data.dataviewFields[0].fields.slice(0).difference(itemsLeft)
+      // shto dhe hiq el ne dataProvider respektive
+      let DP = selAttr.arrSearch.slice(0)
+      notSelAttr.arr.forEach(el => DP.push(el))
+      selAttr.rep.dataProvider = DP
+      notSelAttr.rep.dataProvider = notSelAttr.arrSearch.difference(notSelAttr.arr)  
 
-      // right repeater label
-      dbModalRepeaterRightLabel =
-        dbModalRepeaterRight.dbModalRepeaterRightLabel &&
-        dbModalRepeaterRight.dbModalRepeaterRightLabel;
+      itemsLeft = []
+      itemsRight = []
+      itemsLeftSearch = dbModalRepeaterLeft.dataProvider.slice(0)
+      itemsRightSearch = dbModalRepeaterRight.dataProvider.slice(0)
+      if (rightSearchEvent) rightSearchEvent.target.value = ""
+      if (leftSearchEvent) leftSearchEvent.target.value = ""
+      if (selAttr) {
+        emptyLeft(e);
+        emptyRight(e);
+      }
 
-      //shto behaviors pasi repetaer-i behet bosh
-      [dbModalRepeaterLeftLabel, dbModalRepeaterRightLabel].forEach((lbl) =>
-        applet.addBehaviors(lbl, {
-          click: "SELECT_ITEM"
-        }, false)
-      );
-
-      [dbModalRepeaterLeftLabel, dbModalRepeaterRightLabel].forEach((rep) => {
-        // hiq klasat nga elementet e selektuar
-        rep.forEach(el => {
-          let newClasses = el.classes.slice(0)
-          newClasses.splice(0, 1)
-          el.classes = newClasses
-        })
-      });
+      addLabelLeft();
+      addLabelRight();
     },
 
-    ADD_COMPONENT_FIELDS: function (e) {
+    SEARCH: e => {
+      let attributes = [
+        {
+          name: 'Left',
+          searchEvent: dbModalRepeaterLeftSearch,
+          rep: dbModalRepeaterLeft,
+          arrSearch: itemsLeftSearch,
+        },
+        {
+          name: 'Right',
+          searchEvent: dbModalRepeaterRightSearch,
+          rep: dbModalRepeaterRight,
+          arrSearch: itemsRightSearch,
+        },
+      ]
+      
+      //pass value to var so you can access it in other behaviors & functions
+      if (e.target.id.includes('Left')) leftSearchEvent = e
+      else rightSearchEvent = e
+
+      let selAttr = e.target.id.includes('Left') ? attributes[0] : attributes[1]
+      let notSelAttr = selAttr.name === 'Left' ? attributes[1] : attributes[0]
+
+      selAttr.searchEvent.value = e.target.value
+
+      //vendos vleren e provider-it
+      selAttr.rep.dataProvider =
+        selAttr.arrSearch.filter(item => item.fieldDisplay.includes(selAttr.searchEvent.value))
+
+      if (notSelAttr.searchEvent.value) {
+        notSelAttr.searchEvent.value = ""
+        notSelAttr.rep.dataProvider = notSelAttr.arrSearch
+      }
+
+      //repeater label click
+      if (selAttr.name === 'Left') addLabelLeft();
+      else addLabelRight();
+
+      // if (e.target.value.length > 0) {
+        emptyLeft(e);
+        emptyRight(e);
+      // };
+    },
+
+    ADD_COMPONENT_FIELDS: e => {
       //shtoji propet e reja
       dbModalRepeaterRight.dataProvider = dbModalRepeaterRight.dataProvider.map((el) => {
         let newEl = {
@@ -233,39 +270,63 @@ let Implementation = function (applet) {
       modal.hide();
     },
 
-    DROPDOWN_DATASOURCE: async (e) => {
-      let foundIndex = indexOfObject(datasourceList, "id", dsDropDown.selectedItem.id)
-
-      //merr dataview per datasource-in e selektuar
-      if(!datasourceList[foundIndex].dataviewList)
-        datasourceList[foundIndex].dataviewList = 
-          await api_RB_Data.getDataviewOfDatasourceClient.get();
-      // if(!dsDropDown.dataProvider[foundIndex].dataviewList)
-      //   dsDropDown.dataProvider[foundIndex].dataviewList = 
-      //     await api_RB_Data.getDataviewOfDatasourceClient.get();
-
-      dvDropDown.dataProvider = datasourceList[foundIndex].dataviewList.slice(0);
+    CANCEL_FIELD_SELECT: e => {
+      itemsLeft = []
+      itemsRight = []
+      itemsLeftSearch = 
+        dvDropDown.dataProvider[foundDvIndex]
+        && dvDropDown.dataProvider[foundDvIndex].dvFields
+      itemsRightSearch = []
+      if (dbModalRepeaterLeft)
+        dbModalRepeaterLeft.dataProvider = 
+        dvDropDown.dataProvider[foundDvIndex]
+        && dvDropDown.dataProvider[foundDvIndex].dvFields
+      if (dbModalRepeaterRight) dbModalRepeaterRight.dataProvider = []
+      if(leftSearchEvent) leftSearchEvent.target.value = ""
+      if(rightSearchEvent) rightSearchEvent.target.value = ""
     },
-
-    DROPDOWN_DATAVIEW: async (e) => {
-      let foundIndex = indexOfObject(dvDropDown.dataProvider, "id", dvDropDown.selectedItem.id)
-
-      //merr fields per dataview te selektuar
-      if(!dvDropDown.dataProvider[foundIndex].dataviewFields)
-        dvDropDown.dataProvider[foundIndex].dataviewFields = 
-          await api_RB_Data.getDataViewFieldsClient.get();
-      
-      //left repeater
-      dbModalRepeaterLeft = modal.find('dbModalRepeaterLeft');
-      dbModalRepeaterLeft.dataProvider =
-        dvDropDown.dataProvider[foundIndex].dataviewFields[0].fields.slice(0);
-      itemsLeft = dvDropDown.dataProvider[foundIndex].dataviewFields[0].fields.slice(0);
-
-      //left repeater label click
-      dbModalRepeaterLeftLabel = dbModalRepeaterLeft.dbModalRepeaterLeftLabel;
-      applet.addBehaviors(dbModalRepeaterLeftLabel, { click: "SELECT_ITEM" }, false);
-    }
   };
+
+  //helpful functions
+  let emptyLeft = e => {
+    // hiq klasat nga elementet e selektuar, boshatis array-n
+    if (dbModalRepeaterLeftLabel) {
+      dbModalRepeaterLeftLabel.forEach(el => {
+        let newClasses = el.classes.slice(0)
+        newClasses.splice(0, 1)
+        el.classes = newClasses
+      });
+      itemsLeft = [];
+    }
+  }
+
+  let emptyRight = e => {
+    // hiq klasat nga elementet e selektuar, boshatis array-n
+    if(dbModalRepeaterRightLabel) {
+      dbModalRepeaterRightLabel.forEach(el => {
+        let newClasses = el.classes.slice(0)
+        newClasses.splice(0, 1)
+        el.classes = newClasses
+      });
+      itemsRight = [];
+    }
+  }
+
+  let addLabelLeft = e => {
+    // left repeater label
+    dbModalRepeaterLeftLabel =
+      dbModalRepeaterLeft.dbModalRepeaterLeftLabel && dbModalRepeaterLeft.dbModalRepeaterLeftLabel;
+    //shto behaviors pasi repetaer-i behet bosh
+    applet.addBehaviors(dbModalRepeaterLeftLabel, { click:  "SELECT_ITEM" }, false)
+  }
+
+  let addLabelRight = e => {
+    // right repeater label
+    dbModalRepeaterRightLabel =
+      dbModalRepeaterRight.dbModalRepeaterRightLabel && dbModalRepeaterRight.dbModalRepeaterRightLabel;
+    //shto behaviors pasi repetaer-i behet bosh
+    applet.addBehaviors(dbModalRepeaterRightLabel, { click:  "SELECT_ITEM" }, false)
+  }
 
   return imp;
 };

@@ -100,23 +100,46 @@ var _initDpForms = function () {
 };
 
 var _initDbModal = async () => {
-  let api_rs = new GaiaAPI_report_source();
+  let api_rs = GaiaAPI_report_source.getInstance();
   
   //save to cache so you don't make the call to the api more than once for the selected time
+  // let cache = new Cache({ttl: 3600000});
   let cache = Cache.getInstance();
-  let datasourceList = cache.get('datasourceList');
-  if (!datasourceList) {
-    cache.set('datasourceList', await api_rs.report_sourceClient.get());
+  if (!cache.get("datasourceList")) {
+    cache.set("datasourceList", JSON.stringify(await api_rs.report_sourceClient.get()));
+    // cache.set("datasourceList", await api_rs.report_sourceClient.get());
     cache.persist();
-    datasourceList = cache.get('datasourceList');
   }
 
   return Promise.resolve(Builder)
 };
 
+var _initUploadReportModal = async () => {
+  let api_dv_pID_10 = new GaiaAPI_dataview_pid_10()
+
+  let raRepList = new RemoteArray({
+    recordsPerPage: 10, // pagination
+    fetchPromise: p => {
+      let dvInp = new dvInput();
+      dvInp.tableData = new tableData({
+        currentRecord: p.startPage * p.recordsPerPage,
+        recordsPerPage: p.recordsPerPage
+      });
+      if (p.filterData) dvInp.advancedSqlFilters = p.filterData;
+      return api_dv_pID_10.dataview_pid_10Client.post(dvInp);
+    }
+  });
+  Builder.reportsList = new ArrayEx(raRepList);
+    
+  return Promise.all([Builder.reportsList.init()]).then(result => Builder);
+};
+
 var _initSaveReportModal = () => {
-  console.log('inside_initSaveReportModal')
+  Builder.reportErrorLabel = ""
+  return Promise.resolve(Builder);
 }
+
+var _initCreateNewReportModal = () => Promise.resolve(Builder)
 
 //this function will decide where the view will go in the GUI on endDraw
 //principles to follow
@@ -144,6 +167,16 @@ var dbModalRoute = function (applet) {
 };
 
 var saveReportModalRoute = applet => {
+  if (applet.view.attached) applet.view.show();
+  else applet.view.render().then(cmpInstance => applet.view.show() );
+}
+
+var createNewReportModalRoute = applet => {
+  if (applet.view.attached) applet.view.show();
+  else applet.view.render().then(cmpInstance => applet.view.show() );
+}
+
+var uploadReportModalRoute = applet => {
   if (applet.view.attached) applet.view.show();
   else applet.view.render().then(cmpInstance => applet.view.show() );
 }
@@ -177,9 +210,25 @@ var oxana = new App({
     {
       url: "./flowerui/oxana/report_builder/applets/saveReportModal/",
       anchor: "saveReportModal",
-      dataPromise: _initDP,
+      dataPromise: _initSaveReportModal,
       port: "viewStack",
       uiRoute: saveReportModalRoute,
+      //forceReload: true
+    },
+    {
+      url: "./flowerui/oxana/report_builder/applets/createNewReportModal/",
+      anchor: "createNewReportModal",
+      dataPromise: _initCreateNewReportModal,
+      port: "viewStack",
+      uiRoute: createNewReportModalRoute,
+      //forceReload: true
+    },
+    {
+      url: "./flowerui/oxana/report_builder/applets/uploadReportModal/",
+      anchor: "uploadReportModal",
+      dataPromise: _initUploadReportModal,
+      port: "viewStack",
+      uiRoute: uploadReportModalRoute,
       //forceReload: true
     },
   ],

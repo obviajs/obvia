@@ -1,0 +1,44 @@
+{
+    "ctor": "Modal",
+    "props": {
+      "id": "uploadReportModal",
+      "title": "Select Report To Upload",
+      "classes": ["modal", "modal-fullscreen", "uploadReportModal"],
+      "components": [
+        {
+          "ctor": "Container",
+          "props": {
+            "id": "uploadModalWrapper",
+            "components": [
+              {
+                "ctor": "TextInput",
+                "props": {
+                  "id": "uploadSearch",
+                  "placeholder": "Search Report"
+                }
+              },
+              {
+                "ctor": "Repeater",
+                "props": {
+                  "id": "uploadRepeater",
+                  "classes": ["uploadRepeater", "row"],
+                  "dataProvider": [],
+                  "components": [
+                    {
+                      "ctor": "Label",
+                      "props": {
+                        "id": "uploadRepeaterLabel",
+                        "labelType": "label",
+                        "label": "{report_name}",
+                        "classes": ["uploadRepeaterLabel"]
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
