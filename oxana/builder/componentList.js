@@ -170,8 +170,8 @@ Builder.initComponentList = function () {
             "ctor": "RegularExpressionValidator"
         },
         {
-            "label": "BrowseData",
-            "ctor": "BrowseData"
+            "label": "DataBrowse",
+            "ctor": "DataBrowse"
         }
     ]);
 };

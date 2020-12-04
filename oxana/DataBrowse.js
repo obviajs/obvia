@@ -1,11 +1,11 @@
 /**
- * This is an BrowseData Element
+ * This is an DataBrowse Element
  * 
  * Kreatx 2020
  */
 
 //component definition
-var BrowseData = function (_props) {
+var DataBrowse = function (_props) {
     let _self = this;
     let _dataProvider,  _columns = [], _fields;
 
@@ -123,7 +123,7 @@ var BrowseData = function (_props) {
             {
                 ctor: Modal,
                 props: {
-                    id: 'recordSelectModalBrowseData',
+                    id: 'recordSelectModalDataBrowse',
                     size: ModalSize.LARGE,
                     title: 'Select an Item',
                     components: [
@@ -221,4 +221,4 @@ var BrowseData = function (_props) {
     
     Container.call(this, _props, true);
 };
-BrowseData.prototype.ctor = 'BrowseData';
+DataBrowse.prototype.ctor = 'DataBrowse';

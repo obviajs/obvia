@@ -43,7 +43,7 @@ rjs.define("./components/base/AutoObject.js", "AutoObject");
 rjs.define("lib/TwoWayMap.js", "TwoWayMap");
 rjs.define("./oxana/builder/SpacingEditor.js", "SpacingEditor");
 rjs.define("./oxana/AutoBrowse.js", "AutoBrowse");
-rjs.define("./oxana/BrowseData.js", "BrowseData");
+rjs.define("./oxana/DataBrowse.js", "DataBrowse");
 rjs.define("./components/base/Attr.js", "Attr");
 rjs.define("./components/base/Css.js", "Css");
 rjs.define("./components/base/Props.js", "Props");
@@ -273,7 +273,7 @@ rjs.require(["EventDispatcher"]).then(function () {
         "FormFieldSize",
         "FormEventType",
         "AutoBrowse",
-        "BrowseData",
+        "DataBrowse",
         "Attr",
         "Css",
         "codeEditor_css",
