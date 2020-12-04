@@ -5,129 +5,96 @@
  */
 
 //component definition
-var CurrencyExRate = function (_props) {
-    var _self = this;
-
-    Object.defineProperty(this, "value",
-    {
+let CurrencyExRate = function (_props) {
+    let _self = this;
+  
+    Object.defineProperty(this, "value", {
+        get: function value() {
+            return _value;
+        },
         set: function value(v) {
             if (JSON.stringify(_value) != JSON.stringify(v)) {
-                _value.amount = v.amount;
+                _value.exRate = v.exRate;
                 _value.currency = v.currency;
 
-                this.amountInput.value = v.amount;
-                this.amountInput.currency = v.currency;
+                this.exchangeRate.value = v.exRate;
+                this.exchangeRate.currency = v.currency;
             }
-        }
+        },
+        enumerable: true,
     });
 
     this.changeHandler = function (e) {
-        _value.amount = this.amountInput.value;
-        _value.currency = this.currencySelect.value;
+        _value.exRate = this.children.exchangeRate.value;
+        _value.currency = this.children.currencySelect.value;
     };
-
-    this.attached = false;
-    this.afterAttach = function (e) {
-        this.cComponents = [];
-        if (e.target.id == this.domID && !this.attached) {
-            this.attached = true;
-            if (typeof _afterAttach == 'function')
-                _afterAttach.apply(this, arguments);
-            e.preventDefault();
-            this.$el
-                .append(this.renderCurrencySelect(_currencyList, _value.currency))
-                .append(this.renderAmountInput(_value.amount));
-
-            this.amountInput.$el.css({ 'width': '50%', 'float': 'left' });
-            this.currencySelect.$el.css({ 'width': '50%', 'float': 'left' });
-        }
-    };
-
-    this.renderAmountInput = function (value) {
-        this.amountInput = new TextInput({
-            id: 'amountInput-' + this.id,
-            mask: {
-                alias: "decimal",
-                prefix: ''
+    let _cmps;
+    let fnContainerDelayInit = function () {
+        _cmps = [
+           
+            {
+                ctor: DropDown,
+                props: {
+                    id: "currencySelect",
+                    dataProvider: _currencyList,
+                    labelField: _labelField,
+                    valueField: _valueField,
+                    value: _value.currency,
+                    css: {
+                        width: '20%',
+                        float: 'left'
+                    }
+                }
             },
-            value: value
-        });
-
-        var _self = this;
-        this.amountInput.on('creationComplete', function (e) {
-            e.stopImmediatePropagation();
-            e.stopPropagation();
-            _self.cComponents.push(this);
-
-            if (_self.cComponents.length > 1) {
-                _self.enabled = this.enabled;
-
-                _self.trigger('creationComplete');
-            }
-
-        });
-
-        return this.amountInput.render();
+            {
+                ctor: TextInput,
+                props: {
+                    id: "exchangeRate",
+                    value: _value.exRate,
+                    css: {
+                        width: '80%',
+                        float: 'left'
+                    }
+                }
+            } 
+        ];
     };
+    
 
-    this.renderCurrencySelect = function (currencyList, selected) {
-        this.currencySelect = new Select({
-            id: 'currencySelect-' + this.id,
-            dataProvider: currencyList,
-            textField: _labelField,
-            valueField: _valueField,
-            value: selected,
-        });
-
-        var _self = this;
-        this.currencySelect.on('creationComplete', function (e) {
-            e.stopImmediatePropagation();
-            e.stopPropagation();
-            _self.cComponents.push(this);
-
-            if (_self.cComponents.length > 1) {
-                _self.enabled = this.enabled;
-
-                _self.trigger('creationComplete');
-            }
-        });
-
-        return this.currencySelect.render();
-    };
-
-    this.template = function () {
-        return "<div data-triggers='change' id='" + this.domID + "'></div>";
-    };
-
-    var _defaultParams = {
+    let _defaultParams = {
         value: {
-            amount: "",
+            exRate: "",
             currency: "1"
         },
+        classes: ["d-flex"],
+        type: ContainerType.NONE,
         currencyList: [],
         labelField: 'text',
-        valueField: 'id'
+        valueField: 'id',
+        
     };
     _props = extend(false, false, _defaultParams, _props);
 
-    var _value = _props.value;
-    var _currencyList = _props.currencyList;
-    var _labelField = _props.labelField;
-    var _valueField = _props.valueField;
-    var _change = _props.change;
-    var _afterAttach = _props.afterAttach;
-    _props.afterAttach = this.afterAttach;
+    let _value = _props.value;
+    let _currencyList = _props.currencyList;
+    let _labelField = _props.labelField;
+    let _valueField = _props.valueField;
+    let _change = _props.change;
+   
    
     _props.change = function () {
         if (typeof _change == 'function')
             _change.apply(this, arguments);
 
-        var e = arguments[0];
+        let e = arguments[0];
         if (!e.isDefaultPrevented()) {
             _self.changeHandler();
         }
     };
+    fnContainerDelayInit();
+    _props.components = _cmps;
+    Container.call(this, _props, true);
 
-    Component.call(this, _props);
 };
-CurrencyExRate.type = 'currencyexrate';
+//component prototype
+CurrencyExRate.prototype.ctor = 'CurrencyExRate';

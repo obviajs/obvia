@@ -172,6 +172,10 @@ Builder.initComponentList = function () {
         {
             "label": "DataBrowse",
             "ctor": "DataBrowse"
+        },
+        {
+            "label": "CurrencyExRate",
+            "ctor": "CurrencyExRate"
         }
     ]);
 };

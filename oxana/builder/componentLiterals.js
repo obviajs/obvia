@@ -679,6 +679,16 @@ Builder.initComponentLiterals = function () {
             label: "DataBrowse",
             icon: ".png"
         },
+        "CurrencyExRate":{
+            literal: {
+                "ctor": CurrencyExRate,
+                "props": {
+                    id: "currencyEx"
+                }
+            },
+            label: "CurrencyExRate",
+            icon: ".png"
+        },
         "DataGridCellRenderer": {
             literal: {
                 "ctor": DataGridCellRenderer,

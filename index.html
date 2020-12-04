@@ -33,6 +33,7 @@
             rjs.define("./oxana/Code/CodeMerge.js", "CodeMerge");
             rjs.define("./oxana/kanban/Kanban.js", "Kanban");
             rjs.define("./oxana/DataBrowse.js", "DataBrowse");
+            rjs.define("./oxana/accounting/components/CurrencyExRate.js", "CurrencyExRate");
             rjs.define("./oxana/kanban/css/kanban_default.css", "kanban_default_css");
             rjs.define("./oxana/GaiaAPI/GaiaAPI_forms.js", "GaiaAPI_forms");
             rjs.require([
@@ -48,7 +49,8 @@
                 "Kanban",
                 "kanban_default_css",
                 "GaiaAPI_forms",
-                "DataBrowse"
+                "DataBrowse",
+                "CurrencyExRate"
             ]).then(function () {
                 //rjs.define("./examples/cache/example.js", "api_client_cache");
                 rjs.define("./examples/ApiClient/example.js", "ApiClientExample");
