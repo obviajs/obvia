@@ -142,7 +142,6 @@ Builder.initMetaProps = function () {
       props: {
         change: function () {
           this.parent.parent.instance.x = this.value;
-          this.parent.parent.instance.$el[0].style.left = this.value + "px";
         },
       },
     },
@@ -152,9 +151,7 @@ Builder.initMetaProps = function () {
       index: 3,
       props: {
         change: function () {
-          console.log(this.value, "yMetaProp");
           this.parent.parent.instance.y = this.value;
-          this.parent.parent.instance.$el[0].style.top = this.value + "px";
         },
       },
     },

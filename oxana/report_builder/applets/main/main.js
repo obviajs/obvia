@@ -46,7 +46,7 @@ let Implementation = function (applet) {
     createNewReportModal;
   
   let component_id = 0;
-  let waLiteral = {};
+  let workAreaUE = null;
 
   //component resize
   let resizable = false;
@@ -275,21 +275,16 @@ let Implementation = function (applet) {
           .workAreaColumn;
       workAreaRowL2 = workAreaColumn.workAreaCell.workAreaRowL2;
       workArea = workAreaRowL2.workAreaColumnL2;
-      //save unedited waLiteral
-      waLiteral = JSON.stringify(workAreaRowL2.literal);
       console.log("WA Components", workArea);
       title = workArea.title;
       pageHeader = workArea.pageHeader;
       detail = workArea.detail;
       pageFooter = workArea.pageFooter;
       summary = workArea.summary;
+      //save unedited workArea
+      workAreaUE = JSON.stringify(workArea);
       componentList = componentsContainer.componentList;
-      sectionList =
-        propertyEditorViewStack.propertyEditorContainerWrap.sectionsList
-          .checkBox;
-      console.log("SECTIONS", sectionList);
-
-      console.log(propertyEditorContainer, "propertyEditorContainer c");
+      sectionList = propertyEditorViewStack.propertyEditorContainerWrap.sectionsList.checkBox;
 
       applet.addBehaviors(
         applet.view,
@@ -660,8 +655,8 @@ let Implementation = function (applet) {
           inst.attr.isCmp = true;
           inst.section = targetBand.id;
 
-          inst.$el[0].style.left = "0px";
-          inst.$el[0].style.top = "0px";
+          // inst.$el[0].style.left = "0px";
+          // inst.$el[0].style.top = "0px";
           inst.x = "0";
           inst.y = "0";
 
@@ -698,8 +693,8 @@ let Implementation = function (applet) {
             var offset = event.dataTransfer.getData("text/plain").split(",");
             var x_drag = event.clientX + parseInt(offset[0], 10);
             var y_drag = event.clientY + parseInt(offset[1], 10);
-            inst.$el[0].style.left = x_drag + "px";
-            inst.$el[0].style.top = y_drag + "px";
+            // inst.$el[0].style.left = x_drag + "px";
+            // inst.$el[0].style.top = y_drag + "px";
             inst.x = x_drag;
             inst.y = y_drag;
 
@@ -1618,26 +1613,27 @@ let Implementation = function (applet) {
   };
 
   let loadLayout = (bhv, content) => {
-    let parsedWaLiteral = JSON.parse(waLiteral);
+    let parsedWaLiteral = JSON.parse(workAreaUE).components;
 
-    //label comes undefined
-    ['Title', 'Page Header', 'Detail', 'Page Footer', 'Summary'].forEach((label, index) =>
-      parsedWaLiteral.props.components[0].props.components[index].props.components[0].props.label = label  
-    )
+    let _cmp =
+      content
+      ? content.props.components[0].props.components[0].props.components[0].props.components
+      : parsedWaLiteral
 
-    let _cmp = content ? content : parsedWaLiteral;
     let res =
-      objectHierarchyGetMatchingMember( _cmp, "props.id", "workAreaRowL2", "props.components" );
+      objectHierarchyGetMatchingMember(_cmp, "props.id", "workAreaRowL2", "props.components");
     if (res.match) _cmp = res.match;
-    workAreaRowL2.removeAllChildren(0);
+    workArea.removeAllChildren(0);
 
-    _cmp.props.components.forEach(cmp => {
-      let inst = workAreaRowL2.addComponent(cmp)
+    _cmp.forEach((band) => {
+      //add band
+      let inst = workArea.addComponent(band);
+      // add band behavior
       applet.addBehaviors(inst, cmpWaBehaviors, true);
-    });
+    })
 
-    if(bhv === 'afterSave') data.selectedReport.report_literal = _cmp;
-  }
+    if (bhv === 'afterSave') data.selectedReport.report_literal = _cmp;
+  };
 
   let daBehaviors = {
     mouseover: "WA_HOVER",

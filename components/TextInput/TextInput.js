@@ -92,19 +92,17 @@ var TextInput = function (_props) {
         },
         enumerable: true
     });
-
+  
+    let _beforeAttach = this.beforeAttach;
     this.beforeAttach = function (e) {
-        if (e.target.id == this.domID) {
-            if (_props.value != null)
-                this.value = _props.value;
-            if (_props.autocomplete != null)
-                this.autocomplete = _props.autocomplete;
-            if (_props.placeholder) {
-                this.placeholder = _props.placeholder;
-            }
-        }
+      if (e.target.id == this.domID) {
+        if (typeof _beforeAttach == 'function') _beforeAttach.apply(this, arguments);
+        if (_props.value != null) this.value = _props.value;
+        if (_props.autocomplete != null) this.autocomplete = _props.autocomplete;
+        if (_props.placeholder) this.placeholder = _props.placeholder;
+      }
     };
-    
+
     this.afterAttach = function (e) {
         if (e.target.id == this.$el.attr('id') && !this.attached) {
             //init input mask

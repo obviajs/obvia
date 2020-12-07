@@ -24,25 +24,18 @@ let Implementation = function (applet) {
   let leftSearchEvent, rightSearchEvent;
   let foundDsIndex, foundDvIndex;
   
-  // let cache = new Cache({ ttl: 3600000 });
-  let cache = Cache.getInstance();
-  // if (cache.get("datasourceList"))
-    let datasourceList = JSON.parse(cache.get('datasourceList'));
-  // let datasourceList = cache.get('datasourceList');
+  let cache = new Cache({ ttl: 3600000 });
+  let datasourceList = cache.get('datasourceList');
 
   let api_RB_Data = new GaiaAPI_report_source()
 
   let imp = {
-    // INIT: e => {
-
-    // },
-
     END_DRAW: e => {
       modal = applet.view;
   
       //dataSource dropdown
       dsDropDown = modal.find('dbModalDatasourceDropdown');
-      dsDropDown.dataProvider = datasourceList;
+      dsDropDown.dataProvider = datasourceList.slice(0);
       applet.addBehaviors(dsDropDown, { change: "DROPDOWN_DATASOURCE" }, false);
 
       //dataView dropdown
@@ -103,30 +96,41 @@ let Implementation = function (applet) {
       //kontrollo cache nqs ekziston dataviewList per datasource-in e selektuar
       let foundDvList = datasourceList[foundDsIndex].dataviewList
       if (!foundDvList) {
-        foundDvList = await api_RB_Data.getDataviewOfDatasourceClient.get();    
-        datasourceList[foundDsIndex].dataviewList = foundDvList.slice(0)
-        cache.set('datasourceList', JSON.stringify(datasourceList));
+        foundDvList = await api_RB_Data.getDataviewOfDatasourceClient.get();
+        if (!foundDvList.status_description) {
+          datasourceList[foundDsIndex].dataviewList = foundDvList.slice(0)
+          cache.set('datasourceList', datasourceList);
+        } else {
+          console.log(foundDvList.status_description, 'error inside getDataviewOfDatasourceClient')
+        }
         cache.persist();
       }
       
       //merr dataview per datasource-in e selektuar
-      dvDropDown.dataProvider = JSON.parse(cache.get('datasourceList'))[foundDsIndex].dataviewList;
+      dvDropDown.dataProvider = cache.get('datasourceList')[foundDsIndex].dataviewList;
     },
 
     DROPDOWN_DATAVIEW: async (e) => {
+      //vendos id e dataview-se ne kontekst per ta shtuar tek report properties
+      data.selectedReport.id_dataview = dvDropDown.selectedItem.id
+
       foundDvIndex = indexOfObject(dvDropDown.dataProvider, "id", dvDropDown.selectedItem.id)
       
       //merr fields per dataview te selektuar
       let foundDvFields =
-        JSON.parse(cache.get('datasourceList'))[foundDsIndex].dataviewList[foundDvIndex].dvFields
+        cache.get('datasourceList')[foundDsIndex].dataviewList[foundDvIndex].dvFields
       if(!foundDvFields) {
         foundDvFields = await api_RB_Data.getDataViewFieldsClient.get();
-        datasourceList[foundDsIndex].dataviewList[foundDvIndex].dvFields = foundDvFields.slice(0)[0].fields;
-        dvDropDown.dataProvider[foundDvIndex].dvFields = foundDvFields.slice(0)[0].fields;
-        cache.set('datasourceList', JSON.stringify(datasourceList));
-        cache.persist();
-        //add to context
-        data.dataviewFields = foundDvFields.slice(0);
+        if (!foundDvFields.status_description) { 
+          datasourceList[foundDsIndex].dataviewList[foundDvIndex].dvFields = foundDvFields.slice(0)[0].fields;
+          dvDropDown.dataProvider[foundDvIndex].dvFields = foundDvFields.slice(0)[0].fields;
+          cache.set('datasourceList', datasourceList);
+          cache.persist();
+          //add to context
+          data.dataviewFields = foundDvFields.slice(0);
+        } else {
+          console.log(foundDvFields.status_description, 'error inside getDataViewFieldsClient')
+        }
       }
       
       //left repeater
@@ -134,7 +138,6 @@ let Implementation = function (applet) {
       dbModalRepeaterLeft.dataProvider = dvDropDown.dataProvider[foundDvIndex].dvFields;
       itemsLeftSearch = dvDropDown.dataProvider[foundDvIndex].dvFields;
       addLabelLeft();
-
     },
 
     SELECT_ITEM: (e, ra) => {

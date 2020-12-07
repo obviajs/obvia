@@ -27,6 +27,7 @@ var JRComponent = function (_props) {
           } else this.hide();
         }
       }
+      this.$el[0].style.left = v + "px";
     },
     enumerable: true,
   });
@@ -39,6 +40,7 @@ var JRComponent = function (_props) {
       if (_y != v) {
         _y = v;
       }
+      this.$el[0].style.top = v + "px";
     },
     enumerable: true,
   });
@@ -78,5 +80,6 @@ var JRComponent = function (_props) {
     },
     enumerable: true,
   });
+
 };
 // JRComponent.prototype.ctor = 'JRComponent';

@@ -8,6 +8,7 @@ var ReportProperties = function (_props) {
         deleted: 0,
         author_id_user: 0,
         report_help_url: '',
+        id_dataview: '',
         id_report_type: 0,
         report_literal: '',
         report_literal_view: ''
@@ -23,6 +24,7 @@ var ReportProperties = function (_props) {
     this.report_help_url = _props.report_help_url;
     this.date_modified = _props.date_modified;
     this.id_report_type = _props.id_report_type;
+    this.id_dataview = _props.id_dataview;
     this.report_literal_view = _props.report_literal_view;
     
     Object.defineProperty(this, "props", {

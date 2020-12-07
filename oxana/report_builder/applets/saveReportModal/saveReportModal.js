@@ -89,6 +89,11 @@ let Implementation = function (applet) {
               reportDescriptionTarget.value = "";
               reportDescription.value = "";
               data.selectedReport = new ReportProperties();
+              
+              //merr repeater-in e main-it dhe beji reset componenteve ne panelin majtas ne main
+              let mainLeftComponents = app.viewStack.mainContainer.container.componentsContainer.componentList;
+              mainLeftComponents.dataProvider = new ArrayEx(data.componentList);
+              
               // custom event to re-create the workArea
               let evt = new jQuery.Event("loadLayout");
               modal.trigger(evt);

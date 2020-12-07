@@ -103,12 +103,13 @@ var _initDbModal = async () => {
   let api_rs = GaiaAPI_report_source.getInstance();
   
   //save to cache so you don't make the call to the api more than once for the selected time
-  // let cache = new Cache({ttl: 3600000});
-  let cache = Cache.getInstance();
+  let cache = new Cache({ttl: 3600000});
   if (!cache.get("datasourceList")) {
-    cache.set("datasourceList", JSON.stringify(await api_rs.report_sourceClient.get()));
-    // cache.set("datasourceList", await api_rs.report_sourceClient.get());
-    cache.persist();
+    await api_rs.report_sourceClient.get()
+      .then(res => {
+        cache.set("datasourceList", res);
+        cache.persist();
+      }).catch(error => console.log(error, 'Error inside _initDbModal'))
   }
 
   return Promise.resolve(Builder)
@@ -232,14 +233,16 @@ var oxana = new App({
       //forceReload: true
     },
   ],
-  components: [{
-    ctor: ViewStack,
-    props: {
-      id: "viewStack",
-      type: ContainerType.NONE,
-      components: [],
+  components: [
+    {
+      ctor: ViewStack,
+      props: {
+        id: "viewStack",
+        type: ContainerType.NONE,
+        components: [],
+      },
     },
-  }, ],
+  ],
 });
 
 let formField;
