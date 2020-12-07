@@ -1,5 +1,5 @@
 /**
- * This is an DataBrowse Element
+ * This is an BrowseData Element
  * 
  * Kreatx 2020
  */
@@ -54,15 +54,17 @@ var DataBrowse = function (_props) {
  
      this.endDraw = function (e) {
          if (e.target.id == this.domID) {
-            _textInput = this.textField;
-             _modal = this.children[this.components[2].props.id];
+             _textInput = this.children[this.components[0].props.id].components[0];
+            // _textInput.placeholder = this.children[this.components[0].props.id].components[0].props.placeholder;
+             
+             _modal = this.children[this.components[1].props.id];
              _dg = _modal.modalDialog.modalContent.modalBody.dataGrid;
         }
     };
     this.afterAttach = function (e) {
         if (e.target.id == this.domID) {
           //is followed the same approach to solve the width case as AutoBrowse but it's not the exact issue
-           this.textField.offsetWidth = this.$el.width() - this.workArea_66.$el.width();
+           //this.textField.offsetWidth = this.$el.width() - this.workArea_66.$el.width();
         }
     };
     this.beforeAttach = function (e) {
@@ -77,33 +79,42 @@ var DataBrowse = function (_props) {
     var fnContainerDelayInit = function(){
         _cmps = 
         [
-           {
-                "ctor": "TextInput",
-                "props": {
-                    value: "",
-                    type: "text",
-                    autocomplete: "off",
-                    components: [],
-                    sortChildren: false,
-                    id: "textField",
-                    index: 0,
-                    spacing: {},
-                    css: {},
-                    visible: true,
-                    enabled: true,
-                    classes: [],
-                    placeholder: "Placeholder"
-                }
-            },
+           
             {
                 "ctor": "Container",
                 "props": {
                     type: ContainerType.NONE,
                     "id": "workArea_66",
+                    css: {
+                         "display":"flex"
+                     },
                     "components": [
+                        {
+                            "ctor": "TextInput",
+                            "props": {
+                                css:"80%",
+                                value: "",
+                                type: "text",
+                                autocomplete: "off",
+                                components: [],
+                                sortChildren: false,
+                                id: "textField",
+                                index: 0,
+                                spacing: {},
+                                css: {},
+                                visible: true,
+                                enabled: true,
+                                classes: [],
+                                placeholder: "Placeholder",
+                                label: "Component"
+                            }
+                        },
                         {
                             ctor: Button,
                             props: {
+                                css: {
+                                 width: "20%"
+                                },
                                 id: 'selectBtn',
                                 type: "button",
                                 components: [{
@@ -123,7 +134,7 @@ var DataBrowse = function (_props) {
             {
                 ctor: Modal,
                 props: {
-                    id: 'recordSelectModalDataBrowse',
+                    id: 'recordSelectModalBrowseData',
                     size: ModalSize.LARGE,
                     title: 'Select an Item',
                     components: [
@@ -181,18 +192,18 @@ var DataBrowse = function (_props) {
         fields:[],
         attr:{"data-triggers":"browse"},   
         value:new ArrayEx([]),
-        classes:["d-inline-flex"],
+       // classes:["d-inline-flex"],
         allowNewItem: false
     };
 
     _props = extend(false, false, _defaultParams, _props);
-    if (!_props.attr) { 
-        _props.attr = {};
-    }
-    if (!_props.classes) { 
-        _props.classes = ["d-flex"];
-    } else
-        _props.classes.pushUnique("d-flex");
+    // if (!_props.attr) { 
+    //     _props.attr = {};
+    // }
+    // if (!_props.classes) { 
+    //    // _props.classes = ["d-flex"];
+    // } else
+    //     _props.classes.pushUnique("d-flex");
 
     let myDtEvts = ["browse"];
     if (!Object.isEmpty(_props.attr) && _props.attr["data-triggers"] && !Object.isEmpty(_props.attr["data-triggers"]))

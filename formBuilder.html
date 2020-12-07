@@ -36,8 +36,6 @@
             rjs.define("./oxana/builder/componentList.js", "componentList");
             rjs.define("./oxana/builder/CollectionEditor.js", "CollectionEditor");
             rjs.define("./oxana/builder/ObjectEditor.js", "ObjectEditor");
-            rjs.define("./oxana/DataBrowse.js", "DataBrowse");
-            rjs.define("./oxana/accounting/components/CurrencyExRate.js", "CurrencyExRate");
             rjs.require([
                 "Builder_Css",
                 "yaml",
@@ -46,7 +44,7 @@
                 "ApiClientGen",
                 "componentList",
                 "CollectionEditor",
-                "ObjectEditor"
+                "ObjectEditor",
             ]).then(function () {
                 rjs.define("./oxana/Scrap.js", "Scrap");
                 rjs.define("./oxana/builder/metaProps.js", "metaProps");
@@ -68,7 +66,8 @@
                     "GaiaAPI_forms",
                     "GaiaAPI_DV_dataviews",
                     "GaiaAPI_Frms_dataview",
-                    "GaiaAPI_dataview_pid_1"
+                    "GaiaAPI_dataview_pid_1",
+                   
                 ]).then(function () {
                     rjs.define("./oxana/builder/FormBuilder.js", "FormBuilder");
                 });

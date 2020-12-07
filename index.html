@@ -32,8 +32,8 @@
             rjs.define("./oxana/Code/Code.js", "Code");
             rjs.define("./oxana/Code/CodeMerge.js", "CodeMerge");
             rjs.define("./oxana/kanban/Kanban.js", "Kanban");
-            rjs.define("./oxana/DataBrowse.js", "DataBrowse");
-            rjs.define("./oxana/accounting/components/CurrencyExRate.js", "CurrencyExRate");
+            //rjs.define("./oxana/DataBrowse.js", "DataBrowse");
+            // rjs.define("./components/CurrencyExRate/CurrencyExRate.js", "CurrencyExRate");
             rjs.define("./oxana/kanban/css/kanban_default.css", "kanban_default_css");
             rjs.define("./oxana/GaiaAPI/GaiaAPI_forms.js", "GaiaAPI_forms");
             rjs.require([
@@ -49,11 +49,13 @@
                 "Kanban",
                 "kanban_default_css",
                 "GaiaAPI_forms",
-                "DataBrowse",
-                "CurrencyExRate"
+               //  "CurrencyExRate",
+               // "DataBrowse"
+               
             ]).then(function () {
                 //rjs.define("./examples/cache/example.js", "api_client_cache");
-                rjs.define("./examples/ApiClient/example.js", "ApiClientExample");
+                rjs.define("./examples/CurrencyExRate/example.js", "CurrencyExRateExample");
+                //rjs.define("./examples/ApiClient/example.js", "ApiClientExample");
                 //rjs.define("./examples/ApiClient/exampleRB.js", "ApiClientExample");
                 //rjs.define("./examples/Table/example.js", "TableExample");
                 //rjs.define("./examples/wizard/example.js", "wizardExample");

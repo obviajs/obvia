@@ -44,7 +44,6 @@ rjs.define("lib/TwoWayMap.js", "TwoWayMap");
 rjs.define("./oxana/builder/SpacingEditor.js", "SpacingEditor");
 rjs.define("./oxana/AutoBrowse.js", "AutoBrowse");
 rjs.define("./oxana/DataBrowse.js", "DataBrowse");
-rjs.define("./oxana/accounting/components/CurrencyExRate.js", "CurrencyExRate");
 rjs.define("./components/base/Attr.js", "Attr");
 rjs.define("./components/base/Css.js", "Css");
 rjs.define("./components/base/Props.js", "Props");
@@ -175,7 +174,7 @@ rjs.define("./components/DataGrid/DataGridCellRenderer.js", "DataGridCellRendere
 rjs.define("./components/DataGrid/DataGridColumn.js", "DataGridColumn");
 rjs.define("./components/DataGrid/DataGrid.js", "DataGrid");
 
-rjs.define("./oxana/accounting/components/CurrencyExRate.js", "CurrencyExRate");
+rjs.define("./components/CurrencyExRate/CurrencyExRate.js", "CurrencyExRate");
 //Loader
 
 //ProgressBar
@@ -275,7 +274,6 @@ rjs.require(["EventDispatcher"]).then(function () {
         "FormEventType",
         "AutoBrowse",
         "DataBrowse",
-        "CurrencyExRate",
         "Attr",
         "Css",
         "codeEditor_css",

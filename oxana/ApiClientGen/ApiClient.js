@@ -53,12 +53,12 @@ var ApiClient = function (_props) {
     };
     
     let _prepareUrl = function (url, pathParams, queryParams) {
-        url = _buildUrl(url, pathParams);
-        if (url[url.length - 1] != '/') {
-            url = url + '/';
-        }
-        if(queryParams && queryParams.length>0)
-            url += "?" + new URLSearchParams(queryParams).toString();
+       // url = _buildUrl(url, pathParams);
+        // if (url[url.length - 1] != '/') {
+        //     url = url + '/';
+        // }
+        // if(queryParams && queryParams.length>0)
+        //     url += "?" + new URLSearchParams(queryParams).toString();
         return url;
     };
 

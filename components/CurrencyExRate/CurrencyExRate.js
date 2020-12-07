@@ -5,7 +5,7 @@
  */
 
 //component definition
-let CurrencyExRate = function (_props) {
+var CurrencyExRate = function (_props) {
     let _self = this;
   
     Object.defineProperty(this, "value", {
@@ -28,35 +28,60 @@ let CurrencyExRate = function (_props) {
         _value.exRate = this.children.exchangeRate.value;
         _value.currency = this.children.currencySelect.value;
     };
+    this.afterAttach = function (e) {
+        if (e.target.id == this.domID) {
+          
+           //this.width = this.$el.width() - this.workArea_53.$el.width();
+          // this.width = this.$el.width() - this.workArea_53.$el.width();
+            this.$el.width() = this.$container.parent().parent().width() - 50;
+        }
+    };
     let _cmps;
     let fnContainerDelayInit = function () {
         _cmps = [
            
             {
-                ctor: DropDown,
-                props: {
-                    id: "currencySelect",
-                    dataProvider: _currencyList,
-                    labelField: _labelField,
-                    valueField: _valueField,
-                    value: _value.currency,
+                "ctor": "Container",
+                "props": {
+                    type: ContainerType.NONE,
+                    "id": "workArea_53",
                     css: {
-                        width: '20%',
-                        float: 'left'
-                    }
+                        "display": "flex",
+                        "width": "100%"
+                    },
+                    "components": [
+                        
+                        {
+                            ctor: DropDown,
+                            props: {
+                                id: "currencySelect",
+                                dataProvider: _currencyList,
+                                labelField: _labelField,
+                                valueField: _valueField,
+                                value: _value.currency,
+                                css: {
+                                    width: '20%',
+                                    float: 'left'
+                                }
+                            }
+                        },
+                        {
+                            ctor: TextInput,
+                            props: {
+                                id: "exchangeRate",
+                                value: _value.exRate,
+                                css: {
+                                    width: '80%',
+                                    float: 'left'
+                                }
+                            }
+                        }
+                    ]
                 }
             },
-            {
-                ctor: TextInput,
-                props: {
-                    id: "exchangeRate",
-                    value: _value.exRate,
-                    css: {
-                        width: '80%',
-                        float: 'left'
-                    }
-                }
-            } 
+           
+         
+            
         ];
     };
     

@@ -62,6 +62,10 @@ Builder.initComponentList = function () {
             "ctor": "AutoCompleteEx"
         },
         {
+            "label": "CurrencyExRate",
+            "ctor": "CurrencyExRate"
+        },
+        {
             "label": "AutoBrowse",
             "ctor": "AutoBrowse"
         },
@@ -172,10 +176,6 @@ Builder.initComponentList = function () {
         {
             "label": "DataBrowse",
             "ctor": "DataBrowse"
-        },
-        {
-            "label": "CurrencyExRate",
-            "ctor": "CurrencyExRate"
         }
     ]);
 };
