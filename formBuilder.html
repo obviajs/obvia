@@ -30,9 +30,9 @@
         function main() {
             rjs.define("./oxana/builder/css/builder.css", "Builder_Css");
             rjs.define("lib/yaml.js", "yaml");
-            rjs.define("./oxana/ApiClientGen/OAMethod.js", "OAMethod");
-            rjs.define("./oxana/ApiClientGen/ApiClient.js", "ApiClient");
-            rjs.define("./oxana/ApiClientGen/ApiClientGen.js", "ApiClientGen");
+            rjs.define("./lib/ApiClientGen/OAMethod.js", "OAMethod");
+            rjs.define("./lib/ApiClientGen/ApiClient.js", "ApiClient");
+            rjs.define("./lib/ApiClientGen/ApiClientGen.js", "ApiClientGen");
             rjs.define("./oxana/builder/componentList.js", "componentList");
             rjs.define("./oxana/builder/CollectionEditor.js", "CollectionEditor");
             rjs.define("./oxana/builder/ObjectEditor.js", "ObjectEditor");
@@ -46,7 +46,7 @@
                 "CollectionEditor",
                 "ObjectEditor",
             ]).then(function () {
-                rjs.define("./oxana/Scrap.js", "Scrap");
+                rjs.define("./lib/Scrap.js", "Scrap");
                 rjs.define("./oxana/builder/metaProps.js", "metaProps");
                 rjs.define("./oxana/builder/componentLiterals.js", "componentLiterals");
                 rjs.define("./oxana/builder/model/FormProperties.js", "FormProperties");

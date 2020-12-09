@@ -42,8 +42,8 @@ rjs.define("./components/base/Spacing.js", "Spacing");
 rjs.define("./components/base/AutoObject.js", "AutoObject");
 rjs.define("lib/TwoWayMap.js", "TwoWayMap");
 rjs.define("./oxana/builder/SpacingEditor.js", "SpacingEditor");
-rjs.define("./oxana/AutoBrowse.js", "AutoBrowse");
-rjs.define("./oxana/DataBrowse.js", "DataBrowse");
+rjs.define("./components/AutoBrowse.js", "AutoBrowse");
+rjs.define("./components/DataBrowse.js", "DataBrowse");
 rjs.define("./components/base/Attr.js", "Attr");
 rjs.define("./components/base/Css.js", "Css");
 rjs.define("./components/base/Props.js", "Props");
@@ -125,9 +125,9 @@ rjs.define("./components/Select/Select.js", "Select");
 rjs.define("./components/Tree/Li.js", "Li");
 rjs.define("./components/Tree/Tree.js", "Tree");
 //HierarchicalTree
-rjs.define("./oxana/HierarchialTree/HierarchialTree.js", "HierarchialTree");
+rjs.define("./components/HierarchialTree/HierarchialTree.js", "HierarchialTree");
 //CreditCard
-rjs.define('./oxana/CreditCard/CreditCard.js', "CreditCard");
+rjs.define('./components/CreditCard/CreditCard.js', "CreditCard");
 //DateTime
 rjs.define("./components/DateTime/DateTime.js", "DateTime");
 
@@ -196,14 +196,14 @@ rjs.define("./components/Calendar/CalendarConstants.js", "CalendarConstants");
 //CalendarWeek
 rjs.define("./components/Calendar/CalendarWeek.js", "CalendarWeek");
 rjs.define("./components/Calendar/CalendarMonth.js", "CalendarMonth");
-rjs.define("./oxana/wizard/Wizard.js", "Wizard");
+rjs.define("./components/wizard/Wizard.js", "Wizard");
 rjs.define("lib/KeyboardUtils.js", "KeyboardUtils");
 
 rjs.define("./components/Calendar/css/calendarMonth-default.css", "calendarMonth_default_css");
 rjs.define("./components/Calendar/css/calendarWeek-default.css", "calendarWeek_default_css");
 rjs.define("./components/Calendar/css/calendarDay-default.css", "calendarDay_default_css");
 rjs.define("./components/Calendar/css/calendar-default.css", "calendar_default_css");
-rjs.define('oxana/CreditCard/css/creditCard-default.css', 'creditCard-default_css');
+rjs.define('./components/CreditCard/css/creditCard-default.css', 'creditCard-default_css');
 rjs.define("./components/Repeater/css/repeater-default.css", "repeater_default_css");
 rjs.define("./components/DataGrid/css/datagrid-default.css", "datagrid_default_css");
 rjs.define("./components/Toggle/toggle-default.css", "toggle_default_css");
@@ -212,7 +212,7 @@ rjs.define("./components/AutoComplete/AutoCompleteEx.css", "AutoCompleteExCSS");
 rjs.define("lib/dependencies/summernote/summernote.css", "SummerNoteCSS");
 rjs.define("./components/base/css/parent-default.css", "parent_default_css");
 rjs.define("./components/base/css/collapse.css", "collapse_css");
-rjs.define("./oxana/HierarchialTree/css/HierarchialTree-default.css", "HierarchialTree_css");
+rjs.define("./components/HierarchialTree/css/HierarchialTree-default.css", "HierarchialTree_css");
 rjs.define("./components/SideNav/css/sidenav-default.css", "sidenav_default_css");
 rjs.define("./oxana/Code/css/code.css", "codeEditor_css");
 
@@ -222,7 +222,7 @@ rjs.define("./components/Validation/RangeValidator.js", "RangeValidator");
 rjs.define("./components/Validation/RequiredFieldValidator.js", "RequiredFieldValidator");
 rjs.define("./components/Validation/RegularExpressionValidator.js", "RegularExpressionValidator");
 rjs.define("./components/Validation/CustomValidator.js", "CustomValidator");
-//rjs.define("./oxana/Wizard/css/wizard-default.css", "wizard_default_css");
+//rjs.define("./components/Wizard/css/wizard-default.css", "wizard_default_css");
 rjs.define("./components/DropEdit/css/DropEdit.css", "DropEdit_css");
 rjs.define("./components/Tree/css/tree-default.css", "tree_default_css");
 rjs.define("./components/SideNav/css/sideNav.css", "sideNav_css");

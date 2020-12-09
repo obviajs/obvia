@@ -53,7 +53,7 @@ var TextInput = function (_props) {
 
     Object.defineProperty(this, "type", {
         get: function type() {
-            return _type
+            return _type;
         },
         set: function type(v) {
             if (_type != v) {
@@ -74,7 +74,7 @@ var TextInput = function (_props) {
 
     Object.defineProperty(this, "autocomplete", {
         get: function autocomplete() {
-            return _autocomplete
+            return _autocomplete;
         },
         set: function autocomplete(v) {
             if (_autocomplete != v) {

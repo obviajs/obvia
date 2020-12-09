@@ -9,37 +9,36 @@ var DateTimeCb = function (_props) {
     let _dpDate = DateTimeCb.dpDate, _dpMonth = DateTimeCb.dpMonth, _dpYear = DateTimeCb.dpYear, _dpHour = DateTimeCb.dpHour, _dpMinute = DateTimeCb.dpMinute, _dpSecond = DateTimeCb.dpSecond;
     let _dateSelect, _monthSelect, _yearSelect, _hourSelect, _minuteSelect, _secondSelect;
     let _cmps, _tpl;
-    let _initDP = function()
-    {
-        if(!DateTimeCb.init){
+    let _initDP = function () {
+        if (!DateTimeCb.init) {
             for (let i = 1; i < 32; i++) {
-                _dpDate[i-1] = {"value": i, "label": i};
+                _dpDate[i - 1] = { "value": i, "label": i };
             }
             for (let i = 0; i < 13; i++) {
-                _dpMonth[i] = {"value": i, "label": CalendarConstants.Months[i]};
+                _dpMonth[i] = { "value": i, "label": CalendarConstants.Months[i] };
             }
         
             for (let i = _startYear; i < _endYear; i++) {
-                _dpYear.push({"value": i, "label": i});
+                _dpYear.push({ "value": i, "label": i });
             }
             
             for (let i = 0; i < 24; i++) {
-                _dpHour[i] = {"value": i, "label": i};
+                _dpHour[i] = { "value": i, "label": i };
             }
             
             for (let i = 0; i < 60; i++) {
-                _dpMinute[i] = _dpSecond[i] = {"value": i, "label": i};
+                _dpMinute[i] = _dpSecond[i] = { "value": i, "label": i };
             }
             DateTimeCb.init = true;
-        }else{
-            if(_dpYear[0] != _startYear || _dpYear[_dpYear.length-1]!=_endYear){
+        } else {
+            if (_dpYear[0] != _startYear || _dpYear[_dpYear.length - 1] != _endYear) {
                 _dpYear = [];
                 for (let i = _startYear; i < _endYear; i++) {
-                    _dpYear.push({"value": i, "label": i});
+                    _dpYear.push({ "value": i, "label": i });
                 }
             }
         }
-    }
+    };
 
     Object.defineProperty(this, "value", {
         get: function value() {
@@ -304,7 +303,8 @@ var DateTimeCb = function (_props) {
     fnContainerDelayInit();
     _props.components = _cmps;
     
-    Container.call(this, _props, true);
+    let r = Container.call(this, _props, true);
+    return r;
 };
 DateTimeCb.prototype.ctor = "DateTimeCb";
 DateTimeCb.init = false;
