@@ -22,11 +22,10 @@ If you would like to financially support Obvia's development, please consider ma
 
 ## License
 [MIT]\
-Powered by Kreatx 
 
 [obviajs.com]: https://obviajs.com/
-[Issue Reporting Guidelines]: https://github.com/kreatx-admin/obvia/blob/master/.github/CONTRIBUTING.md#issue-reporting-guidelines
-[Contribution Guidelines]: https://github.com/kreatx-admin/obvia/blob/master/.github/CONTRIBUTING.md
+[Issue Reporting Guidelines]: https://github.com/obviajs/obvia/blob/master/.github/CONTRIBUTING.md#issue-reporting-guidelines
+[Contribution Guidelines]: https://github.com/obviajs/obvia/blob/master/.github/CONTRIBUTING.md
 [PayPal]: https://paypal.me/obviajs
 [MIT]: https://opensource.org/licenses/MIT
 [chat]: https://discord.gg/bYd5A2Q

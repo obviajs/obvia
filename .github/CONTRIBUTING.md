@@ -8,7 +8,7 @@ We are really excited that you would like to contribute to Obvia and help make i
 - [Commit Message Guidelines](#commit-message-guidelines)
 
 ## Code of Conduct
-We would like to keep Obvia an open and inclusive community to everybody. Please read and follow our [Code of Conduct.](https://github.com/kreatx-admin/obvia/blob/master/.github/CODE_OF_CONDUCT.md)
+We would like to keep Obvia an open and inclusive community to everybody. Please read and follow our [Code of Conduct.](https://github.com/obviajs/obvia/blob/master/.github/CODE_OF_CONDUCT.md)
 
 ## Issue Reporting Guidelines
 Before submitting an issue, please search the issue tracker, maybe an issue for your problem already exists and the discussion can help you find a solution or workaround.
@@ -16,7 +16,7 @@ Before submitting an issue, please search the issue tracker, maybe an issue for 
 We want to address the issues as soon as possible, but before we can fix a bug, we need to reproduce and confirm it. Therefore, when submitting a bug report, we require that you provide a minimal reproduction, which can provide us with valuable information in order to isolate the problem. 
 Unfortunately, we cannot investigate or fix bugs without a minimal reproduction, so if we do not hear back from you, we are going to close an issue that doesn't have enough information to be reproduced.
 
-You can file new issues by filling out one of our [new issue templates](https://github.com/kreatx-admin/obvia/issues/new/choose).
+You can file new issues by filling out one of our [new issue templates](https://github.com/obviajs/obvia/issues/new/choose).
 
 ## Pull Request Guidelines
 Before you submit your Pull Request (PR), please consider the following guidelines:
