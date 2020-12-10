@@ -21,7 +21,7 @@ Thank you to everyone who has contributed to ***Obvia***!
 If you would like to financially support Obvia's development, please consider making a donation on our [PayPal].
 
 ## License
-[MIT]\
+[MIT]
 
 [obviajs.com]: https://obviajs.com/
 [Issue Reporting Guidelines]: https://github.com/obviajs/obvia/blob/master/.github/CONTRIBUTING.md#issue-reporting-guidelines
