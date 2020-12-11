@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Flower UI</title>
+    <title>ObviaJS</title>
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
@@ -14,61 +14,25 @@
     <link rel="stylesheet" async
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script async src="https://kit.fontawesome.com/51294fb9f5.js"></script>
-
-    <!-- FLOWER UI -->
-    <!-- <link rel="stylesheet" type="text/css" href="css/main.css" /> -->
-    <!-- <script src="lib/rca/RemoteCursorEvent.js"></script> -->
-    <!-- <script src="lib/rca/RemoteCursorArray.js"></script> -->
-    <!-- <script src="lib/rca/SortField.js"></script> -->
     <script src="lib/rjs.js"></script>
     <script>
-        rjs.init({
-            debug: false
-        });
-
         function main() {
-            rjs.define("./oxana/builder/CollectionEditor.js", "CollectionEditor");
-            rjs.define("./oxana/builder/ObjectEditor.js", "ObjectEditor");
-            rjs.define("./oxana/Code/Code.js", "Code");
-            rjs.define("./oxana/Code/CodeMerge.js", "CodeMerge");
-            rjs.define("./oxana/kanban/Kanban.js", "Kanban");
-            //rjs.define("./oxana/DataBrowse.js", "DataBrowse");
-            // rjs.define("./components/CurrencyExRate/CurrencyExRate.js", "CurrencyExRate");
-            rjs.define("./oxana/kanban/css/kanban_default.css", "kanban_default_css");
-            rjs.define("./oxana/GaiaAPI/GaiaAPI_forms.js", "GaiaAPI_forms");
-            rjs.require([
-                "CollectionEditor",
-                "ObjectEditor",
-                "Code",
-                "CodeMerge",
-                "yaml",
-                "ApiClient",
-                "ApiClientGen",
-                "OAMethod",
-                "GaiaAPI_Utils",
-                "Kanban",
-                "kanban_default_css",
-                "GaiaAPI_forms",
-               //  "CurrencyExRate",
-               // "DataBrowse"
-               
-            ]).then(function () {
-                //rjs.define("./examples/cache/example.js", "api_client_cache");
-                rjs.define("./examples/CurrencyExRate/example.js", "CurrencyExRateExample");
-                //rjs.define("./examples/ApiClient/example.js", "ApiClientExample");
-                //rjs.define("./examples/ApiClient/exampleRB.js", "ApiClientExample");
-                //rjs.define("./examples/Table/example.js", "TableExample");
-                //rjs.define("./examples/wizard/example.js", "wizardExample");
-                //rjs.define("./examples/Validation/example.js", "Validation");
-                //rjs.define("./examples/Validation/repeaterExample.js", "Validation");
-                //rjs.define("./examples/Validation/rangeValidationExample.js", "RangeValidation");
-                // rjs.define("./examples/Validation/regularExpressionValidatorExample.js",
-                //     "regularExpressionValidators");
-                //rjs.define("./examples/Validation/customValidationExample.js", "custom");
-                //rjs.define("./examples/KanBan/example.js", "KanBanExample");
-                //let gaiaForm = new GaiaAPI_forms();
-                //let form = gaiaForm.formsClient.get(1);
-            });
+          
+            //rjs.define("./examples/cache/example.js", "api_client_cache");
+            //rjs.define("./examples/CurrencyExRate/example.js", "CurrencyExRateExample");
+            rjs.define("./examples/ApiClient/example.js", "ApiClientExample");
+            //rjs.define("./examples/ApiClient/exampleRB.js", "ApiClientExample");
+            //rjs.define("./examples/Table/example.js", "TableExample");
+            //rjs.define("./examples/wizard/example.js", "wizardExample");
+            //rjs.define("./examples/Validation/example.js", "Validation");
+            //rjs.define("./examples/Validation/repeaterExample.js", "Validation");
+            //rjs.define("./examples/Validation/rangeValidationExample.js", "RangeValidation");
+            // rjs.define("./examples/Validation/regularExpressionValidatorExample.js",
+            //     "regularExpressionValidators");
+            //rjs.define("./examples/Validation/customValidationExample.js", "custom");
+            //rjs.define("./examples/KanBan/example.js", "KanBanExample");
+  
+           
             //rjs.define("./examples/Code/example.js", "CodeExample");
             //rjs.define("./examples/DropEdit/example.js", "DropEditExample");
             //rjs.define("./examples/ArrayEx/example.js", "ArrayExExample");
@@ -112,19 +76,13 @@
             //rjs.define("./examples/Repeater/exampleEx.js", "RepeaterExample");
             //rjs.define("./examples/Calendar/example.js", "CalendarExample");
             //rjs.define("./examples/DataBrowse/example.js", "DataBrowse");
-            // rjs.define("./examples/HierachicalTree/example.js", "HierachicalTree");
-            rjs.define("lib/yaml.js", "yaml");
-            rjs.define("./lib/ApiClientGen/ApiClient.js", "ApiClient");
-            rjs.define("./lib/ApiClientGen/ApiClientGen.js", "ApiClientGen");
-            rjs.define("./lib/ApiClientGen/OAMethod.js", "OAMethod");
-            rjs.define("./oxana/GaiaAPI/GaiaAPI_Utils.js",
-                "GaiaAPI_Utils");
+            //rjs.define("./examples/HierachicalTree/example.js", "HierachicalTree");
             //rjs.define('./examples/CreditCard/example.js', "CreditCard");
             //rjs.define("./examples/Calendar/example_dayView.js", "CalendarDayExample");
             //rjs.define("./examples/Calendar/example_week.js", "CalendarWeekExample");
             //rjs.define('./examples/MultiSwitch/example.js', "MultiSwitchExample");
             //rjs.define("./examples/Link/example.js", "LinkExample");
-            // rjs.define("./examples/Modal/example.js", "ModalExample");
+            //rjs.define("./examples/Modal/example.js", "ModalExample");
             //rjs.define('./examples/TextEditor/example.js', "TextEditorExample");
             //rjs.define('./examples/TextInput/example.js', "TextInputExample");
             //rjs.define("./examples/AutoComplete/example.js", "AutoCompleteExample");
@@ -146,7 +104,5 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
     integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
 </script>
-<!-- main entry point script -->
-<script type="text/javascript" src="main.js"></script>
-
+<script type="text/javascript" src="aml.js"></script>
 </html>

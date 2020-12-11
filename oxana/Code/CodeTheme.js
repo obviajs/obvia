@@ -72,4 +72,4 @@ CodeTheme.require = function(theme){
     }
     return p;
 }
-CodeTheme.basepath = "./oxana/Code/require/theme/"; 
+CodeTheme.basepath = "Code/require/theme/"; 

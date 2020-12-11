@@ -3,7 +3,6 @@
  * 
  * Kreatx 2019
  */
-//requires 
 var Code = function (_props) {
     let _self = this,
         _cmInst, _errors = [],
@@ -25,7 +24,7 @@ var Code = function (_props) {
             if (cursor.line != 0)
                 doc.replaceRange(text, cursor);
         }
-    }
+    };
 
     Object.defineProperty(this, "cmInst", {
         get: function cmInst() {
@@ -126,7 +125,6 @@ var Code = function (_props) {
         e.preventDefault();
         _codeArea = this.codeArea;
         coroutine(function* () {
-            yield Code.require();
             yield CodeMode.require(_mode.name);
             yield CodeTheme.require(_theme);
         }).then(function () {
@@ -140,7 +138,7 @@ var Code = function (_props) {
             });
             _self.trigger('creationComplete');
         });
-    }
+    };
 
     let _changes = function (cm, changes) {
         let evt = jQuery.Event("changes");
@@ -151,20 +149,20 @@ var Code = function (_props) {
 
     let _toggleFullScreen = function () {
         _cmInst.setOption("fullScreen", !_cmInst.getOption("fullScreen"));
-    }
+    };
 
     let _exitFullScreen = function () {
         if (_cmInst.getOption("fullScreen")) _cmInst.setOption("fullScreen", false);
-    }
+    };
 
     let _makeMarker = function () {
         var marker = document.createElement("div");
         marker.style.color = "#822";
         marker.innerHTML = "●";
         return marker;
-    }
+    };
 
-    var _defaultParams = {
+    let _defaultParams = {
         mode: {
             name: "javascript",
             globalVars: true,
@@ -216,16 +214,3 @@ var Code = function (_props) {
     return r;
 };
 Code.prototype.ctor = 'Code';
-Code.require = function () {
-    rjs.define("./oxana/Code/CodeMode.js", "CodeMode");
-    rjs.define("./oxana/Code/CodeTheme.js", "CodeTheme");
-    rjs.define("./oxana/Code/CodeBase.js", "CodeBase");
-
-    return coroutine(function* () {
-        yield rjs.require(["CodeMode", "CodeTheme", "CodeBase"]);
-        yield CodeBase.require();
-        rjs.define("./oxana/Code/CodeAddons.js", "CodeAddons");
-        yield rjs.require(["CodeAddons"]);
-        yield CodeAddons.require();
-    });
-}

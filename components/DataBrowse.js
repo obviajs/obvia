@@ -21,54 +21,56 @@ var DataBrowse = function (_props) {
             {
                 _dataProvider = v;
                _dg.dataProvider = v;
-            }
-            
+            }            
         },
         enumerable:true
-        });
+    });
     
-        Object.defineProperty(this, "value", 
+    Object.defineProperty(this, "value", 
+    {
+        get: function value() 
         {
-            get: function value() 
-            {
-                return  _textInput.value;
-            },
-            set: function value(v) 
-            {
-                _textInput.value = v;
-            },
-            enumerable:true
-            });
-      Object.defineProperty(this, "placeholder", 
+            return  _textInput.value;
+        },
+        set: function value(v) 
         {
-            get: function placeholder() 
-            {
-                return  _textInput.placeholder;
-            },
-            set: function placeholder(v) 
-            {
-                _textInput.placeholder = v;
-            },
-            enumerable:true
-        });
+            _textInput.value = v;
+        },
+        enumerable:true
+    });
+    
+    Object.defineProperty(this, "placeholder", 
+    {
+        get: function placeholder() 
+        {
+            return  _textInput.placeholder;
+        },
+        set: function placeholder(v) 
+        {
+            _textInput.placeholder = v;
+        },
+        enumerable:true
+    });
  
-     this.endDraw = function (e) {
-         if (e.target.id == this.domID) {
-             _textInput = this.children[this.components[0].props.id].components[0];
-            // _textInput.placeholder = this.children[this.components[0].props.id].components[0].props.placeholder;
-             
-             _modal = this.children[this.components[1].props.id];
-             _dg = _modal.modalDialog.modalContent.modalBody.dataGrid;
+    this.endDraw = function (e) {
+        if (e.target.id == this.domID) {
+            _textInput = this.children[this.components[0].props.id].components[0];
+        // _textInput.placeholder = this.children[this.components[0].props.id].components[0].props.placeholder;
+            
+            _modal = this.children[this.components[1].props.id];
+            _dg = _modal.modalDialog.modalContent.modalBody.dataGrid;
         }
     };
+
     this.afterAttach = function (e) {
         if (e.target.id == this.domID) {
-          //is followed the same approach to solve the width case as AutoBrowse but it's not the exact issue
+            //is followed the same approach to solve the width case as AutoBrowse but it's not the exact issue
            //this.textField.offsetWidth = this.$el.width() - this.workArea_66.$el.width();
         }
     };
+
     this.beforeAttach = function (e) {
-      if (e.target.id == this.domID) {
+        if (e.target.id == this.domID) {
             if (_props.value) {
                 this.value = _props.value;
             }
@@ -78,21 +80,19 @@ var DataBrowse = function (_props) {
     let _cmps,  _dg, _modal;
     var fnContainerDelayInit = function(){
         _cmps = 
-        [
-           
+        [           
             {
                 "ctor": "Container",
                 "props": {
                     type: ContainerType.NONE,
                     "id": "workArea_66",
                     css: {
-                         "display":"flex"
-                     },
+                        "display":"flex"
+                    },
                     "components": [
                         {
                             "ctor": "TextInput",
                             "props": {
-                                css:"80%",
                                 value: "",
                                 type: "text",
                                 autocomplete: "off",
@@ -111,10 +111,7 @@ var DataBrowse = function (_props) {
                         },
                         {
                             ctor: Button,
-                            props: {
-                                css: {
-                                 width: "20%"
-                                },
+                            props: {                               
                                 id: 'selectBtn',
                                 type: "button",
                                 components: [{
@@ -156,7 +153,7 @@ var DataBrowse = function (_props) {
         ];
     };
 
-    var _drawGrid = function (e) {
+    let _drawGrid = function (e) {
         _dg.updateDisplayList();
     };
 
@@ -167,11 +164,12 @@ var DataBrowse = function (_props) {
             _modal.show();
         }
     };
+
     let _selectItem = function (e, ra) {
-        console.log(e, "this is the event");
-        _textInput.value = ra.currentItem
-       _modal.hide();
+        _textInput.value = ra.currentItem[_labelField];
+        _modal.hide();
     };
+
     let _initColumns = function () {
         for (let i = 0; i < _fields.length; i++) {
             _columns.push({

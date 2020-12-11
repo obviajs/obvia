@@ -22,21 +22,18 @@ var CodeMerge = function (_props) {
         enumerable: true
     });
     
-    this.beforeAttach = function(e) 
-    {
-        if (e.target.id == this.domID) 
-        {
+    this.beforeAttach = function (e) {
+        if (e.target.id == this.domID) {
             this.$container = this.$el;
             e.preventDefault();
             coroutine(function* () {
-                yield CodeMerge.require();
                 yield CodeMode.require(_mode);
                 yield CodeTheme.require(_theme);
-            }).then(function(){
+            }).then(function () {
                 _cmInst = CodeMirror.MergeView(_self.$el[0], _props);
-            }); 
+            });
         }
-    }
+    };
     
     /*
     if (GUI.IDE.fullScreenState) {
@@ -72,16 +69,3 @@ var CodeMerge = function (_props) {
     return r;
 };
 CodeMerge.prototype.ctor = 'CodeMerge';
-CodeMerge.require = function(){
-    rjs.define("./oxana/Code/CodeMode.js", "CodeMode");
-    rjs.define("./oxana/Code/CodeTheme.js", "CodeTheme");
-    rjs.define("./oxana/Code/CodeBase.js", "CodeBase");
-    
-    return coroutine(function* () {
-        yield rjs.require(["CodeMode", "CodeTheme", "CodeBase"]);
-        yield CodeBase.require();
-        rjs.define("./oxana/Code/CodeAddons.js", "CodeAddons");
-        yield rjs.require(["CodeAddons"]);
-        yield CodeAddons.require();
-    });
-}

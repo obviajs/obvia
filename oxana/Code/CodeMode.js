@@ -13,4 +13,4 @@ CodeMode.require = function(mode){
     rjs.define(CodeMode.basepath+mode+"/"+mode+".js", mode);
     return rjs.require([mode]);
 }
-CodeMode.basepath = "./oxana/Code/require/mode/"; 
+CodeMode.basepath = "Code/require/mode/"; 

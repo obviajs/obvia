@@ -461,7 +461,7 @@ var Component = function (_props) {
     let _beginDraw = this.beginDraw;
     this.beginDraw = function (e) {
         if (e.target.id == this.domID) {
-            console.log("beginDraw : Type:", this.ctor + " id:" + this.$el.attr("id"));
+            //console.log("beginDraw : Type:", this.ctor + " id:" + this.$el.attr("id"));
             if (typeof _props.beginDraw == 'function')
                 _props.beginDraw.apply(this.proxyMaybe, arguments);
             if (!e.isDefaultPrevented()) {
@@ -474,7 +474,7 @@ var Component = function (_props) {
     let _endDraw = this.endDraw;
     this.endDraw = function (e) {
         if (e.target.id == this.domID) {
-            console.log("endDraw : Type:", this.ctor + " id:" + this.$el.attr("id"));
+            //console.log("endDraw : Type:", this.ctor + " id:" + this.$el.attr("id"));
             if (typeof _props.endDraw == 'function')
                 _props.endDraw.apply(this.proxyMaybe, arguments);
             //TODO: not neccessary ? 

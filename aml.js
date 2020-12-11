@@ -41,7 +41,6 @@ rjs.define("./components/base/Component.js", "Component");
 rjs.define("./components/base/Spacing.js", "Spacing");
 rjs.define("./components/base/AutoObject.js", "AutoObject");
 rjs.define("lib/TwoWayMap.js", "TwoWayMap");
-rjs.define("./oxana/builder/SpacingEditor.js", "SpacingEditor");
 rjs.define("./components/AutoBrowse.js", "AutoBrowse");
 rjs.define("./components/DataBrowse.js", "DataBrowse");
 rjs.define("./components/base/Attr.js", "Attr");
@@ -226,8 +225,18 @@ rjs.define("./components/Validation/CustomValidator.js", "CustomValidator");
 rjs.define("./components/DropEdit/css/DropEdit.css", "DropEdit_css");
 rjs.define("./components/Tree/css/tree-default.css", "tree_default_css");
 rjs.define("./components/SideNav/css/sideNav.css", "sideNav_css");
-rjs.require(["EventDispatcher"]).then(function () {
-    rjs.require([
+
+rjs.define("./components/kanban/Kanban.js", "Kanban");
+rjs.define("./components/kanban/css/kanban_default.css", "kanban_default_css");
+
+rjs.define("lib/yaml.js", "yaml");
+rjs.define("./lib/ApiClientGen/ApiClient.js", "ApiClient");
+rjs.define("./lib/ApiClientGen/ApiClientGen.js", "ApiClientGen");
+rjs.define("./lib/ApiClientGen/OAMethod.js", "OAMethod");
+
+let dependencies = [
+    ["EventDispatcher"],
+    [
         "Poolable",
         "Timer",
         "AutoObject",
@@ -267,7 +276,6 @@ rjs.require(["EventDispatcher"]).then(function () {
         "HistoryEventType",
         "Component",
         "Spacing",
-        "SpacingEditor",
         "Form",
         "FormField",
         "FormFieldSize",
@@ -400,7 +408,14 @@ rjs.require(["EventDispatcher"]).then(function () {
         //"wizard_default_css",
         "tree_default_css",
         "sideNav_css",
-    ], function () {
-        window.main();
-    }, flowerCM);
+        "Kanban",
+        "kanban_default_css",
+        "yaml",
+        "ApiClient",
+        "ApiClientGen",
+        "OAMethod"
+    ]
+];
+rjs.grequire(dependencies).then(() => {
+    window.main();
 });
