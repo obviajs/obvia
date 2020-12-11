@@ -213,7 +213,6 @@ rjs.define("./components/base/css/parent-default.css", "parent_default_css");
 rjs.define("./components/base/css/collapse.css", "collapse_css");
 rjs.define("./components/HierarchialTree/css/HierarchialTree-default.css", "HierarchialTree_css");
 rjs.define("./components/SideNav/css/sidenav-default.css", "sidenav_default_css");
-rjs.define("./oxana/Code/css/code.css", "codeEditor_css");
 
 rjs.define("./components/Validation/ValidationManager.js", "ValidationManager");
 rjs.define("./components/Validation/Validator.js", "Validator");
@@ -284,7 +283,6 @@ let dependencies = [
         "DataBrowse",
         "Attr",
         "Css",
-        "codeEditor_css",
         "Props",
         "Parent",
         "ContainerType",
