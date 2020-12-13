@@ -121,7 +121,7 @@ var DataGrid = function (_props) {
                         }
                     }
                 }
-                _self.$message.remove();
+                _self.$message.hide();
             } else {
                 if (deltaScroll < 0) {
                     if (_self.dataProvider.nextPage && _self.dataProvider.totalRecords == Infinity) {
@@ -136,22 +136,19 @@ var DataGrid = function (_props) {
                             } else {
                                 alert("ehlo");
                             }
-                            _self.$message.remove();
+                            _self.$message.hide();
                         });
                     } else {
                         _self.$table.css({
                             "margin-top": _prevScrollTop + "px"
                         });
-                        _self.$scrollArea.css({
-                            "margin-top": (-(_self.realHeight) - _prevScrollTop) + "px"
-                        });
                         r = false;
-                        _self.$message.remove();
+                        _self.$message.hide();
                     }
 
                 } else {
                     r = false;
-                    _self.$message.remove();
+                    _self.$message.hide();
                 }
             }
         }
@@ -176,7 +173,7 @@ var DataGrid = function (_props) {
 
     this.template = function () {
         let html =
-            "<div id='" + this.domID + "' style='overflow-y: scroll'>" +
+            "<div id='" + this.domID + "' style='overflow-y: auto; position:relative'>" +
             "<table class='table' id='" + this.domID + "-table'>" +
             "<thead id='" + this.domID + "-header'>" +
             "</thead>" +
@@ -236,7 +233,8 @@ var DataGrid = function (_props) {
         }
         Promise.all(_comprenders).then(function () {
             _self.$hadow.contents().appendTo(_self.$table);
-            _self.updateDisplayList();
+            if(_self.attached)
+                _self.updateDisplayList();
             _comprenders = [];
             _self.$el.trigger('endDraw');
         });
@@ -284,7 +282,7 @@ var DataGrid = function (_props) {
     this.createHeader = function () {
         let headerHtml = "<tr>";
         if (_showRowIndex) {
-            headerHtml += "<th>#</th>";
+            headerHtml += "<th style='max-width:50px'>#</th>";
         }
         headerHtml += "</tr>";
         let $header = $(headerHtml);
@@ -600,7 +598,6 @@ var DataGrid = function (_props) {
     };
     let _bodyHeight, mtt, smt;
     this.updateDisplayList = function () {
-        _displayed = true;
         //we now know the parent and element dimensions
         _avgRowHeight = (this.$el.height() - this.$header.height()) / _self.rowCount;
         _bodyHeight = this.$el.height() - this.$header.height();
@@ -610,21 +607,23 @@ var DataGrid = function (_props) {
         let left = pos.left + this.$table.width() - 14;
         let top = pos.top + this.$el.height();
         this.realHeight = (this.$el.height() + this.$header.height() - 16);
-        this.$message = $("<div>Creating Rows</div>");
-
+        if (!this.$message) {
+            this.$message = $("<div style='display:none;position:absolute;bottom:0px;left:0px;z-index:9999'>Creating Rows</div>");
+            //     "background-color": "white",
+            this.$table.append(this.$message);
+        }
+           
         if (!this.$scrollArea) {
             this.$scrollArea = $("<div/>");
             this.$table.after(this.$scrollArea);
         }
-
+//<div style="opacity: 0; position: absolute; top: 0px; left: 0px; width: 1px; height: 3.1e+07px;"></div>
         this.$scrollArea.css({
-            border: "1px",
-            opacity: 100,
-            "margin-top": -this.realHeight + "px",
-            float: "right",
-            position: "relative",
-            "margin-left": "-16px",
-            width: "10px",
+            opacity: 0,
+            position: "absolute",
+            top: "0px",
+            left: "0px",
+            width: "1px",
             height: _virtualHeight + "px"
         });
 
@@ -637,23 +636,12 @@ var DataGrid = function (_props) {
 
         this.$el.on("scroll", function (e) {
             //if (_virtualHeight > (e.target.scrollTop + this.realHeight) - 2 * _avgRowHeight) {
-            this.loading = true;
-            this.$message.css({
-                position: "absolute",
-                top: 150 + "px",
-                left: 150 + "px",
-                "background-color": "white",
-                "z-index": 9999
-            });
-            this.$table.append(this.$message);
+            this.$message.show();
 
             this.$table.css({
                 "margin-top": e.target.scrollTop + "px"
             });
-            this.$scrollArea.css({
-                "margin-top": (-(this.realHeight) - e.target.scrollTop) + "px"
-            });
-
+   
             this.delayScroll.apply(this, arguments).then(function (r) {
                 if (!r) {
                     //_self.$table.css({ "margin-top": mtt + "px" });
@@ -722,12 +710,11 @@ var DataGrid = function (_props) {
         }
     };
 
-    let _displayed = false;
     let _ctrlIsPressed = false;
     this.afterAttach = function (e) {
         if (e.target.id == this.domID) {
             let av = e.target.style.getPropertyValue('display');
-            if (av != "" && av != "none" && !_displayed) {
+            if (av == "" || av != "none") {
                 this.updateDisplayList();
             }
 
@@ -739,7 +726,7 @@ var DataGrid = function (_props) {
             $(_self.ownerDocument).keyup(function () {
                 if ((Env.getInstance().current == EnvType.MAC && !event.metaKey) || event.which == "17")
                     _ctrlIsPressed = false;
-            });
+            });     
         }
     };
 

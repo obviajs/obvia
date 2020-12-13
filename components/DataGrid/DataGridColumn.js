@@ -20,9 +20,7 @@ var DataGridColumn = function (_props) {
         },
         itemEditor: null,
         editable: false,
-        visible: true,
-        oncellstyling: null,
-        oncelleditfinished: null
+        visible: true
     };
     var _props = extend(false, false, _defaultParams, _props);
     this.width = _props.width;
@@ -38,8 +36,6 @@ var DataGridColumn = function (_props) {
     this.itemEditor = _props.itemEditor;
     this.editable = _props.editable;
     this.visible = _props.visible;
-    this.oncellstyling = _props.oncellstyling;
-    this.oncelleditfinished = _props.oncelleditfinished;
     let _self = this;
 
     Object.defineProperty(this, "props", {
