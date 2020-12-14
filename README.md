@@ -30,7 +30,7 @@ This is a list of all the open source libraries used in the Obvia framework.
 [Debounce decorator]\
 [CSS hasStyleRule]\
 [Coroutine]\
-[MD5 (Message-Digest Algorithm)]\
+[MD5 (Message-Digest Algorithm)]
 
 ## License
 [MIT]

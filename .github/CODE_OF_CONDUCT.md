@@ -8,4 +8,4 @@ We do not condone the use of sexual language or imagery, derogatory comments, pe
 
 The maintainers of the Obvia project have the right and responsibility to remove, edit, or reject comments, commits, code, issues, and other contributions that are not aligned to this Code of Conduct. Project members who do not follow the Code of Conduct may be removed from the project team.
 
-If you are subject to or witness unacceptable behavior, or have any other concerns, please email us at info@kreatx.com.
+If you are subject to or witness unacceptable behavior, or have any other concerns, please email us at info@obviajs.com.
