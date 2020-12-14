@@ -22,15 +22,15 @@ If you would like to financially support Obvia's development, please consider ma
 
 ## Libraries
 This is a list of all the open source libraries used in the Obvia framework.
-[yaml.js]
-[tokenize.js]
-[micro-requirejs]
-[Deep Clone]
-[Get Font Awesome Icon from MIME]
-[Debounce decorator]
-[CSS hasStyleRule]
-[Coroutine]
-[MD5 (Message-Digest Algorithm)]
+[yaml.js]\
+[tokenize.js]\
+[micro-requirejs]\
+[Deep Clone]\
+[Get Font Awesome Icon from MIME]\
+[Debounce decorator]\
+[CSS hasStyleRule]\
+[Coroutine]\
+[MD5 (Message-Digest Algorithm)]\
 
 ## License
 [MIT]
