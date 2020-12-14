@@ -88,8 +88,25 @@ apiClient.get("https://api.mocki.io/v1/8dea432f").then(r => {
     
     myDataGrid.render().then(function (cmpInstance) {
         $('#root').append(cmpInstance.$el);
+        var myButton = new Button({
+            id: 'button',
+            type: "",
+            value: "",
+            label: "Click me",
+            classes: ["btn", "btn-success"],
+            click: function (e) {
+                myDataGrid.dataProvider[0].name = "Anony Mous";
+                myDataGrid.dataProvider[1].name = "John Whick";
+                myDataGrid.dataProvider[2].name = "Jean Claude";
+            }
+        });
+        myButton.render().then(function (cmpInstance) {
+            $('#root').append(cmpInstance.$el);
+        });
     });
 });
+
+
 
 
 var celleditfinished_ex = function (e, rowIndex, columnIndex, itemEditorInfo) {

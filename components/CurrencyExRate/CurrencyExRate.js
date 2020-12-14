@@ -31,9 +31,6 @@ var CurrencyExRate = function (_props) {
     this.afterAttach = function (e) {
         if (e.target.id == this.domID) {
           
-           //this.width = this.$el.width() - this.workArea_53.$el.width();
-          // this.width = this.$el.width() - this.workArea_53.$el.width();
-            this.$el.width() = this.$container.parent().parent().width() - 50;
         }
     };
     let _cmps;
