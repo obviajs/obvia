@@ -16,10 +16,6 @@ Before reporting an issue, please read the [Issue Reporting Guidelines]. Issues 
 ## Want to Help?
 If you would like to contribute some code or improve the documentation, please read our [Contribution Guidelines] then check out the current issues. Your work is always appreciated!
 
-## Contribution
-Thank you to everyone who has contributed to ***Obvia***!
-If you would like to financially support Obvia's development, please consider making a donation on our [PayPal].
-
 ## Libraries
 This is a list of all the open source libraries used in the Obvia framework.
 [yaml.js]\
@@ -31,6 +27,24 @@ This is a list of all the open source libraries used in the Obvia framework.
 [CSS hasStyleRule]\
 [Coroutine]\
 [MD5 (Message-Digest Algorithm)]
+
+## Roadmap
+This is a basic roadmap with some instructions to keep in mind when working with Obvia.
+
+* The implementation class is to be named according to the applet anchor
+* Implement the dependency injection
+* Create a dependency info-structure
+* Create a base-dependent type to return dependencies-related information (array of dependencies info-structure)
+* Implementations will be dependent types
+* Create a Factory Implementation to support the autowiring of dependencies
+* Create the info structure for the types which the Factory will create/return instances of
+* An Applet will not create the implementation instance directly but will ask the Factory for it
+* The Applet (& App) should handle URL hash changes via an external dependency (the existing logic is to be wrapped in a default provider)
+* The security is to be provided by external dependencies
+
+## Contribution
+Thank you to everyone who has contributed to ***Obvia***!
+If you would like to financially support Obvia's development, please consider making a donation on our [PayPal].
 
 ## License
 [MIT]
