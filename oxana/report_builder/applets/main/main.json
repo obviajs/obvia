@@ -134,6 +134,21 @@
                     }
                   },
                   {
+                    "ctor": "DropDown",
+                    "props": {
+                      "id": "uploadReportVersion",
+                      "classes": [
+                        "fas",
+                        "fas-sort-down",
+                        "btn-default",
+                        "navIcons"
+                      ],
+                      "label": "Version ",
+                      "labelField": "revision_name",
+                      "valueField": "revision_id"
+                    }
+                  },
+                  {
                     "ctor": "Label",
                     "props": {
                       "id": "openDatabase",

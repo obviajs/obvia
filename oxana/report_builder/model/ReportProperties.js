@@ -11,7 +11,9 @@ var ReportProperties = function (_props) {
         id_dataview: '',
         id_report_type: 0,
         report_literal: '',
-        report_literal_view: ''
+        report_literal_view: '',
+        report_guid: '',
+        id_document: 0
     };
     _props = extend(false, false, _defaultParams, _props);
     this.report_id = _props.report_id;
@@ -26,6 +28,8 @@ var ReportProperties = function (_props) {
     this.id_report_type = _props.id_report_type;
     this.id_dataview = _props.id_dataview;
     this.report_literal_view = _props.report_literal_view;
+    this.report_guid = _props.report_guid;
+    this.id_document = _props.id_document;
     
     Object.defineProperty(this, "props", {
         get: function props() {

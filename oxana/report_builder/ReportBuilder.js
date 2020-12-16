@@ -105,11 +105,13 @@ var _initDbModal = async () => {
   //save to cache so you don't make the call to the api more than once for the selected time
   let cache = new Cache({ttl: 3600000});
   if (!cache.get("datasourceList")) {
-    await api_rs.report_sourceClient.get()
-      .then(res => {
-        cache.set("datasourceList", res);
-        cache.persist();
-      }).catch(error => console.log(error, 'Error inside _initDbModal'))
+    let res = await api_rs.report_sourceClient.get()
+    if (!res.status_description) {
+      cache.set("datasourceList", res);
+      cache.persist();
+    } else {
+      console.error(res.status_description, 'Error inside _initDbModal')
+    }
   }
 
   return Promise.resolve(Builder)
@@ -119,7 +121,7 @@ var _initUploadReportModal = async () => {
   let api_dv_pID_10 = new GaiaAPI_dataview_pid_10()
 
   let raRepList = new RemoteArray({
-    recordsPerPage: 10, // pagination
+    recordsPerPage: 12, // pagination
     fetchPromise: p => {
       let dvInp = new dvInput();
       dvInp.tableData = new tableData({
@@ -136,6 +138,11 @@ var _initUploadReportModal = async () => {
 };
 
 var _initSaveReportModal = () => {
+  if (!Builder.showNewReportLabel) {
+    Builder.showNewReportLabel = false
+    Builder.showNewReportTextInput = true
+    Builder.selectedReportName = ""
+  }
   Builder.reportErrorLabel = ""
   return Promise.resolve(Builder);
 }

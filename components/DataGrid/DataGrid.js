@@ -316,6 +316,9 @@ var DataGrid = function (_props) {
                 this.editPosition.event = 1;
                 _cellItemRenderers[this.editPosition.rowIndex][this.editPosition.columnIndex].show();
             }
+            if (this.editPosition == null) { 
+                this.editPosition = {};
+            }
 
             if (columnIndex > _columns.length - 1) {
                 columnIndex = 0;

@@ -43,7 +43,8 @@ let Implementation = function (applet) {
     openDatabase,
     dbModal,
     saveReportModal,
-    createNewReportModal;
+    createNewReportModal,
+    uploadReportVersion;
   
   let component_id = 0;
   let workAreaUE = null;
@@ -421,6 +422,10 @@ let Implementation = function (applet) {
         },
         false
       );
+
+      uploadReportVersion = middleNav.uploadReportVersion;
+      uploadReportVersion.dataProvider = []
+      applet.addBehaviors( uploadReportVersion, { change: "UPLOAD_REPORT_VERSION", }, false );
 
       desktopPreview = middleNav.desktop;
       applet.addBehaviors(
@@ -996,6 +1001,15 @@ let Implementation = function (applet) {
     LOAD_LAYOUT_NEW_REPORT: e => loadLayout('newReport'),
 
     LOAD_LAYOUT_UPLOAD_REPORT: e => loadLayout('uploadReport', e.content),
+
+    UPLOAD_REPORT_VERSION: async e => {
+      let api_reports_revision = new GaiaAPI_reports();
+      let res =
+        await api_reports_revision.getRevisionsClient.get(uploadReportVersion.selectedItem.revision_guid);
+
+      if (!res.status_description) loadLayout('uploadVersion', res[0].revision_literal)
+      else console.error(res.status_description, 'error inside UPLOAD_REPORT_VERSION')
+    },
 
     HISTORY_STEP_ADDED: function (e) {
       console.log("called HISTORY_STEP_ADDED.", e.current);
@@ -1633,6 +1647,7 @@ let Implementation = function (applet) {
     })
 
     if (bhv === 'afterSave') data.selectedReport.report_literal = _cmp;
+    if (bhv === 'newReport') data.selectedReport = new ReportProperties();
   };
 
   let daBehaviors = {
