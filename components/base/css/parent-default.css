@@ -1,0 +1,28 @@
+.placeholder:empty:not(:focus):before{
+    content:attr(placeholder);
+    position: relative;
+    white-space: pre;
+    text-align: center;
+    display: block;
+    /*transform: translate(0%, 25%);*/
+    margin: auto;
+    top: 0px;
+    bottom: 0px;
+    right: 0px;
+    left: 0px;
+    height: 30%;
+    padding: 10%;
+  }
+  .placeholder-top-left:empty:not(:focus):before{
+    content:attr(placeholder);
+    position: relative;
+    white-space: pre;
+    display: block;
+    /*transform: translate(0%, 25%);*/
+    margin: auto;
+    top: 0px;
+    bottom: 0px;
+    right: 0px;
+    left: 0px;
+    height: 30%;
+  }

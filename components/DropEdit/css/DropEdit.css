@@ -1,0 +1,16 @@
+.dropdown {
+    display: flex;
+    flex-direction: row;
+}
+
+.caret {
+    background-color: #eeeeee;
+}
+
+.drop-edit {
+    position: absolute;
+    transform: translate3d(930px, 35px, 0px);
+    top: 0px;
+    left: 0px;
+    will-change: transform;
+}

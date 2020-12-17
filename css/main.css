@@ -1,0 +1,18 @@
+body {
+    font-size: 14px
+}
+
+.select2-selection__rendered{
+    line-height: 22px !important;
+    padding: 3px !important;
+}
+
+.bootbox-body {
+    word-wrap: break-word;
+}
+
+.invalid{
+    border-color: rgba(235, 73, 73, 0.8);
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgb(235, 73, 73);
+    outline: 0 none;
+}

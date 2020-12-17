@@ -1,0 +1,133 @@
+
+.rounded-button{
+    border-radius: 50rem!important;
+    display: block;
+    padding: .5rem 1rem;
+    box-sizing: border-box;
+    font:normal normal normal 14px/1 FontAwesome;
+    font-size:inherit;
+    text-rendering:auto;
+    /* color: #007bff; */
+    text-align: center;
+    color: #fff;
+    background-color: #0069d9;
+    border-color: #0062cc;
+    font-size:18px;
+    font-weight: 900;
+}
+/* 
+.full-name {
+    margin-right:80%;
+}  */
+
+.text-select {
+    margin-left:-3.5%;
+    margin-right:0%;
+}
+.text-i{
+    margin-left:-3.7%;
+    margin-right:15%;
+    text-align:center;
+    
+}
+
+.text-input{
+    margin-right:9%;
+    margin-bottom:5%;
+    margin-right:10%;
+}
+.text-ii{
+    margin-bottom:5%;
+    margin-right:15%;
+    text-align:center;
+}
+.text-emphasize{
+    font-size:18px;
+    font-weight: 900;
+    margin-bottom:3%;
+    margin-top:3%;
+    font-size:18px;
+    font-weight: 900;
+
+}
+.fc-out-div{
+    margin-top:0%;
+}
+.fc-controll{
+    width: 80%;
+    padding: 12px 20px;
+    /* margin: 8px 0; */
+    /* display: inline-block; */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    /* margin-right:5%; */
+    margin-bottom:5%;  width: 100%;
+    height: calc(1.5em + .75rem + 2px);
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    transition: border-color .15s;
+    font-size:16px;
+    font-weight:800;
+}
+.fc-icon{
+    margin-right:-6%;
+}
+.fc-icon-card{
+    margin-right:-20%;
+}
+.fc-error{
+    border-color:red;
+
+}
+.fc-success{
+    border-color:green;
+
+}
+.fc-label-error{
+    color: #d3431f;
+    background-color: #faded7;
+    border-color: #ffe5de;
+    font-size:18px;
+    font-weight: 900;
+    padding: .45rem 1.25rem;
+    margin-bottom: 1rem;
+    border: 1px solid transparent;
+    border-radius: .25rem;
+}
+.fc-label-success{
+    color: #155724;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+    margin-top:10%;
+    font-size:14px;
+    font-weight: 600;
+    /* padding: .45rem 1.25rem; */
+    margin-bottom: 0.5rem;
+    border: 1px solid transparent;
+    border-radius: .25rem;
+}
+.is-invalid{
+    color: #d3431f;
+    background-color: #faded7;
+    border-color: #ffe5de;
+    /* margin-top:10%; */
+    font-size:18px;
+    font-weight: 900;
+    padding: .75rem 1.25rem;
+    margin-bottom: 1rem;
+    border: 1px solid transparent;
+    border-radius: .25rem;
+
+}
+
+.text-select_year{
+    margin-right:17%;
+}

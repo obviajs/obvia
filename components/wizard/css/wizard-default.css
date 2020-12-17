@@ -1,0 +1,305 @@
+@import url("https://fonts.googleapis.com/css?family=Roboto:300,400,700");
+
+:root {
+    --blue: #007bff;
+    --indigo: #6610f2;
+    --purple: #6f42c1;
+    --pink: #e83e8c;
+    --red: #dc3545;
+    --orange: #fd7e14;
+    --yellow: #ffc107;
+    --green: #28a745;
+    --teal: #20c997;
+    --cyan: #17a2b8;
+    --white: #fff;
+    --gray: #6c757d;
+    --gray-dark: #343a40;
+    --primary: #007bff;
+    --secondary: #6c757d;
+    --success: #28a745;
+    --info: #17a2b8;
+    --warning: #ffc107;
+    --danger: #dc3545;
+    --light: #f8f9fa;
+    --dark: #343a40;
+    --breakpoint-xs: 0;
+    --breakpoint-sm: 576px;
+    --breakpoint-md: 768px;
+    --breakpoint-lg: 992px;
+    --breakpoint-xl: 1200px;
+    --font-family-sans-serif: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    --font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box
+}
+
+html {
+    font-family: sans-serif;
+    line-height: 1.15;
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+    -ms-overflow-style: scrollbar;
+    -webkit-tap-highlight-color: transparent
+}
+
+
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #212529;
+    text-align: left;
+    background-color: #fff
+}
+
+a {
+    color: #007bff;
+    text-decoration: none;
+    background-color: transparent;
+    -webkit-text-decoration-skip: objects
+}
+
+a:hover {
+    color: #0056b3;
+    text-decoration: underline
+}
+
+a:not([href]):not([tabindex]) {
+    color: inherit;
+    text-decoration: none
+}
+
+a:not([href]):not([tabindex]):hover,
+a:not([href]):not([tabindex]):focus {
+    color: inherit;
+    text-decoration: none
+}
+
+a:not([href]):not([tabindex]):focus {
+    outline: 0
+}
+
+
+
+.container {
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto
+}
+
+@media (min-width: 576px) {
+    .container {
+        max-width: 540px
+    }
+}
+
+@media (min-width: 768px) {
+    .container {
+        max-width: 720px
+    }
+}
+
+@media (min-width: 992px) {
+    .container {
+        max-width: 960px
+    }
+}
+
+@media (min-width: 1200px) {
+    .container {
+        max-width: 1140px
+    }
+}
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    margin-right: -15px;
+    margin-left: -15px
+}
+
+.col-4,
+.col-6,
+.col-12,
+.col,
+.col {
+    flex-basis: 0;
+    flex-grow: 1;
+    max-width: 100%
+}
+
+.col-4 {
+    flex: 0 0 33.33333%;
+    max-width: 33.33333%
+}
+
+.col-6 {
+    flex: 0 0 50%;
+    max-width: 50%
+}
+
+.col-12 {
+    flex: 0 0 100%;
+    max-width: 100%
+}
+
+.wizard-steps {
+    margin: 10px 0 53px;
+    padding: 0;
+    text-align: center;
+    border-bottom: 4px solid white
+}
+
+.wizard-steps li {
+    position: relative;
+    display: inline-block;
+    padding: 15px 30px;
+    max-width: 250px
+}
+
+.wizard-steps li:after {
+    content: " ";
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    margin-bottom: -2px;
+    transform: translate(-50%, 50%);
+    width: 15px;
+    height: 15px;
+    background: white;
+    border: 5px solid white;
+    border-radius: 30px
+}
+
+.wizard-steps li a {
+    font-size: 14px;
+    color: #8a8a8a
+}
+
+.wizard-steps li .step-no {
+    display: none;
+    position: absolute;
+    top: 90%;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-top: 25px;
+    font-size: 12px;
+    color: #9E398A
+}
+
+.wizard-steps li.current-step:after {
+    width: 25px;
+    height: 25px;
+    background: #9E398A
+}
+
+.wizard-steps li.current-step .step-no {
+    display: block
+}
+
+.wizard-form-wrapper {
+    padding: 20px 30px;
+    background: white;
+    border-radius: 4px;
+    box-shadow: 0 0 5px -2px rgba(0, 0, 0, 0.4)
+}
+
+.wizard-form-wrapper .wizard-form-header {
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #ea4981
+}
+
+.wizard-form-wrapper .wizard-form-header .form-title {
+    margin: 0;
+    font-size: 24px;
+    color: #484848
+}
+
+.wizard-form-wrapper .wizard-form-header .form-current-step {
+    color: #9E398A
+}
+
+.wizard-form-wrapper .wizard-form-body {
+    padding: 0 15px
+}
+
+.wizard-form-wrapper .wizard-form-footer {
+    padding: 15px 0;
+    padding-bottom: 0;
+    border-top: 1px solid #eee
+}
+
+.wizard-form-wrapper .wizard-form-footer .btn {
+    margin-right: 10px
+}
+
+.wizard-form-wrapper .wizard-form-footer .btn:last-child {
+    margin-right: 0
+}
+
+.page-top-row {
+    margin: 0 0 15px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #ea4981
+}
+
+.page-top-row .page-title {
+    margin: 0;
+    font-size: 24px;
+    line-height: 1.4;
+    color: #474747
+}
+
+.page-top-row .page-title span {
+    color: #8a8a8a
+}
+
+.text-right {
+    text-align: right !important
+}
+
+.form-group {
+    margin-bottom: 1rem
+}
+
+.input-field {
+    position: relative
+}
+
+.input-field input,
+.input-field select,
+.input-field textarea,
+.input-field button {
+    padding-left: 30px;
+    border-radius: 4px
+}
+
+.input-field input:focus,
+.input-field select:focus,
+.input-field textarea:focus,
+.input-field button:focus {
+    outline: none
+}
+
+.input-field .fa {
+    position: absolute;
+    top: 10px;
+    left: 8px;
+    z-index: 5;
+    pointer-events: none;
+    width: 18px;
+    text-align: center
+}
+
+.form-control {
+    font-size: 14px
+}
