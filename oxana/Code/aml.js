@@ -23,7 +23,7 @@ rjs.define("/flowerui/lib/BrowserUtils.js", "BrowserUtils");
 rjs.define("/flowerui/lib/BrowserManager.js", "BrowserManager");
 rjs.define("/flowerui/lib/my.js", "my");
 rjs.define("/flowerui/lib/Tokenizer.js", "Tokenizer");
-rjs.define("/flowerui/lib/binding/BindingUtils.js", "BindingUtils");
+rjs.define("/flowerui/lib/binding/BindingsManager.js", "BindingsManager");
 rjs.define("/flowerui/lib/binding/PropertyChangeEvent.js", "PropertyChangeEvent");
 rjs.define("/flowerui/lib/binding/ChangeWatcher.js", "ChangeWatcher");
 rjs.define("/flowerui/lib/rca/RemoteDataEvent.js", "RemoteDataEvent");
@@ -279,7 +279,7 @@ let dependencies = [
         "BrowserManager",
         "my",
         "Tokenizer",
-        "BindingUtils",
+        "BindingsManager",
         "PropertyChangeEvent",
         "ChangeWatcher",
         "DataField",

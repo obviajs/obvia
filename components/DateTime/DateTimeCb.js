@@ -92,8 +92,21 @@ var DateTimeCb = function (_props) {
            return _mode;
         },
         set: function mode(v) {
-            if(_mode != v)
+            if (_mode != v) {                
                 _mode = v;
+                if (_mode & 1 > 0) {
+                    _hourSelect.visible = true;
+                } else
+                    _hourSelect.visible = false;    
+                if (_mode & 2 > 0) {
+                    _minuteSelect.visible = true;
+                } else
+                    _minuteSelect.visible = false;
+                if (_mode & 3 > 0) {
+                    _secondSelect.visible = true;
+                } else
+                    _secondSelect.visible = false;
+            }
         },
         enumerable: true
     });
@@ -112,14 +125,9 @@ var DateTimeCb = function (_props) {
             _dateSelect = this.cntDs.dateSelect;
             _monthSelect = this.cntMs.monthSelect;
             _yearSelect = this.cntYs.yearSelect;
-            if (this.components[3])
-                _hourSelect = this.cntHs.hourSelect;
-            if (this.components[4])
-                _minuteSelect = this.cntIs.minuteSelect;
-            if (this.components[5])
-                _secondSelect = this.cntSs.secondSelect;
-
-           
+            _hourSelect = this.cntHs.hourSelect;
+            _minuteSelect = this.cntIs.minuteSelect;
+            _secondSelect = this.cntSs.secondSelect;           
             EventDispatcher.listen([_dateSelect, _monthSelect, _yearSelect, _hourSelect, _minuteSelect, _secondSelect], "change", _change);
         }
         console.log("endDraw");
@@ -204,79 +212,73 @@ var DateTimeCb = function (_props) {
                         ]
                     }
                 },
-                "{{?hour}}",
-                "{{?minute}}",
-                "{{?second}}"
+                {
+                    "ctor": "Container",
+                    "props": {
+                        type: ContainerType.NONE,
+                        "id": "cntHs",
+                        classes: ["pl-1"],
+                        "components": [
+                            {
+                                "ctor": "Select",
+                                "props": {
+                                    "id": "hourSelect",
+                                    "dataProvider": _dpHour,
+                                    labelField: "label",
+                                    valueField: "value"
+                                }
+                            }
+                        ]
+                    }
+                },
+                {
+                    "ctor": "Container",
+                    "props": {
+                        type: ContainerType.NONE,
+                        "id": "cntIs",
+                        "components": [
+                            {
+                                "ctor": "Select",
+                                "props": {
+                                    "id": "minuteSelect",
+                                    "dataProvider": _dpMinute,
+                                    labelField: "label",
+                                    valueField: "value"
+                                }
+                            }
+                        ]
+                    }
+                },
+                {
+                    "ctor": "Container",
+                    "props": {
+                        type: ContainerType.NONE,
+                        "id": "cntSs",
+                        "components": [
+                            {
+                                "ctor": "Select",
+                                "props": {
+                                    "id": "secondSelect",
+                                    "dataProvider": _dpSecond,
+                                    labelField: "label",
+                                    valueField: "value"
+                                }
+                            }
+                        ]
+                    }
+                }
             ];
 
-        let hour = {
-            "ctor": "Container",
-            "props": {
-                type: ContainerType.NONE,
-                "id": "cntHs",
-                classes: ["pl-1"],
-                "components": [
-                    {
-                        "ctor": "Select",
-                        "props": {
-                            "id": "hourSelect",
-                            "dataProvider": _dpHour,
-                            labelField: "label",
-                            valueField: "value"
-                        }
-                    }
-                ]
-            }
-        };
-        let minute = {
-            "ctor": "Container",
-            "props": {
-                type: ContainerType.NONE,
-                "id": "cntIs",
-                "components": [
-                    {
-                        "ctor": "Select",
-                        "props": {
-                            "id": "minuteSelect",
-                            "dataProvider": _dpMinute,
-                            labelField: "label",
-                            valueField: "value"
-                        }
-                    }
-                ]
-            }
-        };
-        let second = {
-            "ctor": "Container",
-            "props": {
-                type: ContainerType.NONE,
-                "id": "cntSs",
-                "components": [
-                    {
-                        "ctor": "Select",
-                        "props": {
-                            "id": "secondSelect",
-                            "dataProvider": _dpSecond,
-                            labelField: "label",
-                            valueField: "value"
-                        }
-                    }
-                ]
-            }
-        };
         let parts = {};
         if (_mode & 1 > 0) {
-            parts.hour = hour;
+            _cmps[3].props.visible = true;
         }
         if (_mode & 2 > 0) {
-            parts.minute = minute;
+            _cmps[4].props.visible = true;
         }
         if (_mode & 3 > 0) {
-            parts.second = second;
+            _cmps[5].props.visible = true;
         }
-        _tpl = new JTemplate({ template: _cmps }, parts);
-        _tpl.parse();
-        _cmps = (_tpl.now()).template;
     };
 
     let _defaultParams = {

@@ -24,7 +24,7 @@
 	<script src="lib/ObjectUtils.js"></script>
     <script src="lib/StringUtils.js"></script>
     <script src="lib/Tokenizer.js"></script>
-    <script src="lib/binding/BindingUtils.js"></script>
+    <script src="lib/binding/BindingsManager.js"></script>
     <script src="lib/binding/PropertyChangeEvent.js"></script>
     <script src="lib/binding/ChangeWatcher.js"></script>
 	
@@ -54,7 +54,7 @@
             });
 
             alert("before binding "+t3.c.d);
-            BindingUtils.getValue(this, "t1.a+t2.b", t3, ["c","d"], "currentItem");
+            BindingsManager.getValue(this, "t1.a+t2.b", t3, ["c","d"], "currentItem");
             alert("after binding "+t3.c.d);
             t1.a = 11;
             alert("after t1.a update "+t3.c.d);

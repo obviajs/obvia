@@ -29,6 +29,18 @@ apiClient.get("https://api.mocki.io/v1/8dea432f").then(r => {
                 editable: true
             },
             {
+                width: 400,
+                name: "age",
+                field: "age",
+                description: "Age",
+                sortable: true,
+                sortInfo: {
+                    sortOrder: 0,
+                    sortDirection: "ASC"
+                },
+                editable: true
+            },
+            {
                 width:200,
                 name: "company",
                 field: "company",
@@ -95,9 +107,9 @@ apiClient.get("https://api.mocki.io/v1/8dea432f").then(r => {
             label: "Click me",
             classes: ["btn", "btn-success"],
             click: function (e) {
-                myDataGrid.dataProvider[0].name = "Anony Mous";
-                myDataGrid.dataProvider[1].name = "John Whick";
-                myDataGrid.dataProvider[2].name = "Jean Claude";
+                for (let i = 0; i < 5; i++) { 
+                    myDataGrid.dataProvider[i].age += 10; 
+                }
             }
         });
         myButton.render().then(function (cmpInstance) {

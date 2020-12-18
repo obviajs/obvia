@@ -67,7 +67,7 @@ var Component = function (_props) {
     let _domID = _id + '_' + _guid;
 
     Component.instances[_domID] = this;
-
+    let _bindingsManager = BindingsManager.getInstance(this);
     //let _propUpdateMap = {"label":{"o":$el, "fn":"html", "p":[] }, "hyperlink":{}};
     //generate GUID for this component
     Object.defineProperty(this, "guid", {
@@ -269,12 +269,6 @@ var Component = function (_props) {
             }
         },
         enumerable: false
-    });
-
-    Object.defineProperty(this, "watchers", {
-        get: function watchers() {
-            return _watchers;
-        }
     });
 
     Object.defineProperty(this, "bindings", {
@@ -482,8 +476,8 @@ var Component = function (_props) {
                 if (typeof _endDraw == 'function')
                     _endDraw.apply(this.proxyMaybe, arguments);
             }
-            if ((_props.applyBindings == null || _props.applyBindings == true) && _watchers.length == 0)
-                _watchers = this.applyBindings(_bindingDefaultContext);
+            if ((_props.applyBindings == null || _props.applyBindings == true) && _bindingsManager.watchers.length == 0)
+                this.applyBindings(_bindingDefaultContext);
             _self.trigger('beforeAttach');
         }
     };
@@ -776,15 +770,12 @@ var Component = function (_props) {
     };
 
     this.resetBindings = function () {
-        for (let i = 0; i < _watchers.length; i++) {
-            _watchers[i].reset();
-        }
+        _bindingsManager.resetBindings();
     };
 
     this.setBindingExpression = function (property, expression) {
         let match = getMatching(_bindings, "property", property, true);
         if (match.indices.length > 0) {
-
             let b = getBindingExp(expression);
             if (b) {
                 let newBinding = {
@@ -793,8 +784,7 @@ var Component = function (_props) {
                     "nullable": false
                 };
                 _bindings.splice(match.indices[0], 1, newBinding);
-                _watchers[match.indices[0]].reset();
-
+               
                 let currentItem = _bindingDefaultContext;
                 let bindingExp = expression;
                 let site = this;
@@ -814,7 +804,7 @@ var Component = function (_props) {
                 }
                 // let context = extend(false, true, this, obj);
                 let fn = function () {
-                    _watchers.splicea(match.indices[0], 1, BindingUtils.getValue(window, bindingExp, site, site_chain, defaultBindTo));
+                    _bindingsManager.getValue(window, bindingExp, site_chain, defaultBindTo);
                 };
                 if (nullable) {
                     let fnDelayed = whenDefined(window[defaultBindTo], bindingExp, fn);
@@ -824,14 +814,13 @@ var Component = function (_props) {
                 }
             }
         }
-
     };
 
     let _bindedTo;
     this.refreshBindings = function (data) {
         if (_bindedTo != data) {
             this.resetBindings();
-            _watchers = this.applyBindings(data);
+            this.applyBindings(data);
             if (this.children) {
                 for (let cid in this.children) {
                     if (this.children[cid].bindingDefaultContext == _bindingDefaultContext)
@@ -844,33 +833,10 @@ var Component = function (_props) {
 
     this.applyBindings = function (data) {
         _bindedTo = data;
-        let w = [];
-        // for(let bi=0;bi<_bindings.length;bi++){
-        //     (function(currentItem, bindingExp, site, site_chain, nullable){
-        //         return (function(e) { // a closure is created
-        //             //this here refers to window context
-        //             let defaultBindTo = "currentItem_"+_self.guid;
-        //             this[defaultBindTo] = (currentItem || Component.defaultContext);
-        //             if(!("currentItem" in this[defaultBindTo])){
-        //                 this[defaultBindTo]["currentItem"] = this[defaultBindTo];
-        //             }
-        //            // let context = extend(false, true, this, obj);
-        //             let fn = function(){
-        //                 w.splicea(w.length, 0, BindingUtils.getValue(this, bindingExp, site, site_chain, defaultBindTo));
-        //             };
-        //             if(nullable){
-        //                 let fnDelayed = whenDefined(this[defaultBindTo], bindingExp, fn);
-        //                 fnDelayed();
-        //             }else{
-        //                 fn();
-        //             }
-        //         })();	
-        //     })(data, _bindings[bi].expression, this, [_bindings[bi].property], _bindings[bi].nullable);
-        // }
         for (let bi = 0; bi < _bindings.length; bi++) {
             let currentItem = data;
             let bindingExp = _bindings[bi].expression;
-            let site = this;
+            
             let site_chain = [_bindings[bi].property];
             let nullable = _bindings[bi].nullable;
 
@@ -886,16 +852,15 @@ var Component = function (_props) {
             }
             // let context = extend(false, true, this, obj);
             let fn = function () {
-                w.splicea(w.length, 0, BindingUtils.getValue(window, bindingExp, site, site_chain, defaultBindTo));
+                _bindingsManager.getValue(window, bindingExp, site_chain, defaultBindTo);
             };
             if (nullable) {
-                let fnDelayed = whenDefined(window[defaultBindTo], BindingUtils.getIdentifier(bindingExp), fn);
+                let fnDelayed = whenDefined(window[defaultBindTo], BindingsManager.getIdentifier(bindingExp), fn);
                 fnDelayed();
             } else {
                 fn();
             }
         }
-        return w;
     };
 
     this.keepBase = function () {

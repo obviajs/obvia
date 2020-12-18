@@ -369,7 +369,7 @@ var DataGrid = function (_props) {
             _cellItemRenderers[rowIndex][columnIndex].hide();
             let itemEditorInfo = _cellItemEditors[columnIndex];
             let itemEditor;
-            if (itemEditorInfo == undefined) {
+            if (itemEditorInfo == null) {
                 if (column.itemEditor.props.value == undefined || getBindingExp(column.itemEditor.props.value) == null) {
                     column.itemEditor.props.value = "{?" + column.field + "}";
                 }
@@ -382,15 +382,11 @@ var DataGrid = function (_props) {
                 itemEditor.parent = this;
                 itemEditor.parentType = 'repeater';
                 itemEditor.parentForm = this.parentForm;
-                itemEditor.$el.css("margin", "0px");
-                // let itemEditorWidth = column.calculatedWidth-(_cells[rowIndex][columnIndex].outerWidth() - _cells[rowIndex][columnIndex].innerWidth()) - 2;
-                let itemEditorWidth = column.calculatedWidth - 46;
                 itemEditor.$el.css({
-                    "outline": "none",
-                    "font-size": "14px",
-                    "width": itemEditorWidth + "px"
+                    "margin": "0px",
+                    "outline": "none"
                 });
-
+                    
                 _cellItemEditors[columnIndex] = {
                     "itemEditor": itemEditor,
                     "rowIndex": rowIndex
@@ -464,7 +460,6 @@ var DataGrid = function (_props) {
                 if (itemEditorInfo.rowIndex != rowIndex) {
                     itemEditorInfo.rowIndex = rowIndex;
                     itemEditor.$el.detach();
-                    //itemEditor.$el.detach();
                 }
                 itemEditor.refreshBindings(data);
             }
@@ -497,6 +492,11 @@ var DataGrid = function (_props) {
                 itemEditor.value = column.itemEditor.props["value"] || data[column.field];
             */
             itemEditor.render().then(function (cmpInstance) {
+                let w = parseInt(_cells[rowIndex][columnIndex].css('width'));
+                let p = parseInt(_cells[rowIndex][columnIndex].css('padding'));
+                let b = itemEditor.css["border-width"];
+
+                itemEditor.css.width = (w - 2*p - 2*b-8) + "px";
                 _cells[rowIndex][columnIndex].append(cmpInstance.$el);
                 itemEditor.show();
                 let e = jQuery.Event('cellEditStarted');
