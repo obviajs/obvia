@@ -101,7 +101,7 @@ let Implementation = function (applet) {
           datasourceList[foundDsIndex].dataviewList = foundDvList.slice(0)
           cache.set('datasourceList', datasourceList);
         } else {
-          console.log(foundDvList.status_description, 'error inside getDataviewOfDatasourceClient')
+          console.error(foundDvList.status_description, 'error inside getDataviewOfDatasourceClient')
         }
         cache.persist();
       }
@@ -129,7 +129,7 @@ let Implementation = function (applet) {
           //add to context
           data.dataviewFields = foundDvFields.slice(0);
         } else {
-          console.log(foundDvFields.status_description, 'error inside getDataViewFieldsClient')
+          console.error(foundDvFields.status_description, 'error inside getDataViewFieldsClient')
         }
       }
       

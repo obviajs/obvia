@@ -31,42 +31,6 @@ var GaiaAPI_reports = function(_props){
         /*{typeMap}*/
         
     	/**
-		*Get the requested report
-		* @param {string} report_guid Report Guid
-		* @returns {Promise} 
-		*/
-    	this.get = function(report_guid){
-        let objQuery = {};
-
-        let objPath = {};
-		objPath["report_guid"] = report_guid;
-
-        let objBody = null;
-        let requestContentType = "application/json";
-        let responses = {"200":{"responseType":"JSON","type":"arrayReportEntity"},"404":{"responseType":"JSON","type":"responseStatus"}};
-        return new Promise((resolve, reject) =>
-        {
-            	this.apiCall(objQuery, objBody, objPath, requestContentType, "get").then(function(resp){
-                if(responses[resp.status]){
-                    let responseType = responses[resp.status].responseType.toLowerCase();
-                    let ret;
-                    switch(responseType)
-                    {
-                        case "json":
-                            ret = isString(resp.response) ? JSON.parse(resp.response) : resp.response;
-                            ret = new (GaiaAPI_reports[responses[resp.status].type])(ret);
-                            break;
-                    }
-                    //TODO: convert to specified type
-                    resolve(ret);
-                }else//unspecified http response code returned
-                    reject();
-            }).catch(function(error){
-                reject(error);
-            });
-        });
-    	};
-    	/**
 		*Create or edit a report
 		* @param {report_entity} report_entity The request body for post /reports 
 		* @returns {Promise} 
@@ -105,8 +69,231 @@ var GaiaAPI_reports = function(_props){
         OAMethod.call(this, apiClient);
         this.basePath = _server + "/reports";
     };
+	this.getReports = function(apiClient) { 
+        apiClient = apiClient || _apiClient;
+        /*{typeMap}*/
+        
+    	/**
+		*Get the requested report
+		* @param {string} report_guid Report Guid
+		* @returns {Promise} 
+		*/
+    	this.get = function(report_guid){
+        let objQuery = {};
+
+        let objPath = {};
+		objPath["report_guid"] = report_guid;
+
+        let objBody = null;
+        let requestContentType = "application/json";
+        let responses = {"200":{"responseType":"JSON","type":"arrayReportEntity"},"404":{"responseType":"JSON","type":"responseStatus"}};
+        return new Promise((resolve, reject) =>
+        {
+            	this.apiCall(objQuery, objBody, objPath, requestContentType, "get").then(function(resp){
+                if(responses[resp.status]){
+                    let responseType = responses[resp.status].responseType.toLowerCase();
+                    let ret;
+                    switch(responseType)
+                    {
+                        case "json":
+                            ret = isString(resp.response) ? JSON.parse(resp.response) : resp.response;
+                            ret = new (GaiaAPI_reports[responses[resp.status].type])(ret);
+                            break;
+                    }
+                    //TODO: convert to specified type
+                    resolve(ret);
+                }else//unspecified http response code returned
+                    reject();
+            }).catch(function(error){
+                reject(error);
+            });
+        });
+    	};
+        
+        OAMethod.call(this, apiClient);
+        this.basePath = _server + "/reports/{report_guid}/getReports";
+    };
+	this.getRevisions = function(apiClient) { 
+        apiClient = apiClient || _apiClient;
+        /*{typeMap}*/
+        
+    	/**
+		*Get the requested revision
+		* @param {string} revision_guid Revision GUID
+		* @returns {Promise} 
+		*/
+    	this.get = function(revision_guid){
+        let objQuery = {};
+
+        let objPath = {};
+		objPath["revision_guid"] = revision_guid;
+
+        let objBody = null;
+        let requestContentType = "application/json";
+        let responses = {"200":{"responseType":"JSON","type":"arrayRevision"},"404":{"responseType":"JSON","type":"responseStatus"}};
+        return new Promise((resolve, reject) =>
+        {
+            	this.apiCall(objQuery, objBody, objPath, requestContentType, "get").then(function(resp){
+                if(responses[resp.status]){
+                    let responseType = responses[resp.status].responseType.toLowerCase();
+                    let ret;
+                    switch(responseType)
+                    {
+                        case "json":
+                            ret = isString(resp.response) ? JSON.parse(resp.response) : resp.response;
+                            ret = new (GaiaAPI_reports[responses[resp.status].type])(ret);
+                            break;
+                    }
+                    //TODO: convert to specified type
+                    resolve(ret);
+                }else//unspecified http response code returned
+                    reject();
+            }).catch(function(error){
+                reject(error);
+            });
+        });
+    	};
+        
+        OAMethod.call(this, apiClient);
+        this.basePath = _server + "/reports/{revision_guid}/getRevisions";
+    };
+	this.getReportComponents = function(apiClient) { 
+        apiClient = apiClient || _apiClient;
+        /*{typeMap}*/
+        
+    	/**
+		*This method returns the report components
+		* @param {string} view Report Literal
+		* @returns {Promise} 
+		*/
+    	this.get = function(view){
+        let objQuery = {};
+		objQuery["view"] = view;
+
+        let objPath = {};
+
+        let objBody = null;
+        let requestContentType = "application/json";
+        let responses = {"200":{"responseType":"JSON","type":"responseStatus"},"404":{"responseType":"JSON","type":"responseStatus"}};
+        return new Promise((resolve, reject) =>
+        {
+            	this.apiCall(objQuery, objBody, objPath, requestContentType, "get").then(function(resp){
+                if(responses[resp.status]){
+                    let responseType = responses[resp.status].responseType.toLowerCase();
+                    let ret;
+                    switch(responseType)
+                    {
+                        case "json":
+                            ret = isString(resp.response) ? JSON.parse(resp.response) : resp.response;
+                            ret = new (GaiaAPI_reports[responses[resp.status].type])(ret);
+                            break;
+                    }
+                    //TODO: convert to specified type
+                    resolve(ret);
+                }else//unspecified http response code returned
+                    reject();
+            }).catch(function(error){
+                reject(error);
+            });
+        });
+    	};
+        
+        OAMethod.call(this, apiClient);
+        this.basePath = _server + "/reports/getReportComponents";
+    };
+	this.addDocument = function(apiClient) { 
+        apiClient = apiClient || _apiClient;
+        /*{typeMap}*/
+        
+    	/**
+		*This method adds a document and a revision in Digital Archive
+		* @param {string} report_name Report Name
+		* @returns {Promise} 
+		*/
+    	this.post = function(report_name){
+        let objQuery = {};
+
+        let objPath = {};
+
+        let objBody = {"report_name":report_name};
+        let requestContentType = "json";
+        let responses = {"200":{"responseType":"JSON","type":"responseStatus"},"404":{"responseType":"JSON","type":"responseStatus"}};
+        return new Promise((resolve, reject) =>
+        {
+            	this.apiCall(objQuery, objBody, objPath, requestContentType, "post").then(function(resp){
+                if(responses[resp.status]){
+                    let responseType = responses[resp.status].responseType.toLowerCase();
+                    let ret;
+                    switch(responseType)
+                    {
+                        case "json":
+                            ret = isString(resp.response) ? JSON.parse(resp.response) : resp.response;
+                            ret = new (GaiaAPI_reports[responses[resp.status].type])(ret);
+                            break;
+                    }
+                    //TODO: convert to specified type
+                    resolve(ret);
+                }else//unspecified http response code returned
+                    reject();
+            }).catch(function(error){
+                reject(error);
+            });
+        });
+    	};
+        
+        OAMethod.call(this, apiClient);
+        this.basePath = _server + "/reports/addDocument";
+    };
+	this.addRevision = function(apiClient) { 
+        apiClient = apiClient || _apiClient;
+        /*{typeMap}*/
+        
+    	/**
+		*This method adds a revision in Digital Archive
+		* @param {integer} id_document Report Name
+		* @returns {Promise} 
+		*/
+    	this.post = function(id_document){
+        let objQuery = {};
+
+        let objPath = {};
+
+        let objBody = {"id_document":id_document};
+        let requestContentType = "json";
+        let responses = {"200":{"responseType":"JSON","type":"responseStatus"},"404":{"responseType":"JSON","type":"responseStatus"}};
+        return new Promise((resolve, reject) =>
+        {
+            	this.apiCall(objQuery, objBody, objPath, requestContentType, "post").then(function(resp){
+                if(responses[resp.status]){
+                    let responseType = responses[resp.status].responseType.toLowerCase();
+                    let ret;
+                    switch(responseType)
+                    {
+                        case "json":
+                            ret = isString(resp.response) ? JSON.parse(resp.response) : resp.response;
+                            ret = new (GaiaAPI_reports[responses[resp.status].type])(ret);
+                            break;
+                    }
+                    //TODO: convert to specified type
+                    resolve(ret);
+                }else//unspecified http response code returned
+                    reject();
+            }).catch(function(error){
+                reject(error);
+            });
+        });
+    	};
+        
+        OAMethod.call(this, apiClient);
+        this.basePath = _server + "/reports/addRevision";
+    };
 
 		this.reportsClient = new this.reports();
+		this.getReportsClient = new this.getReports();
+		this.getRevisionsClient = new this.getRevisions();
+		this.getReportComponentsClient = new this.getReportComponents();
+		this.addDocumentClient = new this.addDocument();
+		this.addRevisionClient = new this.addRevision();
 
 };
 Poolable.call(GaiaAPI_reports);
@@ -125,6 +312,7 @@ Poolable.call(GaiaAPI_reports);
 	* @property {Number}  id_dataview               - Report's dataview id
 	* @property {String}  report_literal_view               - Report's literal view
 	* @property {String}  report_guid               - Report's guid
+	* @property {Number}  id_document               - Document Id
 
     */
    GaiaAPI_reports.report_entity = function report_entity(_props){
@@ -142,17 +330,9 @@ Poolable.call(GaiaAPI_reports);
 		this.id_dataview = _props.id_dataview;
 		this.report_literal_view = _props.report_literal_view;
 		this.report_guid = _props.report_guid;
+		this.id_document = _props.id_document;
 
     };
-
-
-	GaiaAPI_reports.arrayReportEntity = function arrayReportEntity()
-	{
-		ArrayEx.apply(this, arguments);    
-		this.memberType = ["report_entity"]; 
-	};
-	GaiaAPI_reports.arrayReportEntity.prototype = Object.create(ArrayEx.prototype);
-	GaiaAPI_reports.arrayReportEntity.prototype.constructor = GaiaAPI_reports.arrayReportEntity;
 
     /**
 	* @property {Number}  status_code               - Response status code
@@ -165,3 +345,47 @@ Poolable.call(GaiaAPI_reports);
 		this.status_description = _props.status_description;
 
     };
+	GaiaAPI_reports.arrayReportEntity = function arrayReportEntity()
+	{
+		ArrayEx.apply(this, arguments);    
+		this.memberType = ["report_entity"]; 
+	};
+	GaiaAPI_reports.arrayReportEntity.prototype = Object.create(ArrayEx.prototype);
+	GaiaAPI_reports.arrayReportEntity.prototype.constructor = GaiaAPI_reports.arrayReportEntity;
+
+    /**
+	* @property {Number}  revision_id               - Revision ID
+	* @property {Number}  id_document               - Document ID
+	* @property {Number}  id_user               - user ID
+	* @property {Number}  revision_file_name               - Revision File Name
+	* @property {Number}  revision_name               - Revision Name
+	* @property {Number}  byte_size               - Byte Size
+	* @property {Number}  is_active               - Is Active
+	* @property {Number}  system_date               - System Date
+	* @property {Number}  deleted               - Is deleted
+	* @property {String}  revision_guid               - Revision GUID
+
+    */
+   GaiaAPI_reports.revision = function revision(_props){
+        _props = _props || {};
+		this.revision_id = _props.revision_id;
+		this.id_document = _props.id_document;
+		this.id_user = _props.id_user;
+		this.revision_file_name = _props.revision_file_name;
+		this.revision_name = _props.revision_name;
+		this.byte_size = _props.byte_size;
+		this.is_active = _props.is_active;
+		this.system_date = _props.system_date;
+		this.deleted = _props.deleted;
+		this.revision_guid = _props.revision_guid;
+
+    };
+
+
+	GaiaAPI_reports.arrayRevision = function arrayRevision()
+	{
+		ArrayEx.apply(this, arguments);    
+		this.memberType = ["revision"]; 
+	};
+	GaiaAPI_reports.arrayRevision.prototype = Object.create(ArrayEx.prototype);
+	GaiaAPI_reports.arrayRevision.prototype.constructor = GaiaAPI_reports.arrayRevision;

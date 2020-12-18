@@ -249,6 +249,7 @@ rjs.define("inspect/ObjectEditor.js", "ObjectEditor");
 
 rjs.define("GaiaAPI/GaiaAPI_dataview_pid_6.js", "GaiaAPI_dataview_pid_6");
 rjs.define("GaiaAPI/GaiaAPI_dataview_pid_10.js", "GaiaAPI_dataview_pid_10");
+rjs.define("GaiaAPI/GaiaAPI_dataview_pid_11.js", "GaiaAPI_dataview_pid_11");
 rjs.define("GaiaAPI/GaiaAPI_report_source.js", "GaiaAPI_report_source");
 rjs.define("GaiaAPI/GaiaAPI_reports.js", "GaiaAPI_reports");
 
@@ -468,6 +469,7 @@ let dependencies = [
     ], [
         "GaiaAPI_dataview_pid_6",
         "GaiaAPI_dataview_pid_10",
+        "GaiaAPI_dataview_pid_11",
         "GaiaAPI_report_source",
         "GaiaAPI_reports",
         "JRLabel",

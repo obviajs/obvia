@@ -21,12 +21,28 @@
                 }
               },
               {
+                "ctor": "Label",
+                "props": {
+                  "id": "reportNameVersionLabel",
+                  "label": "{selectedReportName}",
+                  "visible": "{showNewReportLabel}",
+                  "css": {
+                    "fontSize": "30px",
+                    "border": "1px solid black",
+                    "borderRadius": "5px",
+                    "padding": "5px"
+                  }
+                }
+              },
+              {
                 "ctor": "TextInput",
                 "props": {
                   "id": "reportNameInput",
                   "label": "Report Name",
                   "type": "text",
-                  "placeholder": "Report Name"
+                  "placeholder": "Report Name",
+                  "visible": "{showNewReportTextInput}",
+                  "value": "{selectedReportName}"
                 }
               },
               {
