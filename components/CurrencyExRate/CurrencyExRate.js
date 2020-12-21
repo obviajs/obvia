@@ -57,7 +57,6 @@ var CurrencyExRate = function (_props) {
                                 valueField: _valueField,
                                 value: _value.currency,
                                 css: {
-                                    width: '20%',
                                     float: 'left'
                                 }
                             }
@@ -67,10 +66,7 @@ var CurrencyExRate = function (_props) {
                             props: {
                                 id: "exchangeRate",
                                 value: _value.exRate,
-                                css: {
-                                    width: '80%',
-                                    float: 'left'
-                                }
+                                css: {}
                             }
                         }
                     ]
