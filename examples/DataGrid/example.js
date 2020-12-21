@@ -2,21 +2,20 @@ var loader = new Loader({
     id: 'loader'
 });
 
-loader.render().then(function (cmpInstance) {
+loader.render().then(function(cmpInstance) {
     $('#root').append(cmpInstance.$el);
     loader.show();
 });
 let apiClient = new ApiClient();
-apiClient.get("https://api.mocki.io/v1/8dea432f").then(r => { 
+apiClient.get("https://api.mocki.io/v1/8dea432f").then(r => {
     var myDataGrid = new DataGrid({
         id: 'DataGrid',
         height: 300,
-        width:800,
+        width: 800,
         allowNewItem: true, //allow the user to add items that are not included in the specified dataProvider
         rowCount: 5, //visible rows count - virtual scrolling wil be applied on scroll
         dataProvider: new ArrayEx(r.response),
-        columns: [
-            {
+        columns: [{
                 width: 400,
                 name: "name",
                 field: "name",
@@ -29,7 +28,19 @@ apiClient.get("https://api.mocki.io/v1/8dea432f").then(r => {
                 editable: true
             },
             {
-                width:200,
+                width: 400,
+                name: "age",
+                field: "age",
+                description: "Age",
+                sortable: true,
+                sortInfo: {
+                    sortOrder: 0,
+                    sortDirection: "ASC"
+                },
+                editable: true
+            },
+            {
+                width: 200,
                 name: "company",
                 field: "company",
                 description: "Company",
@@ -38,7 +49,7 @@ apiClient.get("https://api.mocki.io/v1/8dea432f").then(r => {
                     sortOrder: 0,
                     sortDirection: "ASC"
                 },
-                editable: true,    
+                editable: true,
                 itemEditor: {
                     ctor: TextInput,
                     props: {
@@ -82,11 +93,11 @@ apiClient.get("https://api.mocki.io/v1/8dea432f").then(r => {
             }
         ]
     });
-    myDataGrid.on('creationComplete', function () {
+    myDataGrid.on('creationComplete', function() {
         loader.hide();
     });
-    
-    myDataGrid.render().then(function (cmpInstance) {
+
+    myDataGrid.render().then(function(cmpInstance) {
         $('#root').append(cmpInstance.$el);
         var myButton = new Button({
             id: 'button',
@@ -94,13 +105,13 @@ apiClient.get("https://api.mocki.io/v1/8dea432f").then(r => {
             value: "",
             label: "Click me",
             classes: ["btn", "btn-success"],
-            click: function (e) {
-                myDataGrid.dataProvider[0].name = "Anony Mous";
-                myDataGrid.dataProvider[1].name = "John Whick";
-                myDataGrid.dataProvider[2].name = "Jean Claude";
+            click: function(e) {
+                for (let i = 0; i < 5; i++) {
+                    myDataGrid.dataProvider[i].age += 10;
+                }
             }
         });
-        myButton.render().then(function (cmpInstance) {
+        myButton.render().then(function(cmpInstance) {
             $('#root').append(cmpInstance.$el);
         });
     });
@@ -109,7 +120,7 @@ apiClient.get("https://api.mocki.io/v1/8dea432f").then(r => {
 
 
 
-var celleditfinished_ex = function (e, rowIndex, columnIndex, itemEditorInfo) {
+var celleditfinished_ex = function(e, rowIndex, columnIndex, itemEditorInfo) {
     var realRowIndex = rowIndex % this.rowCount;
     //e.preventDefault();
     console.log("celleditfinished_ex");

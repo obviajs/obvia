@@ -23,7 +23,7 @@ rjs.define("lib/BrowserUtils.js", "BrowserUtils");
 rjs.define("lib/BrowserManager.js", "BrowserManager");
 rjs.define("lib/my.js", "my");
 rjs.define("lib/Tokenizer.js", "Tokenizer");
-rjs.define("lib/binding/BindingUtils.js", "BindingUtils");
+rjs.define("lib/binding/BindingsManager.js", "BindingsManager");
 rjs.define("lib/binding/PropertyChangeEvent.js", "PropertyChangeEvent");
 rjs.define("lib/binding/ChangeWatcher.js", "ChangeWatcher");
 rjs.define("lib/rca/RemoteDataEvent.js", "RemoteDataEvent");
@@ -259,7 +259,7 @@ let dependencies = [
         "BrowserManager",
         "my",
         "Tokenizer",
-        "BindingUtils",
+        "BindingsManager",
         "PropertyChangeEvent",
         "ChangeWatcher",
         "DataField",
