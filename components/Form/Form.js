@@ -3,8 +3,6 @@
  * 
  * Kreatx 2018
  */
-
-//component definition
 var Form = function(_props)
 {
     let _formData, _action, _method;
@@ -62,23 +60,7 @@ var Form = function(_props)
         },
         enumerable:true
     });
-
-
-    this.validate = function () 
-    {
-        let valid = true;
-        this.errorList = [];
-
-        this.components.forEach(function (component) {
-            if (!this[component.props.id].validate()) {
-                this.errorList = this.errorList.concat(this[component.props.id].errorList);
-                valid = false;
-            }
-        }.bind(this));
-
-        return valid;
-    };
-
+    
     this.clear = function () 
     {
         this.components.forEach(function (component) {
@@ -114,7 +96,7 @@ var Form = function(_props)
     this.addFormData = function(name, value)
     {
         if(!_formData){
-            _formData = new FormData(this.$form[0]);
+            _formData = new FormData(this.$el[0]);
         }
         _formData.append(name, value);
     };
@@ -143,68 +125,82 @@ var Form = function(_props)
     this.getFormData = function()
     {
         if(!_formData){
-            _formData = new FormData(this.$form[0]);
+            _formData = new FormData(this.$el[0]);
         }
         return _formData;
     };
+
     this.resetFormData = function()
     {
         _formData = undefined;
     };
-    this.reset = function(){
+    
+    this.reset = function () {
         this.$el.get(0).reset();
     };
+
+    let _xhrProgress = function (e) {
+        let postProgress = jQuery.Event(FormEventType.POST_PROGRESS);
+        if (e.originalEvent.lengthComputable) {
+            let total = postProgress.total= e.originalEvent.total;
+            let loaded = postProgress.loaded = e.originalEvent.loaded;
+
+            let percentage = (loaded * 100) / total;          
+            if (percentage >= 100) {
+                // process completed  
+            }
+            postProgress.percentage = percentage;
+        }
+        postProgress.originalEvent = e;
+        _self.trigger(postProgress, [_self]);    
+    };
+
+    let _xhrStarted = function (e) {
+        let postStarted = jQuery.Event(FormEventType.POST_STARTED);
+        postStarted.originalEvent = e;
+        _self.trigger(postStarted, [_self]);    
+    };
+
+    let _requestComplete = function () {
+        let postComplete = jQuery.Event(FormEventType.POST_COMPLETE);
+        postComplete.originalEvent = e;
+        _self.trigger(postComplete, [_self]);
+    };
+
+    let _xhrRejected = function (e) {
+        let postError = jQuery.Event(FormEventType.POST_ERROR);
+        postError.originalEvent = e;
+        _self.trigger(postError, [_self]);
+    };
+
+    let _xhrResolved = function (e) {
+        let postSuccess = jQuery.Event(FormEventType.POST_SUCCESS);
+        postSuccess.originalEvent = e;
+        _self.trigger(postSuccess, [_self]);
+    };
+
+    let _apiClient = new ApiClient();
     this.post = function (dataType) {
         let type = dataType ? dataType : "json";
         let _self = this;
-        $.ajax({
-            url: _action,
-            data: this.getFormData(),
-            type: _method,
-            contentType: false,
-            processData: false,
-            cache: false,
-            "dataType": type,
-            xhr: function () {
-                _self.trigger(FormEventType.POST_STARTED);
-                let cXhr = $.ajaxSettings.xhr();
-                if (cXhr.upload) {
-                    cXhr.upload.addEventListener('progress',
-                        function (e) {
-                            if (e.lengthComputable) {
-                                let max = e.total;
-                                let current = e.loaded;
-                    
-                                let percentage = (current * 100) / max;
-                                console.log(percentage);
-                    
-                                if (percentage >= 100) {
-                                    // process completed  
-                                }
-                                e.percentage = percentage;
-                            }
-                            _self.trigger(FormEventType.POST_PROGRESS, [e]);
-                        }, false);
-                }
-                return cXhr;
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                console.error(errorThrown);
-                _self.trigger(FormEventType.POST_ERROR, [jqXHR, textStatus, errorThrown]);
-            },
-            success: function (data, textStatus, jqXHR) {
-                _self.trigger(FormEventType.POST_SUCCESS, [data, textStatus, jqXHR]);
-            },
-            always: function (jqXHR, textStatus) {
-                _self.trigger(FormEventType.POST_COMPLETE, [jqXHR, textStatus]);
-            }
-        });
+
+        _apiClient.on("xhrProgress", _xhrProgress);
+        _apiClient.on("xhrStarted", _xhrStarted);
+        _apiClient.on("xhrRejected", _xhrRejected);
+        _apiClient.on("xhrResolved", _xhrResolved);
+        _apiClient.body(this.getFormData())
+                .type('multipart/form-data')
+                .query()
+                .path()
+                .headers()//additional headers information
+        [_method.toLowerCase()](_action, type).finally(_requestComplete);
     };
 
     let _defaultParams = {
         method: "POST",
         type: ""
     };
+    
     _props = extend(false, false, _defaultParams, _props);
     _formData = null;
     _action = _props.action;

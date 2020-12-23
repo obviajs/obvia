@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>ObviaJS</title>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <link rel="stylesheet" async
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script async src="https://kit.fontawesome.com/51294fb9f5.js"></script>
+    <script src="/flowerui/lib/rjs.js"></script>
+    <script>
+        function main() {
+            var P3ComInstance = new P3Com("ws://127.0.0.1:4669/");
+            var printer = new FiscalPrinter(P3ComInstance);
+
+            printer.on(FiscalPrinterEventType.CONNECTION_CLOSE, function (e, data) {
+                alert("Connection terminated!");
+            });
+
+            printer.on(FiscalPrinterEventType.CONNECTION_ERROR, function (e, data) {
+                alert("Check if P3Com is running and fiscal printer is connected!");
+            });
+
+            printer.on(FiscalPrinterEventType.FISCAL_RECEIPT_RECEIVED, function (e, data) {
+                alert("Fiscal receipt data were proccessed successfully!");
+            });
+
+            printer.on(FiscalPrinterEventType.FISCAL_RECEIPT_REJECTED, function (e, data) {
+                alert("Fiscal receipt data error!");
+            });
+
+            printer.on(FiscalPrinterEventType.FISCAL_RECEIPT_PRINTED, function (e, data) {
+                alert("Fiscal receipt printed successfully!");
+            });
+
+            printer.on(FiscalPrinterEventType.FISCAL_RECEIPT_PRINT_FAILED, function (e, data) {
+                alert("Fiscal receipt print failed!");
+            });
+
+            printer.on(FiscalPrinterEventType.CONFIGURATION_RECEIVED, function (e, data) {
+                alert("Fiscal configuration data were proccessed successfully!");
+            });
+
+            printer.on(FiscalPrinterEventType.CONFIGURATION_REJECTED, function (e, data) {
+                alert("Fiscal configuration data error!");
+            });
+
+            printer.on(FiscalPrinterEventType.CONFIGURATION_WRITTEN, function (e, data) {
+                alert("Fiscal configuration file was written successfully!");
+            });
+
+            printer.on(FiscalPrinterEventType.CONFIGURATION_WRITE_FAILED, function (e, data) {
+                alert("Fiscal configuration file was not written!");
+            });
+
+            var printFiscalReceipt = function () {
+                var items = JSON.parse('[{"id_salesorderheader":"65246","salesorderbody_id":"133424","id_item":"3","item_code":"400KA100","item_name":"Kapsule - Ama Intenso - kuti 10","item_description":"","id_unit":"1","unit_name":"Cope","quantity":"150.00","price":"55.00","subtotal":"8250.00","deleted":"0","discount_percent":"0","item_id":"3","item_resume":"400KA100-Kapsule - Ama Intenso - kuti 10","subTotal":8250,"subTotalDiscounted":8250},{"id_salesorderheader":"65246","salesorderbody_id":"133425","id_item":"4","item_code":"400KA103","item_name":"Kapsule - Ama Premium - kuti 10","item_description":"","id_unit":"1","unit_name":"Cope","quantity":"30.00","price":"55.00","subtotal":"1650.00","deleted":"0","discount_percent":"0","item_id":"4","item_resume":"400KA103-Kapsule - Ama Premium - kuti 10","subTotal":1650,"subTotalDiscounted":1650},{"id_salesorderheader":"65246","salesorderbody_id":"133426","id_item":"26","item_code":"400KA106","item_name":"Kapsule - Ama Deccafienato - kuti 10","item_description":"","id_unit":"1","unit_name":"Cope","quantity":"80.00","price":"55.00","subtotal":"4400.00","deleted":"0","discount_percent":"0","item_id":"26","item_resume":"400KA106-Kapsule - Ama Deccafienato - kuti 10","subTotal":4400,"subTotalDiscounted":4400},{"id_salesorderheader":"65246","salesorderbody_id":"133427","id_item":"1347","item_code":"400KA109","item_name":"Kapsule - Ama Soprano- kuti 10","item_description":"","id_unit":"1","unit_name":"Cope","quantity":"20.00","price":"55.00","subtotal":"1100.00","deleted":"0","discount_percent":"0","item_id":"1347","item_resume":"400KA109-Kapsule - Ama Soprano- kuti 10","subTotal":1100,"subTotalDiscounted":1100}]');
+                var body = [];
+
+                for (var i = 0; i < items.length; i++) {
+                    body[i] = new InvoiceItem();
+                    body[i].item_name = items[i].item_name;
+                    body[i].quantity = items[i].quantity;
+                    body[i].price = items[i].price;
+                    body[i].vat = 1;//items[i];
+                    body[i].item_vat = 1;//items[i];
+                    body[i].fiscal_item_code = items[i].item_code;
+                    body[i].discount_percent = items[i].discount_percent;
+                    body[i].vat_category = 1;//items[i];
+                    body[i].subtotal_with_vat = items[i].subtotal;
+                    body[i].unit = items[i].unit_name;
+                }
+
+                var header = new Invoice();
+                header.document_number = '000001';
+                header.serial_number = '000001';
+                header.id_paymethod = '2';
+                header.invoice_type = '1';
+                header.invoiceBody = body;
+
+                printer.PrintalFiscalReceipt(header);
+            };
+
+            var openModal = function () {
+                if (configModal !== null || configModal !== undefined) {
+                    configModal.show();
+                }
+            };
+
+            var fillConfigModal = function () {
+                fiscalFilePath.render().then(function (cmpInstance) {
+                    configModal.modalDialog.modalContent.modalBody.$el.append(cmpInstance.$el);
+                });
+                fiscalBackupPath.render().then(function (cmpInstance) {
+                    configModal.modalDialog.modalContent.modalBody.$el.append(cmpInstance.$el);
+                });
+                keepBackup.render().then(function (cmpInstance) {
+                    configModal.modalDialog.modalContent.modalBody.$el.append(cmpInstance.$el);
+                });
+                fiscalExePath.render().then(function (cmpInstance) {
+                    configModal.modalDialog.modalContent.modalBody.$el.append(cmpInstance.$el);
+                });
+                fiscalPrinterType.render().then(function (cmpInstance) {
+                    configModal.modalDialog.modalContent.modalBody.$el.append(cmpInstance.$el);
+                });
+                priceCoeficient.render().then(function (cmpInstance) {
+                    configModal.modalDialog.modalContent.modalBody.$el.append(cmpInstance.$el);
+                });
+                invFooterMessage.render().then(function (cmpInstance) {
+                    configModal.modalDialog.modalContent.modalBody.$el.append(cmpInstance.$el);
+                });
+                invCelNumber.render().then(function (cmpInstance) {
+                    configModal.modalDialog.modalContent.modalBody.$el.append(cmpInstance.$el);
+                });
+                saveConfig.render().then(function (cmpInstance) {
+                    configModal.modalDialog.modalContent.modalBody.$el.append(cmpInstance.$el);
+                });
+            };
+
+            var saveConfiguration = function () {
+                var data = new FiscalPrinterConfig();
+
+                var FiscalPrinterProperties = {
+                    type: fiscalPrinterType.value == 1 ? FiscalPrinterType.AEDENG :
+                        ( fiscalPrinterType.value == 2 ? FiscalPrinterType.AEDITA : FiscalPrinterType.NONE ),
+                    filepath: fiscalFilePath.value,
+                    backupFilePath: fiscalBackupPath.value,
+                    keepBackup: keepBackup.checked ? "true" : "false",
+                    fileName: fileName.value,
+                    priceCoefficient: priceCoeficient.value,
+                    fiscalExePath: fiscalExePath.value
+                };
+
+                var PromoProperties = {
+                    invoiceFooterMessage: invFooterMessage.value,
+                    invoiceCelNumber: invCelNumber.value
+                };
+
+                data.FiscalPrinter = extend(false, false, data.FiscalPrinter, FiscalPrinterProperties);
+                data.Promo = extend(false, false, data.Promo, PromoProperties);
+
+                for (var i = 0; i < 2; i++) {
+                    obj = i ? data.Promo : data.Fiscalprinter;
+                    for (var key in obj) {
+                        if (obj.hasOwnProperty(key)) {
+                            if (obj[key] === undefined) {
+                                delete obj[key];
+                            }
+                        }
+                    }
+                }
+
+                printer.WriteConfiguration(data);
+            };
+
+            var printFiscal = new Button({
+                id: "print-fiscal",
+                type: "button",
+                label: "Print Fiscal Receipt",
+                style: "",
+                class: "btn btn-success",
+                click: printFiscalReceipt
+            });
+
+            var writeConfig = new Button({
+                id: "write-config",
+                type: "button",
+                label: "Write Configuration",
+                style: "",
+                class: "btn btn-success",
+                click: openModal
+            });
+
+            var saveConfig = new Button({
+                id: "save-config",
+                type: "button",
+                label: "Save Configuration",
+                style: "",
+                class: "btn btn-success",
+                click: saveConfiguration
+            });
+
+            var configModal = new Modal({
+                id: 'config-modal',
+                size: 'modal-lg',
+                title: 'Configure Fiscal Printer'
+            });
+
+            var fiscalFilePath = new TextInput({
+                class: 'form-control',
+                id: 'fiscal-filepath',
+                required: true,
+                mask: '',
+                value: 'C:\\com\\'
+            });
+
+            var fiscalBackupPath = new TextInput({
+                class: 'form-control',
+                id: 'fiscal-backuppath',
+                required: true,
+                mask: '',
+                value: 'C:\\com\\backup\\'
+            });
+
+            var keepBackup = new CheckBox({
+                id: "keep-backup",
+                label: "Ruaj BackUp",
+                value: "1",
+                enabled: true,
+                checked: false
+            });
+
+            var fileName = new TextInput({
+                class: 'form-control',
+                id: 'fiscal-filename',
+                required: true,
+                mask: '',
+                value: 'comt.txt'
+            });
+
+            var fiscalExePath = new TextInput({
+                class: 'form-control',
+                id: 'fiscal-exepath',
+                required: true,
+                mask: '',
+                value: 'C:\\'
+            });
+
+            var fiscalPrinterType = new Select({
+                id: 'fiscal-printer-type',
+                dataProvider: [{"value": "1", "text": "English"}, {"value": "2", "text": "Italian"}],
+                textField: "text",
+                valueField: "value",
+                value: "1",
+            });
+
+            var priceCoeficient = new TextInput({
+                class: 'form-control',
+                id: 'price-coeficient',
+                required: true,
+                mask: '',
+                value: '100'
+            });
+
+            var invFooterMessage = new TextInput({
+                class: 'form-control',
+                id: 'footer-message',
+                required: true,
+                mask: '',
+                value: 'Printuar nga Kreatx xS'
+            });
+
+            var invCelNumber = new TextInput({
+                class: 'form-control',
+                id: 'cel-number',
+                required: true,
+                mask: '',
+                value: '+355 69 696 9090'
+            });
+
+            var alreadyCreated = false;
+
+            configModal.on('creationComplete', function (e) {
+                e.stopImmediatePropagation();
+                e.stopPropagation();
+
+                if (!alreadyCreated)
+                    fillConfigModal();
+
+                alreadyCreated = true;
+            });
+
+            printFiscal.render().then(function (cmpInstance) {
+                $("#root").append(cmpInstance.$el);
+            });
+            writeConfig.render().then(function (cmpInstance) {
+                $("#root").append(cmpInstance.$el);
+            });
+            configModal.render().then(function (cmpInstance) {
+                $("#root").append(cmpInstance.$el);
+            });
+
+        }
+    </script>
+</head>
+
+<body>
+    <div id='root'></div>
+</body>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous">
+</script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
+</script>
+<script type="text/javascript" src="aml.js"></script>
+</html>
