@@ -13,7 +13,9 @@ var ReportProperties = function (_props) {
         report_literal: '',
         report_literal_view: '',
         report_guid: '',
-        id_document: 0
+        id_document: 0,
+        component_count: 0,
+        dataviewFields_list: ''
     };
     _props = extend(false, false, _defaultParams, _props);
     this.report_id = _props.report_id;
@@ -30,6 +32,8 @@ var ReportProperties = function (_props) {
     this.report_literal_view = _props.report_literal_view;
     this.report_guid = _props.report_guid;
     this.id_document = _props.id_document;
+    this.component_count = _props.component_count;
+    this.dataviewFields_list = _props.dataviewFields_list;
     
     Object.defineProperty(this, "props", {
         get: function props() {

@@ -130,7 +130,7 @@ var GaiaAPI_reports = function(_props){
 
         let objBody = null;
         let requestContentType = "application/json";
-        let responses = {"200":{"responseType":"JSON","type":"arrayRevision"},"404":{"responseType":"JSON","type":"responseStatus"}};
+        let responses = {"200":{"responseType":"JSON","type":"revision_data"},"404":{"responseType":"JSON","type":"responseStatus"}};
         return new Promise((resolve, reject) =>
         {
             	this.apiCall(objQuery, objBody, objPath, requestContentType, "get").then(function(resp){
@@ -313,6 +313,8 @@ Poolable.call(GaiaAPI_reports);
 	* @property {String}  report_literal_view               - Report's literal view
 	* @property {String}  report_guid               - Report's guid
 	* @property {Number}  id_document               - Document Id
+	* @property {Number}  component_count               - Component count
+	* @property {String}  dataview_fields_list               - Dataview Fields List
 
     */
    GaiaAPI_reports.report_entity = function report_entity(_props){
@@ -331,6 +333,8 @@ Poolable.call(GaiaAPI_reports);
 		this.report_literal_view = _props.report_literal_view;
 		this.report_guid = _props.report_guid;
 		this.id_document = _props.id_document;
+		this.component_count = _props.component_count;
+		this.dataview_fields_list = _props.dataview_fields_list;
 
     };
 
@@ -354,38 +358,13 @@ Poolable.call(GaiaAPI_reports);
 	GaiaAPI_reports.arrayReportEntity.prototype.constructor = GaiaAPI_reports.arrayReportEntity;
 
     /**
-	* @property {Number}  revision_id               - Revision ID
-	* @property {Number}  id_document               - Document ID
-	* @property {Number}  id_user               - user ID
-	* @property {Number}  revision_file_name               - Revision File Name
-	* @property {Number}  revision_name               - Revision Name
-	* @property {Number}  byte_size               - Byte Size
-	* @property {Number}  is_active               - Is Active
-	* @property {Number}  system_date               - System Date
-	* @property {Number}  deleted               - Is deleted
-	* @property {String}  revision_guid               - Revision GUID
+	* @property {String}  revision_literal               - Revision Literal
+	* @property {String}  revision_extradata               - Revision Extradata
 
     */
-   GaiaAPI_reports.revision = function revision(_props){
+   GaiaAPI_reports.revision_data = function revision_data(_props){
         _props = _props || {};
-		this.revision_id = _props.revision_id;
-		this.id_document = _props.id_document;
-		this.id_user = _props.id_user;
-		this.revision_file_name = _props.revision_file_name;
-		this.revision_name = _props.revision_name;
-		this.byte_size = _props.byte_size;
-		this.is_active = _props.is_active;
-		this.system_date = _props.system_date;
-		this.deleted = _props.deleted;
-		this.revision_guid = _props.revision_guid;
+		this.revision_literal = _props.revision_literal;
+		this.revision_extradata = _props.revision_extradata;
 
     };
-
-
-	GaiaAPI_reports.arrayRevision = function arrayRevision()
-	{
-		ArrayEx.apply(this, arguments);    
-		this.memberType = ["revision"]; 
-	};
-	GaiaAPI_reports.arrayRevision.prototype = Object.create(ArrayEx.prototype);
-	GaiaAPI_reports.arrayRevision.prototype.constructor = GaiaAPI_reports.arrayRevision;

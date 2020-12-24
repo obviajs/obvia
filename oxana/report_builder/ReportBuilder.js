@@ -63,6 +63,7 @@ var _initDP = (function () {
   Builder.forms = new ArrayEx(raFrms);
   Builder.dataviews = new ArrayEx(raFrmsDataview);
   Builder.data = {};
+  
 
   return Promise.all([Builder.forms.init(), Builder.sources.init()]).then(
     function (result) {
@@ -137,6 +138,7 @@ var _initUploadReportModal = async () => {
   return Promise.all([Builder.reportsList.init()]).then(result => Builder);
 };
 
+
 var _initSaveReportModal = () => {
   if (!Builder.showNewReportLabel) {
     Builder.showNewReportLabel = false
@@ -149,6 +151,8 @@ var _initSaveReportModal = () => {
 
 var _initCreateNewReportModal = () => Promise.resolve(Builder)
 
+var _initUploadVersionModal = () => Promise.resolve(Builder)
+
 //this function will decide where the view will go in the GUI on endDraw
 //principles to follow
 //a view should be added to one of its parent`s children
@@ -159,35 +163,10 @@ var uiRoute = function (applet) {
   return viewContainer.addChild(applet.view);
 };
 
-var modalRoute = function (applet) {
-  if (applet.view.attached) {
-    applet.view.show();
-  } else {
-    applet.view.render().then(function (cmpInstance) {
-      applet.view.show();
-    });
-  }
-};
-
-var dbModalRoute = function (applet) {
+var modalRoute = applet => {
   if (applet.view.attached) applet.view.show();
   else applet.view.render().then(cmpInstance => applet.view.show() );
 };
-
-var saveReportModalRoute = applet => {
-  if (applet.view.attached) applet.view.show();
-  else applet.view.render().then(cmpInstance => applet.view.show() );
-}
-
-var createNewReportModalRoute = applet => {
-  if (applet.view.attached) applet.view.show();
-  else applet.view.render().then(cmpInstance => applet.view.show() );
-}
-
-var uploadReportModalRoute = applet => {
-  if (applet.view.attached) applet.view.show();
-  else applet.view.render().then(cmpInstance => applet.view.show() );
-}
 
 var oxana = new App({
   applets: [
@@ -212,7 +191,7 @@ var oxana = new App({
       anchor: "dbModal",
       dataPromise: _initDbModal,
       port: "viewStack",
-      uiRoute: dbModalRoute,
+      uiRoute: modalRoute,
       //forceReload: true
     },
     {
@@ -220,7 +199,7 @@ var oxana = new App({
       anchor: "saveReportModal",
       dataPromise: _initSaveReportModal,
       port: "viewStack",
-      uiRoute: saveReportModalRoute,
+      uiRoute: modalRoute,
       //forceReload: true
     },
     {
@@ -228,7 +207,7 @@ var oxana = new App({
       anchor: "createNewReportModal",
       dataPromise: _initCreateNewReportModal,
       port: "viewStack",
-      uiRoute: createNewReportModalRoute,
+      uiRoute: modalRoute,
       //forceReload: true
     },
     {
@@ -236,9 +215,17 @@ var oxana = new App({
       anchor: "uploadReportModal",
       dataPromise: _initUploadReportModal,
       port: "viewStack",
-      uiRoute: uploadReportModalRoute,
+      uiRoute: modalRoute,
       //forceReload: true
     },
+    {
+      url: "./flowerui/oxana/report_builder/applets/uploadVersionModal/",
+      anchor: "uploadVersionModal",
+      dataPromise: _initUploadVersionModal,
+      port: "viewStack",
+      uiRoute: modalRoute,
+      //forceReload: true
+    }
   ],
   components: [
     {

@@ -169,7 +169,7 @@
           "props": {
             "id": "saveAndNewButton",
             "classes": ["btn", "btn-primary"],
-            "label": "Save & New"
+            "label": "Save & Create New"
           }
         }
       ]

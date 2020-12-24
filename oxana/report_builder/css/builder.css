@@ -180,6 +180,7 @@ label[data-toggle="collapse"]:not([aria-expanded]):before {
 }
 .newLeftRepeaterComponent {
   background: black !important;
+  color:grey;
 }
 .uploadReportModal .modal-dialog {
   max-width: 100%;

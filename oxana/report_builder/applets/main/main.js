@@ -44,7 +44,7 @@ let Implementation = function (applet) {
     dbModal,
     saveReportModal,
     createNewReportModal,
-    uploadReportVersion;
+    openUploadReportVersion;
   
   let component_id = 0;
   let workAreaUE = null;
@@ -423,9 +423,8 @@ let Implementation = function (applet) {
         false
       );
 
-      uploadReportVersion = middleNav.uploadReportVersion;
-      uploadReportVersion.dataProvider = []
-      applet.addBehaviors( uploadReportVersion, { change: "UPLOAD_REPORT_VERSION", }, false );
+      openUploadReportVersion = middleNav.openUploadReportVersion;
+      applet.addBehaviors( openUploadReportVersion, { click: "OPEN_UPLOAD_VERSION_MODAL", }, false );
 
       desktopPreview = middleNav.desktop;
       applet.addBehaviors(
@@ -635,8 +634,9 @@ let Implementation = function (applet) {
           inst = targetBand.addComponent(lit);
           
           //change id generation for report components
-          component_id = parseInt(component_id) + 1
-          inst.id = inst.ctor + '_' + component_id
+          Builder.selectedReport.component_count =
+            parseInt(Builder.selectedReport.component_count) + 1;
+          inst.id = inst.ctor + '_' + Builder.selectedReport.component_count
   
           let classes = inst.classes.slice(0);
           classes.pushUnique("selected-component");
@@ -848,7 +848,26 @@ let Implementation = function (applet) {
         })
       })
     },
+    
+    OPEN_UPLOAD_VERSION_MODAL: e => {
+      let myApplet = app.appletsMap["uploadVersionModal"] 
+      let passDp = () => {
+        //kaloji dataproviderin datagrides
+        if (!data.dataGridVersions)
+          data.dataGridVersions = new ArrayEx([{ revision_name: "...", system_date: "..." }]);
+        
+        let dg = myApplet.view.modalDialog.modalContent.modalBody.dataGridVersions;
+        dg.dataProvider.splicea(0, dg.dataProvider.length, data.dataGridVersions);
+        applet.addBehaviors(myApplet.view, { loadLayoutVersion: "LOAD_LAYOUT_UPLOAD_VERSION" })
+      }
 
+      if (myApplet.view) {
+        myApplet.view.show();
+        passDp();
+      }
+      else myApplet.init().then(() => passDp())
+    },
+      
     FILE_SELECTED: function (e) {
       console.log("called FILE_SELECTED.");
       if (browseFile.value.length > 0) {
@@ -1002,14 +1021,7 @@ let Implementation = function (applet) {
 
     LOAD_LAYOUT_UPLOAD_REPORT: e => loadLayout('uploadReport', e.content),
 
-    UPLOAD_REPORT_VERSION: async e => {
-      let api_reports_revision = new GaiaAPI_reports();
-      let res =
-        await api_reports_revision.getRevisionsClient.get(uploadReportVersion.selectedItem.revision_guid);
-
-      if (!res.status_description) loadLayout('uploadVersion', res[0].revision_literal)
-      else console.error(res.status_description, 'error inside UPLOAD_REPORT_VERSION')
-    },
+    LOAD_LAYOUT_UPLOAD_VERSION: e => loadLayout('uploadVersion', e.content),
 
     HISTORY_STEP_ADDED: function (e) {
       console.log("called HISTORY_STEP_ADDED.", e.current);

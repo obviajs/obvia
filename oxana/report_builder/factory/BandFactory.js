@@ -28,7 +28,7 @@ var BandFactory = function(){
                         components[i].props.componentWithData
                           ? "$F{" + components[i].props.value + "}"
                           : '"' + components[i].props.value + '"'
-                          );
+                      );
                   var xmlSyntax2 = xmlSyntax1.replace('var','');
                   components[i].props.value = xmlSyntax2;
                   constructorFactory = new TextFieldFactory(components[i].props);

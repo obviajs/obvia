@@ -24,20 +24,12 @@ let Implementation = function (applet) {
     },
 
     CREATE_NEW_REPORT: e => {
+      if(data.dataGridVersions)
+        data.dataGridVersions = new ArrayEx([{ revision_name: "...", system_date: "..." }]);
+
       //merr repeater-in e main-it dhe beji reset componenteve ne panelin majtas ne main
       let mainLeftComponents = app.viewStack.mainContainer.container.componentsContainer.componentList;
       mainLeftComponents.dataProvider = new ArrayEx(data.componentList);
-      
-      //zgjidh nqs do shfaqet emri i raportit apo do i lihet userit per ta vendosur
-      //beje bosh text inputin
-      data.showNewReportLabel = false
-      data.showNewReportTextInput = true
-      data.selectedReportName = ""
-
-      //bej bosh dataproviderin e versioneve
-      let uploadReportVersion = app.viewStack.mainContainer.nav.middleNav.uploadReportVersion;
-      uploadReportVersion.dataProvider = []
-      uploadReportVersion.selectedItem = ""
 
       // custom event to re-create the workArea
       let evt = new jQuery.Event("loadLayout");

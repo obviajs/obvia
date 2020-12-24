@@ -22,15 +22,12 @@ var TextFieldFactory = function (props) {
   };
   this.props = extend(this.defaultParams, props);
 
-  if (props.transparent === "Opaque") {
-    this.props.mode = "Opaque";
-  } else if (props.transparent === "Transparent") {
-    this.props.mode = "Transparent";
-  }
+  if (props.transparent === "Opaque") this.props.mode = "Opaque";
+  else if (props.transparent === "Transparent") this.props.mode = "Transparent";
 
   if (props.fontSize === "") this.props.fontSize = 9;
 
-  this.toXml = function () {
-    return this.xmlTemplate.formatUnicorn(this.props);
-  };
+  if (props.value === "" && props.componentWithData) this.props.value = "Text Field";
+
+  this.toXml = () => this.xmlTemplate.formatUnicorn(this.props);
 };

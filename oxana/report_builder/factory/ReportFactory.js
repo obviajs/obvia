@@ -21,8 +21,7 @@ var ReportFactory = function (){
   this.names = [];				
   
   
-  this.toXml = function(sections, dataViewFields)
-  {
+  this.toXml = (sections, dataViewFields) => {
     sections = sections == undefined ? this.sections : sections;
     var sectionsXML = "";
     for(var section = 0;section < sections.length;section++) {
@@ -32,36 +31,40 @@ var ReportFactory = function (){
       }
     }
 
-    //get fields' names
-    let queryFields = dataViewFields.fields.map(dvf => dvf.fieldName)
-    
-    let fields = "";
-    let groups = ""
+    let fields = '';
+    let groups = '';
 
-    queryFields.forEach(field => {
+    if (dataViewFields) {
+      let dotIndex = dataViewFields.table_name.indexOf('.')
+      let tableName = dataViewFields.table_name.slice(0, dotIndex)
+
+      //get fields' names
+      let queryFields = dataViewFields.fields.map(dvf => dvf.fieldName)
+      
+      queryFields.forEach(field => {
         //add field tag to the xml
         fields +=
         ('<field name="' + field + '" class="java.lang.String">' +
-          '<property name="com.jaspersoft.studio.field.name" value="' + field + '"/>' +
-          '<property name="com.jaspersoft.studio.field.label" value="' + field + '"/>' +
-          '<property name="com.jaspersoft.studio.field.tree.path" value="document"/>' +
-          '<fieldDescription><![CDATA[]]></fieldDescription>' +
+        '<property name="com.jaspersoft.studio.field.name" value="' + field + '"/>' +
+        '<property name="com.jaspersoft.studio.field.label" value="' + field + '"/>' +
+        '<property name="com.jaspersoft.studio.field.tree.path" value="' + tableName +'"/>' +
+        '<fieldDescription><![CDATA[]]></fieldDescription>' +
         '</field>')
         
         //add group tag to the xml
         groups += 
         '<group name="'+ field +'">' + 
-          '<groupExpression><![CDATA[$F{'+ field +'}]]></groupExpression>' +
+        '<groupExpression><![CDATA[$F{'+ field +'}]]></groupExpression>' +
         '</group>'
-    })
-
-    
+      })
+    }
+      
     return this.xmlTemplate.formatUnicorn({
       "sectionsXML": sectionsXML,
-      "query": dataViewFields.sql,
+      "query": dataViewFields ? dataViewFields.sql : '',
       "fields": fields,
       "groups": groups
     }); 
   }
-    
+  
 }

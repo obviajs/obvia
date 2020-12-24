@@ -40,6 +40,9 @@ let Implementation = function (applet) {
 
         //cancel
         applet.addBehaviors(modal, { "dismiss": "CANCEL_REPORT" }, false);
+        
+        //suggest report name
+        applet.addBehaviors(modal, { "shown": "FILL_NAME" }, false);
       },
 
       REPORT_NAME_CHANGED: e =>  reportNameTarget = e.target,
@@ -52,8 +55,15 @@ let Implementation = function (applet) {
         ValidationManager.getInstance().validate().then(result => {
           let canContinue = !(result.includes(false))
           if (canContinue) {
+            //merr repeater-in e main-it dhe kaloji dataview fields ne context , per tu bere post
+            let mainLeftComponentsDP =
+              app.viewStack.mainContainer.container.componentsContainer.componentList.dataProvider.slice(0);
+            
             //data to be posted
-            data.selectedReport.report_name = reportNameTarget ? reportNameTarget.value : reportName.value;
+            data.selectedReport.dataviewFields_list =
+              mainLeftComponentsDP.filter(el => el.componentWithData)
+            data.selectedReport.report_name =
+              reportNameTarget ? reportNameTarget.value : reportName.value;
             data.selectedReport.description = reportDescriptionTarget.value;
 
             let gaiaReport = new GaiaAPI_reports();
@@ -63,8 +73,7 @@ let Implementation = function (applet) {
                 reportErrorLabel.label = 'Success'
                 reportErrorLabel.visible = true;
                 canContinue = false
-                data.showNewReportLabel = false
-                data.showNewReportTextInput = true
+                data.selectedReport = { ...res }
                 versionListCall(res)
               })
               .catch(err => {
@@ -80,7 +89,13 @@ let Implementation = function (applet) {
         ValidationManager.getInstance().validate().then(result => {
           let canContinue = !(result.includes(false))
           if (canContinue) {
-            //data to be posted
+            //merr repeater-in e main-it dhe kaloji dataview fields ne context , per tu bere post
+            let mainLeftComponents =
+              app.viewStack.mainContainer.container.componentsContainer.componentList;
+            
+              //data to be posted
+            data.selectedReport.dataviewFields_list =
+              mainLeftComponents.dataProvider.slice(0).filter(el => el.componentWithData)
             data.selectedReport.report_name = reportNameTarget ? reportNameTarget.value : reportName.value;
             data.selectedReport.description = reportDescriptionTarget.value;
             
@@ -94,19 +109,9 @@ let Implementation = function (applet) {
               reportDescriptionTarget.value = "";
               reportDescription.value = "";
               canContinue = false
-              data.showNewReportLabel = false
-              data.showNewReportTextInput = true
               data.selectedReport = new ReportProperties();
-              
-              //merr repeater-in e main-it dhe beji reset componenteve ne panelin majtas ne main
-              let mainLeftComponents =
-                app.viewStack.mainContainer.container.componentsContainer.componentList;
-              mainLeftComponents.dataProvider = new ArrayEx(data.componentList);
-  
-              //bej bosh dataproviderin e versioneve
-              let uploadReportVersion = app.viewStack.mainContainer.nav.middleNav.uploadReportVersion;
-              uploadReportVersion.dataProvider = []
-              uploadReportVersion.selectedItem = ""
+              //beji reset komponenteve ne panelin majtas ne main              
+              mainLeftComponents.dataProvider = data.componentList;
               
               // custom event to re-create the workArea
               let evt = new jQuery.Event("loadLayout");
@@ -126,6 +131,11 @@ let Implementation = function (applet) {
         if(reportNameTarget) reportNameTarget.value = "";
         if(reportDescriptionTarget) reportDescriptionTarget.value = "";
         reportErrorLabel.visible = false
+      },
+
+      FILL_NAME: e => {
+        if(data.dataGridVersions && data.dataGridVersions[0].revision_name !== "...") 
+          reportName.value = data.selectedReport.report_name
       }
     }; 
   
@@ -134,16 +144,15 @@ let Implementation = function (applet) {
       //bej thirrjen ne api per listen e versioneve te raportit
       let api_reports_revision = GaiaAPI_dataview_pid_11.getInstance();
       data.id_document_revision = parseInt(res.id_document)
+      let resReportVersions = new RemoteArray({
+        recordsPerPage: 5, // pagination
+        fetchPromise: p =>
+          api_reports_revision.dataview_pid_11Client.post(data.id_document_revision)
+      });
+      data.dataGridVersions = new ArrayEx(resReportVersions);
+      return Promise.all([data.dataGridVersions.init()]).then(res => data)
+    };
 
-      let resReportVersions = await api_reports_revision.dataview_pid_11Client.post(data.id_document_revision)
-      if (!resReportVersions.status_description) {
-        let uploadReportVersion = app.viewStack.mainContainer.nav.middleNav.uploadReportVersion;
-        uploadReportVersion.dataProvider = resReportVersions.slice(0)
-      } else {
-        console.error(resReportVersion.status_description, 'error from dataview_pid_11Client apiCall')
-      }
-    }
-  
     return imp;
   };
   
