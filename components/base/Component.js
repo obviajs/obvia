@@ -784,7 +784,7 @@ var Component = function (_props) {
                     "nullable": false
                 };
                 _bindings.splice(match.indices[0], 1, newBinding);
-               
+
                 let currentItem = _bindingDefaultContext;
                 let bindingExp = expression;
                 let site = this;
@@ -836,7 +836,7 @@ var Component = function (_props) {
         for (let bi = 0; bi < _bindings.length; bi++) {
             let currentItem = data;
             let bindingExp = _bindings[bi].expression;
-            
+
             let site_chain = [_bindings[bi].property];
             let nullable = _bindings[bi].nullable;
 
@@ -954,13 +954,11 @@ var Component = function (_props) {
     }
 
     this.find = function (childId) {
-        let r = null;
-        let paths = findMember(this, "id", ["$el", "$container", "base", "attr", "classes", "css", "spacing", "dataProvider", "parentForm", "parent", "currentItem", "props", "components"], childId, false);
-        if (paths.length > 0) {
-            paths[0].pop();
-            r = getChainValue(this, paths[0]);
-        }
-        return r;
+        let r = objectHierarchyGetMatchingMember(this, "id", childId, "children", false),
+            m = null;
+        if (r && r.match)
+            m = r.match;
+        return m;
     };
 
     this.trigger('init');

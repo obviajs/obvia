@@ -334,8 +334,8 @@ var Parent = function (_props, _hideComponents = false) {
                         resolve(_proxy);
                     }
                 });
+                this.addComponents();
             });
-            this.addComponents();
         }
         return _rPromise;
     };

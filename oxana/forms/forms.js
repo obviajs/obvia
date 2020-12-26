@@ -100,7 +100,7 @@ var _initDpForms = function () {
 var uiRoute = function (applet) {
     //check applet.view.attached if you want to addChild only when its not already
     let _appendTo = "viewStack";
-    let viewContainer = applet.parent.find(applet.port);
+    let viewContainer = applet.parent.find(_appendTo);
     return viewContainer.addChild(applet.view);
 };
 var modalRoute = function (applet) {
@@ -118,7 +118,6 @@ var oxana = new App({
             url: "./flowerui/oxana/forms/applets/main/",
             anchor: "main",
             dataPromise: _initDP,
-            port: "viewStack",
             "uiRoute": uiRoute
             //forceReload: true
         },
@@ -126,7 +125,6 @@ var oxana = new App({
             url: "./flowerui/oxana/forms/applets/saveForm/",
             anchor: "saveForm",
             dataPromise: _initDP,
-            port: "viewStack",
             "uiRoute": modalRoute
             //forceReload: true
         },
@@ -134,7 +132,6 @@ var oxana = new App({
             url: "./flowerui/oxana/forms/applets/formsModal/",
             anchor: "formsModal",
             dataPromise: _initDpForms,
-            port: "viewStack",
             "uiRoute": modalRoute
             //forceReload: true
         }
