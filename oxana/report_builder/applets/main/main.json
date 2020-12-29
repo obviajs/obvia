@@ -494,6 +494,20 @@
                         }
                       ]
                     }
+                  },
+                  {
+                    "ctor": "Label",
+                    "props": {
+                      "id": "guide-h",
+                      "classes": ["guide"]
+                    }
+                  },
+                  {
+                    "ctor": "Label",
+                    "props": {
+                      "id": "guide-v",
+                      "classes": ["guide"]
+                    }
                   }
                 ]
               }

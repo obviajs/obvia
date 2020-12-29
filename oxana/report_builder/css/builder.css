@@ -211,3 +211,18 @@ label[data-toggle="collapse"]:not([aria-expanded]):before {
   font-size: 18px;
   transition: 0.2s ease-in-out;
 }
+/* guide lines */
+.guide {
+  display: none;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+label[id*='guide-h'] {
+  border-top: 1px dashed #55f;
+  width: 100%;
+}
+label[id*='guide-v'] {
+  border-left: 1px dashed #55f;
+  height: 100%;
+}

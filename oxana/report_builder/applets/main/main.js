@@ -49,6 +49,11 @@ let Implementation = function (applet) {
   let component_id = 0;
   let workAreaUE = null;
 
+  //guide lines
+  let MIN_DISTANCE = 10; // minimum distance to "snap" to a guide
+  let guides = [];
+  let innerOffsetX, innerOffsetY, chosenGuides, pos;
+
   //component resize
   let resizable = false;
   let formField;
@@ -803,8 +808,71 @@ let Implementation = function (applet) {
             "," +
             (parseInt(style.getPropertyValue("top"), 10) - event.clientY)
         );
+
+        //set not-selected elements' guide lines positions
+        guides = $.map($(".default-component").not(".selected-component"), computeGuidesForElement);
+        innerOffsetX = e.originalEvent.offsetX;
+        innerOffsetY = e.originalEvent.offsetY;
       },
     },
+
+    DRAG_COMPONENT: e => {
+      // iterate all guides, remember the closest h and v guides
+      chosenGuides = { top: { dist: MIN_DISTANCE + 1 }, left: { dist: MIN_DISTANCE + 1 } };
+      let $t = $(".selected-component");
+      pos = { 
+        top: (e.originalEvent.pageY - 50) - innerOffsetY, 
+        left: (e.originalEvent.pageX - 367) - innerOffsetX 
+      };
+      let w = $t.outerWidth() - 1;
+      let h = $t.outerHeight() - 1;
+      let elemGuides = computeGuidesForElement(null, pos, w, h);
+
+      $.each(guides, (i, guide) => {
+        $.each(elemGuides, (i, elemGuide) => {
+          if (guide.type == elemGuide.type) {
+            let prop = guide.type == "h" ? "top" : "left";
+            let d = Math.abs(elemGuide[prop] - guide[prop]);
+            if (d < chosenGuides[prop].dist) {
+              chosenGuides[prop].dist = d;
+              chosenGuides[prop].offset = elemGuide[prop] - pos[prop];
+              chosenGuides[prop].guide = guide;
+            }
+          }
+        });
+      });
+
+      //show guide lines
+      if (chosenGuides.top.dist <= MIN_DISTANCE)
+        $("label[id*='guide-h']").css("top", chosenGuides.top.guide.top + 50).show();
+      else $("label[id*='guide-h']").hide();
+
+      if (chosenGuides.left.dist <= MIN_DISTANCE)
+        $("label[id*='guide-v']").css("left", chosenGuides.left.guide.left + 367).show();
+      else $("label[id*='guide-v']").hide();
+    },
+
+    DRAGEND_COMPONENT: e => {
+      let val;
+
+      //pull element to closest component
+      if (chosenGuides.top.dist <= MIN_DISTANCE) {
+        val = (chosenGuides.top.guide.top - chosenGuides.top.offset) % 200;
+        e.target.style.top = val + 'px';
+      } else {
+        val = pos.top % 200;
+        e.target.style.top = val + 'px';
+      }
+
+      if (chosenGuides.left.dist <= MIN_DISTANCE) {
+        val = chosenGuides.left.guide.left - chosenGuides.left.offset
+        e.target.style.left = val + 'px'; 
+      } else {
+        val = pos.left;
+        e.target.style.left = val + 'px';
+      }
+    },
+
     HISTORY_STEP_DETAILS: function (e) {
       console.log("called HISTORY_STEP_DETAILS.");
     },
@@ -1662,6 +1730,50 @@ let Implementation = function (applet) {
     if (bhv === 'newReport') data.selectedReport = new ReportProperties();
   };
 
+  let computeGuidesForElement = (elem, pos, w, h) => {
+    if (elem != null) {
+      var $t = $(elem);
+      pos = $t.offset();
+      pos.top -= 50;
+      pos.left -= 367;
+      w = $t.outerWidth() - 1;
+      h = $t.outerHeight() - 1;
+    }
+  
+    return [
+      {
+        type: "h",
+        left: pos.left,
+        top: pos.top,
+      },
+      {
+        type: "h",
+        left: pos.left,
+        top: pos.top + h,
+      },
+      {
+        type: "v",
+        left: pos.left,
+        top: pos.top,
+      },
+      {
+        type: "v",
+        left: pos.left + w,
+        top: pos.top,
+      },
+      {
+        type: "h",
+        left: pos.left,
+        top: pos.top + h / 2,
+      },
+      {
+        type: "v",
+        left: pos.left + w / 2,
+        top: pos.top,
+      },
+    ];
+  }
+
   let daBehaviors = {
     mouseover: "WA_HOVER",
     mouseout: "WA_HOVER",
@@ -1721,6 +1833,8 @@ let Implementation = function (applet) {
     dragstart: {
       DRAGSTART_COMPONENT: isDraggable,
     },
+    drag: "DRAG_COMPONENT",
+    dragend: "DRAGEND_COMPONENT",
     dropped: "SELECT_COMPONENT",
   };
 
