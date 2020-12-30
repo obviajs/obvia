@@ -324,7 +324,7 @@ var Repeater = function (_props, _hideComponents = false) {
             let swap = [];
             for (let i = 0; i < toAdd.swap.length; i++) {
                 swap.push(toAdd.swap[i].a1_index);
-                if (toAdd.swap[i].a2_index < _dataProvider.length) { 
+                if (toAdd.swap[i].a2_index < _dataProvider.length) {
                     swap.push(toAdd.swap[i].a2_index);
                 }
             }
@@ -335,7 +335,7 @@ var Repeater = function (_props, _hideComponents = false) {
             toRemove = differenceOnKeyMatch(_oldDataProvider, _dataProvider, _guidField, false, true);
             for (let i = 0; i < toRemove.swap.length; i++) {
                 swap.push(toRemove.swap[i].a2_index);
-                if (toRemove.swap[i].a1_index < _dataProvider.length) { 
+                if (toRemove.swap[i].a1_index < _dataProvider.length) {
                     swap.push(toRemove.swap[i].a1_index);
                 }
             }
@@ -419,6 +419,15 @@ var Repeater = function (_props, _hideComponents = false) {
             enumerable: false,
             configurable: true
         });
+
+        if (!("currentIndex" in data)) {
+            Object.defineProperty(data, "currentIndex", {
+                value: index,
+                enumerable: false,
+                configurable: true
+            });
+        }
+
         let beforeRowAddEvent = jQuery.Event("beforeRowAdd");
         this.trigger(beforeRowAddEvent, [_self, new RepeaterEventArgs(_rowItems, data, index)]);
 

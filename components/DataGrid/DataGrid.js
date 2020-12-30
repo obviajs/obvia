@@ -233,7 +233,7 @@ var DataGrid = function (_props) {
         }
         Promise.all(_comprenders).then(function () {
             _self.$hadow.contents().appendTo(_self.$table);
-            if(_self.attached)
+            if (_self.attached)
                 _self.updateDisplayList();
             _comprenders = [];
             _self.$el.trigger('endDraw');
@@ -316,7 +316,7 @@ var DataGrid = function (_props) {
                 this.editPosition.event = 1;
                 _cellItemRenderers[this.editPosition.rowIndex][this.editPosition.columnIndex].show();
             }
-            if (this.editPosition == null) { 
+            if (this.editPosition == null) {
                 this.editPosition = {};
             }
 
@@ -389,7 +389,7 @@ var DataGrid = function (_props) {
                     "margin": "0px",
                     "outline": "none"
                 });
-                    
+
                 _cellItemEditors[columnIndex] = {
                     "itemEditor": itemEditor,
                     "rowIndex": rowIndex
@@ -409,32 +409,32 @@ var DataGrid = function (_props) {
                             //TODO: Check columnIndex boundaries and pass to next row if it is 
                             //the last one, if now rows remaining pass to first row(check repeater implementation)
                             let itemEditorColumnIndex;
-                                let i;
-                                if(e.shiftKey){
-                                    for(i = columnIndex; i > 0; i--){
-                                        if(_columns[i - 1].itemEditor){
-                                            break;
-                                        }
+                            let i;
+                            if (e.shiftKey) {
+                                for (i = columnIndex; i > 0; i--) {
+                                    if (_columns[i - 1].itemEditor) {
+                                        break;
                                     }
-                                    itemEditorColumnIndex = i - 1;
-                                }else {
-                                    for(i = columnIndex; i < _columns.length - 1; i++){
-                                        if(_columns[i + 1].itemEditor){
-                                            break;
-                                        }
-                                    }
-                                    itemEditorColumnIndex = i + 1;
                                 }
-                                
+                                itemEditorColumnIndex = i - 1;
+                            } else {
+                                for (i = columnIndex; i < _columns.length - 1; i++) {
+                                    if (_columns[i + 1].itemEditor) {
+                                        break;
+                                    }
+                                }
+                                itemEditorColumnIndex = i + 1;
+                            }
 
-                            if(itemEditorColumnIndex ==  _columns.length || itemEditorColumnIndex == -1){
+
+                            if (itemEditorColumnIndex == _columns.length || itemEditorColumnIndex == -1) {
                                 _self.cellEditFinished(_self.editPosition.rowIndex, _self.editPosition.columnIndex, true);
-                            }else {
+                            } else {
                                 e.preventDefault();
-                                _self.cellEdit(_self.editPosition.rowIndex, itemEditorColumnIndex);   
+                                _self.cellEdit(_self.editPosition.rowIndex, itemEditorColumnIndex);
                             }
                             break;
-                            
+
                     }
                 });
                 itemEditor.on('keyup', function (e) {
@@ -499,7 +499,7 @@ var DataGrid = function (_props) {
                 let p = parseInt(_cells[rowIndex][columnIndex].css('padding'));
                 let b = itemEditor.css["border-width"];
 
-                itemEditor.css.width = (w - 2*p - 2*b-8) + "px";
+                itemEditor.css.width = (w - 2 * p - 2 * b - 8) + "px";
                 _cells[rowIndex][columnIndex].append(cmpInstance.$el);
                 itemEditor.show();
                 let e = jQuery.Event('cellEditStarted');
@@ -615,12 +615,12 @@ var DataGrid = function (_props) {
             //     "background-color": "white",
             this.$table.append(this.$message);
         }
-           
+
         if (!this.$scrollArea) {
             this.$scrollArea = $("<div/>");
             this.$table.after(this.$scrollArea);
         }
-//<div style="opacity: 0; position: absolute; top: 0px; left: 0px; width: 1px; height: 3.1e+07px;"></div>
+        //<div style="opacity: 0; position: absolute; top: 0px; left: 0px; width: 1px; height: 3.1e+07px;"></div>
         this.$scrollArea.css({
             opacity: 0,
             position: "absolute",
@@ -644,7 +644,7 @@ var DataGrid = function (_props) {
             this.$table.css({
                 "margin-top": e.target.scrollTop + "px"
             });
-   
+
             this.delayScroll.apply(this, arguments).then(function (r) {
                 if (!r) {
                     //_self.$table.css({ "margin-top": mtt + "px" });
@@ -729,7 +729,7 @@ var DataGrid = function (_props) {
             $(_self.ownerDocument).keyup(function () {
                 if ((Env.getInstance().current == EnvType.MAC && !event.metaKey) || event.which == "17")
                     _ctrlIsPressed = false;
-            });     
+            });
         }
     };
 
@@ -904,6 +904,13 @@ var DataGrid = function (_props) {
                 component.props.bindingDefaultContext = data;
                 component.props.ownerDocument = _props.ownerDocument;
 
+                if (!("currentIndex" in data)) {
+                    Object.defineProperty(data, "currentIndex", {
+                        value: index,
+                        enumerable: false,
+                        configurable: true
+                    });
+                }
                 //build components properties, check bindings
 
                 let dataProviderField = column.field;
@@ -931,7 +938,7 @@ var DataGrid = function (_props) {
                 _cellItemRenderers[index][columnIndex] = el;
                 let columnName = column.name || `column_${columnIndex}`;
                 rowItems[columnName] = el;
-                
+
                 let csEvt = jQuery.Event('cellStyling', [_self, index, columnIndex, _self.rowItems, column, data]);
 
                 if (column.editable) {

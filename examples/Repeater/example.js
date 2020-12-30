@@ -1,17 +1,28 @@
-var ra = new RemoteArray({url:"http://192.168.64.2/rca/index.php", post:{"testKey":"testValue"}, recordsPerPage:5})
-var dp = new ArrayEx(ra);
-var myRepeater = new Repeater({
-    id: 'repeater',
-    dataProvider:dp,
-    components: [
-        {
-            ctor: Button,
-            props: {
-                id: 'component',
-                label: "{first_name+' '+last_name}",
+let apiClient = new ApiClient();
+apiClient.get("https://api.mocki.io/v1/8dea432f").then(r => {
+    var myRepeater = new Repeater({
+        id: 'repeater',
+        dataProvider: new ArrayEx(r.response),
+        components: [{
+                ctor: Label,
+                props: {
+                    id: 'lblCmp',
+                    label: "{currentIndex + 1}",
+                }
+            },
+            {
+                ctor: Button,
+                props: {
+                    id: 'btnCmp',
+                    label: "{name+' '+company}",
+                }
             }
-        }
-    ]
+        ]
+    });
+
+    myRepeater.render().then(function (cmpInstance) {
+        $('#root').append(cmpInstance.$el);
+    });
 });
 /*
 var dp = new ArrayEx([{label:"test"}, {label:"anonimous", children:[{label:"hulk"}]}]);
@@ -194,7 +205,3 @@ var myRepeater = new Repeater({
     ]
 });
 */
-myRepeater.render().then(function (cmpInstance)
-{
-  $('#root').append(cmpInstance.$el);
-});
