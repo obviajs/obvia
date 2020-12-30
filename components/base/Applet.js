@@ -107,6 +107,7 @@ var Applet = function (_props) {
             _view = Component.fromLiteral(_literal);
 
             _self.addBehaviors(_view, _behaviors, false);
+            _self.addBehaviors(_app, _app.defaultBehaviors, false);
 
             if (_applets) {
                 let len = _applets.length;

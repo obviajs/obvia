@@ -111,6 +111,19 @@ var App = function (_props) {
             }
         }
     });
+    let _defaultBehaviors = {
+        "InactivityDetected": "APP_INACTIVE",
+        "ActivityDetected": "APP_ACTIVE",
+        "WindowHide": "APP_WINDOW_HIDDEN",
+        "WindowShow": "APP_WINDOW_SHOWN",
+        "beforeunload": "APP_UNLOADED"
+    };
+
+    Object.defineProperty(this, 'defaultBehaviors', {
+        get: function () {
+            return _defaultBehaviors;
+        }
+    });
 
     let _initDefaultBehaviors = function () {
         if (_historyProps.enabled) {
@@ -125,15 +138,7 @@ var App = function (_props) {
             historyBehaviors[HistoryEventType.HISTORY_STEP_ADDED] = "HISTORY_STEP_ADDED";
             _self.addBehaviors(_guid, _history, historyBehaviors);
         }
-        let defaultBehaviors = {
-            "InactivityDetected": "APP_INACTIVE",
-            "ActivityDetected": "APP_ACTIVE",
-            "WindowHide": "APP_WINDOW_HIDDEN",
-            "WindowShow": "APP_WINDOW_SHOWN",
-            "beforeunload": "APP_UNLOADED"
-        };
-
-        _self.addBehaviors(_guid, _self, defaultBehaviors);
+        _self.addBehaviors(_guid, _self, _defaultBehaviors);
     };
 
     _behaviorimplementations[_guid]["APP_UNLOADED"] = function (e) {
@@ -143,18 +148,6 @@ var App = function (_props) {
         for (let i = 0; i < len; i++) {
             BrowserWindow.all[i].close();
         }
-    };
-    _behaviorimplementations[_guid]["APP_INACTIVE"] = function (e, idleTime, idleCount) {
-        console.log("App became Inactive, Launch a cool screensaver here");
-    };
-    _behaviorimplementations[_guid]["APP_ACTIVE"] = function (e, idleTime, idleCount) {
-        console.log("App became Active, Disable screensaver and show login if session expired here");
-    };
-    _behaviorimplementations[_guid]["APP_WINDOW_HIDDEN"] = function (e, idleTime, idleCount) {
-        console.log("App Window was minimized, you may want to stop network traffic or do sth cpu intensive here.");
-    };
-    _behaviorimplementations[_guid]["APP_WINDOW_SHOWN"] = function (e, idleTime, idleCount) {
-        console.log("App Window was maximized, you may want to greet the user.");
     };
 
     this.addApplet = function (applet) {
