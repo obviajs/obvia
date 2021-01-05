@@ -5,9 +5,9 @@
  */
 
 //component definition
-var CurrencyExRate = function (_props) {
+var CurrencyExRate = function(_props) {
     let _self = this;
-  
+
     Object.defineProperty(this, "value", {
         get: function value() {
             return _value;
@@ -24,19 +24,19 @@ var CurrencyExRate = function (_props) {
         enumerable: true,
     });
 
-    this.changeHandler = function (e) {
+    this.changeHandler = function(e) {
         _value.exRate = this.children.exchangeRate.value;
         _value.currency = this.children.currencySelect.value;
     };
-    this.afterAttach = function (e) {
+    this.afterAttach = function(e) {
         if (e.target.id == this.domID) {
-          
+
         }
     };
     let _cmps;
-    let fnContainerDelayInit = function () {
+    let fnContainerDelayInit = function() {
         _cmps = [
-           
+
             {
                 "ctor": "Container",
                 "props": {
@@ -47,7 +47,7 @@ var CurrencyExRate = function (_props) {
                         "width": "100%"
                     },
                     "components": [
-                        
+
                         {
                             ctor: DropDown,
                             props: {
@@ -57,7 +57,6 @@ var CurrencyExRate = function (_props) {
                                 valueField: _valueField,
                                 value: _value.currency,
                                 css: {
-                                    width: '20%',
                                     float: 'left'
                                 }
                             }
@@ -67,21 +66,18 @@ var CurrencyExRate = function (_props) {
                             props: {
                                 id: "exchangeRate",
                                 value: _value.exRate,
-                                css: {
-                                    width: '80%',
-                                    float: 'left'
-                                }
+                                css: {}
                             }
                         }
                     ]
                 }
             },
-           
-         
-            
+
+
+
         ];
     };
-    
+
 
     let _defaultParams = {
         value: {
@@ -93,7 +89,7 @@ var CurrencyExRate = function (_props) {
         currencyList: [],
         labelField: 'text',
         valueField: 'id',
-        
+
     };
     _props = extend(false, false, _defaultParams, _props);
 
@@ -102,9 +98,9 @@ var CurrencyExRate = function (_props) {
     let _labelField = _props.labelField;
     let _valueField = _props.valueField;
     let _change = _props.change;
-   
-   
-    _props.change = function () {
+
+
+    _props.change = function() {
         if (typeof _change == 'function')
             _change.apply(this, arguments);
 

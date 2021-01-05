@@ -904,6 +904,13 @@ var DataGrid = function(_props) {
                 component.props.bindingDefaultContext = data;
                 component.props.ownerDocument = _props.ownerDocument;
 
+                if (!("currentIndex" in data)) {
+                    Object.defineProperty(data, "currentIndex", {
+                        value: index,
+                        enumerable: false,
+                        configurable: true
+                    });
+                }
                 //build components properties, check bindings
 
                 let dataProviderField = column.field;

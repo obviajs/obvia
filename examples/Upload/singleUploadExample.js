@@ -1,16 +1,3 @@
-/*
-var singleUpload = new UploadEx({
-    id: 'upload',
-    multiple: true
-});
-$('#root').append(singleUpload.render());
-*/
-var loader = new Loader({
-    id: 'loader'
-});
-$('#root').append(await loader.render().$el);
-loader.show();
-
 var myForm = new Form({
     id: 'form',
     formName: 'My Form',
@@ -21,14 +8,15 @@ var multiUpl = new MultiUpload({
     form: myForm
 });
 
-multiUpl.on('creationComplete', function () {
-    loader.hide();
+multiUpl.render().then(function(cmpInstance) {
+    $('#root').append(cmpInstance.$el);
 });
 
-
-multiUpl.on('creationComplete', function (e) {
-    loader.hide();
+var singleUpload = new UploadEx({
+    id: 'upload',
+    multiple: true,
+    form: myForm
 });
-multiUpl.render().then(function (cmpInstance) {
+singleUpload.render().then(function(cmpInstance) {
     $('#root').append(cmpInstance.$el);
 });

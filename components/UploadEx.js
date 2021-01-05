@@ -3,173 +3,172 @@
  *
  * Kreatx 2019
  */
+var UploadEx = function(_props) {
+    let _self = this;
+    let _upload, _lblFileName, _btnRemove, _removeColumn, _iconLbl, _lblFileSize, _progressBar, _progressRow, _btnUpload, _btnDownload, _btnSelect;
+    let _lastFileTypeIcon;
 
-var UploadEx = function (_props) {
-    var _self = this;
-    var _upload, _lblFileName, _btnRemove, _removeColumn, _iconLbl, _lblFileSize, _progressBar, _progressRow, _btnUpload, _btnDownload, _btnSelect;
-    var _lastFileTypeIcon;
-
-    var upload_change = function(e){
+    let upload_change = function(e) {
         e.stopPropagation();
         e.stopImmediatePropagation();
         _self.value = e.target.files;
-    }
+    };
 
-    var init = function(files){
-        if((Array.isArray(files) || BinUtils.isFileList(files)) && files.length>0)
-        {
-            if(files[0]["url"]==null){
+    let init = function(files) {
+        if ((Array.isArray(files) || BinUtils.isFileList(files)) && files.length > 0) {
+            if (files[0]["url"] == null) {
                 _btnDownload.enabled = false;
             }
 
-            if(BinUtils.isFile(files[0]) || BinUtils.isBlob(files[0])){
+            if (BinUtils.isFile(files[0]) || BinUtils.isBlob(files[0])) {
                 _btnUpload.enabled = true;
             }
 
-            var classes = _iconLbl.classes.slice(0);
-            if(_lastFileTypeIcon)
-                classes = classes.splice(classes.indexOf(_lastFileTypeIcon),1);
+            let classes = _iconLbl.classes.slice(0);
+            if (_lastFileTypeIcon)
+                classes = classes.splice(classes.indexOf(_lastFileTypeIcon), 1);
             classes.pushUnique("fas");
             classes.pushUnique("fa-lg");
             classes.pushUnique("align-middle");
-            if(files.length>1)
+            if (files.length > 1)
                 _lastFileTypeIcon = "fa-files";
-            else if(files.length>0){
+            else if (files.length > 0) {
                 _lastFileTypeIcon = getFontAwesomeIconFromMIME(files[0].type);
-                if(_lastFileTypeIcon==null)  
-                    _lastFileTypeIcon = "fa-file";  
-            }
-            else
+                if (_lastFileTypeIcon == null)
+                    _lastFileTypeIcon = "fa-file";
+            } else
                 _lastFileTypeIcon = null;
-            if(_lastFileTypeIcon!=null)  
+            if (_lastFileTypeIcon != null)
                 classes.pushUnique(_lastFileTypeIcon);
-            
-            _iconLbl.classes = classes; 
-            
+
+            _iconLbl.classes = classes;
+
             //console.log("File(s) selected, type: "+e.target.files[0].type+" "+_lastFileTypeIcon);
-            var arr = [], size;
-            for(var i=0;i<files.length;i++){
+            let arr = [],
+                size;
+            for (let i = 0; i < files.length; i++) {
                 arr.push(files[i].name);
-                if(files[i].size && !isNaN(files[i].size))
-                    if(size==null)
+                if (files[i].size && !isNaN(files[i].size))
+                    if (size == null)
                         size = 0;
-                    size += files[i].size;
+                size += files[i].size;
             }
-            _lblFileName.label = arr.length>0?arr.join(","):"No file selected.";
-            if(size==null)
+            _lblFileName.label = arr.length > 0 ? arr.join(",") : "No file selected.";
+            if (size == null)
                 _lblFileSize.label = "";
             else
-                _lblFileSize.label = formatBytes(size); 
-        }else{
+                _lblFileSize.label = formatBytes(size);
+        } else {
             _btnDownload.enabled = false;
             _btnUpload.enabled = false;
             _btnRemove.enabled = false;
         }
-    }
+    };
 
-    var selectBtn_click = function(){
+    let selectBtn_click = function() {
         _upload.fileDialog();
         console.log("selectBtn_click");
-    }
-    
-    this.ajaxUpload = function(queuee = false){
-        if(_form && _form.ctor && _form.ctor == 'Form'){
-            _form.removeFormData(_upload.id+"[]");
+    };
+
+    this.ajaxUpload = function(queuee = false) {
+        if (_form && _form.ctor && _form.ctor == 'Form') {
+            _form.removeFormData(_upload.id + "[]");
             _form.off(FormEventType.POST_ERROR, _ajaxUpload_error);
             _form.off(FormEventType.POST_SUCCESS, _ajaxUpload_success);
             _form.off(FormEventType.POST_PROGRESS, _ajaxUpload_progress);
             _form.off(FormEventType.POST_COMPLETE, _ajaxUpload_complete);
             _form.off(FormEventType.POST_STARTED, _ajaxUpload_started);
-            
+
             _form.on(FormEventType.POST_ERROR, _ajaxUpload_error);
             _form.on(FormEventType.POST_SUCCESS, _ajaxUpload_success);
             _form.on(FormEventType.POST_PROGRESS, _ajaxUpload_progress);
             _form.on(FormEventType.POST_COMPLETE, _ajaxUpload_complete);
             _form.on(FormEventType.POST_STARTED, _ajaxUpload_started);
 
-            for(var i=0;i<_upload.files.length;i++){
-                if("size" in _upload.files[i] && !("url" in _upload.files[i])){
-                    _form.addFormData(_upload.id+"[]", _upload.files[i]);
+            for (let i = 0; i < _upload.files.length; i++) {
+                if ("size" in _upload.files[i] && !("url" in _upload.files[i])) {
+                    _form.addFormData(_upload.id + "[]", _upload.files[i]);
                 }
             }
-            if(!queuee)
+            if (!queuee)
                 _form.post();
         }
-    }
+    };
 
-    this.ajaxDownload = function(){
-        if(_value && Array.isArray(_value) && _value.length>0)
+    this.ajaxDownload = function() {
+        if (_value && Array.isArray(_value) && _value.length > 0)
             downloadFromUrl(_value[0].name, _value[0].url).then().catch();
-    }
+    };
 
-    var uploadBtn_click = function(e){
+    let uploadBtn_click = function(e) {
         _self.ajaxUpload();
-    }
-    var _ajaxUpload_error = function(e, jqXHR,  textStatus, errorThrown){
+    };
+
+    let _ajaxUpload_error = function(e, jqXHR, textStatus, errorThrown) {
         setTimeout(_ajaxUpload_complete, 500);
-    }
-    var _ajaxUpload_success = function(e, data, textStatus, jqXHR){
+    };
+
+    let _ajaxUpload_success = function(e, data, textStatus, jqXHR) {
         setTimeout(_ajaxUpload_complete, 500);
-        for(var i=0;i<_value.length;i++){
-            if(data[_upload.id]){
+        for (let i = 0; i < _value.length; i++) {
+            if (data[_upload.id]) {
                 _value[i].url = data[_upload.id][i].url;
             }
         }
-    }
-    var _ajaxUpload_progress = function(e, xhrProgressEvt){
+    };
+
+    let _ajaxUpload_progress = function(e, xhrProgressEvt) {
         _progressBar.valueNow = xhrProgressEvt.percentage;
-    }
-    var _ajaxUpload_started = function(e){
-        if(_showProgress){
-             var classes = _progressRow.classes.slice(0);
-            classes.splice(classes.indexOf("d-none"),1);
+    };
+
+    let _ajaxUpload_started = function(e) {
+        if (_showProgress) {
+            let classes = _progressRow.classes.slice(0);
+            classes.splice(classes.indexOf("d-none"), 1);
             _progressBar.valueNow = 0;
-            _progressRow.classes = classes; 
-        } 
-    }
-    var _ajaxUpload_complete = function(e){
-        if(_showProgress){
-            var classes = _progressRow.classes.slice(0);
-            classes.pushUnique("d-none");
-            _progressRow.classes = classes; 
+            _progressRow.classes = classes;
         }
-    }
+    };
 
-    var downloadBtn_click = function(){
+    let _ajaxUpload_complete = function(e) {
+        if (_showProgress) {
+            let classes = _progressRow.classes.slice(0);
+            classes.pushUnique("d-none");
+            _progressRow.classes = classes;
+        }
+    };
+
+    let downloadBtn_click = function() {
         _self.ajaxDownload();
-    }
+    };
 
-    var removeBtn_click = function(){
+    let removeBtn_click = function() {
         this.value = null;
-    }
+    };
 
-    var _cmps;
-    
-    var fnContainerDelayInit = function(){
-        _cmps = [
-            {
+    let _cmps;
+
+    let fnContainerDelayInit = function() {
+        _cmps = [{
                 ctor: Container,
                 props: {
                     id: "mainRow",
                     type: ContainerType.ROW,
                     height: 30,
-                    components:[
-                        {
+                    components: [{
                             ctor: Container,
                             props: {
                                 id: "iconColumn",
                                 type: ContainerType.COLUMN,
-                                spacing: {colSpan:1},
-                                classes:["border"],
-                                components:[
-                                    {
-                                        ctor: Label,
-                                        props: {
-                                            id: "iconLbl",
-                                            labelType: LabelType.i
-                                        }
+                                spacing: { colSpan: 1 },
+                                classes: ["border"],
+                                components: [{
+                                    ctor: Label,
+                                    props: {
+                                        id: "iconLbl",
+                                        labelType: LabelType.i
                                     }
-                                ]
+                                }]
                             }
                         },
                         {
@@ -177,21 +176,20 @@ var UploadEx = function (_props) {
                             props: {
                                 id: "fileNameColumn",
                                 type: ContainerType.COLUMN,
-                                spacing: {colSpan:7},
-                                classes:["border"],
-                                components:[
-                                    {
+                                spacing: { colSpan: 7 },
+                                classes: ["border"],
+                                components: [{
                                         ctor: Label,
                                         props: {
                                             id: "fileName",
-                                            label:"No file selected."
+                                            label: "No file selected."
                                         }
                                     },
                                     {
                                         ctor: Upload,
                                         props: {
                                             id: "uploadInput",
-                                            classes:["d-none"],
+                                            classes: ["d-none"],
                                             change: upload_change
                                         }
                                     }
@@ -203,16 +201,14 @@ var UploadEx = function (_props) {
                             props: {
                                 id: "fileSizeColumn",
                                 type: ContainerType.COLUMN,
-                                spacing: {colSpan:1},
-                                classes:["border"],
-                                components:[
-                                    {
-                                        ctor: Label,
-                                        props: {
-                                            id: "fileSize",
-                                        }
+                                spacing: { colSpan: 1 },
+                                classes: ["border"],
+                                components: [{
+                                    ctor: Label,
+                                    props: {
+                                        id: "fileSize",
                                     }
-                                ]
+                                }]
                             }
                         },
                         {
@@ -220,10 +216,9 @@ var UploadEx = function (_props) {
                             props: {
                                 id: "controlsColumn",
                                 type: ContainerType.BTN_GROUP,
-                                role:"group",
-                                spacing: {colSpan:3, pr:0, pl:0},
-                                components:[
-                                    {
+                                role: "group",
+                                spacing: { colSpan: 3, pr: 0, pl: 0 },
+                                components: [{
                                         ctor: Button,
                                         props: {
                                             id: "selectBtn",
@@ -233,7 +228,7 @@ var UploadEx = function (_props) {
                                                 props: {
                                                     id: 'fa',
                                                     labelType: LabelType.i,
-                                                    classes: ["fas","fa-folder-open"]
+                                                    classes: ["fas", "fa-folder-open"]
                                                 }
                                             }],
                                             click: selectBtn_click
@@ -244,13 +239,13 @@ var UploadEx = function (_props) {
                                         props: {
                                             id: "uploadBtn",
                                             type: "button",
-                                            enabled:false,
+                                            enabled: false,
                                             components: [{
                                                 ctor: Label,
                                                 props: {
                                                     id: 'fa',
                                                     labelType: LabelType.i,
-                                                    classes: ["fas","fa-cloud-upload-alt"]
+                                                    classes: ["fas", "fa-cloud-upload-alt"]
                                                 }
                                             }],
                                             click: uploadBtn_click
@@ -261,13 +256,13 @@ var UploadEx = function (_props) {
                                         props: {
                                             id: "downloadBtn",
                                             type: "button",
-                                            enabled:false,
+                                            enabled: false,
                                             components: [{
                                                 ctor: Label,
                                                 props: {
                                                     id: 'fa',
                                                     labelType: LabelType.i,
-                                                    classes: ["fas","fa-cloud-download-alt"]
+                                                    classes: ["fas", "fa-cloud-download-alt"]
                                                 }
                                             }],
                                             click: downloadBtn_click
@@ -278,18 +273,18 @@ var UploadEx = function (_props) {
                                         props: {
                                             id: "removeBtn",
                                             type: "button",
-                                            enabled:false,
+                                            enabled: false,
                                             components: [{
                                                 ctor: Label,
                                                 props: {
                                                     id: 'fa',
                                                     labelType: LabelType.i,
-                                                    classes: ["fas","fa-trash"]
+                                                    classes: ["fas", "fa-trash"]
                                                 }
                                             }],
                                             click: removeBtn_click
                                         }
-                                    }                 
+                                    }
                                 ]
                             }
                         }
@@ -302,66 +297,55 @@ var UploadEx = function (_props) {
                     id: "progressRow",
                     type: ContainerType.ROW,
                     height: 5,
-                    classes:["d-none"],
-                    components:[
-                        {
-                            ctor: Container,
-                            props: {
-                                id: "progressColumn",
-                                type: ContainerType.COLUMN,
-                                spacing: {colSpan:12,pl:0},
-                                classes:["border", "progress"],
-                                height: 5,
-                                components:[
-                                    {
-                                        ctor: ProgressBar,
-                                        props: {
-                                            id:"progressbar",
-                                            valueNow: 0,
-                                            valueMin: 0,
-                                            valueMax: 100,
-                                            width: "100%",
-                                            height: "100%",
-                                            classes: [BgStyle.BG_INFO, ProgressBarStyle.PROGRESS, ProgressBarStyle.PROGRESS_ANIMATED, ProgressBarStyle.PROGRESS_STRIPED]
-                                        }
-                                    }
-                                ]
-                            }
+                    classes: ["d-none"],
+                    components: [{
+                        ctor: Container,
+                        props: {
+                            id: "progressColumn",
+                            type: ContainerType.COLUMN,
+                            spacing: { colSpan: 12, pl: 0 },
+                            classes: ["border", "progress"],
+                            height: 5,
+                            components: [{
+                                ctor: ProgressBar,
+                                props: {
+                                    id: "progressbar",
+                                    valueNow: 0,
+                                    valueMin: 0,
+                                    valueMax: 100,
+                                    width: "100%",
+                                    height: "100%",
+                                    classes: [BgStyle.BG_INFO, ProgressBarStyle.PROGRESS, ProgressBarStyle.PROGRESS_ANIMATED, ProgressBarStyle.PROGRESS_STRIPED]
+                                }
+                            }]
                         }
-                    ]
+                    }]
                 }
             }
-        ];       
+        ];
     };
 
-    Object.defineProperty(this, "multiple", 
-    {
-        get: function multiple() 
-        {
+    Object.defineProperty(this, "multiple", {
+        get: function multiple() {
             return _multiple;
         },
-        set: function multiple(v) 
-        {
-            if(_multiple != v)
-            {  
-                var fn = whenDefined(_upload, "multiple", function(){
+        set: function multiple(v) {
+            if (_multiple != v) {
+                let fn = whenDefined(_upload, "multiple", function() {
                     _upload.multiple = _multiple = v;
                 });
                 fn();
             }
         }
     });
-    Object.defineProperty(this, "accept", 
-    {
-        get: function accept() 
-        {
+
+    Object.defineProperty(this, "accept", {
+        get: function accept() {
             return _accept;
         },
-        set: function accept(v) 
-        {
-            if(_accept != v)
-            {  
-                var fn = whenDefined(_upload, "accept", function(){
+        set: function accept(v) {
+            if (_accept != v) {
+                let fn = whenDefined(_upload, "accept", function() {
                     _upload.accept = _accept = v;
                 });
                 fn();
@@ -369,33 +353,29 @@ var UploadEx = function (_props) {
         }
     });
 
-    Object.defineProperty(this, "showBtnRemove", 
-    {
-        get: function showBtnRemove() 
-        {
+    Object.defineProperty(this, "showBtnRemove", {
+        get: function showBtnRemove() {
             return _showBtnRemove;
         },
-        set: function showBtnRemove(v) 
-        {
-            if(_showBtnRemove != v)
-            {  
-                var fn = whenDefined(_btnRemove, "id", function(){
-                    if(v){
-                        var classes = _btnRemove.classes.slice(0);
-                        classes = classes.splice(classes.indexOf("d-none"),1);
-                        _btnRemove.classes = classes;  
+        set: function showBtnRemove(v) {
+            if (_showBtnRemove != v) {
+                let fn = whenDefined(_btnRemove, "id", function() {
+                    if (v) {
+                        let classes = _btnRemove.classes.slice(0);
+                        classes = classes.splice(classes.indexOf("d-none"), 1);
+                        _btnRemove.classes = classes;
 
                         classes = _removeColumn.classes.slice(0);
-                        classes = classes.splice(classes.indexOf("d-none"),1);
-                        _removeColumn.classes = classes; 
-                    }else{
-                        var classes = _btnRemove.classes.slice(0);
+                        classes = classes.splice(classes.indexOf("d-none"), 1);
+                        _removeColumn.classes = classes;
+                    } else {
+                        let classes = _btnRemove.classes.slice(0);
                         classes.pushUnique("d-none");
                         _btnRemove.classes = classes;
 
                         classes = _removeColumn.classes.slice(0);
                         classes.pushUnique("d-none");
-                        _removeColumn.classes = classes; 
+                        _removeColumn.classes = classes;
                     }
                     _showBtnRemove = v;
                 });
@@ -404,36 +384,29 @@ var UploadEx = function (_props) {
         }
     });
 
-    Object.defineProperty(this, "showProgress", 
-    {
-        get: function showProgress() 
-        {
+    Object.defineProperty(this, "showProgress", {
+        get: function showProgress() {
             return _showProgress;
         },
-        set: function showProgress(v) 
-        {
-            if(_showProgress != v)
-            {  
+        set: function showProgress(v) {
+            if (_showProgress != v) {
                 _showProgress = v;
-                if(!_showProgress){
-                    var classes = _progressRow.classes.slice(0);
+                if (!_showProgress) {
+                    let classes = _progressRow.classes.slice(0);
                     classes.pushUnique("d-none");
-                    _progressRow.classes = classes; 
+                    _progressRow.classes = classes;
                 }
             }
         }
     });
 
-    Object.defineProperty(this, "upload", 
-    {
-        get: function upload() 
-        {
+    Object.defineProperty(this, "upload", {
+        get: function upload() {
             return _upload;
         }
     });
 
-    Object.defineProperty(this, "value",
-    {
+    Object.defineProperty(this, "value", {
         get: function value() {
             return _value;
         },
@@ -444,26 +417,26 @@ var UploadEx = function (_props) {
             }
         }
     });
-    var _setValue = function(v){
+
+    let _setValue = function(v) {
         if (v) {
-            if(!Array.isArray(v) && !BinUtils.isFileList(v))
+            if (!Array.isArray(v) && !BinUtils.isFileList(v))
                 _value = _upload.files = [v];
-            else{
-                if(BinUtils.isFileList(v)){
+            else {
+                if (BinUtils.isFileList(v)) {
                     v = Array.fromIterator(v);
                 }
                 _value = _upload.files = v;
             }
             init(_value);
         } else {
-            init([{url:"", name:"", size:"", type:""}]);
+            init([{ url: "", name: "", size: "", type: "" }]);
             _upload.reset();
         }
-    }
-    this.beforeAttach = function(e) 
-    {
-        if (e.target.id == this.domID) 
-        {
+    };
+
+    this.beforeAttach = function(e) {
+        if (e.target.id == this.domID) {
             _upload = this.mainRow.fileNameColumn.uploadInput;
             _iconLbl = this.mainRow.iconColumn.iconLbl;
             _progressRow = this.progressRow;
@@ -474,28 +447,28 @@ var UploadEx = function (_props) {
             _btnUpload = this.mainRow.controlsColumn.uploadBtn;
             _btnDownload = this.mainRow.controlsColumn.downloadBtn;
             _btnRemove = this.mainRow.controlsColumn.removeBtn;
-            _removeColumn = this.mainRow.controlsColumn.removeColumn;         
-            
-            if(_props.multiple!=null)
+            _removeColumn = this.mainRow.controlsColumn.removeColumn;
+
+            if (_props.multiple != null)
                 this.multiple = _props.multiple;
-            if(_props.accept)
-                this.accept = _props.accept;  
-            if(_props.showBtnRemove!=null)
+            if (_props.accept)
+                this.accept = _props.accept;
+            if (_props.showBtnRemove != null)
                 this.showBtnRemove = _props.showBtnRemove;
-            if(_props.value!=null)
+            if (_props.value != null)
                 _setValue(_props.value);
             e.preventDefault();
         }
-    }
+    };
 
-    var _defaultParams = {
+    let _defaultParams = {
         multiple: true,
         value: [],
         form: null,
         showProgress: true
     };
 
-    var _multiple, _accept, _showBtnRemove, _form, _value, _showProgress;
+    let _multiple, _accept, _showBtnRemove, _form, _value, _showProgress;
 
     _props = extend(false, false, _defaultParams, _props);
     _showProgress = _props.showProgress;
