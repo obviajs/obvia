@@ -8,7 +8,7 @@
 var DataBrowse = function (_props) {
     let _self = this;
     let _dataProvider, _columns = [],
-        _fields;
+        _fields, _placeholder;
 
     Object.defineProperty(this, "dataProvider", {
         get: function dataProvider() {
@@ -33,15 +33,18 @@ var DataBrowse = function (_props) {
         enumerable: true
     });
 
-    // Object.defineProperty(this, "placeholder", {
-    //     get: function placeholder() {
-    //         return _textInput.placeholder;
-    //     },
-    //     set: function placeholder(v) {
-    //         _textInput.placeholder = v;
-    //     },
-    //     enumerable: true
-    // });
+    Object.defineProperty(this, "placeholder", {
+        get: function placeholder() {
+            return _textInput.placeholder;
+        },
+        set: function placeholder(v) {
+            if (v) {
+                _textInput.placeholder = v;
+            }
+            _textInput.placeholder = "Placeholder"
+        },
+        enumerable: true
+    });
 
     this.endDraw = function (e) {
         if (e.target.id == this.domID) {
@@ -60,6 +63,7 @@ var DataBrowse = function (_props) {
         if (e.target.id == this.domID) {
             if (_props.value) {
                 this.value = _props.value;
+                this.placeholder = _props.placeholder
             }
             e.preventDefault();
         }
@@ -89,7 +93,7 @@ var DataBrowse = function (_props) {
                                 visible: true,
                                 enabled: true,
                                 classes: [],
-                                placeholder: "Placeholder",
+                                placeholder: "",
                                 label: "Component"
                             }
                         },
@@ -147,9 +151,9 @@ var DataBrowse = function (_props) {
         }
     };
 
-    let _selectItem = function (e, r, odg, ra) {
-        _textInput.value = odg.currentItem[_labelField];
-        _textInput.placeholder = odg.currentItem[_labelField];
+    let _selectItem = function (e, odg, ra) {
+        _textInput.value = ra.currentItem[_labelField];
+        _placeholder = ra.currentItem[_labelField];
         _modal.hide();
     };
 
@@ -208,6 +212,7 @@ var DataBrowse = function (_props) {
     }
     _valueField = _props.valueField;
     _labelField = _props.labelField;
+    _placeholder = _props.placeholder;
     _value = _props.value;
     _fields = _props.fields;
     _initColumns();
