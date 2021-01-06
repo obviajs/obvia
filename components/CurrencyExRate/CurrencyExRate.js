@@ -7,7 +7,7 @@
 //component definition
 var CurrencyExRate = function (_props) {
     let _self = this;
-  
+
     Object.defineProperty(this, "value", {
         get: function value() {
             return _value;
@@ -30,13 +30,13 @@ var CurrencyExRate = function (_props) {
     };
     this.afterAttach = function (e) {
         if (e.target.id == this.domID) {
-          
+
         }
     };
     let _cmps;
     let fnContainerDelayInit = function () {
         _cmps = [
-           
+
             {
                 "ctor": "Container",
                 "props": {
@@ -47,7 +47,7 @@ var CurrencyExRate = function (_props) {
                         "width": "100%"
                     },
                     "components": [
-                        
+
                         {
                             ctor: DropDown,
                             props: {
@@ -72,12 +72,12 @@ var CurrencyExRate = function (_props) {
                     ]
                 }
             },
-           
-         
-            
+
+
+
         ];
     };
-    
+
 
     let _defaultParams = {
         value: {
@@ -87,9 +87,9 @@ var CurrencyExRate = function (_props) {
         classes: ["d-flex"],
         type: ContainerType.NONE,
         currencyList: [],
-        labelField: 'text',
-        valueField: 'id',
-        
+        labelField: "title",
+        valueField: "key",
+
     };
     _props = extend(false, false, _defaultParams, _props);
 
@@ -98,8 +98,8 @@ var CurrencyExRate = function (_props) {
     let _labelField = _props.labelField;
     let _valueField = _props.valueField;
     let _change = _props.change;
-   
-   
+
+
     _props.change = function () {
         if (typeof _change == 'function')
             _change.apply(this, arguments);

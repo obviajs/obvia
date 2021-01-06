@@ -7,66 +7,53 @@
 //component definition
 var DataBrowse = function (_props) {
     let _self = this;
-    let _dataProvider,  _columns = [], _fields;
+    let _dataProvider, _columns = [],
+        _fields;
 
-    Object.defineProperty(this, "dataProvider", 
-    {
-        get: function dataProvider() 
-        {
+    Object.defineProperty(this, "dataProvider", {
+        get: function dataProvider() {
             return _dataProvider;
         },
-        set: function dataProvider(v) 
-        {
-            if (_dataProvider != v)
-            {
+        set: function dataProvider(v) {
+            if (_dataProvider != v) {
                 _dataProvider = v;
-               _dg.dataProvider = v;
-            }            
+                _dg.dataProvider = v;
+            }
         },
-        enumerable:true
+        enumerable: true
     });
-    
-    Object.defineProperty(this, "value", 
-    {
-        get: function value() 
-        {
-            return  _textInput.value;
+
+    Object.defineProperty(this, "value", {
+        get: function value() {
+            return _textInput.value;
         },
-        set: function value(v) 
-        {
+        set: function value(v) {
             _textInput.value = v;
         },
-        enumerable:true
+        enumerable: true
     });
-    
-    Object.defineProperty(this, "placeholder", 
-    {
-        get: function placeholder() 
-        {
-            return  _textInput.placeholder;
-        },
-        set: function placeholder(v) 
-        {
-            _textInput.placeholder = v;
-        },
-        enumerable:true
-    });
- 
+
+    // Object.defineProperty(this, "placeholder", {
+    //     get: function placeholder() {
+    //         return _textInput.placeholder;
+    //     },
+    //     set: function placeholder(v) {
+    //         _textInput.placeholder = v;
+    //     },
+    //     enumerable: true
+    // });
+
     this.endDraw = function (e) {
         if (e.target.id == this.domID) {
-            _textInput = this.children[this.components[0].props.id].components[0];
-        // _textInput.placeholder = this.children[this.components[0].props.id].components[0].props.placeholder;
-            
+            // _textInput = this.children[this.components[0].props.id].components[0];
+            _textInput = this.workArea_66.textField;
             _modal = this.children[this.components[1].props.id];
             _dg = _modal.modalDialog.modalContent.modalBody.dataGrid;
         }
     };
 
     this.afterAttach = function (e) {
-        if (e.target.id == this.domID) {
-            //is followed the same approach to solve the width case as AutoBrowse but it's not the exact issue
-           //this.textField.offsetWidth = this.$el.width() - this.workArea_66.$el.width();
-        }
+        if (e.target.id == this.domID) {}
     };
 
     this.beforeAttach = function (e) {
@@ -77,20 +64,17 @@ var DataBrowse = function (_props) {
             e.preventDefault();
         }
     };
-    let _cmps,  _dg, _modal;
-    var fnContainerDelayInit = function(){
-        _cmps = 
-        [           
-            {
+    let _cmps, _dg, _modal;
+    var fnContainerDelayInit = function () {
+        _cmps = [{
                 "ctor": "Container",
                 "props": {
                     type: ContainerType.NONE,
                     "id": "workArea_66",
                     css: {
-                        "display":"flex"
+                        "display": "flex"
                     },
-                    "components": [
-                        {
+                    "components": [{
                             "ctor": "TextInput",
                             "props": {
                                 value: "",
@@ -111,7 +95,7 @@ var DataBrowse = function (_props) {
                         },
                         {
                             ctor: Button,
-                            props: {                               
+                            props: {
                                 id: 'selectBtn',
                                 type: "button",
                                 components: [{
@@ -119,7 +103,7 @@ var DataBrowse = function (_props) {
                                     props: {
                                         id: 'fa',
                                         labelType: LabelType.i,
-                                        classes: ["fas","fa-folder-open"]
+                                        classes: ["fas", "fa-folder-open"]
                                     }
                                 }],
                                 click: _browse
@@ -134,19 +118,17 @@ var DataBrowse = function (_props) {
                     id: 'recordSelectModalBrowseData',
                     size: ModalSize.LARGE,
                     title: 'Select an Item',
-                    components: [
-                            {
-                                ctor:DataGrid,
-                                props:{
-                                id: 'dataGrid',
-                                allowNewItem: _props.allowNewItem, //allow the user to add items that are not included in the specified dataProvider
-                                rowCount:5, //visible rows count - virtual scrolling wil be applied on scroll
-                                dataProvider: _dataProvider,
-                                columns: _columns,
-                                rowDblClick: _selectItem.bind(_self)
-                            }
+                    components: [{
+                        ctor: DataGrid,
+                        props: {
+                            id: 'dataGrid',
+                            allowNewItem: _props.allowNewItem, //allow the user to add items that are not included in the specified dataProvider
+                            rowCount: 5, //visible rows count - virtual scrolling wil be applied on scroll
+                            dataProvider: _dataProvider,
+                            columns: _columns,
+                            rowDblClick: _selectItem.bind(_self)
                         }
-                    ],
+                    }],
                     displayListUpdated: _drawGrid
                 }
             }
@@ -165,8 +147,9 @@ var DataBrowse = function (_props) {
         }
     };
 
-    let _selectItem = function (e, ra) {
-        _textInput.value = ra.currentItem[_labelField];
+    let _selectItem = function (e, r, odg, ra) {
+        _textInput.value = odg.currentItem[_labelField];
+        _textInput.placeholder = odg.currentItem[_labelField];
         _modal.hide();
     };
 
@@ -178,7 +161,10 @@ var DataBrowse = function (_props) {
                 description: _fields[i].description,
                 visible: _fields[i].visible ? _fields[i].visible : true,
                 sortable: true,
-                sortInfo: { sortOrder: 0, sortDirection: "ASC" }
+                sortInfo: {
+                    sortOrder: 0,
+                    sortDirection: "ASC"
+                }
             });
         }
     };
@@ -187,10 +173,12 @@ var DataBrowse = function (_props) {
         type: ContainerType.NONE,
         "components": [],
         dataProvider: new ArrayEx(),
-        fields:[],
-        attr:{"data-triggers":"browse"},   
-        value:new ArrayEx([]),
-       // classes:["d-inline-flex"],
+        fields: [],
+        attr: {
+            "data-triggers": "browse"
+        },
+        value: new ArrayEx([]),
+        // classes:["d-inline-flex"],
         allowNewItem: false
     };
 
@@ -204,20 +192,18 @@ var DataBrowse = function (_props) {
     //     _props.classes.pushUnique("d-flex");
 
     let myDtEvts = ["browse"];
-    if (!Object.isEmpty(_props.attr) && _props.attr["data-triggers"] && !Object.isEmpty(_props.attr["data-triggers"]))
-    {
+    if (!Object.isEmpty(_props.attr) && _props.attr["data-triggers"] && !Object.isEmpty(_props.attr["data-triggers"])) {
         let dt = _props.attr["data-triggers"].split(" ");
-        for (let i = 0; i < dt.length; i++)
-        {   
+        for (let i = 0; i < dt.length; i++) {
             myDtEvts.pushUnique(dt[i]);
         }
     }
     _props.attr["data-triggers"] = myDtEvts.join(" ");
-    
+
     if (_props.dataProvider && !getBindingExp(_props.dataProvider)) {
         _dataProvider = _props.dataProvider;
     }
-    if (_props.bindingDefaultContext) { 
+    if (_props.bindingDefaultContext) {
         _bindingDefaultContext = _props.bindingDefaultContext;
     }
     _valueField = _props.valueField;
@@ -227,7 +213,7 @@ var DataBrowse = function (_props) {
     _initColumns();
     fnContainerDelayInit();
     _props.components = _cmps;
-    
+
     Container.call(this, _props, true);
 };
 DataBrowse.prototype.ctor = 'DataBrowse';
