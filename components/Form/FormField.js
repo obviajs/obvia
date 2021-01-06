@@ -124,28 +124,6 @@ var FormField = function (_props) {
         },
         enumerable:true
     });
-    /**
-         this.validate = function () {
-        if (_props.required) {
-            if (this.value == "" || this.value == undefined) {
-                this.errorList = [
-                    KxGenerator.getErrorList().call(this)['empty']
-                ];
-                this.$el.addClass('invalid');
-                return false;
-            } else {
-                this.errorList = [];
-                this.$el.removeClass('invalid');
-            }
-        }
-        return true;
-    };
-     *  */
-    
-
-    this.validate = function () {
-
-    };
 
     let _defaultParams = {
         enabled: true,

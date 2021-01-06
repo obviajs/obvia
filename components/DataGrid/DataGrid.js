@@ -402,7 +402,7 @@ var DataGrid = function (_props) {
                         itemEditor.focus();
                     }
                 });
-                itemEditor.on('keydown', function (e) {
+                itemEditor.on('keyup', function (e) {
                     switch (e.keyCode) {
                         case 9: // TAB - apply and move to next column on the same row 
                             //_self.trigger('cellEditFinished', [rowIndex, columnIndex, column, data, true]);

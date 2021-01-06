@@ -148,6 +148,7 @@ rjs.define("./components/AutoComplete/SuggestionRenderer.js", "SuggestionRendere
 rjs.define("https://unpkg.com/leaflet@1.5.1/dist/leaflet.js", "LeafletJS");
 rjs.define("https://unpkg.com/leaflet@1.5.1/dist/leaflet.css", "LeafletCSS");
 rjs.define("./components/Map/MapLocationPicker.js", "MapLocationPicker");
+rjs.define("./components/Map/LeafletMap.js", "LeafletMap");
 //Toggle
 rjs.define("./components/Toggle/ToggleBgStyle.js", "ToggleBgStyle");
 rjs.define("./components/Toggle/Toggle.js", "Toggle");
@@ -341,6 +342,7 @@ let dependencies = [
         "LeafletJS",
         "LeafletCSS",
         "MapLocationPicker",
+        "LeafletMap",
         "ToggleBgStyle",
         "Toggle",
         "MultiSwitch",
