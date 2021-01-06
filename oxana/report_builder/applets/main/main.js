@@ -28,8 +28,6 @@ let Implementation = function (applet) {
     undoButton,
     redoButton,
     cmpTrash,
-    toggleSideNavLeft,
-    toggleSideNavRight,
     uploadIcon,
     createNewReport,
     saveLayout,
@@ -53,6 +51,7 @@ let Implementation = function (applet) {
   let MIN_DISTANCE = 10; // minimum distance to "snap" to a guide
   let guides = [];
   let innerOffsetX, innerOffsetY, chosenGuides, pos;
+  let leftPanelWidth;
 
   //component resize
   let resizable = false;
@@ -364,25 +363,6 @@ let Implementation = function (applet) {
           .propertyEditorViewStack.cmpTrash;
       applet.addBehaviors(cmpTrash, daBehaviors, false);
 
-      toggleSideNavLeft =
-        app.viewStack.mainContainer.nav.leftNav.toggleSideNavLeft;
-      applet.addBehaviors(
-        toggleSideNavLeft,
-        {
-          click: "TOGGLE_VISIBILITY_LEFT",
-        },
-        false
-      );
-      toggleSideNavRight =
-        app.viewStack.mainContainer.nav.rightNav.toggleSideNavRight;
-      applet.addBehaviors(
-        toggleSideNavRight,
-        {
-          click: "TOGGLE_VISIBILITY_RIGHT",
-        },
-        false
-      );
-
       uploadIcon = middleNav.uploadIcon;
       applet.addBehaviors(
         uploadIcon,
@@ -574,7 +554,6 @@ let Implementation = function (applet) {
       e.preventDefault();
       e.stopPropagation();
     },
-
     ADD_COMPONENT: {
       description: "Add component ",
       do: function (e) {
@@ -747,7 +726,6 @@ let Implementation = function (applet) {
             };
             propertyEditorContainer.removeAllChildren();
             propertyEditorContainer.components = [oeLit];
-
             changeFieldProperties(e, inst);
           }
         }
@@ -781,6 +759,11 @@ let Implementation = function (applet) {
             ? this.classes["self"].slice(0)
             : this.classes.slice(0);
           classes.pushUnique("selected-component");
+          
+          //add class to element to show guide lines, remove it from all other elements
+          classes.pushUnique("last-selected");
+          $(".default-component, .selected-component").not(this.$el).removeClass("last-selected")
+          
           if (isObject(this.classes)) this.classes["self"] = classes;
           else this.classes = classes;
         }
@@ -789,6 +772,7 @@ let Implementation = function (applet) {
       },
       stopPropagation: true,
     },
+
     DRAGSTART_COMPONENT: {
       description: "Drag Component",
       do: function (e) {
@@ -810,7 +794,7 @@ let Implementation = function (applet) {
         );
 
         //set not-selected elements' guide lines positions
-        guides = $.map($(".default-component").not(".selected-component"), computeGuidesForElement);
+        guides = $.map($(".default-component, .selected-component").not(".last-selected"), computeGuidesForElement);
         innerOffsetX = e.originalEvent.offsetX;
         innerOffsetY = e.originalEvent.offsetY;
       },
@@ -819,10 +803,11 @@ let Implementation = function (applet) {
     DRAG_COMPONENT: e => {
       // iterate all guides, remember the closest h and v guides
       chosenGuides = { top: { dist: MIN_DISTANCE + 1 }, left: { dist: MIN_DISTANCE + 1 } };
-      let $t = $(".selected-component");
+      let $t = $(".last-selected");
+      leftPanelWidth = workArea.$el.offset().left + 15
       pos = { 
         top: (e.originalEvent.pageY - 50) - innerOffsetY, 
-        left: (e.originalEvent.pageX - 367) - innerOffsetX 
+        left: (e.originalEvent.pageX - leftPanelWidth) - innerOffsetX 
       };
       let w = $t.outerWidth() - 1;
       let h = $t.outerHeight() - 1;
@@ -848,7 +833,7 @@ let Implementation = function (applet) {
       else $("label[id*='guide-h']").hide();
 
       if (chosenGuides.left.dist <= MIN_DISTANCE)
-        $("label[id*='guide-v']").css("left", chosenGuides.left.guide.left + 367).show();
+        $("label[id*='guide-v']").css("left", chosenGuides.left.guide.left + leftPanelWidth).show();
       else $("label[id*='guide-v']").hide();
     },
 
@@ -860,7 +845,7 @@ let Implementation = function (applet) {
         val = (chosenGuides.top.guide.top - chosenGuides.top.offset) % 200;
         e.target.style.top = val + 'px';
       } else {
-        val = pos.top % 200;
+        val = pos.top < 0 ? 0 : pos.top % 200;
         e.target.style.top = val + 'px';
       }
 
@@ -868,9 +853,12 @@ let Implementation = function (applet) {
         val = chosenGuides.left.guide.left - chosenGuides.left.offset
         e.target.style.left = val + 'px'; 
       } else {
-        val = pos.left;
+        val = pos.left < 0 ? 0 : pos.left;
         e.target.style.left = val + 'px';
       }
+
+      //remove guide lines
+      setTimeout(() => $("label[id*='guide-h'], label[id*='guide-v']").hide(), 1000)
     },
 
     HISTORY_STEP_DETAILS: function (e) {
@@ -1174,18 +1162,6 @@ let Implementation = function (applet) {
       },
       undo: function () {
         //undo
-      },
-    },
-
-    TOGGLE_VISIBILITY_LEFT: {
-      do: function (e) {
-        componentsContainer.toggleVisibility();
-      },
-    },
-
-    TOGGLE_VISIBILITY_RIGHT: {
-      do: function (e) {
-        rightSideNav.toggleVisibility();
       },
     },
 
@@ -1732,10 +1708,10 @@ let Implementation = function (applet) {
 
   let computeGuidesForElement = (elem, pos, w, h) => {
     if (elem != null) {
-      var $t = $(elem);
+      let $t = $(elem);
       pos = $t.offset();
       pos.top -= 50;
-      pos.left -= 367;
+      pos.left -= leftPanelWidth;
       w = $t.outerWidth() - 1;
       h = $t.outerHeight() - 1;
     }
