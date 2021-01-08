@@ -4,7 +4,6 @@ var oxana = new App({
       url: "./flowerui/oxana/report_builder/applets/main/",
       anchor: "main",
       dataPromise: _initDP,
-      port: "viewStack",
       uiRoute: uiRoute,
       //forceReload: true
     },
@@ -12,7 +11,6 @@ var oxana = new App({
       url: "./flowerui/oxana/report_builder/applets/formsModal/",
       anchor: "formsModal",
       dataPromise: _initDpForms,
-      port: "viewStack",
       uiRoute: modalRoute,
       //forceReload: true
     },
@@ -20,7 +18,6 @@ var oxana = new App({
       url: "./flowerui/oxana/report_builder/applets/dbModal/",
       anchor: "dbModal",
       dataPromise: _initDbModal,
-      port: "viewStack",
       uiRoute: modalRoute,
       //forceReload: true
     },
@@ -28,7 +25,6 @@ var oxana = new App({
       url: "./flowerui/oxana/report_builder/applets/saveReportModal/",
       anchor: "saveReportModal",
       dataPromise: _initSaveReportModal,
-      port: "viewStack",
       uiRoute: modalRoute,
       //forceReload: true
     },
@@ -36,7 +32,6 @@ var oxana = new App({
       url: "./flowerui/oxana/report_builder/applets/createNewReportModal/",
       anchor: "createNewReportModal",
       dataPromise: _initBaseDP,
-      port: "viewStack",
       uiRoute: modalRoute,
       //forceReload: true
     },
@@ -44,7 +39,6 @@ var oxana = new App({
       url: "./flowerui/oxana/report_builder/applets/uploadReportModal/",
       anchor: "uploadReportModal",
       dataPromise: _initUploadReportModal,
-      port: "viewStack",
       uiRoute: modalRoute,
       //forceReload: true
     },
@@ -52,7 +46,6 @@ var oxana = new App({
       url: "./flowerui/oxana/report_builder/applets/uploadVersionModal/",
       anchor: "uploadVersionModal",
       dataPromise: _initBaseDP,
-      port: "viewStack",
       uiRoute: modalRoute,
       //forceReload: true
     }

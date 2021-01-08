@@ -498,6 +498,10 @@ let Implementation = function (applet) {
       );
     },
 
+    AFTER_ATTACH: e => {
+      leftPanelWidth =
+        app.viewStack.mainContainer.container.workArea.$el.offset().left + 15;
+    },
     // "UPDATE_BEHAVIOR_BINDINGS": {
     //     do: function (e) {
     //         console.log("UPDATE_BEHAVIOR_BINDINGS");
@@ -804,7 +808,6 @@ let Implementation = function (applet) {
       // iterate all guides, remember the closest h and v guides
       chosenGuides = { top: { dist: MIN_DISTANCE + 1 }, left: { dist: MIN_DISTANCE + 1 } };
       let $t = $(".last-selected");
-      leftPanelWidth = workArea.$el.offset().left + 15
       pos = { 
         top: (e.originalEvent.pageY - 50) - innerOffsetY, 
         left: (e.originalEvent.pageX - leftPanelWidth) - innerOffsetX 

@@ -238,20 +238,20 @@ rjs.define("report_builder/app/dataPromise/componentLiterals.js", "componentLite
 rjs.define("forms/model/WizardStep.js", "WizardStep");
 rjs.define("forms/css/forms.css", "forms_Css");
 
-rjs.define("GaiaAPI/GaiaAPI_Utils.js", "GaiaAPI_Utils");
-rjs.define("GaiaAPI/GaiaAPI_forms.js", "GaiaAPI_forms");
 rjs.define("GaiaAPI/GaiaAPI_DV_dataviews.js", "GaiaAPI_DV_dataviews");
 rjs.define("GaiaAPI/GaiaAPI_Frms_dataview.js", "GaiaAPI_Frms_dataview");
+rjs.define("GaiaAPI/GaiaAPI_forms.js", "GaiaAPI_forms");
 rjs.define("GaiaAPI/GaiaAPI_dataview_pid_1.js", "GaiaAPI_dataview_pid_1");
+rjs.define("GaiaAPI/GaiaAPI_Utils.js", "GaiaAPI_Utils");
+rjs.define("GaiaAPI/GaiaAPI_dataview_pid_6.js", "GaiaAPI_dataview_pid_6");
 rjs.define("inspect/CollectionEditor.js", "CollectionEditor");
 rjs.define("inspect/ObjectEditor.js", "ObjectEditor");
 
-
-rjs.define("GaiaAPI/GaiaAPI_dataview_pid_6.js", "GaiaAPI_dataview_pid_6");
-rjs.define("GaiaAPI/GaiaAPI_dataview_pid_10.js", "GaiaAPI_dataview_pid_10");
-rjs.define("GaiaAPI/GaiaAPI_dataview_pid_11.js", "GaiaAPI_dataview_pid_11");
-rjs.define("GaiaAPI/GaiaAPI_report_source.js", "GaiaAPI_report_source");
-rjs.define("GaiaAPI/GaiaAPI_reports.js", "GaiaAPI_reports");
+//report builder gaiaAPI files
+rjs.define("report_builder/app/GaiaAPI_reportBuilder/GaiaAPI_dataview_pid_10.js", "GaiaAPI_dataview_pid_10");
+rjs.define("report_builder/app/GaiaAPI_reportBuilder/GaiaAPI_dataview_pid_11.js", "GaiaAPI_dataview_pid_11");
+rjs.define("report_builder/app/GaiaAPI_reportBuilder/GaiaAPI_report_source.js", "GaiaAPI_report_source");
+rjs.define("report_builder/app/GaiaAPI_reportBuilder/GaiaAPI_reports.js", "GaiaAPI_reports");
 
 rjs.define("report_builder/app/dataPromise/model/ReportProperties.js", "ReportProperties");
 rjs.define("report_builder/app/reusables/components/JRComponent.js", "JRComponent");
@@ -477,7 +477,8 @@ let dependencies = [
         "GaiaAPI_Frms_dataview",
         "GaiaAPI_dataview_pid_1",
         "JRComponent"
-    ], [
+    ],
+    [
         "GaiaAPI_dataview_pid_6",
         "GaiaAPI_dataview_pid_10",
         "GaiaAPI_dataview_pid_11",
@@ -506,9 +507,8 @@ let dependencies = [
         "_initUploadReportModal",
         "_initDbModal",
         "uiRoute",
-        "modalRoute"
+        "modalRoute",
     ]
-
 ];
 
 rjs.grequire(dependencies).then(() => {
