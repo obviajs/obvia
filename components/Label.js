@@ -5,7 +5,7 @@
  */
 
 //component definition
-var Label = function (_props, _hideComponents=false) {
+var Label = function (_props, _hideComponents = false) {
     Object.defineProperty(this, "label", {
         get: function label() {
             return _label;
@@ -31,7 +31,7 @@ var Label = function (_props, _hideComponents=false) {
         enumerable: true,
         configurable: true
     });
-    
+
     Object.defineProperty(this, "contenteditable", {
         get: function contenteditable() {
             return _contenteditable;
@@ -39,8 +39,8 @@ var Label = function (_props, _hideComponents=false) {
         set: function contenteditable(v) {
             if (_contenteditable != v) {
                 _contenteditable = v;
-                if (this.$el) {     
-                    if(v)
+                if (this.$el) {
+                    if (v)
                         this.$el.attr('contenteditable', v);
                     else
                         this.$el.removeAttr('contenteditable');
@@ -48,7 +48,7 @@ var Label = function (_props, _hideComponents=false) {
             }
         }
     });
-    
+
     Object.defineProperty(this, "labelType", {
         get: function labelType() {
             return _labelType;
@@ -85,13 +85,13 @@ var Label = function (_props, _hideComponents=false) {
             if (_props.label) {
                 this.label = _props.label;
             }
-            if (_props.contenteditable) { 
+            if (_props.contenteditable) {
                 this.contenteditable = _props.contenteditable;
-            }                
+            }
         }
     };
     this.template = function () {
-        return "<" + _labelType + " id='" + this.domID + "'></" + _labelType + ">";
+        return "<" + _labelType + " id='" + this.domID + "' data-triggers='input'></" + _labelType + ">";
     };
 
     let _defaultParams = {

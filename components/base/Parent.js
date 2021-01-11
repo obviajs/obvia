@@ -220,6 +220,7 @@ var Parent = function (_props, _hideComponents = false) {
     let _init = this.init;
     this.init = function (e) {
         if (e.target.id == this.domID) {
+            this.$container = this.$el;
             if (typeof _init == 'function')
                 _init.apply(this, arguments);
         }
@@ -309,21 +310,22 @@ var Parent = function (_props, _hideComponents = false) {
         return arrInst;
     };
 
-    let _rPromise;
-    this.render = function () {
-        if (_rPromise == null) {
-            this.$container = this.$el;
-            _rPromise = new Promise((resolve, reject) => {
-                _self.on("endDraw", function (e) {
-                    if (e.target.id == _self.domID) {
-                        resolve(_proxy);
-                    }
+    if (!this.hasOwnProperty("render")) {
+        let _rPromise;
+        this.render = function () {
+            if (_rPromise == null) {
+                _rPromise = new Promise((resolve, reject) => {
+                    _self.on("endDraw", function (e) {
+                        if (e.target.id == _self.domID) {
+                            resolve(_proxy);
+                        }
+                    });
+                    this.addComponents();
                 });
-                this.addComponents();
-            });
-        }
-        return _rPromise;
-    };
+            }
+            return _rPromise;
+        };
+    }
 
     Component.call(this, _props);
     /*

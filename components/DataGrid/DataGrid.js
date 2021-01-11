@@ -402,9 +402,26 @@ var DataGrid = function (_props) {
                         itemEditor.focus();
                     }
                 });
+                itemEditor.on('keydown', function (e) {
+                    switch (e.keyCode) {
+                        case 9:
+                            e.preventDefault();
+                            break;
+                    }
+                });
                 itemEditor.on('keyup', function (e) {
                     switch (e.keyCode) {
-                        case 9: // TAB - apply and move to next column on the same row 
+                        case 13: // ENTER - apply value
+                            console.log("finished editing");
+                            e.preventDefault();
+                            _self.cellEditFinished(_self.editPosition.rowIndex, _self.editPosition.columnIndex, true);
+                            break;
+                        case 27: // ESC - get back to old value
+                            e.preventDefault();
+                            _self.cellEditFinished(_self.editPosition.rowIndex, _self.editPosition.columnIndex, false);
+                            break;
+                        case 9:
+                            // TAB - apply and move to next column on the same row
                             //_self.trigger('cellEditFinished', [rowIndex, columnIndex, column, data, true]);
                             //TODO: Check columnIndex boundaries and pass to next row if it is 
                             //the last one, if now rows remaining pass to first row(check repeater implementation)
@@ -425,30 +442,12 @@ var DataGrid = function (_props) {
                                 }
                                 itemEditorColumnIndex = i + 1;
                             }
-
-
                             if (itemEditorColumnIndex == _columns.length || itemEditorColumnIndex == -1) {
                                 _self.cellEditFinished(_self.editPosition.rowIndex, _self.editPosition.columnIndex, true);
                             } else {
-                                e.preventDefault();
                                 _self.cellEdit(_self.editPosition.rowIndex, itemEditorColumnIndex);
                             }
                             break;
-
-                    }
-                });
-                itemEditor.on('keyup', function (e) {
-                    switch (e.keyCode) {
-                        case 13: // ENTER - apply value
-                            console.log("finished editing");
-                            e.preventDefault();
-                            _self.cellEditFinished(_self.editPosition.rowIndex, _self.editPosition.columnIndex, true);
-                            break;
-                        case 27: // ESC - get back to old value
-                            e.preventDefault();
-                            _self.cellEditFinished(_self.editPosition.rowIndex, _self.editPosition.columnIndex, false);
-                            break;
-
                     }
                 });
 

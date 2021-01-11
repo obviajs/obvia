@@ -295,7 +295,7 @@ var Container = function (_props, _hideComponents = false) {
     });
     //is template overrided ?
     this.template = this.template || function () {
-        return '<div id="' + this.domID + '"></div>';
+        return '<div id="' + this.domID + '" data-triggers="input"></div>';
     };
 
     let _init = this.init;

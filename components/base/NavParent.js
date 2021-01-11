@@ -1,20 +1,16 @@
 var NavParent = function (_props) {
-    let _self = this, _selectedIndex;
-    
-    Object.defineProperty(this, "selectedIndex", 
-    {
-        get: function selectedIndex() 
-        {
+    let _self = this,
+        _selectedIndex;
+
+    Object.defineProperty(this, "selectedIndex", {
+        get: function selectedIndex() {
             return _selectedIndex;
         },
-        set: function selectedIndex(v) 
-        {
-            if(_selectedIndex != v)
-            {
+        set: function selectedIndex(v) {
+            if (_selectedIndex != v) {
                 let event = jQuery.Event("change");
                 this.trigger(event, [_selectedIndex, v]);
-                if (!event.isDefaultPrevented()) 
-                {
+                if (!event.isDefaultPrevented()) {
                     _selectedIndex = v;
                     event = jQuery.Event("changed");
                     this.trigger(event, [_selectedIndex, v]);
@@ -22,13 +18,21 @@ var NavParent = function (_props) {
             }
         }
     });
-    
+
+    let _init = this.init;
+    this.init = function (e) {
+        if (e.target.id == this.domID) {
+            if (typeof _init == 'function')
+                _init.apply(this, arguments);
+        }
+    };
+
     let _endDraw = this.endDraw;
     this.endDraw = function (e) {
         if (e.target.id == this.domID) {
             if (typeof _endDraw == 'function')
                 _endDraw.apply(this, arguments);
-            
+
             if (this.components && Array.isArray(this.components)) {
                 let len = this.components.length;
                 for (let i = 0; i < len; i++) {
@@ -43,7 +47,7 @@ var NavParent = function (_props) {
             }
         }
     };
-    
+
     let _beforeAttach = this.beforeAttach;
     this.beforeAttach = function (e) {
         if (e.target.id == this.domID) {
@@ -54,8 +58,7 @@ var NavParent = function (_props) {
         }
     };
 
-    let _childClicked = function (e, index)
-    { 
+    let _childClicked = function (e, index) {
         _self.selectedIndex = index;
     };
 
@@ -65,21 +68,19 @@ var NavParent = function (_props) {
     };
     _props = extend(false, false, _defaultParams, _props);
 
-    if (!_props.attr) { 
+    if (!_props.attr) {
         _props.attr = {};
     }
     let myDtEvts = ["change", "changed"];
-    if (!Object.isEmpty(_props.attr) && _props.attr["data-triggers"] && !Object.isEmpty(_props.attr["data-triggers"]))
-    {
+    if (!Object.isEmpty(_props.attr) && _props.attr["data-triggers"] && !Object.isEmpty(_props.attr["data-triggers"])) {
         let dt = _props.attr["data-triggers"].split(" ");
-        for (let i = 0; i < dt.length; i++)
-        {   
+        for (let i = 0; i < dt.length; i++) {
             myDtEvts.pushUnique(dt[i]);
         }
     }
     _props.attr["data-triggers"] = myDtEvts.join(" ");
 
-    let r = Parent.call(this, _props);
+    let r = Container.call(this, _props);
     return r;
 };
 NavParent.prototype.ctor = 'NavParent';

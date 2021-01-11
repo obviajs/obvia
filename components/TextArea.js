@@ -26,7 +26,6 @@ var TextArea = function (_props) {
                         this.$el.val("");
                     }
                 }
-                //this.trigger('change');
             }
         },
         enumerable: true
@@ -79,18 +78,18 @@ var TextArea = function (_props) {
             if (_props.value) {
                 this.value = _props.value;
             }
-            if ( _props.placeholder) { 
+            if (_props.placeholder) {
                 this.placeholder = _props.placeholder;
             }
         }
     };
 
-    this.changeHandler = function (e) {
+    this.inputHandler = function (e) {
         _value = this.$el.val();
     };
 
     this.template = function () {
-        return "<textarea data-triggers='change' id='" + this.domID + "' " + (!this.enabled ? "disabled" : "") + "></textarea>";
+        return "<textarea data-triggers='input' id='" + this.domID + "' " + (!this.enabled ? "disabled" : "") + "></textarea>";
     };
 
     let _defaultParams = {
@@ -104,7 +103,7 @@ var TextArea = function (_props) {
     let _spellCheck = _props.spellCheck;
     let _value;
     let _placeholder;
-    let _change = _props.change;
+    let _input = _props.input;
     let _dblclick = _props.dblclick;
 
     _props.dblclick = function () {
@@ -115,15 +114,15 @@ var TextArea = function (_props) {
         if (!e.isDefaultPrevented()) {}
     };
 
-    _props.change = function () {
+    _props.input = function () {
         let e = arguments[0];
         if (!e.isDefaultPrevented()) {
-            _self.changeHandler(e);
+            _self.inputHandler(e);
         }
-        if (typeof _change == 'function')
-            _change.apply(this, arguments);
+        if (typeof _input == 'function')
+            _input.apply(this, arguments);
     };
 
-    Component.call(this, _props);    
+    Component.call(this, _props);
 };
 TextArea.prototype.ctor = 'TextArea';

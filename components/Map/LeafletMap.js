@@ -8,17 +8,35 @@
 var LeafletMap = function (_props) {
     let _self = this,
         _markers = [],
+        _layerGroup,
         _latitudeField,
         _longitudeField,
-        _latitude, _longitude;
+        _latitude, _longitude,
+        _dataProvider, _zoomLevel, _map,
+        _selectedItem,
+        _allowNewItem;
 
     let _initMap = function (e) {
         if (!_map) {
-            _map = L.map(_self.domID).setView([_latitude, _longitude], _zoomLevel);
+            _map = L.map(_self.domID).setView([0, 0], 0);
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             }).addTo(_map);
+            _centerMap();
             _map.on('click', _mapClick);
+        }
+        if (!_layerGroup) {
+            _layerGroup = L.layerGroup();
+        }
+    };
+
+    let _centerMap = function () {
+        if ((!_latitude || !_longitude) && _dataProvider.length > 0) {
+            _latitude = _dataProvider[0][_latitudeField];
+            _longitude = _dataProvider[0][_longitudeField];
+        }
+        if (_latitude && _longitude) {
+            _map.flyTo([_latitude, _longitude], _zoomLevel);
         }
     };
 
@@ -28,17 +46,35 @@ var LeafletMap = function (_props) {
             marker = L.marker(latlng, {
                 draggable: _props.marker.draggable
             }).addTo(_map);
-            marker.on('dragend', function (event) {
-                let pos = event.target.getLatLng();
-                _self.value = {
-                    latitude: pos.lat,
-                    longitude: pos.lng
-                };
+            marker.on('dragend', function (e) {
+                let pos = e.target.getLatLng();
+                let m = getMatching(_dataProvider, _layerIdField, e.target._leaflet_id, true);
+                m.objects[0][_latitudeField] = pos.lat;
+                m.objects[0][_longitudeField] = pos.lng;
             });
+            marker.on('click', _markerClick);
             _map.addLayer(marker);
         }
         return marker;
     };
+
+    let _markerClick = function (e) {
+        let m = getMatching(_dataProvider, _layerIdField, e.target._leaflet_id, true);
+        _self.selectedItem = m.objects[0];
+    };
+
+    Object.defineProperty(this, "selectedItem", {
+        get: function selectedItem() {
+            return _selectedItem;
+        },
+        set: function selectedItem(v) {
+            if (v != _selectedItem) {
+                _selectedItem = v;
+                this.trigger("change");
+            }
+        },
+        enumerable: true
+    });
 
     let _moveMarker = function (latlng) {
         if (!_marker) {
@@ -51,21 +87,43 @@ var LeafletMap = function (_props) {
     };
 
     let _mapClick = function (e) {
-        let pos = e.latlng;
-        if (!_marker) {
-            _marker = _initMarker(pos);
-            _self.value = {
-                latitude: pos.lat,
-                longitude: pos.lng
-            };
+        if (_allowNewItem) {
+            let pos = e.latlng;
+            let m = _initMarker(pos);
+            let nr = {};
+            nr[_layerIdField] = _layerGroup.getLayerId(m);
+            nr[_latitudeField] = pos.lat;
+            nr[_longitudeField] = pos.lng;
+            _dataProvider.push(nr);
+            _self.selectedItem = nr;
         }
     };
+
+    Object.defineProperty(this, "layerIdField", {
+        get: function layerIdField() {
+            return _layerIdField;
+        }
+    });
+
+    Object.defineProperty(this, "latitudeField", {
+        get: function latitudeField() {
+            return _latitudeField;
+        }
+    });
+
+    Object.defineProperty(this, "longitudeField", {
+        get: function longitudeField() {
+            return _longitudeField;
+        }
+    });
 
     Object.defineProperty(this, "dataProvider", {
         get: function dataProvider() {
             return _dataProvider;
         },
         set: function dataProvider(v) {
+            _initMap();
+
             let len = _markers.length;
             for (let i = 0; i < len; i++) {
                 _map.removeLayer(_markers[i]);
@@ -74,8 +132,12 @@ var LeafletMap = function (_props) {
             if (v) {
                 len = v.length;
                 for (let i = 0; i < len; i++) {
-                    _markers.push(_initMarker([v[i][_latitudeField], v[i][_longitudeField]]));
+                    let m = _initMarker([v[i][_latitudeField], v[i][_longitudeField]]);
+                    v[i][_layerIdField] = _layerGroup.getLayerId(m);
+                    _markers.push(m);
                 }
+                _dataProvider = v;
+                _centerMap();
             }
         },
         enumerable: true
@@ -109,6 +171,12 @@ var LeafletMap = function (_props) {
             if (_props.longitude) {
                 _longitude = _props.longitude;
             }
+            if (_props.allowNewItem) {
+                _allowNewItem = _props.allowNewItem;
+            }
+            if (_props.layerIdField) {
+                _layerIdField = _props.layerIdField;
+            }
             e.preventDefault();
         }
     };
@@ -125,23 +193,18 @@ var LeafletMap = function (_props) {
         }
     };
 
-    let _zoomLevel, _dataProvider, _map;
-
     let _defaultParams = {
         type: ContainerType.NONE,
         "components": [],
-        value: {
-            latitude: 41.1533,
-            longitude: 20.1683,
-
-        },
         marker: {
             draggable: true
         },
         zoomLevel: 7,
         classes: ["wrap"],
         latitudeField: "lat",
-        longitudeField: "lng"
+        longitudeField: "lng",
+        layerIdField: "layerId",
+        allowNewItem: false
     };
 
     _props = extend(false, false, _defaultParams, _props);
@@ -157,7 +220,8 @@ var LeafletMap = function (_props) {
     }
     _props.attr["data-triggers"] = myDtEvts.join(" ");
 
-    Container.call(this, _props);
+    let r = Container.call(this, _props);
+    return r;
 };
 //component prototype
 LeafletMap.prototype.ctor = 'LeafletMap';

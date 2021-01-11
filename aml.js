@@ -79,6 +79,7 @@ rjs.define("./components/HRule.js", "HRule");
 rjs.define("./components/Color.js", "Color");
 //Container
 rjs.define("./components/Container.js", "Container");
+rjs.define("./components/ObjectCmp.js", "ObjectCmp");
 rjs.define("./components/Nav.js", "Nav");
 rjs.define("./components/Header.js", "Header");
 rjs.define("./components/Footer.js", "Footer");
@@ -289,6 +290,7 @@ let dependencies = [
         "ContainerType",
         "NavParent",
         "Container",
+        "ObjectCmp",
         "ScrollPane",
         "SideNav",
         "SideNavSide",
