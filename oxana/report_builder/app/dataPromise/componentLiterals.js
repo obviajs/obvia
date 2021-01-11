@@ -37,7 +37,6 @@ Builder.initComponentLiterals = function () {
             label: "Label",
             icon: ".png"
         },
-
         "JRLabel": {
             literal: {
                 "ctor": JRLabel,

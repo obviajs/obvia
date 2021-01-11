@@ -37,28 +37,6 @@
             {
               "ctor": "Container",
               "props": {
-                "id": "leftNav",
-                "width": "350px",
-                "type": "",
-                "components": [
-                  {
-                    "ctor": "Label",
-                    "props": {
-                      "id": "toggleSideNavLeft",
-                      "labelType": "i",
-                      "classes": ["fas", "fa-bars", "navIcons"],
-                      "css": {
-                        "marginTop": "15px",
-                        "marginLeft": "335px"
-                      }
-                    }
-                  }
-                ]
-              }
-            },
-            {
-              "ctor": "Container",
-              "props": {
                 "type": "",
                 "id": "middleNav",
                 "css": {
@@ -170,28 +148,6 @@
                       "css": {
                         "paddingLeft": "60px",
                         "marginRight": "20px"
-                      }
-                    }
-                  }
-                ]
-              }
-            },
-            {
-              "ctor": "Container",
-              "props": {
-                "id": "rightNav",
-                "type": "",
-                "width": "350px",
-                "components": [
-                  {
-                    "ctor": "Label",
-                    "props": {
-                      "id": "toggleSideNavRight",
-                      "labelType": "i",
-                      "classes": ["fas", "fa-bars", "navIcons"],
-                      "css": {
-                        "marginTop": "15px",
-                        "marginRight": "335px"
                       }
                     }
                   }
@@ -509,7 +465,8 @@
                       "classes": ["guide"]
                     }
                   }
-                ]
+                ],
+                "classes": ["wa-size"]
               }
             },
             {

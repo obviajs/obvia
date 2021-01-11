@@ -232,43 +232,53 @@ rjs.define("/flowerui/lib/ApiClientGen/ApiClientGen.js", "ApiClientGen");
 rjs.define("/flowerui/lib/Scrap.js", "Scrap");
 
 rjs.define("forms/SpacingEditor.js", "SpacingEditor");
-rjs.define("report_builder/componentList.js", "componentList");
-rjs.define("report_builder/metaProps.js", "metaProps");
-rjs.define("report_builder/componentLiterals.js", "componentLiterals");
+rjs.define("report_builder/app/dataPromise/componentList.js", "componentList");
+rjs.define("report_builder/app/dataPromise/metaProps.js", "metaProps");
+rjs.define("report_builder/app/dataPromise/componentLiterals.js", "componentLiterals");
 rjs.define("forms/model/WizardStep.js", "WizardStep");
 rjs.define("forms/css/forms.css", "forms_Css");
 
-rjs.define("GaiaAPI/GaiaAPI_Utils.js", "GaiaAPI_Utils");
-rjs.define("GaiaAPI/GaiaAPI_forms.js", "GaiaAPI_forms");
 rjs.define("GaiaAPI/GaiaAPI_DV_dataviews.js", "GaiaAPI_DV_dataviews");
 rjs.define("GaiaAPI/GaiaAPI_Frms_dataview.js", "GaiaAPI_Frms_dataview");
+rjs.define("GaiaAPI/GaiaAPI_forms.js", "GaiaAPI_forms");
 rjs.define("GaiaAPI/GaiaAPI_dataview_pid_1.js", "GaiaAPI_dataview_pid_1");
+rjs.define("GaiaAPI/GaiaAPI_Utils.js", "GaiaAPI_Utils");
+rjs.define("GaiaAPI/GaiaAPI_dataview_pid_6.js", "GaiaAPI_dataview_pid_6");
 rjs.define("inspect/CollectionEditor.js", "CollectionEditor");
 rjs.define("inspect/ObjectEditor.js", "ObjectEditor");
 
+//report builder gaiaAPI files
+rjs.define("report_builder/app/GaiaAPI_reportBuilder/GaiaAPI_dataview_pid_10.js", "GaiaAPI_dataview_pid_10");
+rjs.define("report_builder/app/GaiaAPI_reportBuilder/GaiaAPI_dataview_pid_11.js", "GaiaAPI_dataview_pid_11");
+rjs.define("report_builder/app/GaiaAPI_reportBuilder/GaiaAPI_report_source.js", "GaiaAPI_report_source");
+rjs.define("report_builder/app/GaiaAPI_reportBuilder/GaiaAPI_reports.js", "GaiaAPI_reports");
 
-rjs.define("GaiaAPI/GaiaAPI_dataview_pid_6.js", "GaiaAPI_dataview_pid_6");
-rjs.define("GaiaAPI/GaiaAPI_dataview_pid_10.js", "GaiaAPI_dataview_pid_10");
-rjs.define("GaiaAPI/GaiaAPI_dataview_pid_11.js", "GaiaAPI_dataview_pid_11");
-rjs.define("GaiaAPI/GaiaAPI_report_source.js", "GaiaAPI_report_source");
-rjs.define("GaiaAPI/GaiaAPI_reports.js", "GaiaAPI_reports");
+rjs.define("report_builder/app/dataPromise/model/ReportProperties.js", "ReportProperties");
+rjs.define("report_builder/app/reusables/components/JRComponent.js", "JRComponent");
+rjs.define("report_builder/app/reusables/components/JRLabel.js", "JRLabel");
+rjs.define("report_builder/app/reusables/components/JRTextInput.js", "JRTextInput");
+rjs.define("report_builder/app/reusables/components/JRBand.js", "JRBand");
+rjs.define("report_builder/app/reusables/components/JRHRule.js", "JRHRule");
+rjs.define("report_builder/app/reusables/components/JRImage.js", "JRImage");
+rjs.define("report_builder/app/reusables/components/JRContainer.js", "JRContainer");
+rjs.define("report_builder/app/reusables/factory/ReportFactory.js", "ReportFactory");
+rjs.define("report_builder/app/reusables/factory/SectionFactory.js","SectionFactory");
+rjs.define("report_builder/app/reusables/factory/BandFactory.js", "BandFactory");
+rjs.define("report_builder/app/reusables/factory/StaticTextFactory.js", "StaticTextFactory");
+rjs.define("report_builder/app/reusables/factory/TextFieldFactory.js", "TextFieldFactory");
+rjs.define("report_builder/app/reusables/factory/ImageFactory.js", "ImageFactory");
+rjs.define("report_builder/app/reusables/factory/HRuleFactory.js", "HRuleFactory");
+rjs.define("report_builder/app/reportBuilder.css", "Report_Builder_Css");
 
-rjs.define("report_builder/model/ReportProperties.js", "ReportProperties");
-rjs.define("report_builder/components/JRComponent.js", "JRComponent");
-rjs.define("report_builder/components/JRLabel.js", "JRLabel");
-rjs.define("report_builder/components/JRTextInput.js", "JRTextInput");
-rjs.define("report_builder/components/JRBand.js", "JRBand");
-rjs.define("report_builder/components/JRHRule.js", "JRHRule");
-rjs.define("report_builder/components/JRImage.js", "JRImage");
-rjs.define("report_builder/components/JRContainer.js", "JRContainer");
-rjs.define("report_builder/factory/ReportFactory.js", "ReportFactory");
-rjs.define("report_builder/factory/SectionFactory.js","SectionFactory");
-rjs.define("report_builder/factory/BandFactory.js", "BandFactory");
-rjs.define("report_builder/factory/StaticTextFactory.js", "StaticTextFactory");
-rjs.define("report_builder/factory/TextFieldFactory.js", "TextFieldFactory");
-rjs.define("report_builder/factory/ImageFactory.js", "ImageFactory");
-rjs.define("report_builder/factory/HRuleFactory.js", "HRuleFactory");
-rjs.define("report_builder/css/builder.css", "Report_Builder_Css");
+//dataPromise and routes
+rjs.define("report_builder/app/dataPromise/_initBaseDP.js", "_initBaseDP");
+rjs.define("report_builder/app/dataPromise/_initDP.js", "_initDP");
+rjs.define("report_builder/app/dataPromise/_initDpForms.js", "_initDpForms");
+rjs.define("report_builder/app/dataPromise/_initSaveReportModal.js", "_initSaveReportModal");
+rjs.define("report_builder/app/dataPromise/_initUploadReportModal.js", "_initUploadReportModal");
+rjs.define("report_builder/app/dataPromise/_initDbModal.js", "_initDbModal");
+rjs.define("report_builder/app/routes/uiRoute.js", "uiRoute");
+rjs.define("report_builder/app/routes/modalRoute.js", "modalRoute");
 
 let dependencies = [
     ["EventDispatcher"],
@@ -454,7 +464,8 @@ let dependencies = [
         "componentList",
         "CollectionEditor",
         "ObjectEditor"
-    ], [
+    ],
+    [
         "Scrap",
         "metaProps",
         "componentLiterals",
@@ -466,7 +477,8 @@ let dependencies = [
         "GaiaAPI_Frms_dataview",
         "GaiaAPI_dataview_pid_1",
         "JRComponent"
-    ], [
+    ],
+    [
         "GaiaAPI_dataview_pid_6",
         "GaiaAPI_dataview_pid_10",
         "GaiaAPI_dataview_pid_11",
@@ -486,10 +498,19 @@ let dependencies = [
         "HRuleFactory",
         "JRBand",
         "Report_Builder_Css"
+    ],
+    [
+        "_initBaseDP",
+        "_initDP",
+        "_initDpForms",
+        "_initSaveReportModal",
+        "_initUploadReportModal",
+        "_initDbModal",
+        "uiRoute",
+        "modalRoute",
     ]
-
 ];
 
 rjs.grequire(dependencies).then(() => {
-    window.main();
+  window.main();
 });

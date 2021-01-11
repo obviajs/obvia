@@ -19,9 +19,14 @@
     <!-- <link rel="stylesheet" href="oxana/css/global.css"> -->
     <!--link rel="stylesheet" href="../../oxana/css/global.css" /-->
 
-    <link
+    <!-- <link
       rel="icon"
       href="../oxanaui/assets/images/favicon.png"
+      type="image/x-icon"
+    /> -->
+    <link
+      rel="icon"
+      href="../assets/obviaIcon.ico"
       type="image/x-icon"
     />
     <link
@@ -35,7 +40,7 @@
     <script>
       var Builder = {};
       function main() {
-        rjs.define("report_builder/ReportBuilder.js", "ReportBuilder");
+        rjs.define("report_builder/app/ReportBuilder.js", "ReportBuilder");
       }
     </script>
   </head>
@@ -57,5 +62,5 @@
     crossorigin="anonymous"
   ></script>
   <!-- main entry point script -->
-  <script type="text/javascript" src="report_builder/aml.js"></script>
+  <script type="text/javascript" src="report_builder/app/aml.js"></script>
 </html>
