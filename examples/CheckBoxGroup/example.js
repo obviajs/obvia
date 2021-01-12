@@ -51,5 +51,6 @@ var myCheckboxGroup = new CheckBoxGroup({
         //e.preventDefault();
     }
 });
-
-$('#root').append(await myCheckboxGroup.render().$el);
+myCheckboxGroup.render().then(function (cmpInstance) {
+    $('#root').append(cmpInstance.$el);
+});
