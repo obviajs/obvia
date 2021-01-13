@@ -469,6 +469,7 @@ var Repeater = function (_props, _hideComponents = false) {
                 if (_self[cmpId][index]) {
                     for (let u = index; u < _self[cmpId].length; u++) {
                         _self[cmpId][u].repeaterIndex += 1;
+                        data.currentIndex += 1;
                     }
                 }
 
@@ -566,27 +567,30 @@ var Repeater = function (_props, _hideComponents = false) {
                 if (dpRemove) {
                     removedItem = this.dataProvider.splice(index, 1);
                 }
-
+                let rlen = this.rowItems.length;
+                let clen = _components.length;
                 //delete component instances on that row
-                for (let cI = 0; cI < _components.length; cI++) {
+                for (let cI = 0; cI < clen; cI++) {
                     let component = _components[cI];
                     //remove repeated block from dom
                     if (cI == 0 && _rendering.wrap) {
                         this[component.props.id][index].$el.closest('.repeated-block').remove();
                         this[component.props.id][index].$el.closest('.repeated-block-hr').remove();
-                    }
-                    if (!_rendering.wrap) {
+                    } else if (!_rendering.wrap) {
                         this[component.props.id][index].destruct(1);
                     }
                     //modify new cmp repeater indexes
-                    for (let i = 0; i < this[component.props.id].length; i++) {
+                    for (let i = index + 1; i < rlen; i++) {
                         let item = this[component.props.id][i];
-                        if (i > index)
-                            item.repeaterIndex -= 1;
+                        item.repeaterIndex -= 1;
                     }
 
                     rowItems[component.props.id] = [this[component.props.id][index]];
                     this[component.props.id].splice(index, 1);
+                }
+
+                for (let i = index + 1; i < rlen; i++) {
+                    this.dataProvider[index].currentIndex -= 1;
                 }
                 this.trigger('rowDelete', [this, new RepeaterEventArgs(rowItems, this.dataProvider[index], index)]);
                 this.rowItems.splice(index, 1);

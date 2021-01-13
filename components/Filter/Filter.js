@@ -39,9 +39,23 @@ var Filter = function (_props) {
           }
         }
       }; */
+    let _removeFilterItem = function (e, ra) {
+        repDP.splice(ra.currentIndex, 1);
+    };
 
+    let _addFilterItem = function (e) {
+        valueAutoComplete = this.value;
+        if (!repDP) {
+            repDP = this.parent.parent.children.filterMainContainer.repeater.dataProvider;
+        }
+        let i = deepCopy(valueAutoComplete[0]);
+        delete i.guid;
+        repDP.push(i);
+        this.value = null;
+    };
 
     let _cmps;
+
     let fnContainerDelayInit = function () {
 
         _cmps = [{
@@ -61,16 +75,7 @@ var Filter = function (_props) {
                             labelField: _labelField,
                             maxSuggestionsCount: 1,
                             dataProvider: _autocmpDP,
-                            change: function (e) {
-                                valueAutoComplete = this.value;
-                                if (!repDP) {
-                                    repDP = this.parent.parent.children.filterMainContainer.repeater.dataProvider;
-                                }
-                                let i = deepCopy(valueAutoComplete[0]);
-                                delete i.guid;
-                                repDP.push(i);
-                                this.value = null;
-                            }
+                            change: _addFilterItem
                         }
                     },
                     {
@@ -150,7 +155,8 @@ var Filter = function (_props) {
                                                 classes: ["fas", "fa-times"],
                                                 css: {
                                                     "text-decoration": "none"
-                                                }
+                                                },
+                                                click: _removeFilterItem
                                             }
                                         }]
                                     }

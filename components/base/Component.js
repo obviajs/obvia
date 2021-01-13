@@ -688,7 +688,8 @@ var Component = function (_props) {
                                 _handlers[eventType] = [];
                             if (!this.hasListener(eventType, fnc)) {
                                 let proxyHandler = function () {
-                                    let args = [];
+                                    let args = [],
+                                        e = arguments[0];
                                     for (let i = 0; i < arguments.length; i++) {
                                         args.push(arguments[i]);
                                     }
@@ -699,6 +700,14 @@ var Component = function (_props) {
                                                 _self.parentRepeater.rowItems[_self.repeaterIndex],
                                                 _self.parentRepeater.dataProvider[_self.repeaterIndex],
                                                 _self.repeaterIndex
+                                            )
+                                        ]);
+                                    } else if (e.target != e.currentTarget && Component.instances[e.target.id] && Component.instances[e.target.id].parentRepeater) {
+                                        args = args.concat([
+                                            new RepeaterEventArgs(
+                                                Component.instances[e.target.id].parentRepeater.rowItems[Component.instances[e.target.id].repeaterIndex],
+                                                Component.instances[e.target.id].parentRepeater.dataProvider[Component.instances[e.target.id].repeaterIndex],
+                                                Component.instances[e.target.id].repeaterIndex
                                             )
                                         ]);
                                     }
@@ -898,7 +907,8 @@ var Component = function (_props) {
                             if (_handlers[innerEventIn] == null)
                                 _handlers[innerEventIn] = [];
                             let proxyHandler = function () {
-                                let args = [];
+                                let args = [],
+                                    e = arguments[0];
                                 for (let i = 0; i < arguments.length; i++) {
                                     args.push(arguments[i]);
                                 }
@@ -914,6 +924,14 @@ var Component = function (_props) {
                                             )
                                         ]
                                     );
+                                } else if (e.target != e.currentTarget && Component.instances[e.target.id] && Component.instances[e.target.id].parentRepeater) {
+                                    args = args.concat([
+                                        new RepeaterEventArgs(
+                                            Component.instances[e.target.id].parentRepeater.rowItems[Component.instances[e.target.id].repeaterIndex],
+                                            Component.instances[e.target.id].parentRepeater.dataProvider[Component.instances[e.target.id].repeaterIndex],
+                                            Component.instances[e.target.id].repeaterIndex
+                                        )
+                                    ]);
                                 }
                                 args[0].originalContext = this;
                                 return handler.events[innerEventIn].apply(_self.proxyMaybe, args);
