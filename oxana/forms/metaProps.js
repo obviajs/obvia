@@ -502,7 +502,7 @@ Builder.initMetaProps = function () {
                                                 }
                                             }],
                                             click: function (e, ra) {
-                                                this.parent.removeRow(ra.currentIndex);
+                                                this.parent.dataProvider.splice(ra.currentIndex, 1);
                                             }
                                         }
                                     }

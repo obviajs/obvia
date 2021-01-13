@@ -147,7 +147,7 @@ var Repeater = function (_props, _hideComponents = false) {
                 //var ind = this.rowItems.length + i;
                 if (toRefresh.indexOf(toRemove.a1_indices[i]) == -1 && toAdd.a1_indices.indexOf(toRemove.a1_indices[i]) == -1)
                     if (toRemove.a1_indices[i] < _rows.length)
-                        this.removeRow(toRemove.a1_indices[i], false, true, dpRemove = false);
+                        this.removeRow(toRemove.a1_indices[i], false, true);
                 //this.removeChildAtIndex(toRemove.a1_indices[i]);
             }
             if (toAdd.a1_indices.length > 0) {
@@ -229,7 +229,7 @@ var Repeater = function (_props, _hideComponents = false) {
                 }
                 if (v == null || v.length == 0) {
                     if (_oldDataProvider && _oldDataProvider.length > 0)
-                        this.removeAllRows(false);
+                        this.removeAllRows();
                     _dataProvider = !ArrayEx.isArrayEx(v) ? new ArrayEx(v) : v;
                     _creationFinished = true;
                     this.createRows();
@@ -274,7 +274,7 @@ var Repeater = function (_props, _hideComponents = false) {
 
                     } else if (delta < 0) {
                         for (let i = _oldDataProvider.length - 1; i >= v.length; i--) {
-                            this.removeRow(i, false, true, dpRemove = false);
+                            this.removeRow(i, false, true);
                         }
                     }
                     _dataProvider = !ArrayEx.isArrayEx(v) ? new ArrayEx(v) : v;
@@ -291,7 +291,7 @@ var Repeater = function (_props, _hideComponents = false) {
                 }
                 _oldDataProvider = acExtend(_dataProvider);
             } else if (_dataProvider == v) {
-                this.removeAllRows(false);
+                this.removeAllRows();
                 this.createRows();
             }
         },
@@ -547,26 +547,23 @@ var Repeater = function (_props, _hideComponents = false) {
         return rp;
     };
 
-    this.removeAllRows = function (dpRemove = true) {
+    this.removeAllRows = function () {
         let i = _self.rows.length - 1;
         while (i >= 0) {
-            this.removeRow(i, false, false, dpRemove);
+            this.removeRow(i, false, false);
             i--;
         }
         _self.rows.splice(0, _self.rows.length);
     };
     if (!this.hasOwnProperty("removeRow")) {
-        this.removeRow = function (index, isPreventable = false, focusOnRowDelete = true, dpRemove = true) {
+        this.removeRow = function (index, isPreventable = false, focusOnRowDelete = true) {
             var rowItems = {};
             let beforeRowDeleteEvent = jQuery.Event("beforeRowDelete");
-            this.trigger(beforeRowDeleteEvent, [_self, new RepeaterEventArgs(_self.rowItems[index], _oldDataProvider[index], index)]);
+            let ra = new RepeaterEventArgs(_self.rowItems[index], _oldDataProvider[index], index);
+            this.trigger(beforeRowDeleteEvent, [_self, ra]);
 
             if (!isPreventable || (isPreventable && !beforeRowDeleteEvent.isDefaultPrevented())) {
                 //remove dp row
-                var removedItem;
-                if (dpRemove) {
-                    removedItem = this.dataProvider.splice(index, 1);
-                }
                 let rlen = this.rowItems.length;
                 let clen = _components.length;
                 //delete component instances on that row
@@ -579,7 +576,7 @@ var Repeater = function (_props, _hideComponents = false) {
                     } else if (!_rendering.wrap) {
                         this[component.props.id][index].destruct(1);
                     }
-                    //modify new cmp repeater indexes
+                    //modify new cmp repeater indexes, row is still not removed so start at index + 1
                     for (let i = index + 1; i < rlen; i++) {
                         let item = this[component.props.id][i];
                         item.repeaterIndex -= 1;
@@ -588,18 +585,17 @@ var Repeater = function (_props, _hideComponents = false) {
                     rowItems[component.props.id] = [this[component.props.id][index]];
                     this[component.props.id].splice(index, 1);
                 }
-
-                for (let i = index + 1; i < rlen; i++) {
-                    this.dataProvider[index].currentIndex -= 1;
+                //dp element has been removed so start at index
+                let dplen = this.dataProvider.length;
+                for (let i = index; i < dplen; i++) {
+                    this.dataProvider[i].currentIndex -= 1;
                 }
-                this.trigger('rowDelete', [this, new RepeaterEventArgs(rowItems, this.dataProvider[index], index)]);
+                this.trigger('rowDelete', [this, ra]);
                 this.rowItems.splice(index, 1);
                 _rows.splice(index, 1);
                 //animate
                 if (focusOnRowDelete && (index - 1) >= 0)
                     this.rowItems[index - 1][_components[0].props.id].scrollTo();
-
-                return removedItem;
             }
         };
     }

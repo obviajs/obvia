@@ -1238,7 +1238,7 @@ myForm.on('creationComplete', function () {
 
         bootbox.confirm("Do you want to remove row?", function (result) {
             if (result) {
-                repeater.removeRow(repeater.currentIndex);
+                repeater.dataProvider.splice(repeater.currentIndex, 1);
             }
         });
 

@@ -16,7 +16,7 @@ var Select = function (_props) {
             if (_valueField != v) {
                 _valueField = v;
                 this.components = fnContainerDelayInit();
-                this.removeAllRows(false);
+                this.removeAllRows();
                 if (_dataProvider && _dataProvider.length > 0) {
                     let dpFields = Object.keys(_dataProvider[0]);
                     if (propDataProvider && dpFields.includes(_labelField) && dpFields.includes(_valueField)) {
@@ -36,7 +36,7 @@ var Select = function (_props) {
             if (_labelField != v) {
                 _labelField = v;
                 this.components = fnContainerDelayInit();
-                this.removeAllRows(false);
+                this.removeAllRows();
                 if (_dataProvider && _dataProvider.length > 0) {
                     let dpFields = Object.keys(_dataProvider[0]);
                     if (propDataProvider && dpFields.includes(_labelField) && dpFields.includes(_valueField)) {
@@ -125,7 +125,7 @@ var Select = function (_props) {
         },
         set: function dataProvider(v) {
             _dataProvider = v;
-            this.removeAllRows(false);
+            this.removeAllRows();
 
             if (v.length > 0) {
                 let dpFields = Object.keys(v[0]);

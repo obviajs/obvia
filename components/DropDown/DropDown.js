@@ -18,7 +18,7 @@ var DropDown = function (_props) {
             if (_labelField != v) {
                 _labelField = v;
                 _componentRepeater.components = fnInitCmpLink();
-                _componentRepeater.removeAllRows(false);
+                _componentRepeater.removeAllRows();
                 if (_dataProvider && _dataProvider.length > 0) {
                     let dpFields = Object.keys(_dataProvider[0]);
                     if (dpFields.includes(_labelField)) {
@@ -36,7 +36,7 @@ var DropDown = function (_props) {
         },
         set: function dataProvider(v) {
             _dataProvider = v;
-            _componentRepeater.removeAllRows(false);
+            _componentRepeater.removeAllRows();
 
             if (v.length > 0) {
                 let dpFields = Object.keys(v[0]);
