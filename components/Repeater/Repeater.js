@@ -505,43 +505,43 @@ var Repeater = function (_props, _hideComponents = false) {
                 });
                 //rowItems = {};
                 //render component in row
-                if (el.render) {
-                    let cp = el.render().then(function (cmpInstance) {
+                let cp = el.render().then(function (cmpInstance) {
+                    if (!_rendering.wrap) {
+                        // if(_self.mode =="append")
+                        // {
+                        //     _$hadow.append(cmpInstance.$el);
+                        // }else{
+                        //     _$hadow.prepend(cmpInstance.$el);
+                        // }
+                        _$hadow.insertAt(cmpInstance.$el, index * len + cIndex);
+                    } else {
+                        renderedRow
+                            .addClass("repeated-block")
+                            .css((_rendering.direction == 'horizontal' ? {
+                                display: 'inline-block'
+                            } : {}))
+                            .insertAt(cmpInstance.$el, cIndex);
 
-                        if (!_rendering.wrap) {
-                            // if(_self.mode =="append")
-                            // {
-                            //     _$hadow.append(cmpInstance.$el);
-                            // }else{
-                            //     _$hadow.prepend(cmpInstance.$el);
-                            // }
-                            _$hadow.insertAt(cmpInstance.$el, index * len + cIndex);
-                        } else {
-                            renderedRow
-                                .addClass("repeated-block")
-                                .css((_rendering.direction == 'horizontal' ? {
-                                    display: 'inline-block'
-                                } : {}))
-                                .append(cmpInstance.$el);
-
-                            if (_rendering.separator && (index > 0)) {
-                                renderedRow.addClass("separator");
-                            }
-                            // if(_self.mode =="append")
-                            // {
-                            //     _$hadow.append(renderedRow);
-                            // }else{
-                            //     _$hadow.prepend(renderedRow);
-                            // }
-                            _$hadow.insertAt(renderedRow, index * len + cIndex);
+                        if (_rendering.separator && (index > 0)) {
+                            renderedRow.addClass("separator");
                         }
-
-                    });
-                    rp.push(cp);
-                }
+                        // if(_self.mode =="append")
+                        // {
+                        //     _$hadow.append(renderedRow);
+                        // }else{
+                        //     _$hadow.prepend(renderedRow);
+                        // }
+                    }
+                });
+                rp.push(cp);
             }
             _rowItems.splice(index, 0, rowItems);
             _rows.push(renderedRow);
+        }
+        if (_rendering.wrap) {
+            Promise.all(rp).then(function () {
+                _$hadow.insertAt(renderedRow, index);
+            });
         }
         return rp;
     };

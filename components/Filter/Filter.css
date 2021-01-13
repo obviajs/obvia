@@ -44,3 +44,10 @@
     display: flex;
     align-items: center;
 }
+
+.filter .close {
+    background-color: #aeb2b55e;
+    padding: 0 6px;
+    display: flex;
+    align-items: center;
+}

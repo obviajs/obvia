@@ -66,9 +66,12 @@ var Filter = function (_props) {
                                 if (!repDP) {
                                     repDP = this.parent.parent.children.filterMainContainer.repeater.dataProvider;
                                 }
-                                repDP.pushUnique(valueAutoComplete[0])
+                                let i = deepCopy(valueAutoComplete[0]);
+                                delete i.guid;
+                                repDP.push(i);
+                                this.value = null;
                             }
-                        },
+                        }
                     },
                     {
                         ctor: Repeater,
@@ -90,13 +93,15 @@ var Filter = function (_props) {
                                         classes: ["filter", "index"],
                                         type: HeadingType.h6,
                                         label: "{currentIndex + 1}",
-                                    },
+                                    }
                                 },
                                 {
                                     ctor: Container,
                                     props: {
                                         id: 'repeater_container',
                                         classes: ["filter", "repeater-container"],
+                                        type: "",
+                                        width: "100%",
                                         components: [{
                                                 ctor: Label,
                                                 props: {
@@ -108,7 +113,7 @@ var Filter = function (_props) {
                                                     type: HeadingType.h6,
                                                     align: 'left',
                                                     label: "{?" + _labelField + "}",
-                                                },
+                                                }
                                             },
                                             {
                                                 ctor: Heading,
@@ -121,13 +126,37 @@ var Filter = function (_props) {
                                                     },
                                                     align: 'left',
                                                     label: "test",
-                                                },
+                                                }
                                             },
                                         ],
-                                    },
+                                    }
                                 },
-                            ],
-                        },
+                                {
+                                    ctor: Label,
+                                    props: {
+                                        id: 'closeLabel',
+                                        css: {
+                                            margin: 0,
+                                        },
+                                        classes: ["filter", "close"],
+                                        type: HeadingType.h6,
+                                        components: [{
+                                            ctor: Link,
+                                            props: {
+                                                id: 'fa',
+                                                label: "",
+                                                href: "#",
+                                                target: "",
+                                                classes: ["fas", "fa-times"],
+                                                css: {
+                                                    "text-decoration": "none"
+                                                }
+                                            }
+                                        }]
+                                    }
+                                }
+                            ]
+                        }
                     },
                     {
                         ctor: Container,
