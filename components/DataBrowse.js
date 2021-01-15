@@ -40,8 +40,8 @@ var DataBrowse = function (_props) {
         set: function placeholder(v) {
             if (v) {
                 _textInput.placeholder = v;
-            }
-            _textInput.placeholder = "Placeholder"
+            } else
+                _textInput.placeholder = "Placeholder"
         },
         enumerable: true
     });
