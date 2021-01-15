@@ -673,6 +673,36 @@ var Component = function (_props) {
         }
     });
 
+    let _generateProxyHandler = function (originalHandler) {
+        return function () {
+            let args = [],
+                e = arguments[0];
+            for (let i = 0; i < arguments.length; i++) {
+                args.push(arguments[i]);
+            }
+
+            if (_self.parentRepeater) {
+                args = args.concat([
+                    new RepeaterEventArgs(
+                        _self.parentRepeater.rowItems[_self.repeaterIndex],
+                        _self.parentRepeater.dataProvider[_self.repeaterIndex],
+                        _self.repeaterIndex
+                    )
+                ]);
+            } else if (e.target != e.currentTarget && Component.instances[e.target.id] && Component.instances[e.target.id].parentRepeater) {
+                args = args.concat([
+                    new RepeaterEventArgs(
+                        Component.instances[e.target.id].parentRepeater.rowItems[Component.instances[e.target.id].repeaterIndex],
+                        Component.instances[e.target.id].parentRepeater.dataProvider[Component.instances[e.target.id].repeaterIndex],
+                        Component.instances[e.target.id].repeaterIndex
+                    )
+                ]);
+            }
+            args[0].originalContext = this;
+            return originalHandler.apply(_self.proxyMaybe, args);
+        };
+    };
+
     this.on = function (eventType, fnc) {
         eventType = eventType.trim();
         if (typeof fnc !== 'function') {
@@ -687,33 +717,7 @@ var Component = function (_props) {
                             if (_handlers[eventType] == null)
                                 _handlers[eventType] = [];
                             if (!this.hasListener(eventType, fnc)) {
-                                let proxyHandler = function () {
-                                    let args = [],
-                                        e = arguments[0];
-                                    for (let i = 0; i < arguments.length; i++) {
-                                        args.push(arguments[i]);
-                                    }
-
-                                    if (_self.parentRepeater) {
-                                        args = args.concat([
-                                            new RepeaterEventArgs(
-                                                _self.parentRepeater.rowItems[_self.repeaterIndex],
-                                                _self.parentRepeater.dataProvider[_self.repeaterIndex],
-                                                _self.repeaterIndex
-                                            )
-                                        ]);
-                                    } else if (e.target != e.currentTarget && Component.instances[e.target.id] && Component.instances[e.target.id].parentRepeater) {
-                                        args = args.concat([
-                                            new RepeaterEventArgs(
-                                                Component.instances[e.target.id].parentRepeater.rowItems[Component.instances[e.target.id].repeaterIndex],
-                                                Component.instances[e.target.id].parentRepeater.dataProvider[Component.instances[e.target.id].repeaterIndex],
-                                                Component.instances[e.target.id].repeaterIndex
-                                            )
-                                        ]);
-                                    }
-                                    //console.log(_self.$el.attr('id'), arguments[0]);
-                                    return fnc.apply(_self.proxyMaybe, args);
-                                };
+                                let proxyHandler = _generateProxyHandler(fnc);
                                 _handlers[eventType].push({
                                     "proxyHandler": proxyHandler,
                                     "originalHandler": fnc
@@ -906,37 +910,8 @@ var Component = function (_props) {
                         if (handler.registerTo != null) {
                             if (_handlers[innerEventIn] == null)
                                 _handlers[innerEventIn] = [];
-                            let proxyHandler = function () {
-                                let args = [],
-                                    e = arguments[0];
-                                for (let i = 0; i < arguments.length; i++) {
-                                    args.push(arguments[i]);
-                                }
 
-                                //append RepeaterEventArgs to event
-                                if (_self.parentRepeater) {
-                                    args = args.concat(
-                                        [
-                                            new RepeaterEventArgs(
-                                                _self.parentRepeater.rowItems[_self.repeaterIndex],
-                                                _self.parentRepeater.dataProvider[_self.repeaterIndex],
-                                                _self.repeaterIndex
-                                            )
-                                        ]
-                                    );
-                                } else if (e.target != e.currentTarget && Component.instances[e.target.id] && Component.instances[e.target.id].parentRepeater) {
-                                    args = args.concat([
-                                        new RepeaterEventArgs(
-                                            Component.instances[e.target.id].parentRepeater.rowItems[Component.instances[e.target.id].repeaterIndex],
-                                            Component.instances[e.target.id].parentRepeater.dataProvider[Component.instances[e.target.id].repeaterIndex],
-                                            Component.instances[e.target.id].repeaterIndex
-                                        )
-                                    ]);
-                                }
-                                args[0].originalContext = this;
-                                return handler.events[innerEventIn].apply(_self.proxyMaybe, args);
-                            };
-
+                            let proxyHandler = _generateProxyHandler(handler.events[innerEventIn]);
                             _handlers[innerEventIn].push({
                                 "proxyHandler": proxyHandler,
                                 "originalHandler": handler.events[innerEventIn]
