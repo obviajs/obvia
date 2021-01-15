@@ -63,7 +63,9 @@ var DataBrowse = function (_props) {
         if (e.target.id == this.domID) {
             if (_props.value) {
                 this.value = _props.value;
-                this.placeholder = _props.placeholder
+            }
+            if (_props.placeholder) {
+                this.placeholder = _props.placeholder;
             }
             e.preventDefault();
         }
