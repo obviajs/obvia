@@ -104,7 +104,7 @@ var TextInput = function (_props) {
 
     let _afterAttach = this.afterAttach;
     this.afterAttach = function (e) {
-        if (e.target.id == this.$el.attr('id') && !this.attached) {
+        if (e.target.id == this.domID) {
             if (typeof _afterAttach == 'function') _afterAttach.apply(this, arguments);
             //init input mask
             if (_mask) {

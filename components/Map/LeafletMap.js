@@ -14,29 +14,50 @@ var LeafletMap = function (_props) {
         _latitude, _longitude,
         _dataProvider, _zoomLevel, _map,
         _selectedItem,
-        _allowNewItem;
+        _allowNewItem,
+        _centerCircle;
 
     let _initMap = function (e) {
         if (!_map) {
-            _map = L.map(_self.domID).setView([0, 0], 0);
+            _map = L.map(_self.domID).setView([_latitude | 0, _longitude | 0], _zoomLevel | 0);
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             }).addTo(_map);
-            _centerMap();
+            _self.centerMap();
             _map.on('click', _mapClick);
+            _map.on('zoomend', _zoomEnd);
         }
         if (!_layerGroup) {
             _layerGroup = L.layerGroup();
         }
     };
 
-    let _centerMap = function () {
-        if ((!_latitude || !_longitude) && _dataProvider.length > 0) {
-            _latitude = _dataProvider[0][_latitudeField];
-            _longitude = _dataProvider[0][_longitudeField];
+    let _zoomEnd = function (e) {
+        _zoomLevel = e.target._zoom;
+    };
+
+    this.centerMap = function (lat = _latitude, lng = _longitude) {
+        if ((!lat || !lng) && _dataProvider.length > 0) {
+            lat = _dataProvider[0][_latitudeField];
+            lng = _dataProvider[0][_longitudeField];
         }
-        if (_latitude && _longitude) {
-            _map.flyTo([_latitude, _longitude], _zoomLevel);
+        if (lat && lng) {
+            _latitude = lat;
+            _longitude = lng;
+            let center = [lat, lng];
+            _map.flyTo(center, _zoomLevel);
+
+            if (_centerCircle) {
+                _map.removeLayer(_centerCircle);
+            }
+
+            let circleOptions = {
+                color: 'red',
+                fillColor: '#f03',
+                fillOpacity: 0
+            };
+            _centerCircle = L.circle(center, 250, circleOptions);
+            _centerCircle.addTo(_map);
         }
     };
 
@@ -137,7 +158,7 @@ var LeafletMap = function (_props) {
                     _markers.push(m);
                 }
                 _dataProvider = v;
-                _centerMap();
+                _self.centerMap();
             }
         },
         enumerable: true
