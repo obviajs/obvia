@@ -19,6 +19,7 @@ var TextFieldFactory = function (props) {
     backgroundColor: "",
     fontSize: 16,
     mode: "Opaque",
+    editorCode: "",
   };
   this.props = extend(this.defaultParams, props);
 
@@ -27,7 +28,8 @@ var TextFieldFactory = function (props) {
 
   if (props.fontSize === "") this.props.fontSize = 9;
 
-  if (props.value === "" && props.componentWithData) this.props.value = "Text Field";
+  if (props.value === "" && props.componentWithData)
+    this.props.value = "Text Field";
 
   this.toXml = () => this.xmlTemplate.formatUnicorn(this.props);
 };

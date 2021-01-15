@@ -4,12 +4,14 @@ var JRTextInput = function (_props) {
     height: "",
     fontSize: "",
     color: "",
+    editorCode: ""
   };
   _props = extend(false, false, _defaultParams, _props);
   let _width = _props.width;
   let _height = _props.height;
   let _fontSize = _props.fontSize;
   let _color = _props.color;
+  let _editorCode = _props.editorCode;
 
   Object.defineProperty(this, "width", {
     get: function width() {
@@ -54,6 +56,18 @@ var JRTextInput = function (_props) {
     set: function color(v) {
       if (_color != v) {
         _color = v;
+      }
+    },
+    enumerable: true,
+  });
+
+  Object.defineProperty(this, "editorCode", {
+    get: function editorCode() {
+      return _editorCode;
+    },
+    set: function editorCode(v) {
+      if (_editorCode != v) {
+        _editorCode = v;
       }
     },
     enumerable: true,

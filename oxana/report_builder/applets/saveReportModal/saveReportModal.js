@@ -59,6 +59,15 @@ let Implementation = function (applet) {
             let mainLeftComponentsDP =
               app.viewStack.mainContainer.container.componentsContainer.componentList.dataProvider.slice(0);
             
+            //add xml
+            stripHandle(data.workAreaRowL2lit);
+            var sections = data.workAreaRowL2lit.props.components[0].props.components;
+            var reportFactory = new ReportFactory();
+            data.selectedReport.xml =
+              Builder.dataviewFields ?
+                reportFactory.toXml(sections, Builder.dataviewFields[0]) :
+                reportFactory.toXml(sections);
+
             //data to be posted
             data.selectedReport.dataviewFields_list =
               mainLeftComponentsDP.filter(el => el.componentWithData)

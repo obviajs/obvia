@@ -309,6 +309,7 @@ Poolable.call(GaiaAPI_reports);
 	* @property {String}  date_modified               - Report's Modified Date
 	* @property {Number}  id_report_type               - Report's Type ID
 	* @property {String}  report_literal               - Report's Literal
+	* @property {String}  report_xml               - Report's XML
 	* @property {Number}  id_dataview               - Report's dataview id
 	* @property {String}  report_literal_view               - Report's literal view
 	* @property {String}  report_guid               - Report's guid
@@ -329,6 +330,7 @@ Poolable.call(GaiaAPI_reports);
 		this.date_modified = _props.date_modified;
 		this.id_report_type = _props.id_report_type;
 		this.report_literal = _props.report_literal;
+		this.report_xml = _props.report_xml;
 		this.id_dataview = _props.id_dataview;
 		this.report_literal_view = _props.report_literal_view;
 		this.report_guid = _props.report_guid;

@@ -1,0 +1,18 @@
+.CodeMirror-sizer {
+  margin-left: 30px !important;
+}
+
+.CodeMirror-gutters,
+.CodeMirror-gutter.CodeMirror-linenumbers {
+  min-width: 30px;
+}
+
+div[id*="jsEditorModal"] .modal-body {
+  padding: 0px;
+}
+
+.editorBodyContainer {
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
+  padding: 5px;
+}

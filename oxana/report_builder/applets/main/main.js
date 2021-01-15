@@ -76,6 +76,9 @@ let Implementation = function (applet) {
     "RepeaterEx",
   ];
 
+  //code editor
+  let editorItemId;
+
   let imp = {
     // "BEGIN_DRAW": function (e) {
     //     //console.log("APPLET_BEGIN_DRAW");
@@ -597,79 +600,89 @@ let Implementation = function (applet) {
         if (move == "") {
           console.log("ADD_COMPONENT_ " + domID);
           let lit = data.components[ctor].literal;
-          if (
-            noNeedFF.indexOf(ctor) == -1 &&
-            (targetBand.ctor == "Form" ||
-              objectHierarchyGetMatching(
-                targetBand,
-                "ctor",
-                "Form",
-                "parent",
-                1
-              )["match"] != null)
-          ) {
-            let ff = extend(true, formField);
-            ff.props.component = lit;
-            lit = ff;
-          }
-          lit = extend(true, lit);
-          lit.props.afterAttach = function (e) {
-            let evt = new jQuery.Event("dropped");
-            this.trigger(evt);
-          };
-          lit.props.draggable = true;
-
-          inst = targetBand.addComponent(lit);
-          
-          //change id generation for report components
-          Builder.selectedReport.component_count =
-            parseInt(Builder.selectedReport.component_count) + 1;
-          inst.id = inst.ctor + '_' + Builder.selectedReport.component_count
+          if(ctor !== 'JRImage') {
+            if (
+              noNeedFF.indexOf(ctor) == -1 &&
+              (targetBand.ctor == "Form" ||
+                objectHierarchyGetMatching(
+                  targetBand,
+                  "ctor",
+                  "Form",
+                  "parent",
+                  1
+                )["match"] != null)
+            ) {
+              let ff = extend(true, formField);
+              ff.props.component = lit;
+              lit = ff;
+            }
+            lit = extend(true, lit);
+            lit.props.afterAttach = function (e) {
+              let evt = new jQuery.Event("dropped");
+              this.trigger(evt);
+            };
+            lit.props.draggable = true;
   
-          let classes = inst.classes.slice(0);
-          classes.pushUnique("selected-component");
-          inst.classes = classes;
-          applet.addBehaviors(inst, cmpWaBehaviors, false);
-          //remove resize from jrlabel
-          // if (typeof inst.children != "undefined") {
-          //   if (typeof inst.children.jr_resizer != "undefined") {
-          //     applet.addBehaviors(
-          //       inst.children.jr_resizer,
-          //       cmpResizeBehaviors,
-          //       false
-          //     );
-          //   }
-          // }
+            inst = targetBand.addComponent(lit);
+            
+            //change id generation for report components
+            Builder.selectedReport.component_count =
+              parseInt(Builder.selectedReport.component_count) + 1;
+            inst.id = inst.ctor + '_' + Builder.selectedReport.component_count
 
-          let isCont = isContainer.call(inst);
-          if (isCont) {
-            inst.attr.isNotWa = true;
+            
+            let classes = inst.classes.slice(0);
+            classes.pushUnique("selected-component");
+            inst.classes = classes;
+            
+            //jsEditorModal
+            if(inst.ctor === 'JRTextInput') 
+              applet.addBehaviors(inst, { dblclick: "OPEN_JSEDITOR_MODAL" }, false);
+
+            applet.addBehaviors(inst, cmpWaBehaviors, false);
+            //remove resize from jrlabel
+            // if (typeof inst.children != "undefined") {
+            //   if (typeof inst.children.jr_resizer != "undefined") {
+            //     applet.addBehaviors(
+            //       inst.children.jr_resizer,
+            //       cmpResizeBehaviors,
+            //       false
+            //     );
+            //   }
+            // }
+  
+            let isCont = isContainer.call(inst);
+            if (isCont) {
+              inst.attr.isNotWa = true;
+            }
+            inst.attr.isCmp = true;
+            inst.section = targetBand.id;
+  
+            // inst.$el[0].style.left = "0px";
+            // inst.$el[0].style.top = "0px";
+            inst.x = "0";
+            inst.y = "0";
+  
+            inst.css.width = "100px";
+            inst.css.height = "30px";
+            inst.width = "100";
+            inst.height = "30";
+  
+            //put a value to new added items with data
+            if (componentWithData !== "undefined") {
+              inst.value = newComponentValue;
+              inst.componentWithData = true
+            }
+  
+            ret.child = lit;
+            ret.parent = targetBand;
+            ret.container = targetBand;
+            ret.track = true;
+  
+            return ret;
+          } else {
+            app.appletsMap["imageModal"].init()
           }
-          inst.attr.isCmp = true;
-          inst.section = targetBand.id;
-
-          // inst.$el[0].style.left = "0px";
-          // inst.$el[0].style.top = "0px";
-          inst.x = "0";
-          inst.y = "0";
-
-          inst.css.width = "100px";
-          inst.css.height = "30px";
-          inst.width = "100";
-          inst.height = "30";
-
-          //put a value to new added items with data
-          if (componentWithData !== "undefined") {
-            inst.value = newComponentValue;
-            inst.componentWithData = true
-          }
-
-          ret.child = lit;
-          ret.parent = targetBand;
-          ret.container = targetBand;
-          ret.track = true;
-
-          return ret;
         } else {
           inst = Component.instances[domID];
           var instParentID = inst.$el[0].parentElement.id.substring(
@@ -886,6 +899,7 @@ let Implementation = function (applet) {
       app.appletsMap["saveReportModal"].init().then(() => {
         data.selectedReport.report_literal = workAreaColumn.literal;
         data.workArea = workArea;
+        data.workAreaRowL2lit = workAreaRowL2.literal;
         applet.addBehaviors(app.appletsMap["saveReportModal"].view, {
           loadLayout: "LOAD_LAYOUT_AFTER_SAVE",
         });
@@ -925,6 +939,29 @@ let Implementation = function (applet) {
         passDp();
       }
       else myApplet.init().then(() => passDp())
+    },
+
+    OPEN_JSEDITOR_MODAL: e => {
+      let myApplet = app.appletsMap["jsEditorModal"]
+      let reverseString = (str) => (str === '') ? '' : reverseString(str.substr(1)) + str.charAt(0);
+      editorItemId = 
+        reverseString(
+          reverseString(e.target.id)
+          .slice(reverseString(e.target.id).indexOf('_') + 1, e.target.id.length)
+          )
+      let passData = () => {
+        data.workAreaEditorEl = workAreaRowL2.find(editorItemId);
+        applet.addBehaviors(
+          myApplet.view, 
+          { addCodeToComponent: "ADD_CODE_TO_COMPONENT" }
+        )
+      }
+
+      if (myApplet.view) {
+        myApplet.view.show();
+        passData();
+      }
+      else myApplet.init().then(() => passData())
     },
       
     FILE_SELECTED: function (e) {
@@ -1081,6 +1118,11 @@ let Implementation = function (applet) {
     LOAD_LAYOUT_UPLOAD_REPORT: e => loadLayout('uploadReport', e.content),
 
     LOAD_LAYOUT_UPLOAD_VERSION: e => loadLayout('uploadVersion', e.content),
+
+    ADD_CODE_TO_COMPONENT: e => {
+      workAreaRowL2.find(editorItemId).editorCode = e.content;
+      workAreaRowL2.find(editorItemId).value = e.content;
+    },
 
     HISTORY_STEP_ADDED: function (e) {
       console.log("called HISTORY_STEP_ADDED.", e.current);

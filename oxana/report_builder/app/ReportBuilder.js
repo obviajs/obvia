@@ -48,7 +48,21 @@ var oxana = new App({
       dataPromise: _initBaseDP,
       uiRoute: modalRoute,
       //forceReload: true
-    }
+    },
+    {
+      url: "./flowerui/oxana/report_builder/applets/imageModal/",
+      anchor: "imageModal",
+      dataPromise: _initBaseDP,
+      uiRoute: modalRoute,
+      //forceReload: true
+    },
+    {
+      url: "./flowerui/oxana/report_builder/applets/jsEditorModal/",
+      anchor: "jsEditorModal",
+      dataPromise: _initBaseDP,
+      uiRoute: modalRoute,
+      //forceReload: true
+    },
   ],
   components: [
     {

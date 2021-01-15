@@ -247,6 +247,9 @@ rjs.define("GaiaAPI/GaiaAPI_dataview_pid_6.js", "GaiaAPI_dataview_pid_6");
 rjs.define("inspect/CollectionEditor.js", "CollectionEditor");
 rjs.define("inspect/ObjectEditor.js", "ObjectEditor");
 
+rjs.define("/flowerui/oxana/Code/require/lib/codemirror.js", "codemirror");
+rjs.define("/flowerui/oxana/Code/require/lib/codemirror.css", "codemirror_css");
+
 //report builder gaiaAPI files
 rjs.define("report_builder/app/GaiaAPI_reportBuilder/GaiaAPI_dataview_pid_10.js", "GaiaAPI_dataview_pid_10");
 rjs.define("report_builder/app/GaiaAPI_reportBuilder/GaiaAPI_dataview_pid_11.js", "GaiaAPI_dataview_pid_11");
@@ -478,6 +481,7 @@ let dependencies = [
         "GaiaAPI_dataview_pid_1",
         "JRComponent"
     ],
+    [ "codemirror", "codemirror_css" ],
     [
         "GaiaAPI_dataview_pid_6",
         "GaiaAPI_dataview_pid_10",

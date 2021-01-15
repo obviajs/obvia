@@ -207,6 +207,16 @@ Builder.initMetaProps = function () {
         },
       },
     },
+    editorCode: {
+      ctor: "TextInput",
+      label: "EditorCode",
+      index: 8,
+      props: {
+        change: function () {
+          this.parent.parent.instance.editorCode = this.value;
+        },
+      },
+    },
     //new
 
     section: {
