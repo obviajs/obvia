@@ -33,7 +33,6 @@ let Implementation = function (applet) {
     saveLayout,
     selectBtn,
     componentList,
-    openUploadForms,
     openUploadReports,
     appLoader,
     middleNav,
@@ -383,15 +382,6 @@ let Implementation = function (applet) {
         },
         false
       );
-
-      // openUploadForms = middleNav.openUploadForms;
-      // applet.addBehaviors(
-      //   openUploadForms,
-      //   {
-      //     click: "OPEN_MODAL_FORMS",
-      //   },
-      //   false
-      // );
 
       openUploadReports = middleNav.openUploadReports;
       applet.addBehaviors(
@@ -884,14 +874,6 @@ let Implementation = function (applet) {
       console.log("called FILE_SELECT_MODAL.");
       fileSelectModal.show();
     },
-    OPEN_MODAL_FORMS: function (e) {
-      app.appletsMap["formsModal"].init().then(() => {
-        console.log("Applet formsModal initiated");
-        applet.addBehaviors(app.appletsMap["formsModal"].view, {
-          loadLayout: "LOAD_LAYOUT",
-        });
-      });
-    },
 
     OPEN_MODAL_DB: e => app.appletsMap["dbModal"].init(),
 
@@ -943,12 +925,11 @@ let Implementation = function (applet) {
 
     OPEN_JSEDITOR_MODAL: e => {
       let myApplet = app.appletsMap["jsEditorModal"]
-      let reverseString = (str) => (str === '') ? '' : reverseString(str.substr(1)) + str.charAt(0);
       editorItemId = 
         reverseString(
           reverseString(e.target.id)
           .slice(reverseString(e.target.id).indexOf('_') + 1, e.target.id.length)
-          )
+        )
       let passData = () => {
         data.workAreaEditorEl = workAreaRowL2.find(editorItemId);
         applet.addBehaviors(
@@ -1118,7 +1099,7 @@ let Implementation = function (applet) {
     LOAD_LAYOUT_UPLOAD_REPORT: e => loadLayout('uploadReport', e.content),
 
     LOAD_LAYOUT_UPLOAD_VERSION: e => loadLayout('uploadVersion', e.content),
-
+    
     ADD_CODE_TO_COMPONENT: e => {
       workAreaRowL2.find(editorItemId).editorCode = e.content;
       workAreaRowL2.find(editorItemId).value = e.content;
@@ -1372,6 +1353,23 @@ let Implementation = function (applet) {
         stripHandle(lit);
         let jsonLayout = JSON.stringify(lit, null, "\t");
         download("workAreaColumn.json.txt", jsonLayout);
+      },
+      stopPropagation: true,
+    },
+
+    DESKTOP_PREVIEW: {
+      do: e => {
+        let report_name = data.selectedReport.reportName;
+        let report_guid = data.selectedReport.report_guid;
+        let action = "topdf";
+        let source = "pdf";
+        let reportFolder = data.selectedReport.repor_folder;
+                
+        popUpPreviewPdf(
+          'pdfpreview.html',
+          1024, 768,
+          report_name, report_guid, action, source, reportFolder
+        );
       },
       stopPropagation: true,
     },
@@ -1793,7 +1791,27 @@ let Implementation = function (applet) {
         top: pos.top,
       },
     ];
-  }
+  };
+
+  let popUpPreviewPdf = (url, w, h, report_name, report_guid, action, source, reportFolder) => {
+    var left = 0;
+    var top = 0;
+    // var left = (screen.width / 2) - (w / 2);
+    // var top = (screen.height / 2) - (h / 2) - 60;
+    var w = open(url, '_blank', 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width=' + w + ', height=' + h + ', top=' + top + ', left=' + left);
+    
+    let openReport = (name, action, source, version, report_guid) => {
+      console.log('readyToBePosted')
+    }
+
+    w.addEventListener('load', function () {
+      openReport(report_name, report_guid, action, source, reportFolder);
+    }, true);
+
+    return w;
+  };
+
+  let reverseString = (str) => (str === '') ? '' : reverseString(str.substr(1)) + str.charAt(0);
 
   let daBehaviors = {
     mouseover: "WA_HOVER",

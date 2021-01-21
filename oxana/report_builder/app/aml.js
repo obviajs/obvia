@@ -276,7 +276,6 @@ rjs.define("report_builder/app/reportBuilder.css", "Report_Builder_Css");
 //dataPromise and routes
 rjs.define("report_builder/app/dataPromise/_initBaseDP.js", "_initBaseDP");
 rjs.define("report_builder/app/dataPromise/_initDP.js", "_initDP");
-rjs.define("report_builder/app/dataPromise/_initDpForms.js", "_initDpForms");
 rjs.define("report_builder/app/dataPromise/_initSaveReportModal.js", "_initSaveReportModal");
 rjs.define("report_builder/app/dataPromise/_initUploadReportModal.js", "_initUploadReportModal");
 rjs.define("report_builder/app/dataPromise/_initDbModal.js", "_initDbModal");
@@ -506,7 +505,6 @@ let dependencies = [
     [
         "_initBaseDP",
         "_initDP",
-        "_initDpForms",
         "_initSaveReportModal",
         "_initUploadReportModal",
         "_initDbModal",

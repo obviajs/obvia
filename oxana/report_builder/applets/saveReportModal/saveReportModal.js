@@ -162,6 +162,35 @@ let Implementation = function (applet) {
       return Promise.all([data.dataGridVersions.init()]).then(res => data)
     };
 
+  let stripHandle = function (lit) {
+      let noNeedClasses = ["selected-component", "default-component"];
+      if (lit.props["components"] && Array.isArray(lit.props["components"]))
+        for (let i = 0; i < lit.props.components.length; i++) {
+          if (
+            lit.props.components[i].props["attr"] &&
+            lit.props.components[i].props.attr["handle"]
+          ) {
+            lit.props.components[i] = lit.props.components[i].props.components[0];
+          }
+  
+          if (
+            lit.props.components[i].props["classes"] &&
+            lit.props.components[i].props.classes.length > 0
+          ) {
+            let diffClasses = lit.props.components[i].props.classes.difference(
+              noNeedClasses
+            );
+            lit.props.components[i].props.classes = diffClasses;
+          }
+  
+          if (
+            lit.props.components[i].props["components"] &&
+            Array.isArray(lit.props.components[i].props["components"])
+          )
+            stripHandle(lit.props.components[i]);
+        }
+    };
+
     return imp;
   };
   

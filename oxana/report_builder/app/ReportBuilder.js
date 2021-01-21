@@ -8,13 +8,6 @@ var oxana = new App({
       //forceReload: true
     },
     {
-      url: "./flowerui/oxana/report_builder/applets/formsModal/",
-      anchor: "formsModal",
-      dataPromise: _initDpForms,
-      uiRoute: modalRoute,
-      //forceReload: true
-    },
-    {
       url: "./flowerui/oxana/report_builder/applets/dbModal/",
       anchor: "dbModal",
       dataPromise: _initDbModal,

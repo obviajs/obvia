@@ -16,3 +16,19 @@ div[id*="jsEditorModal"] .modal-body {
   border-bottom: 1px solid black;
   padding: 5px;
 }
+
+.panelContainers {
+  display: flex;
+  padding: 5px;
+  border: 1px solid black;
+  margin-top: 10px;
+}
+
+.leftPanelContainer, .middlePanelContainer, .rightPanelContainer {
+  padding : 5px;
+  border: 1px solid grey;
+}
+
+.middlePanelContainer {
+  margin: 0px 5px;
+}

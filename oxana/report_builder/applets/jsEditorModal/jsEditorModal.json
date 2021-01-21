@@ -3,7 +3,6 @@
   "props": {
     "id": "jsEditorModal",
     "title": "Javascript Expression Editor",
-    "size": "ModalSize.SMALL",
     "components": {
       "modalBody": [
         {
@@ -22,6 +21,103 @@
                       "props": {
                         "id": "editorLabel",
                         "visible": false
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "ctor": "Container",
+          "props": {
+            "id": "panelContainers",
+            "classes": ["panelContainers"],
+            "components": [
+              {
+                "ctor": "Container",
+                "props": {
+                  "id": "leftPanelContainer",
+                  "classes": ["leftPanelContainer"],
+                  "components": [
+                    {
+                      "ctor": "Repeater",
+                      "props": {
+                        "id": "leftContainerRepeater",
+                        "rendering": {
+                          "direction": "vertical"
+                        },
+                        "dataProvider": [],
+                        "components": [
+                          {
+                            "ctor": "Label",
+                            "props": {
+                              "id": "leftRepeaterLabel",
+                              "labelType": "label",
+                              "label": "{label}"
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "ctor": "Container",
+                "props": {
+                  "id": "middlePanelContainer",
+                  "classes": ["middlePanelContainer"],
+                  "components": [
+                    {
+                      "ctor": "Repeater",
+                      "props": {
+                        "id": "middleContainerRepeater",
+                        "rendering": {
+                          "direction": "vertical"
+                        },
+                        "dataProvider": [],
+                        "components": [
+                          {
+                            "ctor": "Label",
+                            "props": {
+                              "id": "middleRepeaterLabel",
+                              "labelType": "label",
+                              "label": "{label}"
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "ctor": "Container",
+                "props": {
+                  "id": "rightPanelContainer",
+                  "classes": ["rightPanelContainer"],
+                  "components": [
+                    {
+                      "ctor": "Repeater",
+                      "props": {
+                        "id": "rightContainerRepeater",
+                        "label": "rightContainerRepeater",
+                        "rendering": {
+                          "direction": "vertical"
+                        },
+                        "dataProvider": [],
+                        "components": [
+                          {
+                            "ctor": "Label",
+                            "props": {
+                              "id": "rightRepeaterLabel",
+                              "labelType": "label",
+                              "label": "{label}"
+                            }
+                          }
+                        ]
                       }
                     }
                   ]
