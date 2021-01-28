@@ -28,7 +28,7 @@
     padding: 4px;
 }
 
-.filter .logic-container {
+.filter .expression-container {
     border: 1px solid #555;
 }
 
@@ -50,4 +50,10 @@
     padding: 0 6px;
     display: flex;
     align-items: center;
+}
+
+.filter .item-heading {
+    font-size: 16px;
+    color: #1a73e8;
+    margin: 0;
 }

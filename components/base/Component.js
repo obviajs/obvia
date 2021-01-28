@@ -34,7 +34,7 @@ var Component = function (_props) {
     let _guid = _props.guid;
     let _attr, _css;
     let _id = _props.id = ((!_props.id) || (_props.id == "")) ? _defaultParams.id : _props.id;
-    let _enabled, _draggable, _visible;
+    let _enabled, _draggable, _visible = true;
     let _classes = [];
     let _parent = _props.parent;
     let _parentForm = _props.parentForm;
@@ -434,6 +434,9 @@ var Component = function (_props) {
                 if (typeof _init == 'function')
                     _init.apply(this.proxyMaybe, arguments);
             }
+            if (_props.classes) {
+                this.classes = _props.classes;
+            }
         }
     };
 
@@ -446,9 +449,6 @@ var Component = function (_props) {
             if (!e.isDefaultPrevented()) {
                 if (typeof _beforeAttach == 'function')
                     _beforeAttach.apply(this.proxyMaybe, arguments);
-            }
-            if (_props.classes) {
-                this.classes = _props.classes;
             }
         }
     };
@@ -674,7 +674,7 @@ var Component = function (_props) {
     });
 
     let _generateProxyHandler = function (originalHandler) {
-        return function () {
+        let f = function () {
             let args = [],
                 e = arguments[0];
             for (let i = 0; i < arguments.length; i++) {
@@ -701,6 +701,8 @@ var Component = function (_props) {
             args[0].originalContext = this;
             return originalHandler.apply(_self.proxyMaybe, args);
         };
+        f.bind(_self.proxyMaybe);
+        return f;
     };
 
     this.on = function (eventType, fnc) {
@@ -868,8 +870,18 @@ var Component = function (_props) {
                 _bindingsManager.getValue(window, bindingExp, site_chain, defaultBindTo);
             };
             if (nullable) {
-                let fnDelayed = whenDefined(window[defaultBindTo], BindingsManager.getIdentifier(bindingExp), fn);
-                fnDelayed();
+                let identifierTokens = BindingsManager.getIdentifiers(bindingExp);
+                if (identifierTokens) {
+                    let len = identifierTokens.length;
+                    let cc = window[defaultBindTo];
+                    coroutine(function* () {
+                        for (let i = 0; i < len; i++) {
+                            yield whenDefinedPromise(cc, identifierTokens[i].value);
+                            cc = cc[identifierTokens[i].value];
+                        }
+                        fn();
+                    });
+                }
             } else {
                 fn();
             }

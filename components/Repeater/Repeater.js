@@ -116,7 +116,7 @@ var Repeater = function (_props, _hideComponents = false) {
                     _creationFinished = true;
             } else
                 _creationFinished = true;
-            Promise.all(_comprenders).then(function () {
+            return Promise.all(_comprenders).then(function () {
                 _$hadow.contents().appendTo(_self.$container);
                 _comprenders = [];
                 _self.trigger('endDraw');

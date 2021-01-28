@@ -8,13 +8,15 @@
 var FormField = function (_props) {
     let _self = this;
     let _input, _lbl;
-    
+
     this.endDraw = function (e) {
         if (e.target.id == this.domID) {
-            _componentId = _component.props.id;
-            _input = this.children[_componentId];
             _lbl = this.labelForId;
-            _lbl.$el.prop("for", _input.domID);
+            if (_component) {
+                _componentId = _component.props.id;
+                _input = this.children[_componentId];
+                _prepareInput();
+            }
             if (_props.required)
                 _self.required = _props.required;
             if (_props.placeholder)
@@ -23,8 +25,12 @@ var FormField = function (_props) {
                 _self.name = _props.name;
             if (_props.label)
                 _self.label = _props.label;
-            //_component = _input.literal;
+            //_component = _input.literal;            
+        }
+    };
 
+    let _prepareInput = function () {
+        if (_input) {
             let _cmpObj;
             if (["input", "select", "textarea", "button"].indexOf(_input.$el[0].tagName.toLowerCase()) > -1) {
                 _cmpObj = _input.$el;
@@ -36,26 +42,34 @@ var FormField = function (_props) {
             _cmpObj.addClass("form-control");
             if (_size)
                 _cmpObj.addClass(_size);
+
+            _lbl.$el.prop("for", _input.domID);
         }
     };
-    
+
     this.beforeAttach = function (e) {
         if (e.target.id == this.domID) {
-           
+
         }
     };
     let _afterAttach = this.afterAttach;
 
-    Object.defineProperty(this, "component",
-    {
+    Object.defineProperty(this, "component", {
         get: function component() {
             return _component;
+        },
+        set: function component(v) {
+            if (_component != v) {
+                _component = v;
+                this.removeChild(_input);
+                _input = this.addComponent(_component);
+                _prepareInput();
+            }
         },
         enumerable: true
     });
 
-    Object.defineProperty(this, "name",
-    {
+    Object.defineProperty(this, "name", {
         get: function name() {
             return _name;
         },
@@ -73,9 +87,8 @@ var FormField = function (_props) {
         },
         enumerable: true
     });
-    
-    Object.defineProperty(this, "required",
-    {
+
+    Object.defineProperty(this, "required", {
         get: function required() {
             return _required;
         },
@@ -94,8 +107,7 @@ var FormField = function (_props) {
         enumerable: true
     });
 
-    Object.defineProperty(this, "label",
-    {
+    Object.defineProperty(this, "label", {
         get: function label() {
             return _label;
         },
@@ -109,20 +121,27 @@ var FormField = function (_props) {
         enumerable: true
     });
 
-    Object.defineProperty(this, "input",
-    {
+    Object.defineProperty(this, "input", {
         get: function input() {
             return _input;
         },
-        enumerable:true
+        set: function input(v) {
+            if (_input != v) {
+                this.removeChild(_input);
+                this.addChild(v);
+                _input = v;
+                _component = v.literal;
+                _prepareInput();
+            }
+        },
+        enumerable: true
     });
-    
-    Object.defineProperty(this, "inputLabel",
-    {
+
+    Object.defineProperty(this, "inputLabel", {
         get: function inputLabel() {
             return _lbl;
         },
-        enumerable:true
+        enumerable: true
     });
 
     let _defaultParams = {
@@ -134,7 +153,7 @@ var FormField = function (_props) {
         label: "",
         input: null
     };
-    
+
     _props = extend(false, false, _defaultParams, _props);
     let _placeholder;
     let _name;
@@ -149,17 +168,16 @@ var FormField = function (_props) {
         }
     };
     let _size = _props.size;
-    
+
     _props.components = [_lblCmp];
     if (_component && !Object.isEmpty(_component)) {
         _props.components.push(_component);
     }
-    
+
     let r = Container.call(this, _props, true);
 
     let _enabled = _props.enabled;
-    Object.defineProperty(this, "enabled",
-    {
+    Object.defineProperty(this, "enabled", {
         get: function enabled() {
             return _enabled;
         },
@@ -172,33 +190,32 @@ var FormField = function (_props) {
         },
         configurable: true
     });
-    
+
     Object.defineProperty(this, "props", {
-        get: function props() {            
+        get: function props() {
             return new Props(_self, _props);
         },
         configurable: true
     });
 
-    Object.defineProperty(this, "placeholder",
-        {
-            get: function placeholder() {
-                return _placeholder;
-            },
-            set: function placeholder(v) {
-                if (_placeholder != v) {
-                    _placeholder = v;
-                    if (_placeholder) {
-                        if (_input && _input.$el)
-                            _input.$el.attr("placeholder", _placeholder);
-                    } else {
-                        if (_input && _input.$el)
-                            _input.$el.removeAttr('placeholder');
-                    }
+    Object.defineProperty(this, "placeholder", {
+        get: function placeholder() {
+            return _placeholder;
+        },
+        set: function placeholder(v) {
+            if (_placeholder != v) {
+                _placeholder = v;
+                if (_placeholder) {
+                    if (_input && _input.$el)
+                        _input.$el.attr("placeholder", _placeholder);
+                } else {
+                    if (_input && _input.$el)
+                        _input.$el.removeAttr('placeholder');
                 }
-            },
-            enumerable: true
-        });
+            }
+        },
+        enumerable: true
+    });
     return r;
 };
 //component prototype
