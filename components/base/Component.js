@@ -266,6 +266,11 @@ var Component = function (_props) {
         set: function parentForm(v) {
             if (_parentForm != v) {
                 _parentForm = v;
+                if (this.children) {
+                    for (let cid in this.children) {
+                        this.children[cid].parentForm = _parentForm;
+                    }
+                }
             }
         },
         enumerable: false

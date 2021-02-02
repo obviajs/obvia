@@ -9,92 +9,81 @@ var MultiUpload = function (_props) {
     let _cmps, _lblDrop, _dropContainer, _listRepeater, _progressRow, _progressBar;
     let _dataProvider;
 
-    Object.defineProperty(this, "dataProvider", 
-    {
-        get: function dataProvider() 
-        {
+    Object.defineProperty(this, "dataProvider", {
+        get: function dataProvider() {
             return _dataProvider;
         },
-        set: function dataProvider(v) 
-        {
-            if(_dataProvider != v)
-            {
+        set: function dataProvider(v) {
+            if (_dataProvider != v) {
                 _dataProvider = v;
             }
         }
     });
 
-    let fnContainerDelayInit = function(){
-        _cmps = [
-                    {
-                        ctor: Repeater,
-                        props: {
-                            id: "listRepeater",
-                            rendering: {
-                                direction: "vertical",
-                                separator: false
-                            },
-                            dataProvider: _dataProvider,
-                            components: [
-                                {
-                                    ctor: UploadEx,
-                                    props: {
-                                        id: "upload",
-                                        change: _upload_change,
-                                        form: _form,
-                                        value: "{currentItem}",
-                                        multiple: false,
-                                        showProgress: false
-                                    }
-                                }
-                            ]
-                        }
+    let fnContainerDelayInit = function () {
+        _cmps = [{
+                ctor: Repeater,
+                props: {
+                    id: "listRepeater",
+                    rendering: {
+                        direction: "vertical",
+                        separator: false
                     },
-                    {
-                        ctor: Container,
+                    dataProvider: _dataProvider,
+                    components: [{
+                        ctor: UploadEx,
                         props: {
-                            id: "dropContainer",
-                            type: ContainerType.NONE,
+                            id: "upload",
+                            change: _upload_change,
+                            form: _form,
+                            value: "{currentItem}",
+                            multiple: false,
+                            showProgress: false
+                        }
+                    }]
+                }
+            },
+            {
+                ctor: Container,
+                props: {
+                    id: "dropContainer",
+                    type: ContainerType.NONE,
+                    width: "100%",
+                    height: 50,
+                    classes: ["rounded-lg", "border"],
+                    components: [{
+                        ctor: Label,
+                        props: {
+                            id: "infoLabel",
+                            label: 'Drag and Drop File or Click Me',
+                            classes: ["text-center"],
+                            labelType: LabelType.p
+                        }
+                    }]
+                }
+            },
+            {
+                ctor: Container,
+                props: {
+                    id: "progressRow",
+                    type: ContainerType.NONE,
+                    classes: ["d-none", "progress"],
+                    height: 5,
+                    components: [{
+                        ctor: ProgressBar,
+                        props: {
+                            id: "progressbar",
+                            valueNow: 0,
+                            valueMin: 0,
+                            valueMax: 100,
                             width: "100%",
-                            height: 50,
-                            classes: ["rounded-lg", "border"],
-                            components:[
-                                {
-                                    ctor: Label,
-                                    props: {
-                                        id: "infoLabel",
-                                        label: 'Drag and Drop File or Click Me',
-                                        classes: ["text-center"],
-                                        labelType: LabelType.p
-                                    }
-                                }
-                            ]
+                            height: "100%",
+                            classes: [BgStyle.BG_INFO, ProgressBarStyle.PROGRESS, ProgressBarStyle.PROGRESS_ANIMATED, ProgressBarStyle.PROGRESS_STRIPED]
                         }
-                    },
-                    {
-                        ctor: Container,
-                        props: {
-                            id: "progressRow",
-                            type: ContainerType.NONE,
-                            classes:["d-none", "progress"],
-                            height: 5,
-                            components:[
-                                {
-                                    ctor: ProgressBar,
-                                    props: {
-                                        id:"progressbar",
-                                        valueNow: 0,
-                                        valueMin: 0,
-                                        valueMax: 100,
-                                        width: "100%",
-                                        height: "100%",
-                                        classes: [BgStyle.BG_INFO, ProgressBarStyle.PROGRESS, ProgressBarStyle.PROGRESS_ANIMATED, ProgressBarStyle.PROGRESS_STRIPED]
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                ];
+                    }]
+                }
+            }
+        ];
     };
 
     this.beforeAttach = function (e) {
@@ -106,9 +95,10 @@ var MultiUpload = function (_props) {
             _progressBar = this.progressRow.progressbar;
             _lblDrop.on('click', _clickHandler);
             e.preventDefault();
+            _form = _form == null ? _self.parentForm : _form;
         }
     };
-    
+
     this.afterAttach = function (e) {
         if (e.target.id == this.domID) {
             $("html").on("dragover", _htmlDragOverHandler);
@@ -159,12 +149,12 @@ var MultiUpload = function (_props) {
         e.stopPropagation();
         _lblDrop.label = "Drop";
     };
-    
+
     let _dropHandler = function (e) {
         e.preventDefault();
         e.stopPropagation();
         _lblDrop.label = "Drag and Drop File or Click Me";
-        
+
         for (let n = 0; n < e.originalEvent.dataTransfer.files.length; n++) {
             let len = _listRepeater["upload"] ? _listRepeater["upload"].length : 0;
             let allUsed = true;
@@ -224,7 +214,7 @@ var MultiUpload = function (_props) {
             _listRepeater.dataProvider.push({});
         }
     };
-    
+
     let _upload_change = function (e) {
         console.log("UPL CHANGE: ", arguments);
         let last = _listRepeater.dataProvider.last();
@@ -237,7 +227,7 @@ var MultiUpload = function (_props) {
         _form.off(FormEventType.POST_PROGRESS, _ajaxUpload_progress);
         _form.off(FormEventType.POST_COMPLETE, _ajaxUpload_complete);
         _form.off(FormEventType.POST_STARTED, _ajaxUpload_started);
-        
+
         _form.on(FormEventType.POST_ERROR, _ajaxUpload_error);
         _form.on(FormEventType.POST_SUCCESS, _ajaxUpload_success);
         _form.on(FormEventType.POST_PROGRESS, _ajaxUpload_progress);
@@ -280,22 +270,22 @@ var MultiUpload = function (_props) {
         dataProvider: [],
         form: null
     };
-    
+
     let _accept, _showBtnRemove, _form;
 
     _props = extend(false, false, _defaultParams, _props);
     this.dataProvider = new ArrayEx(_props.dataProvider);
     _form = _props.form;
-    
+
     fnContainerDelayInit();
     _props.components = _cmps;
     Container.call(this, _props);
 
-    if(_props.accept)
-        this.accept = _props.accept;  
-    if(_props.showBtnRemove!=null)
+    if (_props.accept)
+        this.accept = _props.accept;
+    if (_props.showBtnRemove != null)
         this.showBtnRemove = _props.showBtnRemove;
-       
+
     let _destruct = this.destruct;
     this.destruct = function (mode = 1) {
         $("html").off("dragover", _htmlDragOverHandler);

@@ -1,10 +1,7 @@
-
-
-
 var myForm = new Form({
     id: 'form',
     formName: 'My Form',
-    action: "http://192.168.64.2/upload.php"
+    action: "http://ui/upload.php"
 });
 
 var multiUpl = new MultiUpload({
@@ -12,7 +9,7 @@ var multiUpl = new MultiUpload({
 });
 
 multiUpl.render().then(function (cmpInstance) {
-    $('#root').append(cmpInstance.$el);
+    //$('#root').append(cmpInstance.$el);
 });
 
 var singleUpload = new UploadEx({

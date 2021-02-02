@@ -71,7 +71,7 @@ var Parent = function (_props, _hideComponents = false) {
                 _ccRelation[child.id] = component;
                 child.parent = _proxy;
                 child.parentType = this.type;
-                child.parentForm = _proxy;
+                child.parentForm = _proxy.ctor == 'Form' ? _proxy : _proxy.parentForm;
                 child.repeaterIndex = this.repeaterIndex;
                 child.parentRepeater = this.parentRepeater;
 
@@ -206,7 +206,7 @@ var Parent = function (_props, _hideComponents = false) {
             _csorted.splice(index, 0, cmp.id);
             cmp.parent = _proxy;
             cmp.parentType = _self.type;
-            cmp.parentForm = _proxy;
+            cmp.parentForm = _proxy.ctor == 'Form' ? _proxy : _proxy.parentForm;
 
             index = index > -1 ? index : _components.length;
             let cr = {

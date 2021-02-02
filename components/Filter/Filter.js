@@ -236,7 +236,7 @@ var Filter = function (_props) {
                                             "id": "minValueValidator",
                                             "controlToValidate": "minInput",
                                             "errorMessage": "Please enter a value for the lower boundary.",
-                                            "validationGroup": "prsf",
+                                            "validationGroup": _props.guid,
                                             "enabled": "{currentItem.deleted == null || currentItem.deleted == false}",
                                             "visible": false
                                         }
@@ -258,7 +258,7 @@ var Filter = function (_props) {
                                             "id": "maxValueValidator",
                                             "controlToValidate": "maxInput",
                                             "errorMessage": "Please enter a value for the upper boundary.",
-                                            "validationGroup": "prsf",
+                                            "validationGroup": _props.guid,
                                             "enabled": "{currentItem.deleted == null || currentItem.deleted == false}",
                                             "visible": false
                                         }
@@ -284,7 +284,7 @@ var Filter = function (_props) {
                                 "id": "valueValidator",
                                 "controlToValidate": "valueInput",
                                 "errorMessage": "Please enter a value.",
-                                "validationGroup": "prsf",
+                                "validationGroup": _props.guid,
                                 "visible": false
                             }
                         }
@@ -366,7 +366,7 @@ var Filter = function (_props) {
     };
 
     this.validate = function () {
-        return ValidationManager.getInstance().validate("prsf").then((result) => {
+        return ValidationManager.getInstance().validate(_props.guid).then((result) => {
             let len = result.length;
             _valid = true;
             for (let i = 0; i < len; i++) {
@@ -515,7 +515,7 @@ var Filter = function (_props) {
                                                                                     "id": "operatorValidator",
                                                                                     "controlToValidate": "{currentRow.repeater_container.filterEditorContainer.headerRow.mainCol.fOperator.operator.id}",
                                                                                     "errorMessage": "Please select a value for the operator.",
-                                                                                    "validationGroup": "prsf",
+                                                                                    "validationGroup": _props.guid,
                                                                                     "enabled": "{currentItem.deleted == null || currentItem.deleted == false}",
                                                                                     "visible": false
                                                                                 }
@@ -720,12 +720,13 @@ var Filter = function (_props) {
     let = {};
     var _defaultParams = {
         value: "",
-        dataProvider: [],
+        dataProvider: new ArrayEx([]),
         labelField: undefined,
         valueField: undefined,
         typeField: undefined,
         operatorsField: undefined,
-        itemEditorField: undefined
+        itemEditorField: undefined,
+        guid: StringUtils.guid()
     };
 
     _props = extend(false, false, _defaultParams, _props);
