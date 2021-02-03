@@ -234,10 +234,12 @@ var MultiUpload = function (_props) {
         _form.on(FormEventType.POST_COMPLETE, _ajaxUpload_complete);
         _form.on(FormEventType.POST_STARTED, _ajaxUpload_started);
         let len = _listRepeater["upload"] ? _listRepeater["upload"].length : 0;
+        let rp = new Array(len);
         for (let i = 0; i < len; i++) {
             let rowUpl = _listRepeater["upload"][i];
-            rowUpl.ajaxUpload(i == len - 1 ? false : true);
+            rp[i] = rowUpl.ajaxUpload(i == len - 1 ? false : true);
         }
+        return Promise.all(rp);
     };
 
     let _ajaxUpload_error = function (e, jqXHR, textStatus, errorThrown) {

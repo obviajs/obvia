@@ -162,7 +162,7 @@ var Form = function (_props) {
         _apiClient.on("xhrStarted", _xhrStarted);
         _apiClient.on("xhrRejected", _xhrRejected);
         _apiClient.on("xhrResolved", _xhrResolved);
-        _apiClient.body(this.getFormData())
+        return _apiClient.body(this.getFormData())
             .type('multipart/form-data')
             .query()
             .path()

@@ -730,7 +730,7 @@ var Filter = function (_props) {
     };
 
     _props = extend(false, false, _defaultParams, _props);
-    _dataProvider = _props.dataProvider;
+    _dataProvider = Array.isArray(_props.dataProvider) ? new ArrayEx(_props.dataProvider) : _props.dataProvider;
     _valueField = _props.valueField;
     _labelField = _props.labelField;
     _operatorsField = _props.operatorsField;

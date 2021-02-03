@@ -14,7 +14,7 @@ var UploadEx = function (_props) {
         _self.value = e.target.files;
     };
 
-    let init = function (files) {
+    let _init = function (files) {
         if ((Array.isArray(files) || BinUtils.isFileList(files)) && files.length > 0) {
             if (files[0]["url"] == null) {
                 _btnDownload.enabled = false;
@@ -91,7 +91,7 @@ var UploadEx = function (_props) {
                 }
             }
             if (!queuee)
-                _form.post();
+                return _form.post();
         }
     };
 
@@ -148,7 +148,7 @@ var UploadEx = function (_props) {
 
     let _cmps;
 
-    let fnContainerDelayInit = function () {
+    let fnContainerDelay_init = function () {
         _cmps = [{
                 ctor: Container,
                 props: {
@@ -441,9 +441,9 @@ var UploadEx = function (_props) {
                 }
                 _value = _upload.files = v;
             }
-            init(_value);
+            _init(_value);
         } else {
-            init([{
+            _init([{
                 url: "",
                 name: "",
                 size: "",
@@ -453,7 +453,7 @@ var UploadEx = function (_props) {
         }
     };
 
-    this.beforeAttach = function (e) {
+    this.endDraw = function (e) {
         if (e.target.id == this.domID) {
             _upload = this.mainRow.fileNameColumn.uploadInput;
             _iconLbl = this.mainRow.iconColumn.iconLbl;
@@ -473,7 +473,7 @@ var UploadEx = function (_props) {
                 this.accept = _props.accept;
             if (_props.showBtnRemove != null)
                 this.showBtnRemove = _props.showBtnRemove;
-            if (_props.value != null)
+            if (_props.value)
                 _setValue(_props.value);
             e.preventDefault();
 
@@ -492,7 +492,7 @@ var UploadEx = function (_props) {
 
     _props = extend(false, false, _defaultParams, _props);
     _showProgress = _props.showProgress;
-    fnContainerDelayInit();
+    fnContainerDelay_init();
     _props.components = _cmps;
     Container.call(this, _props);
     _form = _props.form;
