@@ -5,31 +5,30 @@
  */
 
 var CheckBox = function (_props) {
-    let _self = this, _label, _value, _checked, _name;
+    let _self = this,
+        _label, _labelForLater, _value, _checked, _name;
 
-    Object.defineProperty(this, "label",
-    {
+    Object.defineProperty(this, "label", {
         get: function label() {
             return _label;
         },
         set: function label(v) {
             if (_label != v) {
-                _label = v;
-                if (this.$el) {
+                if (this.$el && this.attached) {
                     v = $(`<div>${v}</div>`).get(0).innerText;
-                    let last = this.$el.children().last();
-                    if(last && last.length>0)
-                        if(last[0].nextSibling)
-                            last[0].nextSibling.textContent = v;
-                        else
-                            this.$el.appendText(v);
-                    else
-                        //this.$el.appendText(v);
-                        this.$el.text(v);
+                    let last = this.$el[0].nextSibling;
+                    if (last)
+                        last.textContent = v;
+                    else {
+                        this.$el[0].insertAdjacentHTML('afterend', v);
+                    }
+                    _label = v;
+                } else {
+                    _labelForLater = v;
                 }
             }
         },
-        enumerable:true
+        enumerable: true
     });
 
     Object.defineProperty(this, "value", {
@@ -45,11 +44,10 @@ var CheckBox = function (_props) {
             if (this.$el)
                 this.$el.val(v);
         },
-        enumerable:true
+        enumerable: true
     });
 
-    Object.defineProperty(this, "checked",
-    {
+    Object.defineProperty(this, "checked", {
         get: function checked() {
             return _checked;
         },
@@ -60,12 +58,12 @@ var CheckBox = function (_props) {
                     this.$el.prop('checked', v);
             }
         },
-        enumerable:true
+        enumerable: true
     });
 
     Object.defineProperty(this, "name", {
         set: function name(v) {
-            if(_name!=v){
+            if (_name != v) {
                 _name = v;
                 this.$el.attr("name", v);
             }
@@ -78,29 +76,35 @@ var CheckBox = function (_props) {
     let _clickHandler = function () {
         _checked = !_checked;
     };
-    
+
     this.beforeAttach = function () {
-        if (_props.name && !this.getBindingExpression("name")){
-            this.name = _props.name;
-        }
-        if(_props.label && !this.getBindingExpression("label")){
+        if (_props.label && !this.getBindingExpression("label")) {
             this.label = _props.label;
         }
-        if(_props.value && !this.getBindingExpression("value")){
+        if (_props.name && !this.getBindingExpression("name")) {
+            this.name = _props.name;
+        }
+        if (_props.value && !this.getBindingExpression("value")) {
             this.value = _props.value;
         }
-        if(_props.checked && !this.getBindingExpression("checked")){
+        if (_props.checked && !this.getBindingExpression("checked")) {
             this.checked = _props.checked;
         }
-        if(_props.enabled && !this.getBindingExpression("enabled")){
+        if (_props.enabled && !this.getBindingExpression("enabled")) {
             this.enabled = _props.enabled;
         }
     };
-    
+
+    this.afterAttach = function (e) {
+        if (e.target.id == this.domID) {
+            this.label = _labelForLater;
+        }
+    };
+
     this.template = function () {
         return "<input id='" + this.domID + "' type='checkbox'/>";
     };
-    
+
     let _defaultParams = {
         label: '',
         value: null,
@@ -118,10 +122,10 @@ var CheckBox = function (_props) {
             _clickHandler.apply(this, arguments);
         }
         if (typeof _click == 'function')
-        _click.apply(this, arguments);
+            _click.apply(this, arguments);
     };
 
     Component.call(this, _props);
-    
+
 };
 CheckBox.prototype.ctor = "CheckBox";

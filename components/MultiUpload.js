@@ -4,7 +4,7 @@
  * Kreatx 2019
  */
 
-var MultiUpload = function(_props) {
+var MultiUpload = function (_props) {
     let _self = this;
     let _cmps, _lblDrop, _dropContainer, _listRepeater, _progressRow, _progressBar;
     let _dataProvider;
@@ -20,7 +20,7 @@ var MultiUpload = function(_props) {
         }
     });
 
-    let fnContainerDelayInit = function() {
+    let fnContainerDelayInit = function () {
         _cmps = [{
                 ctor: Repeater,
                 props: {
@@ -86,7 +86,7 @@ var MultiUpload = function(_props) {
         ];
     };
 
-    this.beforeAttach = function(e) {
+    this.beforeAttach = function (e) {
         if (e.target.id == this.domID) {
             _lblDrop = this.dropContainer.infoLabel;
             _dropContainer = this.dropContainer;
@@ -95,10 +95,11 @@ var MultiUpload = function(_props) {
             _progressBar = this.progressRow.progressbar;
             _lblDrop.on('click', _clickHandler);
             e.preventDefault();
+            _form = _form == null ? _self.parentForm : _form;
         }
     };
 
-    this.afterAttach = function(e) {
+    this.afterAttach = function (e) {
         if (e.target.id == this.domID) {
             $("html").on("dragover", _htmlDragOverHandler);
             $("html").on("drop", _htmlDropHandler);
@@ -112,7 +113,7 @@ var MultiUpload = function(_props) {
 
     //TODO: on dp change set binding for show/hide trash icon
 
-    let _htmlDragOverHandler = function(e) {
+    let _htmlDragOverHandler = function (e) {
         let t = e.originalEvent.dataTransfer.types;
         if (t.includes("Files")) {
             e.preventDefault();
@@ -121,7 +122,7 @@ var MultiUpload = function(_props) {
         }
     };
 
-    let _htmlDropHandler = function(e) {
+    let _htmlDropHandler = function (e) {
         let t = e.originalEvent.dataTransfer.types;
         if (t.includes("Files")) {
             e.preventDefault();
@@ -130,26 +131,26 @@ var MultiUpload = function(_props) {
         }
     };
 
-    let _htmlDragLeaveHandler = function(e) {
+    let _htmlDragLeaveHandler = function (e) {
         let t = e.originalEvent.dataTransfer.types;
         if (t.includes("Files")) {
             _lblDrop.label = "Drag and Drop File or Click Me";
         }
     };
 
-    let _dragEnterHandler = function(e) {
+    let _dragEnterHandler = function (e) {
         e.preventDefault();
         e.stopPropagation();
         _lblDrop.label = "Drop";
     };
 
-    let _dragOverHandler = function(e) {
+    let _dragOverHandler = function (e) {
         e.preventDefault();
         e.stopPropagation();
         _lblDrop.label = "Drop";
     };
 
-    let _dropHandler = function(e) {
+    let _dropHandler = function (e) {
         e.preventDefault();
         e.stopPropagation();
         _lblDrop.label = "Drag and Drop File or Click Me";
@@ -185,13 +186,13 @@ var MultiUpload = function(_props) {
         uploadData(fd);
         */
     };
-    let _dragLeaveHandler = function(e) {
+    let _dragLeaveHandler = function (e) {
         _lblDrop.label = "Drag and Drop File or Click Me";
     };
 
 
-    let _clickHandler = function(e) {
-        let fnUplRowAdded = function() {
+    let _clickHandler = function (e) {
+        let fnUplRowAdded = function () {
             _listRepeater.off("onRowAdd", fnUplRowAdded);
             let len = _listRepeater["upload"].length;
             let rowUpl = _listRepeater["upload"][len - 1];
@@ -214,13 +215,13 @@ var MultiUpload = function(_props) {
         }
     };
 
-    let _upload_change = function(e) {
+    let _upload_change = function (e) {
         console.log("UPL CHANGE: ", arguments);
         let last = _listRepeater.dataProvider.last();
         //last = Array.fromIterator(this.value);
     };
 
-    this.ajaxUpload = function() {
+    this.ajaxUpload = function () {
         _form.off(FormEventType.POST_ERROR, _ajaxUpload_error);
         _form.off(FormEventType.POST_SUCCESS, _ajaxUpload_success);
         _form.off(FormEventType.POST_PROGRESS, _ajaxUpload_progress);
@@ -233,32 +234,34 @@ var MultiUpload = function(_props) {
         _form.on(FormEventType.POST_COMPLETE, _ajaxUpload_complete);
         _form.on(FormEventType.POST_STARTED, _ajaxUpload_started);
         let len = _listRepeater["upload"] ? _listRepeater["upload"].length : 0;
+        let rp = new Array(len);
         for (let i = 0; i < len; i++) {
             let rowUpl = _listRepeater["upload"][i];
-            rowUpl.ajaxUpload(i == len - 1 ? false : true);
+            rp[i] = rowUpl.ajaxUpload(i == len - 1 ? false : true);
         }
+        return Promise.all(rp);
     };
 
-    let _ajaxUpload_error = function(e, jqXHR, textStatus, errorThrown) {
+    let _ajaxUpload_error = function (e, jqXHR, textStatus, errorThrown) {
         setTimeout(_ajaxUpload_complete, 500);
     };
 
-    let _ajaxUpload_success = function(e, data, textStatus, jqXHR) {
+    let _ajaxUpload_success = function (e, data, textStatus, jqXHR) {
         setTimeout(_ajaxUpload_complete, 500);
     };
 
-    let _ajaxUpload_progress = function(e, xhrProgressEvt) {
+    let _ajaxUpload_progress = function (e, xhrProgressEvt) {
         _progressBar.valueNow = xhrProgressEvt.percentage;
     };
 
-    let _ajaxUpload_started = function(e) {
+    let _ajaxUpload_started = function (e) {
         let classes = _progressRow.classes.slice(0);
         classes.splice(classes.indexOf("d-none"), 1);
         _progressBar.valueNow = 0;
         _progressRow.classes = classes;
     };
 
-    let _ajaxUpload_complete = function(e) {
+    let _ajaxUpload_complete = function (e) {
         let classes = _progressRow.classes.slice(0);
         classes.pushUnique("d-none");
         _progressRow.classes = classes;
@@ -286,7 +289,7 @@ var MultiUpload = function(_props) {
         this.showBtnRemove = _props.showBtnRemove;
 
     let _destruct = this.destruct;
-    this.destruct = function(mode = 1) {
+    this.destruct = function (mode = 1) {
         $("html").off("dragover", _htmlDragOverHandler);
         $("html").off("drop", _htmlDropHandler);
         $("html").off("dragleave", _htmlDragLeaveHandler);

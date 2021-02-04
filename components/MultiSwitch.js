@@ -5,54 +5,49 @@
  */
 
 var MultiSwitch = function (_props) {
-    let _self = this, _dataProvider;
+    let _self = this,
+        _dataProvider;
 
-    Object.defineProperty(this, "valueField", 
-    {
-        get: function valueField() 
-        {
+    Object.defineProperty(this, "valueField", {
+        get: function valueField() {
             return _valueField;
         },
-        set: function valueField(v) 
-        {
-            if (_valueField != v) { 
+        set: function valueField(v) {
+            if (_valueField != v) {
                 _valueField = v;
                 this.components = fnContainerDelayInit();
-                this.removeAllRows(false);
-                if (_dataProvider && _dataProvider.length > 0) { 
+                this.removeAllRows();
+                if (_dataProvider && _dataProvider.length > 0) {
                     let dpFields = Object.keys(_dataProvider[0]);
-                    if (propDataProvider && dpFields.includes(_labelField) && dpFields.includes(_valueField)) { 
+                    if (propDataProvider && dpFields.includes(_labelField) && dpFields.includes(_valueField)) {
                         propDataProvider['set'].call(_self, _dataProvider);
                     }
                 }
             }
         },
-        enumerable:true
+        enumerable: true
     });
-    
-    Object.defineProperty(this, "labelField", 
-    {
-        get: function labelField() 
-        {
+
+    Object.defineProperty(this, "labelField", {
+        get: function labelField() {
             return _labelField;
         },
-        set: function labelField(v) 
-        {
-            if (_labelField != v) { 
+        set: function labelField(v) {
+            if (_labelField != v) {
                 _labelField = v;
-                this.components  = fnContainerDelayInit();
-                this.removeAllRows(false);
-                if (_dataProvider && _dataProvider.length > 0) { 
+                this.components = fnContainerDelayInit();
+                this.removeAllRows();
+                if (_dataProvider && _dataProvider.length > 0) {
                     let dpFields = Object.keys(_dataProvider[0]);
-                    if (propDataProvider && dpFields.includes(_labelField) && dpFields.includes(_valueField)) { 
+                    if (propDataProvider && dpFields.includes(_labelField) && dpFields.includes(_valueField)) {
                         propDataProvider['set'].call(_self, _dataProvider);
                     }
-                } 
+                }
             }
         },
-        enumerable:true
+        enumerable: true
     });
-   
+
     let _defaultParams = {
         direction: "horizontal",
         multiselect: true,
@@ -73,62 +68,59 @@ var MultiSwitch = function (_props) {
     let _selectedClasses = _props.selectedClasses;
     let _defaultClasses = _props.defaultClasses;
 
-    if(_props.states==null){
-        _props.states = [
-            {dataProviderField: _classesField, states: {on: _selectedClasses, off: _defaultClasses}}
-        ];
+    if (_props.states == null) {
+        _props.states = [{
+            dataProviderField: _classesField,
+            states: {
+                on: _selectedClasses,
+                off: _defaultClasses
+            }
+        }];
     }
-    
+
     let fnContainerDelayInit = function () {
-        return [
-            {
-                ctor: Button,
-                props: {
-                    id: "button",
-                    type: "button",
-                    label: "{" + _labelField + "}",
-                    value: "{" + _valueField + "}",
-                    classes: "{" + _classesField + "}",
-                    enabled: "{" + _enabledField + "}",
-                    css: {
-                        float: "left",
-                        borderRadius: "0px"
-                    }
+        return [{
+            ctor: Button,
+            props: {
+                id: "button",
+                type: "button",
+                label: "{" + _labelField + "}",
+                value: "{" + _valueField + "}",
+                classes: "{" + _classesField + "}",
+                enabled: "{" + _enabledField + "}",
+                css: {
+                    float: "left",
+                    borderRadius: "0px"
                 }
             }
-        ];
+        }];
     };
-    
+
     _props.components = fnContainerDelayInit();
 
     List.call(this, _props);
 
-    Object.defineProperty(this, "components",
-    {
-        enumerable:false
+    Object.defineProperty(this, "components", {
+        enumerable: false
     });
-    
-    let propDataProvider = Object.getOwnPropertyDescriptor(this, "dataProvider");   
-    Object.defineProperty(this, "dataProvider", 
-    {
-        get: function dataProvider() 
-        {
+
+    let propDataProvider = Object.getOwnPropertyDescriptor(this, "dataProvider");
+    Object.defineProperty(this, "dataProvider", {
+        get: function dataProvider() {
             return propDataProvider['get'].call(_self);
         },
-        set: function dataProvider(v)
-        { 
+        set: function dataProvider(v) {
             _dataProvider = v;
-            this.removeAllRows(false);
-                    
-            if (v.length > 0) { 
+            this.removeAllRows();
+
+            if (v.length > 0) {
                 let dpFields = Object.keys(v[0]);
-                if (dpFields.includes(_labelField) && dpFields.includes(_valueField))
-                { 
+                if (dpFields.includes(_labelField) && dpFields.includes(_valueField)) {
                     propDataProvider['set'].call(_self, _dataProvider);
                 }
             } else {
                 propDataProvider['set'].call(_self, _dataProvider);
-            }  
+            }
         },
         enumerable: true
     });

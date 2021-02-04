@@ -3,18 +3,18 @@
  *
  * Kreatx 2019
  */
-var UploadEx = function(_props) {
+var UploadEx = function (_props) {
     let _self = this;
     let _upload, _lblFileName, _btnRemove, _removeColumn, _iconLbl, _lblFileSize, _progressBar, _progressRow, _btnUpload, _btnDownload, _btnSelect;
     let _lastFileTypeIcon;
 
-    let upload_change = function(e) {
+    let upload_change = function (e) {
         e.stopPropagation();
         e.stopImmediatePropagation();
         _self.value = e.target.files;
     };
 
-    let init = function(files) {
+    let _init = function (files) {
         if ((Array.isArray(files) || BinUtils.isFileList(files)) && files.length > 0) {
             if (files[0]["url"] == null) {
                 _btnDownload.enabled = false;
@@ -65,12 +65,12 @@ var UploadEx = function(_props) {
         }
     };
 
-    let selectBtn_click = function() {
+    let selectBtn_click = function () {
         _upload.fileDialog();
         console.log("selectBtn_click");
     };
 
-    this.ajaxUpload = function(queuee = false) {
+    this.ajaxUpload = function (queuee = false) {
         if (_form && _form.ctor && _form.ctor == 'Form') {
             _form.removeFormData(_upload.id + "[]");
             _form.off(FormEventType.POST_ERROR, _ajaxUpload_error);
@@ -91,24 +91,24 @@ var UploadEx = function(_props) {
                 }
             }
             if (!queuee)
-                _form.post();
+                return _form.post();
         }
     };
 
-    this.ajaxDownload = function() {
+    this.ajaxDownload = function () {
         if (_value && Array.isArray(_value) && _value.length > 0)
             downloadFromUrl(_value[0].name, _value[0].url).then().catch();
     };
 
-    let uploadBtn_click = function(e) {
+    let uploadBtn_click = function (e) {
         _self.ajaxUpload();
     };
 
-    let _ajaxUpload_error = function(e, jqXHR, textStatus, errorThrown) {
+    let _ajaxUpload_error = function (e, jqXHR, textStatus, errorThrown) {
         setTimeout(_ajaxUpload_complete, 500);
     };
 
-    let _ajaxUpload_success = function(e, data, textStatus, jqXHR) {
+    let _ajaxUpload_success = function (e, data, textStatus, jqXHR) {
         setTimeout(_ajaxUpload_complete, 500);
         for (let i = 0; i < _value.length; i++) {
             if (data[_upload.id]) {
@@ -117,11 +117,11 @@ var UploadEx = function(_props) {
         }
     };
 
-    let _ajaxUpload_progress = function(e, xhrProgressEvt) {
+    let _ajaxUpload_progress = function (e, xhrProgressEvt) {
         _progressBar.valueNow = xhrProgressEvt.percentage;
     };
 
-    let _ajaxUpload_started = function(e) {
+    let _ajaxUpload_started = function (e) {
         if (_showProgress) {
             let classes = _progressRow.classes.slice(0);
             classes.splice(classes.indexOf("d-none"), 1);
@@ -130,7 +130,7 @@ var UploadEx = function(_props) {
         }
     };
 
-    let _ajaxUpload_complete = function(e) {
+    let _ajaxUpload_complete = function (e) {
         if (_showProgress) {
             let classes = _progressRow.classes.slice(0);
             classes.pushUnique("d-none");
@@ -138,17 +138,17 @@ var UploadEx = function(_props) {
         }
     };
 
-    let downloadBtn_click = function() {
+    let downloadBtn_click = function () {
         _self.ajaxDownload();
     };
 
-    let removeBtn_click = function() {
+    let removeBtn_click = function () {
         this.value = null;
     };
 
     let _cmps;
 
-    let fnContainerDelayInit = function() {
+    let fnContainerDelay_init = function () {
         _cmps = [{
                 ctor: Container,
                 props: {
@@ -160,7 +160,9 @@ var UploadEx = function(_props) {
                             props: {
                                 id: "iconColumn",
                                 type: ContainerType.COLUMN,
-                                spacing: { colSpan: 1 },
+                                spacing: {
+                                    colSpan: 1
+                                },
                                 classes: ["border"],
                                 components: [{
                                     ctor: Label,
@@ -176,7 +178,9 @@ var UploadEx = function(_props) {
                             props: {
                                 id: "fileNameColumn",
                                 type: ContainerType.COLUMN,
-                                spacing: { colSpan: 7 },
+                                spacing: {
+                                    colSpan: 7
+                                },
                                 classes: ["border"],
                                 components: [{
                                         ctor: Label,
@@ -201,7 +205,9 @@ var UploadEx = function(_props) {
                             props: {
                                 id: "fileSizeColumn",
                                 type: ContainerType.COLUMN,
-                                spacing: { colSpan: 1 },
+                                spacing: {
+                                    colSpan: 1
+                                },
                                 classes: ["border"],
                                 components: [{
                                     ctor: Label,
@@ -217,7 +223,11 @@ var UploadEx = function(_props) {
                                 id: "controlsColumn",
                                 type: ContainerType.BTN_GROUP,
                                 role: "group",
-                                spacing: { colSpan: 3, pr: 0, pl: 0 },
+                                spacing: {
+                                    colSpan: 3,
+                                    pr: 0,
+                                    pl: 0
+                                },
                                 components: [{
                                         ctor: Button,
                                         props: {
@@ -303,7 +313,10 @@ var UploadEx = function(_props) {
                         props: {
                             id: "progressColumn",
                             type: ContainerType.COLUMN,
-                            spacing: { colSpan: 12, pl: 0 },
+                            spacing: {
+                                colSpan: 12,
+                                pl: 0
+                            },
                             classes: ["border", "progress"],
                             height: 5,
                             components: [{
@@ -331,7 +344,7 @@ var UploadEx = function(_props) {
         },
         set: function multiple(v) {
             if (_multiple != v) {
-                let fn = whenDefined(_upload, "multiple", function() {
+                let fn = whenDefined(_upload, "multiple", function () {
                     _upload.multiple = _multiple = v;
                 });
                 fn();
@@ -345,7 +358,7 @@ var UploadEx = function(_props) {
         },
         set: function accept(v) {
             if (_accept != v) {
-                let fn = whenDefined(_upload, "accept", function() {
+                let fn = whenDefined(_upload, "accept", function () {
                     _upload.accept = _accept = v;
                 });
                 fn();
@@ -359,7 +372,7 @@ var UploadEx = function(_props) {
         },
         set: function showBtnRemove(v) {
             if (_showBtnRemove != v) {
-                let fn = whenDefined(_btnRemove, "id", function() {
+                let fn = whenDefined(_btnRemove, "id", function () {
                     if (v) {
                         let classes = _btnRemove.classes.slice(0);
                         classes = classes.splice(classes.indexOf("d-none"), 1);
@@ -418,7 +431,7 @@ var UploadEx = function(_props) {
         }
     });
 
-    let _setValue = function(v) {
+    let _setValue = function (v) {
         if (v) {
             if (!Array.isArray(v) && !BinUtils.isFileList(v))
                 _value = _upload.files = [v];
@@ -428,14 +441,19 @@ var UploadEx = function(_props) {
                 }
                 _value = _upload.files = v;
             }
-            init(_value);
+            _init(_value);
         } else {
-            init([{ url: "", name: "", size: "", type: "" }]);
+            _init([{
+                url: "",
+                name: "",
+                size: "",
+                type: ""
+            }]);
             _upload.reset();
         }
     };
 
-    this.beforeAttach = function(e) {
+    this.endDraw = function (e) {
         if (e.target.id == this.domID) {
             _upload = this.mainRow.fileNameColumn.uploadInput;
             _iconLbl = this.mainRow.iconColumn.iconLbl;
@@ -455,9 +473,11 @@ var UploadEx = function(_props) {
                 this.accept = _props.accept;
             if (_props.showBtnRemove != null)
                 this.showBtnRemove = _props.showBtnRemove;
-            if (_props.value != null)
+            if (_props.value)
                 _setValue(_props.value);
             e.preventDefault();
+
+            _form = _form == null ? _self.parentForm : _form;
         }
     };
 
@@ -472,7 +492,7 @@ var UploadEx = function(_props) {
 
     _props = extend(false, false, _defaultParams, _props);
     _showProgress = _props.showProgress;
-    fnContainerDelayInit();
+    fnContainerDelay_init();
     _props.components = _cmps;
     Container.call(this, _props);
     _form = _props.form;

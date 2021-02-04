@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+    <meta content="A timepicker component for Twitter Bootstrap" name="description">
+    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.0/css/bootstrap.min.css"
+          type="text/css" media="screen"/>
+</head>
+<body>
+<div class="container" style="text-align:center">
+    <br>
+    <br>
+
+    <div class="row">
+        <div class="col-md-offset-4 col-md-8">
+            <h1>This is a Web Soocket connection test!</h1>
+        </div>
+    </div>
+    <br>
+    <br>
+
+    <div class="row">
+        <div class="col-md-offset-4 col-md-4">
+            <button type="button" class="btn btn-success" onclick="connect()">Connect</button>
+        </div>
+    </div>
+	<br>
+    <br>
+	<div class="row">
+        <div class="col-md-offset-4 col-md-4">
+            <button type="button" class="btn btn-success" onclick="send()">Send Data</button>
+        </div>
+    </div>
+	<br>
+    <br>
+</div>
+</body>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+		crossorigin="anonymous"></script>
+<script type="text/javascript" src="lib/LAN/ip_discovery.js"></script>
+<script type="text/javascript" src="lib/StringUtils.js"></script>
+<script type="text/javascript" src="lib/P3Com/Host.js"></script>
+<script type="text/javascript" src="lib/P3Com/P3Com.js"></script>
+<script type="text/javascript" src="lib/P3Com/P3ComEventType.js"></script>
+<script type="text/javascript" src="lib/P3Com/P3ComManager.js"></script>
+<script>
+    var p3man = new P3ComManager();
+    p3man.on(P3ComEventType.DISCOVERY_STARTED, function(event){
+        console.log("Scan Started");
+    });
+    p3man.on(P3ComEventType.DISCOVERY_FINISHED, function(event){
+        console.log("Scan Finished, hosts discovered:");
+        console.log(event.discoveredHosts);
+        console.log(event.dateStarted," ", event.dateFinished);
+    });
+    p3man.on(P3ComEventType.HOST_DISCOVERED, function(event){
+        console.log("Hosts discovered...");
+        console.log(event.discoveredHosts);
+        console.log(event.dateStarted);
+    });
+    
+    p3man.scan();
+     
+</script>
+</html>

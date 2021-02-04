@@ -1,4 +1,4 @@
-var App = function(_props) {
+var App = function (_props) {
     let _defaultParams = {
         idleInterval: 60000,
         inactivityInterval: 60000,
@@ -49,12 +49,12 @@ var App = function(_props) {
 
     let _active = true;
     Object.defineProperty(this, 'active', {
-        get: function() {
+        get: function () {
             return _active;
         }
     });
 
-    let timerIncrement = function() {
+    let timerIncrement = function () {
         _idleTime = _idleTime + _idleInterval;
         if (_idleTime >= _inactivityInterval) {
             let idleCount = Math.floor(_idleTime / _inactivityInterval);
@@ -68,8 +68,8 @@ var App = function(_props) {
 
     let _visible = true;
     let visibilityEvents = ['visibilitychange', 'webkitvisibilitychange', 'mozvisibilitychange', 'msvisibilitychange'];
-    visibilityEvents.forEach(function(event) {
-        window.addEventListener(event, function(event) {
+    visibilityEvents.forEach(function (event) {
+        window.addEventListener(event, function (event) {
             if (document.hidden || document.webkitHidden || document.mozHidden || document.msHidden) {
                 if (_visible) {
                     _visible = false;
@@ -91,10 +91,10 @@ var App = function(_props) {
     let _behaviors = new AutoObject();
 
     Object.defineProperty(this, 'behaviors', {
-        get: function() {
+        get: function () {
             return _behaviors;
         },
-        set: function(v) {
+        set: function (v) {
             if (_behaviors != v) {
                 _behaviors = v;
             }
@@ -102,10 +102,10 @@ var App = function(_props) {
     });
     let _behaviorimplementations = new AutoObject();
     Object.defineProperty(this, 'behaviorimplementations', {
-        get: function() {
+        get: function () {
             return _behaviorimplementations;
         },
-        set: function(v) {
+        set: function (v) {
             if (_behaviorimplementations != v) {
                 _behaviorimplementations = v;
             }
@@ -120,12 +120,12 @@ var App = function(_props) {
     };
 
     Object.defineProperty(this, 'defaultBehaviors', {
-        get: function() {
+        get: function () {
             return _defaultBehaviors;
         }
     });
 
-    let _initDefaultBehaviors = function() {
+    let _initDefaultBehaviors = function () {
         if (_historyProps.enabled) {
             _history = History.getInstance(".history_" + _self.domID);
             /*_history.on(HistoryEventType.HISTORY_UNDONE + " " + HistoryEventType.HISTORY_REDONE + " " + HistoryEventType.HISTORY_STEP_ADDED, function (e) {
@@ -141,7 +141,7 @@ var App = function(_props) {
         _self.addBehaviors(_guid, _self, _defaultBehaviors);
     };
 
-    _behaviorimplementations[_guid]["APP_UNLOADED"] = function(e) {
+    _behaviorimplementations[_guid]["APP_UNLOADED"] = function (e) {
         //window.open("http://google.com/");
         //return "You have unsaved changes";
         let len = BrowserWindow.all.length;
@@ -150,7 +150,7 @@ var App = function(_props) {
         }
     };
 
-    this.addApplet = function(applet) {
+    this.addApplet = function (applet) {
         applet.app = applet.parent = r;
         _applets.push(applet);
         let appletInst = _appletsMap[applet.anchor] = new Applet(applet);
@@ -159,7 +159,7 @@ var App = function(_props) {
 
     let _implementations = {};
     let _b2imps = {};
-    this.addImplementation = function(imps) {
+    this.addImplementation = function (imps) {
         if (!_implementations[imps.guid]) {
             for (let behavior in imps) {
                 if (_behaviorimplementations[imps.guid][behavior] == null || imps[behavior].override) {
@@ -181,7 +181,7 @@ var App = function(_props) {
         }
     };
 
-    let _event2behavior = function(e) {
+    let _event2behavior = function (e) {
         if (e.type != "InactivityDetected" && e.type != "ActivityDetected" && e.type != "WindowHide" && e.type != "WindowShow") {
             if (_idleTime >= _inactivityInterval) {
                 let idleCount = Math.floor(_idleTime / _inactivityInterval);
@@ -287,7 +287,7 @@ var App = function(_props) {
         }
     };
 
-    this.init = function(e) {
+    this.init = function (e) {
         if (e.target.id == this.domID) {
             if (_props.title) {
                 _self.title = _props.title;
@@ -295,13 +295,13 @@ var App = function(_props) {
         }
     };
 
-    this.endDraw = function(e) {
+    this.endDraw = function (e) {
         if (e.target.id == this.domID) {
 
         }
     };
 
-    let _hashchange = function(e) {
+    let _hashchange = function (e) {
         //if 
         _route(e.newValue);
 
@@ -315,7 +315,7 @@ var App = function(_props) {
     };
 
 
-    let _route = function(hash) {
+    let _route = function (hash) {
         let m = BrowserUtils.parse(hash);
         if (m.hash && m.hash != "") {
             let appletInst = _appletsMap[m.hash];
@@ -340,9 +340,9 @@ var App = function(_props) {
     _browserManager.on("hashchange", _hashchange);
     let _appletsMap = {};
 
-    this.beginDraw = function(e) {
+    this.beginDraw = function (e) {
         if (e.target.id == this.domID) {
-            $(this.ownerDocument.body).on("keydown keyup", function(e) {
+            $(this.ownerDocument.body).on("keydown keyup", function (e) {
                 //target is always body
                 if (e.target == _self.ownerDocument.body) {
                     if (!e.guid) {
@@ -367,20 +367,20 @@ var App = function(_props) {
         }
     };
 
-    let _appletInit = function(e) {
+    let _appletInit = function (e) {
         //compare with Proxy of myself
         if (e.target.parent == r)
             console.log("App.js Appletinit", e.map);
         //_delayUpdateHash.apply(this, arguments);
     };
 
-    let _updateHash = function(e) {
+    let _updateHash = function (e) {
         console.log("App.js Appletinit", e.map);
         return e;
     };
     let _delayUpdateHash = debounce(_updateHash, 2000);
     let _cmpListenerImps = {};
-    this.addBehaviors = function(impUid, cmps, behaviors) {
+    this.addBehaviors = function (impUid, cmps, behaviors) {
         var cmps = isObject(cmps) && !cmps.forEach ? [cmps] : cmps;
         let len = cmps.length;
         for (let i = 0; i < len; i++) {
@@ -420,7 +420,7 @@ var App = function(_props) {
         }
     };
 
-    this.removeBehaviors = function(impUid, cmps, behaviors) {
+    this.removeBehaviors = function (impUid, cmps, behaviors) {
         var cmps = isObject(cmps) && !cmps.forEach ? [cmps] : cmps;
         let len = cmps.length;
         for (let i = 0; i < len; i++) {

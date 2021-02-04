@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script type="text/javascript" src="lib/dependencies/scripts/jquery.min.js"></script>
+        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet">
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="lib/LAN/ip_discovery.js"></script>
+        <script type="text/javascript" src="lib/StringUtils.js"></script>
+        <script type="text/javascript" src="lib/Tokenizer.js"></script>
+        <script type="text/javascript" src="lib/ArrayUtils.js"></script>
+        <script type="text/javascript" src="lib/BinUtils.js"></script>
+        <script type="text/javascript" src="lib/ObjectUtils.js"></script>
+        <script type="text/javascript" src="lib/DecoratorUtils.js"></script>
+        <script type="text/javascript" src="lib/binding/BindingsManager.js"></script>
+        <script type="text/javascript" src="lib/P3Com/EventDispatcher.js"></script>
+        <script type="text/javascript" src="lib/P3Com/Command.js"></script>
+        <script type="text/javascript" src="lib/P3Com/CommandType.js"></script>
+        <script type="text/javascript" src="lib/P3Com/Host.js"></script>
+        <script type="text/javascript" src="lib/P3Com/P3Com.js"></script>
+        <script type="text/javascript" src="lib/P3Com/P3ComEventType.js"></script>
+        <script type="text/javascript" src="lib/P3Com/P3ComManager.js"></script>
+        <script type="text/javascript" src="lib/P3Com/Scanner/Scanner.js"></script>
+        <script type="text/javascript" src="lib/P3Com/Scanner/ScanProperties.js"></script>
+        <script type="text/javascript" src="lib/P3Com/Scanner/FileExtension.js"></script>
+        <script type="text/javascript" src="lib/P3Com/Scanner/PaperType.js"></script>
+        <script type="text/javascript" src="lib/P3Com/Scanner/ScannerEventType.js"></script>
+        <script type="text/javascript" src="lib/dependencies/scripts/jquery.inputmask.bundle.min.js"></script>
+        <script type="text/javascript" src="components/base/Component.js"></script>
+        <script type="text/javascript" src="components/base/Parent.js"></script>
+        <script type="text/javascript" src="components/base/NavParent.js"></script>
+        <script type="text/javascript" src="components/base/Selectable.js"></script>
+        <script type="text/javascript" src="components/Modal/Modal.js"></script>
+        <script type="text/javascript" src="components/Modal/ModalSize.js"></script>
+        <script type="text/javascript" src="components/TextInput.js"></script>
+        <script type="text/javascript" src="components/CheckBox.js"></script>
+        <script type="text/javascript" src="components/Select.js"></script>
+        <script type="text/javascript" src="components/Button.js"></script>
+        <script type="text/javascript" src="components/Form/Form.js"></script>
+        <script type="text/javascript" src="components/Form/FormField.js"></script>
+        <script type="text/javascript" src="components/Form/FormEventType.js"></script>
+        <script type="text/javascript" src="components/Loader.js"></script>
+        <script type="text/javascript" src="components/Repeater.js"></script>
+        <script type="text/javascript" src="components/RadioButton.js"></script>
+        <script type="text/javascript" src="components/RadioGroup.js"></script>
+        <script type="text/javascript" src="components/List.js"></script>
+    </head>
+    <body>
+        <div id="root"></div>
+        <div id="scan" width="400px" height="400px"></div>
+    </body>
+    <script>
+		var P3ComInstance = new P3Com("ws://127.0.0.1:4669/");
+        var scan = new Scanner(P3ComInstance, "scan");
+
+        scan.on(ScannerEventType.CONNECTION_CLOSE, function (e, data) {
+            alert("Connection terminated!");
+        });
+
+        scan.on(ScannerEventType.CONNECTION_ERROR, function (e, data) {
+            alert("Check if P3Com is running and fiscal printer is connected!");
+        });
+
+        scan.on(ScannerEventType.LOAD_SCANNERS_RECEIVED, function (e, data) {
+            alert("Load scanners command processed successfully!");
+        });
+
+        scan.on(ScannerEventType.LOAD_SCANNERS_REJECETED, function (e, data) {
+            alert("Load scanners command data error!");
+        });
+
+        scan.on(ScannerEventType.LOAD_SCANNERS_FAILED, function (e, data) {
+            alert("Load scanners command failed!");
+        });
+
+        scan.on(ScannerEventType.SCAN_DOCUMENT_RECEIVED, function (e, data) {
+            alert("Scan document data received successfully!");
+        });
+
+        scan.on(ScannerEventType.SCAN_DOCUMENT_REJECETED, function (e, data) {
+            alert("Scan document data error!");
+        });
+
+        scan.on(ScannerEventType.SCAN_DOCUMENT_FAILED, function (e, data) {
+            alert("Scan document command failed!");
+        });
+
+        var myForm = new Form({
+            id: "form",
+            type: "form",
+            style: "",
+            class: "formHtml",
+            action: "test_scanner.php"
+        });
+
+        var i = 0;
+        myForm.on(FormEventType.POST_PROGRESS, function(e, data) {
+            console.log(e);
+            console.log("======")
+            console.log(data);
+            console.log("-end-" + ++i)
+        });
+
+        var myRadioGroup = null;
+		scan.on(ScannerEventType.SCANNER_LIST_LOADED, function(e, scannersList){
+			if(!myRadioGroup)
+			{
+				myRadioGroup = new RadioGroup({
+					id: 'radiogroup',
+					colspan: '6',
+					label: 'Radiogroup',
+					fieldName: 'radioInput',
+					blockProcessAttr: false,
+					required: false,
+					dataProvider: scannersList,
+					valueField: 'deviceId',
+					labelField: 'deviceName',
+					classField: "buttonClass",
+					defaultClass: 'btn btn-xs btn-default',
+					selectedClass: 'btn btn-xs btn-success',
+					enabledField: "enabled",
+					value: [],
+					onchange : function(e){
+                        //console.log(myRadioGroup.value[0].deviceId);
+                        scan.DeviceId = myRadioGroup.value[0].deviceId;
+                        
+                        //e.preventDefault();
+					} 
+				});
+                myModal.$body.append(myRadioGroup.render());
+                //myModal.$body.append(confirmScanner.render());
+				myModal.show();
+			}
+        });
+        
+        scan.on(ScannerEventType.DOCUMENT_SCANNED, function(e, base64string, contentType){
+            console.log("Dokumenti u skanua. " + e);
+            saveScan.enabled = true;
+
+            var blob = BinUtils.b64toBlob(base64string, contentType);            
+            myForm.addFileUploadField("scannedDocument", blob);   
+            myForm.post();    
+            
+            P3ComInstance = null; 
+            scan = null;     
+        });
+			
+        function loadScanners() 
+		{
+			scan.LoadScanners();
+        }
+
+        var scanItem = new ScanProperties();
+        scanItem.deviceId = '';
+        function scanDocument(dpi) 
+        {   
+            P3ComInstance = new P3Com("ws://192.168.1.55:4669/");
+            scan = new Scanner(P3ComInstance, "scan");
+            
+            if (scan.DeviceId) {
+                scanItem.filepath = "c:\\com\\";
+                scanItem.name = "name";
+                scanItem.extension = FileExtension.PDF;
+                //scanItem.deviceId = "{6BDD1FC6-810F-11D0-BEC7-08002BE2092F}\\0000";
+                scanItem.isAdf = true;
+                scanItem.HORIZONTAL_SCAN_RESOLUTION_DPI = dpi;
+                scanItem.VERTICAL_SCAN_RESOLUTION_DPI = dpi;
+                paperSize = PaperType.toPixels(PaperType.A4, dpi);
+                scanItem.HORIZONTAL_SCAN_SIZE_PIXELS = paperSize.width;
+                scanItem.VERTICAL_SCAN_SIZE_PIXELS = paperSize.height;
+                console.log(scanItem);
+
+                scan.Scan(scanItem);
+            }
+            else {
+                whenDefined(scan, "DeviceId", scanDocument);
+                loadScanners();
+            }
+        }
+
+        function saveScannedItem () {
+            scan.SaveScan();
+        }
+
+        var myModal = new Modal({
+            id: 'autocomplete-modal-' + this.domID,
+            size: 'modal-lg',
+            title: 'Zgjidh Skaner',
+        });
+		
+        var myButton = new Button({
+            id: "button",
+            type: "button",
+            value: "Load Scanners",
+            label: "Load Scanners",
+            class: "btn btn-success",
+            click : loadScanners
+        });
+
+        $('#root').append(myButton.render());
+
+        var confirmScanner = new Button({
+            id: "scan",
+            type: "button",
+            value: "Scan Document",
+            label: "Scan Document",
+            class: "btn btn-success",
+            click : function(e){scanDocument(200);}
+        });
+        $('#root').append(confirmScanner.render());
+
+        var saveScan = new Button({
+            id: "save-scan",
+            type: "button",
+            value: "Save Scan",
+            label: "Save Scan",
+            class: "btn btn-success",
+            //enabled: false,
+            click : saveScannedItem
+        });
+
+        saveScan.enabled = false;
+        $('#root').append(saveScan.render());
+
+        myModal.on('creationComplete', function (e) {
+            //trigger autocomplete complete
+            e.stopPropagation();
+        })
+
+        $('#root').append(myModal.render());
+       
+    </script>    
+</html>

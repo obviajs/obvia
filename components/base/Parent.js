@@ -71,7 +71,7 @@ var Parent = function (_props, _hideComponents = false) {
                 _ccRelation[child.id] = component;
                 child.parent = _proxy;
                 child.parentType = this.type;
-                child.parentForm = _proxy;
+                child.parentForm = _proxy.ctor == 'Form' ? _proxy : _proxy.parentForm;
                 child.repeaterIndex = this.repeaterIndex;
                 child.parentRepeater = this.parentRepeater;
 
@@ -125,25 +125,20 @@ var Parent = function (_props, _hideComponents = false) {
     this.addComponent = function (component, index) {
         index = index > -1 ? index : _components.length;
         _components.splice(index, 0, component);
-        let cmp = this.addComponentInContainer(this.$container, component, index);
-        let cr = arrayFromKey(_comprenders, "promise");
-        Promise.all(cr).then(function () {
-            _comprenders = [];
-            for (let i = 0; i < _csorted.length; i++) {
-                let cmpInstance = _children[_csorted[i]];
-                if (cmpInstance && cmpInstance.attach) {
-                    if (cmpInstance.appendTo) {
-                        cmpInstance.appendTo.insertAt(cmpInstance.$el, i);
-                    } else
-                        _$hadow.insertAt(cmpInstance.$el, i);
-                } else {
-                    console.log("Component not found " + _csorted[i]);
-                }
+        let cr = this.addComponentInContainer(this.$container, component, index);
+
+        cr.promise.then(function (cmpInstance) {
+            if (cmpInstance && cmpInstance.attach && !cmpInstance.attached) {
+                if (cmpInstance.appendTo) {
+                    cmpInstance.appendTo.append(cmpInstance.$el);
+                } else
+                    _self.$container.insertAt(cmpInstance.$el, index);
+            } else {
+                console.log("Component not found " + _csorted[i]);
             }
-            _$hadow.contents().appendTo(_self.$container);
             _self.trigger('endDraw');
         });
-        return cmp;
+        return cr.cmp;
     };
 
     Object.defineProperty(this, "sortChildren", {
@@ -211,29 +206,21 @@ var Parent = function (_props, _hideComponents = false) {
             _csorted.splice(index, 0, cmp.id);
             cmp.parent = _proxy;
             cmp.parentType = _self.type;
-            cmp.parentForm = _proxy;
+            cmp.parentForm = _proxy.ctor == 'Form' ? _proxy : _proxy.parentForm;
 
             index = index > -1 ? index : _components.length;
-            if (cmp.render) {
-                _comprenders.push({
-                    "cmp": cmp,
-                    "promise": cmp.render().then(function (cmpInstance) {
-                        /*if (cmpInstance.appendTo)
-                        {
-                            cmpInstance.appendTo.insertAt(cmpInstance.$el, index);
-                        } else
-                            container.insertAt(cmpInstance.$el, index);
-                            */
-                        --_countChildren;
-                    })
-                });
-            }
-            return cmp;
+            let cr = {
+                "cmp": cmp,
+                "promise": cmp.render()
+            };
+            _comprenders.push(cr);
+            return cr;
         }
     };
     let _init = this.init;
     this.init = function (e) {
         if (e.target.id == this.domID) {
+            this.$container = this.$el;
             if (typeof _init == 'function')
                 _init.apply(this, arguments);
         }
@@ -274,7 +261,6 @@ var Parent = function (_props, _hideComponents = false) {
     let _sortChildren = _props.sortChildren;
     //override because creationComplete will be thrown when all children components are created
     // this.afterAttach = undefined;
-    let _countChildren;
     this.addComponents = function (cmps) {
         _self.trigger('beginDraw');
         let arrInst = [];
@@ -290,13 +276,13 @@ var Parent = function (_props, _hideComponents = false) {
             if (_sortChildren) {
                 acSort(components, "props.index");
             }
-            _countChildren = components.length;
             for (let i = 0; i < components.length; i++) {
                 if (isObject(components[i])) {
                     if (cmps) {
                         _components.splice(i, 0, components[i]);
                     }
-                    arrInst.push(this.addComponentInContainer(_$hadow, components[i], i));
+                    let cr = this.addComponentInContainer(_$hadow, components[i], i);
+                    arrInst.push(cr.cmp);
                 }
             }
             let cr = arrayFromKey(_comprenders, "promise");
@@ -304,7 +290,7 @@ var Parent = function (_props, _hideComponents = false) {
                 _comprenders = [];
                 for (let i = 0; i < _csorted.length; i++) {
                     let cmpInstance = _children[_csorted[i]];
-                    if (cmpInstance && cmpInstance.attach) {
+                    if (cmpInstance && cmpInstance.attach && !cmpInstance.attached) {
                         if (cmpInstance.appendTo) {
                             cmpInstance.appendTo.insertAt(cmpInstance.$el, i);
                         } else
@@ -324,21 +310,22 @@ var Parent = function (_props, _hideComponents = false) {
         return arrInst;
     };
 
-    let _rPromise;
-    this.render = function () {
-        if (_rPromise == null) {
-            this.$container = this.$el;
-            _rPromise = new Promise((resolve, reject) => {
-                _self.on("endDraw", function (e) {
-                    if (e.target.id == _self.domID) {
-                        resolve(_proxy);
-                    }
+    if (!this.hasOwnProperty("render")) {
+        let _rPromise;
+        this.render = function () {
+            if (_rPromise == null) {
+                _rPromise = new Promise((resolve, reject) => {
+                    _self.on("endDraw", function (e) {
+                        if (e.target.id == _self.domID) {
+                            resolve(_proxy);
+                        }
+                    });
+                    this.addComponents();
                 });
-            });
-            this.addComponents();
-        }
-        return _rPromise;
-    };
+            }
+            return _rPromise;
+        };
+    }
 
     Component.call(this, _props);
     /*

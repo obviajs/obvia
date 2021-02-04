@@ -1,4 +1,4 @@
-var Applet = function(_props) {
+var Applet = function (_props) {
     this.$el = $(this);
     let _defaultParams = {
         forceReload: false,
@@ -49,9 +49,9 @@ var Applet = function(_props) {
     let _behaviors = _props.behaviors;
     let _title = _props.title;
 
-    this.route = function(msg) {
+    this.route = function (msg) {
         if ((_parent == _app) || msg[_anchor]) {
-            return coroutine(function*() {
+            return coroutine(function* () {
                 let p = yield _self.init(msg[_anchor]);
 
                 let pc = [p];
@@ -68,17 +68,17 @@ var Applet = function(_props) {
         }
     };
 
-    this.buildHash = function(s) {
+    this.buildHash = function (s) {
         let inst = s ? s : _self;
 
         return inst.parent == inst.app ? "#" + inst.anchor + "?" : this.buildHash(inst.parent) + inst.anchor;
     };
-    let _amPresent = function() {
+    let _amPresent = function () {
 
     };
 
     let _map = {};
-    this.init = function(msg) {
+    this.init = function (msg) {
         //set default hash for this applet. This will be executed only when applet was inited by calling init()
         //getChainValue(host, chain)
         let m = BrowserUtils.parse(BrowserManager.getInstance().hash);
@@ -86,12 +86,12 @@ var Applet = function(_props) {
             // BrowserManager.getInstance().pushState(null, _app.title || _title, "#" + _anchor);
         }
         _backWards(m);
-        return (!_loaded ? coroutine(function*() {
+        return (!_loaded ? coroutine(function* () {
             let rnd = _forceReload ? "?r=" + Math.random() : "";
             let r = yield Promise.all([
                 get(_furl + _anchor + ".json" + rnd, _mimeType),
                 //import uses different starting point (currrent file directory)
-                import (_furl + _anchor + ".js" + rnd),
+                import(_furl + _anchor + ".js" + rnd),
                 _dataPromise ? (typeof _dataPromise == 'function' ? _dataPromise.call() : _dataPromise) : Promise.resolve(_data)
             ]).then((p) => {
                 let module = p[1];
@@ -138,7 +138,7 @@ var Applet = function(_props) {
         }));
     };
 
-    let _backWards = function(m) {
+    let _backWards = function (m) {
         let chain = [],
             p = _self.parent;
         while (p.ctor != 'App') {
@@ -148,7 +148,7 @@ var Applet = function(_props) {
         let mm = getChainValue(m.map, chain);
     };
 
-    this.addBehaviors = function(cmps, behaviors, recurse = true) {
+    this.addBehaviors = function (cmps, behaviors, recurse = true) {
         var cmps = isObject(cmps) && !cmps.forEach ? [cmps] : cmps;
         let eventTypesJoined = "";
         for (let b in behaviors) {
@@ -166,7 +166,7 @@ var Applet = function(_props) {
         }
     };
 
-    this.removeBehaviors = function(cmps, behaviors, recurse = true) {
+    this.removeBehaviors = function (cmps, behaviors, recurse = true) {
         var cmps = isObject(cmps) && !cmps.forEach ? [cmps] : cmps;
         let eventTypesJoined = "";
         for (let b in behaviors) {
@@ -185,7 +185,7 @@ var Applet = function(_props) {
         }
     };
 
-    let _appletInit = function(e) {
+    let _appletInit = function (e) {
         if (e.target != _self && _appletsMap[e.target.anchor] && e.currentTarget != _self) {
             //extend e and trigger
             _map[_anchor][e.target.anchor] = e.map[e.target.anchor];

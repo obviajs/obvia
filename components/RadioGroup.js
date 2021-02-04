@@ -5,54 +5,49 @@
  */
 
 var RadioGroup = function (_props) {
-    let _self = this, _dataProvider;
+    let _self = this,
+        _dataProvider;
 
-    Object.defineProperty(this, "valueField", 
-    {
-        get: function valueField() 
-        {
+    Object.defineProperty(this, "valueField", {
+        get: function valueField() {
             return _valueField;
         },
-        set: function valueField(v) 
-        {
-            if (_valueField != v) { 
+        set: function valueField(v) {
+            if (_valueField != v) {
                 _valueField = v;
                 this.components = fnContainerDelayInit();
-                this.removeAllRows(false);
-                if (_dataProvider && _dataProvider.length > 0) { 
+                this.removeAllRows();
+                if (_dataProvider && _dataProvider.length > 0) {
                     let dpFields = Object.keys(_dataProvider[0]);
-                    if (propDataProvider && dpFields.includes(_labelField) && dpFields.includes(_valueField)) { 
+                    if (propDataProvider && dpFields.includes(_labelField) && dpFields.includes(_valueField)) {
                         propDataProvider['set'].call(_self, _dataProvider);
                     }
                 }
             }
         },
-        enumerable:true
+        enumerable: true
     });
-    
-    Object.defineProperty(this, "labelField", 
-    {
-        get: function labelField() 
-        {
+
+    Object.defineProperty(this, "labelField", {
+        get: function labelField() {
             return _labelField;
         },
-        set: function labelField(v) 
-        {
-            if (_labelField != v) { 
+        set: function labelField(v) {
+            if (_labelField != v) {
                 _labelField = v;
-                this.components  = fnContainerDelayInit();
-                this.removeAllRows(false);
-                if (_dataProvider && _dataProvider.length > 0) { 
+                this.components = fnContainerDelayInit();
+                this.removeAllRows();
+                if (_dataProvider && _dataProvider.length > 0) {
                     let dpFields = Object.keys(_dataProvider[0]);
-                    if (propDataProvider && dpFields.includes(_labelField) && dpFields.includes(_valueField)) { 
+                    if (propDataProvider && dpFields.includes(_labelField) && dpFields.includes(_valueField)) {
                         propDataProvider['set'].call(_self, _dataProvider);
                     }
-                } 
+                }
             }
         },
-        enumerable:true
-        });
-    
+        enumerable: true
+    });
+
     let _defaultParams = {
         id: 'radiogroup',
         checkedField: true,
@@ -80,11 +75,22 @@ var RadioGroup = function (_props) {
     let _selectedClasses = _props.selectedClasses;
     let _defaultClasses = _props.defaultClasses;
 
-    if(_props.states==null){
-        _props.states = [
-            {dataProviderField: _classesField, states: {on: _selectedClasses, off: _defaultClasses}},
-            {dataProviderField: _checkedField, states: {on: true, off: false}}
-        ];      
+    if (_props.states == null) {
+        _props.states = [{
+                dataProviderField: _classesField,
+                states: {
+                    on: _selectedClasses,
+                    off: _defaultClasses
+                }
+            },
+            {
+                dataProviderField: _checkedField,
+                states: {
+                    on: true,
+                    off: false
+                }
+            }
+        ];
     }
     let fnContainerDelayInit = function () {
         return [{
@@ -100,41 +106,36 @@ var RadioGroup = function (_props) {
             }
         }];
     };
-    
+
     _props.components = fnContainerDelayInit();
-    
+
     List.call(this, _props);
 
     this.afterAttach = function (e) {
 
     };
-    
-    Object.defineProperty(this, "components",
-    {
-        enumerable:false
+
+    Object.defineProperty(this, "components", {
+        enumerable: false
     });
-    
-    let propDataProvider = Object.getOwnPropertyDescriptor(this, "dataProvider");   
-    Object.defineProperty(this, "dataProvider", 
-    {
-        get: function dataProvider() 
-        {
+
+    let propDataProvider = Object.getOwnPropertyDescriptor(this, "dataProvider");
+    Object.defineProperty(this, "dataProvider", {
+        get: function dataProvider() {
             return propDataProvider['get'].call(_self);
         },
-        set: function dataProvider(v)
-        { 
+        set: function dataProvider(v) {
             _dataProvider = v;
-            this.removeAllRows(false);
-                    
-            if (v.length > 0) { 
+            this.removeAllRows();
+
+            if (v.length > 0) {
                 let dpFields = Object.keys(v[0]);
-                if (dpFields.includes(_labelField) && dpFields.includes(_valueField))
-                { 
+                if (dpFields.includes(_labelField) && dpFields.includes(_valueField)) {
                     propDataProvider['set'].call(_self, _dataProvider);
                 }
             } else {
                 propDataProvider['set'].call(_self, _dataProvider);
-            }  
+            }
         },
         enumerable: true
     });

@@ -3,8 +3,8 @@
  * 
  * Kreatx 2018
  */
-var Form = function(_props) {
-    let _formData, _action, _method;
+var Form = function (_props) {
+    let _formData, _action, _method, _self = this;
 
     Object.defineProperty(this, "method", {
         get: function method() {
@@ -48,8 +48,8 @@ var Form = function(_props) {
         enumerable: true
     });
 
-    this.clear = function() {
-        this.components.forEach(function(component) {
+    this.clear = function () {
+        this.components.forEach(function (component) {
             try {
                 if (typeof this[component.props.id].child.value == "string")
                     this[component.props.id].child.value = "";
@@ -60,9 +60,9 @@ var Form = function(_props) {
         }.bind(this));
     };
 
-    this.serialize = function(encode = false) {
+    this.serialize = function (encode = false) {
         let value = {};
-        this.components.forEach(function(component) {
+        this.components.forEach(function (component) {
             value[component.props.id] = this[component.props.id].child.value;
         }.bind(this));
 
@@ -73,18 +73,18 @@ var Form = function(_props) {
         return serialized;
     };
 
-    this.template = function() {
+    this.template = function () {
         return "<form id='" + this.domID + "' method='" + _method + "' action='" + _action + "'></form>";
     };
 
-    this.addFormData = function(name, value) {
+    this.addFormData = function (name, value) {
         if (!_formData) {
             _formData = new FormData(this.$el[0]);
         }
         _formData.append(name, value);
     };
 
-    this.removeFormData = function(name) {
+    this.removeFormData = function (name) {
         if (_formData) {
             if (typeof _formData["delete"] == 'function') {
                 _formData.delete(name);
@@ -100,22 +100,22 @@ var Form = function(_props) {
         }
     };
 
-    this.getFormData = function() {
+    this.getFormData = function () {
         if (!_formData) {
             _formData = new FormData(this.$el[0]);
         }
         return _formData;
     };
 
-    this.resetFormData = function() {
+    this.resetFormData = function () {
         _formData = undefined;
     };
 
-    this.reset = function() {
+    this.reset = function () {
         this.$el.get(0).reset();
     };
 
-    let _xhrProgress = function(e) {
+    let _xhrProgress = function (e) {
         let postProgress = jQuery.Event(FormEventType.POST_PROGRESS);
         if (e.originalEvent.lengthComputable) {
             let total = postProgress.total = e.originalEvent.total;
@@ -131,45 +131,43 @@ var Form = function(_props) {
         _self.trigger(postProgress, [_self]);
     };
 
-    let _xhrStarted = function(e) {
+    let _xhrStarted = function (e) {
         let postStarted = jQuery.Event(FormEventType.POST_STARTED);
         postStarted.originalEvent = e;
         _self.trigger(postStarted, [_self]);
     };
 
-    let _requestComplete = function() {
+    let _requestComplete = function (e) {
         let postComplete = jQuery.Event(FormEventType.POST_COMPLETE);
         postComplete.originalEvent = e;
         _self.trigger(postComplete, [_self]);
     };
 
-    let _xhrRejected = function(e) {
+    let _xhrRejected = function (e) {
         let postError = jQuery.Event(FormEventType.POST_ERROR);
         postError.originalEvent = e;
         _self.trigger(postError, [_self]);
     };
 
-    let _xhrResolved = function(e) {
+    let _xhrResolved = function (e) {
         let postSuccess = jQuery.Event(FormEventType.POST_SUCCESS);
         postSuccess.originalEvent = e;
         _self.trigger(postSuccess, [_self]);
     };
 
     let _apiClient = new ApiClient();
-    this.post = function(dataType) {
+    this.post = function (dataType) {
         let type = dataType ? dataType : "json";
-        let _self = this;
-
         _apiClient.on("xhrProgress", _xhrProgress);
         _apiClient.on("xhrStarted", _xhrStarted);
         _apiClient.on("xhrRejected", _xhrRejected);
         _apiClient.on("xhrResolved", _xhrResolved);
-        _apiClient.body(this.getFormData())
+        return _apiClient.body(this.getFormData())
             .type('multipart/form-data')
             .query()
             .path()
             .headers() //additional headers information
-            [_method.toLowerCase()](_action, type).finally(_requestComplete);
+        [_method.toLowerCase()](_action, type).finally(_requestComplete);
     };
 
     let _defaultParams = {
@@ -182,6 +180,7 @@ var Form = function(_props) {
     _action = _props.action;
     _method = _props.method;
 
-    Container.call(this, _props);
+    let r = Container.call(this, _props);
+    return r;
 };
 Form.prototype.ctor = 'Form';

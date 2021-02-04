@@ -5,11 +5,9 @@
  */
 
 //component definition
-var TabNavigator = function(_props) 
-{
+var TabNavigator = function (_props) {
     let _self = this;
-    let _changed = function (e, oldIndex, newIndex)
-    {
+    let _changed = function (e, oldIndex, newIndex) {
         let len = this.components.length;
         for (let i = 0; i < len; i++) {
             let cTab = this.children[this.csorted[i]];
@@ -26,27 +24,33 @@ var TabNavigator = function(_props)
             }
         }
     };
-                    
-    this.endDraw = function (e) 
-    {
+
+    let _init = this.init;
+    this.init = function (e) {
         if (e.target.id == this.domID) {
             this.$navigation = this.$el.find('#' + this.domID + "_navigation");
             this.$container = this.$el.find('#' + this.domID + "_container");
+            if (typeof _init == 'function')
+                _init.apply(this, arguments);
         }
     };
-    
-    this.template = function ()
-    {
+
+    this.endDraw = function (e) {
+        if (e.target.id == this.domID) {
+
+        }
+    };
+
+    this.template = function () {
         return "<div data-triggers='change' id='" + this.domID + "' class='container'>" +
             '<ul class="nav nav-tabs" id="' + this.domID + '_navigation"></ul>' +
             '<div class="tab-content" id="' + this.domID + '_container"></div>' +
             "</div>";
     };
 
-    let _defaultParams = {
-    };
+    let _defaultParams = {};
     _props = extend(false, false, _defaultParams, _props);
-    
+
     let r = NavParent.call(this, _props);
     r.on("changed", _changed);
     return r;

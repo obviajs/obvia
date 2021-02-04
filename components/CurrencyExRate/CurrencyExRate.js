@@ -5,7 +5,7 @@
  */
 
 //component definition
-var CurrencyExRate = function(_props) {
+var CurrencyExRate = function (_props) {
     let _self = this;
 
     Object.defineProperty(this, "value", {
@@ -24,17 +24,17 @@ var CurrencyExRate = function(_props) {
         enumerable: true,
     });
 
-    this.changeHandler = function(e) {
+    this.changeHandler = function (e) {
         _value.exRate = this.children.exchangeRate.value;
         _value.currency = this.children.currencySelect.value;
     };
-    this.afterAttach = function(e) {
+    this.afterAttach = function (e) {
         if (e.target.id == this.domID) {
 
         }
     };
     let _cmps;
-    let fnContainerDelayInit = function() {
+    let fnContainerDelayInit = function () {
         _cmps = [
 
             {
@@ -87,8 +87,8 @@ var CurrencyExRate = function(_props) {
         classes: ["d-flex"],
         type: ContainerType.NONE,
         currencyList: [],
-        labelField: 'text',
-        valueField: 'id',
+        labelField: "title",
+        valueField: "key",
 
     };
     _props = extend(false, false, _defaultParams, _props);
@@ -100,7 +100,7 @@ var CurrencyExRate = function(_props) {
     let _change = _props.change;
 
 
-    _props.change = function() {
+    _props.change = function () {
         if (typeof _change == 'function')
             _change.apply(this, arguments);
 

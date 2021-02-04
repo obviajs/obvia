@@ -20,7 +20,7 @@ apiClient.get("https://api.mocki.io/v1/8dea432f").then(r => {
         ]
     });
 
-    myRepeater.render().then(function(cmpInstance) {
+    myRepeater.render().then(function (cmpInstance) {
         $('#root').append(cmpInstance.$el);
     });
 });

@@ -364,23 +364,29 @@ var AutoCompleteEx = function (_props) {
                     v = [v];
                 }
                 if (!_value.equals(v)) {
-                    //is the tokenRepeater rendered yet ? 
-                    if (_tokenRepeater && _tokenRepeater.$container) {
-                        if (_valueWatcher && _value) {
-                            _valueWatcher.reset();
-                            _value.off("propertyChange", _dpLengthChanged);
-                        }
-                        _tokenRepeater.dataProvider = _value = new ArrayEx(v);
-                        _input.value = "";
-                        this.trigger('change');
-                        _tokenInputReSize();
-                        if (_value) {
-                            _valueWatcher = ChangeWatcher.getInstance(_value);
-                            _valueWatcher.watch(_value, "length", _dpLengthChanged);
-                            _value.on("propertyChange", _dpLengthChanged);
-                        }
-                    } else
-                        _value.splicea(0, _value.length, v);
+                    let e = jQuery.Event('beforeChange');
+                    e.newValue = v;
+                    e.oldValue = _value;
+                    this.proxyMaybe.trigger(e);
+                    if (!e.isDefaultPrevented()) {
+                        //is the tokenRepeater rendered yet ? 
+                        if (_tokenRepeater && _tokenRepeater.$container) {
+                            if (_valueWatcher && _value) {
+                                _valueWatcher.reset();
+                                _value.off("propertyChange", _dpLengthChanged);
+                            }
+                            _tokenRepeater.dataProvider = _value = new ArrayEx(v);
+                            _input.value = "";
+                            this.trigger('change');
+                            _tokenInputReSize();
+                            if (_value) {
+                                _valueWatcher = ChangeWatcher.getInstance(_value);
+                                _valueWatcher.watch(_value, "length", _dpLengthChanged);
+                                _value.on("propertyChange", _dpLengthChanged);
+                            }
+                        } else
+                            _value.splicea(0, _value.length, v);
+                    }
                 }
             } else {
                 this.removeAllTokenItems();
@@ -466,7 +472,7 @@ var AutoCompleteEx = function (_props) {
         _props.value = new ArrayEx([]);
     }
     _maxSuggestionsCount = _props.maxSuggestionsCount;
-    _props.attr["data-triggers"] = "noSuggestionsFound";
+    _props.attr["data-triggers"] = "noSuggestionsFound beforeChange";
 
     let _valueField = _props.valueField;
     let _labelField = _props.labelField;

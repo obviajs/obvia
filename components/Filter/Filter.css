@@ -1,0 +1,59 @@
+.filter .main-container {
+    width: 20vw;
+}
+
+.filter .main_autocomplete {
+    margin-bottom: 1rem;
+}
+
+.filter .main_autocomplete>div {
+    border-radius: 10px;
+    padding-left: 10px;
+}
+
+.filter .main_autocomplete>div>input {
+    width: 100% !important;
+}
+
+.filter .repeater>div {
+    display: flex;
+    flex-wrap: nowrap;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    margin-bottom: 5px;
+}
+
+.filter .repeater-container {
+    text-align: left;
+    padding: 4px;
+}
+
+.filter .expression-container {
+    border: 1px solid #555;
+}
+
+.filter .initial_style.initial_style {
+    width: 160px;
+    height: 30px;
+    overflow: hidden;
+}
+
+.filter .index {
+    background-color: #aeb2b55e;
+    padding: 0 6px;
+    display: flex;
+    align-items: center;
+}
+
+.filter .close {
+    background-color: #aeb2b55e;
+    padding: 0 6px;
+    display: flex;
+    align-items: center;
+}
+
+.filter .item-heading {
+    font-size: 16px;
+    color: #1a73e8;
+    margin: 0;
+}

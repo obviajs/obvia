@@ -2,7 +2,7 @@ var loader = new Loader({
     id: 'loader'
 });
 
-loader.render().then(function(cmpInstance) {
+loader.render().then(function (cmpInstance) {
     $('#root').append(cmpInstance.$el);
     loader.show();
 });
@@ -93,11 +93,14 @@ apiClient.get("https://api.mocki.io/v1/8dea432f").then(r => {
             }
         ]
     });
-    myDataGrid.on('creationComplete', function() {
+    myDataGrid.on('creationComplete', function () {
         loader.hide();
     });
+    myDataGrid.on('cellEditFinished', function () {
 
-    myDataGrid.render().then(function(cmpInstance) {
+    });
+
+    myDataGrid.render().then(function (cmpInstance) {
         $('#root').append(cmpInstance.$el);
         var myButton = new Button({
             id: 'button',
@@ -105,13 +108,13 @@ apiClient.get("https://api.mocki.io/v1/8dea432f").then(r => {
             value: "",
             label: "Click me",
             classes: ["btn", "btn-success"],
-            click: function(e) {
+            click: function (e) {
                 for (let i = 0; i < 5; i++) {
                     myDataGrid.dataProvider[i].age += 10;
                 }
             }
         });
-        myButton.render().then(function(cmpInstance) {
+        myButton.render().then(function (cmpInstance) {
             $('#root').append(cmpInstance.$el);
         });
     });
@@ -120,7 +123,7 @@ apiClient.get("https://api.mocki.io/v1/8dea432f").then(r => {
 
 
 
-var celleditfinished_ex = function(e, rowIndex, columnIndex, itemEditorInfo) {
+var celleditfinished_ex = function (e, rowIndex, columnIndex, itemEditorInfo) {
     var realRowIndex = rowIndex % this.rowCount;
     //e.preventDefault();
     console.log("celleditfinished_ex");

@@ -5,7 +5,7 @@
  */
 
 //component definition
-var Repeater = function(_props, _hideComponents = false) {
+var Repeater = function (_props, _hideComponents = false) {
     let _rowItems = [],
         _rows = [];
     let _self = this;
@@ -13,7 +13,7 @@ var Repeater = function(_props, _hideComponents = false) {
     let _$hadow = $("<div/>");
     let _autoUpdateDisplay;
 
-    this.containerKeyDown = function(e) {
+    this.containerKeyDown = function (e) {
         if (typeof _keydown == 'function')
             _keydown.apply(this, arguments);
         // if(!e.isDefaultPrevented()){
@@ -59,7 +59,7 @@ var Repeater = function(_props, _hideComponents = false) {
     let _focusedRow = 0;
     let _focusedComponent = 0;
 
-    this.focusComponent = function(rowIndex, cIndex) {
+    this.focusComponent = function (rowIndex, cIndex) {
         if (rowIndex > this.dataProvider.length - 1) {
             rowIndex = 0;
         } else if (rowIndex < 0) {
@@ -88,7 +88,7 @@ var Repeater = function(_props, _hideComponents = false) {
     };
     let _comprenders = [];
     if (!this.hasOwnProperty("createRows")) {
-        this.createRows = function() {
+        this.createRows = function () {
             _self.trigger('beginDraw');
             //this.$container.empty();
             _focusedRow = 0;
@@ -106,7 +106,7 @@ var Repeater = function(_props, _hideComponents = false) {
                                     configurable: true
                                 });
                             let rowComponentsPromises = _self.addRow(data, i);
-                            Promise.all(rowComponentsPromises).then(function() {
+                            Promise.all(rowComponentsPromises).then(function () {
                                 _rowAdded(i, data);
                             });
                             _comprenders.splicea(_comprenders.length, 0, rowComponentsPromises);
@@ -116,7 +116,7 @@ var Repeater = function(_props, _hideComponents = false) {
                     _creationFinished = true;
             } else
                 _creationFinished = true;
-            Promise.all(_comprenders).then(function() {
+            return Promise.all(_comprenders).then(function () {
                 _$hadow.contents().appendTo(_self.$container);
                 _comprenders = [];
                 _self.trigger('endDraw');
@@ -124,7 +124,7 @@ var Repeater = function(_props, _hideComponents = false) {
         };
     }
 
-    let _rowAdded = function(index, data) {
+    let _rowAdded = function (index, data) {
         ++_createdRows;
         //trigger row add event
         let era = jQuery.Event("rowAdd");
@@ -141,14 +141,14 @@ var Repeater = function(_props, _hideComponents = false) {
         }
     };
     if (!this.hasOwnProperty("dataProviderChanged")) {
-        this.dataProviderChanged = function(toAdd, toRemove, toRefresh) {
+        this.dataProviderChanged = function (toAdd, toRemove, toRefresh) {
             acSort(toRemove.a1_indices, null, 2);
             for (let i = 0; i < toRemove.a1_indices.length; i++) {
                 //var ind = this.rowItems.length + i;
                 if (toRefresh.indexOf(toRemove.a1_indices[i]) == -1 && toAdd.a1_indices.indexOf(toRemove.a1_indices[i]) == -1)
                     if (toRemove.a1_indices[i] < _rows.length)
-                        this.removeRow(toRemove.a1_indices[i], false, true, dpRemove = false);
-                    //this.removeChildAtIndex(toRemove.a1_indices[i]);
+                        this.removeRow(toRemove.a1_indices[i], false, true);
+                //this.removeChildAtIndex(toRemove.a1_indices[i]);
             }
             if (toAdd.a1_indices.length > 0) {
                 acSort(toAdd.a1_indices);
@@ -161,7 +161,7 @@ var Repeater = function(_props, _hideComponents = false) {
                         }
                         let ind = toAdd.a1_indices[i];
                         let rowComponentsPromises = this.addRow(this.dataProvider[ind], ind);
-                        Promise.all(rowComponentsPromises).then(function() {
+                        Promise.all(rowComponentsPromises).then(function () {
                             _rowAdded(ind, _self.dataProvider[ind]);
                         });
                         _comprenders.splicea(_comprenders.length, 0, rowComponentsPromises);
@@ -169,7 +169,7 @@ var Repeater = function(_props, _hideComponents = false) {
                 }
                 if (_comprenders.length > 0) {
                     let cLen = _comprenders.length;
-                    Promise.all(_comprenders).then(function() {
+                    Promise.all(_comprenders).then(function () {
                         if (_comprenders.length > 0) {
                             console.log('prevLength:', cLen, ' currentLength: ', _comprenders.length);
                             _$hadow.contents().appendTo(_self.$container);
@@ -229,7 +229,7 @@ var Repeater = function(_props, _hideComponents = false) {
                 }
                 if (v == null || v.length == 0) {
                     if (_oldDataProvider && _oldDataProvider.length > 0)
-                        this.removeAllRows(false);
+                        this.removeAllRows();
                     _dataProvider = !ArrayEx.isArrayEx(v) ? new ArrayEx(v) : v;
                     _creationFinished = true;
                     this.createRows();
@@ -260,13 +260,13 @@ var Repeater = function(_props, _hideComponents = false) {
                                 });
 
                             let rowComponentsPromises = this.addRow(v[i], i);
-                            Promise.all(rowComponentsPromises).then(function() {
+                            Promise.all(rowComponentsPromises).then(function () {
                                 _rowAdded(i, v[i]);
                             });
                             _comprenders.splicea(_comprenders.length, 0, rowComponentsPromises);
                         }
                         if (_comprenders.length > 0) {
-                            Promise.all(_comprenders).then(function() {
+                            Promise.all(_comprenders).then(function () {
                                 _$hadow.contents().appendTo(_self.$container);
                                 _comprenders = [];
                             });
@@ -274,7 +274,7 @@ var Repeater = function(_props, _hideComponents = false) {
 
                     } else if (delta < 0) {
                         for (let i = _oldDataProvider.length - 1; i >= v.length; i--) {
-                            this.removeRow(i, false, true, dpRemove = false);
+                            this.removeRow(i, false, true);
                         }
                     }
                     _dataProvider = !ArrayEx.isArrayEx(v) ? new ArrayEx(v) : v;
@@ -291,7 +291,7 @@ var Repeater = function(_props, _hideComponents = false) {
                 }
                 _oldDataProvider = acExtend(_dataProvider);
             } else if (_dataProvider == v) {
-                this.removeAllRows(false);
+                this.removeAllRows();
                 this.createRows();
             }
         },
@@ -300,7 +300,7 @@ var Repeater = function(_props, _hideComponents = false) {
     });
 
     let _dpWatcher;
-    let _dpLengthChanged = function(e) {
+    let _dpLengthChanged = function (e) {
         e.stopPropagation();
         e.stopImmediatePropagation();
         let len = _dataProvider.length;
@@ -364,7 +364,7 @@ var Repeater = function(_props, _hideComponents = false) {
     };
     let _debouncedLengthChanged = debounce(_dpLengthChanged, 1);
 
-    let _dpMemberChanged = function(e) {
+    let _dpMemberChanged = function (e) {
         e.stopPropagation();
         e.stopImmediatePropagation();
         if (_creationFinished && ["length", "guid", "filterData"].indexOf(e.property) == -1) {
@@ -408,7 +408,7 @@ var Repeater = function(_props, _hideComponents = false) {
     }
     let _createdRows = 0;
     //renders a new row, adds components in stack
-    this.addRow = function(data, index, isPreventable = false, focusOnRowAdd = true) {
+    this.addRow = function (data, index, isPreventable = false, focusOnRowAdd = true) {
         let rp = [];
         index = index == null ? _rows.length : index;
         let renderedRow = $('<div/>');
@@ -469,6 +469,7 @@ var Repeater = function(_props, _hideComponents = false) {
                 if (_self[cmpId][index]) {
                     for (let u = index; u < _self[cmpId].length; u++) {
                         _self[cmpId][u].repeaterIndex += 1;
+                        data.currentIndex += 1;
                     }
                 }
 
@@ -482,13 +483,13 @@ var Repeater = function(_props, _hideComponents = false) {
                     renderedRow.addClass("wrap");
                 }
 
-                el.on('focus', function(e, repeaterEventArgs) {
+                el.on('focus', function (e, repeaterEventArgs) {
                     _focusedRow = repeaterEventArgs.currentIndex;
                     _focusedComponent = Object.keys(repeaterEventArgs.currentRow).indexOf(this.id);
                     console.log("focused repeated component", _focusedRow, _focusedComponent);
                 });
 
-                el.on('change', function(e, rargs) {
+                el.on('change', function (e, rargs) {
                     let currentItem = _self.dataProvider[index];
                     if (component.props.value && isString(component.props.value) && component.props.value[0] == '{' && component.props.value[component.props.value.length - 1] == '}') {
                         var bindingExp = this.getBindingExpression("value");
@@ -505,102 +506,101 @@ var Repeater = function(_props, _hideComponents = false) {
                 });
                 //rowItems = {};
                 //render component in row
-                if (el.render) {
-                    let cp = el.render().then(function(cmpInstance) {
+                let cp = el.render().then(function (cmpInstance) {
+                    if (!_rendering.wrap) {
+                        // if(_self.mode =="append")
+                        // {
+                        //     _$hadow.append(cmpInstance.$el);
+                        // }else{
+                        //     _$hadow.prepend(cmpInstance.$el);
+                        // }
+                        _$hadow.insertAt(cmpInstance.$el, index * len + cIndex);
+                    } else {
+                        renderedRow
+                            .addClass("repeated-block")
+                            .css((_rendering.direction == 'horizontal' ? {
+                                display: 'inline-block'
+                            } : {}))
+                            .insertAt(cmpInstance.$el, cIndex);
 
-                        if (!_rendering.wrap) {
-                            // if(_self.mode =="append")
-                            // {
-                            //     _$hadow.append(cmpInstance.$el);
-                            // }else{
-                            //     _$hadow.prepend(cmpInstance.$el);
-                            // }
-                            _$hadow.insertAt(cmpInstance.$el, index * len + cIndex);
-                        } else {
-                            renderedRow
-                                .addClass("repeated-block")
-                                .css((_rendering.direction == 'horizontal' ? {
-                                    display: 'inline-block'
-                                } : {}))
-                                .append(cmpInstance.$el);
-
-                            if (_rendering.separator && (index > 0)) {
-                                renderedRow.addClass("separator");
-                            }
-                            // if(_self.mode =="append")
-                            // {
-                            //     _$hadow.append(renderedRow);
-                            // }else{
-                            //     _$hadow.prepend(renderedRow);
-                            // }
-                            _$hadow.insertAt(renderedRow, index * len + cIndex);
+                        if (_rendering.separator && (index > 0)) {
+                            renderedRow.addClass("separator");
                         }
-
-                    });
-                    rp.push(cp);
-                }
+                        // if(_self.mode =="append")
+                        // {
+                        //     _$hadow.append(renderedRow);
+                        // }else{
+                        //     _$hadow.prepend(renderedRow);
+                        // }
+                    }
+                });
+                rp.push(cp);
             }
             _rowItems.splice(index, 0, rowItems);
             _rows.push(renderedRow);
         }
+        if (_rendering.wrap) {
+            Promise.all(rp).then(function () {
+                _$hadow.insertAt(renderedRow, index);
+            });
+        }
         return rp;
     };
 
-    this.removeAllRows = function(dpRemove = true) {
+    this.removeAllRows = function () {
         let i = _self.rows.length - 1;
         while (i >= 0) {
-            this.removeRow(i, false, false, dpRemove);
+            this.removeRow(i, false, false);
             i--;
         }
         _self.rows.splice(0, _self.rows.length);
     };
     if (!this.hasOwnProperty("removeRow")) {
-        this.removeRow = function(index, isPreventable = false, focusOnRowDelete = true, dpRemove = true) {
+        this.removeRow = function (index, isPreventable = false, focusOnRowDelete = true) {
             var rowItems = {};
             let beforeRowDeleteEvent = jQuery.Event("beforeRowDelete");
-            this.trigger(beforeRowDeleteEvent, [_self, new RepeaterEventArgs(_self.rowItems[index], _oldDataProvider[index], index)]);
+            let ra = new RepeaterEventArgs(_self.rowItems[index], _oldDataProvider[index], index);
+            this.trigger(beforeRowDeleteEvent, [_self, ra]);
 
             if (!isPreventable || (isPreventable && !beforeRowDeleteEvent.isDefaultPrevented())) {
                 //remove dp row
-                var removedItem;
-                if (dpRemove) {
-                    removedItem = this.dataProvider.splice(index, 1);
-                }
-
+                let rlen = this.rowItems.length;
+                let clen = _components.length;
                 //delete component instances on that row
-                for (let cI = 0; cI < _components.length; cI++) {
+                for (let cI = 0; cI < clen; cI++) {
                     let component = _components[cI];
                     //remove repeated block from dom
                     if (cI == 0 && _rendering.wrap) {
                         this[component.props.id][index].$el.closest('.repeated-block').remove();
                         this[component.props.id][index].$el.closest('.repeated-block-hr').remove();
-                    }
-                    if (!_rendering.wrap) {
+                    } else if (!_rendering.wrap) {
                         this[component.props.id][index].destruct(1);
                     }
-                    //modify new cmp repeater indexes
-                    for (let i = 0; i < this[component.props.id].length; i++) {
+                    //modify new cmp repeater indexes, row is still not removed so start at index + 1
+                    for (let i = index + 1; i < rlen; i++) {
                         let item = this[component.props.id][i];
-                        if (i > index)
-                            item.repeaterIndex -= 1;
+                        item.repeaterIndex -= 1;
                     }
 
                     rowItems[component.props.id] = [this[component.props.id][index]];
                     this[component.props.id].splice(index, 1);
                 }
-                this.trigger('rowDelete', [this, new RepeaterEventArgs(rowItems, this.dataProvider[index], index)]);
+                //dp element has been removed so start at index
+                let dplen = this.dataProvider.length;
+                for (let i = index; i < dplen; i++) {
+                    this.dataProvider[i].currentIndex -= 1;
+                }
+                this.trigger('rowDelete', [this, ra]);
                 this.rowItems.splice(index, 1);
                 _rows.splice(index, 1);
                 //animate
                 if (focusOnRowDelete && (index - 1) >= 0)
                     this.rowItems[index - 1][_components[0].props.id].scrollTo();
-
-                return removedItem;
             }
         };
     }
     let _afterAttach = this.afterAttach;
-    this.afterAttach = function(e) {
+    this.afterAttach = function (e) {
         if (e.target.id == this.domID) {
             if (typeof _afterAttach == 'function')
                 _afterAttach.apply(this, arguments);
@@ -609,7 +609,7 @@ var Repeater = function(_props, _hideComponents = false) {
         }
     };
     var _beforeAttach = this.beforeAttach;
-    this.beforeAttach = function(e) {
+    this.beforeAttach = function (e) {
         if (e.target.id == this.domID) {
             if (typeof _beforeAttach == 'function')
                 _beforeAttach.apply(this, arguments);
@@ -663,10 +663,10 @@ var Repeater = function(_props, _hideComponents = false) {
             alert("overrided")
         };*/
 
-    this.render = function() {
+    this.render = function () {
         this.$container = this.$el;
         _rPromise = new Promise((resolve, reject) => {
-            _self.on("endDraw", function(e) {
+            _self.on("endDraw", function (e) {
                 if (e.target.id == _self.domID) {
                     resolve(this);
                 }

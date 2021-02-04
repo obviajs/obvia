@@ -8,7 +8,7 @@
 var DropDown = function (_props) {
     let _self = this;
 
-    let _dataProvider, _btnDD, _componentRepeater, _label, _selectedItem, _allowNewItem;
+    let _dataProvider, _btnDD, _componentRepeater, _label, _selectedItem, _allowNewItem, myw;
 
     Object.defineProperty(this, "labelField", {
         get: function labelField() {
@@ -18,7 +18,7 @@ var DropDown = function (_props) {
             if (_labelField != v) {
                 _labelField = v;
                 _componentRepeater.components = fnInitCmpLink();
-                _componentRepeater.removeAllRows(false);
+                _componentRepeater.removeAllRows();
                 if (_dataProvider && _dataProvider.length > 0) {
                     let dpFields = Object.keys(_dataProvider[0]);
                     if (dpFields.includes(_labelField)) {
@@ -36,7 +36,7 @@ var DropDown = function (_props) {
         },
         set: function dataProvider(v) {
             _dataProvider = v;
-            _componentRepeater.removeAllRows(false);
+            _componentRepeater.removeAllRows();
 
             if (v.length > 0) {
                 let dpFields = Object.keys(v[0]);
@@ -49,6 +49,12 @@ var DropDown = function (_props) {
         },
         enumerable: true
     });
+    Object.defineProperty(this, "valueField", {
+        get: function valueField() {
+            return _valueField;
+        },
+        enumerable: true
+    });
 
     Object.defineProperty(this, "selectedItem", {
         get: function selectedItem() {
@@ -57,6 +63,7 @@ var DropDown = function (_props) {
         },
         set: function selectedItem(v) {
             if (_selectedItem != v) {
+                let oldValue = _selectedItem;
                 if (!isObject(v)) {
                     let o = {};
                     o[_valueField] = v;
@@ -78,6 +85,7 @@ var DropDown = function (_props) {
                         _btnDD.label = _label;
                     }
                     this.trigger("change");
+                    myw.propertyChanged("selectedItem", oldValue, _selectedItem);
                 }
             }
         }
@@ -106,12 +114,19 @@ var DropDown = function (_props) {
             }
         }
     };
+
+    this.init = function (e) {
+        myw = ChangeWatcher.getInstance(_self);
+    };
+
     this.beforeAttach = function (e) {
         if (e.target.id == this.domID) {
 
         }
     };
+
     this.afterAttach = function (e) {};
+
     let fnInitCmpLink = function () {
         let _componentLink = {
             ctor: Link,

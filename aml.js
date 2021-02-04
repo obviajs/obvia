@@ -79,6 +79,9 @@ rjs.define("./components/HRule.js", "HRule");
 rjs.define("./components/Color.js", "Color");
 //Container
 rjs.define("./components/Container.js", "Container");
+rjs.define("./components/ObjectCmp.js", "ObjectCmp");
+rjs.define("./components/Filter/Filter.js", "Filter");
+rjs.define("./components/Filter/Filter.css", "Filter_css");
 rjs.define("./components/Nav.js", "Nav");
 rjs.define("./components/Header.js", "Header");
 rjs.define("./components/Footer.js", "Footer");
@@ -148,6 +151,7 @@ rjs.define("./components/AutoComplete/SuggestionRenderer.js", "SuggestionRendere
 rjs.define("https://unpkg.com/leaflet@1.5.1/dist/leaflet.js", "LeafletJS");
 rjs.define("https://unpkg.com/leaflet@1.5.1/dist/leaflet.css", "LeafletCSS");
 rjs.define("./components/Map/MapLocationPicker.js", "MapLocationPicker");
+rjs.define("./components/Map/LeafletMap.js", "LeafletMap");
 //Toggle
 rjs.define("./components/Toggle/ToggleBgStyle.js", "ToggleBgStyle");
 rjs.define("./components/Toggle/Toggle.js", "Toggle");
@@ -225,8 +229,8 @@ rjs.define("./components/DropEdit/css/DropEdit.css", "DropEdit_css");
 rjs.define("./components/Tree/css/tree-default.css", "tree_default_css");
 rjs.define("./components/SideNav/css/sideNav.css", "sideNav_css");
 
-rjs.define("./components/kanban/Kanban.js", "Kanban");
-rjs.define("./components/kanban/css/kanban_default.css", "kanban_default_css");
+rjs.define("./components/Kanban/Kanban.js", "Kanban");
+rjs.define("./components/Kanban/css/kanban_default.css", "kanban_default_css");
 
 rjs.define("lib/yaml.js", "yaml");
 rjs.define("./lib/ApiClientGen/ApiClient.js", "ApiClient");
@@ -288,6 +292,9 @@ let dependencies = [
         "ContainerType",
         "NavParent",
         "Container",
+        "ObjectCmp",
+        "Filter",
+        "Filter_css",
         "ScrollPane",
         "SideNav",
         "SideNavSide",
@@ -341,6 +348,7 @@ let dependencies = [
         "LeafletJS",
         "LeafletCSS",
         "MapLocationPicker",
+        "LeafletMap",
         "ToggleBgStyle",
         "Toggle",
         "MultiSwitch",

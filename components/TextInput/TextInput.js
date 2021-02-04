@@ -26,7 +26,6 @@ var TextInput = function (_props) {
                         this.$el.val("");
                     }
                 }
-                //this.trigger('change');
             }
         },
         enumerable: true
@@ -92,19 +91,21 @@ var TextInput = function (_props) {
         },
         enumerable: true
     });
-  
+
     let _beforeAttach = this.beforeAttach;
     this.beforeAttach = function (e) {
-      if (e.target.id == this.domID) {
-        if (typeof _beforeAttach == 'function') _beforeAttach.apply(this, arguments);
-        if (_props.value != null) this.value = _props.value;
-        if (_props.autocomplete != null) this.autocomplete = _props.autocomplete;
-        if (_props.placeholder) this.placeholder = _props.placeholder;
-      }
+        if (e.target.id == this.domID) {
+            if (typeof _beforeAttach == 'function') _beforeAttach.apply(this, arguments);
+            if (_props.value != null) this.value = _props.value;
+            if (_props.autocomplete != null) this.autocomplete = _props.autocomplete;
+            if (_props.placeholder) this.placeholder = _props.placeholder;
+        }
     };
 
+    let _afterAttach = this.afterAttach;
     this.afterAttach = function (e) {
-        if (e.target.id == this.$el.attr('id') && !this.attached) {
+        if (e.target.id == this.domID) {
+            if (typeof _afterAttach == 'function') _afterAttach.apply(this, arguments);
             //init input mask
             if (_mask) {
                 this.$el.inputmask(_mask);
@@ -112,7 +113,7 @@ var TextInput = function (_props) {
         }
     };
 
-    this.changeHandler = function () {
+    this.inputHandler = function () {
         _value = this.$el.val();
     };
 
@@ -123,7 +124,7 @@ var TextInput = function (_props) {
     };
 
     this.template = function () {
-        return "<input data-triggers='change' type='" + this.type + "' id='" + this.domID + "'>";
+        return "<input data-triggers='input' type='" + this.type + "' id='" + this.domID + "'>";
     };
 
     var _defaultParams = {
@@ -140,15 +141,15 @@ var TextInput = function (_props) {
     let _mask = _props.mask;
     let _placeholder;
     let _type = _props.type;
-    let _change = _props.change;
+    let _input = _props.input;
 
-    _props.change = function () {
+    _props.input = function () {
         let e = arguments[0];
         if (!e.isDefaultPrevented()) {
-            _self.changeHandler(e);
+            _self.inputHandler(e);
         }
-        if (typeof _change == 'function')
-            _change.apply(this, arguments);
+        if (typeof _input == 'function')
+            _input.apply(this, arguments);
     };
     let r = Parent.call(this, _props);
     return r;

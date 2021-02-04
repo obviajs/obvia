@@ -7,7 +7,10 @@
 //component definition
 var Select = function (_props) {
     let _self = this,
-        _value, _dataProvider, _rendering;
+        _value, _dataProvider, _rendering, _multiple;
+
+    let myw = ChangeWatcher.getInstance(_self);
+
     Object.defineProperty(this, "valueField", {
         get: function valueField() {
             return _valueField;
@@ -16,7 +19,7 @@ var Select = function (_props) {
             if (_valueField != v) {
                 _valueField = v;
                 this.components = fnContainerDelayInit();
-                this.removeAllRows(false);
+                this.removeAllRows();
                 if (_dataProvider && _dataProvider.length > 0) {
                     let dpFields = Object.keys(_dataProvider[0]);
                     if (propDataProvider && dpFields.includes(_labelField) && dpFields.includes(_valueField)) {
@@ -36,7 +39,7 @@ var Select = function (_props) {
             if (_labelField != v) {
                 _labelField = v;
                 this.components = fnContainerDelayInit();
-                this.removeAllRows(false);
+                this.removeAllRows();
                 if (_dataProvider && _dataProvider.length > 0) {
                     let dpFields = Object.keys(_dataProvider[0]);
                     if (propDataProvider && dpFields.includes(_labelField) && dpFields.includes(_valueField)) {
@@ -54,17 +57,39 @@ var Select = function (_props) {
         },
         set: function value(v) {
             if (_value != v) {
+                let oldValue = _value;
                 _value = v;
                 if (this.$el) {
                     this.$el.val(v);
                     this.trigger('change');
+                    myw.propertyChanged("value", oldValue, _value);
+                }
+            }
+        }
+    });
+
+    Object.defineProperty(this, "multiple", {
+        get: function multiple() {
+            return _multiple;
+        },
+        set: function multiple(v) {
+            if (_multiple != v) {
+                _multiple = v;
+                if (_multiple) {
+                    if (this.$el)
+                        this.$el.attr("multiple", _multiple);
+                } else {
+                    if (this.$el)
+                        this.$el.removeAttr('multiple');
                 }
             }
         }
     });
 
     let _changeHandler = function (e) {
+        let oldValue = _value;
         _value = this.$el.val();
+        myw.propertyChange("value", oldValue, _value);
     };
 
     this.template = function () {
@@ -75,6 +100,9 @@ var Select = function (_props) {
         if (e.target.id == this.domID) {
             if (_props.value && !this.getBindingExpression("value")) {
                 this.value = _props.value;
+            }
+            if (_props.multiple) {
+                this.multiple = _props.multiple;
             }
         }
     };
@@ -125,7 +153,7 @@ var Select = function (_props) {
         },
         set: function dataProvider(v) {
             _dataProvider = v;
-            this.removeAllRows(false);
+            this.removeAllRows();
 
             if (v.length > 0) {
                 let dpFields = Object.keys(v[0]);

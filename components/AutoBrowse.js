@@ -7,64 +7,52 @@
 //component definition
 var AutoBrowse = function (_props) {
     let _self = this;
-    let _dataProvider, _bindingDefaultContext, _valueField, _labelField, _value, _columns = [], _fields;
+    let _dataProvider, _bindingDefaultContext, _valueField, _labelField, _value, _columns = [],
+        _fields;
 
-    Object.defineProperty(this, "dataProvider", 
-    {
-        get: function dataProvider() 
-        {
+    Object.defineProperty(this, "dataProvider", {
+        get: function dataProvider() {
             return _dataProvider;
         },
-        set: function dataProvider(v) 
-        {
-            if (_dataProvider != v)
-            {
+        set: function dataProvider(v) {
+            if (_dataProvider != v) {
                 _dataProvider = v;
                 _autocomplete.dataProvider = v;
                 _dg.dataProvider = v;
             }
-            
+
         },
-        enumerable:true
+        enumerable: true
     });
 
-    Object.defineProperty(this, "valueField", 
-    {
-        get: function valueField() 
-        {
+    Object.defineProperty(this, "valueField", {
+        get: function valueField() {
             return _valueField;
         },
-        set: function valueField(v) 
-        {
+        set: function valueField(v) {
             _autocomplete.valueField = _valueField = v;
         },
-        enumerable:true
-        });
-    
-    Object.defineProperty(this, "labelField", 
-    {
-        get: function labelField() 
-        {
+        enumerable: true
+    });
+
+    Object.defineProperty(this, "labelField", {
+        get: function labelField() {
             return _labelField;
         },
-        set: function labelField(v) 
-        {
+        set: function labelField(v) {
             _autocomplete.labelField = _labelField = v;
         },
-        enumerable:true
-        });
-    
-    Object.defineProperty(this, "value", 
-    {
-        get: function value() 
-        {
+        enumerable: true
+    });
+
+    Object.defineProperty(this, "value", {
+        get: function value() {
             return _autocomplete.value;
         },
-        set: function value(v) 
-        {
+        set: function value(v) {
             _autocomplete.value = v;
         },
-        enumerable:true
+        enumerable: true
     });
     this.endDraw = function (e) {
         if (e.target.id == this.domID) {
@@ -75,8 +63,8 @@ var AutoBrowse = function (_props) {
     };
     this.afterAttach = function (e) {
         if (e.target.id == this.domID) {
-          
-           this.autocomplete.width = this.$el.width() - this.workArea_53.$el.width();
+
+            this.autocomplete.width = this.$el.width() - this.workArea_53.$el.width();
         }
     };
 
@@ -89,12 +77,10 @@ var AutoBrowse = function (_props) {
         }
     };
     let _cmps, _autocomplete, _dg, _modal;
-    var fnContainerDelayInit = function(){
-        _cmps = 
-        [
-            {
+    var fnContainerDelayInit = function () {
+        _cmps = [{
                 "ctor": AutoCompleteEx,
-                "props":{
+                "props": {
                     id: 'autocomplete',
                     valueField: _valueField,
                     labelField: _labelField,
@@ -111,24 +97,22 @@ var AutoBrowse = function (_props) {
                 "props": {
                     type: ContainerType.NONE,
                     "id": "workArea_53",
-                    "components": [
-                        {
-                            ctor: Button,
-                            props: {
-                                id: 'selectBtn',
-                                type: "button",
-                                components: [{
-                                    ctor: Label,
-                                    props: {
-                                        id: 'fa',
-                                        labelType: LabelType.i,
-                                        classes: ["fas","fa-folder-open"]
-                                    }
-                                }],
-                                click: _browse
-                            }
+                    "components": [{
+                        ctor: Button,
+                        props: {
+                            id: 'selectBtn',
+                            type: "button",
+                            components: [{
+                                ctor: Label,
+                                props: {
+                                    id: 'fa',
+                                    labelType: LabelType.i,
+                                    classes: ["fas", "fa-folder-open"]
+                                }
+                            }],
+                            click: _browse
                         }
-                    ]
+                    }]
                 }
             },
             {
@@ -137,19 +121,17 @@ var AutoBrowse = function (_props) {
                     id: 'recordSelectModal',
                     size: ModalSize.LARGE,
                     title: 'Select an Item',
-                    components: [
-                            {
-                                ctor:DataGrid,
-                                props:{
-                                id: 'dataGrid',
-                                allowNewItem: _props.allowNewItem, //allow the user to add items that are not included in the specified dataProvider
-                                rowCount:5, //visible rows count - virtual scrolling wil be applied on scroll
-                                dataProvider: _dataProvider,
-                                columns: _columns,
-                                rowDblClick: _selectItem.bind(_self)
-                            }
+                    components: [{
+                        ctor: DataGrid,
+                        props: {
+                            id: 'dataGrid',
+                            allowNewItem: _props.allowNewItem, //allow the user to add items that are not included in the specified dataProvider
+                            rowCount: 5, //visible rows count - virtual scrolling wil be applied on scroll
+                            dataProvider: _dataProvider,
+                            columns: _columns,
+                            rowDblClick: _selectItem.bind(_self)
                         }
-                    ],
+                    }],
                     displayListUpdated: _drawGrid
                 }
             }
@@ -171,7 +153,7 @@ var AutoBrowse = function (_props) {
         _autocomplete.value = ra.currentItem;
         _modal.hide();
     };
-    
+
     let _initColumns = function () {
         for (let i = 0; i < _fields.length; i++) {
             _columns.push({
@@ -180,7 +162,10 @@ var AutoBrowse = function (_props) {
                 description: _fields[i].description,
                 visible: _fields[i].visible ? _fields[i].visible : true,
                 sortable: true,
-                sortInfo: { sortOrder: 0, sortDirection: "ASC" }
+                sortInfo: {
+                    sortOrder: 0,
+                    sortDirection: "ASC"
+                }
             });
         }
     };
@@ -189,38 +174,38 @@ var AutoBrowse = function (_props) {
         type: ContainerType.NONE,
         "components": [],
         dataProvider: new ArrayEx(),
-        fields:[],
-        attr:{"data-triggers":"browse"},   
-        value:new ArrayEx([]),
-        classes:["d-inline-flex"],
+        fields: [],
+        attr: {
+            "data-triggers": "browse"
+        },
+        value: new ArrayEx([]),
+        classes: ["d-inline-flex"],
         valueField: "",
         allowNewItem: false
     };
 
     _props = extend(false, false, _defaultParams, _props);
-    if (!_props.attr) { 
+    if (!_props.attr) {
         _props.attr = {};
     }
-    if (!_props.classes) { 
+    if (!_props.classes) {
         _props.classes = ["d-flex"];
     } else
         _props.classes.pushUnique("d-flex");
 
     let myDtEvts = ["browse"];
-    if (!Object.isEmpty(_props.attr) && _props.attr["data-triggers"] && !Object.isEmpty(_props.attr["data-triggers"]))
-    {
+    if (!Object.isEmpty(_props.attr) && _props.attr["data-triggers"] && !Object.isEmpty(_props.attr["data-triggers"])) {
         let dt = _props.attr["data-triggers"].split(" ");
-        for (let i = 0; i < dt.length; i++)
-        {   
+        for (let i = 0; i < dt.length; i++) {
             myDtEvts.pushUnique(dt[i]);
         }
     }
     _props.attr["data-triggers"] = myDtEvts.join(" ");
-    
+
     if (_props.dataProvider && !getBindingExp(_props.dataProvider)) {
         _dataProvider = _props.dataProvider;
     }
-    if (_props.bindingDefaultContext) { 
+    if (_props.bindingDefaultContext) {
         _bindingDefaultContext = _props.bindingDefaultContext;
     }
     _valueField = _props.valueField;
@@ -230,7 +215,7 @@ var AutoBrowse = function (_props) {
     _initColumns();
     fnContainerDelayInit();
     _props.components = _cmps;
-    
+
     Container.call(this, _props, true);
 };
 AutoBrowse.prototype.ctor = 'AutoBrowse';
