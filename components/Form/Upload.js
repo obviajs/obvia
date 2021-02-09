@@ -7,7 +7,7 @@
 //component definition
 var Upload = function (_props) {
     let _self = this,
-        _files;
+        _files, _name;
     let _changeHandler = function (e) {
         _files = Array.fromIterator(e.target.files);
     };
@@ -56,6 +56,25 @@ var Upload = function (_props) {
                 }
             }
         }
+    });
+
+    Object.defineProperty(this, "name", {
+        get: function name() {
+            return _name;
+        },
+        set: function name(v) {
+            if (_name != v) {
+                _name = v;
+                if (_name) {
+                    if (this.$el)
+                        this.$el.attr("name", _name);
+                } else {
+                    if (this.$el)
+                        this.$el.removeAttr('name');
+                }
+            }
+        },
+        enumerable: true
     });
 
     this.reset = function () {

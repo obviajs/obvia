@@ -8,7 +8,8 @@ let urlArr = [
     // "https://gaia.oxana.io/api/process_roles/yaml",
     // "https://gaia.oxana.io/api/dataview_pid_1/yaml"
     //"http://ui/Fiscalizaion.yaml",
-    "http://esa.flare.al/?DV_customers/yaml"
+    //"http://esa.flare.al/?DV_customers/yaml",
+    "http://gaia-billing/api/inventories/yaml"
 ];
 
 for (let i = 0; i < urlArr.length; i++) {

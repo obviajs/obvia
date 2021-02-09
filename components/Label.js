@@ -32,6 +32,22 @@ var Label = function (_props, _hideComponents = false) {
         configurable: true
     });
 
+    Object.defineProperty(this, "html", {
+        get: function html() {
+            return _html = this.$el.html();
+        },
+        set: function html(v) {
+            if (_html != v) {
+                _html = v;
+                if (this.$el) {
+                    this.$el.html(v);
+                }
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+
     Object.defineProperty(this, "contenteditable", {
         get: function contenteditable() {
             return _contenteditable;
@@ -101,7 +117,7 @@ var Label = function (_props, _hideComponents = false) {
     };
     _props = extend(false, false, _defaultParams, _props);
 
-    let _label, _contenteditable;
+    let _label, _html, _contenteditable;
     let _labelType = _props.labelType;
 
     let r = Parent.call(this, _props, _hideComponents);
