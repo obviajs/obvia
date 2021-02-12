@@ -86,7 +86,7 @@ Poolable.call(GaiaAPI_dataview_pid_1);
 	* @property {String}  input_id               - Input ID
 
     */
-   GaiaAPI_dataview_pid_1.rule = function(_props){
+   GaiaAPI_dataview_pid_1.rule = function rule(_props){
         _props = _props || {};
 		this.id = _props.id;
 		this.field = _props.field;
@@ -100,13 +100,13 @@ Poolable.call(GaiaAPI_dataview_pid_1);
     };
 
 
-	GaiaAPI_dataview_pid_1.arrayRule = function()
+	GaiaAPI_dataview_pid_1.arrayRule = function arrayRule()
 	{
-		let r = ArrayEx.apply(this, arguments);
-		r.memberType = ["rule"]; 
-		return r;
+		ArrayEx.apply(this, arguments);    
+		this.memberType = ["rule"]; 
 	};
 	GaiaAPI_dataview_pid_1.arrayRule.prototype = Object.create(ArrayEx.prototype);
+	GaiaAPI_dataview_pid_1.arrayRule.prototype.constructor = GaiaAPI_dataview_pid_1.arrayRule;
 
 
 
@@ -116,7 +116,7 @@ Poolable.call(GaiaAPI_dataview_pid_1);
 	* @property {boolean}  valid               - Valid
 
     */
-   GaiaAPI_dataview_pid_1.advancedSqlFilters = function(_props){
+   GaiaAPI_dataview_pid_1.advancedSqlFilters = function advancedSqlFilters(_props){
         _props = _props || {};
 		this.condition = _props.condition;
 		this.rules = _props.rules;
@@ -133,7 +133,7 @@ Poolable.call(GaiaAPI_dataview_pid_1);
 	* @property {String}  orderable               - Is orderable
 
     */
-   GaiaAPI_dataview_pid_1.column = function(_props){
+   GaiaAPI_dataview_pid_1.column = function column(_props){
         _props = _props || {};
 		this.data = _props.data;
 		this.name = _props.name;
@@ -143,13 +143,13 @@ Poolable.call(GaiaAPI_dataview_pid_1);
     };
 
 
-	GaiaAPI_dataview_pid_1.arrayColumn = function()
+	GaiaAPI_dataview_pid_1.arrayColumn = function arrayColumn()
 	{
-		let r = ArrayEx.apply(this, arguments);
-		r.memberType = ["column"]; 
-		return r;
+		ArrayEx.apply(this, arguments);    
+		this.memberType = ["column"]; 
 	};
 	GaiaAPI_dataview_pid_1.arrayColumn.prototype = Object.create(ArrayEx.prototype);
+	GaiaAPI_dataview_pid_1.arrayColumn.prototype.constructor = GaiaAPI_dataview_pid_1.arrayColumn;
 
 
 
@@ -158,7 +158,7 @@ Poolable.call(GaiaAPI_dataview_pid_1);
 	* @property {String}  dir               - Direction
 
     */
-   GaiaAPI_dataview_pid_1.order = function(_props){
+   GaiaAPI_dataview_pid_1.order = function order(_props){
         _props = _props || {};
 		this.column = _props.column;
 		this.dir = _props.dir;
@@ -166,13 +166,13 @@ Poolable.call(GaiaAPI_dataview_pid_1);
     };
 
 
-	GaiaAPI_dataview_pid_1.arrayOrder = function()
+	GaiaAPI_dataview_pid_1.arrayOrder = function arrayOrder()
 	{
-		let r = ArrayEx.apply(this, arguments);
-		r.memberType = ["order"]; 
-		return r;
+		ArrayEx.apply(this, arguments);    
+		this.memberType = ["order"]; 
 	};
 	GaiaAPI_dataview_pid_1.arrayOrder.prototype = Object.create(ArrayEx.prototype);
+	GaiaAPI_dataview_pid_1.arrayOrder.prototype.constructor = GaiaAPI_dataview_pid_1.arrayOrder;
 
 
 
@@ -183,7 +183,7 @@ Poolable.call(GaiaAPI_dataview_pid_1);
 	* @property {Number}  recordsPerPage               - Limit
 
     */
-   GaiaAPI_dataview_pid_1.tableData = function(_props){
+   GaiaAPI_dataview_pid_1.tableData = function tableData(_props){
         _props = _props || {};
 		this.columns = _props.columns;
 		this.orders = _props.orders;
@@ -199,7 +199,7 @@ Poolable.call(GaiaAPI_dataview_pid_1);
 	* @property {tableData}  tableData               - Table Data
 
     */
-   GaiaAPI_dataview_pid_1.dvInput = function(_props){
+   GaiaAPI_dataview_pid_1.dvInput = function dvInput(_props){
         _props = _props || {};
 		this.advancedSqlFilters = _props.advancedSqlFilters;
 		this.tableData = _props.tableData;
@@ -221,7 +221,7 @@ Poolable.call(GaiaAPI_dataview_pid_1);
 	* @property {String}  form_guid               - Form's guid
 
     */
-   GaiaAPI_dataview_pid_1.form = function(_props){
+   GaiaAPI_dataview_pid_1.form = function form(_props){
         _props = _props || {};
 		this.form_id = _props.form_id;
 		this.form_name = _props.form_name;
@@ -239,20 +239,20 @@ Poolable.call(GaiaAPI_dataview_pid_1);
     };
 
 
-	GaiaAPI_dataview_pid_1.arrayForm = function()
+	GaiaAPI_dataview_pid_1.arrayForm = function arrayForm()
 	{
-		let r = ArrayEx.apply(this, arguments);
-		r.memberType = ["form"]; 
-		return r;
+		ArrayEx.apply(this, arguments);    
+		this.memberType = ["form"]; 
 	};
 	GaiaAPI_dataview_pid_1.arrayForm.prototype = Object.create(ArrayEx.prototype);
+	GaiaAPI_dataview_pid_1.arrayForm.prototype.constructor = GaiaAPI_dataview_pid_1.arrayForm;
 
     /**
 	* @property {Number}  status_code               - Response status code
 	* @property {String}  status_description               - Response description
 
     */
-   GaiaAPI_dataview_pid_1.responseStatus = function(_props){
+   GaiaAPI_dataview_pid_1.responseStatus = function responseStatus(_props){
         _props = _props || {};
 		this.status_code = _props.status_code;
 		this.status_description = _props.status_description;

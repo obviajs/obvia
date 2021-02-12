@@ -32,17 +32,16 @@ var GaiaAPI_process_roles = function(_props){
         
     	/**
 		*Create new role.
-		* @param {string} role_name process_role name
-		* @param {string} role_description user's description
+		* @param {process_role} process_role The request body for post /process_roles 
 		* @returns {Promise} 
 		*/
-    	this.post = function(role_name,role_description){
+    	this.post = function(process_role){
         let objQuery = {};
 
         let objPath = {};
 
-        let objBody = {"role_name":role_name,"role_description":role_description};
-        let requestContentType = "application/x-www-form-urlencoded";
+        let objBody = process_role;
+        let requestContentType = "json";
         let responses = {"200":{"responseType":"JSON","type":"process_role"},"409":{"responseType":"JSON","type":"responseStatus"}};
         return new Promise((resolve, reject) =>
         {
@@ -122,7 +121,7 @@ var GaiaAPI_process_roles = function(_props){
         let objPath = {};
 
         let objBody = {"id_process_role":id_process_role,"id_process":id_process};
-        let requestContentType = "application/x-www-form-urlencoded";
+        let requestContentType = "multipart/form-data";
         let responses = {"200":{"responseType":"JSON","type":"process_role"},"404":{"responseType":"JSON","type":"responseStatus"},"409":{"responseType":"JSON","type":"responseStatus"}};
         return new Promise((resolve, reject) =>
         {
@@ -489,7 +488,7 @@ Poolable.call(GaiaAPI_process_roles);
 	* @property {String}  time_modified               - Time Modified
 
     */
-   GaiaAPI_process_roles.process_role = function(_props){
+   GaiaAPI_process_roles.process_role = function process_role(_props){
         _props = _props || {};
 		this.process_role_id = _props.process_role_id;
 		this.process_role_name = _props.process_role_name;
@@ -508,7 +507,7 @@ Poolable.call(GaiaAPI_process_roles);
 	* @property {String}  status_description               - Response description
 
     */
-   GaiaAPI_process_roles.responseStatus = function(_props){
+   GaiaAPI_process_roles.responseStatus = function responseStatus(_props){
         _props = _props || {};
 		this.status_code = _props.status_code;
 		this.status_description = _props.status_description;
@@ -519,18 +518,18 @@ Poolable.call(GaiaAPI_process_roles);
 	* @property {Number}  counter               - Number of records affected
 
     */
-   GaiaAPI_process_roles.recordsAffected = function(_props){
+   GaiaAPI_process_roles.recordsAffected = function recordsAffected(_props){
         _props = _props || {};
 		this.counter = _props.counter;
 
     };
-	GaiaAPI_process_roles.arrayNumber = function()
+	GaiaAPI_process_roles.arrayNumber = function arrayNumber()
 	{
-		let r = ArrayEx.apply(this, arguments);
-		r.memberType = ["Number"]; 
-		return r;
+		ArrayEx.apply(this, arguments);    
+		this.memberType = ["Number"]; 
 	};
 	GaiaAPI_process_roles.arrayNumber.prototype = Object.create(ArrayEx.prototype);
+	GaiaAPI_process_roles.arrayNumber.prototype.constructor = GaiaAPI_process_roles.arrayNumber;
 
 
 
@@ -539,7 +538,7 @@ Poolable.call(GaiaAPI_process_roles);
 	* @property {team}  team               - Team Ids Array
 
     */
-   GaiaAPI_process_roles.process_add_group = function(_props){
+   GaiaAPI_process_roles.process_add_group = function process_add_group(_props){
         _props = _props || {};
 		this.id_process_role = _props.id_process_role;
 		this.team = _props.team;
@@ -548,15 +547,15 @@ Poolable.call(GaiaAPI_process_roles);
 
     /**
 	* @property {Number}  process_role_group_id               - Process Role Group Id
-	* @property {Number}  id_process_role               - Process Role Id
+	* @property {Number}  id_process_role_process               - Process Role Id
 	* @property {Number}  id_team               - Team Id
 	* @property {Number}  deleted               - Is Deleted
 
     */
-   GaiaAPI_process_roles.process_role_group = function(_props){
+   GaiaAPI_process_roles.process_role_group = function process_role_group(_props){
         _props = _props || {};
 		this.process_role_group_id = _props.process_role_group_id;
-		this.id_process_role = _props.id_process_role;
+		this.id_process_role_process = _props.id_process_role_process;
 		this.id_team = _props.id_team;
 		this.deleted = _props.deleted;
 
@@ -567,7 +566,7 @@ Poolable.call(GaiaAPI_process_roles);
 	* @property {users}  users               - User Ids Array
 
     */
-   GaiaAPI_process_roles.add_role_user = function(_props){
+   GaiaAPI_process_roles.add_role_user = function add_role_user(_props){
         _props = _props || {};
 		this.id_process_role = _props.id_process_role;
 		this.users = _props.users;
@@ -577,15 +576,15 @@ Poolable.call(GaiaAPI_process_roles);
     /**
 	* @property {Number}  process_role_user_id               - Process Role User Id
 	* @property {Number}  id_user               - User Id
-	* @property {Number}  id_process_role               - Process Role Id
+	* @property {Number}  id_process_role_process               - Process Role Id
 	* @property {Number}  deleted               - Is Deleted
 
     */
-   GaiaAPI_process_roles.process_role_user = function(_props){
+   GaiaAPI_process_roles.process_role_user = function process_role_user(_props){
         _props = _props || {};
 		this.process_role_user_id = _props.process_role_user_id;
 		this.id_user = _props.id_user;
-		this.id_process_role = _props.id_process_role;
+		this.id_process_role_process = _props.id_process_role_process;
 		this.deleted = _props.deleted;
 
     };
@@ -595,23 +594,23 @@ Poolable.call(GaiaAPI_process_roles);
 	* @property {users}  users               - User Ids Array
 
     */
-   GaiaAPI_process_roles.rmv_role_user = function(_props){
+   GaiaAPI_process_roles.rmv_role_user = function rmv_role_user(_props){
         _props = _props || {};
 		this.id_process_role = _props.id_process_role;
 		this.users = _props.users;
 
     };
-	GaiaAPI_process_roles.arrayProcessRole = function()
+	GaiaAPI_process_roles.arrayProcessRole = function arrayProcessRole()
 	{
-		let r = ArrayEx.apply(this, arguments);
-		r.memberType = ["process_role"]; 
-		return r;
+		ArrayEx.apply(this, arguments);    
+		this.memberType = ["process_role"]; 
 	};
 	GaiaAPI_process_roles.arrayProcessRole.prototype = Object.create(ArrayEx.prototype);
-	GaiaAPI_process_roles.arrayProcessRoleGroup = function()
+	GaiaAPI_process_roles.arrayProcessRole.prototype.constructor = GaiaAPI_process_roles.arrayProcessRole;
+	GaiaAPI_process_roles.arrayProcessRoleGroup = function arrayProcessRoleGroup()
 	{
-		let r = ArrayEx.apply(this, arguments);
-		r.memberType = ["process_role_group"]; 
-		return r;
+		ArrayEx.apply(this, arguments);    
+		this.memberType = ["process_role_group"]; 
 	};
 	GaiaAPI_process_roles.arrayProcessRoleGroup.prototype = Object.create(ArrayEx.prototype);
+	GaiaAPI_process_roles.arrayProcessRoleGroup.prototype.constructor = GaiaAPI_process_roles.arrayProcessRoleGroup;

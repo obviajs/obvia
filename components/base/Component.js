@@ -139,9 +139,6 @@ var Component = function (_props) {
                             this.parent.children[_id] = this.parent.children[oldId];
                             delete this.parent.children[oldId];
 
-                            this.parent.ccRelation[_id] = this.parent.ccRelation[oldId];
-                            delete this.parent.ccRelation[oldId];
-
                             let ind = this.parent.csorted.indexOf(oldId);
                             if (ind > -1) {
                                 this.parent.csorted.splice(ind, 1, _id);
@@ -1009,19 +1006,7 @@ Component.processPropertyBindings = function (props) {
 };
 
 Component.instanceInc = 0;
-Component.fromLiteral = function (_literal) {
-    //let _literal = Object.assign({}, _literal);
-    //let props = Object.assign({}, _literal.props);
-    let props = _literal.props;
-
-    if (_literal.ctor) {
-        if (typeof _literal.ctor == "string") {
-            _literal.ctor = window[_literal.ctor];
-        }
-        let el = new _literal.ctor(props);
-        return el;
-    }
-};
+Literal.call(Component);
 Component.listeners = {};
 Component.objListeners = {};
 Component.MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;

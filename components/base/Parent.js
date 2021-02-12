@@ -5,15 +5,21 @@ var Parent = function (_props, _hideComponents = false) {
     let _children = {};
     let _enabled;
 
-    let _proxy = new Proxy(this, {
-        get: function (target, property, receiver) {
-            if (!target.hasOwnProperty(property)) {
-                if (target.children && target.children[property])
-                    return target.children[property];
-            }
-            return Reflect.get(...arguments);
-        }
-    });
+    if (!this.hasOwnProperty("initProxy")) {
+        this.initProxy = function () {
+            return new Proxy(this, {
+                get: function (target, property, receiver) {
+                    if (!target.hasOwnProperty(property) && !target.constructor.prototype.hasOwnProperty(property)) {
+                        if (target.children && target.children[property])
+                            return target.children[property];
+                    }
+                    return Reflect.get(...arguments);
+                }
+            });
+        };
+    }
+
+    let _proxy = this.initProxy();
 
     Object.defineProperty(this, "hasInternalComponents", {
         get: function hasInternalComponents() {
@@ -41,7 +47,7 @@ var Parent = function (_props, _hideComponents = false) {
         set: function components(v) {
             this.removeAllChildren();
             _components = v;
-            this.addComponents();
+            this.addComponents(_components);
         },
         enumerable: true && !_hideComponents,
         configurable: true
@@ -57,18 +63,16 @@ var Parent = function (_props, _hideComponents = false) {
     };
 
     this.addChild = function (child, index) {
-        if (child && !_children[child.id]) {
-            index = index > -1 ? index : _components.length;
-            if (index >= 0 && index <= _components.length) {
-                index = index > -1 ? index : _components.length;
+        if (child && _children[child.id] != child) {
+            index = index > -1 ? index : _csorted.length;
+            if (index >= 0 && index <= _csorted.length) {
+                index = index > -1 ? index : _csorted.length;
                 let component = {
                     ctor: child.ctor,
                     props: child.props
                 };
-                _components.splice(index, 0, component);
                 _children[child.id] = child;
                 _csorted.splice(index, 0, child.id);
-                _ccRelation[child.id] = component;
                 child.parent = _proxy;
                 child.parentType = this.type;
                 child.parentForm = _proxy.ctor == 'Form' ? _proxy : _proxy.parentForm;
@@ -87,27 +91,34 @@ var Parent = function (_props, _hideComponents = false) {
     this.indexOfChild = function (child) {
         let ind = -1;
         if (child) {
-            ind = _components.indexOf(_ccRelation[child.id]);
+            //check whether this is a child of this parent
+            if (_children[child.id] == child) {
+                ind = _csorted.indexOf(child.id);
+            }
         }
         return ind;
     };
+
+    this.childAtIndex = function (i) {
+        if (i >= 0 && i < _csorted.length) {
+            return _children[_csorted[i]];
+        }
+    };
+
     this.removeAllChildren = function (mode = 1) {
         for (let cid in this.children) {
             this.removeChild(this.children[cid], mode);
         }
     };
+
     this.removeChild = function (child, mode = 1) {
         if (child) {
-            //TODO: kur fshijme child, beji resize siblings; kur fshijme row/col dhe jane 2 gjithsej hiq container prind 
-            let ind = _components.indexOf(_ccRelation[child.id]);
-            if (ind > -1) {
-                _components.splice(ind, 1);
+            if (_children[child.id] == child) {
                 ind = _csorted.indexOf(child.id);
                 if (ind > -1) {
                     _csorted.splice(ind, 1);
                 }
                 delete _children[child.id];
-                delete _ccRelation[child.id];
                 child.destruct(mode);
                 child.parent = null;
             } else {
@@ -117,18 +128,17 @@ var Parent = function (_props, _hideComponents = false) {
     };
 
     this.removeChildAtIndex = function (index, mode = 1) {
-        if (index >= 0 && index < _components.length) {
-            this.removeChild(_children[_components[index].props.id], mode);
+        if (index >= 0 && index < _csorted.length) {
+            this.removeChild(_children[_csorted[index]], mode);
         }
     };
 
     this.addComponent = function (component, index) {
-        index = index > -1 ? index : _components.length;
-        _components.splice(index, 0, component);
+        index = index > -1 ? index : _csorted.length;
         let cr = this.addComponentInContainer(this.$container, component, index);
 
         cr.promise.then(function (cmpInstance) {
-            if (cmpInstance && cmpInstance.attach && !cmpInstance.attached) {
+            if (cmpInstance && !cmpInstance.attached) {
                 if (cmpInstance.appendTo) {
                     cmpInstance.appendTo.append(cmpInstance.$el);
                 } else
@@ -164,19 +174,7 @@ var Parent = function (_props, _hideComponents = false) {
         configurable: true
     });
 
-    Object.defineProperty(this, "ccRelation", {
-        get: function ccRelation() {
-            return _ccRelation;
-        },
-        enumerable: false,
-        configurable: true
-    });
-
-    let _ccRelation = {},
-        _csorted = [];
-    this.getChildDefinedProperties = function (c) {
-        return _ccRelation[c.id];
-    };
+    let _csorted = [];
 
     this.addComponentInContainer = function (container, component, index) {
         if (container) {
@@ -202,13 +200,12 @@ var Parent = function (_props, _hideComponents = false) {
                 throw new Error("Child id: " + cmp.id + " is already used in Parent with id: " + _self.id + ". Components ids should be unique within their parent.");
             else
                 _children[cmp.id] = cmp;
-            _ccRelation[cmp.id] = component;
             _csorted.splice(index, 0, cmp.id);
             cmp.parent = _proxy;
             cmp.parentType = _self.type;
             cmp.parentForm = _proxy.ctor == 'Form' ? _proxy : _proxy.parentForm;
 
-            index = index > -1 ? index : _components.length;
+            index = index > -1 ? index : _csorted.length;
             let cr = {
                 "cmp": cmp,
                 "promise": cmp.render()
@@ -261,16 +258,10 @@ var Parent = function (_props, _hideComponents = false) {
     let _sortChildren = _props.sortChildren;
     //override because creationComplete will be thrown when all children components are created
     // this.afterAttach = undefined;
-    this.addComponents = function (cmps) {
+    this.addComponents = function (components) {
         _self.trigger('beginDraw');
         let arrInst = [];
-        let components;
-        if (cmps) {
-            components = cmps;
-            //_self.$container.contents().appendTo(_$hadow);
-        } else {
-            components = this.components;
-        }
+        let cr = [];
         _comprenders = [];
         if (components && Array.isArray(components) && components.length > 0) {
             if (_sortChildren) {
@@ -278,19 +269,16 @@ var Parent = function (_props, _hideComponents = false) {
             }
             for (let i = 0; i < components.length; i++) {
                 if (isObject(components[i])) {
-                    if (cmps) {
-                        _components.splice(i, 0, components[i]);
-                    }
                     let cr = this.addComponentInContainer(_$hadow, components[i], i);
                     arrInst.push(cr.cmp);
                 }
             }
-            let cr = arrayFromKey(_comprenders, "promise");
+            cr = arrayFromKey(_comprenders, "promise");
             Promise.all(cr).then(function () {
                 _comprenders = [];
                 for (let i = 0; i < _csorted.length; i++) {
                     let cmpInstance = _children[_csorted[i]];
-                    if (cmpInstance && cmpInstance.attach && !cmpInstance.attached) {
+                    if (cmpInstance && !cmpInstance.attached) {
                         if (cmpInstance.appendTo) {
                             cmpInstance.appendTo.insertAt(cmpInstance.$el, i);
                         } else
@@ -307,7 +295,7 @@ var Parent = function (_props, _hideComponents = false) {
             _creationFinished = true;
             _self.trigger('endDraw');
         }
-        return arrInst;
+        return Promise.all(cr);
     };
 
     if (!this.hasOwnProperty("render")) {
@@ -320,7 +308,7 @@ var Parent = function (_props, _hideComponents = false) {
                             resolve(_proxy);
                         }
                     });
-                    this.addComponents();
+                    this.addComponents(_components);
                 });
             }
             return _rPromise;

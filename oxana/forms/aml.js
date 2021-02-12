@@ -2,6 +2,7 @@ var flowerCM = window.flowerCM || {};
 //base Components
 rjs.define("/flowerui/lib/Poolable.js", "Poolable");
 rjs.define("/flowerui/lib/EventDispatcher.js", "EventDispatcher");
+rjs.define("/flowerui/lib/Literal.js", "Literal");
 rjs.define("/flowerui/lib/Timer.js", "Timer");
 rjs.define("/flowerui/lib/NumberUtils.js", "NumberUtils");
 rjs.define("/flowerui/components/base/EnvType.js", "EnvType");
@@ -249,7 +250,7 @@ rjs.define("inspect/ObjectEditor.js", "ObjectEditor");
 
 
 let dependencies = [
-    ["EventDispatcher"],
+    ["EventDispatcher", "Literal"],
     [
         "Poolable",
         "Timer",
@@ -432,7 +433,8 @@ let dependencies = [
         "componentList",
         "CollectionEditor",
         "ObjectEditor"
-    ], [
+    ],
+    [
         "Scrap",
         "metaProps",
         "componentLiterals",

@@ -2,6 +2,7 @@ var flowerCM = window.flowerCM || {};
 //base Components
 rjs.define("lib/Poolable.js", "Poolable");
 rjs.define("lib/EventDispatcher.js", "EventDispatcher");
+rjs.define("lib/Literal.js", "Literal");
 rjs.define("lib/Timer.js", "Timer");
 rjs.define("lib/NumberUtils.js", "NumberUtils");
 rjs.define("./components/base/EnvType.js", "EnvType");
@@ -238,7 +239,7 @@ rjs.define("./lib/ApiClientGen/ApiClientGen.js", "ApiClientGen");
 rjs.define("./lib/ApiClientGen/OAMethod.js", "OAMethod");
 
 let dependencies = [
-    ["EventDispatcher"],
+    ["EventDispatcher", "Literal"],
     [
         "Poolable",
         "Timer",

@@ -2,6 +2,7 @@ var flowerCM = window.flowerCM || {};
 //base Components
 rjs.define("/flowerui/lib/Poolable.js", "Poolable");
 rjs.define("/flowerui/lib/EventDispatcher.js", "EventDispatcher");
+rjs.define("/flowerui/lib/Literal.js", "Literal");
 rjs.define("/flowerui/lib/Timer.js", "Timer");
 rjs.define("/flowerui/lib/NumberUtils.js", "NumberUtils");
 rjs.define("/flowerui/components/base/EnvType.js", "EnvType");
@@ -254,7 +255,7 @@ rjs.define("GaiaAPI/GaiaAPI_events.js", "GaiaAPI_events");
 //rjs.define("GaiaAPI/GaiaAPI_documents.js", "GaiaAPI_documents");
 
 let dependencies = [
-    ["EventDispatcher"],
+    ["EventDispatcher", "Literal"],
     [
         "Poolable",
         "Timer",
@@ -435,7 +436,8 @@ let dependencies = [
         "ApiClientGen",
         "CollectionEditor",
         "ObjectEditor"
-    ], [
+    ],
+    [
         "Scrap",
         "WizardStep",
         "GaiaAPI_Utils",
@@ -500,7 +502,7 @@ rjs.grequire(dependencies).then(() => {
             "lint_css", "lint", "json-lint", "javascript-lint", "show-hint_css", "show-hint", "javascript-hint", "jshint"
         ]
     ];
-    rjs.grequire(dependencies).then(() => { 
+    rjs.grequire(dependencies).then(() => {
         window.main();
     });
 });

@@ -2,6 +2,7 @@ var flowerCM = window.flowerCM || {};
 //base Components
 rjs.define("/flowerui/lib/Poolable.js", "Poolable");
 rjs.define("/flowerui/lib/EventDispatcher.js", "EventDispatcher");
+rjs.define("/flowerui/lib/Literal.js", "Literal");
 rjs.define("/flowerui/lib/Timer.js", "Timer");
 rjs.define("/flowerui/lib/NumberUtils.js", "NumberUtils");
 rjs.define("/flowerui/components/base/EnvType.js", "EnvType");
@@ -250,7 +251,7 @@ rjs.define("/flowerui/lib/P3Com/FiscalPrinter/Invoice.js", "Invoice");
 rjs.define("/flowerui/lib/P3Com/FiscalPrinter/InvoiceItem.js", "InvoiceItem");
 
 let dependencies = [
-    ["EventDispatcher"],
+    ["EventDispatcher", "Literal"],
     [
         "Poolable",
         "Timer",

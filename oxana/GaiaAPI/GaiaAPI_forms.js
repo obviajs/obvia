@@ -252,7 +252,7 @@ Poolable.call(GaiaAPI_forms);
 	* @property {String}  form_guid               - Form's guid
 
     */
-   GaiaAPI_forms.form = function(_props){
+   GaiaAPI_forms.form = function form(_props){
         _props = _props || {};
 		this.form_id = _props.form_id;
 		this.form_name = _props.form_name;
@@ -270,20 +270,20 @@ Poolable.call(GaiaAPI_forms);
     };
 
 
-	GaiaAPI_forms.arrayForm = function()
+	GaiaAPI_forms.arrayForm = function arrayForm()
 	{
-		let r = ArrayEx.apply(this, arguments);
-		r.memberType = ["form"]; 
-		return r;
+		ArrayEx.apply(this, arguments);    
+		this.memberType = ["form"]; 
 	};
 	GaiaAPI_forms.arrayForm.prototype = Object.create(ArrayEx.prototype);
+	GaiaAPI_forms.arrayForm.prototype.constructor = GaiaAPI_forms.arrayForm;
 
     /**
 	* @property {Number}  status_code               - Response status code
 	* @property {String}  status_description               - Response description
 
     */
-   GaiaAPI_forms.responseStatus = function(_props){
+   GaiaAPI_forms.responseStatus = function responseStatus(_props){
         _props = _props || {};
 		this.status_code = _props.status_code;
 		this.status_description = _props.status_description;
@@ -294,7 +294,7 @@ Poolable.call(GaiaAPI_forms);
 	* @property {Number}  counter               - Number of records affected
 
     */
-   GaiaAPI_forms.recordsAffected = function(_props){
+   GaiaAPI_forms.recordsAffected = function recordsAffected(_props){
         _props = _props || {};
 		this.counter = _props.counter;
 
@@ -311,7 +311,7 @@ Poolable.call(GaiaAPI_forms);
 	* @property {Number}  deleted               - Check if process is deleted
 
     */
-   GaiaAPI_forms.process = function(_props){
+   GaiaAPI_forms.process = function process(_props){
         _props = _props || {};
 		this.process_id = _props.process_id;
 		this.process_name = _props.process_name;
@@ -325,13 +325,13 @@ Poolable.call(GaiaAPI_forms);
     };
 
 
-	GaiaAPI_forms.arrayProcess = function()
+	GaiaAPI_forms.arrayProcess = function arrayProcess()
 	{
-		let r = ArrayEx.apply(this, arguments);
-		r.memberType = ["process"]; 
-		return r;
+		ArrayEx.apply(this, arguments);    
+		this.memberType = ["process"]; 
 	};
 	GaiaAPI_forms.arrayProcess.prototype = Object.create(ArrayEx.prototype);
+	GaiaAPI_forms.arrayProcess.prototype.constructor = GaiaAPI_forms.arrayProcess;
 
     /**
 	* @property {Number}  form_field_id               - Form Field ID
@@ -351,9 +351,10 @@ Poolable.call(GaiaAPI_forms);
 	* @property {Number}  enabled               - is Enabled
 	* @property {String}  form_field_guid               - Form Field Guid
 	* @property {String}  form_guid               - Form Guid
+	* @property {String}  tooltip               - Tooltip
 
     */
-   GaiaAPI_forms.form_field = function(_props){
+   GaiaAPI_forms.form_field = function form_field(_props){
         _props = _props || {};
 		this.form_field_id = _props.form_field_id;
 		this.id_form_field_type = _props.id_form_field_type;
@@ -372,14 +373,15 @@ Poolable.call(GaiaAPI_forms);
 		this.enabled = _props.enabled;
 		this.form_field_guid = _props.form_field_guid;
 		this.form_guid = _props.form_guid;
+		this.tooltip = _props.tooltip;
 
     };
 
 
-	GaiaAPI_forms.arrayFormField = function()
+	GaiaAPI_forms.arrayFormField = function arrayFormField()
 	{
-		let r = ArrayEx.apply(this, arguments);
-		r.memberType = ["form_field"]; 
-		return r;
+		ArrayEx.apply(this, arguments);    
+		this.memberType = ["form_field"]; 
 	};
 	GaiaAPI_forms.arrayFormField.prototype = Object.create(ArrayEx.prototype);
+	GaiaAPI_forms.arrayFormField.prototype.constructor = GaiaAPI_forms.arrayFormField;

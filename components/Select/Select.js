@@ -89,7 +89,7 @@ var Select = function (_props) {
     let _changeHandler = function (e) {
         let oldValue = _value;
         _value = this.$el.val();
-        myw.propertyChange("value", oldValue, _value);
+        myw.propertyChanged("value", oldValue, _value);
     };
 
     this.template = function () {

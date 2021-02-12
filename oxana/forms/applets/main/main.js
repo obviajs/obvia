@@ -765,13 +765,15 @@ let Implementation = function (applet) {
                         newInstance = retFromRedoMaybe.child;
                         parent.addChild(newInstance);
                     } else {
-                        newInstance = parent.addComponents(toAdd);
-                        newInstance[0].attr.isWa = true;
-                        applet.addBehaviors(newInstance, cmpWaBehaviors, true);
-                    }
+                        parent.addComponents(toAdd).then((ra) => {
+                            newInstance = ra[0];
+                            ret.child = newInstance;
+                            newInstance.attr.isWa = true;
+                            applet.addBehaviors(newInstance, cmpWaBehaviors, true);
+                        });
 
+                    }
                     ret.parent = parent;
-                    ret.child = newInstance;
                     ret.container = activeContainer.parent;
                     ret.track = true;
                 } else {

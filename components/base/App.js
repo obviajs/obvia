@@ -153,7 +153,11 @@ var App = function (_props) {
     this.addApplet = function (applet) {
         applet.app = applet.parent = r;
         _applets.push(applet);
-        let appletInst = _appletsMap[applet.anchor] = new Applet(applet);
+        if (!_appletsMap[applet.anchor]) {
+            _appletsMap[applet.anchor] = [];
+        }
+        let appletInst = new Applet(applet);
+        _appletsMap[applet.anchor].push(appletInst);
         return appletInst;
     };
 
@@ -318,12 +322,14 @@ var App = function (_props) {
     let _route = function (hash) {
         let m = BrowserUtils.parse(hash);
         if (m.hash && m.hash != "") {
-            let appletInst = _appletsMap[m.hash];
+            let appletInstArr = _appletsMap[m.hash];
+            let appletIndex = m.inst ? m.inst : 0;
+            let appletInst = appletInstArr[appletIndex];
             if (appletInst) {
                 appletInst.route(m.map);
             } else {
                 if (_applets && _applets.length > 0) {
-                    appletInst = _appletsMap[_applets[_defaultAppletIndex].anchor];
+                    appletInst = _appletsMap[_applets[_defaultAppletIndex].anchor][0];
                     appletInst.route(m.map);
                 }
             }
@@ -331,7 +337,7 @@ var App = function (_props) {
             // });
         } else {
             if (_applets && _applets.length > 0) {
-                appletInst = _appletsMap[_applets[_defaultAppletIndex].anchor];
+                appletInst = _appletsMap[_applets[_defaultAppletIndex].anchor][0];
                 appletInst.route(m.map);
             }
         }
@@ -358,7 +364,11 @@ var App = function (_props) {
                 let len = _applets.length;
                 for (let i = 0; i < len; i++) {
                     _applets[i].app = _applets[i].parent = r;
-                    let appletInst = _appletsMap[_applets[i].anchor] = new Applet(_applets[i]);
+                    let appletInst = new Applet(_applets[i]);
+                    if (!_appletsMap[_applets[i].anchor]) {
+                        _appletsMap[_applets[i].anchor] = [];
+                    }
+                    _appletsMap[_applets[i].anchor].push(appletInst);
                     appletInst.on("appletInit", _appletInit);
                 }
             }

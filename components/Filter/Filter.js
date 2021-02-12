@@ -293,7 +293,6 @@ var Filter = function (_props) {
             };
         }
 
-
         filterItemEditor = Component.fromLiteral(filterItemEditor);
         let reqFieldValidator;
         if (ra.currentItem[_operatorsField]) {

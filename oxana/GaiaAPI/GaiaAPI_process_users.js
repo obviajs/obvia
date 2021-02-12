@@ -272,7 +272,7 @@ Poolable.call(GaiaAPI_process_users);
 	* @property {Number}  view_group_cases               - Can View Group Cases
 
     */
-   GaiaAPI_process_users.process_status = function(_props){
+   GaiaAPI_process_users.user_process_role_rights = function user_process_role_rights(_props){
         _props = _props || {};
 		this.can_create = _props.can_create;
 		this.can_assign = _props.can_assign;
@@ -286,11 +286,12 @@ Poolable.call(GaiaAPI_process_users);
 
 
 
+
     /**
-	* @typedef {Object.<string, process_status>} process_role
+	* @typedef {Object.<string, process_status>} user_process_role_status
 
     */
-   GaiaAPI_process_users.process_role = function(_props){
+   GaiaAPI_process_users.user_process_role_status = function user_process_role_status(_props){
         _props = _props || {};
 
         for(let prop in _props){
@@ -302,11 +303,12 @@ Poolable.call(GaiaAPI_process_users);
 
 
 
+
     /**
-	* @typedef {Object.<string, process_role>} process
+	* @typedef {Object.<string, process_role>} user_process_roles
 
     */
-   GaiaAPI_process_users.process = function(_props){
+   GaiaAPI_process_users.user_process_roles = function user_process_roles(_props){
         _props = _props || {};
 
         for(let prop in _props){
@@ -318,11 +320,12 @@ Poolable.call(GaiaAPI_process_users);
 
 
 
+
     /**
 	* @typedef {Object.<string, process>} user_processes
 
     */
-   GaiaAPI_process_users.user_processes = function(_props){
+   GaiaAPI_process_users.user_processes = function user_processes(_props){
         _props = _props || {};
 
         for(let prop in _props){
@@ -337,7 +340,7 @@ Poolable.call(GaiaAPI_process_users);
 	* @property {String}  status_description               - Response description
 
     */
-   GaiaAPI_process_users.responseStatus = function(_props){
+   GaiaAPI_process_users.responseStatus = function responseStatus(_props){
         _props = _props || {};
 		this.status_code = _props.status_code;
 		this.status_description = _props.status_description;
@@ -348,7 +351,7 @@ Poolable.call(GaiaAPI_process_users);
 	* @property {Number}  at_user_status_new               - Process Role New Status
 
     */
-   GaiaAPI_process_users.at_status_init = function(_props){
+   GaiaAPI_process_users.at_user_process_role_status_new = function at_user_process_role_status_new(_props){
         _props = _props || {};
 		this.at_user_status_new = _props.at_user_status_new;
 
@@ -356,57 +359,48 @@ Poolable.call(GaiaAPI_process_users);
 
 
 
+
     /**
-	* @typedef {Object.<string, at_status_init>} at_process_role
+	* @property {at_status_init}  at_status_init               - undefined
 
     */
-   GaiaAPI_process_users.at_process_role = function(_props){
+   GaiaAPI_process_users.at_user_process_role_status_init = function at_user_process_role_status_init(_props){
         _props = _props || {};
+		this.at_status_init = _props.at_status_init;
 
-        for(let prop in _props){
-            if(!this.hasOwnProperty(prop)){
-                this[prop] = new GaiaAPI_process_users.at_status_init(_props[prop]);
-            }
-        }
     };
 
 
 
+
     /**
-	* @typedef {Object.<string, at_process_role>} at_process
+	* @property {at_process_role}  at_process_role               - undefined
 
     */
-   GaiaAPI_process_users.at_process = function(_props){
+   GaiaAPI_process_users.at_user_process_roles = function at_user_process_roles(_props){
         _props = _props || {};
+		this.at_process_role = _props.at_process_role;
 
-        for(let prop in _props){
-            if(!this.hasOwnProperty(prop)){
-                this[prop] = new GaiaAPI_process_users.at_process_role(_props[prop]);
-            }
-        }
     };
 
 
 
+
     /**
-	* @typedef {Object.<string, at_process>} at_user_processes
+	* @property {at_process}  at_process               - undefined
 
     */
-   GaiaAPI_process_users.at_user_processes = function(_props){
+   GaiaAPI_process_users.at_user_processes = function at_user_processes(_props){
         _props = _props || {};
+		this.at_process = _props.at_process;
 
-        for(let prop in _props){
-            if(!this.hasOwnProperty(prop)){
-                this[prop] = new GaiaAPI_process_users.at_process(_props[prop]);
-            }
-        }
     };
 
     /**
 	* @property {Number}  value               - Name
 
     */
-   GaiaAPI_process_users.responseObj = function(_props){
+   GaiaAPI_process_users.responseObj = function responseObj(_props){
         _props = _props || {};
 		this.value = _props.value;
 

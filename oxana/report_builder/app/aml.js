@@ -2,6 +2,7 @@ var flowerCM = window.flowerCM || {};
 //base Components
 rjs.define("/flowerui/lib/Poolable.js", "Poolable");
 rjs.define("/flowerui/lib/EventDispatcher.js", "EventDispatcher");
+rjs.define("/flowerui/lib/Literal.js", "Literal");
 rjs.define("/flowerui/lib/Timer.js", "Timer");
 rjs.define("/flowerui/lib/NumberUtils.js", "NumberUtils");
 rjs.define("/flowerui/components/base/EnvType.js", "EnvType");
@@ -265,7 +266,7 @@ rjs.define("report_builder/app/reusables/components/JRHRule.js", "JRHRule");
 rjs.define("report_builder/app/reusables/components/JRImage.js", "JRImage");
 rjs.define("report_builder/app/reusables/components/JRContainer.js", "JRContainer");
 rjs.define("report_builder/app/reusables/factory/ReportFactory.js", "ReportFactory");
-rjs.define("report_builder/app/reusables/factory/SectionFactory.js","SectionFactory");
+rjs.define("report_builder/app/reusables/factory/SectionFactory.js", "SectionFactory");
 rjs.define("report_builder/app/reusables/factory/BandFactory.js", "BandFactory");
 rjs.define("report_builder/app/reusables/factory/StaticTextFactory.js", "StaticTextFactory");
 rjs.define("report_builder/app/reusables/factory/TextFieldFactory.js", "TextFieldFactory");
@@ -283,7 +284,7 @@ rjs.define("report_builder/app/routes/uiRoute.js", "uiRoute");
 rjs.define("report_builder/app/routes/modalRoute.js", "modalRoute");
 
 let dependencies = [
-    ["EventDispatcher"],
+    ["EventDispatcher", "Literal"],
     [
         "Poolable",
         "Timer",
@@ -480,7 +481,7 @@ let dependencies = [
         "GaiaAPI_dataview_pid_1",
         "JRComponent"
     ],
-    [ "codemirror", "codemirror_css" ],
+    ["codemirror", "codemirror_css"],
     [
         "GaiaAPI_dataview_pid_6",
         "GaiaAPI_dataview_pid_10",
@@ -514,5 +515,5 @@ let dependencies = [
 ];
 
 rjs.grequire(dependencies).then(() => {
-  window.main();
+    window.main();
 });

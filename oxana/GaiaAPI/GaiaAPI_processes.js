@@ -147,18 +147,18 @@ var GaiaAPI_processes = function(_props){
         
     	/**
 		*This method returns the forms of the process
-		* @param {integer} id_process Proces ID
+		* @param {integer} process_guid Proces ID
 		* @param {integer} id_role Role ID
 		* @param {integer} id_status Status ID
 		* @returns {Promise} 
 		*/
-    	this.get = function(id_process,id_role,id_status){
+    	this.get = function(process_guid,id_role,id_status){
         let objQuery = {};
 		objQuery["id_role"] = id_role;
 		objQuery["id_status"] = id_status;
 
         let objPath = {};
-		objPath["id_process"] = id_process;
+		objPath["process_guid"] = process_guid;
 
         let objBody = null;
         let requestContentType = "application/json";
@@ -187,7 +187,7 @@ var GaiaAPI_processes = function(_props){
     	};
         
         OAMethod.call(this, apiClient);
-        this.basePath = _server + "/processes/{id_process}/getForms";
+        this.basePath = _server + "/processes/{process_guid}/getForms";
     };
 	this.getProcessRoles = function(apiClient) { 
         apiClient = apiClient || _apiClient;
@@ -435,7 +435,7 @@ Poolable.call(GaiaAPI_processes);
 	* @property {Number}  deleted               - Check if process is deleted
 
     */
-   GaiaAPI_processes.process = function(_props){
+   GaiaAPI_processes.process = function process(_props){
         _props = _props || {};
 		this.process_id = _props.process_id;
 		this.process_name = _props.process_name;
@@ -449,20 +449,20 @@ Poolable.call(GaiaAPI_processes);
     };
 
 
-	GaiaAPI_processes.arrayProcess = function()
+	GaiaAPI_processes.arrayProcess = function arrayProcess()
 	{
-		let r = ArrayEx.apply(this, arguments);
-		r.memberType = ["process"]; 
-		return r;
+		ArrayEx.apply(this, arguments);    
+		this.memberType = ["process"]; 
 	};
 	GaiaAPI_processes.arrayProcess.prototype = Object.create(ArrayEx.prototype);
+	GaiaAPI_processes.arrayProcess.prototype.constructor = GaiaAPI_processes.arrayProcess;
 
     /**
 	* @property {Number}  status_code               - Response status code
 	* @property {String}  status_description               - Response description
 
     */
-   GaiaAPI_processes.responseStatus = function(_props){
+   GaiaAPI_processes.responseStatus = function responseStatus(_props){
         _props = _props || {};
 		this.status_code = _props.status_code;
 		this.status_description = _props.status_description;
@@ -473,7 +473,7 @@ Poolable.call(GaiaAPI_processes);
 	* @property {Number}  counter               - Number of records affected
 
     */
-   GaiaAPI_processes.recordsAffected = function(_props){
+   GaiaAPI_processes.recordsAffected = function recordsAffected(_props){
         _props = _props || {};
 		this.counter = _props.counter;
 
@@ -482,7 +482,7 @@ Poolable.call(GaiaAPI_processes);
     /**
 	* @property {Number}  process_role_status_form_id               - Process Role Status Form Id
 	* @property {String}  process_role_status_form_guid               - Process Role Status Form Guid
-	* @property {String}  form_guid               - Form Guid
+	* @property {String}  guid_form               - Form Guid
 	* @property {String}  form_name               - Form name
 	* @property {String}  form_literal_view               - Form Literal View
 	* @property {Number}  id_role               - Role ID
@@ -491,11 +491,11 @@ Poolable.call(GaiaAPI_processes);
 	* @property {Number}  order               - Order
 
     */
-   GaiaAPI_processes.prs_form = function(_props){
+   GaiaAPI_processes.prs_form = function prs_form(_props){
         _props = _props || {};
 		this.process_role_status_form_id = _props.process_role_status_form_id;
 		this.process_role_status_form_guid = _props.process_role_status_form_guid;
-		this.form_guid = _props.form_guid;
+		this.guid_form = _props.guid_form;
 		this.form_name = _props.form_name;
 		this.form_literal_view = _props.form_literal_view;
 		this.id_role = _props.id_role;
@@ -506,13 +506,13 @@ Poolable.call(GaiaAPI_processes);
     };
 
 
-	GaiaAPI_processes.arrayPrsForm = function()
+	GaiaAPI_processes.arrayPrsForm = function arrayPrsForm()
 	{
-		let r = ArrayEx.apply(this, arguments);
-		r.memberType = ["prs_form"]; 
-		return r;
+		ArrayEx.apply(this, arguments);    
+		this.memberType = ["prs_form"]; 
 	};
 	GaiaAPI_processes.arrayPrsForm.prototype = Object.create(ArrayEx.prototype);
+	GaiaAPI_processes.arrayPrsForm.prototype.constructor = GaiaAPI_processes.arrayPrsForm;
 
     /**
 	* @property {Number}  process_role_id               - Process Role Id
@@ -526,7 +526,7 @@ Poolable.call(GaiaAPI_processes);
 	* @property {String}  time_modified               - Time Modified
 
     */
-   GaiaAPI_processes.process_role = function(_props){
+   GaiaAPI_processes.process_role = function process_role(_props){
         _props = _props || {};
 		this.process_role_id = _props.process_role_id;
 		this.process_role_name = _props.process_role_name;
@@ -541,13 +541,13 @@ Poolable.call(GaiaAPI_processes);
     };
 
 
-	GaiaAPI_processes.arrayProcessRole = function()
+	GaiaAPI_processes.arrayProcessRole = function arrayProcessRole()
 	{
-		let r = ArrayEx.apply(this, arguments);
-		r.memberType = ["process_role"]; 
-		return r;
+		ArrayEx.apply(this, arguments);    
+		this.memberType = ["process_role"]; 
 	};
 	GaiaAPI_processes.arrayProcessRole.prototype = Object.create(ArrayEx.prototype);
+	GaiaAPI_processes.arrayProcessRole.prototype.constructor = GaiaAPI_processes.arrayProcessRole;
 
     /**
 	* @property {Number}  status_id               - Status ID
@@ -555,7 +555,7 @@ Poolable.call(GaiaAPI_processes);
 	* @property {Number}  num_cases               - Number of cases with this status
 
     */
-   GaiaAPI_processes.status_case_count = function(_props){
+   GaiaAPI_processes.status_case_count = function status_case_count(_props){
         _props = _props || {};
 		this.status_id = _props.status_id;
 		this.status_name = _props.status_name;
@@ -564,19 +564,19 @@ Poolable.call(GaiaAPI_processes);
     };
 
 
-	GaiaAPI_processes.arrayStatusCaseCount = function()
+	GaiaAPI_processes.arrayStatusCaseCount = function arrayStatusCaseCount()
 	{
-		let r = ArrayEx.apply(this, arguments);
-		r.memberType = ["status_case_count"]; 
-		return r;
+		ArrayEx.apply(this, arguments);    
+		this.memberType = ["status_case_count"]; 
 	};
 	GaiaAPI_processes.arrayStatusCaseCount.prototype = Object.create(ArrayEx.prototype);
+	GaiaAPI_processes.arrayStatusCaseCount.prototype.constructor = GaiaAPI_processes.arrayStatusCaseCount;
 
     /**
 	* @property {String}  team_members               - Team names
 
     */
-   GaiaAPI_processes.user_team_members = function(_props){
+   GaiaAPI_processes.user_team_members = function user_team_members(_props){
         _props = _props || {};
 		this.team_members = _props.team_members;
 
@@ -595,7 +595,7 @@ Poolable.call(GaiaAPI_processes);
 	* @property {Number}  team_owner_id_user               - The team's id owner
 
     */
-   GaiaAPI_processes.team = function(_props){
+   GaiaAPI_processes.team = function team(_props){
         _props = _props || {};
 		this.team_name = _props.team_name;
 		this.active = _props.active;
@@ -611,10 +611,10 @@ Poolable.call(GaiaAPI_processes);
     };
 
 
-	GaiaAPI_processes.arrayTeam = function()
+	GaiaAPI_processes.arrayTeam = function arrayTeam()
 	{
-		let r = ArrayEx.apply(this, arguments);
-		r.memberType = ["team"]; 
-		return r;
+		ArrayEx.apply(this, arguments);    
+		this.memberType = ["team"]; 
 	};
 	GaiaAPI_processes.arrayTeam.prototype = Object.create(ArrayEx.prototype);
+	GaiaAPI_processes.arrayTeam.prototype.constructor = GaiaAPI_processes.arrayTeam;

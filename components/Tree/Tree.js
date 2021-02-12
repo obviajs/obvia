@@ -10,21 +10,17 @@ var Tree = function (_props) {
     let _self = this;
     let _creationFinished;
     let _oldDataProvider;
-    Object.defineProperty(this, "dataProvider", 
-    {
-        get: function dataProvider() 
-        {
+    Object.defineProperty(this, "dataProvider", {
+        get: function dataProvider() {
             return _dataProvider;
         },
-        set: function dataProvider(v) 
-        {
-            if(_dataProvider != v)
-            {
-                if(_dpWatcher){
+        set: function dataProvider(v) {
+            if (_dataProvider != v) {
+                if (_dpWatcher) {
                     _dpWatcher.reset();
                     _dataProvider.off("propertyChange", _dpMemberChanged);
                 }
-                _dataProvider = !ArrayEx.isArrayEx(v)?new ArrayEx(v?v:[]):v;
+                _dataProvider = !ArrayEx.isArrayEx(v) ? new ArrayEx(v ? v : []) : v;
                 _dpWatcher = ChangeWatcher.getInstance(_dataProvider);
                 _dpWatcher.watch(_dataProvider, "length", _dpLengthChanged);
                 _dataProvider.on("propertyChange", _dpMemberChanged);
@@ -50,83 +46,69 @@ var Tree = function (_props) {
             _self.dataProviderChanged();
     };
 
-    this.dataProviderChanged = function () 
-    {
+    this.dataProviderChanged = function () {
         //add or remove rows 
-        for(let i=0;i<_dataProvider.length;i++){
-            if(!this.dataProvider[i][_guidField])
+        for (let i = 0; i < _dataProvider.length; i++) {
+            if (!this.dataProvider[i][_guidField])
                 this.dataProvider[i][_guidField] = StringUtils.guid();
         }
-        
+
         let toAdd = differenceOnKeyMatch(_dataProvider, _oldDataProvider, _guidField, false, true);
         let toRemove = differenceOnKeyMatch(_oldDataProvider, _dataProvider, _guidField, false, true);
         let toRefresh = intersect(toAdd.a1_indices, toRemove.a1_indices);
-        for(let i=0;i<toRemove.a1_indices.length;i++){
+        for (let i = 0; i < toRemove.a1_indices.length; i++) {
             //let ind = this.rowItems.length + i;
-            if(toRefresh.indexOf(toRemove.a1_indices[i])==-1)
+            if (toRefresh.indexOf(toRemove.a1_indices[i]) == -1)
                 this.removeChildAtIndex(toRemove.a1_indices[i]);
         }
-        
-        for(let i=0;i<toAdd.a1_indices.length;i++){
-            if(toRefresh.indexOf(toAdd.a1_indices[i])==-1)
-            {
+
+        for (let i = 0; i < toAdd.a1_indices.length; i++) {
+            if (toRefresh.indexOf(toAdd.a1_indices[i]) == -1) {
                 let ind = toAdd.a1_indices[i];
                 let cmp = this.buildTree([this.dataProvider[ind]]);
                 this.addComponent(cmp[0], ind);
             }
         }
-        
-        for(let i = 0; i<toRefresh.length;i++){
-            let cmp = this.children[this.csorted[toRefresh[i]].props.id];
+
+        for (let i = 0; i < toRefresh.length; i++) {
+            let cmp = this.children[this.csorted[toRefresh[i]]];
             cmp.refreshBindings(this.dataProvider[toRefresh[i]]);
             cmp.$el.attr(_guidField, this.dataProvider[toRefresh[i]][_guidField]);
             cmp.attr[_guidField] = this.dataProvider[toRefresh[i]][_guidField];
         }
         _oldDataProvider = acExtend(this.dataProvider);
     };
-    
-    Object.defineProperty(this, "selectedClasses", 
-    {
-        get: function selectedClasses() 
-        {
+
+    Object.defineProperty(this, "selectedClasses", {
+        get: function selectedClasses() {
             return _selectedClasses;
         },
-        set: function selectedClasses(v) 
-        {
-            if(_selectedClasses != v)
-            {  
+        set: function selectedClasses(v) {
+            if (_selectedClasses != v) {
                 _selectedClasses = v;
                 this.select(_selectedItem);
             }
         }
     });
-    
-    Object.defineProperty(this, "expandIcon", 
-    {
-        get: function expandIcon() 
-        {
+
+    Object.defineProperty(this, "expandIcon", {
+        get: function expandIcon() {
             return _expandIcon;
         },
-        set: function expandIcon(v) 
-        {
-            if(_expandIcon != v)
-            {  
+        set: function expandIcon(v) {
+            if (_expandIcon != v) {
                 this.switchFasIcon(_expandIcon, v);
                 _expandIcon = v;
             }
         }
     });
 
-    Object.defineProperty(this, "collapseIcon", 
-    {
-        get: function collapseIcon() 
-        {
+    Object.defineProperty(this, "collapseIcon", {
+        get: function collapseIcon() {
             return _collapseIcon;
         },
-        set: function collapseIcon(v) 
-        {
-            if(_collapseIcon != v)
-            {  
+        set: function collapseIcon(v) {
+            if (_collapseIcon != v) {
                 this.switchFasIcon(_collapseIcon, v);
                 _collapseIcon = v;
             }
@@ -154,22 +136,19 @@ var Tree = function (_props) {
     };
 
     this.beforeAttach = function (e) {
-        if (e.target.id == this.domID) 
-        {
-            if(!e.isDefaultPrevented()){
-            }
+        if (e.target.id == this.domID) {
+            if (!e.isDefaultPrevented()) {}
         }
         //this.components = this.buildTree();
         //this.addComponents(this.components);
     };
-         
-    this.clickHandler=function(e){
+
+    this.clickHandler = function (e) {
         //  if(_dataProvider)
         // this.$el.data('dataProvider',_dataProvider);
     };
-    
-    this.template = function () 
-    {
+
+    this.template = function () {
         return "<ul id='" + this.domID + "'></ul>";
     };
 
@@ -181,7 +160,7 @@ var Tree = function (_props) {
     };
 
     let _defaultParams = {
-        dataProvider:[],
+        dataProvider: [],
         labelField: "label",
         valueField: "guid",
         classesField: undefined,
@@ -199,7 +178,7 @@ var Tree = function (_props) {
         ulClasses: [],
         ulClassesField: undefined,
     };
-        
+
     _props = extend(false, false, _defaultParams, _props);
     let _dataProvider;
     //let _dataProvider = _props.dataProvider;
@@ -250,16 +229,17 @@ var Tree = function (_props) {
         _self.selectedItem = arrayHierarchyGetMatching(_dataProvider, _guidField, liObj[_guidField], _childrenField);
         //_self.select(liObj);
         //e.stopPropagation();
-    };   
+    };
     //to unselect all call with liObj null
     this.select = function (liObj, visited) {
-        let cLi; var visited = visited ? visited : [];
+        let cLi;
+        var visited = visited ? visited : [];
         if (liObj && liObj[_guidField]) {
             let match = getMatchingMember(this.children, "attr." + _guidField, liObj.guid);
             if (match.objects.length > 0) {
                 cLi = match.objects[0];
                 let liClasses = cLi.classes.slice(0);
-                let diff = liClasses.difference(_selectedClasses);
+                let diff = liClasses.difference(_selectedClasses, true);
                 if (diff.length > 0) {
                     liClasses.splicea(liClasses.length, 0, diff);
                 }
@@ -291,17 +271,17 @@ var Tree = function (_props) {
 
     let _componentLi = {
         ctor: Li,
-        props:{
+        props: {
             id: "li",
-            "value": '{?'+_valueField+'}',
+            "value": '{?' + _valueField + '}',
             "click": _toggleTree,
             classes: ["list-group-item"]
         }
     };
-    
+
     let _componentTree = {
         ctor: Tree,
-        props:{
+        props: {
             id: "tree",
             "valueField": _valueField,
             "labelField": _labelField,
@@ -312,7 +292,7 @@ var Tree = function (_props) {
             classes: this.classes
         }
     };
-    
+
     if (_componentsField) {
         _componentTree.props.componentsField = _componentsField;
         _componentLi.props.components = '{?' + _componentsField + '}';
@@ -321,38 +301,30 @@ var Tree = function (_props) {
         _componentLi.props.components = _components;
     }
 
-    if (_liClassesField)
-    { 
+    if (_liClassesField) {
         _componentTree.props.liClassesField = _liClassesField;
         _componentLi.props.classes = '{?' + _liClassesField + '}';
-    }        
-    else if (_liClasses)
-    {
+    } else if (_liClasses) {
         _componentTree.props.liClasses = _liClasses;
         _componentLi.props.classes = _liClasses;
     }
-    
-    if (_ulClassesField)
-    {
+
+    if (_ulClassesField) {
         _componentTree.props.ulClassesField = _ulClassesField;
         _componentTree.props.classes = '{?' + _ulClassesField + '}';
-    }
-    else if (_ulClasses)
-    { 
+    } else if (_ulClasses) {
         _componentTree.props.ulClasses = _ulClasses;
         _componentTree.props.classes = _ulClasses;
     }
-    
-    if (_iconField)
-    { 
+
+    if (_iconField) {
         _componentTree.props.iconField = _iconField;
     }
-    if (_selectedClassesField)
-    { 
+    if (_selectedClassesField) {
         _componentTree.props.selectedClassesField = _selectedClassesField;
-        _componentTree.props.selectedClasses = '{?'+_selectedClassesField+'}';
+        _componentTree.props.selectedClasses = '{?' + _selectedClassesField + '}';
     }
-    
+
     let _componentIconLbl = {
         ctor: Label,
         props: {
@@ -361,7 +333,7 @@ var Tree = function (_props) {
             classes: ["fas", _collapseIcon]
         }
     };
-    
+
     let _nodeIconLbl = {
         ctor: Label,
         props: {
@@ -369,13 +341,13 @@ var Tree = function (_props) {
             labelType: LabelType.i
         }
     };
-    
+
     let _componentLbl = {
         ctor: Label,
         props: {
             id: 'label',
             labelType: LabelType.label,
-            "label": '{?'+_labelField+'}',
+            "label": '{?' + _labelField + '}',
         }
     };
 
@@ -408,7 +380,7 @@ var Tree = function (_props) {
                         cmpLi.props.components = cmps;
                     } else {
                         if (_iconField) {
-                            
+
                             let cmpIcon = extend(true, _nodeIconLbl);
                             cmpIcon.props.bindingDefaultContext = dp[i];
                             cmpIcon.props.classes = '{?' + _iconField + '}';
@@ -422,10 +394,10 @@ var Tree = function (_props) {
                         } else if (_componentsField) {
                             cmps.splicea(cmps.length, 0, dp[i][_componentsField]);
                             cmpLi.props.components = cmps;
-                        } else if (_components) { 
+                        } else if (_components) {
                             cmps.splicea(cmps.length, 0, _components);
                             cmpLi.props.components = cmps;
-                        }else
+                        } else
                             cmpLi.props.label = '{?' + _labelField + '}';
                     }
                     components.push(cmpLi);
@@ -438,51 +410,48 @@ var Tree = function (_props) {
         return components;
     };
 
-    _props.click = function(){
+    _props.click = function () {
         //toggleChildren
-        if(typeof _click=='function')
-        _click.apply(this,arguments);
+        if (typeof _click == 'function')
+            _click.apply(this, arguments);
         let e = arguments[0];
-        if(!e.isDefaultPrevented()){
+        if (!e.isDefaultPrevented()) {
             _self.clickHandler();
         }
     };
-    
-    if (_selectedClassesField)
-    { 
-        _props.selectedClasses = '{?'+_selectedClassesField+'}';
+
+    if (_selectedClassesField) {
+        _props.selectedClasses = '{?' + _selectedClassesField + '}';
     }
-    
+
     let r = Parent.call(this, _props);
-    
+
     Object.defineProperty(this, "selectedItem", {
         get: function selectedItem() {
             return _selectedItem;
         },
         set: function selectedItem(v) {
-            if (_selectedItem!=v) {
+            if (_selectedItem != v) {
                 _selectedItem = v;
-                if(!this.parent || (this.parent && this.parent.ctor !="Li"))
+                if (!this.parent || (this.parent && this.parent.ctor != "Li"))
                     this.select(_selectedItem);
-                else if(this.parent && this.parent.ctor =="Li")
+                else if (this.parent && this.parent.ctor == "Li")
                     this.parent.parent.selectedItem = _selectedItem;
             }
         },
         enumerable: true
     });
     let _rPromise;
-    this.render = function () 
-    {  
+    this.render = function () {
         this.$container = this.$el;
         _rPromise = new Promise((resolve, reject) => {
-            _self.on("endDraw", function(e){
-                if (e.target.id == _self.domID) 
-                {       
-                    resolve(r); 
+            _self.on("endDraw", function (e) {
+                if (e.target.id == _self.domID) {
+                    resolve(r);
                 }
-            });                   
+            });
         });
-        if(_props.dataProvider)
+        if (_props.dataProvider)
             this.dataProvider = _props.dataProvider;
         else
             this.dataProvider = new ArrayEx([]);
