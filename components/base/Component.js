@@ -30,7 +30,7 @@ var Component = function (_props) {
     }
     let _parentRepeater = _props.parentRepeater;
     let _repeaterIndex = _props.repeaterIndex;
-    let _bindingDefaultContext = _props.bindingDefaultContext;
+    let _bindingDefaultContext = _props.bindingDefaultContext || this;
     let _guid = _props.guid;
     let _attr, _css;
     let _id = _props.id = ((!_props.id) || (_props.id == "")) ? _defaultParams.id : _props.id;
@@ -802,29 +802,23 @@ var Component = function (_props) {
                 };
                 _bindings.splice(match.indices[0], 1, newBinding);
 
-                let currentItem = _bindingDefaultContext;
                 let bindingExp = expression;
-                let site = this;
                 let site_chain = [property];
                 let nullable = false;
 
-                //this here refers to window context
-                let defaultBindTo = "currentItem_" + _self.guid;
-                window[defaultBindTo] = (currentItem || this);
-                if (!("currentItem" in window[defaultBindTo])) {
-                    // window[defaultBindTo]["currentItem"] = window[defaultBindTo];
-                    Object.defineProperty(window[defaultBindTo], "currentItem", {
-                        value: window[defaultBindTo],
+                if (!("currentItem" in _bindingDefaultContext)) {
+                    Object.defineProperty(_bindingDefaultContext, "currentItem", {
+                        value: _bindingDefaultContext,
                         enumerable: false,
                         configurable: true
                     });
                 }
                 // let context = extend(false, true, this, obj);
                 let fn = function () {
-                    _bindingsManager.getValue(window, bindingExp, site_chain, defaultBindTo);
+                    _bindingsManager.getValue(_bindingDefaultContext, bindingExp, site_chain);
                 };
                 if (nullable) {
-                    let fnDelayed = whenDefined(window[defaultBindTo], bindingExp, fn);
+                    let fnDelayed = whenDefined(_bindingDefaultContext, bindingExp, fn);
                     fnDelayed();
                 } else {
                     fn();
@@ -851,31 +845,27 @@ var Component = function (_props) {
     this.applyBindings = function (data) {
         _bindedTo = data;
         for (let bi = 0; bi < _bindings.length; bi++) {
-            let currentItem = data;
             let bindingExp = _bindings[bi].expression;
 
             let site_chain = [_bindings[bi].property];
             let nullable = _bindings[bi].nullable;
 
-            //this here refers to window context
-            let defaultBindTo = "currentItem_" + _self.guid;
-            window[defaultBindTo] = (currentItem || this);
-            if (!("currentItem" in window[defaultBindTo])) {
-                Object.defineProperty(window[defaultBindTo], "currentItem", {
-                    value: window[defaultBindTo],
+            if (!("currentItem" in data)) {
+                Object.defineProperty(data, "currentItem", {
+                    value: data,
                     enumerable: false,
                     configurable: true
                 });
             }
             // let context = extend(false, true, this, obj);
             let fn = function () {
-                _bindingsManager.getValue(window, bindingExp, site_chain, defaultBindTo);
+                _bindingsManager.getValue(data, bindingExp, site_chain);
             };
             if (nullable) {
                 let identifierTokens = BindingsManager.getIdentifiers(bindingExp);
                 if (identifierTokens) {
                     let len = identifierTokens.length;
-                    let cc = window[defaultBindTo];
+                    let cc = data;
                     coroutine(function* () {
                         for (let i = 0; i < len; i++) {
                             yield whenDefinedPromise(cc, identifierTokens[i].value);

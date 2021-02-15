@@ -294,7 +294,6 @@ var Filter = function (_props) {
         }
 
         filterItemEditor = Component.fromLiteral(filterItemEditor);
-        let reqFieldValidator;
         if (ra.currentItem[_operatorsField]) {
             _operatorsDp.splicea(0, _operatorsDp.length, ra.currentItem[_operatorsField]);
         } else {

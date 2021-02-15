@@ -6,9 +6,10 @@ loader.render().then(function (cmpInstance) {
     $('#root').append(cmpInstance.$el);
     loader.show();
 });
+var myDataGrid;
 let apiClient = new ApiClient();
-apiClient.get("https://api.mocki.io/v1/8dea432f").then(r => {
-    var myDataGrid = new DataGrid({
+apiClient.get("https://api.mocki.io/v1/83a89b16").then(r => {
+    myDataGrid = new DataGrid({
         id: 'DataGrid',
         height: 300,
         width: 800,

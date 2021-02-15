@@ -634,7 +634,7 @@ var DataGrid = function (_props) {
             "position": "relative"
         });
         this.$el.scrollTop(0);
-        this.delayScroll = debouncePromise(_onScroll, 400);
+        this.delayScroll = debouncePromise(_onScroll, 10);
 
         this.$el.on("scroll", function (e) {
             //if (_virtualHeight > (e.target.scrollTop + this.realHeight) - 2 * _avgRowHeight) {
