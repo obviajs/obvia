@@ -53,12 +53,12 @@ var Applet = function (_props) {
         if ((_parent == _app) || msg[_anchor]) {
             return coroutine(function* () {
                 let p = yield _self.init(msg[_anchor]);
-
+                let appletIndex = msg.inst ? msg.inst : 0;
                 let pc = [p];
                 if (msg[_anchor]) {
                     for (let _canchor in _appletsMap) {
                         if (msg[_anchor][_canchor]) {
-                            let inst = _appletsMap[_canchor];
+                            let inst = _appletsMap[_canchor][appletIndex];
                             pc.push(yield inst.route(msg[_anchor]));
                         }
                     }
@@ -115,7 +115,11 @@ var Applet = function (_props) {
                     let applet = _applets[i];
                     applet.app = _app;
                     applet.parent = _self;
-                    let inst = _appletsMap[_applets[i].anchor] = new Applet(applet);
+                    if (!_appletsMap[_applets[i].anchor]) {
+                        _appletsMap[_applets[i].anchor] = [];
+                    }
+                    let inst = new Applet(applet);
+                    _appletsMap[_applets[i].anchor].push(inst);
                     inst.on("appletInit", _appletInit);
                 }
             }

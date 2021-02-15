@@ -583,7 +583,7 @@ var Filter = function (_props) {
                                                 props: {
                                                     id: 'faRemove',
                                                     label: "",
-                                                    href: "#",
+                                                    href: "javascript.void()",
                                                     target: "",
                                                     classes: ["fas", "fa-times"],
                                                     css: {
@@ -597,7 +597,7 @@ var Filter = function (_props) {
                                                 props: {
                                                     id: 'faAccept',
                                                     label: "",
-                                                    href: "#",
+                                                    href: "javascript.void()",
                                                     target: "",
                                                     visible: false,
                                                     classes: ["fas", "fa-check"],
