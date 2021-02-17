@@ -237,7 +237,7 @@ rjs.define("lib/yaml.js", "yaml");
 rjs.define("./lib/ApiClientGen/ApiClient.js", "ApiClient");
 rjs.define("./lib/ApiClientGen/ApiClientGen.js", "ApiClientGen");
 rjs.define("./lib/ApiClientGen/OAMethod.js", "OAMethod");
-
+rjs.define("lib/LocalizationManager.js", "LocalizationManager");
 let dependencies = [
     ["EventDispatcher", "Literal"],
     [
@@ -420,7 +420,8 @@ let dependencies = [
         "yaml",
         "ApiClient",
         "ApiClientGen",
-        "OAMethod"
+        "OAMethod",
+        "LocalizationManager"
     ]
 ];
 rjs.grequire(dependencies).then(() => {

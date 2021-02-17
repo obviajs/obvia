@@ -247,7 +247,7 @@ rjs.define("GaiaAPI/GaiaAPI_Frms_dataview.js", "GaiaAPI_Frms_dataview");
 rjs.define("GaiaAPI/GaiaAPI_dataview_pid_1.js", "GaiaAPI_dataview_pid_1");
 rjs.define("inspect/CollectionEditor.js", "CollectionEditor");
 rjs.define("inspect/ObjectEditor.js", "ObjectEditor");
-
+rjs.define("/flowerui/lib/LocalizationManager.js", "LocalizationManager");
 
 let dependencies = [
     ["EventDispatcher", "Literal"],
@@ -432,7 +432,8 @@ let dependencies = [
         "ApiClientGen",
         "componentList",
         "CollectionEditor",
-        "ObjectEditor"
+        "ObjectEditor",
+        "LocalizationManager"
     ],
     [
         "Scrap",

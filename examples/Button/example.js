@@ -1,26 +1,32 @@
-var loader = new Loader({
-  id: 'loader'
-});
-$('#root').append(await loader.render().$el);
-loader.show();
-
 var myButton = new Button({
   id: 'button',
   type: "",
   value: "",
-  label: "Click me",
+  label: "{localizationManager.getLocaleString('Forms', 'successfullySaved', localizationManager.selectedLocale)}",
   classes: ["btn", "btn-success"],
   click: function (e) {
     console.log("From ClickAction");
   }
 });
-myButton.on('creationComplete', function () {
-  loader.hide();
-  myButton.on('click', function () {
-
-    // alert("test");
-  });
+let localizationManager = new LocalizationManager({
+  selectedLocale: {
+      displayLanguage: "English",
+      localeString: "en_US"
+  },
+  fetchPromise: function (p) { 
+    return get(BrowserManager.getInstance().base+ "/oxanaui/app/locale/" + p.localeString + ".json", "application/json")
+  }
 });
-myButton.render().then(function (cmpInstance) {
-  $('#root').append(cmpInstance.$el);
+myButton.localizationManager = localizationManager;
+
+myButton.on('click', function () {
+  localizationManager.setSelectedLocale({
+      displayLanguage: "English",
+      localeString: "sq_AL"
+  })
+});
+localizationManager.loaded.then((d) => {
+  myButton.render().then(function (cmpInstance) {
+    $('#root').append(cmpInstance.$el);
+  });
 });

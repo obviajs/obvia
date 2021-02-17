@@ -608,11 +608,20 @@ var Repeater = function (_props, _hideComponents = false) {
                 e.preventDefault();
         }
     };
-    var _beforeAttach = this.beforeAttach;
+    
+    let _beforeAttach = this.beforeAttach;
     this.beforeAttach = function (e) {
         if (e.target.id == this.domID) {
             if (typeof _beforeAttach == 'function')
                 _beforeAttach.apply(this, arguments);
+        }
+    };
+    
+    let _init = this.init;
+    this.init = function (e) {
+        if (e.target.id == this.domID) {
+            if (typeof _init == 'function')
+                _init.apply(this, arguments);
         }
     };
 

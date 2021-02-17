@@ -283,6 +283,7 @@ rjs.define("report_builder/app/dataPromise/_initDbModal.js", "_initDbModal");
 rjs.define("report_builder/app/routes/uiRoute.js", "uiRoute");
 rjs.define("report_builder/app/routes/modalRoute.js", "modalRoute");
 
+rjs.define("/flowerui/lib/LocalizationManager.js", "LocalizationManager");
 let dependencies = [
     ["EventDispatcher", "Literal"],
     [
@@ -466,7 +467,8 @@ let dependencies = [
         "ApiClientGen",
         "componentList",
         "CollectionEditor",
-        "ObjectEditor"
+        "ObjectEditor",
+        "LocalizationManager"
     ],
     [
         "Scrap",

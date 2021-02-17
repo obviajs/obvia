@@ -250,8 +250,9 @@ rjs.define("/flowerui/lib/P3Com/FiscalPrinter/PromoProperties.js", "PromoPropert
 rjs.define("/flowerui/lib/P3Com/FiscalPrinter/Invoice.js", "Invoice");
 rjs.define("/flowerui/lib/P3Com/FiscalPrinter/InvoiceItem.js", "InvoiceItem");
 
+rjs.define("/flowerui/lib/LocalizationManager.js", "LocalizationManager");
 let dependencies = [
-    ["EventDispatcher", "Literal"],
+    ["EventDispatcher", "Literal",
     [
         "Poolable",
         "Timer",
@@ -428,7 +429,8 @@ let dependencies = [
         "yaml",
         "ApiClient",
         "ApiClientGen",
-        "OAMethod"
+        "OAMethod",
+        "LocalizationManager"]
     ],
     [
         "ip_discovery", "Command", "CommandType", "Host", "P3Com", "P3ComEventType", "P3ComManager",

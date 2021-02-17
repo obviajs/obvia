@@ -164,6 +164,30 @@ var DataGrid = function (_props) {
         this.$scrollArea.css({ height: _virtualHeight + "px" });
         */
     };
+    
+    this.init = function (e) {
+        this.delayScroll = debouncePromise(_onScroll, 10);
+        this.$el.on("scroll", function (e) {
+            //if (_virtualHeight > (e.target.scrollTop + this.realHeight) - 2 * _avgRowHeight) {
+            this.$message.show();
+
+            this.$table.css({
+                "margin-top": e.target.scrollTop + "px"
+            });
+
+            this.delayScroll.apply(this, arguments).then(function (r) {
+                if (!r) {
+                    //_self.$table.css({ "margin-top": mtt + "px" });
+                    //_self.$scrollArea.css({ "margin-top": smt + "px" });
+                } else {
+                    // mtt = e.target.scrollTop;
+                    // smt = (-(_self.realHeight) - e.target.scrollTop);
+                }
+            });
+            //this.onScroll.apply(this, arguments);
+            //}
+        }.bind(this));
+    };
 
     this.beginDraw = function (e) {
         if (e.target.id == this.domID) {
@@ -340,7 +364,6 @@ var DataGrid = function (_props) {
                 //this.$el.scrollTop(_prevScrollTop + _avgRowHeight);
                 let ps = _prevScrollTop;
                 this.scroll(ps + _avgRowHeight);
-                //this.$table.css({"margin-top":(ps + _avgRowHeight)});
 
                 data = _self.dataProvider[rowIndex + _virtualIndex];
 
@@ -630,32 +653,9 @@ var DataGrid = function (_props) {
         });
 
         this.$table.css({
-            "margin-top": "0px",
             "position": "relative"
         });
-        this.$el.scrollTop(0);
-        this.delayScroll = debouncePromise(_onScroll, 10);
-
-        this.$el.on("scroll", function (e) {
-            //if (_virtualHeight > (e.target.scrollTop + this.realHeight) - 2 * _avgRowHeight) {
-            this.$message.show();
-
-            this.$table.css({
-                "margin-top": e.target.scrollTop + "px"
-            });
-
-            this.delayScroll.apply(this, arguments).then(function (r) {
-                if (!r) {
-                    //_self.$table.css({ "margin-top": mtt + "px" });
-                    //_self.$scrollArea.css({ "margin-top": smt + "px" });
-                } else {
-                    mtt = e.target.scrollTop;
-                    smt = (-(_self.realHeight) - e.target.scrollTop);
-                }
-            });
-            //this.onScroll.apply(this, arguments);
-            //}
-        }.bind(this));
+        this.$el.scrollTop(0);       
         this.setCellsWidth();
     };
 
