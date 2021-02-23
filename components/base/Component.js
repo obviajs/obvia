@@ -25,12 +25,10 @@ var Component = function (_props) {
         if (!ppb.processedProps.hasOwnProperty(prop))
             delete _props[prop];
     }
-    if (_props.bindingDefaultContext == null) {
-        _props.bindingDefaultContext = this;
-    }
+
     let _parentRepeater = _props.parentRepeater;
     let _repeaterIndex = _props.repeaterIndex;
-    let _bindingDefaultContext = _props.bindingDefaultContext || this;
+    let _bindingDefaultContext;
     let _guid = _props.guid;
     let _attr, _css;
     let _id = _props.id = ((!_props.id) || (_props.id == "")) ? _defaultParams.id : _props.id;
@@ -243,14 +241,16 @@ var Component = function (_props) {
         set: function parent(v) {
             if (_parent != v) {
                 if (_parent) {
-                    if (_self.$el) {
-                        if (_parent)
-                            _parent.$el.detach(_self.$el);
-                        if (v)
-                            v.$el.append(_self.$el);
-                    }
+                    if (_parent)
+                        _parent.removeChild(_self);                        
                 }
                 _parent = v;
+                if (this.children) {
+                    for (let cid in this.children) {
+                        this.children[cid].invalidateScopeChain();
+                    }
+                }
+                this.invalidateScopeChain();
             }
         },
         enumerable: false
@@ -478,8 +478,8 @@ var Component = function (_props) {
                 if (typeof _endDraw == 'function')
                     _endDraw.apply(this.proxyMaybe, arguments);
             }
-            if ((_props.applyBindings == null || _props.applyBindings == true) && _bindingsManager.watchers.length == 0)
-                this.applyBindings(_bindingDefaultContext);
+            if (_bindingsManager.watchers.length == 0)
+                this.applyBindings();
             _self.trigger('beforeAttach');
         }
     };
@@ -827,45 +827,48 @@ var Component = function (_props) {
         }
     };
 
-    let _bindedTo;
     this.refreshBindings = function (data) {
-        if (_bindedTo != data) {
+        let r = false;
+        if (_bindingDefaultContext != data) {
+            this.invalidateScopeChain();
+            _bindingDefaultContext = data;
             this.resetBindings();
-            this.applyBindings(data);
+            this.applyBindings();
             if (this.children) {
                 for (let cid in this.children) {
-                    if (this.children[cid].bindingDefaultContext == _bindingDefaultContext)
-                        this.children[cid].refreshBindings(data);
+                    this.children[cid].invalidateScopeChain();
+                    this.children[cid].applyBindings();
                 }
             }
+            _bindingDefaultContext = data;
+            r = true;
         }
-        _bindingDefaultContext = data;
+        return r;
     };
 
-    this.applyBindings = function (data) {
-        _bindedTo = data;
+    this.applyBindings = function () {
+        let scope = this.getScopeChain();
         for (let bi = 0; bi < _bindings.length; bi++) {
             let bindingExp = _bindings[bi].expression;
-
             let site_chain = [_bindings[bi].property];
             let nullable = _bindings[bi].nullable;
 
-            if (!("currentItem" in data)) {
-                Object.defineProperty(data, "currentItem", {
-                    value: data,
+            if (!("currentItem" in _bindingDefaultContext)) {
+                Object.defineProperty(_bindingDefaultContext, "currentItem", {
+                    value: _bindingDefaultContext,
                     enumerable: false,
                     configurable: true
                 });
             }
             // let context = extend(false, true, this, obj);
             let fn = function () {
-                _bindingsManager.getValue(data, bindingExp, site_chain);
+                _bindingsManager.getValue(scope, bindingExp, site_chain);
             };
             if (nullable) {
                 let identifierTokens = BindingsManager.getIdentifiers(bindingExp);
                 if (identifierTokens) {
                     let len = identifierTokens.length;
-                    let cc = data;
+                    let cc = _bindingDefaultContext;
                     coroutine(function* () {
                         for (let i = 0; i < len; i++) {
                             yield whenDefinedPromise(cc, identifierTokens[i].value);
@@ -958,7 +961,27 @@ var Component = function (_props) {
         return m;
     };
 
-    this.trigger('init');
+    let _cachedScope = null
+    this.invalidateScopeChain = function () {
+        _cachedScope = null;
+    };
+
+    this.getScopeChain = function () {
+        let scope = _cachedScope
+        if (!_cachedScope) {
+            scope = [this.bindingDefaultContext];
+            if (this.proxyMaybe != this.bindingDefaultContext)
+                scope.push(this.proxyMaybe);
+            if (this.parent) {
+                scope.splicea(scope.length, 0, this.parent.getScopeChain())
+            } else
+                scope.push(window)
+            _cachedScope = scope;
+        } 
+        return scope;
+    };
+    _bindingDefaultContext = _props.bindingDefaultContext || this.proxyMaybe;
+    this.trigger('init');  
 };
 
 Component.processPropertyBindings = function (props) {

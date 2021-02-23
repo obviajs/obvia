@@ -1,180 +1,180 @@
 Builder.initComponentList = function () {
     Builder.componentList = new ArrayEx([{
-            "label": "Label",
+            "componentNameLabel": "Label",
             "ctor": "Label"
         },
         {
-            "label": "Heading",
+            "componentNameLabel": "Heading",
             "ctor": "Heading"
         },
         {
-            "label": "Link",
+            "componentNameLabel": "Link",
             "ctor": "Link"
         },
         {
-            "label": "HRule",
+            "componentNameLabel": "HRule",
             "ctor": "HRule"
         },
         {
-            "label": "Button",
+            "componentNameLabel": "Button",
             "ctor": "Button"
         },
         {
-            "label": "TextInput",
+            "componentNameLabel": "TextInput",
             "ctor": "TextInput"
         },
         {
-            "label": "TextArea",
+            "componentNameLabel": "TextArea",
             "ctor": "TextArea"
         },
         {
-            "label": "DateTime",
+            "componentNameLabel": "DateTime",
             "ctor": "DateTime"
         },
         {
-            "label": "DateTimeCb",
+            "componentNameLabel": "DateTimeCb",
             "ctor": "DateTimeCb"
         },
         {
-            "label": "Image",
+            "componentNameLabel": "Image",
             "ctor": "Image"
         },
         {
-            "label": "Select",
+            "componentNameLabel": "Select",
             "icon": "drop-down-list.png",
             "ctor": "Select"
         },
         {
-            "label": "DropDown",
+            "componentNameLabel": "DropDown",
             "icon": "drop-down-list.png",
             "ctor": "DropDown"
         },
         {
-            "label": "Amount",
+            "componentNameLabel": "Amount",
             "ctor": "Amount"
         },
         {
-            "label": "Tree",
+            "componentNameLabel": "Tree",
             "ctor": "Tree"
         },
         {
-            "label": "AutoComplete",
+            "componentNameLabel": "AutoComplete",
             "ctor": "AutoCompleteEx"
         },
         {
-            "label": "CurrencyExRate",
+            "componentNameLabel": "CurrencyExRate",
             "ctor": "CurrencyExRate"
         },
         {
-            "label": "AutoBrowse",
+            "componentNameLabel": "AutoBrowse",
             "ctor": "AutoBrowse"
         },
         {
-            "label": "RadioGroup",
+            "componentNameLabel": "RadioGroup",
             "ctor": "RadioGroup"
         },
         {
-            "label": "Toggle",
+            "componentNameLabel": "Toggle",
             "ctor": "Toggle"
         },
         {
-            "label": "CheckBox",
+            "componentNameLabel": "CheckBox",
             "ctor": "CheckBox"
         },
         {
-            "label": "CheckBoxGroup",
+            "componentNameLabel": "CheckBoxGroup",
             "ctor": "CheckBoxGroup"
         },
         {
-            "label": "Form",
+            "componentNameLabel": "Form",
             "ctor": "Form"
         },
         {
-            "label": "Header",
+            "componentNameLabel": "Header",
             "ctor": "Header"
         },
         {
-            "label": "Footer",
+            "componentNameLabel": "Footer",
             "ctor": "Footer"
         },
         {
-            "label": "SideNav",
+            "componentNameLabel": "SideNav",
             "ctor": "SideNav"
         },
         {
-            "label": "Container",
+            "componentNameLabel": "Container",
             "ctor": "Container"
         },
         {
-            "label": "ViewStack",
+            "componentNameLabel": "ViewStack",
             "ctor": "ViewStack"
         },
         {
-            "label": "Upload",
+            "componentNameLabel": "Upload",
             "ctor": "UploadEx"
         },
         {
-            "label": "MultiUpload",
+            "componentNameLabel": "MultiUpload",
             "ctor": "MultiUpload"
         },
         {
-            "label": "MapLocationPicker",
+            "componentNameLabel": "MapLocationPicker",
             "ctor": "MapLocationPicker"
         },
         {
-            "label": "Repeater",
+            "componentNameLabel": "Repeater",
             "ctor": "Repeater"
         },
         {
-            "label": "RepeaterEx",
+            "componentNameLabel": "RepeaterEx",
             "ctor": "RepeaterEx"
         },
         {
-            "label": "List",
+            "componentNameLabel": "List",
             "ctor": "List"
         },
         {
-            "label": "DataGrid",
+            "componentNameLabel": "DataGrid",
             "ctor": "DataGrid"
         },
         {
-            "label": "CalendarDay",
+            "componentNameLabel": "CalendarDay",
             "ctor": "CalendarDay"
         },
         {
-            "label": "CalendarWeek",
+            "componentNameLabel": "CalendarWeek",
             "ctor": "CalendarWeek"
         },
         {
-            "label": "CalendarMonth",
+            "componentNameLabel": "CalendarMonth",
             "ctor": "CalendarMonth"
         },
         {
-            "label": "Calendar",
+            "componentNameLabel": "Calendar",
             "ctor": "Calendar"
         },
         {
-            "label": "CreditCard",
+            "componentNameLabel": "CreditCard",
             "ctor": "CreditCard"
         },
         {
-            "label": "Wizard",
+            "componentNameLabel": "Wizard",
             "ctor": "Wizard"
         },
         {
-            "label": "RequiredFieldValidator",
+            "componentNameLabel": "RequiredFieldValidator",
             "ctor": "RequiredFieldValidator"
         },
         {
-            "label": "RangeValidator",
+            "componentNameLabel": "RangeValidator",
             "ctor": "RangeValidator"
         },
         {
-            "label": "RegularExpressionValidator",
+            "componentNameLabel": "RegularExpressionValidator",
             "ctor": "RegularExpressionValidator"
         },
         {
-            "label": "DataBrowse",
+            "componentNameLabel": "DataBrowse",
             "ctor": "DataBrowse"
         }
     ]);

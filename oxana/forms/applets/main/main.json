@@ -7,7 +7,8 @@
          "height": "100%",
          "visible": true
       },
-      "components": [{
+      "components": [
+         {
             "ctor": "Loader",
             "props": {
                "id": "appLoader"
@@ -35,7 +36,8 @@
                "classes": [
                   "nav"
                ],
-               "components": [{
+               "components": [
+                  {
                      "ctor": "Container",
                      "props": {
                         "id": "leftNav",
@@ -43,22 +45,24 @@
                            "width": "350px"
                         },
                         "type": "",
-                        "components": [{
-                           "ctor": "Label",
-                           "props": {
-                              "id": "toggleSideNavLeft",
-                              "labelType": "i",
-                              "classes": [
-                                 "fas",
-                                 "fa-bars",
-                                 "navIcons"
-                              ],
-                              "css": {
-                                 "marginTop": "15px",
-                                 "marginLeft": "340px"
+                        "components": [
+                           {
+                              "ctor": "Label",
+                              "props": {
+                                 "id": "toggleSideNavLeft",
+                                 "labelType": "i",
+                                 "classes": [
+                                    "fas",
+                                    "fa-bars",
+                                    "navIcons"
+                                 ],
+                                 "css": {
+                                    "marginTop": "15px",
+                                    "marginLeft": "340px"
+                                 }
                               }
                            }
-                        }]
+                        ]
                      }
                   },
                   {
@@ -71,8 +75,11 @@
                            "marginRight": "0",
                            "paddingLeft": "40px"
                         },
-                        "classes": ["middleNav"],
-                        "components": [{
+                        "classes": [
+                           "middleNav"
+                        ],
+                        "components": [
+                           {
                               "ctor": "Label",
                               "props": {
                                  "id": "undoButton",
@@ -260,21 +267,23 @@
                         "id": "rightNav",
                         "type": "",
                         "width": "350px",
-                        "components": [{
-                           "ctor": "Label",
-                           "props": {
-                              "id": "toggleSideNavRight",
-                              "labelType": "i",
-                              "classes": [
-                                 "fas",
-                                 "fa-bars",
-                                 "navIcons"
-                              ],
-                              "css": {
-                                 "marginTop": "15px"
+                        "components": [
+                           {
+                              "ctor": "Label",
+                              "props": {
+                                 "id": "toggleSideNavRight",
+                                 "labelType": "i",
+                                 "classes": [
+                                    "fas",
+                                    "fa-bars",
+                                    "navIcons"
+                                 ],
+                                 "css": {
+                                    "marginTop": "15px"
+                                 }
                               }
                            }
-                        }]
+                        ]
                      }
                   }
                ]
@@ -290,7 +299,8 @@
                   "flex-shrink-0",
                   "flex-nowrap"
                ],
-               "components": [{
+               "components": [
+                  {
                      "ctor": "SideNav",
                      "props": {
                         "id": "componentsContainer",
@@ -300,7 +310,8 @@
                            "sidenav",
                            "sideNav_side_left"
                         ],
-                        "components": [{
+                        "components": [
+                           {
                               "ctor": "Container",
                               "props": {
                                  "id": "container",
@@ -308,7 +319,8 @@
                                  "classes": [
                                     "inner-addon right-addon"
                                  ],
-                                 "components": [{
+                                 "components": [
+                                    {
                                        "ctor": "TextInput",
                                        "props": {
                                           "id": "cmpSearchTextInput",
@@ -328,22 +340,24 @@
                                           "classes": [
                                              "btn"
                                           ],
-                                          "components": [{
-                                             "ctor": "Label",
-                                             "props": {
-                                                "id": "i",
-                                                "label": "",
-                                                "labelType": "i",
-                                                "classes": [
-                                                   "fa",
-                                                   "fa-search"
-                                                ],
-                                                "css": {
-                                                   "marginTop": "0",
-                                                   "top": 0
+                                          "components": [
+                                             {
+                                                "ctor": "Label",
+                                                "props": {
+                                                   "id": "i",
+                                                   "label": "",
+                                                   "labelType": "i",
+                                                   "classes": [
+                                                      "fa",
+                                                      "fa-search"
+                                                   ],
+                                                   "css": {
+                                                      "marginTop": "0",
+                                                      "top": 0
+                                                   }
                                                 }
                                              }
-                                          }]
+                                          ]
                                        }
                                     },
                                     {
@@ -352,22 +366,27 @@
                                           "id": "buttonDel",
                                           "type": "button",
                                           "label": "",
-                                          "classes": ["remove_button", "btn"],
-                                          "components": [{
-                                             "ctor": "Label",
-                                             "props": {
-                                                "id": "i",
-                                                "label": "",
-                                                "labelType": "i",
-                                                "classes": [
-                                                   "fas",
-                                                   "fa-times"
-                                                ],
-                                                "css": {
-                                                   "marginTop": "0"
+                                          "classes": [
+                                             "remove_button",
+                                             "btn"
+                                          ],
+                                          "components": [
+                                             {
+                                                "ctor": "Label",
+                                                "props": {
+                                                   "id": "i",
+                                                   "label": "",
+                                                   "labelType": "i",
+                                                   "classes": [
+                                                      "fas",
+                                                      "fa-times"
+                                                   ],
+                                                   "css": {
+                                                      "marginTop": "0"
+                                                   }
                                                 }
                                              }
-                                          }]
+                                          ]
                                        }
                                     }
                                  ]
@@ -380,36 +399,40 @@
                                  "rendering": {
                                     "direction": "vertical"
                                  },
-                                 "components": [{
-                                    "ctor": "Container",
-                                    "props": {
-                                       "id": "component",
-                                       "draggable": true,
-                                       "classes": [
-                                          "border",
-                                          "comp_side"
-                                       ],
-                                       "css": {
-                                          "borderRadius": "5px",
-                                          "margin": "2px 2px"
-                                       },
-                                       "width": "100%",
-                                       "height": 80,
-                                       "type": "",
-                                       "components": [{
-                                          "ctor": "Label",
-                                          "props": {
-                                             "id": "Component Label",
-                                             "label": "{label}",
-                                             "css": {
-                                                "fontSize": "15px",
-                                                "marginTop": "20px",
-                                                "fontWeight": "bold"
+                                 "components": [
+                                    {
+                                       "ctor": "Container",
+                                       "props": {
+                                          "id": "component",
+                                          "draggable": true,
+                                          "classes": [
+                                             "border",
+                                             "comp_side"
+                                          ],
+                                          "css": {
+                                             "borderRadius": "5px",
+                                             "margin": "2px 2px"
+                                          },
+                                          "width": "100%",
+                                          "height": 80,
+                                          "type": "",
+                                          "components": [
+                                             {
+                                                "ctor": "Label",
+                                                "props": {
+                                                   "id": "Component Label",
+                                                   "label": "{componentNameLabel}",
+                                                   "css": {
+                                                      "fontSize": "15px",
+                                                      "marginTop": "20px",
+                                                      "fontWeight": "bold"
+                                                   }
+                                                }
                                              }
-                                          }
-                                       }]
+                                          ]
+                                       }
                                     }
-                                 }]
+                                 ]
                               }
                            }
                         ]
@@ -419,76 +442,83 @@
                      "ctor": "Container",
                      "props": {
                         "id": "workArea",
-                        "components": [{
+                        "components": [
+                           {
                               "ctor": "Container",
                               "props": {
                                  "id": "workAreaRow",
                                  "type": "row",
                                  "height": "100%",
-                                 "components": [{
-                                    "ctor": "Container",
-                                    "props": {
-                                       "type": "",
-                                       "spacing": {
-                                          "colSpan": 12
-                                       },
-                                       "id": "workAreaColumn",
-                                       "components": [{
-                                          "ctor": "Container",
-                                          "props": {
-                                             "spacing": {
-                                                "h": 100
-                                             },
-                                             "id": "workAreaCell",
-                                             "type": "",
-                                             "components": [{
-                                                   "ctor": "Container",
-                                                   "props": {
-                                                      "id": "workAreaRowL2",
-                                                      "type": "row",
-                                                      "spacing": {
-                                                         "h": 100
-                                                      },
-                                                      "components": [{
+                                 "components": [
+                                    {
+                                       "ctor": "Container",
+                                       "props": {
+                                          "type": "",
+                                          "spacing": {
+                                             "colSpan": 12
+                                          },
+                                          "id": "workAreaColumn",
+                                          "components": [
+                                             {
+                                                "ctor": "Container",
+                                                "props": {
+                                                   "spacing": {
+                                                      "h": 100
+                                                   },
+                                                   "id": "workAreaCell",
+                                                   "type": "",
+                                                   "components": [
+                                                      {
                                                          "ctor": "Container",
                                                          "props": {
-                                                            "type": "",
+                                                            "id": "workAreaRowL2",
+                                                            "type": "row",
                                                             "spacing": {
                                                                "h": 100
                                                             },
-                                                            "id": "workAreaColumnL2",
-                                                            "classes": [
-                                                               "border",
-                                                               "col"
+                                                            "components": [
+                                                               {
+                                                                  "ctor": "Container",
+                                                                  "props": {
+                                                                     "type": "",
+                                                                     "spacing": {
+                                                                        "h": 100
+                                                                     },
+                                                                     "id": "workAreaColumnL2",
+                                                                     "classes": [
+                                                                        "border",
+                                                                        "col"
+                                                                     ]
+                                                                  }
+                                                               }
                                                             ]
                                                          }
-                                                      }]
-                                                   }
-                                                },
-                                                {
-                                                   "ctor": "Footer",
-                                                   "props": {
-                                                      "id": "footer",
-                                                      "type": "row",
-                                                      "css": {
-                                                         "width": "100%",
-                                                         "maxWidth": "1140px",
-                                                         "height": "2.5rem",
-                                                         "position": "absolute",
-                                                         "backgroundColor": "#A1AAFF",
-                                                         "bottom": 0,
-                                                         "left": 0
+                                                      },
+                                                      {
+                                                         "ctor": "Footer",
+                                                         "props": {
+                                                            "id": "footer",
+                                                            "type": "row",
+                                                            "css": {
+                                                               "width": "100%",
+                                                               "maxWidth": "1140px",
+                                                               "height": "2.5rem",
+                                                               "position": "absolute",
+                                                               "backgroundColor": "#A1AAFF",
+                                                               "bottom": 0,
+                                                               "left": 0
+                                                            }
+                                                         }
                                                       }
-                                                   }
+                                                   ]
                                                 }
-                                             ]
-                                          }
-                                       }]
+                                             }
+                                          ]
+                                       }
                                     }
-                                 }]
+                                 ]
                               }
                            }
-
                         ]
                      }
                   },
@@ -504,86 +534,92 @@
                            "sideNav_side_right",
                            "flex-shrink-0"
                         ],
-                        "components": [{
-                           "ctor": "Container",
-                           "props": {
-                              "id": "rightSideContainer",
-                              "components": [{
-                                 "ctor": "ViewStack",
-                                 "props": {
-                                    "id": "propertyEditorViewStack",
-                                    "type": "",
-                                    "components": [{
-                                          "ctor": "Container",
-                                          "props": {
-                                             "id": "propertyEditorContainerWrap",
-                                             "type": "",
-                                             "components": [{
-                                                   "ctor": "Label",
-                                                   "props": {
-                                                      "id": "label",
-                                                      "label": "Field Properties",
-                                                      "css": {
-                                                         "marginLeft": "0"
-                                                      },
-                                                      "classes": [
-                                                         "sideRight_label"
-                                                      ]
-                                                   }
-                                                },
-                                                {
-                                                   "ctor": "HRule",
-                                                   "props": {
-                                                      "id": "hr",
-                                                      "width": 600,
-                                                      "align": "center",
-                                                      "css": {
-                                                         "margin": 0
-                                                      }
-                                                   }
-                                                },
-                                                {
-                                                   "ctor": "Container",
-                                                   "props": {
-                                                      "id": "propertyEditorContainer",
-                                                      "type": "",
-                                                      "components": [
-
-                                                      ],
-                                                      "classes": [
-                                                         "propertyEditor"
-                                                      ]
-                                                   }
-                                                }
-                                             ]
-                                          }
-                                       },
-                                       {
-                                          "ctor": "Container",
-                                          "props": {
-                                             "id": "cmpTrash",
-                                             "classes": [
-                                                "cmpTrash"
-                                             ],
-                                             "components": [{
-                                                "ctor": "Label",
+                        "components": [
+                           {
+                              "ctor": "Container",
+                              "props": {
+                                 "id": "rightSideContainer",
+                                 "components": [
+                                    {
+                                       "ctor": "ViewStack",
+                                       "props": {
+                                          "id": "propertyEditorViewStack",
+                                          "type": "",
+                                          "components": [
+                                             {
+                                                "ctor": "Container",
                                                 "props": {
-                                                   "id": "cmpTrashIcon",
-                                                   "labelType": "i",
-                                                   "classes": [
-                                                      "fas",
-                                                      "fa-trash",
-                                                      "trash-icon"
+                                                   "id": "propertyEditorContainerWrap",
+                                                   "type": "",
+                                                   "components": [
+                                                      {
+                                                         "ctor": "Label",
+                                                         "props": {
+                                                            "id": "label",
+                                                            "label": "Field Properties",
+                                                            "css": {
+                                                               "marginLeft": "0"
+                                                            },
+                                                            "classes": [
+                                                               "sideRight_label"
+                                                            ]
+                                                         }
+                                                      },
+                                                      {
+                                                         "ctor": "HRule",
+                                                         "props": {
+                                                            "id": "hr",
+                                                            "width": 600,
+                                                            "align": "center",
+                                                            "css": {
+                                                               "margin": 0
+                                                            }
+                                                         }
+                                                      },
+                                                      {
+                                                         "ctor": "Container",
+                                                         "props": {
+                                                            "id": "propertyEditorContainer",
+                                                            "type": "",
+                                                            "components": [],
+                                                            "classes": [
+                                                               "propertyEditor"
+                                                            ]
+                                                         }
+                                                      }
                                                    ]
                                                 }
-                                             }]
-                                          }
+                                             },
+                                             {
+                                                "ctor": "Container",
+                                                "props": {
+                                                   "id": "cmpTrash",
+                                                   "classes": [
+                                                      "cmpTrash"
+                                                   ],
+                                                   "components": [
+                                                      {
+                                                         "ctor": "Label",
+                                                         "props": {
+                                                            "id": "cmpTrashIcon",
+                                                            "labelType": "i",
+                                                            "classes": [
+                                                               "fas",
+                                                               "fa-trash",
+                                                               "trash-icon"
+                                                            ]
+                                                         }
+                                                      }
+                                                   ]
+                                                }
+                                             }
+                                          ]
                                        }
-                                    ]
-                                 }
-                              }]
+                                    }
+                                 ]
+                              }
                            }
-                        }]
+                        ]
                      }
                   },
                   {
@@ -592,20 +628,21 @@
                         "id": "fileSelectModal",
                         "size": "ModalSize.LARGE",
                         "title": "Select File",
-                        "components": [{
-                           "ctor": "UploadEx",
-                           "props": {
-                              "id": "browseFile",
-                              "multiple": false,
-                              "showProgress": false
+                        "components": [
+                           {
+                              "ctor": "UploadEx",
+                              "props": {
+                                 "id": "browseFile",
+                                 "multiple": false,
+                                 "showProgress": false
+                              }
                            }
-                        }]
+                        ]
                      }
                   }
                ]
             }
          }
-
       ]
    }
 }

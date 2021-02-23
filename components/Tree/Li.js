@@ -55,7 +55,6 @@ var Li = function (_props) {
     };
 
     _props = extend(false, false, _defaultParams, _props);
-    //_props.applyBindings = false;
    
     let r = Container.call(this, _props); 
    

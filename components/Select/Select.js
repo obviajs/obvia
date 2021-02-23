@@ -128,7 +128,6 @@ var Select = function (_props) {
     };
 
     shallowCopy(extend(false, false, _defaultParams, _props), _props);
-    _props.applyBindings = true;
     let _labelField = _props.labelField;
     let _valueField = _props.valueField;
 

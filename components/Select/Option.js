@@ -56,7 +56,6 @@ var Option = function (_props) {
     };
 
     _props = extend(false, false, _defaultParams, _props);
-    //_props.applyBindings = false;
     Component.call(this, _props);
 };
 //component prototype

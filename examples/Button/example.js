@@ -1,14 +1,5 @@
-var myButton = new Button({
-  id: 'button',
-  type: "",
-  value: "",
-  label: "{localizationManager.getLocaleString('Forms', 'successfullySaved', localizationManager.selectedLocale)}",
-  classes: ["btn", "btn-success"],
-  click: function (e) {
-    console.log("From ClickAction");
-  }
-});
-let localizationManager = new LocalizationManager({
+let Context = {};
+Context.localizationManager = new LocalizationManager({
   selectedLocale: {
       displayLanguage: "English",
       localeString: "en_US"
@@ -17,16 +8,48 @@ let localizationManager = new LocalizationManager({
     return get(BrowserManager.getInstance().base+ "/oxanaui/app/locale/" + p.localeString + ".json", "application/json")
   }
 });
-myButton.localizationManager = localizationManager;
-
-myButton.on('click', function () {
-  localizationManager.setSelectedLocale({
-      displayLanguage: "English",
-      localeString: "sq_AL"
-  })
+//myButton.localizationManager = localizationManager;
+var myContainer = new Container({
+  components: [
+    {
+      ctor: Button,
+      props: {
+        id: 'button1',
+        type: "",
+        value: "",
+        label: "Fixed Label",
+        classes: ["btn", "btn-success"],
+        click: function (e) {
+          console.log("From ClickAction");
+        },
+        bindingDefaultContext: Context
+      }
+    },
+    {
+      ctor: Button,
+      props: {
+        id: 'button2',
+        type: "",
+        value: "",
+        label: "{localizationManager.getLocaleString('Forms', 'successfullySaved', localizationManager.selectedLocale) + button1.label}",
+        classes: ["btn", "btn-success"],
+        click: function (e) {
+          console.log("From ClickAction");
+        },
+        bindingDefaultContext: Context
+      }
+    }
+  ]
 });
-localizationManager.loaded.then((d) => {
-  myButton.render().then(function (cmpInstance) {
+
+Context.localizationManager.loaded.then((d) => {
+  myContainer.render().then(function (cmpInstance) {
+    myContainer.button1.on('click', function () {
+      Context.localizationManager.setSelectedLocale({
+          displayLanguage: "English",
+          localeString: "sq_AL"
+      })
+    });
     $('#root').append(cmpInstance.$el);
   });
 });

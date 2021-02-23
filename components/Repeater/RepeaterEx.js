@@ -123,7 +123,7 @@ var RepeaterEx = function (_props) {
     if (!_props.attr) {
         _props.attr = {};
     }
-    let myDtEvts = ["rowAdd", "rowEdit", "beforeRowAdd", "rowDelete", "beforeRowDelete", "dataProviderLengthChanged"];
+    let myDtEvts = ["rowAdd", "rowEdit", "beforeRowAdd", "rowDelete", "beforeRowDelete", "dataProviderUpdate"];
     if (!Object.isEmpty(_props.attr) && _props.attr["data-triggers"] && !Object.isEmpty(_props.attr["data-triggers"])) {
         let dt = _props.attr["data-triggers"].split(" ");
         for (let i = 0; i < dt.length; i++) {

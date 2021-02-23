@@ -14,6 +14,13 @@ var Parent = function (_props, _hideComponents = false) {
                             return target.children[property];
                     }
                     return Reflect.get(...arguments);
+                },
+                getOwnPropertyDescriptor(target, property) {
+                    if (!target.hasOwnProperty(property) && !target.constructor.prototype.hasOwnProperty(property)) {
+                        if (target.children && target.children[property])
+                            return {configurable: true, enumerable: true};
+                    }
+                    return Reflect.getOwnPropertyDescriptor(...arguments);
                 }
             });
         };
@@ -75,7 +82,7 @@ var Parent = function (_props, _hideComponents = false) {
                 _csorted.splice(index, 0, child.id);
                 child.parent = _proxy;
                 child.parentType = this.type;
-                child.parentForm = _proxy.ctor == 'Form' ? _proxy : _proxy.parentForm;
+                child.parentForm = _self.ctor == 'Form' ? _proxy : _proxy.parentForm;
                 child.repeaterIndex = this.repeaterIndex;
                 child.parentRepeater = this.parentRepeater;
 
@@ -182,16 +189,11 @@ var Parent = function (_props, _hideComponents = false) {
             let cmpLit = {};
             shallowCopy(component, cmpLit, ["props"]);
             cmpLit.props = {};
-            shallowCopy(component.props, cmpLit.props, ["id", "bindingDefaultContext"]);
+            shallowCopy(component.props, cmpLit.props, ["id"]);
             if (component.props.id && _children[component.props.id]) {
                 cmpLit.props.id = component.props.id + '_' + Object.keys(_children).length;
             } else
                 cmpLit.props.id = component.props.id;
-            if (component.props.bindingDefaultContext == null) {
-                cmpLit.props.bindingDefaultContext = this.bindingDefaultContext;
-            } else {
-                cmpLit.props.bindingDefaultContext = component.props.bindingDefaultContext;
-            }
             cmpLit.props.repeaterIndex = _self.repeaterIndex;
             cmpLit.props.parentRepeater = _self.parentRepeater;
             let cmp = Component.fromLiteral(cmpLit);
@@ -203,7 +205,7 @@ var Parent = function (_props, _hideComponents = false) {
             _csorted.splice(index, 0, cmp.id);
             cmp.parent = _proxy;
             cmp.parentType = _self.type;
-            cmp.parentForm = _proxy.ctor == 'Form' ? _proxy : _proxy.parentForm;
+            cmp.parentForm = _self.ctor == 'Form' ? _proxy : _proxy.parentForm;
 
             index = index > -1 ? index : _csorted.length;
             let cr = {
@@ -228,7 +230,7 @@ var Parent = function (_props, _hideComponents = false) {
         if (e.target.id == this.domID) {
             if (typeof _beforeAttach == 'function')
                 _beforeAttach.apply(this, arguments);
-            if (_props.enabled != null && !this.getBindingExpression("enabled"))
+            if (_props.enabled != null)
                 this.enabled = _props.enabled;
         }
     };

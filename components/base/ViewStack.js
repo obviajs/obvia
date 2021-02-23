@@ -27,6 +27,21 @@ var ViewStack = function (_props) {
                     }
                 }
                 return Reflect.get(...arguments);
+            },
+            getOwnPropertyDescriptor(target, property) {
+                if (!target.hasOwnProperty(property) && !target.constructor.prototype.hasOwnProperty(property)) {
+                    if (target.children && target.children[property])
+                        return { configurable: true, enumerable: true };
+                    else {
+                            let ind = indexOfObject(_components, "props.id", property);
+                            if (ind > -1) {
+                                _components[ind].props.visible = false;
+                                _addComponents([_components[ind]]);
+                                return { configurable: true, enumerable: true };
+                            }
+                        }
+                }
+                return Reflect.getOwnPropertyDescriptor(...arguments);
             }
         });
     };

@@ -387,17 +387,17 @@ let Implementation = function (applet) {
         },
 
         "OPEN_MODAL_FORMS": function (e) {
-            app.appletsMap["formsModal"].init().then(() => {
+            app.appletsMap["formsModal"][0].init().then(() => {
                 data.formList.filter();
                 console.log("Applet formsModal inited");
-                applet.addBehaviors(app.appletsMap["formsModal"].view, {
+                applet.addBehaviors(app.appletsMap["formsModal"][0].view, {
                     "loadLayout": "LOAD_LAYOUT"
                 });
             });
         },
 
         "OPEN_MODAL_FORM_FOR_SAVE": function (e) {
-            app.appletsMap["saveForm"].init().then(() => {
+            app.appletsMap["saveForm"][0].init().then(() => {
                 console.log('Applet saveForm inited.');
             });
             data.selectedForm.form_literal = workAreaRowL2.literal;
@@ -491,7 +491,7 @@ let Implementation = function (applet) {
             if (value.length > 0) {
                 _cmpList.filter(function (el) {
                     let regEx = new RegExp(`${value}`, "gi");
-                    return el.label.toLowerCase().match(regEx);
+                    return el.componentNameLabel.toLowerCase().match(regEx);
                 });
             }
         },
