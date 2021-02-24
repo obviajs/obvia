@@ -67,7 +67,7 @@ var Wizard = function (_props) {
             let o = {
                 "stepLabel": getChainValue(r, _stepPath),
                 "detail": getChainValue(r, _detailsPath),
-                "components": stepCmps
+                "liComponents": stepCmps
             };
             arr.push(o);
         }
@@ -111,7 +111,7 @@ var Wizard = function (_props) {
                                     id: "wizardTree",
                                     classes: ["wizard-steps"],
                                     selectedClasses: ["current-step"],
-                                    componentsField: "components",
+                                    componentsField: "liComponents",
                                     dataProvider: _steps
                                 }
                             }]
