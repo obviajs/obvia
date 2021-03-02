@@ -19,9 +19,8 @@ var Select = function (_props) {
             if (_valueField != v) {
                 _valueField = v;
                 this.components = fnContainerDelayInit();
-                this.removeAllRows();
                 if (_dataProvider && _dataProvider.length > 0) {
-                    let dpFields = Object.keys(_dataProvider[0]);
+                    let dpFields = Object.getOwnPropertyNames(_dataProvider[0]);
                     if (propDataProvider && dpFields.includes(_labelField) && dpFields.includes(_valueField)) {
                         propDataProvider['set'].call(_self, _dataProvider);
                     }
@@ -39,9 +38,8 @@ var Select = function (_props) {
             if (_labelField != v) {
                 _labelField = v;
                 this.components = fnContainerDelayInit();
-                this.removeAllRows();
                 if (_dataProvider && _dataProvider.length > 0) {
-                    let dpFields = Object.keys(_dataProvider[0]);
+                    let dpFields = Object.getOwnPropertyNames(_dataProvider[0]);
                     if (propDataProvider && dpFields.includes(_labelField) && dpFields.includes(_valueField)) {
                         propDataProvider['set'].call(_self, _dataProvider);
                     }
@@ -152,10 +150,9 @@ var Select = function (_props) {
         },
         set: function dataProvider(v) {
             _dataProvider = v;
-            this.removeAllRows();
 
             if (v.length > 0) {
-                let dpFields = Object.keys(v[0]);
+                let dpFields = Object.getOwnPropertyNames(v[0]);
                 if (dpFields.includes(_labelField) && dpFields.includes(_valueField)) {
                     propDataProvider['set'].call(_self, _dataProvider);
                 }

@@ -125,7 +125,7 @@ var Repeater = function (_props, _hideComponents = false) {
             return _dataProvider;
         },
         set: function dataProvider(v) {
-            if (_dataProvider != v) {
+            if (_dataProvider != v || v==null) {
                 if (_dpWatcher && _dataProvider) {
                     _dpWatcher.reset();
                     _dataProvider.off("propertyChange", _debouncedUpdateDataProvider);
@@ -152,17 +152,7 @@ var Repeater = function (_props, _hideComponents = false) {
             let p;
             let rb = Math.min(oldValue, newValue);
             for (let i = 0; i < newValue && _dataProvider; i++) {
-                if (!_dataProvider[i][_guidField])
-                    Object.defineProperty(_dataProvider[i], _guidField, {
-                        value: StringUtils.guid(),
-                        enumerable: false,
-                        configurable: true
-                    });
-                Object.defineProperty(_dataProvider[i], "currentRow", {
-                    value: _rowItems[i],
-                    enumerable: false,
-                    configurable: true
-                });
+                _self.prepareBindingShortcuts(_dataProvider[i], i);
                 if (i < rb) {
                     for (let cmpID in _rowItems[i]) {
                         let cmp = _rowItems[i][cmpID];
@@ -218,19 +208,31 @@ var Repeater = function (_props, _hideComponents = false) {
             configurable: true
         });
     }
-    let _createdRows = 0;
-    //renders a new row, adds components in stack
-    this.addRow = function (data, index, isPreventable = false, focusOnRowAdd = true) {
-        let rp = [];
-        index = index == null ? _rows.length : index;
-        let renderedRow = $('<div/>');
-        let rowItems = {};
+    
+    this.prepareBindingShortcuts = function (data, index) {
+        if (!data[_self.guidField]) {
+            Object.defineProperty(data, _self.guidField, {
+                value: StringUtils.guid(),
+                enumerable: false,
+                configurable: true
+            });
+        }
 
-        Object.defineProperty(data, "currentRow", {
-            value: rowItems,
-            enumerable: false,
-            configurable: true
-        });
+        if (!("currentRow" in data)) {
+            Object.defineProperty(data, "currentRow", {
+                value: _rowItems[index],
+                enumerable: false,
+                configurable: true
+            });
+        }
+
+        if (!("currentItem" in data)) {
+            Object.defineProperty(data, "currentItem", {
+                value: data,
+                enumerable: false,
+                configurable: true
+            });
+        }
 
         if (!("currentIndex" in data)) {
             Object.defineProperty(data, "currentIndex", {
@@ -239,6 +241,17 @@ var Repeater = function (_props, _hideComponents = false) {
                 configurable: true
             });
         }
+    };
+
+    let _createdRows = 0;
+    //renders a new row, adds components in stack
+    this.addRow = function (data, index, isPreventable = false, focusOnRowAdd = true) {
+        let rp = [];
+        index = index == null ? _rows.length : index;
+        let renderedRow = $('<div/>');
+        let rowItems = {};
+        _rowItems.splice(index, 0, rowItems);
+        //_prepareBindingShortcuts(data, index);       
 
         let beforeRowAddEvent = jQuery.Event("beforeRowAdd");
         this.trigger(beforeRowAddEvent, [_self, new RepeaterEventArgs(_rowItems, data, index)]);
@@ -348,7 +361,6 @@ var Repeater = function (_props, _hideComponents = false) {
                 });
                 rp.push(cp);
             }
-            _rowItems.splice(index, 0, rowItems);
             _rows.push(renderedRow);
         }
        
@@ -487,7 +499,7 @@ var Repeater = function (_props, _hideComponents = false) {
             alert("overrided")
         };*/
 
-    this.render = function () {
+    this.render = async function () {
         this.$container = this.$el;
         _rPromise = new Promise((resolve, reject) => {
             _self.on("endDraw", function (e) {
@@ -498,7 +510,7 @@ var Repeater = function (_props, _hideComponents = false) {
         });
         //if(_props.dataProvider)
         if (!this.getBindingExpression("dataProvider"))
-            this.dataProvider = _props.dataProvider;
+            this.dataProvider = await Promise.resolve(Literal.fromLiteral(_props.dataProvider));
         else
             this.dataProvider = new ArrayEx([]);
         return _rPromise;

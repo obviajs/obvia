@@ -31,6 +31,7 @@ rjs.define("/flowerui/lib/rca/RemoteDataEvent.js", "RemoteDataEvent");
 rjs.define("/flowerui/lib/rca/DataField.js", "DataField");
 rjs.define("/flowerui/lib/rca/RemoteArray.js", "RemoteArray");
 rjs.define("/flowerui/lib/rca/RemoteObject.js", "RemoteObject");
+rjs.define("/flowerui/lib/UseBindings.js", "UseBindings");
 rjs.define("/flowerui/components/base/Align.js", "Align");
 rjs.define("/flowerui/components/base/BrowserWindow.js", "BrowserWindow");
 rjs.define("/flowerui/components/Repeater/RepeaterEventArgs.js", "RepeaterEventArgs");
@@ -316,6 +317,7 @@ let dependencies = [
         "DataField",
         "RemoteDataEvent",
         "RemoteObject",
+        "UseBindings",
         "RemoteArray",
         "Align",
         "BrowserWindow",

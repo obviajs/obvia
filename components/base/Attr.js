@@ -1,5 +1,5 @@
-var Attr = function (_attr, $el) {
-    let _$el = $el;
+var Attr = function (_attr, cmpInst) {
+    let _$el = cmpInst.$el, _self = this;
     let p = new Proxy(this, {
         deleteProperty: function (target, property) {
             _$el.removeAttr(property);
@@ -30,5 +30,10 @@ var Attr = function (_attr, $el) {
             p[prop] = _attr[prop];
         }
     }
+    UseBindings.call(p, _attr);
+
+    this.getScopeChain = function () {
+        return [this, ...cmpInst.getScopeChain()];
+    };
     return p;
 };

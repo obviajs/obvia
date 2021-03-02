@@ -13,7 +13,8 @@ var form = new Form({
             ctor: RequiredFieldValidator,
             props: {
                 controlToValidate: "username",
-                errorMessage: "Please fill this field."
+                errorMessage: "Please fill this field.",
+                validationGroup:"grp"
             }
         }
     ]

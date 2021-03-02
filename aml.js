@@ -31,6 +31,7 @@ rjs.define("lib/rca/RemoteDataEvent.js", "RemoteDataEvent");
 rjs.define("lib/rca/DataField.js", "DataField");
 rjs.define("lib/rca/RemoteArray.js", "RemoteArray");
 rjs.define("lib/rca/RemoteObject.js", "RemoteObject");
+rjs.define("lib/UseBindings.js", "UseBindings");
 rjs.define("./components/base/Align.js", "Align");
 rjs.define("./components/base/BrowserWindow.js", "BrowserWindow");
 rjs.define("./components/Repeater/RepeaterEventArgs.js", "RepeaterEventArgs");
@@ -76,6 +77,7 @@ rjs.define("./components/LabelType.js", "LabelType");
 rjs.define("./components/Label.js", "Label");
 //HRule
 rjs.define("./components/HRule.js", "HRule");
+rjs.define("./components/Br.js", "Br");
 // Color Picker
 rjs.define("./components/Color.js", "Color");
 //Container
@@ -271,6 +273,7 @@ let dependencies = [
         "RemoteDataEvent",
         "RemoteObject",
         "RemoteArray",
+        "UseBindings",
         "Align",
         "BrowserWindow",
         "RepeaterEventArgs",
@@ -368,6 +371,7 @@ let dependencies = [
         "DataGridColumn",
         "DataGrid",
         "HRule",
+        "Br",
         "Color",
         "Image",
         "ProgressBarStyle",

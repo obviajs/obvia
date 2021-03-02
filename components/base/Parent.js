@@ -196,9 +196,9 @@ var Parent = function (_props, _hideComponents = false) {
                 cmpLit.props.id = component.props.id;
             cmpLit.props.repeaterIndex = _self.repeaterIndex;
             cmpLit.props.parentRepeater = _self.parentRepeater;
-            if (cmpLit.props.bindingDefaultContext == null) {
-                cmpLit.props.bindingDefaultContext = _self.bindingDefaultContext;
-            }
+            // if (cmpLit.props.bindingDefaultContext == null) {
+            //     cmpLit.props.bindingDefaultContext = _self.bindingDefaultContext;
+            // }
             let cmp = Component.fromLiteral(cmpLit);
             //component.props.id = cmp.id;
             if (_children[cmp.id])

@@ -254,19 +254,15 @@ var DataGrid = function (_props) {
         let newValue = _self.rowCount;
         let p;
         let rb = Math.min(oldValue, newValue);
-        for (let i = 0 + _virtualIndex; i < newValue + _virtualIndex && _self.dataProvider; i++) {
-            if (!_self.dataProvider[i][_self.guidField])
-                Object.defineProperty(_self.dataProvider[i], _self.guidField, {
-                    value: StringUtils.guid(),
-                    enumerable: false,
-                    configurable: true
-                });
-            if (i < rb + _virtualIndex) {
+        for (let i = 0; i < newValue && _self.dataProvider; i++) {
+            let vr = i + _virtualIndex;
+            _self.prepareBindingShortcuts(_self.dataProvider[vr], vr);
+            if (i < rb) {
                 for (let cmpID in _self.rowItems[i]) {
                     let cmp = _self.rowItems[i][cmpID];
                     if (cmp.refreshBindings) {
-                        cmp.refreshBindings(_self.dataProvider[i]);
-                        cmp.attr[_self.guidField] = _self.dataProvider[i][_self.guidField];
+                        cmp.refreshBindings(_self.dataProvider[vr]);
+                        cmp.attr[_self.guidField] = _self.dataProvider[vr][_self.guidField];
                     }
                 }
             }
@@ -914,13 +910,6 @@ var DataGrid = function (_props) {
                 component.props.parentRepeater = _self.proxyMaybe;
                 component.props.repeaterIndex = index;
                 
-                if (!("currentIndex" in data)) {
-                    Object.defineProperty(data, "currentIndex", {
-                        value: index,
-                        enumerable: false,
-                        configurable: true
-                    });
-                }
                 //build components properties, check bindings
 
                 let dataProviderField = column.field;

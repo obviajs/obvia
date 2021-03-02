@@ -33,7 +33,7 @@ var Form = function (_props) {
         },
         set: function action(v) {
             if (_action != v) {
-                if (_action) {
+                if (v) {
                     if (this.$el) {
                         this.$el.attr('action', v);
                         _action = v;
@@ -115,6 +115,17 @@ var Form = function (_props) {
         this.$el.get(0).reset();
     };
 
+    let _endDraw = this.endDraw;
+    this.endDraw = function (e) {
+        if (e.target.id == this.domID) {
+            if (typeof _endDraw == 'function')
+                _endDraw.apply(this, arguments);
+            if (_action == null && _props.action) { 
+                _self.action = _props.action;
+            }
+        }
+    };
+
     let _xhrProgress = function (e) {
         let postProgress = jQuery.Event(FormEventType.POST_PROGRESS);
         if (e.originalEvent.lengthComputable) {
@@ -177,7 +188,6 @@ var Form = function (_props) {
 
     _props = extend(false, false, _defaultParams, _props);
     _formData = null;
-    _action = _props.action;
     _method = _props.method;
 
     let r = Container.call(this, _props);

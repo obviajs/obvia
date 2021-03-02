@@ -13,6 +13,7 @@ apiClient.get("https://api.mocki.io/v1/83a89b16").then(r => {
         id: 'DataGrid',
         height: 300,
         width: 800,
+        attr:{"testBindedAttr":"{dataProvider.length}"},
         allowNewItem: true, //allow the user to add items that are not included in the specified dataProvider
         rowCount: 5, //visible rows count - virtual scrolling wil be applied on scroll
         dataProvider: new ArrayEx(r.response),

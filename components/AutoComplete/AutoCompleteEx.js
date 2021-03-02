@@ -459,7 +459,6 @@ var AutoCompleteEx = function (_props) {
         multiSelect: false,
         maxSuggestionsCount: 10,
         "type": ContainerType.NONE,
-        classes: ["no-form-control"],
         valueField: "id",
         labelField: "text"
     };

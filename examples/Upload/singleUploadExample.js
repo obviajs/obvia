@@ -1,6 +1,5 @@
 var myForm = new Form({
     id: 'form',
-    formName: 'My Form',
     action: "http://ui/?UploadManager/test"
 });
 

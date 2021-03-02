@@ -76,9 +76,11 @@ var Upload = function (_props) {
         },
         enumerable: true
     });
-
+    
+    let _form = $('<form class="d-none">'); 
     this.reset = function () {
-        this.$el.wrap('<form class="d-none">').closest('form').get(0).reset();
+        this.$el.wrap(_form);
+        _form.get(0).reset();
         this.$el.unwrap();
     };
 
