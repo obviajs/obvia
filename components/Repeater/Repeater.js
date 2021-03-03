@@ -220,7 +220,7 @@ var Repeater = function (_props, _hideComponents = false) {
 
         if (!("currentRow" in data)) {
             Object.defineProperty(data, "currentRow", {
-                value: _rowItems[index],
+                get: function () { return _rowItems[index]; },
                 enumerable: false,
                 configurable: true
             });

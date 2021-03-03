@@ -31,7 +31,7 @@ var Component = function (_props) {
     let _guid = _props.guid;
     let _attr, _css;
     let _id = _props.id = ((!_props.id) || (_props.id == "")) ? _defaultParams.id : _props.id;
-    let _enabled, _draggable, _visible = true;
+    let _enabled, _draggable, _visible = true, _display = true;
     let _classes = [];
     let _parent = _props.parent;
     let _parentForm = _props.parentForm;
@@ -273,6 +273,25 @@ var Component = function (_props) {
                 _visible = v;
                 if (this.$el) {
                     if (_visible)
+                        this.$el.css({ "visibility": "visible" });
+                    else
+                        this.$el.css({ "visibility": "hidden" });
+                }
+            }
+        },
+        configurable: true,
+        enumerable: true
+    });
+
+    Object.defineProperty(this, "display", {
+        get: function display() {
+            return _display;
+        },
+        set: function display(v) {
+            if (_display != v) {
+                _display = v;
+                if (this.$el) {
+                    if (_display)
                         this.show();
                     else
                         this.hide();
@@ -593,7 +612,6 @@ var Component = function (_props) {
     this.show = function () {
         if (this.$el) {
             this.$el.show();
-            _visible = true;
         }
         return this;
     };
@@ -601,7 +619,6 @@ var Component = function (_props) {
     this.hide = function () {
         if (this.$el) {
             this.$el.hide();
-            _visible = false;
         }
         return this;
     };
@@ -811,6 +828,8 @@ var Component = function (_props) {
         this.enabled = _props.enabled;
     if (_props.visible != null)
         this.visible = _props.visible;
+    if (_props.display != null)
+        this.display = _props.display;
     if (_props.draggable != null)
         this.draggable = _props.draggable;
     let _spacing = new Spacing(_props.spacing, this.$el);
