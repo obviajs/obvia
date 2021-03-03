@@ -446,8 +446,14 @@ var DataGrid = function (_props) {
             let itemEditorInfo = _cellItemEditors[columnIndex];
             let itemEditor;
             if (itemEditorInfo == null) {
-                if (column.itemEditor.props.value == undefined || getBindingExp(column.itemEditor.props.value) == null) {
-                    column.itemEditor.props.value = "{?" + column.field + "}";
+                let ctor;
+                if (typeof column.itemEditor.ctor == "string") {
+                    ctor = window[column.itemEditor.ctor];
+                } else
+                    ctor = column.itemEditor.ctor;
+                let valueProp = ctor.prototype.valueProp ? ctor.prototype.valueProp : "value";
+                if (column.itemEditor.props[valueProp] == null || getBindingExp(column.itemEditor.props[valueProp]) == null) {
+                    column.itemEditor.props[valueProp] = "{?" + column.field + "}";
                 }
                 column.itemEditor.props.parentRepeater = _self.proxyMaybe;
                 column.itemEditor.props.repeaterIndex = rowIndex;
@@ -606,15 +612,16 @@ var DataGrid = function (_props) {
 
             _self.trigger(e, [rowIndex, columnIndex, itemEditor, applyEdit]);
             value = e.result;
+            let valueProp = itemEditor.valueProp ? itemEditor.valueProp : "value";
 
             if (!applyEdit || !e.isDefaultPrevented()) {
                 itemEditor.hide();
                 _cellItemRenderers[rowIndex][columnIndex].show();
                 if (applyEdit) {
                     if (!calledHandler) {
-                        let exp = itemEditor.getBindingExpression("value");
-                        if (!value) {
-                            value = itemEditor.value;
+                        let exp = itemEditor.getBindingExpression(valueProp);
+                        if (value == null) {                            
+                            value = itemEditor[valueProp];
                         }
 
                         if (exp) {

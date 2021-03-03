@@ -6,8 +6,14 @@
 
 //component definition
 var AutoCompleteEx = function (_props) {
-    let _separator, _tokenContainer, _tokenRepeater, _suggestionsRepeater, _input, _maxSuggestionsCount, _valueWatcher;
+    let _separator, _tokenContainer, _tokenRepeater, _suggestionsRepeater, _input, _maxSuggestionsCount, _valueWatcher, _matchType;
     let _dpWatcher;
+    Object.defineProperty(this, "matchType", {
+        get: function matchType() {
+            return _matchType;
+        },
+    });
+        
     Object.defineProperty(this, "dataProvider", {
         get: function dataProvider() {
             return _dataProvider;
@@ -460,7 +466,8 @@ var AutoCompleteEx = function (_props) {
         maxSuggestionsCount: 10,
         "type": ContainerType.NONE,
         valueField: "id",
-        labelField: "text"
+        labelField: "text",
+        "matchType": StringMatchType.CONTAINS
     };
 
     _props = extend(false, false, _defaultParams, _props);
@@ -476,6 +483,7 @@ var AutoCompleteEx = function (_props) {
     let _valueField = _props.valueField;
     let _labelField = _props.labelField;
     let _dataProvider;
+    _matchType = _props.matchType;
 
     let _allowNewItem = _props.allowNewItem;
     let _label = _props.label;

@@ -20,9 +20,11 @@ var Wizard = function (_props) {
         },
         set: function selectedIndex(v) {
             if (_selectedIndex != v && v >= 0 && v < _steps.length) {
-                let event = jQuery.Event("change");
-                this.$el.trigger(event, [_selectedIndex, v]);
-                if (!event.isDefaultPrevented()) {
+                let e = jQuery.Event("beforeChange");
+                e.newValue = v;
+                e.oldValue = _selectedIndex;
+                this.$el.trigger(e);
+                if (!e.isDefaultPrevented()) {
                     _selectedIndex = v;
                     _stepHeading.label = _steps[v].stepLabel;
                     _detailLabel.label = _steps[v].detail;
@@ -30,6 +32,7 @@ var Wizard = function (_props) {
                     _wizardTree.select({
                         "guid": _steps[v]["guid"]
                     });
+                    this.$el.trigger("change");
                 }
             }
         },
