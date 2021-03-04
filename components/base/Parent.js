@@ -274,7 +274,7 @@ var Parent = function (_props, _hideComponents = false) {
             }
             for (let i = 0; i < components.length; i++) {
                 if (isObject(components[i])) {
-                    let cr = this.addComponentInContainer(_$hadow, components[i], i);
+                    let cr = this.addComponentInContainer(_$hadow, components[i], _csorted.length + i);
                     arrInst.push(cr.cmp);
                 }
             }

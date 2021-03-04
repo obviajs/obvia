@@ -74,7 +74,7 @@ var ViewStack = function (_props) {
 
     _props = extend(false, false, _defaultParams, _props);
     let _selectedIndex = _props.selectedIndex;
-    let _components = _props.components;
+    let _components = [];
 
     if (!_props.attr) {
         _props.attr = {};
@@ -112,9 +112,9 @@ var ViewStack = function (_props) {
         return p;
     };
 
-    this.addComponents = function (cmps) {
-        if (cmps && cmps.length > 0) {
-            _components.splicea(_components.length, 0, cmps);
+    this.addComponents = function (components) {
+        if (components && components.length > 0) {
+            _components.splicea(_components.length, 0, components);
         }
         return Promise.resolve(_renderSelectedChild(_selectedIndex));
     };

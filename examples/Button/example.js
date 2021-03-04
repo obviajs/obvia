@@ -46,7 +46,7 @@ Context.localizationManager.loaded.then((d) => {
   myContainer.render().then(function (cmpInstance) {
     myContainer.button1.on('click', function () {
       Context.localizationManager.setSelectedLocale({
-          displayLanguage: "English",
+          displayLanguage: "Shqip",
           localeString: "sq_AL"
       })
     });

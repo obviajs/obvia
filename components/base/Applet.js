@@ -18,7 +18,9 @@ var Applet = function (_props) {
             let rnd = p.forceReload ? "?r=" + Math.random() : "";            
             let _base = BrowserManager.getInstance().base;
             let _furl = _base + (p.url[0] == "." ? p.url.substr(1) : p.url);
-            return get(_furl + p.anchor + ".json" + rnd, p.mimeType);
+            return get(_furl + p.anchor + ".json" + rnd, p.mimeType).then(function (r) { 
+                return JSON.parse(r.response);
+            });
         },
         fetchImplementationPromise: (p) => { 
             let rnd = p.forceReload ? "?r=" + Math.random() : "";            
@@ -115,7 +117,7 @@ var Applet = function (_props) {
                 return p;
             });
 
-            _literal = JSON.parse(r[0].response);
+            _literal = r[0];
             _literal.props.bindingDefaultContext = _data;
             _view = Component.fromLiteral(_literal);
 

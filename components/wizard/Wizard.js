@@ -199,39 +199,33 @@ var Wizard = function (_props) {
                                                         id: "row-footer",
                                                         type: ContainerType.ROW,
                                                         classes: ["row"],
-                                                        components: [{
-                                                                ctor: Container,
-                                                                props: {
-                                                                    id: "col-footer",
-                                                                    type: ContainerType.COLUMN,
-                                                                    classes: ["col-6"],
-                                                                    components: [{
-                                                                        ctor: Button,
-                                                                        props: {
-                                                                            id: "left-arrow",
-                                                                            href: "#",
-                                                                            classes: ["btn", "btn-outline-primary"],
-                                                                            click: _prev,
-                                                                            label: "Kthehu",
-                                                                            components: [{
-                                                                                ctor: Label,
-                                                                                props: {
-                                                                                    id: "back",
-                                                                                    labelType: LabelType.i,
-                                                                                    classes: ["fa", "fa-arrow-left"]
-                                                                                }
-                                                                            }]
-                                                                        }
-                                                                    }]
-                                                                }
-                                                            },
+                                                        components: [
                                                             {
                                                                 ctor: Container,
                                                                 props: {
                                                                     id: "text-right",
                                                                     type: ContainerType.COLUMN,
-                                                                    classes: ["col-6", "text-right"],
-                                                                    components: [{
+                                                                    classes: ["col", "text-right"],
+                                                                    components: [
+                                                                        {
+                                                                            ctor: Button,
+                                                                            props: {
+                                                                                id: "left-arrow",
+                                                                                href: "#",
+                                                                                classes: ["btn", "btn-outline-primary"],
+                                                                                click: _prev,
+                                                                                label: "Kthehu",
+                                                                                components: [{
+                                                                                    ctor: Label,
+                                                                                    props: {
+                                                                                        id: "back",
+                                                                                        labelType: LabelType.i,
+                                                                                        classes: ["fa", "fa-arrow-left"]
+                                                                                    }
+                                                                                }]
+                                                                            }
+                                                                        },
+                                                                        {
                                                                         ctor: Button,
                                                                         props: {
                                                                             id: "next",
