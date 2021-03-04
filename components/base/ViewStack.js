@@ -20,7 +20,7 @@ var ViewStack = function (_props) {
                     else {
                         let ind = indexOfObject(_components, "props.id", property);
                         if (ind > -1) {
-                            _components[ind].props.visible = false;
+                            _components[ind].props.display = false;
                             _addComponents([_components[ind]]);
                             return target.children[property];
                         }
@@ -35,7 +35,7 @@ var ViewStack = function (_props) {
                     else {
                             let ind = indexOfObject(_components, "props.id", property);
                             if (ind > -1) {
-                                _components[ind].props.visible = false;
+                                _components[ind].props.display = false;
                                 _addComponents([_components[ind]]);
                                 return { configurable: true, enumerable: true };
                             }
@@ -95,9 +95,9 @@ var ViewStack = function (_props) {
         let len = _self.csorted.length;
         for (let i = 0; i < len; i++) {
             if (i != si)
-                _self.childAtIndex(i).visible = false;
+                _self.childAtIndex(i).display = false;
             else
-                _self.childAtIndex(i).visible = true;
+                _self.childAtIndex(i).display = true;
         }
         let p;
         let c = _self.childAtIndex(si);
