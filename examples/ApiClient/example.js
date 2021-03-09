@@ -12,7 +12,9 @@ let urlArr = [
     //"http://esa.flare.al/?DV_customers/yaml",
     //"http://gaia-billing/api/inventories/yaml",
 
-    "https://gaia-oshee.oxana.io/api/applets/yaml"
+    //"https://gaia-oshee.oxana.io/api/applets/yaml"
+    //"https://gaia-oshee.oxana.io/api/form_submit/yaml"
+    "https://gaia-oshee.oxana.io/api/process_cases/yaml"
 ];
 
 for (let i = 0; i < urlArr.length; i++) {

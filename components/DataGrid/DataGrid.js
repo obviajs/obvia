@@ -252,6 +252,11 @@ var DataGrid = function (_props) {
         _self.trigger('beginDraw');
         let oldValue = _self.rows.length;
         let newValue = _self.rowCount;
+        if (_allowNewItem) {
+            let emptyObj = createEmptyObject(_columns, "field", "description");
+            if(!deepEqual(emptyObj, _self.dataProvider[_self.dataProvider.length - 1]))
+                _self.dataProvider.pad(emptyObj, 1);
+        }
         let p;
         let rb = Math.min(oldValue, newValue);
         for (let i = 0; i < newValue && _self.dataProvider; i++) {
@@ -277,8 +282,7 @@ var DataGrid = function (_props) {
             while (delta < 0) {
                 let index = newValue + delta
                 let rowComponentsPromises = _self.addRow(_self.dataProvider[index], index);
-                _comprenders.splicea(_comprenders.length, 0, rowComponentsPromises);
-           
+                _comprenders.splicea(_comprenders.length, 0, rowComponentsPromises);           
                 ++delta;
             }
         }
@@ -295,32 +299,6 @@ var DataGrid = function (_props) {
         e.newValue = newValue;
         _self.trigger(e, [_self]);
         return Promise.resolve(p);
-    };
-
-    this.createRows = function () {
-        this.$el.trigger('beginDraw');
-        if (_self.dataProvider && _self.dataProvider.length) {
-            let endIndex = this.rowCount;
-            // _rowItems = {}; we need this if we create Repeater instances via Object.assign
-            for (let i = 0; i < endIndex; i++) {
-                _comprenders.splicea(_comprenders.length, 0, this.addRow(_self.dataProvider[i], i));
-            }
-            if (_allowNewItem && endIndex == _self.dataProvider.length) {
-                let emptyObj = this.defaultItem = createEmptyObject(_columns, "field", "description");
-                _self.dataProvider.pad(emptyObj, 1);
-                _comprenders.splicea(_comprenders.length, 0, this.addRow(_self.dataProvider[_self.dataProvider.length - 1], _self.dataProvider.length - 1));
-            }
-        }
-    };
-
-    this.addEmptyRow = function () {
-        let emptyObj = this.defaultItem = createEmptyObject(_columns, "field", "description");
-        _self.dataProvider.pad(emptyObj, 1);
-        _comprenders = this.addRow(_self.dataProvider[_self.dataProvider.length - 1], _self.dataProvider.length - 1);
-        return Promise.all(_comprenders).then(function () {
-            _comprenders = [];
-            _self.$hadow.contents().appendTo(_self.$table);
-        });
     };
 
     this.applyVirtualBindings = function (virtualIndex) {

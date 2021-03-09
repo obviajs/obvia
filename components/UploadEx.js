@@ -61,7 +61,7 @@ var UploadEx = function (_props) {
                 if (files[i].url) {
                     let clit = deepCopy(alit);
                     clit.props.label = files[i].name;
-                    clit.props.href = "javascript:void()"; //files[i].url;
+                    clit.props.href = "javascript:void(0)"; //files[i].url;
                     clit.props.click = () => {
                         _self.ajaxDownload(i);
                     };
@@ -133,7 +133,7 @@ var UploadEx = function (_props) {
         setTimeout(_ajaxUpload_complete, 500);
     };
 
-    let _ajaxUpload_success = function (e, form) {
+    let _ajaxUpload_success = function (e) {
         setTimeout(_ajaxUpload_complete, 500);
         let data = e.originalEvent.responseObject.response;
         for (let i = 0; i < _value.length; i++) {
@@ -206,11 +206,19 @@ var UploadEx = function (_props) {
                             }
                         },
                         {
-                            ctor: Upload,
+                            ctor: Form,
                             props: {
-                                id: "uploadInput",
-                                classes: ["d-none"],
-                                change: upload_change
+                                id:"form",
+                                components: [
+                                    {
+                                        ctor: Upload,
+                                        props: {
+                                            id: "uploadInput",
+                                            classes: ["d-none"],
+                                            change: upload_change
+                                        }
+                                    }
+                                ]
                             }
                         },
                         {
@@ -446,7 +454,8 @@ var UploadEx = function (_props) {
 
     this.endDraw = function (e) {
         if (e.target.id == this.domID) {
-            _upload = this.mainRow.uploadInput;
+            _form = this.mainRow.form;
+            _upload = this.mainRow.form.uploadInput;
             _upload.name = _upload.id + "[]";
 
             _iconLbl = this.mainRow.wrapIconLbl.iconLbl;
@@ -475,15 +484,12 @@ var UploadEx = function (_props) {
             if (_action == null && _props.action) { 
                 _self.action = _props.action;
             }
-            e.preventDefault();
-
-            _form = _form == null ? (_self.parentForm ? new Form({"action":_action}) : _self.parentForm ): _form;
+            e.preventDefault();            
         }
     };
 
     let _defaultParams = {
         multiple: true,
-        form: null,
         showProgress: true,
         fullUrlField: "full_url",
         type:""

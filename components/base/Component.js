@@ -60,8 +60,6 @@ var Component = function (_props) {
     let _appendTo = _props.appendTo;
 
     let _domID = _id + '_' + _guid;
-
-    Component.instances[_domID] = this;
     //let _propUpdateMap = {"label":{"o":$el, "fn":"html", "p":[] }, "hyperlink":{}};
     //generate GUID for this component
     Object.defineProperty(this, "guid", {
@@ -118,7 +116,7 @@ var Component = function (_props) {
                     delete Component.instances[this.domID];
                     _id = v;
                     _domID = _id + '_' + _guid;
-                    Component.instances[_domID] = this;
+                    Component.instances[_domID] = this.proxyMaybe;
 
                     if (this.parent) {
                         if (this.parent.ctor == "Repeater") {
@@ -416,7 +414,7 @@ var Component = function (_props) {
         this.$el = tpl;
     else if (tpl && tpl != "")
         this.$el = $(tpl);
-
+    this.$el.ownerDocument = _ownerDocument;
     _attr = new Attr(_props.attr, this);
     _css = new Css(_props.css, this);
 
@@ -486,8 +484,7 @@ var Component = function (_props) {
                 this.applyBindings();
                 this.attr.applyBindings();
                 this.css.applyBindings();
-            }
-                
+            }                
             _self.trigger('beforeAttach');
         }
     };
@@ -732,7 +729,7 @@ var Component = function (_props) {
                                     "proxyHandler": proxyHandler,
                                     "originalHandler": fnc
                                 });
-                                this.$el.on(eventType, proxyHandler);
+                                this.$el.on(eventType, proxyHandler);                                
                             } else {
                                 console.log("Tried to add a listener that was previously added.");
                             }
@@ -822,8 +819,9 @@ var Component = function (_props) {
                 }
             }
         }
-    };
+    };    
 
+    Component.instances[_domID] = this.proxyMaybe;
     if (_props.enabled != null)
         this.enabled = _props.enabled;
     if (_props.visible != null)
