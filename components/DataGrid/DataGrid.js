@@ -10,6 +10,17 @@ var DataGrid = function (_props) {
     let _currentIndex = 1;
     let _multiSelect;
     let _colElements;
+    let _defaultItem;
+    
+    Object.defineProperty(this, "defaultItem", {
+        get: function defaultItem() {
+            return _defaultItem;
+        },
+        set: function defaultItem(v) {
+            if (_defaultItem != v)
+                _defaultItem = v;
+        }
+    });
 
     Object.defineProperty(this, "currentIndex", {
         get: function currentIndex() {
@@ -201,7 +212,7 @@ var DataGrid = function (_props) {
             "<table class='table' style='margin-bottom:0px' id='" + this.domID + "-fixed-table'>" +
             "<thead id='" + this.domID + "-header'></thead></table>" +
             "<div id='" + this.domID + "-body-wrapper' style='overflow-y: auto; position:relative;'>" +
-            "<table class='table' id='" + this.domID + "-table'></table>" +
+            "<table class='table' id='" + this.domID + "-table' style='position:relative'></table>" +
             "</div></div>";
         return html;
     };
@@ -253,9 +264,11 @@ var DataGrid = function (_props) {
         let oldValue = _self.rows.length;
         let newValue = _self.rowCount;
         if (_allowNewItem) {
-            let emptyObj = createEmptyObject(_columns, "field", "description");
-            if(!deepEqual(emptyObj, _self.dataProvider[_self.dataProvider.length - 1]))
-                _self.dataProvider.pad(emptyObj, 1);
+            if (!_defaultItem) {
+                _defaultItem = createEmptyObject(_columns, "field", "description");
+            }
+            if(!deepEqual(_defaultItem, _self.dataProvider[_self.dataProvider.length - 1]))
+                _self.dataProvider.pad(deepCopy(_defaultItem), 1);
         }
         let p;
         let rb = Math.min(oldValue, newValue);
@@ -686,10 +699,6 @@ var DataGrid = function (_props) {
             width: "1px",
             height: _virtualHeight + "px"
         });
-
-        this.$table.css({
-            "position": "relative"
-        });
        
         if(!_self.dataProvider || (_rowCount>_self.dataProvider.length))
             this.$bodyWrapper.scrollTop(0);       
@@ -812,7 +821,7 @@ var DataGrid = function (_props) {
     let _rendering = _props.rendering;
     let _showRowIndex = _props.showRowIndex;
     let _rowCount = _props.rowCount;
-
+    _defaultItem = _props.defaultItem;
     let _allowNewItem = _props.allowNewItem;
 
     let _columns = _props.columns;

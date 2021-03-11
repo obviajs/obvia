@@ -228,9 +228,9 @@ var Repeater = function (_props, _hideComponents = false) {
 
         if (!("currentItem" in data)) {
             Object.defineProperty(data, "currentItem", {
-                value: data,
+                get: function () { return data; },
                 enumerable: false,
-                configurable: true
+                configurable: true                
             });
         }
 
