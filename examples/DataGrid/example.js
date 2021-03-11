@@ -6,12 +6,14 @@ loader.render().then(function (cmpInstance) {
     $('#root').append(cmpInstance.$el);
     loader.show();
 });
+var myDataGrid;
 let apiClient = new ApiClient();
-apiClient.get("https://api.mocki.io/v1/8dea432f").then(r => {
-    var myDataGrid = new DataGrid({
+apiClient.get("https://api.mocki.io/v1/83a89b16").then(r => {
+    myDataGrid = new DataGrid({
         id: 'DataGrid',
         height: 300,
         width: 800,
+        attr:{"testBindedAttr":"{(new Date()).getFullYear()}"},
         allowNewItem: true, //allow the user to add items that are not included in the specified dataProvider
         rowCount: 5, //visible rows count - virtual scrolling wil be applied on scroll
         dataProvider: new ArrayEx(r.response),
@@ -93,9 +95,7 @@ apiClient.get("https://api.mocki.io/v1/8dea432f").then(r => {
             }
         ]
     });
-    myDataGrid.on('creationComplete', function () {
-        loader.hide();
-    });
+
     myDataGrid.on('cellEditFinished', function () {
 
     });
@@ -117,6 +117,55 @@ apiClient.get("https://api.mocki.io/v1/8dea432f").then(r => {
         myButton.render().then(function (cmpInstance) {
             $('#root').append(cmpInstance.$el);
         });
+
+        var myButton2 = new Button({
+            id: 'button2',
+            type: "",
+            value: "",
+            label: "Splice",
+            classes: ["btn", "btn-success"],
+            click: function (e) {
+                myDataGrid.dataProvider.splicea(0, 0, [
+                    {
+                        "_id": "602a4344f759fe17eb84824b",
+                        "age": 27,
+                        "guid": "cfa08086-cd92-4f4c-b948-9d4eac8289e1",
+                        "name": "Anony Mous",
+                        "tags": ["est", "Lorem", "duis", "non", "et", "irure", "officia"],
+                        "about": "Aliquip enim minim laboris veniam occaecat aute nostrud deserunt non enim excepteur dolore magna aliquip. Non aute sint esse occaecat mollit do enim deserunt nostrud commodo eiusmod sunt labore. Minim duis aute magna deserunt.\r\n",
+                        "email": "carmenkramer@peticular.com",
+                        "index": 0,
+                        "phone": "+1 (844) 427-2140",
+                        "gender": "female",
+                        "address": "968 Varick Avenue, Faywood, California, 4323",
+                        "balance": "$2,175.90",
+                        "company": "Kreatx",
+                        "friends": [{
+                            "id": 0,
+                            "name": "Elinor Cardenas"
+                        }, {
+                            "id": 1,
+                            "name": "Ofelia Patton"
+                        }, {
+                            "id": 2,
+                            "name": "Elva Aguirre"
+                        }],
+                        "picture": "http://placehold.it/32x32",
+                        "eyeColor": "blue",
+                        "greeting": "Hello, Carmen Kramer! You have 1 unread messages.",
+                        "isActive": true,
+                        "latitude": -26.608744,
+                        "longitude": 105.653813,
+                        "registered": "2019-12-24T11:59:56 -01:00",
+                        "favoriteFruit": "kiwi"
+                    }
+                ]);                
+            }
+        });
+        myButton2.render().then(function (cmpInstance) {
+            $('#root').append(cmpInstance.$el);
+        });
+        loader.hide();
     });
 });
 

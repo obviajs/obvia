@@ -1,5 +1,5 @@
-var Css = function (_css, $el) {
-    let _$el = $el;
+var Css = function (_css, cmpInst) {
+    let _$el = cmpInst.$el, _self = this;
     let p = new Proxy(this, {
         deleteProperty: function (target, property) {
             _$el.css(property, '');
@@ -8,7 +8,12 @@ var Css = function (_css, $el) {
         },
         set: function (target, property, value, receiver) {
             _$el.css(property, value);
-            target[property] = value;
+            if (_css && _css[property] && Array.isArray(_css[property])) {
+                if (!target[property])
+                    target[property] = [];
+                target[property].push(value);
+            } else
+                target[property] = value;
             return true;
         },
         get: function (target, property, receiver) {
@@ -32,6 +37,10 @@ var Css = function (_css, $el) {
             }
         }
     }
+    UseBindings.call(this, _css);
 
+    this.getScopeChain = function () {
+        return [this, ...cmpInst.getScopeChain()];
+    };
     return p;
 };

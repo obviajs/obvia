@@ -2,11 +2,14 @@ var myWizard = new Wizard({
     id: "wizard",
     stepPath: "attr.step",
     detailsPath: "attr.details",
-    components: [
-        {
+    loop: true,
+    components: [{
             ctor: Container,
             props: {
-                attr: { "step": "Step 1", "details": "Detaje Personale" },
+                attr: {
+                    "step": "Step 1",
+                    "details": "Detaje Personale"
+                },
                 id: "container_row",
                 type: ContainerType.ROW,
                 classes: ["row"],
@@ -143,7 +146,10 @@ var myWizard = new Wizard({
         {
             ctor: Container,
             props: {
-                attr: { "step": "Step 2", "details": "Te pergjithshme" },
+                attr: {
+                    "step": "Step 2",
+                    "details": "Te pergjithshme"
+                },
                 id: "container-row",
                 type: ContainerType.ROW,
                 classes: ["row"],
@@ -280,7 +286,10 @@ var myWizard = new Wizard({
         {
             ctor: Container,
             props: {
-                attr: {"step": "Step 3", "details": "Kontakt"},
+                attr: {
+                    "step": "Step 3",
+                    "details": "Kontakt"
+                },
                 id: "container-row",
                 type: ContainerType.ROW,
                 classes: ["row"],
@@ -377,7 +386,7 @@ var myWizard = new Wizard({
 
                 ]
             }
-        }  
+        }
     ]
 });
 

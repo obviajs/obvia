@@ -2,6 +2,7 @@ var Applet = function (_props) {
     this.$el = $(this);
     let _defaultParams = {
         forceReload: false,
+        mimeType: "application/json",
         behaviors: {
             "beginDraw": "BEGIN_DRAW",
             "endDraw": "END_DRAW",
@@ -12,9 +13,26 @@ var Applet = function (_props) {
         },
         attr: {},
         lazy: true,
-        guid: StringUtils.guid()
+        guid: StringUtils.guid(),
+        fetchViewPromise: (p) => { 
+            let rnd = p.forceReload ? "?r=" + Math.random() : "";            
+            let _base = BrowserManager.getInstance().base;
+            let _furl = _base + (p.url[0] == "." ? p.url.substr(1) : p.url);
+            return get(_furl + p.anchor + ".json" + rnd, p.mimeType).then(function (r) { 
+                return JSON.parse(r.response);
+            });
+        },
+        fetchImplementationPromise: (p) => { 
+            let rnd = p.forceReload ? "?r=" + Math.random() : "";            
+            let _base = BrowserManager.getInstance().base;
+            let _furl = _base + (p.url[0] == "." ? p.url.substr(1) : p.url);
+            //import uses different starting point (currrent file directory)
+            return import(_furl + p.anchor + ".js" + rnd);
+        }
     };
     _props = extend(false, false, _defaultParams, _props);
+    let _fetchViewPromise = _props.fetchViewPromise;
+    let _fetchImplementationPromise = _props.fetchImplementationPromise;
     let _self = this;
     let _parent = _props.parent;
     let _forceReload = _props.forceReload;
@@ -23,7 +41,7 @@ var Applet = function (_props) {
     let _data = _props.data;
     let _uiRoute = _props.uiRoute;
     let _attr = _props.attr;
-    let _mimeType = "application/json";
+    let _mimeType = _props.mimeType;
     let _lazy = _props.lazy;
     let _guid = _props.guid;
     //the url after # that will bring this view to focus
@@ -42,9 +60,7 @@ var Applet = function (_props) {
     let _view;
     //the behaviors implementations (ex ctl)
     let _implementation;
-    let _loaded = false;
-    let _base = BrowserManager.getInstance().base;
-    let _furl = _base + (_url[0] == "." ? _url.substr(1) : _url);
+    let _loaded = false;    
     //Applet implementation skeleton
     let _behaviors = _props.behaviors;
     let _title = _props.title;
@@ -53,12 +69,12 @@ var Applet = function (_props) {
         if ((_parent == _app) || msg[_anchor]) {
             return coroutine(function* () {
                 let p = yield _self.init(msg[_anchor]);
-
+                let appletIndex = msg.inst ? msg.inst : 0;
                 let pc = [p];
                 if (msg[_anchor]) {
                     for (let _canchor in _appletsMap) {
                         if (msg[_anchor][_canchor]) {
-                            let inst = _appletsMap[_canchor];
+                            let inst = _appletsMap[_canchor][appletIndex];
                             pc.push(yield inst.route(msg[_anchor]));
                         }
                     }
@@ -87,11 +103,10 @@ var Applet = function (_props) {
         }
         _backWards(m);
         return (!_loaded ? coroutine(function* () {
-            let rnd = _forceReload ? "?r=" + Math.random() : "";
             let r = yield Promise.all([
-                get(_furl + _anchor + ".json" + rnd, _mimeType),
+                _fetchViewPromise(_props),
                 //import uses different starting point (currrent file directory)
-                import(_furl + _anchor + ".js" + rnd),
+                _fetchImplementationPromise(_props),
                 _dataPromise ? (typeof _dataPromise == 'function' ? _dataPromise.call() : _dataPromise) : Promise.resolve(_data)
             ]).then((p) => {
                 let module = p[1];
@@ -102,7 +117,7 @@ var Applet = function (_props) {
                 return p;
             });
 
-            _literal = JSON.parse(r[0].response);
+            _literal = r[0];
             _literal.props.bindingDefaultContext = _data;
             _view = Component.fromLiteral(_literal);
 
@@ -115,7 +130,11 @@ var Applet = function (_props) {
                     let applet = _applets[i];
                     applet.app = _app;
                     applet.parent = _self;
-                    let inst = _appletsMap[_applets[i].anchor] = new Applet(applet);
+                    if (!_appletsMap[_applets[i].anchor]) {
+                        _appletsMap[_applets[i].anchor] = [];
+                    }
+                    let inst = new Applet(applet);
+                    _appletsMap[_applets[i].anchor].push(inst);
                     inst.on("appletInit", _appletInit);
                 }
             }

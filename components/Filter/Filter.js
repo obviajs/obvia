@@ -20,86 +20,87 @@ var Filter = function (_props) {
         _expressionContainer,
         _rules,
         _valid = true,
+        _advancedMode,
         _defaultOperators = new ArrayEx([{
                 value: "equal",
-                label: "equals",
+                operatorLabel: "equals",
                 friendly: "equals to {value}",
                 inputVisible: true,
                 rangeInput: false
             },
             {
                 value: "not_equal",
-                label: "is not equal",
+                operatorLabel: "is not equal",
                 friendly: "is not equal to {value}",
                 inputVisible: true,
                 rangeInput: false
             },
             {
                 value: "in",
-                label: "in",
+                operatorLabel: "in",
                 friendly: "in ({value})",
                 inputVisible: true,
                 rangeInput: false
             },
             {
                 value: "not_in",
-                label: "not in",
+                operatorLabel: "not in",
                 friendly: "not in ({value})",
                 inputVisible: true,
                 rangeInput: false
             },
             {
                 value: "less",
-                label: "is less than",
+                operatorLabel: "is less than",
                 friendly: "is less than {value}",
                 inputVisible: true,
                 rangeInput: false
             },
             {
                 value: "less_or_equal",
-                label: "is less or equal than",
+                operatorLabel: "is less or equal than",
                 friendly: "is less or equal than {value}",
                 inputVisible: true,
                 rangeInput: false
             },
             {
                 value: "greater",
-                label: "is greater than",
+                operatorLabel: "is greater than",
                 friendly: "is greater than {value}",
                 inputVisible: true,
                 rangeInput: false
             },
             {
                 value: "greater_or_equal",
-                label: "is greater or equal than",
+                operatorLabel: "is greater or equal than",
                 friendly: "is greater or equal than {value}",
                 inputVisible: true,
                 rangeInput: false
             },
             {
                 value: "between",
-                label: "is between",
+                operatorLabel: "is between",
                 friendly: "is between {min} and {max}",
                 inputVisible: true,
                 rangeInput: true
             },
             {
                 value: "not_between",
-                label: "is not between",
+                operatorLabel: "is not between",
                 friendly: "is not between {min} and {max}",
                 inputVisible: true,
                 rangeInput: true
             },
             {
                 value: "is_null",
-                label: "is null",
+                operatorLabel: "is null",
                 friendly: "is null",
                 inputVisible: false,
                 rangeInput: false
             },
             {
                 value: "is_not_null",
-                label: "is not null",
+                operatorLabel: "is not null",
                 friendly: "is not null",
                 inputVisible: false,
                 rangeInput: false
@@ -238,7 +239,7 @@ var Filter = function (_props) {
                                             "errorMessage": "Please enter a value for the lower boundary.",
                                             "validationGroup": _props.guid,
                                             "enabled": "{currentItem.deleted == null || currentItem.deleted == false}",
-                                            "visible": false
+                                            "display": false
                                         }
                                     }
                                 ]
@@ -260,7 +261,7 @@ var Filter = function (_props) {
                                             "errorMessage": "Please enter a value for the upper boundary.",
                                             "validationGroup": _props.guid,
                                             "enabled": "{currentItem.deleted == null || currentItem.deleted == false}",
-                                            "visible": false
+                                            "display": false
                                         }
                                     }
                                 ]
@@ -285,7 +286,7 @@ var Filter = function (_props) {
                                 "controlToValidate": "valueInput",
                                 "errorMessage": "Please enter a value.",
                                 "validationGroup": _props.guid,
-                                "visible": false
+                                "display": false
                             }
                         }
                     ]
@@ -293,16 +294,14 @@ var Filter = function (_props) {
             };
         }
 
-
         filterItemEditor = Component.fromLiteral(filterItemEditor);
-        let reqFieldValidator;
         if (ra.currentItem[_operatorsField]) {
             _operatorsDp.splicea(0, _operatorsDp.length, ra.currentItem[_operatorsField]);
         } else {
             _operatorsDp.splicea(0, _operatorsDp.length, _defaultOperators);
         }
         ra.currentRow.repeater_container.filterItemHeading.hide();
-        ra.currentRow.repeater_container.filterEditorContainer.headerRow.mainCol.fOperator.label = ra.currentItem[_labelField];
+        ra.currentRow.repeater_container.filterEditorContainer.headerRow.mainCol.fOperator.operatorLabel = ra.currentItem[_labelField];
         let oldInput = ra.currentRow.repeater_container.filterEditorContainer.mainRow.mainCol.fItemEditor.input;
         if (oldInput) {
             if (oldInput.valueValidator)
@@ -336,8 +335,8 @@ var Filter = function (_props) {
                     }
                 }
             }
-            ra.currentRow.filterActionLabel.faRemove.visible = false;
-            ra.currentRow.filterActionLabel.faAccept.visible = true;
+            ra.currentRow.filterActionLabel.faRemove.display = false;
+            ra.currentRow.filterActionLabel.faAccept.display = true;
             ra.currentRow.repeater_container.filterEditorContainer.show();
         });
     };
@@ -388,8 +387,8 @@ var Filter = function (_props) {
 
                 ra.currentRow.repeater_container.filterItemHeading.label = label;
 
-                ra.currentRow.filterActionLabel.faRemove.visible = true;
-                ra.currentRow.filterActionLabel.faAccept.visible = false;
+                ra.currentRow.filterActionLabel.faRemove.display = true;
+                ra.currentRow.filterActionLabel.faAccept.display = false;
                 ra.currentRow.repeater_container.filterEditorContainer.hide();
                 ra.currentRow.repeater_container.filterItemHeading.show();
                 _update();
@@ -459,7 +458,8 @@ var Filter = function (_props) {
                                                     },
                                                     classes: [],
                                                     type: HeadingType.h6,
-                                                    align: 'left',
+                                                    align: 'left',                                                    
+                                                    "bindingDefaultContext":"{currentItem}",
                                                     label: "{?" + _labelField + "}",
                                                 }
                                             },
@@ -477,7 +477,8 @@ var Filter = function (_props) {
                                                 ctor: Container,
                                                 props: {
                                                     id: 'filterEditorContainer',
-                                                    visible: false,
+                                                    display: false,                                                    
+                                                    "bindingDefaultContext":"{currentItem}",
                                                     components: [{
                                                             ctor: Container,
                                                             props: {
@@ -500,7 +501,7 @@ var Filter = function (_props) {
                                                                                         "ctor": "DropDown",
                                                                                         "props": {
                                                                                             "id": "operator",
-                                                                                            "labelField": "label",
+                                                                                            "labelField": "operatorLabel",
                                                                                             "valueField": "value",
                                                                                             "dataProvider": _operatorsDp,
                                                                                             //"selectedItem": "{?operator}",
@@ -513,11 +514,11 @@ var Filter = function (_props) {
                                                                                 "ctor": "RequiredFieldValidator",
                                                                                 "props": {
                                                                                     "id": "operatorValidator",
-                                                                                    "controlToValidate": "{currentRow.repeater_container.filterEditorContainer.headerRow.mainCol.fOperator.operator.id}",
+                                                                                    "controlToValidate": "{?currentRow.repeater_container.filterEditorContainer.headerRow.mainCol.fOperator.operator.id}",
                                                                                     "errorMessage": "Please select a value for the operator.",
                                                                                     "validationGroup": _props.guid,
                                                                                     "enabled": "{currentItem.deleted == null || currentItem.deleted == false}",
-                                                                                    "visible": false
+                                                                                    "display": false
                                                                                 }
                                                                             }
                                                                         ]
@@ -531,19 +532,22 @@ var Filter = function (_props) {
                                                                 id: 'mainRow',
                                                                 classes: ["form-row"],
                                                                 type: "",
+                                                                "bindingDefaultContext":"{currentItem}",
                                                                 components: [{
                                                                     ctor: Container,
                                                                     props: {
                                                                         type: "",
                                                                         id: 'mainCol',
                                                                         classes: ["col"],
+                                                                        "bindingDefaultContext":"{currentItem}",
                                                                         components: [{
                                                                             "ctor": "FormField",
                                                                             "props": {
                                                                                 "label": "Value",
                                                                                 "id": "fItemEditor",
                                                                                 "size": "form-control-sm",
-                                                                                "visible": "{?currentRow.repeater_container.filterEditorContainer.headerRow.mainCol.fOperator.operator.selectedItem.inputVisible}"
+                                                                                "bindingDefaultContext":"{currentItem}",
+                                                                                "display": "{?currentRow.repeater_container.filterEditorContainer.headerRow.mainCol.fOperator.operator.selectedItem.inputVisible}"
                                                                             }
                                                                         }]
                                                                     }
@@ -585,7 +589,7 @@ var Filter = function (_props) {
                                                 props: {
                                                     id: 'faRemove',
                                                     label: "",
-                                                    href: "#",
+                                                    href: "javascript:void(0)",
                                                     target: "",
                                                     classes: ["fas", "fa-times"],
                                                     css: {
@@ -599,9 +603,9 @@ var Filter = function (_props) {
                                                 props: {
                                                     id: 'faAccept',
                                                     label: "",
-                                                    href: "#",
+                                                    href: "javascript:void(0)",
                                                     target: "",
-                                                    visible: false,
+                                                    display: false,
                                                     classes: ["fas", "fa-check"],
                                                     css: {
                                                         "text-decoration": "none"
@@ -621,7 +625,8 @@ var Filter = function (_props) {
                             id: 'expressionContainer',
                             classes: ["filter", "expression-container"],
                             contenteditable: true,
-                            input: _expressionInput
+                            input: _expressionInput,
+                            display: _advancedMode
                         }
                     }
                 ]
@@ -726,7 +731,8 @@ var Filter = function (_props) {
         typeField: undefined,
         operatorsField: undefined,
         itemEditorField: undefined,
-        guid: StringUtils.guid()
+        guid: StringUtils.guid(),
+        advancedMode: true
     };
 
     _props = extend(false, false, _defaultParams, _props);
@@ -735,6 +741,7 @@ var Filter = function (_props) {
     _labelField = _props.labelField;
     _operatorsField = _props.operatorsField;
     _itemEditorField = _props.itemEditorField;
+    _advancedMode = _props.advancedMode;
 
     fnContainerDelayInit();
     _props.components = _cmps;

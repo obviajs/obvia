@@ -2,6 +2,7 @@ var flowerCM = window.flowerCM || {};
 //base Components
 rjs.define("lib/Poolable.js", "Poolable");
 rjs.define("lib/EventDispatcher.js", "EventDispatcher");
+rjs.define("lib/Literal.js", "Literal");
 rjs.define("lib/Timer.js", "Timer");
 rjs.define("lib/NumberUtils.js", "NumberUtils");
 rjs.define("./components/base/EnvType.js", "EnvType");
@@ -30,6 +31,7 @@ rjs.define("lib/rca/RemoteDataEvent.js", "RemoteDataEvent");
 rjs.define("lib/rca/DataField.js", "DataField");
 rjs.define("lib/rca/RemoteArray.js", "RemoteArray");
 rjs.define("lib/rca/RemoteObject.js", "RemoteObject");
+rjs.define("lib/UseBindings.js", "UseBindings");
 rjs.define("./components/base/Align.js", "Align");
 rjs.define("./components/base/BrowserWindow.js", "BrowserWindow");
 rjs.define("./components/Repeater/RepeaterEventArgs.js", "RepeaterEventArgs");
@@ -75,6 +77,7 @@ rjs.define("./components/LabelType.js", "LabelType");
 rjs.define("./components/Label.js", "Label");
 //HRule
 rjs.define("./components/HRule.js", "HRule");
+rjs.define("./components/Br.js", "Br");
 // Color Picker
 rjs.define("./components/Color.js", "Color");
 //Container
@@ -236,9 +239,9 @@ rjs.define("lib/yaml.js", "yaml");
 rjs.define("./lib/ApiClientGen/ApiClient.js", "ApiClient");
 rjs.define("./lib/ApiClientGen/ApiClientGen.js", "ApiClientGen");
 rjs.define("./lib/ApiClientGen/OAMethod.js", "OAMethod");
-
+rjs.define("lib/LocalizationManager.js", "LocalizationManager");
 let dependencies = [
-    ["EventDispatcher"],
+    ["EventDispatcher", "Literal"],
     [
         "Poolable",
         "Timer",
@@ -270,6 +273,7 @@ let dependencies = [
         "RemoteDataEvent",
         "RemoteObject",
         "RemoteArray",
+        "UseBindings",
         "Align",
         "BrowserWindow",
         "RepeaterEventArgs",
@@ -367,6 +371,7 @@ let dependencies = [
         "DataGridColumn",
         "DataGrid",
         "HRule",
+        "Br",
         "Color",
         "Image",
         "ProgressBarStyle",
@@ -419,7 +424,8 @@ let dependencies = [
         "yaml",
         "ApiClient",
         "ApiClientGen",
-        "OAMethod"
+        "OAMethod",
+        "LocalizationManager"
     ]
 ];
 rjs.grequire(dependencies).then(() => {

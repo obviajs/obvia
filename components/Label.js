@@ -32,21 +32,20 @@ var Label = function (_props, _hideComponents = false) {
         configurable: true
     });
 
-    Object.defineProperty(this, "contenteditable", {
-        get: function contenteditable() {
-            return _contenteditable;
+    Object.defineProperty(this, "html", {
+        get: function html() {
+            return _html = this.$el.html();
         },
-        set: function contenteditable(v) {
-            if (_contenteditable != v) {
-                _contenteditable = v;
+        set: function html(v) {
+            if (_html != v) {
+                _html = v;
                 if (this.$el) {
-                    if (v)
-                        this.$el.attr('contenteditable', v);
-                    else
-                        this.$el.removeAttr('contenteditable');
+                    this.$el.html(v);
                 }
             }
-        }
+        },
+        enumerable: true,
+        configurable: true
     });
 
     Object.defineProperty(this, "labelType", {
@@ -85,9 +84,6 @@ var Label = function (_props, _hideComponents = false) {
             if (_props.label) {
                 this.label = _props.label;
             }
-            if (_props.contenteditable) {
-                this.contenteditable = _props.contenteditable;
-            }
         }
     };
     this.template = function () {
@@ -97,14 +93,14 @@ var Label = function (_props, _hideComponents = false) {
     let _defaultParams = {
         label: "",
         labelType: LabelType.label,
-        contenteditable: false
+        type:""
     };
     _props = extend(false, false, _defaultParams, _props);
 
-    let _label, _contenteditable;
+    let _label, _html;
     let _labelType = _props.labelType;
 
-    let r = Parent.call(this, _props, _hideComponents);
+    let r = Container.call(this, _props, _hideComponents);
     return r;
 };
 Label.prototype.ctor = 'Label';

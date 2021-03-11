@@ -1,4 +1,4 @@
-var Component = function (_props) {
+var Component = function (_props) {   
     let _self = this;
     if (!Component[this.ctor]) {
         Component[this.ctor] = {};
@@ -20,21 +20,18 @@ var Component = function (_props) {
         attach: true
     };
     shallowCopy(extend(false, false, _defaultParams, _props), _props);
-    let ppb = Component.processPropertyBindings(_props);
+    UseBindings.call(this, _props);
     for (let prop in _props) {
-        if (!ppb.processedProps.hasOwnProperty(prop))
+        if (this.bindedProps.hasOwnProperty(prop))
             delete _props[prop];
     }
-    if (_props.bindingDefaultContext == null) {
-        _props.bindingDefaultContext = this;
-    }
+
     let _parentRepeater = _props.parentRepeater;
     let _repeaterIndex = _props.repeaterIndex;
-    let _bindingDefaultContext = _props.bindingDefaultContext;
     let _guid = _props.guid;
     let _attr, _css;
     let _id = _props.id = ((!_props.id) || (_props.id == "")) ? _defaultParams.id : _props.id;
-    let _enabled, _draggable, _visible = true;
+    let _enabled, _draggable, _visible = true, _display = true;
     let _classes = [];
     let _parent = _props.parent;
     let _parentForm = _props.parentForm;
@@ -57,17 +54,12 @@ var Component = function (_props) {
     let _dragend = _props.dragend;
     let _idChanged = _props.idChanged;
     let _ownerDocument = _props.ownerDocument;
-    let _watchers = [];
-    let _bindings = ppb.bindings;
     let _attached = false;
     let _attach = _props.attach;
     let _index = _props.index;
     let _appendTo = _props.appendTo;
 
     let _domID = _id + '_' + _guid;
-
-    Component.instances[_domID] = this;
-    let _bindingsManager = BindingsManager.getInstance(this);
     //let _propUpdateMap = {"label":{"o":$el, "fn":"html", "p":[] }, "hyperlink":{}};
     //generate GUID for this component
     Object.defineProperty(this, "guid", {
@@ -75,6 +67,13 @@ var Component = function (_props) {
             return _guid;
         },
         enumerable: true
+    });
+
+    Object.defineProperty(this, "dependencies", {
+        get: function dependencies() {
+            return [{"attr":this.attr, "css":this.css}, this.children];
+        },
+        enumerable: false
     });
 
     Object.defineProperty(this, "attach", {
@@ -91,18 +90,6 @@ var Component = function (_props) {
                 _attached = v;
             }
         }
-    });
-    Object.defineProperty(this, "bindingDefaultContext", {
-        get: function bindingDefaultContext() {
-            return _bindingDefaultContext;
-        },
-        set: function bindingDefaultContext(v) {
-            if (_bindingDefaultContext != v) {
-                _bindingDefaultContext = v;
-                this.refreshBindings(_bindingDefaultContext);
-            }
-        },
-        enumerable: false
     });
 
     Object.defineProperty(this, "proxyMaybe", {
@@ -129,7 +116,7 @@ var Component = function (_props) {
                     delete Component.instances[this.domID];
                     _id = v;
                     _domID = _id + '_' + _guid;
-                    Component.instances[_domID] = this;
+                    Component.instances[_domID] = this.proxyMaybe;
 
                     if (this.parent) {
                         if (this.parent.ctor == "Repeater") {
@@ -138,9 +125,6 @@ var Component = function (_props) {
                         } else {
                             this.parent.children[_id] = this.parent.children[oldId];
                             delete this.parent.children[oldId];
-
-                            this.parent.ccRelation[_id] = this.parent.ccRelation[oldId];
-                            delete this.parent.ccRelation[oldId];
 
                             let ind = this.parent.csorted.indexOf(oldId);
                             if (ind > -1) {
@@ -246,14 +230,16 @@ var Component = function (_props) {
         set: function parent(v) {
             if (_parent != v) {
                 if (_parent) {
-                    if (_self.$el) {
-                        if (_parent)
-                            _parent.$el.detach(_self.$el);
-                        if (v)
-                            v.$el.append(_self.$el);
-                    }
+                    if (_parent)
+                        _parent.removeChild(_self);                        
                 }
                 _parent = v;
+                if (this.children) {
+                    for (let cid in this.children) {
+                        this.children[cid].invalidateScopeChain();
+                    }
+                }
+                this.invalidateScopeChain();
             }
         },
         enumerable: false
@@ -276,12 +262,6 @@ var Component = function (_props) {
         enumerable: false
     });
 
-    Object.defineProperty(this, "bindings", {
-        get: function bindings() {
-            return _bindings;
-        }
-    });
-
     Object.defineProperty(this, "visible", {
         get: function visible() {
             return _visible;
@@ -291,6 +271,25 @@ var Component = function (_props) {
                 _visible = v;
                 if (this.$el) {
                     if (_visible)
+                        this.$el.css({ "visibility": "visible" });
+                    else
+                        this.$el.css({ "visibility": "hidden" });
+                }
+            }
+        },
+        configurable: true,
+        enumerable: true
+    });
+
+    Object.defineProperty(this, "display", {
+        get: function display() {
+            return _display;
+        },
+        set: function display(v) {
+            if (_display != v) {
+                _display = v;
+                if (this.$el) {
+                    if (_display)
                         this.show();
                     else
                         this.hide();
@@ -415,9 +414,9 @@ var Component = function (_props) {
         this.$el = tpl;
     else if (tpl && tpl != "")
         this.$el = $(tpl);
-
-    _attr = new Attr(_props.attr, this.$el);
-    _css = new Css(_props.css, this.$el);
+    this.$el.ownerDocument = _ownerDocument;
+    _attr = new Attr(_props.attr, this);
+    _css = new Css(_props.css, this);
 
     let _DOMMutation = this.DOMMutation;
     this.DOMMutation = function (e) {
@@ -481,8 +480,11 @@ var Component = function (_props) {
                 if (typeof _endDraw == 'function')
                     _endDraw.apply(this.proxyMaybe, arguments);
             }
-            if ((_props.applyBindings == null || _props.applyBindings == true) && _bindingsManager.watchers.length == 0)
-                this.applyBindings(_bindingDefaultContext);
+            if (_self.bindingsManager.watchers.length == 0) {                
+                this.applyBindings();
+                this.attr.applyBindings();
+                this.css.applyBindings();
+            }                
             _self.trigger('beforeAttach');
         }
     };
@@ -607,7 +609,6 @@ var Component = function (_props) {
     this.show = function () {
         if (this.$el) {
             this.$el.show();
-            _visible = true;
         }
         return this;
     };
@@ -615,7 +616,6 @@ var Component = function (_props) {
     this.hide = function () {
         if (this.$el) {
             this.$el.hide();
-            _visible = false;
         }
         return this;
     };
@@ -729,7 +729,7 @@ var Component = function (_props) {
                                     "proxyHandler": proxyHandler,
                                     "originalHandler": fnc
                                 });
-                                this.$el.on(eventType, proxyHandler);
+                                this.$el.on(eventType, proxyHandler);                                
                             } else {
                                 console.log("Tried to add a listener that was previously added.");
                             }
@@ -779,130 +779,7 @@ var Component = function (_props) {
         let found = getMatching(_handlers[eventType], "originalHandler", fnc, true);
         return found.objects.length > 0;
     };
-
-    this.getBindingExpression = function (property) {
-        let match = getMatching(_bindings, "property", property, true);
-        let expression = null;
-        if (match.objects.length > 0) {
-            expression = match.objects[0]["expression"];
-        }
-        return expression;
-    };
-
-    this.resetBindings = function () {
-        _bindingsManager.resetBindings();
-    };
-
-    this.setBindingExpression = function (property, expression) {
-        let match = getMatching(_bindings, "property", property, true);
-        if (match.indices.length > 0) {
-            let b = getBindingExp(expression);
-            if (b) {
-                let newBinding = {
-                    "expression": b.expression,
-                    "property": property,
-                    "nullable": false
-                };
-                _bindings.splice(match.indices[0], 1, newBinding);
-
-                let currentItem = _bindingDefaultContext;
-                let bindingExp = expression;
-                let site = this;
-                let site_chain = [property];
-                let nullable = false;
-
-                //this here refers to window context
-                let defaultBindTo = "currentItem_" + _self.guid;
-                window[defaultBindTo] = (currentItem || this);
-                if (!("currentItem" in window[defaultBindTo])) {
-                    // window[defaultBindTo]["currentItem"] = window[defaultBindTo];
-                    Object.defineProperty(window[defaultBindTo], "currentItem", {
-                        value: window[defaultBindTo],
-                        enumerable: false,
-                        configurable: true
-                    });
-                }
-                // let context = extend(false, true, this, obj);
-                let fn = function () {
-                    _bindingsManager.getValue(window, bindingExp, site_chain, defaultBindTo);
-                };
-                if (nullable) {
-                    let fnDelayed = whenDefined(window[defaultBindTo], bindingExp, fn);
-                    fnDelayed();
-                } else {
-                    fn();
-                }
-            }
-        }
-    };
-
-    let _bindedTo;
-    this.refreshBindings = function (data) {
-        if (_bindedTo != data) {
-            this.resetBindings();
-            this.applyBindings(data);
-            if (this.children) {
-                for (let cid in this.children) {
-                    if (this.children[cid].bindingDefaultContext == _bindingDefaultContext)
-                        this.children[cid].refreshBindings(data);
-                }
-            }
-        }
-        _bindingDefaultContext = data;
-    };
-
-    this.applyBindings = function (data) {
-        _bindedTo = data;
-        for (let bi = 0; bi < _bindings.length; bi++) {
-            let currentItem = data;
-            let bindingExp = _bindings[bi].expression;
-
-            let site_chain = [_bindings[bi].property];
-            let nullable = _bindings[bi].nullable;
-
-            //this here refers to window context
-            let defaultBindTo = "currentItem_" + _self.guid;
-            window[defaultBindTo] = (currentItem || this);
-            if (!("currentItem" in window[defaultBindTo])) {
-                Object.defineProperty(window[defaultBindTo], "currentItem", {
-                    value: window[defaultBindTo],
-                    enumerable: false,
-                    configurable: true
-                });
-            }
-            // let context = extend(false, true, this, obj);
-            let fn = function () {
-                _bindingsManager.getValue(window, bindingExp, site_chain, defaultBindTo);
-            };
-            if (nullable) {
-                let identifierTokens = BindingsManager.getIdentifiers(bindingExp);
-                if (identifierTokens) {
-                    let len = identifierTokens.length;
-                    let cc = window[defaultBindTo];
-                    coroutine(function* () {
-                        for (let i = 0; i < len; i++) {
-                            yield whenDefinedPromise(cc, identifierTokens[i].value);
-                            cc = cc[identifierTokens[i].value];
-                        }
-                        fn();
-                    });
-                }
-            } else {
-                fn();
-            }
-        }
-    };
-
-    this.keepBase = function () {
-        this.base = {};
-        for (let prop in this) {
-            if (isGetter(this, prop))
-                copyAccessor(prop, this, this.base);
-            else
-                this.base[prop] = this[prop];
-        }
-    };
-
+    
     this.implement = function (inst) {
         for (let prop in inst) {
             if (isGetter(inst, prop))
@@ -942,12 +819,15 @@ var Component = function (_props) {
                 }
             }
         }
-    };
+    };    
 
+    Component.instances[_domID] = this.proxyMaybe;
     if (_props.enabled != null)
         this.enabled = _props.enabled;
     if (_props.visible != null)
         this.visible = _props.visible;
+    if (_props.display != null)
+        this.display = _props.display;
     if (_props.draggable != null)
         this.draggable = _props.draggable;
     let _spacing = new Spacing(_props.spacing, this.$el);
@@ -971,57 +851,30 @@ var Component = function (_props) {
         return m;
     };
 
-    this.trigger('init');
-};
-
-Component.processPropertyBindings = function (props) {
-    let _bindings = [];
-    //build components properties, check bindings
-    let _processedProps = {};
-
-    for (let prop in props) {
-        if (typeof prop == 'string') {
-            //check for binding
-            let b = getBindingExp(props[prop]);
-            if (b) {
-                if (prop != "bindingDefaultContext") {
-                    _bindings.push({
-                        "expression": b.expression,
-                        "property": prop,
-                        "nullable": b.nullable
-                    });
-                } else
-                    _bindings.unshift({
-                        "expression": b.expression,
-                        "property": prop,
-                        "nullable": b.nullable
-                    });
-            } else {
-                //no binding
-                _processedProps[prop] = props[prop];
-            }
-        }
-    }
-    return {
-        "bindings": _bindings,
-        "processedProps": _processedProps
+    let _cachedScope = null
+    this.invalidateScopeChain = function () {
+        _cachedScope = null;
     };
-};
 
+    this.getScopeChain = function () {
+        let scope = _cachedScope
+        if (!_cachedScope) {
+            scope = [this.bindingDefaultContext];
+            if (this.proxyMaybe != this.bindingDefaultContext)
+                scope.push(this.proxyMaybe);
+            if (this.parent) {
+                scope.splicea(scope.length, 0, this.parent.getScopeChain())
+            } else
+                scope.push(window)
+            _cachedScope = scope;
+        } 
+        return scope;
+    };
+    _self.bindingDefaultContext = _props.bindingDefaultContext || this.proxyMaybe;
+    this.trigger('init');  
+};
 Component.instanceInc = 0;
-Component.fromLiteral = function (_literal) {
-    //let _literal = Object.assign({}, _literal);
-    //let props = Object.assign({}, _literal.props);
-    let props = _literal.props;
-
-    if (_literal.ctor) {
-        if (typeof _literal.ctor == "string") {
-            _literal.ctor = window[_literal.ctor];
-        }
-        let el = new _literal.ctor(props);
-        return el;
-    }
-};
+Literal.call(Component);
 Component.listeners = {};
 Component.objListeners = {};
 Component.MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;

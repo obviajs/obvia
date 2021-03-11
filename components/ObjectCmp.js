@@ -26,24 +26,6 @@ var ObjectCmp = function (_props, _hideComponents = false) {
         enumerable: true
     });
 
-    Object.defineProperty(this, "type", {
-        get: function type() {
-            return _type;
-        },
-        set: function type(v) {
-            if (_type != v) {
-                if (this.$el) {
-                    if (v)
-                        this.$el.attr('type', v);
-                    else
-                        this.$el.removeAttr('type');
-                    _type = v;
-                }
-            }
-        },
-        enumerable: true
-    });
-
     let _beforeAttach = this.beforeAttach;
     this.beforeAttach = function (e) {
         if (e.target.id == this.domID) {
@@ -62,7 +44,7 @@ var ObjectCmp = function (_props, _hideComponents = false) {
         if (e.target.id == this.domID) {}
     };
     this.template = function () {
-        return "<object></object>";
+        return '<object id="' + this.domID + '" ></object>';
     };
 
     let _defaultParams = {
@@ -72,6 +54,23 @@ var ObjectCmp = function (_props, _hideComponents = false) {
     _props = extend(false, false, _defaultParams, _props);
 
     let r = Container.call(this, _props, _hideComponents);
+    Object.defineProperty(this, "type", {
+        get: function type() {
+            return _type;
+        },
+        set: function type(v) {
+            if (_type != v) {
+                if (this.$el) {
+                    if (v)
+                        this.$el.attr('type', v);
+                    else
+                        this.$el.removeAttr('type');
+                    _type = v;
+                }
+            }
+        },
+        enumerable: true
+    });
     return r;
 };
 ObjectCmp.prototype.ctor = 'ObjectCmp';

@@ -18,7 +18,7 @@ var MultiSwitch = function (_props) {
                 this.components = fnContainerDelayInit();
                 this.removeAllRows();
                 if (_dataProvider && _dataProvider.length > 0) {
-                    let dpFields = Object.keys(_dataProvider[0]);
+                    let dpFields = Object.getOwnPropertyNames(_dataProvider[0]);
                     if (propDataProvider && dpFields.includes(_labelField) && dpFields.includes(_valueField)) {
                         propDataProvider['set'].call(_self, _dataProvider);
                     }
@@ -38,7 +38,7 @@ var MultiSwitch = function (_props) {
                 this.components = fnContainerDelayInit();
                 this.removeAllRows();
                 if (_dataProvider && _dataProvider.length > 0) {
-                    let dpFields = Object.keys(_dataProvider[0]);
+                    let dpFields = Object.getOwnPropertyNames(_dataProvider[0]);
                     if (propDataProvider && dpFields.includes(_labelField) && dpFields.includes(_valueField)) {
                         propDataProvider['set'].call(_self, _dataProvider);
                     }
@@ -114,7 +114,7 @@ var MultiSwitch = function (_props) {
             this.removeAllRows();
 
             if (v.length > 0) {
-                let dpFields = Object.keys(v[0]);
+                let dpFields = Object.getOwnPropertyNames(v[0]);
                 if (dpFields.includes(_labelField) && dpFields.includes(_valueField)) {
                     propDataProvider['set'].call(_self, _dataProvider);
                 }
