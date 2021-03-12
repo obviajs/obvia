@@ -1,13 +1,15 @@
 var loader = new Loader({
     id: 'loader'
 });
-
+/*
 loader.render().then(function (cmpInstance) {
     $('#root').append(cmpInstance.$el);
     loader.show();
 });
+*/
 var myDataGrid;
 let apiClient = new ApiClient();
+
 apiClient.get("https://api.mocki.io/v1/83a89b16").then(r => {
     myDataGrid = new DataGrid({
         id: 'DataGrid',
@@ -176,8 +178,101 @@ apiClient.get("https://api.mocki.io/v1/83a89b16").then(r => {
     });
 });
 
-
-
+var myDataGrid2 = new DataGrid({
+    id: 'DataGrid',
+    height: 300,
+    width: 800,
+    attr:{"testBindedAttr":"{(new Date()).getFullYear()}"},
+    allowNewItem: true, //allow the user to add items that are not included in the specified dataProvider
+    rowCount: 5, //visible rows count - virtual scrolling wil be applied on scroll
+    defaultItem: {
+        "name": "Enter Name",
+        "age": 17,
+        "company": "Acme",
+        "favoriteFruit": "Kiwi",
+        "selectedFavoriteFruit":null
+    },
+    columns: [{
+            width: 400,
+            name: "name",
+            field: "name",
+            description: "Name",
+            sortable: true,
+            sortInfo: {
+                sortOrder: 0,
+                sortDirection: "ASC"
+            },
+            editable: false
+        },
+        {
+            width: 400,
+            name: "age",
+            field: "age",
+            description: "Age",
+            sortable: true,
+            sortInfo: {
+                sortOrder: 0,
+                sortDirection: "ASC"
+            },
+            editable: false
+        },
+        {
+            width: 200,
+            name: "company",
+            field: "company",
+            description: "Company",
+            sortable: false,
+            sortInfo: {
+                sortOrder: 0,
+                sortDirection: "ASC"
+            },
+            editable: true,
+            itemEditor: {
+                ctor: TextInput,
+                props: {
+                    id: 'text',
+                    value: '{company}',
+                }
+            }
+        },
+        {
+            width: 200,
+            name: "favoriteFruit",
+            field: "favoriteFruit",
+            description: "Favorite Fruit",
+            sortable: true,
+            sortInfo: {
+                sortOrder: 0,
+                sortDirection: "ASC"
+            },
+            editable: true,
+            itemEditor: {
+                ctor: AutoCompleteEx,
+                props: {
+                    id: 'autocomplete',
+                    fieldName: 'autocomplete',
+                    multiSelect: false,
+                    valueField: "value",
+                    labelField: "label",
+                    dataProvider: new ArrayEx([{
+                        "value": "apple",
+                        "label": "apple"
+                    }, {
+                        "value": "banana",
+                        "label": "banana"
+                    }, {
+                        "value": "strawberry",
+                        "label": "strawberry"
+                    }]),
+                    value: '{selectedFavoriteFruit}'
+                }
+            }
+        }
+    ]
+});
+myDataGrid2.render().then(function (cmpInstance) {
+    $('#root').append(cmpInstance.$el);
+});
 
 var celleditfinished_ex = function (e, rowIndex, columnIndex, itemEditorInfo) {
     var realRowIndex = rowIndex % this.rowCount;

@@ -262,7 +262,6 @@ var DataGrid = function (_props) {
     this.updateDataProvider = function () {
         _self.trigger('beginDraw');
         let oldValue = _self.rows.length;
-        let newValue = _self.rowCount;
         if (_allowNewItem) {
             if (!_defaultItem) {
                 _defaultItem = createEmptyObject(_columns, "field", "description");
@@ -270,6 +269,8 @@ var DataGrid = function (_props) {
             if(!deepEqual(_defaultItem, _self.dataProvider[_self.dataProvider.length - 1]))
                 _self.dataProvider.pad(deepCopy(_defaultItem), 1);
         }
+        let newValue = _self.rowCount;
+        
         let p;
         let rb = Math.min(oldValue, newValue);
         for (let i = 0; i < newValue && _self.dataProvider; i++) {
@@ -304,7 +305,7 @@ var DataGrid = function (_props) {
             _comprenders = [];
             if (_self.attached)
                 _self.updateDisplayList();
-            _self.trigger('endDraw');
+            _self.trigger('endDraw');                        
         });
 
         let e = jQuery.Event("dataProviderUpdate");
@@ -369,9 +370,10 @@ var DataGrid = function (_props) {
 
     this.cellEdit = function (rowIndex, columnIndex) {
         let e = jQuery.Event('cellEditStarting');
-        _self.trigger(e, [rowIndex, columnIndex]);
+        _self.trigger(e, [rowIndex, columnIndex]);        
+        let column = _columns[columnIndex];
         if (!e.isDefaultPrevented()) {
-            if (this.editPosition != null && this.editPosition.event == 1 && (this.editPosition.rowIndex != rowIndex || this.editPosition.columnIndex != columnIndex)) {
+            if (this.editPosition != null && this.editPosition.event == 1 && (this.editPosition.rowIndex != rowIndex || this.editPosition.columnIndex != columnIndex) && _columns[this.editPosition.columnIndex].editable) {
 
                 let r = this.cellEditFinished(this.editPosition.rowIndex, this.editPosition.columnIndex, true);
 
@@ -392,7 +394,6 @@ var DataGrid = function (_props) {
                 columnIndex = _columns.length - 1;
                 --rowIndex;
             }
-            let column = _columns[columnIndex];
             let data;
 
             if (rowIndex > _self.rowCount - 1) {
@@ -836,7 +837,7 @@ var DataGrid = function (_props) {
     let base = this.base;
     //overrides
     let _rPromise;
-    this.render = function () {
+    this.render = async function () {
         _rPromise = new Promise((resolve, reject) => {
             _self.on("endDraw", function (e) {
                 if (e.target.id == _self.domID) {
@@ -848,7 +849,9 @@ var DataGrid = function (_props) {
         this.createHeader();
         //if(_props.dataProvider)
         if (!this.getBindingExpression("dataProvider"))
-            this.dataProvider = _props.dataProvider;
+            this.dataProvider = await Promise.resolve(Literal.fromLiteral(_props.dataProvider));
+        else
+            this.dataProvider = new ArrayEx([]);
         return _rPromise;
     };
 
@@ -926,7 +929,14 @@ var DataGrid = function (_props) {
                 el.parent = _self.proxyMaybe;
                 el.parentType = 'repeater';
                 el.parentForm = _self.parentForm;
-
+                el.bindingsManager.on("bindingExecuted", function (evt) {
+                    if (index == _self.rowCount - 1 && evt.timesExecuted > 1) {
+                        _self.updateDataProvider().then(function () {
+                            let cs = _self.$bodyWrapper.scrollTop();
+                            _self.$bodyWrapper.scrollTop(cs + _avgRowHeight);
+                        });
+                    }
+                });
                 _cellItemRenderers[index][columnIndex] = el;
                 let columnName = column.name || `column_${columnIndex}`;
                 rowItems[columnName] = el;
@@ -958,23 +968,9 @@ var DataGrid = function (_props) {
 
                         _currentIndex <= index ? _currentIndex = index : _currentIndex = _currentIndex;
 
-
-                        //skip dp if it already exist
-                        let addRowFlag = false;
-                        if (index > _self.dataProvider.length - 1) {
-                            _self.dataProvider.push(_currentItem);
-                            addRowFlag = true;
-                        }
-
                         if (_currentIndex == Math.min(_rowCount, _self.dataProvider.length) && !addRowFlag) {
                             _self.trigger('creationComplete');
                         }
-
-                        //animate
-                        if (addRowFlag && focusOnRowAdd) {
-                            _self.rowItems[index][_self.components[0].props.id].scrollTo();
-                        }
-
                     }
                     return false;
                 });
