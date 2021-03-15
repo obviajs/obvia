@@ -5,7 +5,7 @@ var myCreditCard = new CreditCard({
 
 
 
-myCreditCard.on('creationComplete',function(){
+myCreditCard.on('endDraw',function(){
     myCreditCard.on('click',function(){
         //alert(test1A);
     });

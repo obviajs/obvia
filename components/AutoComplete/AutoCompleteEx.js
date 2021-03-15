@@ -108,16 +108,15 @@ var AutoCompleteEx = function (_props) {
                 let tokenPos = _tokenRepeater.token[i].$el.position();
                 if (tokenPos.top != rowTop) {
                     tokenTop = tokenPos.top;
-                    tokenWidth = _tokenRepeater.token[i].$el.width();
+                    tokenWidth = _tokenRepeater.token[i].$el[0].clientWidth;
                 } else {
-                    tokenWidth += _tokenRepeater.token[i].$el.width();
+                    tokenWidth += _tokenRepeater.token[i].$el[0].clientWidth;
                 }
             }
-            if (_self.$el.width() > 0 && tokenWidth >= 0) {
-                let tokenInputWidth = Math.max(_self.$el.width() - tokenWidth - 2, 0);
-                tokenInputWidth = Math.max((tokenInputWidth - tokenInputWidth * 0.3).toFixed(0), 0);
-                _input.$el.css({
-                    "width": tokenInputWidth + "px"
+            if (_self.$el.width() > 0 && tokenWidth >= 0) {                
+                tokenWidth += tokenWidth?(2 /*border*/ + 2 /*margin*/): 2 /*border of main container*/;                    
+               _input.$el.css({
+                    "width": "calc(100% - "+ tokenWidth+ "px)"
                 });
             }
         }
@@ -563,7 +562,7 @@ var AutoCompleteEx = function (_props) {
                         props: {
                             id: 'tokenInput',
                             attr: {
-                                "placeholder": 'Type something...'
+                                "placeholder": 'Search...'
                             },
                             versionStyle: '',
                             keydown: _tokenInputKeyDown,

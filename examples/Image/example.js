@@ -14,7 +14,7 @@ var myImage = new Image({
 
 });
 
-myImage.on('creationComplete', function (e) {
+myImage.on('endDraw', function (e) {
     loader.hide();
 
 });

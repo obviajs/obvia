@@ -6,7 +6,7 @@ let myLi = new Li({
 
 });
 
-myLi.on('creationComplete', function () {
+myLi.on('endDraw', function () {
     myLi.on('click', function () {
         // alert("test");
     });

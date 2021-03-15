@@ -33,7 +33,7 @@ var myDropEdit = new DropEdit({
     ]),
 });
 
-myDropEdit.on('creationComplete', function () {
+myDropEdit.on('endDraw', function () {
     myDropEdit.on('click', function () {
         //alert(test);
     });

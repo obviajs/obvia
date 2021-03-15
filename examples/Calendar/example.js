@@ -164,7 +164,7 @@ myModal.render().then(function (cmpInstance)
     $('#root').append(cmpInstance.$el);   
 });
 
-myCalendar.on('creationComplete', function ()
+myCalendar.on('endDraw', function ()
 {
     let instDateTime = myModal.modalDialog.modalContent.modalBody.instDateTime;
     let instTextDay = myModal.modalDialog.modalContent.modalBody.instTextDay;

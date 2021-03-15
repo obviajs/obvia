@@ -261,7 +261,6 @@ var Parent = function (_props, _hideComponents = false) {
     //let _afterAttach = _props.afterAttach;
     //_props.afterAttach = this.afterAttach;
     let _sortChildren = _props.sortChildren;
-    //override because creationComplete will be thrown when all children components are created
     // this.afterAttach = undefined;
     this.addComponents = function (components) {
         _self.trigger('beginDraw');

@@ -184,6 +184,7 @@ var myDataGrid2 = new DataGrid({
     width: 800,
     attr:{"testBindedAttr":"{(new Date()).getFullYear()}"},
     allowNewItem: true, //allow the user to add items that are not included in the specified dataProvider
+    allowRemoveItem: true,
     rowCount: 5, //visible rows count - virtual scrolling wil be applied on scroll
     defaultItem: {
         "name": "Enter Name",

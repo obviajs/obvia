@@ -9,7 +9,6 @@ var Repeater = function (_props, _hideComponents = false) {
     let _rowItems = [],
         _rows = [];
     let _self = this;
-    let _creationFinished = false;
     let _$hadow = $("<div/>");
     let _autoUpdateDisplay;
 
@@ -93,13 +92,6 @@ var Repeater = function (_props, _hideComponents = false) {
         //trigger row add event
         let era = jQuery.Event("rowAdd");
         _self.trigger(era, [_self, new RepeaterEventArgs(_rowItems[index], data, index)]);
-
-        if (_createdRows == _self.dataProvider.length) {
-            if (!_creationFinished) {
-                _creationFinished = true;
-                _self.trigger('creationComplete');
-            }
-        }
         if (index + 1 == _self.dataProvider.length && _components.length > 0) {
             _rowItems[_rowItems.length - 1][_components[0].props.id].scrollTo();
         }
@@ -166,7 +158,7 @@ var Repeater = function (_props, _hideComponents = false) {
             let delta = oldValue - newValue;
             if (delta > 0) {
                 while (delta > 0) {
-                    _self.removeRow(newValue + delta - 1, false, true);
+                    _self.removeRow(newValue + delta - 1);
                     --delta;
                 }
             } else if (delta < 0) {
@@ -377,53 +369,54 @@ var Repeater = function (_props, _hideComponents = false) {
     this.removeAllRows = function () {
         let i = _self.rows.length - 1;
         while (i >= 0) {
-            this.removeRow(i, false, false);
+            this.removeRow(i);
             i--;
         }
         _self.rows.splice(0, _self.rows.length);
     };
+
+    let _notifyRemoveRow = function (index, focusOnRowDelete=false) {
+        let beforeRowDeleteEvent = jQuery.Event("beforeRowDelete");
+        let ra = new RepeaterEventArgs(_self.rowItems[index], null, index);
+        _self.trigger(beforeRowDeleteEvent, [_self, ra]);
+
+        if (!beforeRowDeleteEvent.isDefaultPrevented()) {
+            _self.dataProvider.splice(index, 1);
+            if (focusOnRowDelete && index > 0 &&_cellItemRenderers.length > 0)                
+                _self.rowItems[index - 1][_components[0].props.id].scrollTo();
+        }
+    };
+
     if (!this.hasOwnProperty("removeRow")) {
-        this.removeRow = function (index, isPreventable = false, focusOnRowDelete = true) {
-            var rowItems = {};
-            let beforeRowDeleteEvent = jQuery.Event("beforeRowDelete");
-            let ra = new RepeaterEventArgs(_self.rowItems[index], null, index);
-            this.trigger(beforeRowDeleteEvent, [_self, ra]);
-
-            if (!isPreventable || (isPreventable && !beforeRowDeleteEvent.isDefaultPrevented())) {
-                //remove dp row
-                let rlen = this.rowItems.length;
-                let clen = _components.length;
-                //delete component instances on that row
-                for (let cI = 0; cI < clen; cI++) {
-                    let component = _components[cI];
-                    //remove repeated block from dom
-                    if (cI == 0 && _rendering.wrap) {
-                        this[component.props.id][index].$el.closest('.repeated-block').remove();
-                        this[component.props.id][index].$el.closest('.repeated-block-hr').remove();
-                    } else if (!_rendering.wrap) {
-                        this[component.props.id][index].destruct(1);
-                    }
-                    //modify new cmp repeater indexes, row is still not removed so start at index + 1
-                    for (let i = index + 1; i < rlen; i++) {
-                        let item = this[component.props.id][i];
-                        item.repeaterIndex -= 1;
-                    }
-
-                    rowItems[component.props.id] = [this[component.props.id][index]];
-                    this[component.props.id].splice(index, 1);
+        this.removeRow = function (index) {
+            let ra = new RepeaterEventArgs(_self.rowItems[index], null, index);        
+            let rlen = this.rowItems.length;
+            let clen = _components.length;
+            //delete component instances on that row
+            for (let cI = 0; cI < clen; cI++) {
+                let component = _components[cI];
+                //remove repeated block from dom
+                if (cI == 0 && _rendering.wrap) {
+                    this[component.props.id][index].$el.closest('.repeated-block').remove();
+                    this[component.props.id][index].$el.closest('.repeated-block-hr').remove();
+                } else if (!_rendering.wrap) {
+                    this[component.props.id][index].destruct(1);
                 }
-                //dp element has been removed so start at index
-                let dplen = this.dataProvider.length;
-                for (let i = index; i < dplen; i++) {
-                    this.dataProvider[i].currentIndex -= 1;
+                //modify new cmp repeater indexes, row is still not removed so start at index + 1
+                for (let i = index + 1; i < rlen; i++) {
+                    let item = this[component.props.id][i];
+                    item.repeaterIndex -= 1;
                 }
-                this.trigger('rowDelete', [this, ra]);
-                this.rowItems.splice(index, 1);
-                _rows.splice(index, 1);
-                //animate
-                if (focusOnRowDelete && (index - 1) >= 0)
-                    this.rowItems[index - 1][_components[0].props.id].scrollTo();
+                this[component.props.id].splice(index, 1);
             }
+            //dp element has been removed so start at index
+            let dplen = this.dataProvider.length;
+            for (let i = index; i < dplen; i++) {
+                this.dataProvider[i].currentIndex -= 1;
+            }
+            this.trigger('rowDelete', [this, ra]);
+            this.rowItems.splice(index, 1);
+            _rows.splice(index, 1);
         };
     }
     let _afterAttach = this.afterAttach;
@@ -431,7 +424,7 @@ var Repeater = function (_props, _hideComponents = false) {
         if (e.target.id == this.domID) {
             if (typeof _afterAttach == 'function')
                 _afterAttach.apply(this, arguments);
-            if ((!_creationFinished && (_dataProvider && _dataProvider.forEach && _dataProvider.length > 0)) || e.isDefaultPrevented())
+            if ((_dataProvider && _dataProvider.forEach && _dataProvider.length > 0) || e.isDefaultPrevented())
                 e.preventDefault();
         }
     };

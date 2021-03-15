@@ -15,7 +15,7 @@ var myDropDown = new DropDown({
       ]),
     });
 
-  myDropDown.on('creationComplete',function(){
+  myDropDown.on('endDraw',function(){
       myDropDown.on('click',function(){
         //alert(test);
       });

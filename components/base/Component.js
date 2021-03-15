@@ -44,7 +44,6 @@ var Component = function (_props) {
     let _blur = _props.blur;
     let _keydown = _props.keydown;
     let _keyup = _props.keyup;
-    let _creationComplete = _props.creationComplete;
     let _change = _props.change;
     let _drop = _props.drop;
     let _dragover = _props.dragover;
@@ -498,10 +497,6 @@ var Component = function (_props) {
             if (!e.isDefaultPrevented()) {
                 if (typeof _afterAttach == 'function')
                     _afterAttach.apply(this.proxyMaybe, arguments);
-                if (!e.isDefaultPrevented()) {
-                    this.trigger('creationComplete');
-                    //console.log("CreationComplete : Type:",this.ctor+" id:"+ this.$el.attr("id"));
-                }
             }
             //console.log("AfterAttach : Type:",this.ctor+" id:"+ this.$el.attr("id"));
         }
@@ -532,7 +527,6 @@ var Component = function (_props) {
             'blur': _blur && typeof _blur == 'function' ? _blur.bind(_self) : undefined,
             'keydown': _keydown && typeof _keydown == 'function' ? _keydown.bind(_self) : undefined,
             'keyup': _keyup && typeof _keyup == 'function' ? _keyup.bind(_self) : undefined,
-            'creationComplete': _creationComplete && typeof _creationComplete == 'function' ? _creationComplete.bind(_self) : undefined,
             'change': _change && typeof _change == 'function' ? _change.bind(_self) : undefined,
             'drop': _drop && typeof _drop == 'function' ? _drop.bind(_self) : undefined,
             'dragover': _dragover && typeof _dragover == 'function' ? _dragover.bind(_self) : undefined,

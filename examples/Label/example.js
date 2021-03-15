@@ -8,7 +8,7 @@ var myLabel = new Label({
     id: 'label',
     label: 'Label'
 });
-myLabel.on('creationComplete', function (e) {
+myLabel.on('endDraw', function (e) {
     loader.hide();
 });
 $('#root').append(await myLabel.render().$el);

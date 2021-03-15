@@ -74,9 +74,7 @@ myModal.addComponent(myLabel);
 myModal.addComponent(myTextInputEvent);
 
 var inst = myModal.addComponent(mySaveEventButton);
-myModal.on('creationComplete', function () {
 
-});
 inst.on('click', function () {
     console.log("Instance");
     event.interval = myModal.children[myModal.components[0].props.id].value;
@@ -88,7 +86,7 @@ inst.on('click', function () {
 
 })
 $('#root').append(await myModal.render().$el);
-myCalendarWeek.on('creationComplete', function () {
+myCalendarWeek.on('endDraw', function () {
     this.on("cellClick", function (e) {
         myModal.children[myModal.components[0].props.id].value = e.interval;
         myModal.children[myModal.components[1].props.id].value = e.dateContent;

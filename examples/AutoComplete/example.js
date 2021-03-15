@@ -31,7 +31,7 @@ var myAutoComplete = new AutoCompleteEx({
     multiSelect: false,
     matchType: StringMatchType.STARTS_WITH
 });
-myAutoComplete.on('creationComplete', function () {
+myAutoComplete.on('endDraw', function () {
     loader.hide();
     myAutoComplete.on('noSuggestionsFound', function (e, toMatch) {
         console.log("Nothing found for:" + toMatch);

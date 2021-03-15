@@ -24,7 +24,7 @@ var _initDP = async function () {
 }();
 
 var uiRoute = function (applet) {
-    let viewContainer = applet.parent.find(applet.port);
+    let viewContainer = applet.parent.find("container");
     return viewContainer.addChild(applet.view);
 };
 
@@ -44,7 +44,6 @@ var codeEditor = new App({
             url: "./flowerui/oxana/Code/applets/main/",
             anchor: "main",
             dataPromise: _initDP,
-            port: "container",
             uiRoute
             //forceReload: true
         },
@@ -53,7 +52,6 @@ var codeEditor = new App({
             url: "./flowerui/oxana/Code/applets/versions/",
             anchor: "versions",
             dataPromise: _initDP,
-            port: "container",
             "uiRoute": modalRoute
             //forceReload: true}
         }

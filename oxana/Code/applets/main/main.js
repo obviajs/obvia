@@ -55,7 +55,7 @@ let Implementation = function (applet) {
             }, false);
 
             applet.addBehaviors(code, {
-                "creationComplete": "FOCUS_EDITOR"
+                "endDraw": "FOCUS_EDITOR"
             }, false);
 
             applet.addBehaviors(code, {

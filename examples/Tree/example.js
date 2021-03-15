@@ -21,7 +21,7 @@ var myTree = new Tree({
     click : function(e){console.log("From ClickAction");}
 });
 
-myTree.on('creationComplete', function () {
+myTree.on('endDraw', function () {
   myTree.on('click',function (){
    // alert("test");
   });

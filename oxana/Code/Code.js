@@ -136,7 +136,6 @@ var Code = function (_props) {
                 let info = _cmInst.lineInfo(n);
                 _cmInst.setGutterMarker(n, "breakpoints", info.gutterMarkers ? null : _makeMarker());
             });
-            _self.trigger('creationComplete');
         });
     };
 
