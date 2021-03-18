@@ -8,10 +8,9 @@ var myCalendarWeek = new CalendarWeek({
     interval: "interval",
     endHour: "endHour",
     childrenField: "children",
-    descriptionField: "descriptionField",
+    descriptionField: "description",
     timing: "timing",
     dateContent: "dateContent",
-    dataProvider_week: "dataProvider_week",
     classField1: "classField1",
     time: "time",
     click: function (e) {
@@ -77,14 +76,16 @@ var inst = myModal.addComponent(mySaveEventButton);
 
 inst.on('click', function () {
     console.log("Instance");
+    let event = {};
     event.interval = myModal.children[myModal.components[0].props.id].value;
-    event.descriptionField = myModal.children[myModal.components[3].props.id].value;
+    event.description = myModal.children[myModal.components[3].props.id].value;
     event.time = event.interval + " " + myModal.children[myModal.components[1].props.id].value;
     myCalendarWeek.addEvent(event);
     myModal.hide();
     myModal.children[myModal.components[3].props.id].value = " ";
 
-})
+});
+
 $('#root').append(await myModal.render().$el);
 myCalendarWeek.on('endDraw', function () {
     this.on("cellClick", function (e) {

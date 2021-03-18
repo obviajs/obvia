@@ -1,5 +1,5 @@
 [type="date"]:before {
-    content: attr(data-date);
+    content: attr(date);
     color: black;
 }
 
