@@ -75,7 +75,6 @@ var CalendarMonth = function(_props)
         classField: " ",
         startField: " ",
         descriptionField: "description",
-        dateContent: '',
         nowDate: new Date(),
         nowMonth: new Date().getMonth(),
         calendarEvents: [],
@@ -253,7 +252,6 @@ var CalendarMonth = function(_props)
     let  _nowDate = _props.nowDate;
     let  _nowMonth = _props.nowMonth;
     _calendarStartDate = _props.calendarStartDate;
-    let _dateContent = _props.dateContent;
     let _click = _props.click;
     let _dataProvider;
     let _btnPrev;
@@ -309,10 +307,8 @@ var CalendarMonth = function(_props)
 
     let _cellClick = function (e, ra) {
         let event = jQuery.Event("cellClick");
-        event.dateContent = ra.currentItem.dateContent;
-        let startDateTime = new Date(event.dateContent + "T00:00:00Z");
-        event.startDateTime = startDateTime;
-        event.call = this;
+        event.startDateTime = new Date(ra.currentItem.dateContent + "T00:00:00Z");
+        event.cell = this;
         _self.trigger(event);
     };
 
@@ -408,7 +404,7 @@ var CalendarMonth = function(_props)
     _dataProvider = _createData(_nowDate, eve);
     fnContainerDelayInit();
     _props.components = _cmps;
-    let r = Container.call(this, _props);
+    let r = CalendarBase.call(this, _props);
     return r;
 };
 CalendarMonth.prototype.ctor = 'CalendarMonth';

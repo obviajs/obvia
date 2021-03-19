@@ -1,5 +1,6 @@
 var CalendarBase = function(_props){
-    let _self = this, _calendarEvents, _inputFormat, _outputFormat, _childrenField, _guidField, _nowDate, _calendarStartDate;
+    let _self = this, _calendarEvents, _inputFormat, _outputFormat, _childrenField, _guidField, _descriptionField, 
+        _nowDate, _calendarStartDate;
     
     let _dpWatcher;
     let _dpLengthChanged = function(e){
@@ -64,6 +65,21 @@ var CalendarBase = function(_props){
         enumerable: true
     });
     
+    Object.defineProperty(this, "descriptionField", {
+        get: function descriptionField()
+        {
+            return _descriptionField;
+        },
+        set: function descriptionField(v)
+        {
+            if (_descriptionField != v)
+            {
+                _descriptionField = v;
+            }
+        },
+        enumerable: true
+    });
+
     Object.defineProperty(this, "guidField", {
         get: function guidField()
         {
@@ -111,6 +127,7 @@ var CalendarBase = function(_props){
         outputFormat: 'YYYY-MM-DD HH:mm',
         guidField: "guid",
         childrenField: "children",
+        descriptionField: "description",
         nowDate: new Date(),
         calendarStartDate: undefined
     };
@@ -137,11 +154,13 @@ var CalendarBase = function(_props){
         _self.outputFormat = _props.outputFormat;
     if (_props.childrenField)
         _self.childrenField = _props.childrenField;
+    if (_props.descriptionField)
+        _self.descriptionField = _props.descriptionField;
     if (_props.nowDate)
         _self.nowDate = _props.nowDate;
     if (_props.calendarStartDate)
-        _self.calendarStartDate = _props.calendarStartDate;        
-        
+        _self.calendarStartDate = _props.calendarStartDate;
+    
     let r = Container.call(this, _props);
     
     return r;

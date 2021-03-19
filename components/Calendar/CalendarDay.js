@@ -64,12 +64,10 @@ var CalendarDay = function(_props)
         nowDate: new Date(),
         labelField: 'label',
         labelField1: 'label',
-        startHour: " ",
-        endHour: " ",
-        descriptionField: "description",
-        interval: '',
+        startTime: " ",
+        endTime: " ",
+        interval: 30,
         eventsField: "events",
-        dateContent: " ",
         guidField: "guid",
         inputFormat: 'YYYY-MM-DD HH:mm',
         outputFormat: 'YYYY-MM-DD HH:mm'
@@ -84,11 +82,11 @@ var CalendarDay = function(_props)
         let h = hours % 12;
         h = h ? h : 12;
         let ampm = hours >= 12 ? 'pm' : 'am';
-        if (minutes == 30) {
-            return (h + ":30") + "-" + ((h == 12) ? ((hours % 12) + 1) : (h + 1)) + ':00' + ampm;
+        if (minutes == _interval) {
+            return (h + ":" + _interval) + "-" + ((h == 12) ? ((hours % 12) + 1) : (h + 1)) + ':00' + ampm;
         }
         else {
-            return (h + ":00") + "-" + (h + ':30') + ampm;
+            return (h + ":00") + "-" + (h + ":" + _interval) + ampm;
         }
     };
     
@@ -119,9 +117,9 @@ var CalendarDay = function(_props)
             }
             let dp1 = {
                 "value": hours + ":00",
-                "startHour": hours + ":00",
-                "endHour": hours + ':30',
-                "interval": (hours + ":00") + "-" + (hours + ':30') + ampm,
+                "startTime": hours + ":00",
+                "endTime": hours + ":" + _interval,
+                "timeInterval": (hours + ":00") + "-" + (hours + ":" + _interval) + ampm,
                 "dateContent": currentYear + '-' + m_content + '-' + today_d
             };
 
@@ -135,9 +133,9 @@ var CalendarDay = function(_props)
 
             let dp2 = {
                 "value": " ",
-                "startHour": hours + ":30",
-                "endHour": (hours + 1) + ':00',
-                "interval": (hours + ":30") + "-" + ((hours == 12) ? ((i % 12) + 1) : (hours + 1)) + ':00' + ampm,
+                "startTime": hours + ":" + _interval,
+                "endTime": (hours + 1) + ":00",
+                "timeInterval": (hours + ":" + _interval) + "-" + ((hours == 12) ? ((i % 12) + 1) : (hours + 1)) + ':00' + ampm,
                 "timing": ampm,
                 "dateContent": currentYear + '-' + m_content + '-' + today_d
             };
@@ -160,21 +158,19 @@ var CalendarDay = function(_props)
     let _labelField = _props.labelField;
     let _labelField1 = _props.labelField1;
     let _nowDate = _props.nowDate;
-    let _startHour = _props.startHour;
-    let _endHour = _props.endHour;
+    let _startTime = _props.startTime;
+    let _endTime = _props.endTime;
     let _interval = _props.interval;
     let _calendarStartDate = _props.calendarStartDate;
     let  _dataProvider; 
     let _component_Cday;
     let _eventsField = _props.eventsField;
-    let _descriptionField = _props.descriptionField;
-    let _dateContent = _props.dateContent;
     let _component_Mday;
     let eve = [];
 
-    this.addEvent  =  function(event){
+    this.addEvent = function(event){
         if(event.date.getTime() == _nowDate.getTime()){
-            let ind = indexOfObject(_dataProvider,"interval",event.interval);
+            let ind = indexOfObject(_dataProvider, "timeInterval", event.interval);
             if(ind>-1){
                 _dataProvider[ind][_eventsField].splice(_dataProvider[ind][_eventsField].length, 0, event);
             }
@@ -225,11 +221,11 @@ var CalendarDay = function(_props)
 
     let _cellClick = function (e, ra) {
         let event = jQuery.Event("cellClick");
-        event.interval = ra.currentItem.interval;
-        let time = ra.currentItem.startHour.split(':');
-        let setTime = _self.nowDate.setHours(parseInt(time[0]), parseInt(time[1]), 0);
-        console.log("eventtime", setTime);
-        event.startDateTime = new Date(setTime);
+        event.startTime = ra.currentItem.startTime;
+        let arrtime = ra.currentItem.startTime.split(':');
+        let date = new Date(_self.nowDate.getTime());
+        date.setHours(parseInt(arrtime[0]), parseInt(arrtime[1]), 0);
+        event.startDateTime = date;
         event.cell = this;
         _self.trigger(event);
     };
@@ -286,7 +282,7 @@ var CalendarDay = function(_props)
                                                 props: {
                                                     type: ContainerType.NONE,
                                                     id: "container_half_1",
-                                                    label: '{' + _interval + '}',
+                                                    label: "{timeInterval}",
                                                     classes: ["fc-hour-day"],
                                                     height: 10,
                                                     width: 1050,
@@ -311,7 +307,7 @@ var CalendarDay = function(_props)
                                                                 props: {
                                                                     type: ContainerType.NONE,
                                                                     id: "event_Container",
-                                                                    label: "{" + _descriptionField + "}",
+                                                                    label: "{" + _self.descriptionField + "}",
                                                                     classes: ["fc-event"],
                                                                 }
                                                             }]
@@ -337,7 +333,7 @@ var CalendarDay = function(_props)
     _dataProvider = _createHours(_nowDate,eve);
     fnContainerDelayInit();
     _props.components = _cmps;
-    let r = Container.call(this, _props);
+    let r = CalendarBase.call(this, _props);
     return r;
 }
 CalendarDay.prototype.ctor = 'CalendarDay';

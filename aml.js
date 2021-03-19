@@ -134,7 +134,9 @@ rjs.define("./components/HierarchialTree/HierarchialTree.js", "HierarchialTree")
 //CreditCard
 rjs.define('./components/CreditCard/CreditCard.js', "CreditCard");
 //DateTime
+rjs.define("./components/DateTime/DateCmp.js", "DateCmp");
 rjs.define("./components/DateTime/DateTime.js", "DateTime");
+rjs.define("./components/DateTime/Time.js", "Time");
 
 rjs.define("./components/DateTime/DateTimeFormat.js", "DateTimeFormat");
 rjs.define("lib/dependencies/scripts/moment.js", "MomentJS");
@@ -335,6 +337,8 @@ let dependencies = [
         "SummerNoteScript",
         "TextEditor",
         "DateTime",
+        "DateCmp",
+        "Time",
         "DateTimeFormat",
         "MomentJS",
         "CheckBox",

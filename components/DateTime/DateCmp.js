@@ -1,22 +1,21 @@
 /**
- * This is a DateTime Input Element
+ * This is a DateCmp Input Element
  *
  * Kreatx 2019
  */
-var DateTime = function (_props) {
-    let _self = this;
+var DateCmp = function (_props) {
+    let _self = this, _internalFormat = "YYYY-MM-DD";
 
     Object.defineProperty(this, "value", {
         get: function value() {
-            let date = moment(this.$input.val(), _self.internalFormat).format(_outputFormat);
+            let date = moment(this.$input.val(), _internalFormat).format(_outputFormat);
             return (date == "Invalid date" || date == "") ? "" : date;
         },
         set: function value(v) {
             _value = moment(v, _inputFormat);
-            if (this.$el) {
+            if (this.$el)
                 this.attr['date'] = _value.format(_displayFormat);
-                this.$el.val(_value.format(_self.internalFormat));
-            }                
+            this.$el.val(_value.format(_internalFormat));
         },
         enumerable: true
     });
@@ -32,17 +31,6 @@ var DateTime = function (_props) {
         },
         enumerable: true,
         configurable: true
-    });
-    
-    Object.defineProperty(this, "internalFormat", {
-        get: function internalFormat() {
-            return _internalFormat;
-        },
-        set: function internalFormat(v) {
-            if (_internalFormat != v) {
-                _internalFormat = v;
-            }
-        }
     });
 
     Object.defineProperty(this, "max", {
@@ -78,6 +66,7 @@ var DateTime = function (_props) {
         set: function outputFormat(v) {
             if (_outputFormat !== v) {
                 _outputFormat = v;
+                //this.value = _value;
             }
         },
         enumerable: true
@@ -90,6 +79,7 @@ var DateTime = function (_props) {
         set: function displayFormat(v) {
             if (_displayFormat !== v) {
                 _displayFormat = v;
+                //this.value = _value;
                 this.trigger('change');
             }
         },
@@ -110,22 +100,19 @@ var DateTime = function (_props) {
     };
 
     this.inputHandler = function (e) {
-        _value = moment(this.$input.val(), _self.internalFormat);
+        _value = moment(this.$input.val(), _internalFormat);
         this.attr['date'] = _value.format(_displayFormat);
     };
 
-    if (!this.hasOwnProperty("template")) {
-        this.template = function () {
-            return "<input data-triggers='input' type='datetime-local' id='" + this.domID + "'/>";
-        };
-    }
+    this.template = function () {
+        return "<input data-triggers='input' type='date' id='" + this.domID + "'/>";
+    };
 
     let _defaultParams = {
         id: 'datetime',
-        inputFormat: 'DD/MM/YYYY HH:mm',
-        outputFormat: 'DD/MM/YYYY HH:mm',
-        displayFormat: 'DD/MM/YYYY hh:mm A',
-        internalFormat: "YYYY-MM-DDTHH:mm",
+        inputFormat: 'DD/MM/YYYY',
+        outputFormat: 'DD/MM/YYYY',
+        displayFormat: 'DD/MM/YYYY',
         value: null,
         min: null,
         max: null        
@@ -135,8 +122,6 @@ var DateTime = function (_props) {
     let _inputFormat = _props.inputFormat;
     let _outputFormat = _props.outputFormat;
     let _displayFormat = _props.displayFormat;
-    _internalFormat = _props.internalFormat;
-
     let _value, _min, _max;
     let _input = _props.input;
     _props.input = function () {
@@ -151,4 +136,4 @@ var DateTime = function (_props) {
     let r = Parent.call(this, _props);
     return r;
 };
-DateTime.prototype.ctor = "DateTime";
+DateCmp.prototype.ctor = "DateCmp";

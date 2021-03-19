@@ -29,17 +29,16 @@ var CalendarWeek = function(_props)
         dataProvider: [],
         type: ContainerType.NONE,
         labelField: 'label',
-        labelFieldHour: 'label',
-        interval: '',
-        dateContent: "",
+        labelFieldHour: 'label',        
+        descriptionField: "description",
+        interval: 30,
         duration: "",
         time: " ",
-        startHour: " ",
+        startTime: " ",        
+        endTime: " ",
         startHourCalendar: 0,
         endHourCalendar: 24,
-        endHour: " ",
         classField1: " ",
-        descriptionField: "description",
         heightField: "",
         css: { display: "flex" },
         cellHeight: 20,        
@@ -82,8 +81,8 @@ var CalendarWeek = function(_props)
             let dp1 = {
                 "value": result_complete,
                 "dateContent": result_final,
-                "startHour": " ",
-                "endHour": " ",
+                "startTime": " ",
+                "endTime": " ",
                 "duration": "",
                 "valueHour": " ",
                 "top": " ",
@@ -137,13 +136,12 @@ var CalendarWeek = function(_props)
     let _cellHeight = _props.cellHeight;
     let _labelField = _props.labelField;
     let _labelFieldHour = _props._labelFieldHour;
-    let _startHour = _props.startHour;
+    let _startTime = _props.startTime;
     let _duration = _props.duration;
-    let _endHour = _props.endHour;
+    let _endTime = _props.endTime;
     let _interval = _props.interval;
     let _descriptionField = _props.descriptionField;
     let _time = _props.time;
-    let _dateContent = _props.dateContent;
     let  _timing = _props.timing;
     let  _valueHour = _props.valueHour;
     let _classFieldWeek = _props.classFieldWeek;
@@ -153,12 +151,12 @@ var CalendarWeek = function(_props)
     let eve = [];
     let _dataProvider ;
     let _dataProvider_Hour;
-    let _cmpCalendar_Week ;
+    let _cmpCalendar_Week;
     let _component_Mday;
     let _eventsField = _props.eventsField;
     
     let _getTop = function(minutes){
-        return (minutes*_cellHeight)/30;
+        return (minutes*_cellHeight) / _interval;
     };
 
     this.addEvent = function(event){
@@ -191,7 +189,7 @@ var CalendarWeek = function(_props)
     };
     
     let _getHeight = function(duration){
-        let totalHeight =  Math.max(_cellHeight * duration/30, _cellHeight);
+        let totalHeight =  Math.max(_cellHeight * duration/_interval, _cellHeight);
         return totalHeight;   
     };
 
@@ -228,11 +226,11 @@ var CalendarWeek = function(_props)
                 let dp1 = {
                     "value": " ",
                     "valueHour": k == 0 ? hours + ":00" : " ",
-                    "startHour": hours + ":00" + " " + ampm,
-                    "startHourC": hours + ":00",
+                    "startTime": hours + ":00" + " " + ampm,
+                    "startTimeC": hours + ":00",
                     "duration": "",
-                    "endHour": hours + ':30',
-                    "interval": (hours + ":00") + "-" + (hours + ':30') + ampm,
+                    "endTime": hours + ":"+ _interval,
+                    "interval": (hours + ":00") + "-" + (hours + ":"+ _interval) + ampm,
                     "timing": ampm
                 };
                 dp1[_descriptionField] = "";
@@ -243,12 +241,12 @@ var CalendarWeek = function(_props)
                 let dp2 = {
                     "value": " ",
                     "valueHour": " ",
-                    "startHour": hours + ":30" + "" + ampm,
-                    "startHourC": hours + ":30",
+                    "startTime": hours + ":"+ _interval + "" + ampm,
+                    "startTimeC": hours + ":"+ _interval,
                     "duration": " ",
                     "classes": [],
-                    "endHour": (hours + 1) + ':00',
-                    "interval": (hours + ":30") + "-" + ((hours == 12) ? ((j % 12) + 1) : (hours + 1)) + ':00' + ampm
+                    "endTime": (hours + 1) + ':00',
+                    "interval": (hours + ":"+ _interval) + "-" + ((hours == 12) ? ((j % 12) + 1) : (hours + 1)) + ':00' + ampm
                 };
                 dp2[_descriptionField] = "";
                 dp2[_eventsField] = new ArrayEx([]);
@@ -274,11 +272,11 @@ var CalendarWeek = function(_props)
             let dp1 = {
                 "value": " ",
                 "valueHour": hours + ":00",
-                "startHour": hours + ":00" + " " + ampm,
-                "startHourC": hours + ":00",
+                "startTime": hours + ":00" + " " + ampm,
+                "startTimeC": hours + ":00",
                 "duration": "",
-                "endHour": hours + ':30',
-                "interval": (hours + ":00") + "-" + (hours + ':30') + ampm,
+                "endTime": hours + ":"+ _interval,
+                "interval": (hours + ":00") + "-" + (hours + ":"+ _interval) + ampm,
                 "timing": ampm
             };
             dp1[_descriptionField] = "";
@@ -288,12 +286,12 @@ var CalendarWeek = function(_props)
             let dp2 = {
                 "value": " ",
                 "valueHour": " ",
-                "startHour": hours + ":30" + "" + ampm,
-                "startHourC": hours + ":30",
+                "startTime": hours + ":"+ _interval + "" + ampm,
+                "startTimeC": hours + ":"+ _interval,
                 "duration": " ",
                 "classes": [],
-                "endHour": (hours + 1) + ':00',
-                "interval": (hours + ":30") + "-" + ((hours == 12) ? ((j % 12) + 1) : (hours + 1)) + ':00' + ampm
+                "endTime": (hours + 1) + ':00',
+                "interval": (hours + ":"+ _interval ) + "-" + ((hours == 12) ? ((j % 12) + 1) : (hours + 1)) + ':00' + ampm
             };
             dp2[_descriptionField] = "";
             dp2[_eventsField] = new ArrayEx([]);
@@ -365,19 +363,14 @@ var CalendarWeek = function(_props)
     let _cellClick = function(e,ra) {       
         let event = jQuery.Event("cellClick");
         //Konvertimi i ores 12 ne 24 
-        event.startHour = _self.convertHour(ra.currentItem.startHour);
+        event.startTime = _self.convertHour(ra.currentItem.startTime);
         event.dateContent = _self.generateDay(ra);
-        let addDays = function (date, days) {
-            let result = new Date(date);
-            result.setDate(result.getDate() + days);
-            return result;
-        }
-        
-        let time =  addDays(_self.calendarStartDate, ra.currentIndex%7);
-        let  timeToDate = new Date(time);
-        let hourS = event.startHour.split(':');
-        let timeToDateHour = timeToDate.setHours(parseInt(hourS[0],10),parseInt(hourS[1],10),0);
-        event.startDateTime = new Date(timeToDateHour);
+        let date = (new Date(_self.calendarStartDate));
+        date.setDate(_self.calendarStartDate.getDate() + (ra.currentIndex % 7));
+
+        let arrtime = event.startTime.split(':');
+        date.setHours(parseInt(arrtime[0], 10), parseInt(arrtime[1], 10), 0);
+        event.startDateTime = date;
         event.cell = this;
         _self.trigger(event);
     };
@@ -510,8 +503,7 @@ var CalendarWeek = function(_props)
                 }
             }
         ];
-    };
-   
+    };   
     
     let r = CalendarBase.call(this, _props);
     

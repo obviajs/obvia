@@ -10,7 +10,7 @@ var myCalendar = new Calendar({
     descriptionField: "description",
 });
 
-let instTextDay, instLabelDate, instDate, instDuration, instLabelDuration, instTextInput;
+let eventDescription, startDate, endDate;
 
 var myModal = new Modal({
     id: 'addEventModal',
@@ -18,39 +18,25 @@ var myModal = new Modal({
     title: 'Add Events',
     components: [
         {
-            ctor:"TextInput",
-            props:{
-                id: 'instTextInput',
-                value: " " ,
-                classes:["fc-event-input","form-control"]
-            },
-        },
-        {
-            ctor:"TextInput",
-            props:{
-                id: 'instTextDay',
-                value: " " ,
-                classes:["fc-event-input-w","form-control"]
-            },  
-        },
-        {
             "ctor": "Container",
             "props": {
                 "type": "",
                 "classes": ["form-row"],
+                "id": "dtFieldsRow",
                 "components": [
                     {
                         "ctor": "FormField",
                         "props": {
                             "classes": ["col-6"],
                             "label": "Start Date",
+                            "id": "f_startDate",
                             "component": {
                                 "ctor": "DateTime",
                                 "props": {
                                     "id": "startDate",
-                                    "inputFormat": "YYYY-DD-MM",
-                                    "outputFormat": "YYYY-DD-MM",
-                                    "displayFormat": "DD/MM/YYYY",
+                                    "inputFormat": "YYYY-DD-MM HH:mm",
+                                    "outputFormat": "YYYY-DD-MM HH:mm",
+                                    "displayFormat": "DD/MM/YYYY hh:mm A",
                                     "value": "{moment().format(this.inputFormat)}"
                                 }
                             }
@@ -61,13 +47,14 @@ var myModal = new Modal({
                         "props": {
                             "classes": ["col-6"],
                             "label": "Start Date",
+                            "id": "f_endDate",                                
                             "component": {
                                 "ctor": "DateTime",
                                 "props": {
                                     "id": "endDate",
-                                    "inputFormat": "YYYY-DD-MM",
-                                    "outputFormat": "YYYY-DD-MM",
-                                    "displayFormat": "DD/MM/YYYY",
+                                    "inputFormat": "YYYY-DD-MM HH:mm",
+                                    "outputFormat": "YYYY-DD-MM HH:mm",
+                                    "displayFormat": "DD/MM/YYYY hh:mm A",
                                     "value": "{moment().format(this.inputFormat)}"
                                 }
                             }
@@ -80,8 +67,7 @@ var myModal = new Modal({
             ctor: "Label",
             props:{
                 id: 'label',
-                label: 'Enter description for Your Event ',
-                classes:['fc-event-label-title']
+                label: 'Enter description for Your Event '
             },
         },
         {
@@ -89,7 +75,7 @@ var myModal = new Modal({
             props:{
                 id: 'eventDescription',
                 value: '',
-                classes:["fc-event-input","form-control"]
+                classes:["form-control"]
             },
         },
         {
@@ -107,23 +93,15 @@ var myModal = new Modal({
 
 function saveButton_click(e)
 {
-    if (myCalendar.viewStack.selectedIndex == 0)
-    {
-        var event = {};
-        event.interval = instTextInput.value;
-        event.description = instDescription.value;
-        var today = myCalendar.calendarDay.nowDate.getDate();
-        var currentMonth = myCalendar.calendarDay.nowDate.getMonth();
-        var currentYear = myCalendar.calendarDay.nowDate.getFullYear();
-        var myActualMonth = CalendarConstants.Months[currentMonth];
-        event.dateContent = currentYear + '-'+ currentMonth +'-'+ today;
-        event.date = myCalendar.calendarDay.nowDate;
-        event.startDateTime = event.startDateTime;
-        myCalendar.calendarDay.addEvent(event); 
-        myModal.hide();
-        instDescription.value = " ";
-    }
-    else if (myCalendar.viewStack.selectedIndex == 1)
+    let methods = [myCalendar.calendarDay.addEvent, myCalendar.calendarWeek.addEvent, myCalendar.calendarMonth.addEvent];
+    var event = {};
+    event[myCalendar.descriptionField] = eventDescription.value;
+    event.startDate = startDate.value;
+    event.endDate = endDate.value;
+
+    methods[myCalendar.viewStack.selectedIndex](event);
+
+if (myCalendar.viewStack.selectedIndex == 1)
     {   
         var _addMinutes = function (time, minsToAdd) 
         {
@@ -134,19 +112,17 @@ function saveButton_click(e)
         }  
         
         var event = {};
-        event.startHour = instTextInput.value;
+        event.startTime = instTextInput.value;
         event.duration = instDuration.value;
         event.description = instDescription.value;
         event.dateContent = instTextDay.value;
-        event.endHour = _addMinutes(event.startHour,event.duration);
-        event.time = event.startHour + " - " + event.endHour + " " + instTextDay.value;
+        event.endTime = _addMinutes(event.startTime,event.duration);
+        event.time = event.startTime + " - " + event.endTime + " " + instTextDay.value;
         var words = event.startDateTime.split(' ');
         var word0 = words[0];
         var word1 = words[2];
         event.value = word0 + " " + word1;
         myCalendar.calendarWeek.addEvent(event); 
-        myModal.hide();
-        instDescription.value = " ";
     }
     else if (myCalendar.viewStack.selectedIndex == 2)
     {
@@ -154,11 +130,10 @@ function saveButton_click(e)
         event.dateContent = instDate.value;
         event.description = instDescription.value;
         event.startDateTime = instDateTime.value;
-        myCalendar.calendarMonth.addEvent(event); 
-        myModal.hide();
-        instDescription.value = " ";
+        myCalendar.calendarMonth.addEvent(event);    
     }
-}
+    myModal.hide();
+} 
 
 myModal.render().then(function (cmpInstance)
 { 
@@ -167,49 +142,23 @@ myModal.render().then(function (cmpInstance)
 
 myCalendar.on('endDraw', function ()
 {
-    instTextDay = myModal.modalDialog.modalContent.modalBody.instTextDay;
-    instLabelDate = myModal.modalDialog.modalContent.modalBody.instLabelDate;
-    instDate = myModal.modalDialog.modalContent.modalBody.instDate;
-    instDuration = myModal.modalDialog.modalContent.modalBody.instDuration;
-    instLabelDuration = myModal.modalDialog.modalContent.modalBody.instLabelDuration;
-    instTextInput = myModal.modalDialog.modalContent.modalBody.instTextInput;
-    instDescription = myModal.modalDialog.modalContent.modalBody.eventDescription;
+    startDate = myModal.modalDialog.modalContent.modalBody.dtFieldsRow.f_startDate.startDate;
+    endDate = myModal.modalDialog.modalContent.modalBody.dtFieldsRow.f_endDate.endDate;
+    eventDescription = myModal.modalDialog.modalContent.modalBody.eventDescription;
+});
 
-    this.on("cellClick", function (e) {
-        myModal.show();
-        if(myCalendar.viewStack.selectedIndex == 0 ){
-            instTextDay.enabled = false;
-            instLabelDate.enabled = false;
-            instDate.enabled = false;
-            instDuration.enabled = false;
-            instLabelDuration.enabled = false;
-            instTextInput.value = e.interval;
-            myModal.show();
-        }
-        else if(myCalendar.viewStack.selectedIndex == 1 ){
-            instTextInput.enabled = true;
-            instTextDay.enabled = false;
-            instLabelDate.enabled = false;
-            instDate.enabled = false;
-            instDuration.enabled = true;
-            instLabelDuration.enabled = true;
-            instTextInput.value = e.startHour;
-            myModal.show();
-        }
-        else if(myCalendar.viewStack.selectedIndex == 2 ){
-            instLabelDate.enabled = true;
-            instDate.enabled = true;
-            instTextInput.enabled = false;
-            instTextDay.enabled = false;
-            instLabelDuration.enabled = false;
-            instDuration.enabled = false;
-            instDate.value = e.dateContent;
-            myModal.show();
-        }
-        else{
-            console.log("Error!");
-        }       
-    });
+myCalendar.on("cellClick", function (e) {
+    if(myCalendar.viewStack.selectedIndex == 0 ){        
+    }
+    else if(myCalendar.viewStack.selectedIndex == 1 ){
+    }
+    else if(myCalendar.viewStack.selectedIndex == 2 ){
+    }
+    eventDescription.value = "";
+    let dtStr = moment(e.startDateTime).format(startDate.inputFormat);
+    startDate.value = dtStr;
+    endDate.value = dtStr;
+    myModal.show();
 });
 
 myCalendar.render().then(function (cmpInstance)
