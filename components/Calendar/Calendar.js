@@ -5,7 +5,7 @@
 */
 
 var Calendar = function(_props){
-    _self = this;
+    let _self = this;
 
     Object.defineProperty(this, "calendarEvents",{
         get: function calendarEvents(){
@@ -16,13 +16,43 @@ var Calendar = function(_props){
                 _calendarEvents = v;  
             }
         }
-    }); 
-    Object.defineProperty(this, "calendarDay",{
-        get: function calendarDay() {
-            return  _calendarDay;
-        }
     });
     
+    Object.defineProperty(this, "descriptionField", {
+        get: function descriptionField() {
+            return  _descriptionField;
+        }
+    });
+
+    Object.defineProperty(this, "startDateTimeField", {
+        get: function startDateTimeField()
+        {
+            return _startDateTimeField;
+        },
+        set: function startDateTimeField(v)
+        {
+            if (_startDateTimeField != v)
+            {
+                _startDateTimeField = v;
+            }
+        },
+        enumerable: true
+    });
+
+    Object.defineProperty(this, "endDateTimeField", {
+        get: function endDateTimeField()
+        {
+            return _endDateTimeField;
+        },
+        set: function endDateTimeField(v)
+        {
+            if (_endDateTimeField != v)
+            {
+                _endDateTimeField = v;
+            }
+        },
+        enumerable: true
+    });
     Object.defineProperty(this, "calendarWeek",{
         get: function calendarWeek(){
             return  _calendarWeek;
@@ -33,7 +63,14 @@ var Calendar = function(_props){
             return  _calendarMonth;
         }
     });
-    Object.defineProperty(this, "viewStack",{
+    
+    Object.defineProperty(this, "calendarDay", {
+        get: function calendarDay() {
+            return  _calendarDay;
+        }
+    });
+
+    Object.defineProperty(this, "viewStack", {
         get: function viewStack(){
             return  _viewStack;
         }
@@ -49,7 +86,7 @@ var Calendar = function(_props){
             return  _labelYear;
         }
     });
-   
+
     let _defaultParams = {
         nowDate: " ",
         guidField: "guid",
@@ -60,8 +97,10 @@ var Calendar = function(_props){
         calendarEvents: [],
         inputFormat: 'YYYY-MM-DD HH:mm',
         outputFormat: 'YYYY-MM-DD HH:mm',
-        eventsField: "events",
-        descriptionField: "description"
+        eventsField: "cellEvents",
+        descriptionField: "description",
+        startDateTimeField: "startDateTime",
+        endDateTimeField: "endDateTime",
     };
 
     let _calendarDay;
@@ -70,6 +109,7 @@ var Calendar = function(_props){
     let _viewStack;
     let _labelMonth;
     let _labelYear;
+    let _startDateTimeField, _endDateTimeField;
 
     this.beforeAttach = function (e) {
         if (e.target.id == this.domID) {
@@ -187,10 +227,10 @@ var Calendar = function(_props){
                                         labelField: "value",
                                         labelField1: "value",
                                         descriptionField: _descriptionField,
-                                        startHour: "startHour",
+                                        startDateTimeField: _startDateTimeField,
+                                        endDateTimeField: _endDateTimeField,
                                         interval: 30,
-                                        endHour: "endHour",
-                                        eventsField: "events",
+                                        eventsField: _eventsField,
                                         timing: "timing",
                                         nowDate: new Date(),
                                         calendarEvents: _calendarEvents,
@@ -206,14 +246,14 @@ var Calendar = function(_props){
                                         startHourCalendar: 0,
                                         endHourCalendar: 24,
                                         labelField: "value",
-                                        startHour: "startHour",
+                                        descriptionField: _descriptionField,                                        
+                                        startDateTimeField: _startDateTimeField,
+                                        endDateTimeField: _endDateTimeField,
                                         duration: "duration",
                                         valueHour: "valueHour",
                                         interval: 30,
-                                        endHour: "endHour",
                                         startRow: "startRow",
                                         eventsField: _eventsField,
-                                        descriptionField: _descriptionField,
                                         timing: "timing",
                                         classField1: "classField1",
                                         time: "time",
@@ -238,7 +278,9 @@ var Calendar = function(_props){
                                         classField: "classField",
                                         classField1: "classField1",
                                         startField: "startField",
-                                        descriptionField: _descriptionField,
+                                        descriptionField: _descriptionField,                                        
+                                        startDateTimeField: _startDateTimeField,
+                                        endDateTimeField: _endDateTimeField,
                                         nowMonth: new Date().getMonth(),
                                         calendarEvents: _calendarEvents,
                                         inputFormat: _inputFormat,
@@ -258,14 +300,15 @@ var Calendar = function(_props){
     let _nowDate = _props.nowDate;
     let _guidField =  _props.guidField;
     let _selectedIndex = _props.selectedIndex;
-    _calendarDay = _props.calendarDay;
-    _calendarWeek = _props.calendarWeek;
-    _calendarMonth = _props.calendarMonth;
     let _calendarEvents = _props.calendarEvents;
     let _inputFormat = _props.inputFormat;
     let _outputFormat = _props.outputFormat;
     let _eventsField = _props.eventsField;
     let _descriptionField = _props.descriptionField;
+    if (_props.startDateTimeField)
+        _self.startDateTimeField = _props.startDateTimeField; 
+    if (_props.endDateTimeField)
+        _self.endDateTimeField = _props.endDateTimeField;
     
     let _clickDay = function () {
         if (_self.viewStack.selectedIndex < _self.viewStack.components.length) {

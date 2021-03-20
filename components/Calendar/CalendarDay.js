@@ -6,28 +6,7 @@
 var CalendarDay = function(_props)
 {
     let _self = this;
-    let _calendarEvents;
     let _lbl;
-    
-    Object.defineProperty(this, "calendarEvents",{
-        get: function calendarEvents(){
-            return _calendarEvents;
-        },
-        set: function calendarEvents(v){
-            if(_calendarEvents != v){
-                if(_dpWatcher && _calendarEvents){
-                    _dpWatcher.reset();
-                    _calendarEvents.off("propertyChange", _dpMemberChanged);
-                }
-                _calendarEvents = v;
-                if(_calendarEvents){
-                    _dpWatcher = ChangeWatcher.getInstance(_calendarEvents);
-                    _dpWatcher.watch(_calendarEvents, "length", _dpLengthChanged);
-                    _calendarEvents.on("propertyChange", _dpMemberChanged);
-                }
-            }          
-        }
-    }); 
 
     let _dpWatcher;
     let _dpLengthChanged = function (e) {
@@ -40,19 +19,7 @@ var CalendarDay = function(_props)
         e.stopImmediatePropagation();
         _dataProvider[_intervalToIndex[_intervalFromDate(e.newValue)]][_eventsField].splice(_dataProvider[_intervalToIndex[_intervalFromDate(e.newValue)]][_eventsField].length, 0, e.newValue);
     };
-    
-    Object.defineProperty(this, "nowDate", {
-        get: function nowDate(){
-            return  _nowDate;
-        }
-    });
 
-    Object.defineProperty(this, "calendarStartDate",{
-        get: function calendarStartDate() {
-            return  _calendarStartDate;
-        }
-    });
-    
     this.afterAttach = function (e) {
         if (typeof _afterAttach == 'function')
             _afterAttach.apply(this, arguments);
@@ -61,71 +28,59 @@ var CalendarDay = function(_props)
 
     let _defaultParams = {
         dataProvider: [],
-        nowDate: new Date(),
         labelField: 'label',
         labelField1: 'label',
         startTime: " ",
-        endTime: " ",
+        endTime: " ",        
+        startHourCalendar: 0,
+        endHourCalendar: 24,
         interval: 30,
-        eventsField: "events",
+        eventsField: "cellEvents",
         guidField: "guid",
         inputFormat: 'YYYY-MM-DD HH:mm',
-        outputFormat: 'YYYY-MM-DD HH:mm'
+        outputFormat: 'YYYY-MM-DD HH:mm',
+        internalFormat: "YYYY-MM-DD"
     };
 
     let _intervalToIndex = {};
     let _intervalFromDate = function (currentValue) {
-        let date = moment(currentValue.startDateTime).format(_props.inputFormat);
-        let m = moment(date);
+        let m = moment(currentValue[_self.startDateTimeField], _self.inputFormat);
         let hours = m.hours();
         let minutes = m.minutes();
         let h = hours % 12;
         h = h ? h : 12;
         let ampm = hours >= 12 ? 'pm' : 'am';
         if (minutes == _interval) {
-            return (h + ":" + _interval) + "-" + ((h == 12) ? ((hours % 12) + 1) : (h + 1)) + ':00' + ampm;
+            return m.format(_self.internalFormat)+" "+(h + ":" + _interval) + "-" + ((h == 12) ? ((hours % 12) + 1) : (h + 1)) + ':00' + ampm;
         }
         else {
-            return (h + ":00") + "-" + (h + ":" + _interval) + ampm;
+            return  m.format(_self.internalFormat)+" "+(h + ":00") + "-" + (h + ":" + _interval) + ampm;
         }
     };
     
-    let _createHours = function (_calendarStartDate, event) {
-        let groupedEvents = _calendarEvents.groupReduce(_intervalFromDate);
-        let today = _calendarStartDate.getDate();
-        let currentMonth = _calendarStartDate.getMonth();
-        let currentYear = _calendarStartDate.getFullYear();
-        let myActualMonth = CalendarConstants.Months[currentMonth];
+    let _createHours = function () {
+        let groupedEvents = _self.calendarEvents.groupReduce(_intervalFromDate);
         let _dataProvider = [];
-        for (let i = 0; i < 24; i++) {
+        let dateContent = moment(_self.nowDate).format(_self.internalFormat);
+        for (let i = _startHourCalendar; i < _endHourCalendar; i++) {
             let hours = i;
             hours = hours % 12;
-            hours = hours ? hours : 12;
+            hours = hours ? hours : 0;
             let ampm = i >= 12 ? 'pm' : 'am';
-            let m_content = currentMonth;
-            if (currentMonth < 9) {
-                m_content = '0' + (currentMonth + 1);
-            }
-            else {
-                m_content = currentMonth + 1;
-            }
-            let today_d = today;
-            if (today <= 9) {
-                today_d = '0' + today;
-            } else {
-                today_d = today;
-            }
+            
             let dp1 = {
                 "value": hours + ":00",
                 "startTime": hours + ":00",
                 "endTime": hours + ":" + _interval,
                 "timeInterval": (hours + ":00") + "-" + (hours + ":" + _interval) + ampm,
-                "dateContent": currentYear + '-' + m_content + '-' + today_d
+                "dateContent": dateContent
             };
 
             dp1[_eventsField] = new ArrayEx([]);
             dp1[_guidField] = StringUtils.guid();
-            let hourInterval_2 = dp1.interval;
+            let hourInterval_2 = dateContent + " " + dp1.timeInterval;
+            dp1["dateTime"] = hourInterval_2;
+            
             if (hourInterval_2 in groupedEvents) {
                 dp1[_eventsField] = new ArrayEx(groupedEvents[hourInterval_2]);
             }
@@ -137,12 +92,13 @@ var CalendarDay = function(_props)
                 "endTime": (hours + 1) + ":00",
                 "timeInterval": (hours + ":" + _interval) + "-" + ((hours == 12) ? ((i % 12) + 1) : (hours + 1)) + ':00' + ampm,
                 "timing": ampm,
-                "dateContent": currentYear + '-' + m_content + '-' + today_d
+                "dateContent": dateContent
             };
 
             dp2[_eventsField] = new ArrayEx([]);
             dp2[_guidField] = StringUtils.guid();
-            let hourInterval_3 = dp2.interval;
+            let hourInterval_3 = dateContent + " " + dp2.timeInterval;
+            dp2["dateTime"] = hourInterval_3;
             if (hourInterval_3 in groupedEvents) {
                 dp2[_eventsField] = new ArrayEx(groupedEvents[hourInterval_3]);
             }
@@ -157,29 +113,21 @@ var CalendarDay = function(_props)
     let _guidField = _props.guidField;
     let _labelField = _props.labelField;
     let _labelField1 = _props.labelField1;
-    let _nowDate = _props.nowDate;
     let _startTime = _props.startTime;
     let _endTime = _props.endTime;
     let _interval = _props.interval;
-    let _calendarStartDate = _props.calendarStartDate;
     let  _dataProvider; 
-    let _component_Cday;
     let _eventsField = _props.eventsField;
-    let _component_Mday;
-    let eve = [];
+    let _startHourCalendar = _props.startHourCalendar;
+    let _endHourCalendar = _props.endHourCalendar;
 
-    this.addEvent = function(event){
-        if(event.date.getTime() == _nowDate.getTime()){
-            let ind = indexOfObject(_dataProvider, "timeInterval", event.interval);
-            if(ind>-1){
-                _dataProvider[ind][_eventsField].splice(_dataProvider[ind][_eventsField].length, 0, event);
-            }
+    this.addEvent = function (event) {
+        let gi = _intervalFromDate(event);
+        let ind = indexOfObject(_dataProvider, "dateTime", gi);
+        if(ind > -1) {
+            _dataProvider[ind][_eventsField].splice(_dataProvider[ind][_eventsField].length, 0, event);
         }
-        let key  =  event.interval + " " + event.dateContent;
-        if( _calendarEvents[key] == null){
-            _calendarEvents[key] = [];
-        }
-        _calendarEvents[key].push(event);
+        _self.calendarEvents.push(event);
     };        
     
     let _repeater_hour;
@@ -198,10 +146,10 @@ var CalendarDay = function(_props)
     };
 
     this.previous = function (eve) {
-        _nowDate.setDate(_nowDate.getDate() - 1);
-        let new_prev = CalendarConstants.Days[_nowDate.getDay()];
-        let update_prev_date = _nowDate.getDate();
-        let new_dp_prev = _createHours(_nowDate, eve);
+        _self.nowDate.setDate(_self.nowDate.getDate() - 1);
+        let new_prev = CalendarConstants.Days[_self.nowDate.getDay()];
+        let update_prev_date = _self.nowDate.getDate();
+        let new_dp_prev = _createHours();
         let dataProvider = _repeater_hour.dataProvider;
         dataProvider.splicea(0, dataProvider.length, new_dp_prev);
         _lbl.label = new_prev + " " + update_prev_date;
@@ -209,14 +157,22 @@ var CalendarDay = function(_props)
     };
 
     this.next = function (eve) {
-        _nowDate.setDate(_nowDate.getDate() + 1);
-        let new_day = CalendarConstants.Days[_nowDate.getDay()];
-        let update_date = _nowDate.getDate();
-        let new_dp_next = _createHours(_nowDate, eve);
+        _self.nowDate.setDate(_self.nowDate.getDate() + 1);
+        let new_day = CalendarConstants.Days[_self.nowDate.getDay()];
+        let update_date = _self.nowDate.getDate();
+        let new_dp_next = _createHours();
         let dp = _repeater_hour.dataProvider;
         dp.splicea(0, dp.length, new_dp_next);
         _lbl.label = new_day + " " + update_date;
         _self.dataProvider = new_dp_next;
+    };
+    
+    let _calendarEventClick = function (e, ra) {
+        let event = jQuery.Event("calendarEventClick");
+        event.cell = this.parent;
+        event.eventCell = this;
+        event.originalEvent = e;
+        _self.trigger(event, [ra]);
     };
 
     let _cellClick = function (e, ra) {
@@ -225,20 +181,21 @@ var CalendarDay = function(_props)
         let arrtime = ra.currentItem.startTime.split(':');
         let date = new Date(_self.nowDate.getTime());
         date.setHours(parseInt(arrtime[0]), parseInt(arrtime[1]), 0);
-        event.startDateTime = date;
+        event[_self.startDateTimeField] = date;
         event.cell = this;
-        _self.trigger(event);
+        event.originalEvent = e;
+        _self.trigger(event, [ra]);
     };
 
     let  _cmps;
-    let fnContainerDelayInit  = function(){
+    let fnContainerDelayInit = function () {
         _cmps = [
             {
                 ctor: Label,
                 props: {
                     id: 'Label_Displaying_WeekDay',
                     ownerDocument: _self.ownerDocument,
-                    label: CalendarConstants.Days[_nowDate.getDay()] + " " + _nowDate.getDate(),
+                    label: CalendarConstants.Days[_self.nowDate.getDay()] + " " + _self.nowDate.getDate(),
                     classes: ["fc-week-day"],
                 }
             },
@@ -289,28 +246,22 @@ var CalendarDay = function(_props)
                                                 }
                                             },
                                             {
-                                                ctor: Container,
+                                                ctor: Repeater,
                                                 props: {
-                                                    type: ContainerType.NONE,
-                                                    id: "container_Repeater",
+                                                    id: "event_Repeater",
+                                                    dataProvider: "{" + _eventsField + "}",
+                                                    rendering: {
+                                                        direction: "horizontal",
+                                                        separator: false
+                                                    },
                                                     components: [{
-                                                        ctor: Repeater,
+                                                        ctor: Container,
                                                         props: {
-                                                            id: "event_Repeater",
-                                                            dataProvider: "{" + _eventsField + "}",
-                                                            rendering: {
-                                                                direction: "horizontal",
-                                                                separator: false
-                                                            },
-                                                            components: [{
-                                                                ctor: Container,
-                                                                props: {
-                                                                    type: ContainerType.NONE,
-                                                                    id: "event_Container",
-                                                                    label: "{" + _self.descriptionField + "}",
-                                                                    classes: ["fc-event"],
-                                                                }
-                                                            }]
+                                                            type: ContainerType.NONE,
+                                                            id: "event_Container",
+                                                            label: "{" + _self.descriptionField + "}",
+                                                            classes: ["fc-event"],
+                                                            "click": _calendarEventClick
                                                         }
                                                     }]
                                                 }
@@ -324,16 +275,28 @@ var CalendarDay = function(_props)
                     ]
                 }
             }
-        ];        
+        ];
     };
     
-    if(_props.calendarEvents){
-        this.calendarEvents = _props.calendarEvents;
-    }
-    _dataProvider = _createHours(_nowDate,eve);
-    fnContainerDelayInit();
-    _props.components = _cmps;
     let r = CalendarBase.call(this, _props);
+    let _rPromise;
+    this.render = function () 
+    {  
+        this.$container = this.$el;
+        _rPromise = new Promise((resolve, reject) => {
+            _self.on("endDraw", function(e){
+                if (e.target.id == _self.domID) 
+                {
+                    resolve(r); 
+                }
+            });                   
+        });
+        _dataProvider = _createHours();
+        fnContainerDelayInit();
+        this.addComponents(_cmps);
+        return _rPromise;
+    };
+
     return r;
 }
 CalendarDay.prototype.ctor = 'CalendarDay';

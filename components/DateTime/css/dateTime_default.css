@@ -1,20 +1,34 @@
-[type="date"], [type="datetime-local"]:before {
+[type="datetime-local"]:before {
     content: attr(date);
     color: black;
 }
 
-[type="date"], [type="datetime-local"] {
+[type="date"]:before {
+    content: attr(date);
+    color: black;
+}
+
+[type="datetime-local"] {
     position: relative;
     color: white;
 }
 
-[type="date"], [type="datetime-local"]::-webkit-datetime-edit,
-[type="date"], [type="datetime-local"]::-webkit-inner-spin-button,
-[type="date"], [type="datetime-local"]::-webkit-clear-button {
-    display: none;
+[type="date"]{
+    position: relative;
+    color: white;
 }
 
-[type="date"], [type="datetime-local"]::-webkit-calendar-picker-indicator {
+[type="datetime-local"]::-webkit-datetime-edit,
+[type="datetime-local"]::-webkit-inner-spin-button,
+[type="datetime-local"]::-webkit-clear-button {
+    display: none;
+}
+[type="date"]::-webkit-datetime-edit,
+[type="date"]::-webkit-inner-spin-button,
+[type="date"]::-webkit-clear-button {
+    display: none;
+}
+[type="datetime-local"]::-webkit-calendar-picker-indicator {
     position: absolute;
     top: 8px;
     right: 0;
@@ -22,6 +36,17 @@
     opacity: 1;
 }
 
-[type="date"], [type="datetime-local"] {
+[type="date"]::-webkit-calendar-picker-indicator {
+    position: absolute;
+    top: 8px;
+    right: 0;
+    color: black;
+    opacity: 1;
+}
+
+[type="datetime-local"] {
+    min-width: 100px;
+}
+[type="date"] {
     min-width: 100px;
 }

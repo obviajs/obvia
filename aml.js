@@ -16,6 +16,7 @@ rjs.define("lib/ArrayUtils.js", "ArrayUtils");
 rjs.define("lib/ArrayEx.js", "ArrayEx");
 rjs.define("lib/ObjectUtils.js", "ObjectUtils");
 rjs.define("lib/StringUtils.js", "StringUtils");
+rjs.define("lib/DateUtils.js", "DateUtils");
 rjs.define("lib/DecoratorUtils.js", "DecoratorUtils");
 rjs.define("lib/coroutine.js", "coroutine");
 rjs.define("lib/BinUtils.js", "BinUtils");
@@ -260,6 +261,7 @@ let dependencies = [
         "ArrayEx",
         "ObjectUtils",
         "StringUtils",
+        "DateUtils",
         "DecoratorUtils",
         "coroutine",
         "BinUtils",

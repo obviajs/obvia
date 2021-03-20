@@ -2,10 +2,10 @@ var myCalendar = new Calendar({
     id: 'calendar',
     nowDate: new Date(),
     calendarEvents: new ArrayEx([
-        { "description": "Event 1", "startDateTime": "2019-10-08 01:00", "endDateTime": "2019-10-08 01:20" },
-        { "description": "Event 2", "startDateTime": "2019-10-08 01:00", "endDateTime": "2019-10-08 02:00" },
-        { "description": "Event 3", "startDateTime": "2019-10-08 17:30", "endDateTime": "2019-10-08 19:00" },
-        { "description": "Event 4", "startDateTime": "2019-10-08 20:00", "endDateTime": "2019-10-08 20:20" }
+        { "description": "Event 1", "startDateTime": "2021-03-19 01:00", "endDateTime": "2021-03-19 01:20" },
+        { "description": "Event 2", "startDateTime": "2021-03-19 01:00", "endDateTime": "2021-03-19 02:00" },
+        { "description": "Event 3", "startDateTime": "2021-03-19 17:30", "endDateTime": "2021-03-19 19:00" },
+        { "description": "Event 4", "startDateTime": "2021-03-19 20:00", "endDateTime": "2021-03-19 20:20" }
     ]),
     descriptionField: "description",
 });
@@ -96,42 +96,10 @@ function saveButton_click(e)
     let methods = [myCalendar.calendarDay.addEvent, myCalendar.calendarWeek.addEvent, myCalendar.calendarMonth.addEvent];
     var event = {};
     event[myCalendar.descriptionField] = eventDescription.value;
-    event.startDate = startDate.value;
-    event.endDate = endDate.value;
+    event[myCalendar.startDateTimeField] = moment(startDate.value, startDate.outputFormat).format(myCalendar.inputFormat);
+    event[myCalendar.endDateTimeField] = moment(endDate.value, endDate.outputFormat).format(myCalendar.inputFormat);
 
     methods[myCalendar.viewStack.selectedIndex](event);
-
-if (myCalendar.viewStack.selectedIndex == 1)
-    {   
-        var _addMinutes = function (time, minsToAdd) 
-        {
-            var _displayHour = function (h){ return (h<10? '0':'') + h;};
-            var split = time.split(':');
-            var mins = split[0]*60 + +split[1] + +minsToAdd;
-            return _displayHour(mins%(24*60)/60 | 0) + ':' + _displayHour(mins%60);  
-        }  
-        
-        var event = {};
-        event.startTime = instTextInput.value;
-        event.duration = instDuration.value;
-        event.description = instDescription.value;
-        event.dateContent = instTextDay.value;
-        event.endTime = _addMinutes(event.startTime,event.duration);
-        event.time = event.startTime + " - " + event.endTime + " " + instTextDay.value;
-        var words = event.startDateTime.split(' ');
-        var word0 = words[0];
-        var word1 = words[2];
-        event.value = word0 + " " + word1;
-        myCalendar.calendarWeek.addEvent(event); 
-    }
-    else if (myCalendar.viewStack.selectedIndex == 2)
-    {
-        var event = {};
-        event.dateContent = instDate.value;
-        event.description = instDescription.value;
-        event.startDateTime = instDateTime.value;
-        myCalendar.calendarMonth.addEvent(event);    
-    }
     myModal.hide();
 } 
 
@@ -147,15 +115,14 @@ myCalendar.on('endDraw', function ()
     eventDescription = myModal.modalDialog.modalContent.modalBody.eventDescription;
 });
 
-myCalendar.on("cellClick", function (e) {
-    if(myCalendar.viewStack.selectedIndex == 0 ){        
-    }
-    else if(myCalendar.viewStack.selectedIndex == 1 ){
-    }
-    else if(myCalendar.viewStack.selectedIndex == 2 ){
-    }
+myCalendar.on("calendarEventClick", function (e, ra) {
+    e.originalEvent.stopPropagation();
+    e.originalEvent.stopImmediatePropagation();
+});
+
+myCalendar.on("cellClick", function (e, ra) {
     eventDescription.value = "";
-    let dtStr = moment(e.startDateTime).format(startDate.inputFormat);
+    let dtStr = moment(e[myCalendar.startDateTimeField]).format(startDate.inputFormat);
     startDate.value = dtStr;
     endDate.value = dtStr;
     myModal.show();

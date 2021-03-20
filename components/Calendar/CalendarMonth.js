@@ -7,27 +7,6 @@
 var CalendarMonth = function(_props)
 {
     let _self = this;
-    let _calendarEvents;
-    
-    Object.defineProperty(this, "calendarEvents",{
-        get: function calendarEvents(){
-            return _calendarEvents;
-        },
-        set: function calendarEvents(v){
-            if(_calendarEvents != v){
-                if(_dpWatcher && _calendarEvents){
-                    _dpWatcher.reset();
-                    _calendarEvents.off("propertyChange", _dpMemberChanged);
-                }
-                _calendarEvents = v;
-                if(_calendarEvents){
-                    _dpWatcher = ChangeWatcher.getInstance(_calendarEvents);
-                    _dpWatcher.watch(_calendarEvents, "length", _dpLengthChanged);
-                    _calendarEvents.on("propertyChange", _dpMemberChanged);
-                }
-            }          
-        }
-    }); 
     
     let _dpWatcher;
     let _dpLengthChanged = function (e) {
@@ -41,21 +20,9 @@ var CalendarMonth = function(_props)
         _dataProvider[_intervalToIndex[_intervalFromDate(e.newValue)]][_eventsField].splice(_dataProvider[_intervalToIndex[_intervalFromDate(e.newValue)]][_eventsField].length, 0, e.newValue);
     };
 
-    Object.defineProperty(this, "nowDate",{
-        get: function nowDate() {
-            return  _nowDate;
-        }
-    });
-
     Object.defineProperty(this, "nowMonth",{
         get: function nowMonth(){
             return  _nowMonth;
-        }
-    });
-
-    Object.defineProperty(this, "calendarStartDate",{
-        get: function calendarStartDate(){
-            return  _calendarStartDate;
         }
     });
     
@@ -75,31 +42,28 @@ var CalendarMonth = function(_props)
         classField: " ",
         startField: " ",
         descriptionField: "description",
-        nowDate: new Date(),
         nowMonth: new Date().getMonth(),
         calendarEvents: [],
-        eventsField: "events",
+        eventsField: "cellEvents",
         inputFormat: 'YYYY-MM-DD HH:mm',
-        outputFormat: 'YYYY-MM-DD HH:mm'
+        outputFormat: 'YYYY-MM-DD HH:mm',
+        internalFormat: "YYYY-MM-DD"
     };
     
-    let _calendarStartDate;
     let _intervalToIndex = {};
     let _intervalFromDate = function (currentValue) {
-        let date = moment(currentValue.startDateTime).format(_props.inputFormat);
-        return date.toString().substring(0, 10);
+        return moment(currentValue[_self.startDateTimeField], _self.inputFormat).format(_self.internalFormat);
     };
 
-    let _createData = function (_nowDate) {
-        let groupedEvents = _calendarEvents.groupReduce(_intervalFromDate);
-        let today = _nowDate.getDate();
-        let currentMonth = _nowDate.getMonth();
-        let currentYear = _nowDate.getFullYear();
+    let _createData = function () {
+        let groupedEvents = _self.calendarEvents.groupReduce(_intervalFromDate);
+        let today = _self.nowDate.getDate();
+        let currentMonth = _self.nowDate.getMonth();
+        let currentYear = _self.nowDate.getFullYear();
         let _dataProvider = [];
         let selected = false;
-        let days_in_month = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+        let days_in_month = [31, (DateUtils.isLeapYear(currentYear) ? 29 : 28), 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
         // leap year?
-        currentYear % 4 == 0 && currentYear != 1900 ? days_in_month[1] = 29 : days_in_month;
         let _getLastMonth = function (d) {
             if (d.getMonth() == 0) {
                 return 11
@@ -119,9 +83,9 @@ var CalendarMonth = function(_props)
         }
     
         for (let i = 1; i < previousDay; i++) {
-            let j = days_in_month[_getLastMonth(_nowDate)] - ((previousDay - 1) - i);
-            _calendarStartDate = new Date(currentMonth + "/" + (days_in_month[_getLastMonth(_nowDate)] - ((previousDay - 2))) + "/" + currentYear);
-            let m = _getLastMonth(_nowDate) + 1;
+            let j = days_in_month[_getLastMonth(_self.nowDate)] - ((previousDay - 1) - i);
+            _self.calendarStartDate = new Date(currentMonth + "/" + (days_in_month[_getLastMonth(_self.nowDate)] - ((previousDay - 2))) + "/" + currentYear);
+            let m = _getLastMonth(_self.nowDate) + 1;
             let m_content = m;
             if (m <= 9) {
                 m_content = '0' + m;
@@ -236,7 +200,7 @@ var CalendarMonth = function(_props)
         return _dataProvider;
     };
 
-    _props = extend(false,false,_defaultParams,_props);
+    _props = extend(false, false, _defaultParams, _props);
     let eve = [];
     let _labelField = _props.labelField;
     let _lb = _props.lb;
@@ -247,11 +211,8 @@ var CalendarMonth = function(_props)
     let _classField1 = _props.classField1;
     let _classField = _props.classField;
     let _startField = _props.startField;
-    _calendarEvents = _props.calendarEvents;
     let  _descriptionField = _props.descriptionField;
-    let  _nowDate = _props.nowDate;
     let  _nowMonth = _props.nowMonth;
-    _calendarStartDate = _props.calendarStartDate;
     let _click = _props.click;
     let _dataProvider;
     let _btnPrev;
@@ -265,27 +226,24 @@ var CalendarMonth = function(_props)
         }
     };
     
-    this.addEvent  =  function(event){
-        let ind = indexOfObject(_dataProvider, "dateContent", event.dateContent);
-        if(ind>-1){
+    this.addEvent = function (event) {
+        let gi = _intervalFromDate(event);
+        let ind = indexOfObject(_dataProvider, "dateContent", gi);
+        if(ind > -1) {
             _dataProvider[ind][_eventsField].splice(_dataProvider[ind][_eventsField].length, 0, event);
         }
-        let key  = event.dateContent;
-        if( _calendarEvents[key] == null){
-            _calendarEvents[key] = [];
-        }
-        _calendarEvents[key].push(event);
+        _self.calendarEvents.push(event);
     };
 
     let _repeater_day;
     this.previous = function (eve) {
-        if (_nowDate.getMonth() == 0) {
-            _nowDate.setMonth(11);
-            _nowDate.setFullYear(_nowDate.getFullYear() - 1);
+        if (_self.nowDate.getMonth() == 0) {
+            _self.nowDate.setMonth(11);
+            _self.nowDate.setFullYear(_self.nowDate.getFullYear() - 1);
         } else {
-            _nowDate.setMonth(_nowDate.getMonth() - 1);
+            _self.nowDate.setMonth(_self.nowDate.getMonth() - 1);
         }
-        let new_dp_prev = _createData(_nowDate, eve);
+        let new_dp_prev = _createData();
         let dp = _repeater_day.dataProvider;
         dp.splicea(0, dp.length, new_dp_prev);
         _self.dataProvider = new_dp_prev;
@@ -293,23 +251,32 @@ var CalendarMonth = function(_props)
     };
     
     this.next = function (eve){
-        if (_nowDate.getMonth() == 11){
-            _nowDate.setMonth(0);
-            _nowDate.setFullYear(_nowDate.getFullYear() + 1);
+        if (_self.nowDate.getMonth() == 11){
+            _self.nowDate.setMonth(0);
+            _self.nowDate.setFullYear(_self.nowDate.getFullYear() + 1);
         }else{
-            _nowDate.setMonth(_nowDate.getMonth() + 1);
+            _self.nowDate.setMonth(_self.nowDate.getMonth() + 1);
         }
-        let new_dp_next = _createData(_nowDate,eve);
+        let new_dp_next = _createData();
         let dp= _repeater_day.dataProvider ;
         dp.splicea(0,dp.length,new_dp_next);
         _self.dataProvider = new_dp_next;
     };
 
+    let _calendarEventClick = function (e, ra) {
+        let event = jQuery.Event("calendarEventClick");
+        event.cell = this.parent;
+        event.eventCell = this;
+        event.originalEvent = e;
+        _self.trigger(event, [ra]);
+    };
+
     let _cellClick = function (e, ra) {
         let event = jQuery.Event("cellClick");
-        event.startDateTime = new Date(ra.currentItem.dateContent + "T00:00:00Z");
+        event[_self.startDateTimeField] = new Date(ra.currentItem.dateContent + "T00:00:00Z");
         event.cell = this;
-        _self.trigger(event);
+        event.originalEvent = e;
+        _self.trigger(event, [ra]);
     };
 
     let  _cmps;
@@ -380,6 +347,11 @@ var CalendarMonth = function(_props)
                                 props: {
                                     id: "eventRepeater",
                                     dataProvider: "{" + _eventsField + "}",
+                                    rendering: {
+                                        direction: "horizontal",
+                                        separator: false,
+                                        wrap:false
+                                    },
                                     components: [{
                                         ctor: Container,
                                         props: {
@@ -387,6 +359,7 @@ var CalendarMonth = function(_props)
                                             id: "eventContainer",
                                             label: "{" + _descriptionField + "}",
                                             classes: ["fc-event-inner"],
+                                            "click": _calendarEventClick
                                         }
                                     }]
                                 }
@@ -398,13 +371,26 @@ var CalendarMonth = function(_props)
             }
         ];
     };
-    if(_props.calendarEvents){
-        this.calendarEvents = _props.calendarEvents;
-    }
-    _dataProvider = _createData(_nowDate, eve);
-    fnContainerDelayInit();
-    _props.components = _cmps;
+
     let r = CalendarBase.call(this, _props);
+    let _rPromise;
+    this.render = function () 
+    {  
+        this.$container = this.$el;
+        _rPromise = new Promise((resolve, reject) => {
+            _self.on("endDraw", function(e){
+                if (e.target.id == _self.domID) 
+                {
+                    resolve(r); 
+                }
+            });                   
+        });
+        _dataProvider = _createData();
+        fnContainerDelayInit();
+        this.addComponents(_cmps);
+        return _rPromise;
+    };
+    
     return r;
 };
 CalendarMonth.prototype.ctor = 'CalendarMonth';
