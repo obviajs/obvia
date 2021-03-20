@@ -228,7 +228,7 @@ var AutoCompleteEx = function (_props) {
         } else {
             _closeSuggestionsList();
             _input.$el.attr('placeholder', 'No results found :(').delay(1000).queue(function (n) {
-                $(this).attr('placeholder', 'Type something...');
+                $(this).attr('placeholder', 'Search...');
                 n();
             });
             _self.trigger("noSuggestionsFound", [_input.value]);

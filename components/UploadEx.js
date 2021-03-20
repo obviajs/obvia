@@ -179,7 +179,10 @@ var UploadEx = function (_props) {
                 ctor: Container,
                 props: {
                     id: "mainRow",
-                    type:"",
+                    type: "",
+                    css: {
+                        "display": "flex"
+                    },
                     components: [
                         {
                             ctor: Label,
@@ -202,7 +205,7 @@ var UploadEx = function (_props) {
                             props: {
                                 id: "fileName",
                                 label: "No file selected.",
-                                width: 250
+                                width: "100%"
                             }
                         },
                         {
@@ -225,14 +228,18 @@ var UploadEx = function (_props) {
                             ctor: Label,
                             props: {
                                 id: "fileSize",
-                                width: 50
+                                width: 100
                             }
                         },
                         {
-                            ctor: Button,
+                            ctor: Link,
                             props: {
                                 id: "selectBtn",
                                 type: "button",
+                                href: "javascript:void(0)",
+                                css: {
+                                    "width": "45px"
+                                },
                                 components: [{
                                     ctor: Label,
                                     props: {
@@ -245,10 +252,14 @@ var UploadEx = function (_props) {
                             }
                         },
                         {
-                            ctor: Button,
+                            ctor: Link,
                             props: {
                                 id: "uploadBtn",
-                                type: "button",
+                                type: "button",                                
+                                href: "javascript:void(0)",
+                                css: {
+                                    "width": "45px"
+                                },
                                 enabled: false,
                                 components: [{
                                     ctor: Label,
@@ -262,10 +273,14 @@ var UploadEx = function (_props) {
                             }
                         },
                         {
-                            ctor: Button,
+                            ctor: Link,
                             props: {
                                 id: "removeBtn",
                                 type: "button",
+                                href: "javascript:void(0)",
+                                css: {
+                                    "width": "45px"
+                                },
                                 enabled: false,
                                 components: [{
                                     ctor: Label,
@@ -492,7 +507,8 @@ var UploadEx = function (_props) {
         multiple: true,
         showProgress: true,
         fullUrlField: "full_url",
-        type:""
+        type: "",
+        classes: ["form-control", "form-control-sm"]
     };
 
     let _multiple, _accept, _showBtnRemove, _form, _value, _showProgress, _fullUrlField;
