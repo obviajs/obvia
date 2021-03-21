@@ -811,12 +811,14 @@ var DataGrid = function (_props) {
         },
         showRowIndex: true,
         dataProvider: new ArrayEx([]),
-        rowCount: 5,
+        rowCount: null,
         columns: [],
         allowNewItem: false,
         allowRemoveItem: false,
         multiSelect: false,
-        fitWidth: true
+        fitWidth: true,
+        defaultRowHeight: 38.67,
+        height: 500
     };
     _props = extend(false, false, _defaultParams, _props);
     if (!_props.attr) {
@@ -847,7 +849,13 @@ var DataGrid = function (_props) {
 
     let _rendering = _props.rendering;
     let _showRowIndex = _props.showRowIndex;
-    let _rowCount = _props.rowCount;
+    let _rowCount;
+    if (_props.rowCount) {
+        _rowCount = _props.rowCount;
+        _props.height = (_props.rowCount * _props.defaultRowHeight) +  _props.defaultRowHeight /*the header*/;
+    } else {        
+        _rowCount = Math.floor((_props.height - _props.defaultRowHeight /*the header*/) / _props.defaultRowHeight) ;
+    }
     _defaultItem = _props.defaultItem;
     let _allowNewItem = _props.allowNewItem;
     let _allowRemoveItem = _props.allowRemoveItem;
