@@ -32,7 +32,10 @@ var Wizard = function (_props) {
                     _wizardTree.select({
                         "guid": _steps[v]["guid"]
                     });
-                    this.$el.trigger("change");
+                    let ec = jQuery.Event("change");
+                    ec.newValue = e.newValue;
+                    ec.oldValue = e.oldValue;
+                    _self.$el.trigger(ec);          
                 }
             }
         },

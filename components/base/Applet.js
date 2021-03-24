@@ -118,7 +118,7 @@ var Applet = function (_props) {
             });
 
             _literal = r[0];
-            _literal.props.bindingDefaultContext = _data;
+            _literal.props.bindingDefaultContext = _implementation.appletContext;
             _view = Component.fromLiteral(_literal);
 
             _self.addBehaviors(_view, _behaviors, false);

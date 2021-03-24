@@ -844,26 +844,6 @@ var Component = function (_props) {
             m = r.match;
         return m;
     };
-
-    let _cachedScope = null
-    this.invalidateScopeChain = function () {
-        _cachedScope = null;
-    };
-
-    this.getScopeChain = function () {
-        let scope = _cachedScope
-        if (!_cachedScope) {
-            scope = [this.bindingDefaultContext];
-            if (this.proxyMaybe != this.bindingDefaultContext)
-                scope.push(this.proxyMaybe);
-            if (this.parent) {
-                scope.splicea(scope.length, 0, this.parent.getScopeChain())
-            } else
-                scope.push(window)
-            _cachedScope = scope;
-        } 
-        return scope;
-    };
     _self.bindingDefaultContext = _props.bindingDefaultContext || this.proxyMaybe;
     this.trigger('init');  
 };

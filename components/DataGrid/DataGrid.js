@@ -838,7 +838,7 @@ var DataGrid = function (_props) {
         }
     };
 
-    let myDtEvts = ["cellEditFinished", "cellEditStarted", "cellEditStarting", "rowEdit", "rowAdd", "rowDelete", "rowClick", "rowDblClick", "cellStyling", "rowStyling", "columnSort"];
+    let myDtEvts = ["cellEditFinished", "cellEditStarted", "cellEditStarting", "rowEdit", "rowAdd", "rowDelete", "rowClick", "rowDblClick", "cellStyling", "rowStyling", "columnSort", "cellClick"];
     if (!Object.isEmpty(_props.attr) && _props.attr["data-triggers"] && !Object.isEmpty(_props.attr["data-triggers"])) {
         let dt = _props.attr["data-triggers"].split(" ");
         for (let i = 0; i < dt.length; i++) {
@@ -882,10 +882,19 @@ var DataGrid = function (_props) {
 
         this.createHeader();
         //if(_props.dataProvider)
-        if (!this.getBindingExpression("dataProvider"))
-            this.dataProvider = await Promise.resolve(Literal.fromLiteral(_props.dataProvider));
+        if (!this.getBindingExpression("dataProvider")) {
+            let d = Literal.fromLiteral(_props.dataProvider);
+            this.dataProvider = await Promise.resolve(d).then(function (dv) {
+                if (dv.hasOwnProperty("parent")) {
+                    dv.parent = _self;
+                    dv.applyBindings();
+                }
+                return dv;
+            });
+        }
         else
             this.dataProvider = new ArrayEx([]);
+            
         return _rPromise;
     };
 
@@ -998,6 +1007,12 @@ var DataGrid = function (_props) {
                 });
                 //width='"+column.calculatedWidth+"'
                 let cell = $("<td id='cell_" + (index) + "_" + columnIndex + "'></td>");
+                cell.on("click", function (evt) {
+                    let rargs = new RepeaterEventArgs(_self.rowItems[index], _self.dataProvider[index + _virtualIndex], index + _virtualIndex);
+                    rargs.virtualIndex = _virtualIndex;
+                    rargs.columnIndex = columnIndex;
+                    _self.trigger("cellClick", [_self, rargs]);
+                });
                 if (_cells[index] == undefined)
                     _cells[index] = [];
                 _cells[index][columnIndex] = cell;

@@ -242,7 +242,6 @@ var Parent = function (_props, _hideComponents = false) {
         if (e.target.id == this.domID) {
             if (typeof _afterAttach == 'function')
                 _afterAttach.apply(this, arguments);
-
         }
     };
 

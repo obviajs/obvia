@@ -122,7 +122,7 @@ var Repeater = function (_props, _hideComponents = false) {
                     _dpWatcher.reset();
                     _dataProvider.off("propertyChange", _debouncedUpdateDataProvider);
                 }
-                _dataProvider = !ArrayEx.isArrayEx(v) ? new ArrayEx(v) : v;                
+                _dataProvider = v == null || Array.isArray(v) ? new ArrayEx(v) : v;                
                 this.updateDataProvider();
                 if (_dataProvider) {
                     _dpWatcher = ChangeWatcher.getInstance(_dataProvider);
@@ -502,8 +502,15 @@ var Repeater = function (_props, _hideComponents = false) {
             });
         });
         //if(_props.dataProvider)
-        if (!this.getBindingExpression("dataProvider"))
-            this.dataProvider = await Promise.resolve(Literal.fromLiteral(_props.dataProvider));
+        if (!this.getBindingExpression("dataProvider")) {
+            let d = Literal.fromLiteral(_props.dataProvider);
+            this.dataProvider = await Promise.resolve(d).then(function (dv) {
+                if (dv.hasOwnProperty("parent")) {
+                    dv.parent = _self;
+                }
+                return dv;
+            });
+        }
         else
             this.dataProvider = new ArrayEx([]);
         return _rPromise;
