@@ -7,18 +7,48 @@
 //component definition
 var RangeValidator = function (_props) {
     let _self = this,
-        _min, _max;
+        _min, _max, _minAlias, _maxAlias;
 
     this.validate = function () {
         let _controlToValidateInstance = _self.controlToValidateInstance;
         if (_controlToValidateInstance) {
-            if (!_self.enabled || (_controlToValidateInstance.value >= _min && _controlToValidateInstance.value <= _max)) {
+            if (!_self.enabled || ( (_self.min == null || _controlToValidateInstance.value >= _self.min) && (_self.max == null || _controlToValidateInstance.value <= _self.max))) {
                 _self.isValid = true;
             } else
                 _self.isValid = false;
         }
         return Promise.resolve(_self.isValid);
     };
+
+    Object.defineProperty(this, "minAlias", {
+        get: function minAlias() {
+            return _minAlias;
+        },
+        set: function minAlias(v) {
+            if (_minAlias != v) {
+                let oldValue = _minAlias;
+                _minAlias = v;
+                _myw.propertyChanged("minAlias", oldValue, v);
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+
+    Object.defineProperty(this, "maxAlias", {
+        get: function maxAlias() {
+            return _maxAlias;
+        },
+        set: function maxAlias(v) {
+            if (_maxAlias != v) {
+                let oldValue = _maxAlias;
+                _maxAlias = v;
+                _myw.propertyChanged("maxAlias", oldValue, v);
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
 
     Object.defineProperty(this, "min", {
         get: function min() {
@@ -48,11 +78,17 @@ var RangeValidator = function (_props) {
 
     this.beforeAttach = function (e) {
         if (e.target.id == this.domID) {
-            if (_props.max != null) {
+            if (_props.max != null && !this.getBindingExpression("max")) {
                 _max = _props.max;
             }
-            if (_props.min != null) {
+            if (_props.min != null && !this.getBindingExpression("min")) {
                 _min = _props.min;
+            }
+            if (_props.minAlias != null && !this.getBindingExpression("minAlias")) {
+                _minAlias = _props.minAlias;
+            }
+            if (_props.maxAlias != null && !this.getBindingExpression("maxAlias")) {
+                _maxAlias = _props.maxAlias;
             }
             if (_min > _max) {
                 throw new Error("The specified Min value is greater than the specified Max value.");
@@ -64,7 +100,7 @@ var RangeValidator = function (_props) {
         min: null,
         max: null
     };
-
+    
     _props = extend(false, false, _defaultParams, _props);
 
 
@@ -72,6 +108,7 @@ var RangeValidator = function (_props) {
     let _labelType = _props.labelType;
 
     let r = Validator.call(this, _props);
+    let _myw = ChangeWatcher.getInstance(r);
     return r;
 };
 RangeValidator.prototype.ctor = 'RangeValidator';

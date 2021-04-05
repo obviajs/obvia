@@ -12,11 +12,13 @@ var DateTime = function (_props) {
             return (date == "Invalid date" || date == "") ? "" : date;
         },
         set: function value(v) {
+            let oldValue = _value;
             _value = moment(v, _inputFormat);
             if (this.$el) {
                 this.attr['date'] = _value.format(_displayFormat);
                 this.$el.val(_value.format(_self.internalFormat));
-            }                
+            }
+            _myw.propertyChanged("value", oldValue, value);
         },
         enumerable: true
     });
@@ -28,7 +30,7 @@ var DateTime = function (_props) {
         set: function min(v) {
             _min = moment(v, _inputFormat);
             if (this.$el)
-                this.attr['min'] = _min.format(_displayFormat);
+                this.attr['min'] = _min.format(_internalFormat);
         },
         enumerable: true,
         configurable: true
@@ -52,7 +54,7 @@ var DateTime = function (_props) {
         set: function max(v) {
             _max = moment(v, _inputFormat);
             if (this.$el)
-                this.attr['max'] = _max.format(_displayFormat);
+                this.attr['max'] = _max.format(_internalFormat);
         },
         enumerable: true,
         configurable: true
@@ -96,8 +98,17 @@ var DateTime = function (_props) {
         enumerable: true
     });
 
-    this.beforeAttach = function () {
+    this.endDraw = function () {
         this.$input = this.$el;      
+        if (_props.displayFormat) {
+            this.displayFormat = _props.displayFormat;
+        }
+        if (_props.inputFormat) {
+            this.inputFormat = _props.inputFormat;
+        }
+        if (_props.outputFormat) {
+            this.outputFormat = _props.outputFormat;
+        }
         if (_props.min) {
             this.min = moment(_props.min, _inputFormat).format(_inputFormat);
         }
@@ -106,12 +117,15 @@ var DateTime = function (_props) {
         }
         if (_props.value) {
             this.value = moment(_props.value, _inputFormat).format(_inputFormat);
-        }
+        }        
     };
 
     this.inputHandler = function (e) {
+        let oldValue = _value;
         _value = moment(this.$input.val(), _self.internalFormat);
         this.attr['date'] = _value.format(_displayFormat);
+        this.$el.val(_value.format(_self.internalFormat));
+        _myw.propertyChanged("value", oldValue, _value);
     };
 
     if (!this.hasOwnProperty("template")) {
@@ -135,7 +149,7 @@ var DateTime = function (_props) {
     let _inputFormat = _props.inputFormat;
     let _outputFormat = _props.outputFormat;
     let _displayFormat = _props.displayFormat;
-    _internalFormat = _props.internalFormat;
+    let _internalFormat = _props.internalFormat;
 
     let _value, _min, _max;
     let _input = _props.input;
@@ -149,6 +163,7 @@ var DateTime = function (_props) {
         }
     };
     let r = Parent.call(this, _props);
+    let _myw = ChangeWatcher.getInstance(r);
     return r;
 };
 DateTime.prototype.ctor = "DateTime";

@@ -7,10 +7,12 @@ var Attr = function (_attr, cmpInst) {
             return true;
         },
         set: function (target, property, value, receiver) {
-            if (value && !isString(value) && isNaN(value)) {
-                _$el.attr(property, JSON.stringify(value));
-            } else if (value != null)
-                _$el.attr(property, value);
+            if (typeof value != "function") {
+                if (value && !isString(value) && isNaN(value)) {
+                    _$el.attr(property, JSON.stringify(value));
+                } else if (value != null)
+                    _$el.attr(property, value);
+            }
             target[property] = value;
             return true;
         },
@@ -24,13 +26,15 @@ var Attr = function (_attr, cmpInst) {
         }
     });
 
+    UseBindings.call(p, _attr);
     if (_attr) {
         for (let prop in _attr) {
-            _$el.attr(prop, _attr[prop]);
-            p[prop] = _attr[prop];
+            if (this.bindedProps.hasOwnProperty(prop))
+                delete _attr[prop];
+            else
+                p[prop] = _attr[prop];
         }
     }
-    UseBindings.call(p, _attr);
 
     this.getScopeChain = function () {
         return [this, ...cmpInst.getScopeChain()];

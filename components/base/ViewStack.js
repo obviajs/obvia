@@ -52,12 +52,20 @@ var ViewStack = function (_props) {
         },
         set: function selectedIndex(v) {
             if (_selectedIndex != v) {
-                let event = jQuery.Event("change");
-                this.$el.trigger(event, [_selectedIndex, v]);
+                let event = jQuery.Event("beforeChange");
+                event.newValue = v;
+                event.oldValue = _selectedIndex;
+                this.trigger(event);
                 if (!event.isDefaultPrevented()) {
                     _selectedIndex = v;
-                    _renderSelectedChild(_selectedIndex);
-                }
+                    _renderSelectedChild(_selectedIndex).then((pr) => {
+                        let e = jQuery.Event("change");
+                        e.newValue = v;
+                        e.oldValue = _selectedIndex;
+                        _self.trigger(e);
+                    });
+                } else
+                    return false;
             }
         },
         enumerable: true
@@ -109,7 +117,7 @@ var ViewStack = function (_props) {
                 p = _addComponents([]);
             }
         }
-        return p;
+        return Promise.resolve(p);
     };
 
     this.addComponents = function (components) {

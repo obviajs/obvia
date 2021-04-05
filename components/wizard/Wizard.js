@@ -5,7 +5,11 @@
  */
 var Wizard = function (_props) {
     let _self = this;
-    let _viewStack, _stepPath, _detailsPath, _steps = new ArrayEx(),
+    let _viewStack,
+        _stepPath, _detailsPath, _nextBtnLabelPath, _previousBtnLabelPath,
+        _nextBtnVisibilityPath, _previousBtnVisibilityPath,
+        _previousBtn, _nextBtn,
+        _steps = new ArrayEx(),
         _selectedIndex, _detailLabel, _wizardTree, _loop;
 
     Object.defineProperty(this, "viewStack", {
@@ -20,40 +24,28 @@ var Wizard = function (_props) {
         },
         set: function selectedIndex(v) {
             if (_selectedIndex != v && v >= 0 && v < _steps.length) {
-                let e = jQuery.Event("beforeChange");
-                e.newValue = v;
-                e.oldValue = _selectedIndex;
-                this.$el.trigger(e);
-                if (!e.isDefaultPrevented()) {
+                if ((_viewStack.selectedIndex = v) !== false) {
                     _selectedIndex = v;
-                    _stepHeading.label = _steps[v].stepLabel;
                     _detailLabel.label = _steps[v].detail;
-                    _viewStack.selectedIndex = v;
+                    _previousBtn.label = _steps[v].previousBtnLabel;
+                    _nextBtn.label = _steps[v].nextBtnLabel;
+                    _nextBtn.visible = _steps[v].nextBtnVisibility!=null ?  _steps[v].nextBtnVisibility : true;
+                    _previousBtn.visible = _steps[v].previousBtnVisibility!=null ?  _steps[v].previousBtnVisibility : true;
                     _wizardTree.select({
                         "guid": _steps[v]["guid"]
                     });
-                    let ec = jQuery.Event("change");
-                    ec.newValue = e.newValue;
-                    ec.oldValue = e.oldValue;
-                    _self.$el.trigger(ec);          
                 }
             }
         },
         enumerable: true
     });
 
-    let _defaultParams = {
-        type: ContainerType.CONTAINER,
-        stepPath: "attr.step",
-        detailsPath: "attr.details",
-        selectedIndex: 0,
-        loop: true
-    };
-
     this.endDraw = function (e) {
         if (e.target.id == this.domID) {
             _viewStack = this.bodyRowCnt.colCnt.wizardCnt.viewStack;
             _stepHeading = this.bodyRowCnt.colCnt.wizardCnt.container_page_top_row.row_container.page_title_container.stepHeading;
+            _previousBtn = this.bodyRowCnt.colCnt.wizardCnt.wizardFooter.footerRow.buttonCnt.previous;
+            _nextBtn = this.bodyRowCnt.colCnt.wizardCnt.wizardFooter.footerRow.buttonCnt.next;
             _detailLabel = _stepHeading.detailLabel;
             _wizardTree = this.stepsRowCnt.colCnt.wizardTree;
         }
@@ -73,7 +65,11 @@ var Wizard = function (_props) {
             let o = {
                 "stepLabel": getChainValue(r, _stepPath),
                 "detail": getChainValue(r, _detailsPath),
-                "liComponents": stepCmps
+                nextBtnLabel: getChainValue(r, _nextBtnLabelPath),
+                previousBtnLabel: getChainValue(r, _previousBtnLabelPath),                  
+                "liComponents": stepCmps,
+                nextBtnVisibility: getChainValue(r, _nextBtnVisibilityPath),
+                previousBtnVisibility: getChainValue(r, _previousBtnVisibilityPath)
             };
             arr.push(o);
         }
@@ -131,6 +127,7 @@ var Wizard = function (_props) {
                     id: "bodyRowCnt",
                     type: ContainerType.NONE,
                     classes: ["row"],
+                    css: {"height": "100%"},
                     components: [{
                         ctor: Container,
                         props: {
@@ -187,37 +184,38 @@ var Wizard = function (_props) {
                                                 selectedIndex: 0,
                                                 enabled: true,
                                                 components: _props.components,
-                                                endDraw: _viewStack_endDraw
+                                                endDraw: _viewStack_endDraw,
+                                                childAdded: _viewStack_endDraw
                                             }
                                         },
                                         {
                                             ctor: Container,
                                             props: {
-                                                id: "wizard_footer",
+                                                id: "wizardFooter",
                                                 type: ContainerType.NONE,
                                                 classes: ["wizard-form-footer"],
                                                 components: [{
                                                     ctor: Container,
                                                     props: {
-                                                        id: "row-footer",
+                                                        id: "footerRow",
                                                         type: ContainerType.ROW,
                                                         classes: ["row"],
                                                         components: [
                                                             {
                                                                 ctor: Container,
                                                                 props: {
-                                                                    id: "text-right",
+                                                                    id: "buttonCnt",
                                                                     type: ContainerType.COLUMN,
                                                                     classes: ["col", "text-right"],
                                                                     components: [
                                                                         {
                                                                             ctor: Button,
                                                                             props: {
-                                                                                id: "left-arrow",
+                                                                                id: "previous",
                                                                                 href: "#",
                                                                                 classes: ["btn", "btn-outline-primary"],
                                                                                 click: _prev,
-                                                                                label: "Kthehu",
+                                                                                label: "",
                                                                                 components: [{
                                                                                     ctor: Label,
                                                                                     props: {
@@ -234,7 +232,7 @@ var Wizard = function (_props) {
                                                                             id: "next",
                                                                             href: "#",
                                                                             classes: ["btn", "btn-outline-primary"],
-                                                                            label: "Tjetra",
+                                                                            label: "",
                                                                             click: _next,
                                                                             components: [{
                                                                                 ctor: Label,
@@ -253,7 +251,6 @@ var Wizard = function (_props) {
                                                 }]
                                             }
                                         }
-
                                     ]
                                 }
                             }]
@@ -270,6 +267,8 @@ var Wizard = function (_props) {
         } else {
             if (_loop)
                 _self.selectedIndex = 0;
+            else
+                _self.trigger("finished");
         }
     };
 
@@ -282,9 +281,36 @@ var Wizard = function (_props) {
         }
     };
 
+    let _defaultParams = {
+        type: ContainerType.CONTAINER,
+        stepPath: "attr.step",
+        detailsPath: "attr.details",
+        nextBtnLabelPath: "attr.nextBtnLabel",
+        previousBtnLabelPath: "attr.previousBtnLabel",
+        selectedIndex: 0,
+        loop: false,
+        previousBtnVisibilityPath: "attr.previousBtnVisibility",
+        nextBtnVisibilityPath: "attr.nextBtnVisibility"
+    };
+
     _props = extend(false, false, _defaultParams, _props);
+    if (!_props.attr) {
+        _props.attr = {};
+    }
+    let myDtEvts = ["beforeChange", "change", "finished"];
+
+    if (!Object.isEmpty(_props.attr) && _props.attr["data-triggers"] && !Object.isEmpty(_props.attr["data-triggers"])) {
+        let dt = _props.attr["data-triggers"].split(" ");
+        for (let i = 0; i < dt.length; i++) {
+            myDtEvts.pushUnique(dt[i]);
+        }
+    }
+    _props.attr["data-triggers"] = myDtEvts.join(" ");
+
     _stepPath = _props.stepPath;
     _detailsPath = _props.detailsPath;
+    _nextBtnLabelPath = _props.nextBtnLabelPath, _previousBtnLabelPath = _props.previousBtnLabelPath,
+    _nextBtnVisibilityPath = _props.nextBtnVisibilityPath, _previousBtnVisibilityPath = _props.previousBtnVisibilityPath;
     _loop = _props.loop;
 
     fnViewStackDelayInit();

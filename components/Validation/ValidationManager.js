@@ -2,6 +2,15 @@ var ValidationManager = function () {
     let _self, _validators = [];
     this.$el = $(this);
 
+    this.getGroupValidators = function(validationGroup = null){
+        if (validationGroup) {
+            let groups = _validators.groupReduce((currentValue, index) => {
+                return currentValue.validationGroup;
+            });
+            return groups[validationGroup];
+        }
+    };
+        
     this.validate = function (validationGroup = null) {      
         let promises = [];
         if (validationGroup) {

@@ -64,11 +64,18 @@ var AutoCompleteEx = function (_props) {
         enumerable: true
     });
 
-    this.endDraw = function (e) {
+    this.endDraw = async function (e) {
         if (e.target.id == this.domID) {
             _suggestionsRepeater = this.suggestionsRepeater;
-            if (!this.getBindingExpression("dataProvider"))
-                this.dataProvider = _props.dataProvider;
+            if (!this.getBindingExpression("dataProvider")) {
+                let d = Literal.fromLiteral(_props.dataProvider);
+                this.dataProvider = await Promise.resolve(d).then(function (dv) {
+                    if (dv.hasOwnProperty("parent")) {
+                        dv.parent = _self;
+                    }
+                    return dv;
+                });
+            }
             _tokenContainer = this.tokenContainer;
             _input = this.tokenContainer.tokenInput;
             _tokenRepeater = this.tokenContainer.tokenRepeater;
@@ -399,13 +406,6 @@ var AutoCompleteEx = function (_props) {
         }
     });
 
-    this.focus = function () {
-        if (_input) {
-            _input.$el[0].focus({
-                preventScroll: true
-            });
-        }
-    };
     /*
         destruct: function () {
             //TODO: Destruct ? 
@@ -609,7 +609,8 @@ var AutoCompleteEx = function (_props) {
         set: function enabled(v) {
             if (_enabled != v) {
                 _enabled = v;
-                this.$input.prop('disabled', !v);
+                if(this.$input)
+                    this.$input.prop('disabled', !v);
             }
         },
         configurable: true,
@@ -628,6 +629,15 @@ var AutoCompleteEx = function (_props) {
         configurable: true,
         enumerable: true
     });
+    
+    this.focus = function () {
+        if (_input) {
+            _input.$el[0].focus({
+                preventScroll: true
+            });
+        }
+    };
+    
     return r;
 };
 AutoCompleteEx.prototype.ctor = 'AutoCompleteEx';

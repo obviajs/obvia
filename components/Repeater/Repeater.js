@@ -117,7 +117,7 @@ var Repeater = function (_props, _hideComponents = false) {
             return _dataProvider;
         },
         set: function dataProvider(v) {
-            if (_dataProvider != v || v==null) {
+            if ((_dataProvider != v && v) || (v==null && _dataProvider.length>0)) {
                 if (_dpWatcher && _dataProvider) {
                     _dpWatcher.reset();
                     _dataProvider.off("propertyChange", _debouncedUpdateDataProvider);
@@ -523,12 +523,14 @@ var Repeater = function (_props, _hideComponents = false) {
         set: function enabled(v) {
             if (_enabled != v) {
                 _enabled = v;
-                let len = this.dataProvider.length;
-                for (let i = 0; i < len; i++) {
-                    let clen = this.components.length;
-                    for (let j = 0; j < clen; j++) {
-                        let component = this.components[j];
-                        _self[component.props.id][i].enabled = v;
+                if (this.dataProvider) {
+                    let len = this.dataProvider.length;
+                    for (let i = 0; i < len; i++) {
+                        let clen = this.components.length;
+                        for (let j = 0; j < clen; j++) {
+                            let component = this.components[j];
+                            _self[component.props.id][i].enabled = v;
+                        }
                     }
                 }
             }

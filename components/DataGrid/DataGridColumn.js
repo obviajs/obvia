@@ -18,6 +18,8 @@ var DataGridColumn = function (_props) {
                 target: null
             }
         },
+        headerRenderer: {
+        },
         itemEditor: null,
         editable: false,
         visible: true
