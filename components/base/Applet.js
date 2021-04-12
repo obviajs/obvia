@@ -212,7 +212,7 @@ var Applet = function (_props) {
     };
 
     this.routeApplet = function (msg) {
-        shallowCopy(msg, _msg);
+        inTheImageOf(msg, _msg);
         return _initAppletInternal();
     };
 

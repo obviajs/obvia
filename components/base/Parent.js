@@ -17,7 +17,7 @@ var Parent = function (_props, _hideComponents = false) {
                 getOwnPropertyDescriptor(target, property) {
                     if (!target.hasOwnProperty(property) && !target.constructor.prototype.hasOwnProperty(property)) {
                         if (target.children && target.children[property])
-                            return {configurable: true, enumerable: true};
+                            return {configurable: true, enumerable: true, get: Reflect.get};
                     }
                     return Reflect.getOwnPropertyDescriptor(...arguments);
                 }

@@ -13,7 +13,7 @@ var CustomValidator = function (_props) {
         let _controlToValidateInstance = _self.controlToValidateInstance;
         let r = Promise.resolve(_self.isValid);
         if (_controlToValidateInstance) {
-            if (!_self.enabled || (_validationFunction !=null)) {
+            if (_self.enabled && _validationFunction !=null) {
                 if (typeof _validationFunction == "function") {
                     r = _validationFunction.apply(_self).then((v) => {
                         _self.isValid = v;
@@ -24,7 +24,7 @@ var CustomValidator = function (_props) {
                     r = Promise.resolve(_validationFunction);
                 }                
             } else {
-                _self.isValid = false;
+                _self.isValid = !_self.enabled;
                 r = Promise.resolve(_self.isValid);
             }
         }

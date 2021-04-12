@@ -84,7 +84,7 @@ var Component = function (_props) {
         get: function attached() {
             return _attached;
         },
-        set: function (v) {
+        set: function attached(v) {
             if (_attached != v) {
                 _attached = v;
             }
@@ -623,6 +623,7 @@ var Component = function (_props) {
     this.show = function () {
         if (this.$el) {
             this.$el.show();
+            _display = true;
         }
         return this;
     };
@@ -630,6 +631,7 @@ var Component = function (_props) {
     this.hide = function () {
         if (this.$el) {
             this.$el.hide();
+            _display = false;
         }
         return this;
     };

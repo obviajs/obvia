@@ -121,13 +121,14 @@ var List = function (_props) {
         }
     };
 
-    Repeater.call(this, _props);
-    
+    let r = Repeater.call(this, _props);
+    let _myw = ChangeWatcher.getInstance(r);
     Object.defineProperty(this, "value", {
         get: function value() {
             return _value;
         },
         set: function (value) {
+            let oldValue = _value;
             let v = {};               
             if (value == null) {
                 value = [];
@@ -166,10 +167,12 @@ var List = function (_props) {
                 if(this.attached){
                     this.trigger('change');
                 }
+                
+                _myw.propertyChanged("value", oldValue, _value);
             }
         }
     });
-
+    return r;
 };
 
 List.prototype.ctor = 'List';

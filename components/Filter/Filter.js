@@ -188,8 +188,13 @@ var Filter = function (_props) {
     };
 
     let _removeFilterItem = function (e, ra) {
-        repDp.splice(ra.currentIndex, 1);
-        _update();
+        const repeated_block = e.target.parentElement.parentElement;
+        repeated_block.classList.add('fall');
+        repeated_block.addEventListener('transitionend', () => {
+            repDp.splice(ra.currentIndex, 1)
+            _update();
+        });
+
     };
 
     let _addFilterItem = function (e) {
@@ -203,7 +208,6 @@ var Filter = function (_props) {
         e.preventDefault();
         this.proxyMaybe.tokenContainer.tokenInput.value = "";
     };
-
     let _editFilter = function (e, ra) {
         let filterItemEditor = ra.currentItem[_itemEditorField];
         let isRangeInput;
@@ -458,8 +462,8 @@ var Filter = function (_props) {
                                                     },
                                                     classes: [],
                                                     type: HeadingType.h6,
-                                                    align: 'left',                                                    
-                                                    "bindingDefaultContext":"{currentItem}",
+                                                    align: 'left',
+                                                    "bindingDefaultContext": "{currentItem}",
                                                     label: "{?" + _labelField + "}",
                                                 }
                                             },
@@ -477,8 +481,9 @@ var Filter = function (_props) {
                                                 ctor: Container,
                                                 props: {
                                                     id: 'filterEditorContainer',
-                                                    display: false,                                                    
-                                                    "bindingDefaultContext":"{currentItem}",
+                                                    display: false,
+                                                    type:"",
+                                                    "bindingDefaultContext": "{currentItem}",
                                                     components: [{
                                                             ctor: Container,
                                                             props: {
@@ -532,21 +537,21 @@ var Filter = function (_props) {
                                                                 id: 'mainRow',
                                                                 classes: ["form-row"],
                                                                 type: "",
-                                                                "bindingDefaultContext":"{currentItem}",
+                                                                "bindingDefaultContext": "{currentItem}",
                                                                 components: [{
                                                                     ctor: Container,
                                                                     props: {
                                                                         type: "",
                                                                         id: 'mainCol',
                                                                         classes: ["col"],
-                                                                        "bindingDefaultContext":"{currentItem}",
+                                                                        "bindingDefaultContext": "{currentItem}",
                                                                         components: [{
                                                                             "ctor": "FormField",
                                                                             "props": {
                                                                                 "label": "Value",
                                                                                 "id": "fItemEditor",
                                                                                 "size": "form-control-sm",
-                                                                                "bindingDefaultContext":"{currentItem}",
+                                                                                "bindingDefaultContext": "{currentItem}",
                                                                                 "display": "{?currentRow.repeater_container.filterEditorContainer.headerRow.mainCol.fOperator.operator.selectedItem.inputVisible}"
                                                                             }
                                                                         }]

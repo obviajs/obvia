@@ -13,7 +13,7 @@ var AutoCompleteEx = function (_props) {
             return _matchType;
         },
     });
-        
+    let _valueLater;
     Object.defineProperty(this, "dataProvider", {
         get: function dataProvider() {
             return _dataProvider;
@@ -25,7 +25,9 @@ var AutoCompleteEx = function (_props) {
                     _dataProvider.off("propertyChange", _dpChanged);
                 }
                 _props.dataProvider = _dataProvider = v;
-
+                if (_valueLater) {
+                    _self.value = _valueLater;
+                }
                 if (_dataProvider) {
                     _dpWatcher = ChangeWatcher.getInstance(_dataProvider);
                     _dpWatcher.watch(_dataProvider, "length", _dpChanged);
@@ -369,7 +371,10 @@ var AutoCompleteEx = function (_props) {
                         let vo = {};
                         vo[_labelField] = v;
                         vo[_valueField] = v;
-                        v = vo;
+                        if(_allowNewItem)
+                            v = vo;
+                        else
+                            _valueLater = vo;
                     }
                 }
                 if (typeof (v) === "object" && !(v instanceof Array)) {
