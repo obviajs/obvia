@@ -193,25 +193,22 @@ var DataGrid = function (_props) {
             "<div id='" + this.domID + "'>" +
             "<table class='table' style='margin-bottom:0px;table-layout: fixed;' id='" + this.domID + "-fixed-table'>" +
             "<thead id='" + this.domID + "-header'></thead></table>" +
-            "<div id='" + this.domID + "-body-wrapper' style='overflow-y: auto; position:relative;'>" +
+            "<div id='" + this.domID + "-body-wrapper' style='overflow-y: auto; overflow-x:hidden; position:relative;'>" +
             "<table class='table' id='" + this.domID + "-table' style='position:relative;table-layout: fixed;'></table>" +
             "</div></div>";
         return html;
     };
+    let _thOptWidth = 50, _thNumberingWidth = 50;
 
     this.setCellsWidth = function () {
         //at least one row ?    
         this.$bodyWrapper.css({ "height": "calc(100% - " + this.$fixedTable.height() + "px" });
 
-        if (!_props.rowCount) {
-            _rowCount = Math.floor(this.$bodyWrapper.height() / _props.defaultRowHeight);
-            this.$el.css("height", this.$el.height()+'px');
-        }
-
         let scrollAreaWidth = (this.$bodyWrapper.width() - this.$bodyWrapper[0].clientWidth);
         this.$fixedTable.css({ "width": "calc(100% - " + scrollAreaWidth + "px)" }); 
-        
-        if (_cells.length > 0) {
+        let actualWidth = this.$table[0].clientWidth - _thOptWidth - (_thNumbering ? _thNumberingWidth : 0);
+            
+        if (_columns && _columns.length > 0 && actualWidth>0) {
             let definedWidth = 0;
             let autoWidthColumns = [];
             let colsLen = _columns.length;
@@ -225,9 +222,8 @@ var DataGrid = function (_props) {
             }
             // definedWidth += 50; //numbering column
             // definedWidth += 50; //options column
-            let actualWidth = this.$table[0].clientWidth - _thOpt[0].clientWidth - (_thNumbering ? _thNumbering[0].clientWidth : 0);
             actualWidth -= Math.max(2*Math.ceil(scrollAreaWidth), 10);
-           
+        
             let delta = actualWidth - definedWidth;
             let autoWidthColsLen = autoWidthColumns.length;
             if (autoWidthColsLen > 0) {
@@ -243,17 +239,21 @@ var DataGrid = function (_props) {
                 }
                 definedWidth += autoWidthColsLen * autoWidth;
             }
-             if (delta < 0 && _fitWidth) {
+            if (delta < 0 && _fitWidth) {
                 //resize column widths to fit defined container width
                 let factor = actualWidth / definedWidth;
                 for (let columnIndex = 0; columnIndex < colsLen; columnIndex++) {
                     _columns[columnIndex].calculatedWidth = _columns[columnIndex].calculatedWidth * factor;
                 }
             }
-            for (let columnIndex = 0; columnIndex < colsLen; columnIndex++) {
-                _cells[0][columnIndex].css({
-                    "width": (_columns[columnIndex].calculatedWidth + 1 /*border*/) + "px"
-                });
+            if (_cells && _cells.length > 0){
+                for (let columnIndex = 0; columnIndex < colsLen; columnIndex++) {
+                    _cells[0][columnIndex].css({
+                        "width": (_columns[columnIndex].calculatedWidth + 1 /*border*/) + "px"
+                    });
+                }
+            }
+            for (let columnIndex = 0; columnIndex < colsLen; columnIndex++) {               
                 _headerCells[columnIndex].css({
                     "width": (_columns[columnIndex].calculatedWidth) + "px"
                 }); 
@@ -292,9 +292,10 @@ var DataGrid = function (_props) {
                 }
                 _self.dataProvider.pad(deepCopy(_defaultItem), 1);
             }
-        }
+        }        
+        if (_self.attached)
+            _self.updateDisplayList();
         let newValue = _self.rowCount;
-        
         let p;
         let rb = Math.min(oldValue, newValue);
         let dpLen = _self.dataProvider.length;
@@ -338,9 +339,8 @@ var DataGrid = function (_props) {
 
         p = Promise.all(_comprenders).then(function () {
             _self.$hadow.contents().appendTo(_self.$container);
-            _comprenders = [];
-            if (_self.attached)
-                _self.updateDisplayList();
+            _comprenders = [];                  
+            _self.setCellsWidth();
             _self.trigger('endDraw');
             let e = jQuery.Event("dataProviderUpdate");
             e.oldValue = oldValue;
@@ -391,7 +391,7 @@ var DataGrid = function (_props) {
     this.createHeader = function () {
         let $header = $("<tr></tr>");   
         if (_showRowIndex) {
-            _thNumbering = $("<th style='width:50px'>#</th>");
+            _thNumbering = $("<th style='max-width:50px'>#</th>");
             $header.append(_thNumbering);
         }
         _colElements = new Array(_columns.length);
@@ -408,7 +408,7 @@ var DataGrid = function (_props) {
             _colElements[columnIndex] = $th;
         }                    
         $header.append(_colElements);
-        _thOpt = $("<th style='width:50px'><i class='fa fa-chevron-circle-right' aria-hidden='true'></i></th>");
+        _thOpt = $("<th style='max-width:50px'><i class='fa fa-chevron-circle-right' aria-hidden='true'></i></th>");
         $header.append(_thOpt);
         this.$header.append($header);
     };
@@ -712,39 +712,45 @@ var DataGrid = function (_props) {
     };
 
     let _bodyHeight, mtt, smt;
-    this.updateDisplayList = function () {
-        //we now know the parent and element dimensions
-        _bodyHeight = this.$table.height();
-        _avgRowHeight = _bodyHeight / _self.rowCount;
+    this.updateDisplayList = function () {        
+        if (!_props.rowCount) {
+            _rowCount = Math.floor(this.$bodyWrapper.height() / _props.defaultRowHeight);
+            this.$el.css("height", this.$el.height() + 'px');
+            this.$table.css("height", (_self.rowCount * _props.defaultRowHeight)+'px');
+        }
+        if (_self.dataProvider.length > 0) {
+            _bodyHeight = this.$table.height();
+            _avgRowHeight = _bodyHeight / _self.rowCount;
         
-        _virtualHeight = (_self.dataProvider.length + (_allowNewItem ? 1 : 0)) * _avgRowHeight;
+            _virtualHeight = (_self.dataProvider.length + (_allowNewItem ? 1 : 0)) * _avgRowHeight;
 
-        let pos = this.$table.position();
-        let left = pos.left + this.$table.width() - 14;
-        let top = pos.top + this.$el.height();
-        if (!this.$message) {
-            this.$message = $("<div style='display:none;position:absolute;bottom:0px;left:0px;z-index:9999'>Creating Rows</div>");
-            //     "background-color": "white",
-            this.$table.after(this.$message);
-        }
+            let pos = this.$table.position();
+            let left = pos.left + this.$table.width() - 14;
+            let top = pos.top + this.$el.height();
+            if (!this.$message) {
+                this.$message = $("<div style='display:none;position:absolute;bottom:0px;left:0px;z-index:9999'>Creating Rows</div>");
+                //     "background-color": "white",
+                this.$table.after(this.$message);
+            }
 
-        if (!this.$scrollArea) {
-            this.$scrollArea = $("<div/>");
-            this.$table.after(this.$scrollArea);
+            if (!this.$scrollArea) {
+                this.$scrollArea = $("<div/>");
+                this.$table.after(this.$scrollArea);
+            }
+            //<div style="opacity: 0; position: absolute; top: 0px; left: 0px; width: 1px; height: 3.1e+07px;"></div>
+            this.$scrollArea.css({
+                opacity: 0,
+                position: "absolute",
+                top: "0px",
+                left: "0px",
+                width: "1px",
+                height: _virtualHeight + "px"
+            });
         }
-        //<div style="opacity: 0; position: absolute; top: 0px; left: 0px; width: 1px; height: 3.1e+07px;"></div>
-        this.$scrollArea.css({
-            opacity: 0,
-            position: "absolute",
-            top: "0px",
-            left: "0px",
-            width: "1px",
-            height: _virtualHeight + "px"
-        });
-       
         if(!_self.dataProvider || (_rowCount>_self.dataProvider.length))
-            this.$bodyWrapper.scrollTop(0);       
-        this.setCellsWidth();
+            this.$bodyWrapper.scrollTop(0);
+        if (_self.dataProvider && _self.dataProvider.length)
+            _self.setCellsWidth();
     };
 
     Object.defineProperty(this, "multiSelect", {
@@ -901,21 +907,18 @@ var DataGrid = function (_props) {
             });
         });
 
-        this.createHeader();
-        //if(_props.dataProvider)
+        this.createHeader();        
+        this.dataProvider = new ArrayEx([]);
         if (!this.getBindingExpression("dataProvider")) {
             let d = Literal.fromLiteral(_props.dataProvider);
-            this.dataProvider = await Promise.resolve(d).then(function (dv) {
+            Promise.resolve(d).then(function (dv) {
                 if (dv.hasOwnProperty("parent")) {
                     dv.parent = _self;
                     dv.applyBindings();
                 }
-                return dv;
+                _self.dataProvider = dv;
             });
         }
-        else
-            this.dataProvider = new ArrayEx([]);
-            
         return _rPromise;
     };
 

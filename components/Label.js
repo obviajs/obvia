@@ -6,6 +6,8 @@
 
 //component definition
 var Label = function (_props, _hideComponents = false) {
+    let _label, _html, _labelType;
+    
     Object.defineProperty(this, "label", {
         get: function label() {
             return _label;
@@ -97,8 +99,7 @@ var Label = function (_props, _hideComponents = false) {
     };
     _props = extend(false, false, _defaultParams, _props);
 
-    let _label, _html;
-    let _labelType = _props.labelType;
+    _labelType = _props.labelType;
 
     let r = Container.call(this, _props, _hideComponents);
     return r;
