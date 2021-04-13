@@ -909,7 +909,7 @@ var DataGrid = function (_props) {
 
         this.createHeader();        
         this.dataProvider = new ArrayEx([]);
-        if (!this.getBindingExpression("dataProvider")) {
+        if (!this.getBindingExpression("dataProvider") && _props.dataProvider) {
             let d = Literal.fromLiteral(_props.dataProvider);
             Promise.resolve(d).then(function (dv) {
                 if (dv.hasOwnProperty("parent")) {

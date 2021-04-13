@@ -501,14 +501,14 @@ var Repeater = function (_props, _hideComponents = false) {
                 }
             });
         });
-        //if(_props.dataProvider)
-        if (!this.getBindingExpression("dataProvider")) {
+        if (!this.getBindingExpression("dataProvider") && _props.dataProvider) {
             let d = Literal.fromLiteral(_props.dataProvider);
-            this.dataProvider = await Promise.resolve(d).then(function (dv) {
+            Promise.resolve(d).then(function (dv) {
                 if (dv.hasOwnProperty("parent")) {
                     dv.parent = _self;
+                    dv.applyBindings();
                 }
-                return dv;
+                _self.dataProvider = dv;
             });
         }
         else
