@@ -3,7 +3,6 @@ var Parent = function (_props, _hideComponents = false) {
     let _comprenders = [];
     let _self = this;
     let _children = {};
-    let _enabled;
 
     if (!this.hasOwnProperty("initProxy")) {
         this.initProxy = function () {
@@ -18,7 +17,7 @@ var Parent = function (_props, _hideComponents = false) {
                 getOwnPropertyDescriptor(target, property) {
                     if (!target.hasOwnProperty(property) && !target.constructor.prototype.hasOwnProperty(property)) {
                         if (target.children && target.children[property])
-                            return {configurable: true, enumerable: true};
+                            return {configurable: true, enumerable: true, get: Reflect.get};
                     }
                     return Reflect.getOwnPropertyDescriptor(...arguments);
                 }
@@ -85,16 +84,19 @@ var Parent = function (_props, _hideComponents = false) {
                 child.parentForm = _self.ctor == 'Form' ? _proxy : _proxy.parentForm;
                 child.repeaterIndex = this.repeaterIndex;
                 child.parentRepeater = this.parentRepeater;
-
-                return child.render().then(function (cmpInstance) {
+                let rPromise = child.render();
+                return rPromise.then(function (cmpInstance) {
+                    //cmpInstance.applyMyBindings();
                     _self.$el.insertAt(cmpInstance.$el, index);
                     let event = jQuery.Event("childAdded");
                     event.child = child;
                     _self.trigger(event);
+                    return rPromise;
                 });
             }
         }
     };
+    
     this.indexOfChild = function (child) {
         let ind = -1;
         if (child) {
@@ -146,6 +148,7 @@ var Parent = function (_props, _hideComponents = false) {
 
         cr.promise.then(function (cmpInstance) {
             if (cmpInstance && !cmpInstance.attached) {
+                //cmpInstance.applyMyBindings();
                 if (cmpInstance.appendTo) {
                     cmpInstance.appendTo.append(cmpInstance.$el);
                 } else
@@ -233,8 +236,6 @@ var Parent = function (_props, _hideComponents = false) {
         if (e.target.id == this.domID) {
             if (typeof _beforeAttach == 'function')
                 _beforeAttach.apply(this, arguments);
-            if (_props.enabled != null)
-                this.enabled = _props.enabled;
         }
     };
     let _afterAttach = this.afterAttach;
@@ -242,17 +243,27 @@ var Parent = function (_props, _hideComponents = false) {
         if (e.target.id == this.domID) {
             if (typeof _afterAttach == 'function')
                 _afterAttach.apply(this, arguments);
-
         }
     };
 
     let _defaultParams = {
         components: [],
-        enabled: true,
         sortChildren: false
     };
     //_props = extend(false, false, _defaultParams, _props);
     shallowCopy(extend(false, false, _defaultParams, _props), _props);
+    if (!_props.attr) {
+        _props.attr = {};
+    }
+    let myDtEvts = ["childAdded"];
+
+    if (!Object.isEmpty(_props.attr) && _props.attr["data-triggers"] && !Object.isEmpty(_props.attr["data-triggers"])) {
+        let dt = _props.attr["data-triggers"].split(" ");
+        for (let i = 0; i < dt.length; i++) {
+            myDtEvts.pushUnique(dt[i]);
+        }
+    }
+    _props.attr["data-triggers"] = myDtEvts.join(" ");
     let _components = _props.components;
 
     this.$container = null;
@@ -261,7 +272,6 @@ var Parent = function (_props, _hideComponents = false) {
     //let _afterAttach = _props.afterAttach;
     //_props.afterAttach = this.afterAttach;
     let _sortChildren = _props.sortChildren;
-    //override because creationComplete will be thrown when all children components are created
     // this.afterAttach = undefined;
     this.addComponents = function (components) {
         _self.trigger('beginDraw');
@@ -330,25 +340,14 @@ var Parent = function (_props, _hideComponents = false) {
             base.destruct(mode);
         }
     */
-    let objFromDesc = Object.getOwnPropertyDescriptor(this, "enabled");
-    let _oenabled = objFromDesc['set'];
-    Object.defineProperty(this, "enabled", {
-        get: function enabled() {
-            return _enabled;
-        },
-        set: function enabled(v) {
-            if (_enabled != v) {
-                _enabled = v;
-                _oenabled.call(this, v);
-                for (let childId in this.children) {
-                    this.children[childId].enabled = v;
-                }
-            }
-        },
-        enumerable: true,
-        configurable: true
-    });
-
+    this.childrenEnable = function (v) {
+        for (let childId in this.children) {
+            this.children[childId].enabled = v;
+            if (this.children[childId].childrenEnable)
+                this.children[childId].childrenEnable(v);
+        }
+    };
+    
 
     Object.defineProperty(this, "props", {
         get: function props() {

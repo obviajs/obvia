@@ -44,7 +44,6 @@ var Component = function (_props) {
     let _blur = _props.blur;
     let _keydown = _props.keydown;
     let _keyup = _props.keyup;
-    let _creationComplete = _props.creationComplete;
     let _change = _props.change;
     let _drop = _props.drop;
     let _dragover = _props.dragover;
@@ -53,7 +52,7 @@ var Component = function (_props) {
     let _dragleave = _props.dragleave;
     let _dragend = _props.dragend;
     let _idChanged = _props.idChanged;
-    let _ownerDocument = _props.ownerDocument;
+    let _ownerDocument = _props.ownerDocument || _defaultParams.ownerDocument;
     let _attached = false;
     let _attach = _props.attach;
     let _index = _props.index;
@@ -85,7 +84,7 @@ var Component = function (_props) {
         get: function attached() {
             return _attached;
         },
-        set: function (v) {
+        set: function attached(v) {
             if (_attached != v) {
                 _attached = v;
             }
@@ -415,6 +414,11 @@ var Component = function (_props) {
     else if (tpl && tpl != "")
         this.$el = $(tpl);
     this.$el.ownerDocument = _ownerDocument;
+    let dt = this.$el.attr("data-triggers");
+
+    if (dt && !Object.isEmpty(_props.attr) && _props.attr["data-triggers"] && !Object.isEmpty(_props.attr["data-triggers"])) {        
+        _props.attr["data-triggers"] = _props.attr["data-triggers"] + " " + dt;
+    }
     _attr = new Attr(_props.attr, this);
     _css = new Css(_props.css, this);
 
@@ -454,11 +458,15 @@ var Component = function (_props) {
                 if (typeof _beforeAttach == 'function')
                     _beforeAttach.apply(this.proxyMaybe, arguments);
             }
+            if (_props.enabled != null)
+                this.enabled = _props.enabled;
         }
     };
+    let _drawEnded;
     let _beginDraw = this.beginDraw;
     this.beginDraw = function (e) {
         if (e.target.id == this.domID) {
+            _drawEnded = false;
             //console.log("beginDraw : Type:", this.ctor + " id:" + this.$el.attr("id"));
             if (typeof _props.beginDraw == 'function')
                 _props.beginDraw.apply(this.proxyMaybe, arguments);
@@ -472,6 +480,7 @@ var Component = function (_props) {
     let _endDraw = this.endDraw;
     this.endDraw = function (e) {
         if (e.target.id == this.domID) {
+            _drawEnded = true;
             //console.log("endDraw : Type:", this.ctor + " id:" + this.$el.attr("id"));
             if (typeof _props.endDraw == 'function')
                 _props.endDraw.apply(this.proxyMaybe, arguments);
@@ -480,13 +489,17 @@ var Component = function (_props) {
                 if (typeof _endDraw == 'function')
                     _endDraw.apply(this.proxyMaybe, arguments);
             }
-            if (_self.bindingsManager.watchers.length == 0) {                
-                this.applyBindings();
-                this.attr.applyBindings();
-                this.css.applyBindings();
-            }                
+            this.applyMyBindings();
             _self.trigger('beforeAttach');
         }
+    };
+
+    this.applyMyBindings = function () {
+        if (_self.bindingsManager.watchers.length == 0) {                
+            this.applyBindings();
+            this.attr.applyBindings();
+            this.css.applyBindings();
+        } 
     };
 
     let _afterAttach = this.afterAttach;
@@ -498,10 +511,6 @@ var Component = function (_props) {
             if (!e.isDefaultPrevented()) {
                 if (typeof _afterAttach == 'function')
                     _afterAttach.apply(this.proxyMaybe, arguments);
-                if (!e.isDefaultPrevented()) {
-                    this.trigger('creationComplete');
-                    //console.log("CreationComplete : Type:",this.ctor+" id:"+ this.$el.attr("id"));
-                }
             }
             //console.log("AfterAttach : Type:",this.ctor+" id:"+ this.$el.attr("id"));
         }
@@ -532,7 +541,6 @@ var Component = function (_props) {
             'blur': _blur && typeof _blur == 'function' ? _blur.bind(_self) : undefined,
             'keydown': _keydown && typeof _keydown == 'function' ? _keydown.bind(_self) : undefined,
             'keyup': _keyup && typeof _keyup == 'function' ? _keyup.bind(_self) : undefined,
-            'creationComplete': _creationComplete && typeof _creationComplete == 'function' ? _creationComplete.bind(_self) : undefined,
             'change': _change && typeof _change == 'function' ? _change.bind(_self) : undefined,
             'drop': _drop && typeof _drop == 'function' ? _drop.bind(_self) : undefined,
             'dragover': _dragover && typeof _dragover == 'function' ? _dragover.bind(_self) : undefined,
@@ -598,6 +606,12 @@ var Component = function (_props) {
         }
     });
 
+    Object.defineProperty(this, "drawEnded", {
+        get: function drawEnded() {
+            return _drawEnded;
+        }
+    });
+    
     if (!this.hasOwnProperty("render")) {
         this.render = function () {
             _self.trigger('beginDraw');
@@ -609,6 +623,7 @@ var Component = function (_props) {
     this.show = function () {
         if (this.$el) {
             this.$el.show();
+            _display = true;
         }
         return this;
     };
@@ -616,6 +631,7 @@ var Component = function (_props) {
     this.hide = function () {
         if (this.$el) {
             this.$el.hide();
+            _display = false;
         }
         return this;
     };
@@ -822,8 +838,7 @@ var Component = function (_props) {
     };    
 
     Component.instances[_domID] = this.proxyMaybe;
-    if (_props.enabled != null)
-        this.enabled = _props.enabled;
+    
     if (_props.visible != null)
         this.visible = _props.visible;
     if (_props.display != null)
@@ -850,27 +865,6 @@ var Component = function (_props) {
             m = r.match;
         return m;
     };
-
-    let _cachedScope = null
-    this.invalidateScopeChain = function () {
-        _cachedScope = null;
-    };
-
-    this.getScopeChain = function () {
-        let scope = _cachedScope
-        if (!_cachedScope) {
-            scope = [this.bindingDefaultContext];
-            if (this.proxyMaybe != this.bindingDefaultContext)
-                scope.push(this.proxyMaybe);
-            if (this.parent) {
-                scope.splicea(scope.length, 0, this.parent.getScopeChain())
-            } else
-                scope.push(window)
-            _cachedScope = scope;
-        } 
-        return scope;
-    };
-    _self.bindingDefaultContext = _props.bindingDefaultContext || this.proxyMaybe;
     this.trigger('init');  
 };
 Component.instanceInc = 0;

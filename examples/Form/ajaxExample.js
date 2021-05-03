@@ -19,7 +19,7 @@
 
             var myForm = new Form(props);
 
-            myForm.on('creationComplete', function () {
+            myForm.on('endDraw', function () {
                 loader.hide();
             });
 

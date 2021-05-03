@@ -86,7 +86,7 @@ var myContainer = new Container({
         }
     }]
 });
-myContainer.on('creationComplete', function (e) {
+myContainer.on('endDraw', function (e) {
     loader.hide();
 });
 myContainer.render().then(function (cmpInstance) {

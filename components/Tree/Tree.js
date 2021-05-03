@@ -394,8 +394,8 @@ var Tree = function (_props) {
                         } else if (_componentsField) {
                             let clen = dp[i][_componentsField].length;
                             for (let ci = 0; ci < clen; ci++){
-                                 if(!dp[i][_componentsField][ci].props.bindingDefaultContext)
-                                    dp[i][_componentsField][ci].props.bindingDefaultContext = dp[i];
+                                shallowCopy(dp[i][_componentsField][ci].props, dp[i][_componentsField][ci].props, ["bindingDefaultContext"]);
+                                dp[i][_componentsField][ci].props.bindingDefaultContext = dp[i];
                             }                           
                             cmps.splicea(cmps.length, 0, dp[i][_componentsField]);
                             cmpLi.props.components = cmps;

@@ -8,7 +8,7 @@ var DataGridColumn = function (_props) {
         description: "",
         sortOrder: 0,
         sortDirection: "ASC",//DESC
-        sortable: true,
+        sortable: false,
         itemRenderer: {
             ctor: "DataGridCellRenderer",
             props: {
@@ -17,6 +17,8 @@ var DataGridColumn = function (_props) {
                 href: false,
                 target: null
             }
+        },
+        headerRenderer: {
         },
         itemEditor: null,
         editable: false,

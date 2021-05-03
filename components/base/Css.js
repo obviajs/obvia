@@ -7,7 +7,9 @@ var Css = function (_css, cmpInst) {
             return true;
         },
         set: function (target, property, value, receiver) {
-            _$el.css(property, value);
+            if (typeof value != "function") {
+                _$el.css(property, value);
+            }
             if (_css && _css[property] && Array.isArray(_css[property])) {
                 if (!target[property])
                     target[property] = [];
@@ -24,20 +26,23 @@ var Css = function (_css, cmpInst) {
         }
     });
 
+    UseBindings.call(p, _css);
     if (_css) {
-        _$el.css(_css);
         for (let prop in _css) {
-            if (Array.isArray(_css[prop])) {
-                let len = _css[prop].length;
-                for (let i = 0; i < len; i++) {
-                    p[prop] = _css[prop][i];
+            if (this.bindedProps.hasOwnProperty(prop))
+                delete _css[prop];
+            else {
+                if (Array.isArray(_css[prop])) {
+                    let len = _css[prop].length;
+                    for (let i = 0; i < len; i++) {
+                        p[prop] = _css[prop][i];
+                    }
+                } else {
+                    p[prop] = _css[prop];
                 }
-            } else {
-                p[prop] = _css[prop];
             }
         }
     }
-    UseBindings.call(this, _css);
 
     this.getScopeChain = function () {
         return [this, ...cmpInst.getScopeChain()];

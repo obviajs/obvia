@@ -116,8 +116,6 @@ var TextEditor =  function(_props, overrided = false) {
         });
 
         this.$input.summernote('code', this.value);
-
-        this.trigger('creationComplete')
     }; 
 
     this.registerEvents = function () {

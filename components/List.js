@@ -31,6 +31,10 @@ var List = function (_props) {
                 });
             }
         }
+        
+        if (_props.value) {
+            _self.value = _props.value;
+        }
     };
 
     this.selectComponent = function (e, repeaterEventArgs) {
@@ -73,7 +77,7 @@ var List = function (_props) {
     _props = extend(false, false, _defaultParams, _props);
 
     let _multiselect = _props.multiselect;
-    let _value = _props.value;
+    let _value;
     let _states = _props.states;
     let _valueField = _props.valueField;
     let _classesField = _props.classesField;
@@ -117,26 +121,27 @@ var List = function (_props) {
         }
     };
 
-    Repeater.call(this, _props);
-    
+    let r = Repeater.call(this, _props);
+    let _myw = ChangeWatcher.getInstance(r);
     Object.defineProperty(this, "value", {
         get: function value() {
             return _value;
         },
         set: function (value) {
+            let oldValue = _value;
+            let v = {};               
+            if (value == null) {
+                value = [];
+            } else if (typeof value === "string") {
+                v[_valueField] = value;
+                value = [v];
+            } else if (typeof (value) === "object" && !(value instanceof Array)) {
+                value = [value];
+            } else if (!(typeof (value) === "object" && (value instanceof Array))) {
+                v[_valueField] = value;
+                value = [v];
+            }
             if((!_value && value) || (_value && !_value.equals(value))){
-               let v = {};
-                if (value == undefined || value == null) {
-                    value = [];
-                } else if (typeof value === "string") {
-                    v[_valueField] = value;
-                    value = [v];
-                } else if (typeof (value) === "object" && !(value instanceof Array)) {
-                    value = [value];
-                } else if (!(typeof (value) === "object" && (value instanceof Array))) {
-                    v[_valueField] = value;
-                    value = [v];
-                }
                 _value = intersectOnKeyMatch(this.dataProvider, value, _valueField); //value;
                 let unselect = this.dataProvider.difference(_value);
 
@@ -162,10 +167,12 @@ var List = function (_props) {
                 if(this.attached){
                     this.trigger('change');
                 }
+                
+                _myw.propertyChanged("value", oldValue, _value);
             }
         }
     });
-
+    return r;
 };
 
 List.prototype.ctor = 'List';

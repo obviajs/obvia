@@ -23,7 +23,7 @@ var myScrollPane = new ScrollPane({
         }
     }
 });
-myScrollPane.on('creationComplete', function(e)
+myScrollPane.on('endDraw', function(e)
 {
     dp.on("propertyChange", function(e){
         if(e.property == "length"){

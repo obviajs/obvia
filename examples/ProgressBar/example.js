@@ -17,7 +17,7 @@ var pbContainer = new ProgressBar({
     }
 });
 
-pbContainer.on('creationComplete', function (e) {
+pbContainer.on('endDraw', function (e) {
     loader.hide();
     pbContainer.valueNow = 75;
     pbContainer.label = "65%";

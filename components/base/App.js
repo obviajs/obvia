@@ -151,7 +151,7 @@ var App = function (_props) {
     };
 
     this.addApplet = function (applet) {
-        applet.app = applet.parent = r;
+        applet.app = applet.parentApplet = r;
         _applets.push(applet);
         if (!_appletsMap[applet.anchor]) {
             _appletsMap[applet.anchor] = [];
@@ -301,7 +301,7 @@ var App = function (_props) {
 
     this.endDraw = function (e) {
         if (e.target.id == this.domID) {
-
+            
         }
     };
 
@@ -323,14 +323,14 @@ var App = function (_props) {
         let m = BrowserUtils.parse(hash);
         if (m.hash && m.hash != "") {
             let appletInstArr = _appletsMap[m.hash];
-            let appletIndex = m.inst ? m.inst : 0;
+            let appletIndex = m.map.inst && m.map.inst < appletInstArr.length ? m.map.inst : 0;
             let appletInst = appletInstArr[appletIndex];
             if (appletInst) {
-                appletInst.route(m.map);
+                appletInst.route(m);
             } else {
                 if (_applets && _applets.length > 0) {
                     appletInst = _appletsMap[_applets[_defaultAppletIndex].anchor][0];
-                    appletInst.route(m.map);
+                    appletInst.route(m);
                 }
             }
             // appletInst.init(m.map).then((literal) => {
@@ -363,25 +363,17 @@ var App = function (_props) {
             if (_applets && _applets.length > 0) {
                 let len = _applets.length;
                 for (let i = 0; i < len; i++) {
-                    _applets[i].app = _applets[i].parent = r;
+                    _applets[i].app = _applets[i].parentApplet = r;
                     let appletInst = new Applet(_applets[i]);
                     if (!_appletsMap[_applets[i].anchor]) {
                         _appletsMap[_applets[i].anchor] = [];
                     }
                     _appletsMap[_applets[i].anchor].push(appletInst);
-                    appletInst.on("appletInit", _appletInit);
                 }
             }
             _browserManager.init();
             _route(_browserManager.hash);
         }
-    };
-
-    let _appletInit = function (e) {
-        //compare with Proxy of myself
-        if (e.target.parent == r)
-            console.log("App.js Appletinit", e.map);
-        //_delayUpdateHash.apply(this, arguments);
     };
 
     let _updateHash = function (e) {
@@ -447,9 +439,11 @@ var App = function (_props) {
                     }
                     if (isObject(behaviors[eventType])) {
                         for (let behavior in behaviors[eventType]) {
-                            let ind = _b2imps[behavior].indexOf(impUid);
-                            if (ind > -1) {
-                                _b2imps[behavior].splice(ind, 1);
+                            if (_b2imps[behavior]) {
+                                let ind = _b2imps[behavior].indexOf(impUid);
+                                if (ind > -1) {
+                                    _b2imps[behavior].splice(ind, 1);
+                                }
                             }
                         }
                     } else {
