@@ -3,7 +3,8 @@
  *
  * Kreatx 2019
  */
-
+import { List } from "/flowerui/components/List.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
 var CheckBoxGroup = function (_props) {
     let _self = this,
         _dataProvider;
@@ -68,7 +69,7 @@ var CheckBoxGroup = function (_props) {
         }
     };
 
-    _props = extend(false, false, _defaultParams, _props);
+    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
 
     let _valueField = _props.valueField;
     let _labelField = _props.labelField;
@@ -112,7 +113,7 @@ var CheckBoxGroup = function (_props) {
 
     _props.components = fnContainerDelayInit();
 
-    List.call(this, _props);
+    let r = List.call(this, _props);
 
     Object.defineProperty(this, "components", {
         enumerable: false
@@ -138,7 +139,10 @@ var CheckBoxGroup = function (_props) {
         },
         enumerable: true
     });
-
+    return r;
 };
 
 CheckBoxGroup.prototype.ctor = "CheckBoxGroup";
+export {
+    CheckBoxGroup
+};

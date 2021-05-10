@@ -3,6 +3,9 @@
  * 
  * Kreatx 2018
  */
+import { ApiClient } from "/flowerui/lib/ApiClientGen/ApiClient.js";
+import { Container } from "/flowerui/components/Container.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
 var Form = function (_props) {
     let _formData, _action, _method, _self = this;
 
@@ -186,7 +189,7 @@ var Form = function (_props) {
         type: ""
     };
 
-    _props = extend(false, false, _defaultParams, _props);
+    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
     _formData = null;
     _method = _props.method;
 
@@ -194,3 +197,14 @@ var Form = function (_props) {
     return r;
 };
 Form.prototype.ctor = 'Form';
+var FormEventType =
+{
+    "POST_STARTED": "POST_STARTED",
+    "POST_PROGRESS": "POST_PROGRESS",
+    "POST_ERROR": "POST_ERROR",
+    "POST_SUCCESS": "POST_SUCCESS",
+    "POST_COMPLETE": "POST_COMPLETE"
+};
+export {
+    Form, FormEventType
+};

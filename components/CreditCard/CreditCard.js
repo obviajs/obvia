@@ -3,6 +3,10 @@
  * 
  * Kreatx 2019
 */
+import { Container } from "/flowerui/components/Container.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+import { CalendarConstants } from "/flowerui/components/Calendar/CalendarConstants.js";
+
 var CreditCard = function (_props) {
     let _self = this;
     let card_number_error;
@@ -404,7 +408,7 @@ var CreditCard = function (_props) {
         _creditCardComponent[0].props.ownerDocument = _self.ownerDocument;
     };
     
-    _props = extend(false, false, _defaultParams, _props);
+    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
     _initDP();
     fnContaierDelayInit();
     _props.components = _creditCardComponent;

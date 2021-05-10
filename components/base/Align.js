@@ -5,3 +5,6 @@ var Align =
     "right":"right",
     "justify":"justify"
 }
+export {
+    Align
+};

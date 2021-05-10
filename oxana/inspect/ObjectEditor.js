@@ -4,7 +4,9 @@
  * Kreatx 2018
  */
 
-//component definition
+import {Container} from "/flowerui/components/Container.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+
 var ObjectEditor = function (_props) {
     let _self = this, _instance, _field;
 
@@ -26,14 +28,14 @@ var ObjectEditor = function (_props) {
         props = (fld != null && fld != "") ? inst[fld] : inst;
         let rows = [];
         for (let prop in props) {
-            //let propsMeta = extend(true, Builder.metaProps[inst.ctor] && Builder.metaProps[inst.ctor][prop] ? Builder.metaProps[inst.ctor][prop] : Builder.metaProps[prop]);
+            //let propsMeta = ObjectUtils.extend(true, Builder.metaProps[inst.ctor] && Builder.metaProps[inst.ctor][prop] ? Builder.metaProps[inst.ctor][prop] : Builder.metaProps[prop]);
             let propsMeta = Builder.metaProps[inst.ctor] && Builder.metaProps[inst.ctor][prop] ? Builder.metaProps[inst.ctor][prop] : Builder.metaProps[prop];
             if (propsMeta && !Object.isEmpty(propsMeta)) {
-                let propEditor = extend(true, Builder.components[propsMeta.ctor]);
+                let propEditor = ObjectUtils.extend(true, Builder.components[propsMeta.ctor]);
                 if (propEditor) {
                     let itemEditorLit = propEditor.literal;
                     if (propsMeta.props && typeof propsMeta.props != 'function')
-                        itemEditorLit.props = extend(false, false, itemEditorLit.props, propsMeta.props);
+                        itemEditorLit.props = ObjectUtils.extend(false, false, itemEditorLit.props, propsMeta.props);
                     else if (typeof propsMeta.props == 'function')
                         itemEditorLit.props = propsMeta.props.call(inst, this);
                     
@@ -41,7 +43,7 @@ var ObjectEditor = function (_props) {
                         itemEditorLit.props.instance = props[prop];
                         itemEditorLit.props.field = null;
                     }
-                    let ff = extend(true, Builder.components["FormField"].literal);
+                    let ff = ObjectUtils.extend(true, Builder.components["FormField"].literal);
                     ff.props.id = prop;
                     ff.props.label = propsMeta.label;
                     ff.props.placeholder = propsMeta.label;
@@ -106,10 +108,13 @@ var ObjectEditor = function (_props) {
         sortChildren: true,
         field: "props"
     };
-    _props = extend(false, false, _defaultParams, _props);
+    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
     this.$container = this.$el;
     
     let r = Container.call(this, _props);
     return r;
 };
 ObjectEditor.prototype.ctor = 'ObjectEditor';
+export {
+    ObjectEditor
+};

@@ -3,8 +3,9 @@
  * 
  * Kreatx 2020
  */
+import {Parent} from "/flowerui/components/base/Parent.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
 
-//component definition
 var Tr = function (_props, _hideComponents=false) {
    
     let _beforeAttach = this.beforeAttach;
@@ -25,9 +26,12 @@ var Tr = function (_props, _hideComponents=false) {
 
     let _defaultParams = {
     };
-    _props = extend(false, false, _defaultParams, _props);
+    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
 
     let r = Parent.call(this, _props, _hideComponents);
     return r;
 };
 Tr.prototype.ctor = 'Tr';
+export {
+    Tr
+};

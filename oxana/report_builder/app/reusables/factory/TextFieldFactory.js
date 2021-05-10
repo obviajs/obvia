@@ -21,7 +21,7 @@ var TextFieldFactory = function (props) {
     mode: "Opaque",
     editorCode: "",
   };
-  this.props = extend(this.defaultParams, props);
+  this.props = ObjectUtils.extend(this.defaultParams, props);
 
   if (props.transparent === "Opaque") this.props.mode = "Opaque";
   else if (props.transparent === "Transparent") this.props.mode = "Transparent";

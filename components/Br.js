@@ -4,7 +4,8 @@
  * Kreatx 2018
  */
 
-//component definition
+import { Component } from "/flowerui/components/base/Component.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
 var Br = function(_props)
 {
     this.template = function () 
@@ -15,7 +16,10 @@ var Br = function(_props)
     var _defaultParams = {
     };
 
-    _props = extend(false, false, _defaultParams, _props);
+    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
     Component.call(this, _props);
 };
 Br.prototype.ctor = 'Br';
+export {
+    Br
+};

@@ -3,7 +3,8 @@
  *
  * Kreatx 2019
  */
-
+import { List } from "/flowerui/components/List.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
 var RadioGroup = function (_props) {
     let _self = this,
         _dataProvider;
@@ -65,7 +66,7 @@ var RadioGroup = function (_props) {
         multiselect: false
     };
 
-    _props = extend(false, false, _defaultParams, _props);
+    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
 
     let _labelField = _props.labelField;
     let _valueField = _props.valueField;
@@ -109,7 +110,7 @@ var RadioGroup = function (_props) {
 
     _props.components = fnContainerDelayInit();
 
-    List.call(this, _props);
+    let r = List.call(this, _props);
 
     this.afterAttach = function (e) {
 
@@ -139,7 +140,10 @@ var RadioGroup = function (_props) {
         },
         enumerable: true
     });
-
+    return r;
 };
 
 RadioGroup.prototype.ctor = "RadioGroup";
+export {
+    RadioGroup
+};

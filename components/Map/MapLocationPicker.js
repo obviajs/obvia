@@ -4,7 +4,9 @@
  * Kreatx 2018
  */
 
-//component definition
+import { Container } from "/flowerui/components/Container.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+
 var MapLocationPicker = function (_props) {
     let _self = this;
 
@@ -77,7 +79,7 @@ var MapLocationPicker = function (_props) {
                     c = true;
                 }
                 if (c) {
-                    _oldValue = extend(true, _value);
+                    _oldValue = ObjectUtils.extend(true, _value);
                     _value.latitude = v.latitude;
                     _value.longitude = v.longitude;
                     let pos = {};
@@ -254,10 +256,13 @@ var MapLocationPicker = function (_props) {
         classes: ["wrap"]
     };
 
-    _props = extend(false, false, _defaultParams, _props);
+    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
     fnContainerDelayInit();
     _props.components = _cmps;
     Container.call(this, _props);
 };
 //component prototype
 MapLocationPicker.prototype.ctor = 'MapLocationPicker';
+export {
+    MapLocationPicker
+};

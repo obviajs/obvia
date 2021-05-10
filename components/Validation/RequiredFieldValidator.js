@@ -4,7 +4,10 @@
  * Kreatx 2020
  */
 
-//component definition
+import { Validator } from "/flowerui/components/Validation/Validator.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+import { ValidationManager } from "/flowerui/components/Validation/ValidationManager.js";
+
 var RequiredFieldValidator = function (_props) {
     let _self = this;
 
@@ -24,9 +27,12 @@ var RequiredFieldValidator = function (_props) {
 
     };
 
-    _props = extend(false, false, _defaultParams, _props);
+    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
 
     let r = Validator.call(this, _props);
     return r;
 };
 RequiredFieldValidator.prototype.ctor = 'RequiredFieldValidator';
+export {
+    RequiredFieldValidator
+};

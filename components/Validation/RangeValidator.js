@@ -4,7 +4,11 @@
  * Kreatx 2020
  */
 
-//component definition
+import {Validator} from "/flowerui/components/Validation/Validator.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+import { ValidationManager } from "/flowerui/components/Validation/ValidationManager.js";
+import { ChangeWatcher } from "/flowerui/lib/binding/ChangeWatcher.js";
+
 var RangeValidator = function (_props) {
     let _self = this,
         _min, _max, _minAlias, _maxAlias;
@@ -101,7 +105,7 @@ var RangeValidator = function (_props) {
         max: null
     };
     
-    _props = extend(false, false, _defaultParams, _props);
+    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
 
 
     let _label;
@@ -112,3 +116,6 @@ var RangeValidator = function (_props) {
     return r;
 };
 RangeValidator.prototype.ctor = 'RangeValidator';
+export {
+    RangeValidator
+};

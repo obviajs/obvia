@@ -1,3 +1,4 @@
+import { ArrayUtils } from "/flowerui/lib/ArrayUtils.js";
 let Implementation = function (applet) {
   let app = applet.app;
   let data = applet.data;
@@ -1076,7 +1077,7 @@ let Implementation = function (applet) {
     // },
     LOAD_LAYOUT: function (e) {
       let _cmp = e.content;
-      let res = objectHierarchyGetMatchingMember(
+      let res = ArrayUtils.objectHierarchyGetMatchingMember(
         _cmp,
         "props.id",
         "workAreaRowL2",
@@ -1652,7 +1653,7 @@ let Implementation = function (applet) {
       dy != 0 &&
       container.parent.components.length >= 2
     ) {
-      let mpi = indexOfObject(
+      let mpi = ArrayUtils.indexOfObject(
         container.parent.components,
         "props.id",
         container.parent.id
@@ -1676,7 +1677,7 @@ let Implementation = function (applet) {
       dx != 0 &&
       container.parent.components.length >= 2
     ) {
-      let mpi = indexOfObject(
+      let mpi = ArrayUtils.indexOfObject(
         container.parent.components,
         "props.id",
         container.id

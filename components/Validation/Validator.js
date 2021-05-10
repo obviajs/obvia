@@ -4,7 +4,10 @@
  * Kreatx 2020
  */
 
-//component definition
+import { Label, LabelType } from "/flowerui/components/Label.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+import { ValidationManager } from "/flowerui/components/Validation/ValidationManager.js";
+
 var Validator = function (_props) {
     let _self = this,
         _isValid = true,
@@ -157,7 +160,7 @@ var Validator = function (_props) {
         invalidClasses: [],
         validClasses: []
     };
-    _props = extend(false, false, _defaultParams, _props);
+    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
 
 
     let _validationManager = ValidationManager.getInstance();
@@ -178,3 +181,6 @@ var Validator = function (_props) {
     return r;
 };
 Validator.prototype.ctor = 'Validator';
+export {
+    Validator
+};

@@ -6,8 +6,9 @@
  * However, the old child container still exists; it is just invisible.
  * Kreatx 2019
  */
-
-//component definition
+import { Container } from "/flowerui/components/Container.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+import { ArrayUtils } from "/flowerui/lib/ArrayUtils.js";
 var ViewStack = function (_props) {
     let _self = this;
     //we override proxy initialization, because we want to create a child if it is requested
@@ -18,7 +19,7 @@ var ViewStack = function (_props) {
                     if (target.children && target.children[property])
                         return target.children[property];
                     else {
-                        let ind = indexOfObject(_components, "props.id", property);
+                        let ind = ArrayUtils.indexOfObject (_components, "props.id", property);
                         if (ind > -1) {
                             _components[ind].props.display = false;
                             _addComponents([_components[ind]]);
@@ -33,7 +34,7 @@ var ViewStack = function (_props) {
                     if (target.children && target.children[property])
                         return { configurable: true, enumerable: true };
                     else {
-                            let ind = indexOfObject(_components, "props.id", property);
+                            let ind = ArrayUtils.indexOfObject (_components, "props.id", property);
                             if (ind > -1) {
                                 _components[ind].props.display = false;
                                 _addComponents([_components[ind]]);
@@ -77,10 +78,10 @@ var ViewStack = function (_props) {
 
     let _defaultParams = {
         selectedIndex: 0,
-        type: ContainerType.NONE
+        type: ""
     };
 
-    _props = extend(false, false, _defaultParams, _props);
+    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
     let _selectedIndex = _props.selectedIndex;
     let _components = [];
 
@@ -143,3 +144,6 @@ var ViewStack = function (_props) {
     return r;
 };
 ViewStack.prototype.ctor = 'ViewStack';
+export {
+    ViewStack
+};

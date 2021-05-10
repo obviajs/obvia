@@ -4,7 +4,8 @@
  * Kreatx 2018
  */
 
-//component definition
+import { Parent } from "/flowerui/components/base/Parent.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
 var Link = function (_props) {
     Object.defineProperty(this, "title", {
         get: function title() {
@@ -112,7 +113,7 @@ var Link = function (_props) {
         title: undefined
     };
 
-    _props = extend(false, false, _defaultParams, _props);
+    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
 
     let _label, _href, _target, _title;
 
@@ -120,3 +121,14 @@ var Link = function (_props) {
     return r;
 };
 Link.prototype.ctor = 'Link';
+var LinkTarget =
+{
+    "blank": "_blank",
+    "self": "_self",
+    "parent": "_parent",
+    "top": "_top",
+    "framename": "_framename"
+};
+export {
+    Link, LinkTarget
+};

@@ -1,4 +1,7 @@
-var CalendarBase = function(_props){
+import { Container } from "/flowerui/components/Container.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+
+var CalendarBase = function (_props) {
     let _self = this, _calendarEvents, _inputFormat, _outputFormat, _internalFormat,
         _childrenField, _guidField, _descriptionField, _startDateTimeField, _endDateTimeField,
         _nowDate, _calendarStartDate;
@@ -176,7 +179,7 @@ var CalendarBase = function(_props){
         calendarStartDate: null
     };
     
-    _props = extend(false, false, _defaultParams, _props);
+    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
     if (!_props.attr) { 
         _props.attr = {};
     }
@@ -217,3 +220,6 @@ var CalendarBase = function(_props){
     return r;
 }
 CalendarBase.prototype.ctor = 'CalendarBase';
+export {
+    CalendarBase
+};

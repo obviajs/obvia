@@ -1,3 +1,5 @@
+import { Container } from "/flowerui/components/Container.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
 var NavParent = function (_props) {
     let _self = this,
         _selectedIndex;
@@ -66,7 +68,7 @@ var NavParent = function (_props) {
     let _defaultParams = {
         selectedIndex: 0
     };
-    _props = extend(false, false, _defaultParams, _props);
+    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
 
     if (!_props.attr) {
         _props.attr = {};
@@ -84,3 +86,6 @@ var NavParent = function (_props) {
     return r;
 };
 NavParent.prototype.ctor = 'NavParent';
+export {
+    NavParent
+};

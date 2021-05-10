@@ -3,8 +3,19 @@
  *
  * Kreatx 2020
  */
-
-//component definition
+import { Container } from "/flowerui/components/Container.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+import { ValidationManager } from "/flowerui/components/Validation/ValidationManager.js";
+import { ArrayEx } from "/flowerui/lib/ArrayEx.js";
+import { StringUtils } from "/flowerui/lib/StringUtils.js";
+import { Heading, HeadingType } from "/flowerui/components/Heading.js";
+import { AutoCompleteEx } from "/flowerui/components/AutoComplete/AutoCompleteEx.js";
+import { Repeater } from "/flowerui/components/Repeater/Repeater.js";
+import { Label, LabelType } from "/flowerui/components/Label.js";
+import { Link } from "/flowerui/components/Link/Link.js";
+import { Component } from "/flowerui/components/base/Component.js";
+import { getCaretPosition } from "/flowerui/lib/my.js";
+import { tokenize, findRightMatchingRightParenIndex } from "/flowerui/lib/Tokenizer.js";
 var Filter = function (_props) {
     let
         _self = this,
@@ -202,13 +213,13 @@ var Filter = function (_props) {
         if (!repDp) {
             repDp = this.parent.parent.children.filterMainContainer.repeater.dataProvider;
         }
-        let i = deepCopy(valueAutoComplete[0]);
+        let i = ObjectUtils.deepCopy(valueAutoComplete[0]);
         delete i.guid;
         repDp.push(i);
         e.preventDefault();
         this.proxyMaybe.tokenContainer.tokenInput.value = "";
     };
-    let _editFilter = function (e, ra) {
+    let _editFilter = async function (e, ra) {
         let filterItemEditor = ra.currentItem[_itemEditorField];
         let isRangeInput;
         if (ra.currentRow.repeater_container.filterEditorContainer.headerRow.mainCol.fOperator.operator.selectedItem)
@@ -298,7 +309,7 @@ var Filter = function (_props) {
             };
         }
 
-        filterItemEditor = Component.fromLiteral(filterItemEditor);
+        filterItemEditor = await Component.fromLiteral(filterItemEditor);
         if (ra.currentItem[_operatorsField]) {
             _operatorsDp.splicea(0, _operatorsDp.length, ra.currentItem[_operatorsField]);
         } else {
@@ -409,7 +420,7 @@ var Filter = function (_props) {
             props: {
                 id: 'filterMainContainer',
                 classes: ["filter", "main-container"],
-                type: ContainerType.NONE,
+                type: "",
                 components: [{
                         ctor: AutoCompleteEx,
                         props: {
@@ -727,8 +738,7 @@ var Filter = function (_props) {
             "badTokens": bt
         };
     };
-    let = {};
-    var _defaultParams = {
+    let _defaultParams = {
         value: "",
         dataProvider: new ArrayEx([]),
         labelField: undefined,
@@ -740,7 +750,7 @@ var Filter = function (_props) {
         advancedMode: true
     };
 
-    _props = extend(false, false, _defaultParams, _props);
+    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
     _dataProvider = Array.isArray(_props.dataProvider) ? new ArrayEx(_props.dataProvider) : _props.dataProvider;
     _valueField = _props.valueField;
     _labelField = _props.labelField;
@@ -755,3 +765,6 @@ var Filter = function (_props) {
     return r;
 };
 Filter.prototype.ctor = 'Filter';
+export {
+    Filter
+};

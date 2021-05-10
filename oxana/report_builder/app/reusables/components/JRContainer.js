@@ -1,3 +1,4 @@
+import {Container} from "/flowerui/components/Container.js";
 var JRContainer = function (_props) {
     
     let _beforeAttach = this.beforeAttach;

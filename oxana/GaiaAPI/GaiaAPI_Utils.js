@@ -1,3 +1,6 @@
+import { ApiClientGen } from "/flowerui/lib/ApiClientGen/ApiClientGen.js";
+import { ArrayEx } from "/flowerui/lib/ArrayEx.js";
+
 var GaiaAPI_Utils = {};
 GaiaAPI_Utils.generateAndLoadDataView = function (url, recordsPerPage) {
     let arr = url.split("/");
@@ -26,4 +29,7 @@ GaiaAPI_Utils.generateAndLoadDataView = function (url, recordsPerPage) {
         );
         return (new ArrayEx(raDvs)).init();
     });
+};
+export {
+    GaiaAPI_Utils
 };

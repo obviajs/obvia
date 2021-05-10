@@ -1,3 +1,5 @@
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+
 var FormProperties = function (_props) {
     let _defaultParams = {
         form_id: 0,
@@ -13,7 +15,7 @@ var FormProperties = function (_props) {
         form_literal_view: '',
         form_guid: null
     };
-    _props = extend(false, false, _defaultParams, _props);
+    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
     this.form_id = _props.form_id;
     this.form_name = _props.form_name;
     this.description = _props.description;
@@ -40,3 +42,6 @@ var FormProperties = function (_props) {
     });
 };
 FormProperties.prototype.ctor = 'FormProperties';
+export {
+    FormProperties
+};

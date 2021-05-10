@@ -3,6 +3,9 @@
  *
  * Kreatx 2019
  */
+import { DateTime } from "/flowerui/components/DateTime/DateTime.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+
  var DateCmp = function (_props) {
     let _self = this;
 
@@ -21,10 +24,13 @@
         max: null        
     };
 
-    _props = extend(false, false, _defaultParams, _props);
+    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
 
     let r = DateTime.call(this, _props);
 
     return r;
 };
 DateCmp.prototype.ctor = "DateCmp";
+export {
+    DateCmp
+};

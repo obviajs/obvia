@@ -4,7 +4,13 @@
  * Kreatx 2019
  */
 
-//component definition
+import { Parent } from "/flowerui/components/base/Parent.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+import { Li } from "/flowerui/components/Tree/Li.js";
+import { ArrayEx } from "/flowerui/lib//ArrayEx.js";
+import { ChangeWatcher } from "/flowerui/lib/binding/ChangeWatcher.js";
+import { ArrayUtils } from "/flowerui/lib/ArrayUtils.js";
+import { StringUtils } from "/flowerui/lib/StringUtils.js";
 var Tree = function (_props) {
     //inner component data
     let _self = this;
@@ -53,9 +59,9 @@ var Tree = function (_props) {
                 this.dataProvider[i][_guidField] = StringUtils.guid();
         }
 
-        let toAdd = differenceOnKeyMatch(_dataProvider, _oldDataProvider, _guidField, false, true);
-        let toRemove = differenceOnKeyMatch(_oldDataProvider, _dataProvider, _guidField, false, true);
-        let toRefresh = intersect(toAdd.a1_indices, toRemove.a1_indices);
+        let toAdd = ArrayUtils.differenceOnKeyMatch(_dataProvider, _oldDataProvider, _guidField, false, true);
+        let toRemove = ArrayUtils.differenceOnKeyMatch(_oldDataProvider, _dataProvider, _guidField, false, true);
+        let toRefresh = ArrayUtils.intersect(toAdd.a1_indices, toRemove.a1_indices);
         for (let i = 0; i < toRemove.a1_indices.length; i++) {
             //let ind = this.rowItems.length + i;
             if (toRefresh.indexOf(toRemove.a1_indices[i]) == -1)
@@ -76,7 +82,7 @@ var Tree = function (_props) {
             cmp.$el.attr(_guidField, this.dataProvider[toRefresh[i]][_guidField]);
             cmp.attr[_guidField] = this.dataProvider[toRefresh[i]][_guidField];
         }
-        _oldDataProvider = acExtend(this.dataProvider);
+        _oldDataProvider = ArrayUtils.acExtend(this.dataProvider);
     };
 
     Object.defineProperty(this, "selectedClasses", {
@@ -179,7 +185,7 @@ var Tree = function (_props) {
         ulClassesField: undefined,
     };
 
-    _props = extend(false, false, _defaultParams, _props);
+    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
     let _dataProvider;
     //let _dataProvider = _props.dataProvider;
     let _expandIcon = _props.expandIcon;
@@ -205,7 +211,7 @@ var Tree = function (_props) {
 
     let _click = _props.click;
     let _toggleTree = function (e) {
-        let match = getMatching(this.components, "ctor.prototype.ctor", "Tree", true);
+        let match = ArrayUtils.getMatching(this.components, "ctor.prototype.ctor", "Tree", true);
         if (match.objects.length > 0 && e.target == this.children[this.components[0].props.id].$el[0]) {
             let liIcon = this.children[this.components[0].props.id];
             let liIconClasses = liIcon.classes.slice(0);
@@ -226,7 +232,7 @@ var Tree = function (_props) {
         }
         let liObj = {};
         liObj[_guidField] = this.$el.attr(_guidField);
-        _self.selectedItem = arrayHierarchyGetMatching(_dataProvider, _guidField, liObj[_guidField], _childrenField);
+        _self.selectedItem = ArrayUtils.arrayHierarchyGetMatching(_dataProvider, _guidField, liObj[_guidField], _childrenField);
         //_self.select(liObj);
         //e.stopPropagation();
     };
@@ -235,7 +241,7 @@ var Tree = function (_props) {
         let cLi;
         var visited = visited ? visited : [];
         if (liObj && liObj[_guidField]) {
-            let match = getMatchingMember(this.children, "attr." + _guidField, liObj.guid);
+            let match = ObjectUtils.getMatchingMember(this.children, "attr." + _guidField, liObj.guid);
             if (match.objects.length > 0) {
                 cLi = match.objects[0];
                 let liClasses = cLi.classes.slice(0);
@@ -250,7 +256,7 @@ var Tree = function (_props) {
             let cc = this.children[cid];
             if (cc != cLi) {
                 let liClasses = cc.classes.slice(0);
-                let diff = liClasses.difference(intersect(liClasses, _selectedClasses));
+                let diff = liClasses.difference(ArrayUtils.intersect(liClasses, _selectedClasses));
                 cc.classes = diff;
             }
             if (cc.components.length > 2) {
@@ -326,27 +332,27 @@ var Tree = function (_props) {
     }
 
     let _componentIconLbl = {
-        ctor: Label,
+        ctor: "Label",
         props: {
             id: 'fa',
-            labelType: LabelType.i,
+            labelType: "i",
             classes: ["fas", _collapseIcon]
         }
     };
 
     let _nodeIconLbl = {
-        ctor: Label,
+        ctor: "Label",
         props: {
             id: 'fa',
-            labelType: LabelType.i
+            labelType: "i"
         }
     };
 
     let _componentLbl = {
-        ctor: Label,
+        ctor: "Label",
         props: {
             id: 'label',
-            labelType: LabelType.label,
+            labelType: "label",
             "label": '{?' + _labelField + '}',
         }
     };
@@ -360,19 +366,19 @@ var Tree = function (_props) {
                 for (let i = 0; i < dp.length; i++) {
                     if (!dp[i][_guidField])
                         dp[i][_guidField] = StringUtils.guid();
-                    let cmpLi = extend(true, _componentLi);
+                    let cmpLi = ObjectUtils.extend(true, _componentLi);
                     cmpLi.props.bindingDefaultContext = dp[i];
                     cmpLi.props.id = "li";
                     cmpLi.props.attr = {};
                     cmpLi.props.attr[_guidField] = dp[i][_guidField];
                     let cmps = [];
                     if (dp[i][_childrenField] && dp[i][_childrenField].length > 0) {
-                        let tree = extend(true, _componentTree);
+                        let tree = ObjectUtils.extend(true, _componentTree);
                         if (_collapseIcon || _expandIcon) {
-                            let cmpIcon = extend(true, _componentIconLbl);
+                            let cmpIcon = ObjectUtils.extend(true, _componentIconLbl);
                             cmps.push(cmpIcon);
                         }
-                        let cmpLbl = extend(true, _componentLbl);
+                        let cmpLbl = ObjectUtils.extend(true, _componentLbl);
                         cmpLbl.props.bindingDefaultContext = dp[i];
                         cmps.push(cmpLbl);
                         tree.props.dataProvider = dp[i][_childrenField];
@@ -381,20 +387,20 @@ var Tree = function (_props) {
                     } else {
                         if (_iconField) {
 
-                            let cmpIcon = extend(true, _nodeIconLbl);
+                            let cmpIcon = ObjectUtils.extend(true, _nodeIconLbl);
                             cmpIcon.props.bindingDefaultContext = dp[i];
                             cmpIcon.props.classes = '{?' + _iconField + '}';
                             cmps.push(cmpIcon);
                         }
                         if ((_componentLbl || _iconField) && !_componentsField && !_components) {
-                            let cmpLbl = extend(true, _componentLbl);
+                            let cmpLbl = ObjectUtils.extend(true, _componentLbl);
                             cmpLbl.props.bindingDefaultContext = dp[i];
                             cmps.push(cmpLbl);
                             cmpLi.props.components = cmps;
                         } else if (_componentsField) {
                             let clen = dp[i][_componentsField].length;
                             for (let ci = 0; ci < clen; ci++){
-                                shallowCopy(dp[i][_componentsField][ci].props, dp[i][_componentsField][ci].props, ["bindingDefaultContext"]);
+                                ObjectUtils.shallowCopy(dp[i][_componentsField][ci].props, dp[i][_componentsField][ci].props, ["bindingDefaultContext"]);
                                 dp[i][_componentsField][ci].props.bindingDefaultContext = dp[i];
                             }                           
                             cmps.splicea(cmps.length, 0, dp[i][_componentsField]);
@@ -410,7 +416,7 @@ var Tree = function (_props) {
             } else {
                 _creationFinished = true;
             }
-            _oldDataProvider = acExtend(_dataProvider);
+            _oldDataProvider = ArrayUtils.acExtend(_dataProvider);
         }
         return components;
     };
@@ -467,3 +473,6 @@ var Tree = function (_props) {
 
 //component prototype
 Tree.prototype.ctor = 'Tree';
+export {
+    Tree
+};

@@ -4,8 +4,9 @@
  * Kreatx 2018
  */
 
-//component definition
-var HRule = function(_props)
+import {Component} from "/flowerui/components/base/Component.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+var HRule = function (_props)
 {
     
     Object.defineProperty(this, "height", 
@@ -78,7 +79,7 @@ var HRule = function(_props)
         align:"center" //="left|center|right"
     };
 
-    _props = extend(false, false, _defaultParams, _props);
+    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
     var _width = _props.width;
     var _height = _props.height;
     var _align = _props.align;
@@ -86,3 +87,6 @@ var HRule = function(_props)
     Component.call(this, _props);
 };
 HRule.prototype.ctor = 'HRule';
+export {
+    HRule
+};

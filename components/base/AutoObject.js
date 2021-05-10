@@ -16,3 +16,6 @@ var AutoObject = function () {
         }
     });
 };
+export {
+    AutoObject
+};

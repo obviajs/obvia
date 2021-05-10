@@ -3,6 +3,10 @@
  * 
  * Kreatx 2019
  */
+import { Container } from "/flowerui/components/Container.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+import { coroutine } from "/flowerui/lib/coroutine.js";
+
 var Code = function (_props) {
     let _self = this,
         _cmInst, _errors = [],
@@ -202,7 +206,7 @@ var Code = function (_props) {
         nocursor: false
     };
 
-    _props = extend(false, false, _defaultParams, _props);
+    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
     _content = _props.content;
     _mode = _props.mode;
     _theme = _props.theme;

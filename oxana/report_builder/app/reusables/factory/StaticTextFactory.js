@@ -1,3 +1,5 @@
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+
 var StaticTextFactory = function (props) {
   this.xmlTemplate =
     "<staticText>" +
@@ -25,7 +27,7 @@ var StaticTextFactory = function (props) {
     is_strike_through: false,
     label: "Static Text",
   };
-  this.props = extend(this.defaultParams, props);
+  this.props = ObjectUtils.extend(this.defaultParams, props);
 
   if (props.transparent === "Opaque") {
     this.props.mode = "Opaque";
@@ -40,4 +42,7 @@ var StaticTextFactory = function (props) {
   this.toXml = function () {
     return this.xmlTemplate.formatUnicorn(this.props);
   };
+};
+export {
+  StaticTextFactory
 };

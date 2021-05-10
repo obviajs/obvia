@@ -1,3 +1,15 @@
+
+import { Component } from "/flowerui/components/base/Component.js";
+import { Container } from "/flowerui/components/Container.js";
+import { StringUtils } from "/flowerui/lib/StringUtils.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+import { BrowserManager } from "/flowerui/lib/BrowserManager.js";
+import { BrowserUtils } from "/flowerui/lib/BrowserUtils.js";
+import { AutoObject } from "/flowerui/components/base/AutoObject.js";
+import { debounce, debouncePromise, whenDefined, whenDefinedPromise, functionName } from "/flowerui/lib/DecoratorUtils.js";
+import { History, HistoryStep, HistoryEventType } from "/flowerui/components/base/History/History.js";
+import { Applet } from "/flowerui/components/base/Applet.js";
+
 var App = function (_props) {
     let _defaultParams = {
         idleInterval: 60000,
@@ -6,12 +18,12 @@ var App = function (_props) {
         historyProps: {
             enabled: true
         },
-        type: ContainerType.NONE,
+        type: "",
         guid: StringUtils.guid(),
         defaultAppletIndex: 0
     };
 
-    _props = extend(false, false, _defaultParams, _props);
+    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
     let _self = this;
     let _idleTime = 0;
     let _idleInterval = _props.idleInterval;
@@ -204,7 +216,7 @@ var App = function (_props) {
         if (target && _self.behaviors[target.guid] && _self.behaviors[target.guid][e.type] && currentTarget == target) {
             behaviorObj = _self.behaviors[target.guid][e.type];
             manifestor = target;
-        } else if (_self.behaviors[currentTarget.guid] && _self.behaviors[currentTarget.guid][e.type] && isObject(_self.behaviors[currentTarget.guid][e.type])) {
+        } else if (_self.behaviors[currentTarget.guid] && _self.behaviors[currentTarget.guid][e.type] && ObjectUtils.isObject(_self.behaviors[currentTarget.guid][e.type])) {
             let cmpBehaviors = _self.behaviors[currentTarget.guid][e.type];
             for (var prop in cmpBehaviors) {
                 if (cmpBehaviors[prop] && cmpBehaviors[prop].onPropagation) {
@@ -221,10 +233,10 @@ var App = function (_props) {
                 behaviorFilterArr = [];
             let behaviorName, behaviorFilter;
 
-            if (isObject(behaviorObj)) {
+            if (ObjectUtils.isObject(behaviorObj)) {
                 for (let prop in behaviorObj) {
                     behaviorNameArr.push(prop);
-                    if (isObject(behaviorObj[prop])) {
+                    if (ObjectUtils.isObject(behaviorObj[prop])) {
                         behaviorFilterArr.push(behaviorObj[prop]["filter"]);
                     } else
                         behaviorFilterArr.push(behaviorObj[prop]);
@@ -245,7 +257,7 @@ var App = function (_props) {
                         extraArgs = [];
                     if (behavior && typeof behaviorFilter == 'function') {
                         qualifies = behaviorFilter.apply(manifestor, arguments);
-                        if (isObject(qualifies)) {
+                        if (ObjectUtils.isObject(qualifies)) {
                             extraArgs = qualifies.extraArgs;
                             qualifies = qualifies.qualifies;
                         }
@@ -262,10 +274,10 @@ var App = function (_props) {
                         if (typeof behavior == 'function') {
                             ret = behavior.apply(manifestor, args);
                         } else {
-                            let behavior_implementations = isObject(behavior) && !behavior.forEach ? [behavior] : behavior;
+                            let behavior_implementations = ObjectUtils.isObject(behavior) && !behavior.forEach ? [behavior] : behavior;
                             for (let bi = 0; bi < behavior_implementations.length; bi++) {
                                 behavior = behavior_implementations[bi];
-                                if (isObject(behavior)) {
+                                if (ObjectUtils.isObject(behavior)) {
                                     ret = behavior.do.apply(manifestor, args);
                                     if (_historyProps.enabled) {
                                         _history.track(behavior, behaviorName, ret, manifestor, args);
@@ -320,11 +332,11 @@ var App = function (_props) {
 
 
     let _route = function (hash) {
-        let m = BrowserUtils.parse(hash);
+        let m = BrowserUtils.parse(hash), appletInst;
         if (m.hash && m.hash != "") {
             let appletInstArr = _appletsMap[m.hash];
             let appletIndex = m.map.inst && m.map.inst < appletInstArr.length ? m.map.inst : 0;
-            let appletInst = appletInstArr[appletIndex];
+            appletInst = appletInstArr[appletIndex];
             if (appletInst) {
                 appletInst.route(m);
             } else {
@@ -376,14 +388,9 @@ var App = function (_props) {
         }
     };
 
-    let _updateHash = function (e) {
-        console.log("App.js Appletinit", e.map);
-        return e;
-    };
-    let _delayUpdateHash = debounce(_updateHash, 2000);
     let _cmpListenerImps = {};
     this.addBehaviors = function (impUid, cmps, behaviors) {
-        var cmps = isObject(cmps) && !cmps.forEach ? [cmps] : cmps;
+        var cmps = ObjectUtils.isObject(cmps) && !cmps.forEach ? [cmps] : cmps;
         let len = cmps.length;
         for (let i = 0; i < len; i++) {
             let cmp = cmps[i];
@@ -398,12 +405,12 @@ var App = function (_props) {
             let _eventTypesJoined = "";
             for (let eventType in behaviors) {
                 if (_behaviors[uid][eventType]) {
-                    if (!isObject(_behaviors[uid][eventType])) {
+                    if (!ObjectUtils.isObject(_behaviors[uid][eventType])) {
                         let pb = _behaviors[uid][eventType];
                         _behaviors[uid][eventType] = {};
                         _behaviors[uid][eventType][pb] = null;
                     }
-                    if (isObject(behaviors[eventType])) {
+                    if (ObjectUtils.isObject(behaviors[eventType])) {
                         for (var eb in behaviors[eventType]) {
                             _behaviors[uid][eventType][eb] = behaviors[eventType][eb];
                         }
@@ -423,7 +430,7 @@ var App = function (_props) {
     };
 
     this.removeBehaviors = function (impUid, cmps, behaviors) {
-        var cmps = isObject(cmps) && !cmps.forEach ? [cmps] : cmps;
+        var cmps = ObjectUtils.isObject(cmps) && !cmps.forEach ? [cmps] : cmps;
         let len = cmps.length;
         for (let i = 0; i < len; i++) {
             let cmp = cmps[i];
@@ -437,7 +444,7 @@ var App = function (_props) {
                     if (ind > -1) {
                         _cmpListenerImps[cmp.guid][eventType].splice(ind, 1);
                     }
-                    if (isObject(behaviors[eventType])) {
+                    if (ObjectUtils.isObject(behaviors[eventType])) {
                         for (let behavior in behaviors[eventType]) {
                             if (_b2imps[behavior]) {
                                 let ind = _b2imps[behavior].indexOf(impUid);
@@ -484,3 +491,6 @@ var App = function (_props) {
     return r;
 };
 App.prototype.ctor = 'App';
+export {
+    App
+};

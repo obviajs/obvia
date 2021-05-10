@@ -3,6 +3,10 @@
  * 
  * Kreatx 2019
 */
+import { CalendarBase } from "/flowerui/components/Calendar/CalendarBase.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+import { ArrayUtils } from "/flowerui/lib/ArrayUtils.js";
+import { CalendarConstants } from "/flowerui/components/Calendar/CalendarConstants.js";
 var CalendarWeek = function(_props)
 {
     let _self = this;
@@ -124,7 +128,7 @@ var CalendarWeek = function(_props)
         return _dataProvider;
     };    
 
-    _props = extend(false, false, _defaultParams, _props);
+    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
     let _cellHeight = _props.cellHeight;
     let _labelField = _props.labelField;
     let _labelFieldHour = _props._labelFieldHour;
@@ -150,7 +154,7 @@ var CalendarWeek = function(_props)
 
     this.addEvent = function (event) {
         let gi = _intervalFromDate(event);
-        let ind = indexOfObject(_dataProvider, "gi", gi);
+        let ind = ArrayUtils.indexOfObject(_dataProvider, "gi", gi);
         
         if (ind > -1) {
             _prepareEvent(event);            
@@ -504,3 +508,6 @@ var CalendarWeek = function(_props)
     return r;
 }
 CalendarWeek.prototype.ctor = 'CalendarWeek';
+export {
+    CalendarWeek
+};

@@ -3,8 +3,8 @@
  *
  * Kreatx 2019
  */
-
-//component definition
+import { Container } from "/flowerui/components/Container.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
 var Amount = function (_props) {
     let _self = this;
 
@@ -87,7 +87,7 @@ var Amount = function (_props) {
         }
 
     };
-    _props = extend(false, false, _defaultParams, _props);
+    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
 
     let _value = _props.value;
     let _currencyList = _props.currencyList;
@@ -116,3 +116,6 @@ var Amount = function (_props) {
 
 //component prototype
 Amount.prototype.ctor = 'Amount';
+export {
+    Amount
+};

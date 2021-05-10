@@ -4,7 +4,9 @@
  * Kreatx 2019
  */
 
-//component definition
+import { Parent } from "/flowerui/components/base/Parent.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+import { ChangeWatcher } from "/flowerui/lib/binding/ChangeWatcher.js";
 var TextInput = function (_props) {
     let _self = this;
     let _value, _autocomplete, _mask, _placeholder, _type, _input;
@@ -140,7 +142,7 @@ var TextInput = function (_props) {
         autocomplete: "off"
     };
 
-    _props = extend(false, false, _defaultParams, _props);
+    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
     _mask = _props.mask;
     _type = _props.type;
     _input = _props.input;
@@ -160,3 +162,20 @@ var TextInput = function (_props) {
 
 //component prototype
 TextInput.prototype.ctor = 'TextInput';
+var TextInputType = {
+    "EMAIL": "email",
+    "PASSWORD": "password",
+    "NUMBER": "number",
+    "TEXT": "text",
+    "DATE": "date",
+    "DATETIME-LOCAL": "datetime-local",
+    "MONTH": "month",
+    "RANGE": "range",
+    "TEL": "tel",
+    "TIME": "time",
+    "URL": "url",
+    "WEEK": "week"
+};
+export {
+    TextInput, TextInputType
+};

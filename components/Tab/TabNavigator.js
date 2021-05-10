@@ -4,7 +4,9 @@
  * Kreatx 2018
  */
 
-//component definition
+import { Parent } from "/flowerui/components/base/Parent.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+
 var TabNavigator = function (_props) {
     let _self = this;
     let _changed = function (e, oldIndex, newIndex) {
@@ -49,7 +51,7 @@ var TabNavigator = function (_props) {
     };
 
     let _defaultParams = {};
-    _props = extend(false, false, _defaultParams, _props);
+    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
 
     let r = NavParent.call(this, _props);
     r.on("changed", _changed);

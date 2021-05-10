@@ -4,7 +4,9 @@
  * Kreatx 2018
  */
 
-//component definition
+import {Container} from "/flowerui/components/Container.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+
 var CollectionEditor = function (_props) {
     let _self = this;
     let _instance, _field, _memberType, _repeater, _itemLabel;
@@ -115,3 +117,6 @@ var CollectionEditor = function (_props) {
     return r;
 };
 CollectionEditor.prototype.ctor = 'CollectionEditor';
+export {
+    CollectionEditor  
+};

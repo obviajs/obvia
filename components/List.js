@@ -3,7 +3,10 @@
  *
  * Kreatx 2019
  */
-
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+import { ArrayUtils } from "/flowerui/lib/ArrayUtils.js";
+import { Repeater } from "/flowerui/components/Repeater/Repeater.js";
+import { ChangeWatcher } from "/flowerui/lib/binding/ChangeWatcher.js";
 var List = function (_props) {
     let _self = this;
 
@@ -18,7 +21,7 @@ var List = function (_props) {
         for(let i=0;i<this.dataProvider.length;i++)
         {
             if(lookUpValues){
-                ind = indexOfObject(_value, _valueField,  this.dataProvider[i][_valueField]);
+                ind = ArrayUtils.indexOfObject(_value, _valueField,  this.dataProvider[i][_valueField]);
                 _states.forEach(function (state) {
                     if(ind>-1){
                         _self.dataProvider[i][state.dataProviderField] = state.states.on;
@@ -44,7 +47,7 @@ var List = function (_props) {
 
         let v = repeaterEventArgs.currentItem;
         let arrDpIndex = -1;
-        let arrValueIndex = indexOfObject(_self.value, _valueField, v[_valueField]);
+        let arrValueIndex = ArrayUtils.indexOfObject(_self.value, _valueField, v[_valueField]);
         let newValue = _self.value.slice();
         if (arrValueIndex == -1) {
             if (_multiselect) {
@@ -74,7 +77,7 @@ var List = function (_props) {
         value: []
     };
 
-    _props = extend(false, false, _defaultParams, _props);
+    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
 
     let _multiselect = _props.multiselect;
     let _value;
@@ -142,11 +145,11 @@ var List = function (_props) {
                 value = [v];
             }
             if((!_value && value) || (_value && !_value.equals(value))){
-                _value = intersectOnKeyMatch(this.dataProvider, value, _valueField); //value;
+                _value = ArrayUtils.intersectOnKeyMatch(this.dataProvider, value, _valueField); //value;
                 let unselect = this.dataProvider.difference(_value);
 
                 unselect.forEach(function (v) {
-                    let arrDpIndex = (v == undefined || v == null || v[_valueField] == undefined) ? -1 : indexOfObject(this.dataProvider, _valueField, v[_valueField]);
+                    let arrDpIndex = (v == undefined || v == null || v[_valueField] == undefined) ? -1 : ArrayUtils.indexOfObject(this.dataProvider, _valueField, v[_valueField]);
                     if (arrDpIndex != -1) {
                         _states.forEach(function (state) {
                             this.dataProvider[arrDpIndex][state.dataProviderField] = state.states.off;
@@ -155,7 +158,7 @@ var List = function (_props) {
                 }.bind(this));
 
                 this.value.slice(0).forEach(function (v, i) {
-                    let arrDpIndex = (v == null || v[_valueField] == null) ? -1 : indexOfObject(this.dataProvider, _valueField, v[_valueField]);
+                    let arrDpIndex = (v == null || v[_valueField] == null) ? -1 : ArrayUtils.indexOfObject(this.dataProvider, _valueField, v[_valueField]);
                     if (arrDpIndex != -1) {
                         _states.forEach(function (state) {
                             this.dataProvider[arrDpIndex][state.dataProviderField] = state.states.on;
@@ -176,3 +179,6 @@ var List = function (_props) {
 };
 
 List.prototype.ctor = 'List';
+export {
+    List
+};

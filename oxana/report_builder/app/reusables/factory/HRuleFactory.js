@@ -1,3 +1,5 @@
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+
 var HRuleFactory = function (props) {
   this.xmlTemplate =
     "<break>" +
@@ -12,7 +14,7 @@ var HRuleFactory = function (props) {
     backgroundColor: "",
     mode: "Opaque",
   };
-  this.props = extend(this.defaultParams, props);
+  this.props = ObjectUtils.extend(this.defaultParams, props);
 
   if (props.transparent === "Opaque") {
     this.props.mode = "Opaque";

@@ -3,8 +3,11 @@
  * 
  * Kreatx 2018
  */
+import { Container } from "/flowerui/components/Container.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+import { Label } from "/flowerui/components/Label.js";
+import { Props } from "/flowerui/components/base/Props.js";
 
-//component definition
 var FormField = function (_props) {
     let _self = this;
     let _input, _lbl;
@@ -148,13 +151,13 @@ var FormField = function (_props) {
         enabled: true,
         required: false,
         size: FormFieldSize.SMALL,
-        type: ContainerType.NONE,
+        type: "",
         name: "",
         label: "",
         input: null
     };
 
-    _props = extend(false, false, _defaultParams, _props);
+    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
     let _placeholder;
     let _name;
     let _required;
@@ -220,3 +223,11 @@ var FormField = function (_props) {
 };
 //component prototype
 FormField.prototype.ctor = 'FormField';
+var FormFieldSize =
+{
+    "SMALL": "form-control-sm",
+    "LARGE": "form-control-lg"
+};
+export {
+    FormField, FormFieldSize
+};

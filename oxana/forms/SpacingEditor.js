@@ -3,8 +3,9 @@
  * 
  * Kreatx 2018
  */
+import {Container} from "/flowerui/components/Container.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
 
-//component definition
 var SpacingEditor = function (_props) {
     var _self = this;
     let _value;
@@ -166,7 +167,7 @@ var SpacingEditor = function (_props) {
         type: ContainerType.NONE,
         "components": []
     };
-    _props = extend(false, false, _defaultParams, _props);
+    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
     _initDP();
     fnContainerDelayInit();
     _props.components = _cmps;

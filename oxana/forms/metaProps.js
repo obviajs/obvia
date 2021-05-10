@@ -251,7 +251,7 @@ Builder.initMetaProps = function () {
             },
             setter: function () {
                 if (this.attr[Builder.providerValueField]) {
-                    let m = getMatching(Builder.sources, Builder.providerValueField, this.attr[Builder.providerValueField]);
+                    let m = ArrayUtils.getMatching(Builder.sources, Builder.providerValueField, this.attr[Builder.providerValueField]);
                     if (m.objects.length > 0) {
                         return new ArrayEx(m.objects);
                     }
@@ -724,7 +724,7 @@ Builder.initMetaProps = function () {
              */
             setter: function () {
                 if (this.attr.repeated_id_form) {
-                    let m = getMatching(Builder.forms, "form_id", this.attr.repeated_id_form);
+                    let m = ArrayUtils.getMatching(Builder.forms, "form_id", this.attr.repeated_id_form);
                     if (m.objects.length > 0) {
                         return new ArrayEx(m.objects);
                     }
@@ -1183,7 +1183,7 @@ Builder.initMetaProps = function () {
              */
             setter: function () {
                 if (this.id_form) {
-                    let m = getMatching(Builder.forms, "form_id", this.id_form);
+                    let m = ArrayUtils.getMatching(Builder.forms, "form_id", this.id_form);
                     if (m.objects.length > 0) {
                         return new ArrayEx(m.objects);
                     }
@@ -1235,7 +1235,7 @@ Builder.initMetaProps = function () {
                         }];
                         lit.props.accept = function (e) {
                             let stepEditCollEditor = this.proxyMaybe.modalDialog.modalContent.modalBody.stepEditCollEditor;
-                            this.parent.instance.attr.steps = acExtend(false, false, [], ["currentItem"], stepEditCollEditor.dataProvider);
+                            this.parent.instance.attr.steps = ArrayUtils.acExtend(false, false, [], ["currentItem"], stepEditCollEditor.dataProvider);
                         };
                         win = this.parent.parent.addComponent(lit);
                     }

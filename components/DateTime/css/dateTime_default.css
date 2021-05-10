@@ -30,7 +30,8 @@
 }
 [type="datetime-local"]::-webkit-calendar-picker-indicator {
     position: absolute;
-    top: 8px;
+    top: auto;
+    bottom: auto;
     right: 0;
     color: black;
     opacity: 1;
@@ -38,7 +39,8 @@
 
 [type="date"]::-webkit-calendar-picker-indicator {
     position: absolute;
-    top: 8px;
+    top: auto;
+    bottom: auto;
     right: 0;
     color: black;
     opacity: 1;

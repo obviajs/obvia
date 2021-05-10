@@ -1,10 +1,12 @@
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+
 var WizardStep = function (_props) {
     let _defaultParams = {
         stepHeading: undefined,
         detailLabel: undefined,
         id_form: undefined
     };
-    _props = extend(false, false, _defaultParams, _props);
+    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
 
     this.stepHeading = _props.stepHeading;
     this.detailLabel = _props.detailLabel;
@@ -23,3 +25,6 @@ var WizardStep = function (_props) {
     });
 };
 WizardStep.prototype.ctor = 'WizardStep';
+export {
+    WizardStep
+};

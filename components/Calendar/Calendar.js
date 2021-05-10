@@ -3,7 +3,12 @@
  * 
  * Kreatx 2019
 */
-
+import { Container } from "/flowerui/components/Container.js";
+import { CalendarDay } from "/flowerui/components/Calendar/CalendarDay.js";
+import { CalendarWeek } from "/flowerui/components/Calendar/CalendarWeek.js";
+import { CalendarMonth } from "/flowerui/components/Calendar/CalendarMonth.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+import { CalendarConstants } from "/flowerui/components/Calendar/CalendarConstants.js";
 var Calendar = function(_props){
     let _self = this;
 
@@ -296,7 +301,7 @@ var Calendar = function(_props){
         _viewStackComponent.props.ownerDocument = _self.ownerDocument;
     };
     
-    _props = extend(false, false, _defaultParams, _props);
+    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
     let _nowDate = _props.nowDate;
     let _guidField =  _props.guidField;
     let _selectedIndex = _props.selectedIndex;
@@ -389,3 +394,6 @@ var Calendar = function(_props){
     return r;
 }
 Calendar.prototype.ctor = 'Calendar';
+export {
+    Calendar
+};

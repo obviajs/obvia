@@ -1,4 +1,9 @@
 //persist in cache :) 
+import { ArrayEx } from "/flowerui/lib/ArrayEx.js";
+import { StringUtils } from "/flowerui/lib/StringUtils.js";
+import { EventDispatcher } from "/flowerui/lib/EventDispatcher.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+import { ChangeWatcher } from "/flowerui/lib/binding/ChangeWatcher.js";
 
 var History = function(_props)
 { 
@@ -7,7 +12,7 @@ var History = function(_props)
         cacheProps: {enabled:false, cachedVariableName: null}
     };
 
-    _props = extend(false, false, _defaultParams, _props);
+    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
     var _cacheProps = _props.cacheProps;
     if(_cacheProps.enabled)
 	{
@@ -45,11 +50,11 @@ var History = function(_props)
     });
 
     this.track = function(behavior, behaviorName, ret, thisObj, args){
-        if(behavior.undo && typeof behavior.undo == 'function' && ((isObject(ret) && ret.track) || ret===true)){
+        if(behavior.undo && typeof behavior.undo == 'function' && ((ObjectUtils.isObject(ret) && ret.track) || ret===true)){
             var step = new HistoryStep();
             step.behaviorName = behaviorName; 
             step.behavior = behavior;
-            if(isObject(ret)){
+            if(ObjectUtils.isObject(ret)){
                 step.description = ret.description || behavior.description;
                 step.stepType = ret.stepType || behavior.stepType;
             }
@@ -138,3 +143,32 @@ History.getInstance = function(instName)
     return instance;
 }     
 History.prototype = Object.create(EventDispatcher.prototype);
+var HistoryEventType =
+{
+    "HISTORY_STEP_ADDED": "HISTORY_STEP_ADDED",
+    "HISTORY_NO_MORE_UNDO": "HISTORY_NO_MORE_UNDO",
+    "HISTORY_NO_MORE_REDO": "HISTORY_NO_MORE_REDO",
+    "HISTORY_CAN_REDO": "HISTORY_CAN_REDO",
+    "HISTORY_CAN_UNDO": "HISTORY_CAN_UNDO",
+    "HISTORY_REDONE": "HISTORY_REDONE",
+    "HISTORY_UNDONE": "HISTORY_UNDONE"
+};
+var HistoryStep = function (_props) {
+    var _id = StringUtils.guid();
+    this.behaviorName = "";
+    this.description = "";
+    this.stepType = 1; //2 type of change Minor/Major
+    this.date = new Date();
+    this.args;
+    this.thisObj;
+    this.retObj;
+
+    Object.defineProperty(this, "id", {
+        get: function id() {
+            return _id;
+        }
+    });
+};
+export {
+    History, HistoryStep, HistoryEventType
+};

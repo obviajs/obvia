@@ -1,3 +1,5 @@
+
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
 var Props = function (inst, _props, skip = []) {
     let _dskip = ["props", "children"];
     if (skip) {
@@ -35,7 +37,7 @@ var Props = function (inst, _props, skip = []) {
                         }
                         break;
                     default:
-                        if (!isObject(inst[prop]) || !Object.isEmpty(inst[prop]))
+                        if (!ObjectUtils.isObject(inst[prop]) || !Object.isEmpty(inst[prop]))
                             this[prop] = inst[prop];
                 }
             } else
@@ -60,7 +62,7 @@ var Props = function (inst, _props, skip = []) {
                         break;
                     case "rendering":
                         obj[prop] = {};
-                        shallowCopy(inst.rendering, obj[prop], ["currentItem", "currentRow"]);
+                        ObjectUtils.shallowCopy(inst.rendering, obj[prop], ["currentItem", "currentRow"]);
                         break;
                     default:
                         if (this.hasOwnProperty(prop) && this.propertyIsEnumerable(prop))
@@ -72,4 +74,7 @@ var Props = function (inst, _props, skip = []) {
         }
         return obj;
     };
+};
+export {
+    Props
 };

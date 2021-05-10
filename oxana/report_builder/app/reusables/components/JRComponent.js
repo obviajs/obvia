@@ -1,3 +1,5 @@
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+
 var JRComponent = function (_props) {
   let _defaultParams = {
     x: "",
@@ -6,7 +8,7 @@ var JRComponent = function (_props) {
     backgroundColor: "",
     transparent: "",
   };
-  var _props = extend(false, false, _defaultParams, _props);
+  var _props = ObjectUtils.extend(false, false, _defaultParams, _props);
 
   let _x = _props.x;
   let _y = _props.y;
@@ -83,3 +85,6 @@ var JRComponent = function (_props) {
 
 };
 // JRComponent.prototype.ctor = 'JRComponent';
+export {
+  JRComponent
+};

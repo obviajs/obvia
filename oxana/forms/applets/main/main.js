@@ -1,3 +1,6 @@
+import { ArrayUtils } from "/flowerui/lib/ArrayUtils.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+
 let Implementation = function (applet) {
 
     let app = applet.app;
@@ -27,12 +30,12 @@ let Implementation = function (applet) {
             console.log("APPLET_BEGIN_DRAW");
             let paths = findMember(applet.literal, "id", [], "listHistorySteps", false);
             paths[0].pop();
-            let propsListHistorySteps = getChainValue(applet.literal, paths[0]);
+            let propsListHistorySteps = ObjectUtils.ObjectUtils.getChainValue(applet.literal, paths[0]);
             propsListHistorySteps.dataProvider = app.history.steps;
 
             paths = findMember(applet.literal, "id", [], "componentList", false);
             paths[0].pop();
-            let propsComponentList = getChainValue(applet.literal, paths[0]);
+            let propsComponentList = ObjectUtils.ObjectUtils.getChainValue(applet.literal, paths[0]);
             propsComponentList.dataProvider = _cmpList;
         },
         "END_DRAW": function (e) {
@@ -513,7 +516,7 @@ let Implementation = function (applet) {
 
         "LOAD_LAYOUT": function (e) {
             let _cmp = e.content;
-            let res = objectHierarchyGetMatchingMember(_cmp, "props.id", "workAreaRowL2", "props.components");
+            let res = ArrayUtils.objectHierarchyGetMatchingMember(_cmp, "props.id", "workAreaRowL2", "props.components");
             if (res.match) {
                 _cmp = res.match;
             }
@@ -1139,7 +1142,7 @@ let Implementation = function (applet) {
 
     let containerResize = function (container, dx, dy) {
         if (dy && !isNaN(dy) && dy != 0 && container.parent.parent.components.length >= 2) {
-            let mpi = indexOfObject(container.parent.parent.components, "props.id", container.parent.id);
+            let mpi = ArrayUtils.indexOfObject(container.parent.parent.components, "props.id", container.parent.id);
             if (mpi == container.parent.parent.components.length - 1) {
                 dy = -dy;
                 --mpi;
@@ -1155,7 +1158,7 @@ let Implementation = function (applet) {
             container.parent.parent.children[sibling_id].spacing.h += ha_rel;
         }
         if (dx && !isNaN(dx) && dx != 0 && container.parent.components.length >= 2) {
-            let mpi = indexOfObject(container.parent.components, "props.id", container.id);
+            let mpi = ArrayUtils.indexOfObject(container.parent.components, "props.id", container.id);
             if (mpi == container.parent.components.length - 1) {
                 dx = -dx;
                 --mpi;

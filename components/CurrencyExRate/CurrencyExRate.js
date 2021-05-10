@@ -4,7 +4,9 @@
  * Kreatx 2019
  */
 
-//component definition
+import { Container } from "/flowerui/components/Container.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+
 var CurrencyExRate = function (_props) {
     let _self = this;
 
@@ -91,7 +93,7 @@ var CurrencyExRate = function (_props) {
         valueField: "key",
 
     };
-    _props = extend(false, false, _defaultParams, _props);
+    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
 
     let _value = _props.value;
     let _currencyList = _props.currencyList;
@@ -111,8 +113,8 @@ var CurrencyExRate = function (_props) {
     };
     fnContainerDelayInit();
     _props.components = _cmps;
-    Container.call(this, _props, true);
-
+    let r = Container.call(this, _props, true);
+    return r;
 };
 //component prototype
 CurrencyExRate.prototype.ctor = 'CurrencyExRate';

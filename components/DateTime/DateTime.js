@@ -3,6 +3,10 @@
  *
  * Kreatx 2019
  */
+import { Parent } from "/flowerui/components/base/Parent.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+import { ChangeWatcher } from "/flowerui/lib/binding/ChangeWatcher.js";
+
 var DateTime = function (_props) {
     let _self = this;
 
@@ -145,7 +149,7 @@ var DateTime = function (_props) {
         max: null        
     };
 
-    _props = extend(false, false, _defaultParams, _props);
+    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
     let _inputFormat = _props.inputFormat;
     let _outputFormat = _props.outputFormat;
     let _displayFormat = _props.displayFormat;
@@ -167,3 +171,6 @@ var DateTime = function (_props) {
     return r;
 };
 DateTime.prototype.ctor = "DateTime";
+export {
+    DateTime
+};

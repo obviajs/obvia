@@ -1,3 +1,5 @@
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+
 var ReportProperties = function (_props) {
     let _defaultParams = {
         report_id: 0,
@@ -18,7 +20,7 @@ var ReportProperties = function (_props) {
         dataviewFields_list: '',
         xml: ''
     };
-    _props = extend(false, false, _defaultParams, _props);
+    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
     this.report_id = _props.report_id;
     this.report_name = _props.report_name;
     this.description = _props.description;
@@ -50,3 +52,6 @@ var ReportProperties = function (_props) {
     });
 };
 ReportProperties.prototype.ctor = 'ReportProperties';
+export {
+    ReportProperties
+};

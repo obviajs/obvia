@@ -1,3 +1,4 @@
+import { UseBindings } from "/flowerui/lib/UseBindings.js";
 var Rule = function (_rule) {
     let _self = this, _hasBindings = false, _dependencies = [];    
     
@@ -48,4 +49,7 @@ var Rule = function (_rule) {
             return _hasBindings;
         }
     });
+};
+export {
+    Rule
 };

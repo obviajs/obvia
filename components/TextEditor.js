@@ -4,7 +4,9 @@
  * Kreatx 2018
  */
 
-//component definition
+import { Component } from "/flowerui/components/base/Component.js";
+import { List } from "/flowerui/components/List.js";
+
 var TextEditor =  function(_props, overrided = false) {
     var _self = this;
     this.beforeAttach = function () {
@@ -49,7 +51,7 @@ var TextEditor =  function(_props, overrided = false) {
         afterAttach: this.afterAttach
     };
 
-    _props = extend(false, false, _defaultParams, _props);
+    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
     var _change = _props.change;
     var _value = _props.value;
   
@@ -132,3 +134,6 @@ var TextEditor =  function(_props, overrided = false) {
 
 //component prototype
 TextEditor.prototype.ctor = 'TextEditor';
+export {
+    TextEditor
+};

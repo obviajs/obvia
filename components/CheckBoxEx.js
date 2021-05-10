@@ -3,7 +3,8 @@
  *
  * Kreatx 2019
  */
-
+import { Component } from "/flowerui/components/base/Component.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
 var CheckBoxEx = function (_props) {
     let _self = this, _label, _value, _checked, _name;
 
@@ -114,7 +115,7 @@ var CheckBoxEx = function (_props) {
         checked: false
     };
 
-    _props = extend(false, false, _defaultParams, _props);
+    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
 
     let _click = _props.click;
 
@@ -132,3 +133,6 @@ var CheckBoxEx = function (_props) {
 };
 
 CheckBoxEx.prototype.ctor = "CheckBoxEx";
+export {
+    CheckBoxEx
+};

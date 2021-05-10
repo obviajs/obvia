@@ -4,7 +4,9 @@
  * Kreatx 2018
  */
 
-//component definition
+import { Container } from "/flowerui/components/Container.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+
 var LeafletMap = function (_props) {
     let _self = this,
         _markers = [],
@@ -69,7 +71,7 @@ var LeafletMap = function (_props) {
             }).addTo(_map);
             marker.on('dragend', function (e) {
                 let pos = e.target.getLatLng();
-                let m = getMatching(_dataProvider, _layerIdField, e.target._leaflet_id, true);
+                let m = ArrayUtils.getMatching(_dataProvider, _layerIdField, e.target._leaflet_id, true);
                 m.objects[0][_latitudeField] = pos.lat;
                 m.objects[0][_longitudeField] = pos.lng;
             });
@@ -80,7 +82,7 @@ var LeafletMap = function (_props) {
     };
 
     let _markerClick = function (e) {
-        let m = getMatching(_dataProvider, _layerIdField, e.target._leaflet_id, true);
+        let m = ArrayUtils.getMatching(_dataProvider, _layerIdField, e.target._leaflet_id, true);
         _self.selectedItem = m.objects[0];
     };
 
@@ -228,7 +230,7 @@ var LeafletMap = function (_props) {
         allowNewItem: false
     };
 
-    _props = extend(false, false, _defaultParams, _props);
+    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
     if (!_props.attr) {
         _props.attr = {};
     }
@@ -246,3 +248,6 @@ var LeafletMap = function (_props) {
 };
 //component prototype
 LeafletMap.prototype.ctor = 'LeafletMap';
+export {
+    LeafletMap
+};

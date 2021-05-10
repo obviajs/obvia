@@ -4,7 +4,7 @@
  * Kreatx 2019
  */
 
-//component definition
+import {Container} from "/flowerui/components/Container.js";
 var Nav = function(_props)
 {
     //is template overrided ?
@@ -17,3 +17,6 @@ var Nav = function(_props)
     return r;
 };
 Nav.prototype.ctor = 'Nav';
+export {
+    Nav
+};

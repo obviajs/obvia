@@ -4,7 +4,9 @@
  * Kreatx 2019
  */
 
-//component definition
+import { Container } from "/flowerui/components/Container.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+
 var SideNav = function(_props)
 {
     let _self = this, _open, _width, _side;
@@ -72,7 +74,7 @@ var SideNav = function(_props)
         width: 250
     };
     
-    _props = extend(false, false, _defaultParams, _props);
+    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
     let r = Container.call(this, _props);
     return r;
 };

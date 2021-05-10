@@ -1,3 +1,6 @@
+import { TextInput } from "/flowerui/components/TextInput/TextInput.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+
 var JRTextInput = function (_props) {
   let _defaultParams = {
     width: "",
@@ -6,7 +9,7 @@ var JRTextInput = function (_props) {
     color: "",
     editorCode: ""
   };
-  _props = extend(false, false, _defaultParams, _props);
+  _props = ObjectUtils.extend(false, false, _defaultParams, _props);
   let _width = _props.width;
   let _height = _props.height;
   let _fontSize = _props.fontSize;
@@ -89,3 +92,6 @@ var JRTextInput = function (_props) {
   return r;
 };
 JRTextInput.prototype.ctor = "JRTextInput";
+export {
+  JRTextInput
+};

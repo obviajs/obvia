@@ -1,3 +1,6 @@
+import {Label} from "/flowerui/components/Label.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+
 var JRLabel = function (_props) {
   // _props.components = {ctor: JRBand, props: {
   //     id: 'jr_resizer',
@@ -11,7 +14,7 @@ var JRLabel = function (_props) {
     color: "",
   };
 
-  _props = extend(false, false, _defaultParams, _props);
+  _props = ObjectUtils.extend(false, false, _defaultParams, _props);
   let _width = _props.width;
   let _height = _props.height;
   let _fontSize = _props.fontSize;
@@ -86,3 +89,6 @@ var JRLabel = function (_props) {
   return r;
 };
 JRLabel.prototype.ctor = "JRLabel";
+export {
+  JRLabel
+};

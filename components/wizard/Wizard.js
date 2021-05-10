@@ -3,6 +3,9 @@
  * 
  * Kreatx 2020
  */
+import {Container} from "/flowerui/components/Container.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+
 var Wizard = function (_props) {
     let _self = this;
     let _viewStack,
@@ -63,13 +66,13 @@ var Wizard = function (_props) {
         for (let i = 0; i < len; i++) {
             let r = this.components[i].props;
             let o = {
-                "stepLabel": getChainValue(r, _stepPath),
-                "detail": getChainValue(r, _detailsPath),
-                nextBtnLabel: getChainValue(r, _nextBtnLabelPath),
-                previousBtnLabel: getChainValue(r, _previousBtnLabelPath),                  
+                "stepLabel": ObjectUtils.getChainValue(r, _stepPath),
+                "detail": ObjectUtils.getChainValue(r, _detailsPath),
+                nextBtnLabel: ObjectUtils.getChainValue(r, _nextBtnLabelPath),
+                previousBtnLabel: ObjectUtils.getChainValue(r, _previousBtnLabelPath),                  
                 "liComponents": stepCmps,
-                nextBtnVisibility: getChainValue(r, _nextBtnVisibilityPath),
-                previousBtnVisibility: getChainValue(r, _previousBtnVisibilityPath)
+                nextBtnVisibility: ObjectUtils.getChainValue(r, _nextBtnVisibilityPath),
+                previousBtnVisibility: ObjectUtils.getChainValue(r, _previousBtnVisibilityPath)
             };
             arr.push(o);
         }
@@ -293,7 +296,7 @@ var Wizard = function (_props) {
         nextBtnVisibilityPath: "attr.nextBtnVisibility"
     };
 
-    _props = extend(false, false, _defaultParams, _props);
+    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
     if (!_props.attr) {
         _props.attr = {};
     }
@@ -319,3 +322,6 @@ var Wizard = function (_props) {
     return r;
 };
 Wizard.prototype.ctor = 'Wizard';
+export {
+    Wizard
+};

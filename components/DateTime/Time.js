@@ -3,6 +3,9 @@
  *
  * Kreatx 2019
  */
+import { DateTime } from "/flowerui/components/DateTime/DateTime.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+
 var Time = function (_props) {
     let _self = this;
 
@@ -20,10 +23,13 @@ var Time = function (_props) {
         min: null,
         max: null        
     };
-    _props = extend(false, false, _defaultParams, _props);
+    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
     
     let r = DateTime.call(this, _props);
     
     return r;
 };
 Time.prototype.ctor = "Time";
+export {
+    Time
+};

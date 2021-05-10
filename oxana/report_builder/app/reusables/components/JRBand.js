@@ -1,10 +1,13 @@
-var JRBand = function(_props){   
+import {Container} from "/flowerui/components/Container.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+
+var JRBand = function (_props) {
 
     let _defaultParams = {
         name : "",
         bandOrder : 0,
     };
-    _props = extend(false, false, _defaultParams, _props);
+    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
     let _name = _props.name;
     let _bandOrder = _props.bandOrder;
 
@@ -50,3 +53,6 @@ var JRBand = function(_props){
     return r;
 };
 JRBand.prototype.ctor = 'JRBand';
+export {
+    JRBand
+};

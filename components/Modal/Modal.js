@@ -1,10 +1,16 @@
+
 /**
  * This is a Modal component
  * 
  * Kreatx 2018
  */
+import { ArrayEx } from "/flowerui/lib/ArrayEx.js";
+import { Container } from "/flowerui/components/Container.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+import { Heading, HeadingType } from "/flowerui/components/Heading.js";
+import { Button } from "/flowerui/components/Button/Button.js";
+import { Label, LabelType } from "/flowerui/components/Label.js";
 
-//component definition
 var Modal = function (_props) {
     let _self = this;
     Object.defineProperty(this, "title", {
@@ -53,7 +59,7 @@ var Modal = function (_props) {
             {
                 ctor: Container,
                 props: {
-                    type: ContainerType.BTN_GROUP,
+                    type: "btn-group",
                     id: "headerButtonsCnt",
                     components: [{
                             ctor: Button,
@@ -117,7 +123,7 @@ var Modal = function (_props) {
 
     let _defaultParams = {
         size: ModalSize.LARGE,
-        type: ContainerType.NONE,
+        type: "",
         classes: ["modal", "modal-fullscreen"],
         attr: {
             "data-triggers": "displayListUpdated accept dismiss shown hidden",
@@ -127,7 +133,7 @@ var Modal = function (_props) {
         css: {},
         components: _defaultComponents
     };
-    _props = extend(false, false, _defaultParams, _props);
+    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
     if (_props.components && _props.components.forEach) {
         _props.components = _defaultComponents;
     }
@@ -151,18 +157,15 @@ var Modal = function (_props) {
         Modal.all.push(_self);
         _props.css["z-index"] = 1040 + Modal.all.length;
         if (!Modal.BackDrop) {
-            Modal.BackDrop = Component.fromLiteral({
-                ctor: Container,
-                props: {
-                    type: ContainerType.NONE,
-                    classes: ["modal-backdrop", "fade", "show"]
-                }
+            Modal.BackDrop = new Container({
+                type: "",
+                classes: ["modal-backdrop", "fade", "show"]
             });
         }
         _cmps = [{
             ctor: Container,
             props: {
-                type: ContainerType.NONE,
+                type: "",
                 classes: ["modal-dialog", _size],
                 attr: {
                     role: "document"
@@ -171,14 +174,14 @@ var Modal = function (_props) {
                 components: [{
                     ctor: Container,
                     props: {
-                        type: ContainerType.NONE,
+                        type: "",
                         classes: ["modal-content"],
                         id: "modalContent",
                         components: [{
                                 ctor: Container,
                                 props: {
                                     id: "modalHeader",
-                                    type: ContainerType.NONE,
+                                    type: "",
                                     classes: ["modal-header"],
                                     components: _props.components.modalHeader
                                 }
@@ -187,7 +190,7 @@ var Modal = function (_props) {
                                 ctor: Container,
                                 props: {
                                     id: "modalBody",
-                                    type: ContainerType.NONE,
+                                    type: "",
                                     classes: ["modal-body"],
                                     css: {
                                         "overflow-y": "auto",
@@ -200,7 +203,7 @@ var Modal = function (_props) {
                                 ctor: Container,
                                 props: {
                                     id: "modalFooter",
-                                    type: ContainerType.NONE,
+                                    type: "",
                                     classes: ["modal-footer"],
                                     components: _props.components.modalFooter
                                 }
@@ -267,3 +270,11 @@ var Modal = function (_props) {
 Modal.prototype.ctor = 'Modal';
 Modal.all = new ArrayEx();
 Modal.BackDrop = null;
+var ModalSize =
+{
+    "SMALL": "modal-sm",
+    "LARGE": "modal-lg"
+};
+export {
+    Modal, ModalSize
+};

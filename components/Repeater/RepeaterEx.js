@@ -1,3 +1,6 @@
+import { Container } from "/flowerui/components/Container.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+
 var RepeaterEx = function (_props) {
     let _self = this;
     Object.defineProperty(this, "dataProvider", {
@@ -118,7 +121,7 @@ var RepeaterEx = function (_props) {
         dataProvider: new ArrayEx([]),
         guidField: "guid"
     };
-    _props = extend(false, false, _defaultParams, _props);
+    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
 
     if (!_props.attr) {
         _props.attr = {};
@@ -148,7 +151,10 @@ var RepeaterEx = function (_props) {
     fnContainerDelayInit();
     _props.components = _cmps;
 
-    Container.call(this, _props);
-    return _self.proxy;
+    let r = Container.call(this, _props);
+    return r;
 };
 RepeaterEx.prototype.ctor = 'RepeaterEx';
+export {
+    RepeaterEx
+};

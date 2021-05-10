@@ -1,4 +1,6 @@
-var ProgressBar=function(_props){
+import {Container} from "/flowerui/components/Container.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+var ProgressBar = function (_props) {
 
     Object.defineProperty(this, "label",
     {
@@ -121,24 +123,33 @@ var ProgressBar=function(_props){
         valueMin: 0,
         valueMax: 100,
         classes:["progress"],
-        type: ContainerType.NONE,
+        type: "",
         components:[
             {
                 ctor: Container,
                 props:{
                     id:"progressBar",
                     classes:[ProgressBarStyle.PROGRESS],
-                    type: ContainerType.NONE,
+                    type: "",
                     role: "progressbar",
                     beforeAttach:_pbBeforeAttach
                 }
             }
         ]
     };
-    _props=extend(false,false,_defaultParams,_props);
+    _props = ObjectUtils.extend(false,false,_defaultParams,_props);
     
     var _label,_valueNow,_valueMin,_valueMax;
     
     Container.call(this, _props);
 };
 ProgressBar.prototype.ctor = 'ProgressBar';
+var ProgressBarStyle =
+{
+    "PROGRESS": "progress-bar",
+    "PROGRESS_STRIPED": "progress-bar-striped ",
+    "PROGRESS_ANIMATED": "progress-bar-animated"
+};
+export {
+    ProgressBar, ProgressBarStyle
+};
