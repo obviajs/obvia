@@ -85,31 +85,28 @@ var Applet = function (_props) {
     let _defaultAppletIndex = _props.defaultAppletIndex;
 
     let _instIndexMap = {"0": 0 };
-    this.route = function (msg) {
+    this.route = async function (msg) {
         if ((_parentApplet == _app) || msg.hash == _anchor) {
-            return coroutine(function* () {
-                msg = msg || {};
-                let p = yield _self.routeApplet(msg.map);
-                let pc = [p], inst;
-                if (msg.child && _appletsMap[msg.child.hash]) {
-                    let appletIndex = msg.child.map.inst && msg.child.map.inst > -1 ? msg.child.map.inst : 0;
-                    appletIndex = _instIndexMap[appletIndex];
-                    if (appletIndex==null) {
-                        let applet = _applets[_appletsMap[msg.child.hash][0].appletIndex];
-                        _instIndexMap[appletIndex] = _applets.length;
-                        inst = _self.addApplet(applet);
-                    }else 
-                        inst = _appletsMap[msg.child.hash][appletIndex];
-                } else {
-                    if (_defaultAppletIndex!=null && _applets[_defaultAppletIndex]) {
-                        msg.child = {"hash": _applets[_defaultAppletIndex].anchor};
-                        inst = _appletsMap[_applets[_defaultAppletIndex].anchor][0];
-                    }
+            msg = msg || {};
+            await _self.routeApplet(msg.map);
+            let inst;
+            if (msg.child && _appletsMap[msg.child.hash]) {
+                let appletIndex = msg.child.map.inst && msg.child.map.inst > -1 ? msg.child.map.inst : 0;
+                appletIndex = _instIndexMap[appletIndex];
+                if (appletIndex==null) {
+                    let applet = _applets[_appletsMap[msg.child.hash][0].appletIndex];
+                    _instIndexMap[appletIndex] = _applets.length;
+                    inst = _self.addApplet(applet);
+                }else 
+                    inst = _appletsMap[msg.child.hash][appletIndex];
+            } else {
+                if (_defaultAppletIndex!=null && _applets[_defaultAppletIndex]) {
+                    msg.child = {"hash": _applets[_defaultAppletIndex].anchor};
+                    inst = _appletsMap[_applets[_defaultAppletIndex].anchor][0];
                 }
-                if(inst)
-                    pc.push(yield inst.route(msg.child));
-                return Promise.all(pc);
-            });
+            }
+            if(inst)
+                await inst.route(msg.child);
         }
     };
 
@@ -223,15 +220,15 @@ var Applet = function (_props) {
         });
     };
 
-    this.routeApplet = function (msg) {
+    this.routeApplet = async function (msg) {
         ObjectUtils.inTheImageOf(msg, _msg);
-        return _initAppletInternal();
+        return await _initAppletInternal();
     };
 
-    this.initApplet = function (msg) {
+    this.initApplet = async function (msg) {
         //set the hash for this applet by stringifying msg     
         ObjectUtils.shallowCopy(msg, _proxiedMsg);
-        return _initAppletInternal();
+        return await _initAppletInternal();
     };
 
     this.addBehaviors = function (cmps, behaviors, recurse = true) {

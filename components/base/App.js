@@ -318,31 +318,22 @@ var App = function (_props) {
     };
 
     let _hashchange = function (e) {
-        //if 
         _route(e.newValue);
-
-        /**
-         * p.hash, p.map
-        e.oldValue;
-        e.newValue;
-         */
-
-
     };
 
 
-    let _route = function (hash) {
+    let _route = async function (hash) {
         let m = BrowserUtils.parse(hash), appletInst;
         if (m.hash && m.hash != "") {
             let appletInstArr = _appletsMap[m.hash];
             let appletIndex = m.map.inst && m.map.inst < appletInstArr.length ? m.map.inst : 0;
             appletInst = appletInstArr[appletIndex];
             if (appletInst) {
-                appletInst.route(m);
+                await appletInst.route(m);
             } else {
                 if (_applets && _applets.length > 0) {
                     appletInst = _appletsMap[_applets[_defaultAppletIndex].anchor][0];
-                    appletInst.route(m);
+                    await appletInst.route(m);
                 }
             }
             // appletInst.init(m.map).then((literal) => {
@@ -350,7 +341,7 @@ var App = function (_props) {
         } else {
             if (_applets && _applets.length > 0) {
                 appletInst = _appletsMap[_applets[_defaultAppletIndex].anchor][0];
-                appletInst.route(m.map);
+                await appletInst.route(m.map);
             }
         }
     };
