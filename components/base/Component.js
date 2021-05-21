@@ -1,11 +1,21 @@
-var Component = function (_props) {   
+import { Literal } from "/flowerui/lib/Literal.js";
+import { UseBindings } from "/flowerui/lib/UseBindings.js";
+import { Attr } from "/flowerui/components/base/Attr.js";
+import { Css } from "/flowerui/components/base/Css.js";
+import { StringUtils } from "/flowerui/lib/StringUtils.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+import { ArrayUtils } from "/flowerui/lib/ArrayUtils.js";
+import { RepeaterEventArgs } from "/flowerui/components/Repeater/RepeaterEventArgs.js";
+import { Props } from "/flowerui/components/base/Props.js";
+
+var Component = function (_props) {
     let _self = this;
     if (!Component[this.ctor]) {
         Component[this.ctor] = {};
         Component[this.ctor].instanceInc = 0;
     }
     ++Component[this.ctor].instanceInc;
-
+    delete _props["guid"];
     let _defaultParams = {
         id: this.ctor + "_" + Component[this.ctor].instanceInc,
         classes: [],
@@ -19,7 +29,7 @@ var Component = function (_props) {
         appendTo: undefined,
         attach: true
     };
-    shallowCopy(extend(false, false, _defaultParams, _props), _props);
+    ObjectUtils.shallowCopy(ObjectUtils.extend(false, false, _defaultParams, _props), _props);
     UseBindings.call(this, _props);
     for (let prop in _props) {
         if (this.bindedProps.hasOwnProperty(prop))
@@ -186,12 +196,6 @@ var Component = function (_props) {
         }
     });
 
-    Object.defineProperty(this, "spacing", {
-        get: function spacing() {
-            return _spacing;
-        },
-        enumerable: true
-    });
     Object.defineProperty(this, "attr", {
         get: function attr() {
             return _attr;
@@ -309,7 +313,7 @@ var Component = function (_props) {
                 if (this.$el)
                     this.$el.find("input, select, textarea, button").addBack("input, select, textarea, button").each(function () {
                         if (!v)
-                            $(this).prop('disabled', 'disabled');
+                            $(this).attr('disabled', 'disabled');
                         else
                             $(this).removeAttr('disabled');
                     });
@@ -489,8 +493,10 @@ var Component = function (_props) {
                 if (typeof _endDraw == 'function')
                     _endDraw.apply(this.proxyMaybe, arguments);
             }
-            this.applyMyBindings();
-            _self.trigger('beforeAttach');
+            if (!_attached) {
+                this.applyMyBindings();
+                _self.trigger('beforeAttach');
+            }
         }
     };
 
@@ -579,7 +585,7 @@ var Component = function (_props) {
             let found = false;
             for (let i = 0; i < customEvents.length; i++) {
                 if (customEvents[i].registerTo.attr('id') == $(this).attr('id')) {
-                    customEvents[i].events = extend(false, false, eventsObj, customEvents[i].events);
+                    customEvents[i].events = ObjectUtils.extend(false, false, eventsObj, customEvents[i].events);
                     found = true;
                     break;
                 }
@@ -781,7 +787,7 @@ var Component = function (_props) {
             }
             let found;
             for (let i = 0; i < evt.length; i++) {
-                found = getMatching(_handlers[evt[i]], "originalHandler", handler, true);
+                found = ArrayUtils.getMatching(_handlers[evt[i]], "originalHandler", handler, true);
                 if (found.objects.length > 0) {
                     arguments[ind] = found.objects[0].proxyHandler;
                     this.$el.off.apply(this.$el, arguments);
@@ -792,7 +798,7 @@ var Component = function (_props) {
     };
 
     this.hasListener = function (eventType, fnc) {
-        let found = getMatching(_handlers[eventType], "originalHandler", fnc, true);
+        let found = ArrayUtils.getMatching(_handlers[eventType], "originalHandler", fnc, true);
         return found.objects.length > 0;
     };
     
@@ -845,7 +851,6 @@ var Component = function (_props) {
         this.display = _props.display;
     if (_props.draggable != null)
         this.draggable = _props.draggable;
-    let _spacing = new Spacing(_props.spacing, this.$el);
 
     _self.initEvents(this.$el);
 
@@ -859,7 +864,7 @@ var Component = function (_props) {
     }
 
     this.find = function (childId) {
-        let r = objectHierarchyGetMatchingMember(this, "id", childId, "children", false),
+        let r = ArrayUtils.objectHierarchyGetMatchingMember(this, "id", childId, "children", false),
             m = null;
         if (r && r.match)
             m = r.match;
@@ -962,3 +967,6 @@ Component.defaultContext = window;
 Component.registered = {};
 Component.instances = {};
 Component.observer = {};
+export {
+    Component
+};

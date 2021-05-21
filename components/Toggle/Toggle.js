@@ -3,6 +3,8 @@
  *
  * Kreatx 2019
  */
+import {Label} from "/flowerui/components/Label.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
 
 var Toggle = function (_props) {
     let _self = this, _checkBox, _span;
@@ -83,7 +85,7 @@ var Toggle = function (_props) {
         }
     };
     
-    _props = extend(false, false, _defaultParams, _props);
+    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
     if(_props.classes["span"]==null)
         _props.classes["span"] = [];
     _props.classes["span"].pushUnique("slider");
@@ -105,7 +107,11 @@ var Toggle = function (_props) {
     };
     _props.change = null;
 
-    Label.call(this, _props, true);
+    let r = Label.call(this, _props, true);
+    return r;
 };
 
 Toggle.prototype.ctor = "Toggle";
+export {
+    Toggle
+};

@@ -4,7 +4,9 @@
  * Kreatx 2020
  */
 
-//component definition
+import {Validator} from "/flowerui/components/Validation/Validator.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+
 var RegularExpressionValidator = function (_props) {
     let _self = this,
         _validationExpression, _validationExpressionCompiled, _modifiers;
@@ -64,7 +66,7 @@ var RegularExpressionValidator = function (_props) {
         modifiers: ""
     };
 
-    _props = extend(false, false, _defaultParams, _props);
+    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
 
 
     let _label;
@@ -74,3 +76,6 @@ var RegularExpressionValidator = function (_props) {
     return r;
 };
 RegularExpressionValidator.prototype.ctor = 'RegularExpressionValidator';
+export {
+    RegularExpressionValidator
+};

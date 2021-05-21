@@ -11,5 +11,4 @@ var ContainerType =
     "INPUT_GROUP":"input-group",
     "INPUT_GROUP_PREPEND":"input-group-prepend",
     "INPUT_GROUP_TEXT":"input-group-text"
-
 }

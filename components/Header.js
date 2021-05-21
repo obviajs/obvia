@@ -4,7 +4,7 @@
  * Kreatx 2019
  */
 
-//component definition
+import {Container} from "/flowerui/components/Container.js";
 var Header = function(_props)
 {
     //is template overrided ?
@@ -12,7 +12,10 @@ var Header = function(_props)
     { 
         return  '<header id="' + this.domID + '"></header>'; 
     };
-    _props.type = ContainerType.NONE;
+    _props.type = "";
     Container.call(this, _props);
 };
 Header.prototype.ctor = 'Header';
+export {
+    Header
+};

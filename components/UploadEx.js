@@ -3,9 +3,23 @@
  *
  * Kreatx 2019
  */
+
+import { Container } from "/flowerui/components/Container.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+import { StringUtils } from "/flowerui/lib/StringUtils.js";
+import { Label, LabelType } from "/flowerui/components/Label.js";
+import { Form } from "/flowerui/components/Form/Form.js";
+import { Upload } from "/flowerui/components/Form/Upload.js";
+import { Link } from "/flowerui/components/Link/Link.js";
+import { ProgressBar, ProgressBarStyle } from "/flowerui/components/ProgressBar/ProgressBar.js";
+import { whenDefined } from "/flowerui/lib/DecoratorUtils.js";
+import { BinUtils } from "/flowerui/lib/BinUtils.js";
+import { getFontAwesomeIconFromMIME } from "/flowerui/lib/my.js";
+import { downloadFromUrl } from "/flowerui/lib/my.js";
+
 var UploadEx = function (_props) {
     let _self = this;
-    let _upload, _lblFileName, _btnRemove, _iconLbl, _lblFileSize, _progressBar, _progressRow, _btnUpload, _additionalProperties, _action;
+    let _upload, _lblFileName, _btnRemove, _iconLbl, _lblFileSize, _progressBar, _progressRow, _btnUpload, _btnSelect, _additionalProperties, _action, _downloadUrl;
     let _lastFileTypeIcon, _autoUpload, _readOnly;
 
     let upload_change = function (e) {
@@ -29,7 +43,7 @@ var UploadEx = function (_props) {
             classes.pushUnique("align-middle");
             if (files.length > 1)
                 _lastFileTypeIcon = "fa-files";
-            else if (files.length > 0) {
+            else if (files.length > 0 && files[0].type) {
                 _lastFileTypeIcon = getFontAwesomeIconFromMIME(files[0].type);
                 if (_lastFileTypeIcon == null)
                     _lastFileTypeIcon = "fa-file";
@@ -53,23 +67,25 @@ var UploadEx = function (_props) {
             let lit = {
                 ctor: "Label",
                 props: {
-                    label: ";"
-                }
+                    label: ""
+                },
+                classes:["mr-2"]
             };
             let acmps = [];
             for (let i = 0; i < files.length; i++) {
-                if (files[i].url) {
-                    let clit = deepCopy(alit);
+                if (files[i].url || _downloadUrl) {
+                    let clit = ObjectUtils.deepCopy(alit);
                     clit.props.label = files[i].name;
-                    clit.props.href = files[i].url;
+                    clit.props.href = files[i].url || _downloadUrl;
                     acmps.push(clit);
                     acmps.push(lit);
                 } else
                     arr.push(files[i].name);
-                if (files[i].size && !isNaN(files[i].size))
+                if (files[i].size && !isNaN(files[i].size)) {
                     if (size == null)
                         size = 0;
-                size += files[i].size;
+                    size += files[i].size;
+                }                   
             }
             _lblFileName.removeAllChildren();
             if (acmps.length > 0) {
@@ -80,7 +96,7 @@ var UploadEx = function (_props) {
             if (isNaN(size))
                 _lblFileSize.label = "";
             else
-                _lblFileSize.label = formatBytes(size);
+                _lblFileSize.label = StringUtils.formatBytes(size);
         } else {
             _btnUpload.enabled = false;
             _btnRemove.enabled = false;
@@ -321,7 +337,7 @@ var UploadEx = function (_props) {
                                     valueMax: 100,
                                     width: "100%",
                                     height: "100%",
-                                    classes: [BgStyle.BG_INFO, ProgressBarStyle.PROGRESS, ProgressBarStyle.PROGRESS_ANIMATED, ProgressBarStyle.PROGRESS_STRIPED]
+                                    classes: ["bg-info", ProgressBarStyle.PROGRESS, ProgressBarStyle.PROGRESS_ANIMATED, ProgressBarStyle.PROGRESS_STRIPED]
                                 }
                             }]
                         }
@@ -447,6 +463,17 @@ var UploadEx = function (_props) {
         }
     });
 
+    Object.defineProperty(this, "downloadUrl", {
+        get: function downloadUrl() {
+            return _downloadUrl;
+        },
+        set: function downloadUrl(v) {
+            if (_downloadUrl != v) {
+                _downloadUrl = v;
+            }
+        }
+    });
+    
     Object.defineProperty(this, "upload", {
         get: function upload() {
             return _upload;
@@ -554,6 +581,9 @@ var UploadEx = function (_props) {
             if (_readOnly == null && _props.readOnly) {
                 _self.readOnly = _props.readOnly;
             }
+            if (_downloadUrl == null && _props.downloadUrl) {
+                _self.downloadUrl = _props.downloadUrl;
+            }
             e.preventDefault();            
         }
     };
@@ -565,16 +595,20 @@ var UploadEx = function (_props) {
         type: "",
         autoUpload: true,
         readOnly: false,
-        classes: ["form-control", "form-control-sm"]
+        classes: ["form-control", "form-control-sm"],
     };
 
     let _multiple, _accept, _showBtnRemove, _form, _value, _showProgress, _fullUrlField;
 
-    _props = extend(false, false, _defaultParams, _props);
+    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
     _showProgress = _props.showProgress;
     fnContainerDelay_init();
     _props.components = _cmps;
-    Container.call(this, _props);
+    let r = Container.call(this, _props);
     _form = _props.form;
+    return r;
 };
 UploadEx.prototype.ctor = 'UploadEx';
+export {
+    UploadEx
+};

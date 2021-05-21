@@ -289,7 +289,7 @@ var celleditfinished_ex = function (e, rowIndex, columnIndex, itemEditorInfo) {
 
     var label = "";
     if (value.length > 0) {
-        if (itemEditorInfo.itemEditor["labelField"] && isObject(value[0]) && value[0][itemEditorInfo.itemEditor.labelField]) {
+        if (itemEditorInfo.itemEditor["labelField"] && ObjectUtils.isObject(value[0]) && value[0][itemEditorInfo.itemEditor.labelField]) {
             label = value[0][itemEditorInfo.itemEditor.labelField];
         }
     }

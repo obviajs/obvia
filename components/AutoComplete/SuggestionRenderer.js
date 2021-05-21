@@ -3,11 +3,10 @@
  * 
  * Kreatx 2018
  */
-
-//component definition
+import { Link } from "/flowerui/components/Link/Link.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
 var SuggestionRenderer = function(_props)
 {
-
     this.beforeAttach = function () 
     {
         this.$el.addClass('dropdown-item');
@@ -39,10 +38,14 @@ var SuggestionRenderer = function(_props)
     let _defaultParams = {
         closeIconSide:"left",
     };
-    _props = extend(false, false, _defaultParams, _props);
+    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
     let _value = _props.value;
     let _closeIconSide = _props.closeIconSide;
     
-    Link.call(this, _props, true);
+    let r = Link.call(this, _props, true);
+    return r;
 };
 SuggestionRenderer.prototype.ctor = 'SuggestionRenderer';
+export {
+    SuggestionRenderer
+};

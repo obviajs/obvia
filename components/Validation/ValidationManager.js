@@ -1,3 +1,4 @@
+import { EventDispatcher } from "/flowerui/lib/EventDispatcher.js";
 var ValidationManager = function () {
     let _self, _validators = [];
     this.$el = $(this);
@@ -56,3 +57,6 @@ ValidationManager.getInstance = function () {
     return ValidationManager.instance;
 };     
 ValidationManager.prototype = Object.create(EventDispatcher.prototype);
+export {
+    ValidationManager
+};

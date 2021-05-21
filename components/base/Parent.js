@@ -1,8 +1,12 @@
+import { Component } from "/flowerui/components/base/Component.js";
+import { Props } from "/flowerui/components/base/Props.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+import { ArrayUtils } from "/flowerui/lib/ArrayUtils.js";
 var Parent = function (_props, _hideComponents = false) {
     let _$hadow = $("<div/>");
     let _comprenders = [];
     let _self = this;
-    let _children = {};
+    let _children = {}, _enabled;
 
     if (!this.hasOwnProperty("initProxy")) {
         this.initProxy = function () {
@@ -123,7 +127,7 @@ var Parent = function (_props, _hideComponents = false) {
     this.removeChild = function (child, mode = 1) {
         if (child) {
             if (_children[child.id] == child) {
-                ind = _csorted.indexOf(child.id);
+                let ind = _csorted.indexOf(child.id);
                 if (ind > -1) {
                     _csorted.splice(ind, 1);
                 }
@@ -186,13 +190,13 @@ var Parent = function (_props, _hideComponents = false) {
 
     let _csorted = [];
 
-    this.addComponentInContainer = function (container, component, index) {
+    this.addComponentInContainer = async function (container, component, index) {
         if (container) {
             component.props.ownerDocument = this.ownerDocument;
             let cmpLit = {};
-            shallowCopy(component, cmpLit, ["props"]);
+            ObjectUtils.shallowCopy(component, cmpLit, ["props"]);
             cmpLit.props = {};
-            shallowCopy(component.props, cmpLit.props, ["id"]);
+            ObjectUtils.shallowCopy(component.props, cmpLit.props, ["id"]);
             if (component.props.id && _children[component.props.id]) {
                 cmpLit.props.id = component.props.id + '_' + Object.keys(_children).length;
             } else
@@ -202,7 +206,7 @@ var Parent = function (_props, _hideComponents = false) {
             // if (cmpLit.props.bindingDefaultContext == null) {
             //     cmpLit.props.bindingDefaultContext = _self.bindingDefaultContext;
             // }
-            let cmp = Component.fromLiteral(cmpLit);
+            let cmp = await Component.fromLiteral(cmpLit);
             //component.props.id = cmp.id;
             if (_children[cmp.id])
                 throw new Error("Child id: " + cmp.id + " is already used in Parent with id: " + _self.id + ". Components ids should be unique within their parent.");
@@ -251,7 +255,7 @@ var Parent = function (_props, _hideComponents = false) {
         sortChildren: false
     };
     //_props = extend(false, false, _defaultParams, _props);
-    shallowCopy(extend(false, false, _defaultParams, _props), _props);
+    ObjectUtils.shallowCopy(ObjectUtils.extend(false, false, _defaultParams, _props), _props);
     if (!_props.attr) {
         _props.attr = {};
     }
@@ -273,7 +277,7 @@ var Parent = function (_props, _hideComponents = false) {
     //_props.afterAttach = this.afterAttach;
     let _sortChildren = _props.sortChildren;
     // this.afterAttach = undefined;
-    this.addComponents = function (components) {
+    this.addComponents = async function (components) {
         _self.trigger('beginDraw');
         let arrInst = [];
         let cr = [];
@@ -283,12 +287,12 @@ var Parent = function (_props, _hideComponents = false) {
                 acSort(components, "props.index");
             }
             for (let i = 0; i < components.length; i++) {
-                if (isObject(components[i])) {
-                    let cr = this.addComponentInContainer(_$hadow, components[i], _csorted.length + i);
+                if (ObjectUtils.isObject(components[i])) {
+                    let cr = await this.addComponentInContainer(_$hadow, components[i], _csorted.length + i);
                     arrInst.push(cr.cmp);
                 }
             }
-            cr = arrayFromKey(_comprenders, "promise");
+            cr = ArrayUtils.arrayFromKey(_comprenders, "promise");
             Promise.all(cr).then(function () {
                 _comprenders = [];
                 for (let i = 0; i < _csorted.length; i++) {
@@ -331,6 +335,24 @@ var Parent = function (_props, _hideComponents = false) {
     }
 
     Component.call(this, _props);
+
+    Object.defineProperty(this, "enabled", {
+        get: function enabled() {
+            return _enabled;
+        },
+        set: function enabled(v) {
+            if (_enabled != v) {
+                _enabled = v;
+                if (!v)
+                    this.$el.attr('disabled', 'disabled');
+                else
+                    this.$el.removeAttr('disabled');
+            }
+        },
+        configurable: true,
+        enumerable: true
+    });
+
     /*
         this.destruct = function (mode=1)
         {
@@ -358,3 +380,6 @@ var Parent = function (_props, _hideComponents = false) {
     return _proxy;
 };
 Parent.prototype.ctor = 'Parent';
+export {
+    Parent
+};

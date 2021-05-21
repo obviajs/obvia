@@ -4,7 +4,9 @@
  * Kreatx 2019
  */
 
-//component definition
+import { Container } from "/flowerui/components/Container.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+import { StringUtils } from "/flowerui/lib/StringUtils.js";
 var AutoBrowse = function (_props) {
     let _self = this;
     let _dataProvider, _bindingDefaultContext, _valueField, _labelField, _value, _columns = [],
@@ -184,7 +186,7 @@ var AutoBrowse = function (_props) {
         allowNewItem: false
     };
 
-    _props = extend(false, false, _defaultParams, _props);
+    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
     if (!_props.attr) {
         _props.attr = {};
     }
@@ -202,7 +204,7 @@ var AutoBrowse = function (_props) {
     }
     _props.attr["data-triggers"] = myDtEvts.join(" ");
 
-    if (_props.dataProvider && !getBindingExp(_props.dataProvider)) {
+    if (_props.dataProvider && !StringUtils.getBindingExp(_props.dataProvider)) {
         _dataProvider = _props.dataProvider;
     }
     if (_props.bindingDefaultContext) {
@@ -219,3 +221,6 @@ var AutoBrowse = function (_props) {
     Container.call(this, _props, true);
 };
 AutoBrowse.prototype.ctor = 'AutoBrowse';
+export {
+    AutoBrowse
+};

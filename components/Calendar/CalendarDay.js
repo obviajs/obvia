@@ -3,6 +3,11 @@
  * 
  * Kreatx 2019
 */
+import { CalendarBase } from "/flowerui/components/Calendar/CalendarBase.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+import { ArrayUtils } from "/flowerui/lib/ArrayUtils.js";
+import { CalendarConstants } from "/flowerui/components/Calendar/CalendarConstants.js";
+
 var CalendarDay = function(_props)
 {
     let _self = this;
@@ -109,7 +114,7 @@ var CalendarDay = function(_props)
     };
 
 
-    _props = extend(false,false,_defaultParams,_props);
+    _props = ObjectUtils.extend(false,false,_defaultParams,_props);
     let _guidField = _props.guidField;
     let _labelField = _props.labelField;
     let _labelField1 = _props.labelField1;
@@ -123,7 +128,7 @@ var CalendarDay = function(_props)
 
     this.addEvent = function (event) {
         let gi = _intervalFromDate(event);
-        let ind = indexOfObject(_dataProvider, "dateTime", gi);
+        let ind = ArrayUtils.indexOfObject(_dataProvider, "dateTime", gi);
         if(ind > -1) {
             _dataProvider[ind][_eventsField].splice(_dataProvider[ind][_eventsField].length, 0, event);
         }
@@ -300,3 +305,6 @@ var CalendarDay = function(_props)
     return r;
 }
 CalendarDay.prototype.ctor = 'CalendarDay';
+export {
+    CalendarDay
+};

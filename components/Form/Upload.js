@@ -4,7 +4,9 @@
  * Kreatx 2019
  */
 
-//component definition
+import { Component } from "/flowerui/components/base/Component.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+
 var Upload = function (_props) {
     let _self = this,
         _files, _name;
@@ -96,7 +98,7 @@ var Upload = function (_props) {
         multiple: false
     };
 
-    _props = extend(false, false, _defaultParams, _props);
+    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
 
     let _multiple;
     let _accept;
@@ -122,3 +124,6 @@ var Upload = function (_props) {
 };
 //component prototype
 Upload.prototype.ctor = 'Upload';
+export {
+    Upload
+};

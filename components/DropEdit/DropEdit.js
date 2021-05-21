@@ -4,7 +4,12 @@
  * Kreatx 2020
  */
 
-//component definition
+import { Container } from "/flowerui/components/Container.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+import { StringUtils } from "/flowerui/lib/StringUtils.js";
+import { Repeater } from "/flowerui/components/Repeater/Repeater.js";
+import { Button, ButtonSize } from "/flowerui/components/Button/Button.js";
+
 var DropEdit = function (_props) {
     let _self = this;
     let _creationFinished;
@@ -134,7 +139,7 @@ var DropEdit = function (_props) {
             ctor: Repeater,
             props: {
                 id: "repeater",
-                type: ContainerType.NONE,
+                type: "",
                 classes: ["dropdown-menu", "drop-edit"],
                 components: [_componentLink],
                 dataProvider: _dataProvider
@@ -153,7 +158,7 @@ var DropEdit = function (_props) {
         classes: [DropMenuDirection.DROPDOWN],
         label: "",
         size: ButtonSize.SMALL,
-        type: ContainerType.NONE,
+        type: "",
         split: DropSplitType.SPLIT,
         guidField: "guid"
     };
@@ -162,7 +167,7 @@ var DropEdit = function (_props) {
         _inputDD.value = this.label;
         let linkObj = {};
         linkObj[_guidField] = ra.currentItem[_guidField];
-        _self.selectedItem = getMatching(_dataProvider, _guidField, linkObj[_guidField]).objects[0];
+        _self.selectedItem = ArrayUtils.getMatching(_dataProvider, _guidField, linkObj[_guidField]).objects[0];
         _componentRepeater.$el.removeClass("show");
         e.stopPropagation();
     };
@@ -173,7 +178,7 @@ var DropEdit = function (_props) {
         _componentRepeater.$el.toggleClass("show");
     };
 
-    _props = extend(false, false, _defaultParams, _props);
+    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
     if (!_props.attr) {
         _props.attr = {};
     }
@@ -188,7 +193,7 @@ var DropEdit = function (_props) {
     let _selectedItem = _props.selectedItem;
     let _guidField = _props.guidField;
 
-    if (_props.dataProvider && !getBindingExp(_props.dataProvider)) {
+    if (_props.dataProvider && !StringUtils.getBindingExp(_props.dataProvider)) {
         _dataProvider = _props.dataProvider;
     } else
         _dataProvider = new ArrayEx();
@@ -197,3 +202,6 @@ var DropEdit = function (_props) {
     Container.call(this, _props, true);
 };
 DropEdit.prototype.ctor = 'DropEdit';
+export {
+    DropEdit
+};

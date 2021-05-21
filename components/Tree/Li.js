@@ -1,5 +1,8 @@
+import {Container} from "/flowerui/components/Container.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+
 var Li = function (_props) {
-    var _self = this;
+    let _self = this, _label, _value;
     
     Object.defineProperty(this, "label", {
         get: function label() {
@@ -51,16 +54,19 @@ var Li = function (_props) {
     let _defaultParams = {
         label: "",
         value: "",
-        type: ContainerType.NONE
+        type: ""
     };
 
-    _props = extend(false, false, _defaultParams, _props);
+    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
    
     let r = Container.call(this, _props); 
    
-    var _label = _props.label;
-    var _value = _props.value;
+    _label = _props.label;
+    _value = _props.value;
     return r;
 };
 //component prototype
 Li.prototype.ctor = 'Li';
+export {
+    Li
+};

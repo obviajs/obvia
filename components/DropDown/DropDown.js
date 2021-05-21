@@ -4,7 +4,16 @@
  * Kreatx 2019
  */
 
-//component definition
+import { Container } from "/flowerui/components/Container.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+import { ArrayUtils } from "/flowerui/lib/ArrayUtils.js";
+import { ArrayEx } from "/flowerui/lib/ArrayEx.js";
+import { Button, ButtonSize } from "/flowerui/components/Button/Button.js";
+import { StringUtils } from "/flowerui/lib/StringUtils.js";
+import { Link } from "/flowerui/components/Link/Link.js";
+import { Repeater } from "/flowerui/components/Repeater/Repeater.js";
+import { ChangeWatcher } from "/flowerui/lib/binding/ChangeWatcher.js";
+
 var DropDown = function (_props) {
     let _self = this;
 
@@ -62,13 +71,13 @@ var DropDown = function (_props) {
         set: function selectedItem(v) {
             if (_selectedItem != v) {
                 let oldValue = _selectedItem;
-                if (!isObject(v)) {
+                if (!ObjectUtils.isObject(v)) {
                     let o = {};
                     o[_valueField] = v;
                     v = o;
                 }
                 if (v.hasOwnProperty(_valueField)) {
-                    let m = getMatching(_dataProvider, _valueField, v[_valueField]).objects;
+                    let m = ArrayUtils.getMatching(_dataProvider, _valueField, v[_valueField]).objects;
                     if (m.length > 0) {
                         v = m[0];
                         _selectedItem = v;
@@ -163,7 +172,7 @@ var DropDown = function (_props) {
             ctor: Repeater,
             props: {
                 id: "repeater",
-                type: ContainerType.NONE,
+                type: "",
                 classes: ["dropdown-menu"],
                 components: [_componentLink],
                 dataProvider: _dataProvider
@@ -184,7 +193,7 @@ var DropDown = function (_props) {
         classes: [DropMenuDirection.DROPDOWN],
         label: "",
         size: ButtonSize.SMALL,
-        type: ContainerType.NONE,
+        type: "",
         split: DropSplitType.SPLIT,
         guidField: "guid"
     };
@@ -192,12 +201,12 @@ var DropDown = function (_props) {
     let _clickHandler = function (e, ra) {
         let linkObj = {};
         linkObj[_guidField] = ra.currentItem[_guidField];
-        _self.selectedItem = getMatching(_dataProvider, _guidField, linkObj[_guidField]).objects[0];
+        _self.selectedItem = ArrayUtils.getMatching(_dataProvider, _guidField, linkObj[_guidField]).objects[0];
         _componentRepeater.$el.removeClass("show");
         e.stopPropagation();
     };
 
-    _props = extend(false, false, _defaultParams, _props);
+    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
     if (!_props.attr) {
         _props.attr = {};
     }
@@ -213,7 +222,7 @@ var DropDown = function (_props) {
     let _split = _props.split;
     let _guidField = _props.guidField;
 
-    if (_props.dataProvider && !getBindingExp(_props.dataProvider)) {
+    if (_props.dataProvider && !StringUtils.getBindingExp(_props.dataProvider)) {
         _dataProvider = _props.dataProvider;
     }
     _props.components = fnContainerDelayInit();
@@ -222,3 +231,16 @@ var DropDown = function (_props) {
 };
 DropDown.prototype.ctor = 'DropDown';
 DropDown.prototype.valueProp = 'selectedItem';
+var DropSplitType = {
+    "NONE": "",
+    "SPLIT": "dropdown-toggle-split"
+};
+var DropMenuDirection = {
+    "DROPDOWN": "dropdown",
+    "DROPUP": "btn-group dropup",
+    "DROPLEFT": "btn-group dropleft",
+    "DROPRIGHT": "btn-group dropright",
+};
+export {
+    DropDown, DropSplitType, DropMenuDirection
+};

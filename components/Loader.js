@@ -4,7 +4,8 @@
  * Kreatx 2018
  */
 
-//component definition
+import { Component } from "/flowerui/components/base/Component.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
 var Loader = function(_props)
 { 
     this.template = function () 
@@ -29,10 +30,13 @@ var Loader = function(_props)
         visible: true
     };
 
-    _props = extend(false, false, _defaultParams, _props);
+    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
 
     Component.call(this, _props);
 };
 
 //component prototype
 Loader.prototype.ctor = 'Loader';
+export {
+    Loader
+};

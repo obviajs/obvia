@@ -4,11 +4,15 @@
  * Kreatx 2018
  */
 
-//component definition
+import {Label} from "/flowerui/components/Label.js";
 var DataGridCellRenderer = function(_props){
     //component data
-    Label.call(this, _props);
+    let r = Label.call(this, _props);
+    return r;
 };
 
 //component prototype
 DataGridCellRenderer.prototype.ctor = 'DataGridCellRenderer';
+export {
+    DataGridCellRenderer
+};

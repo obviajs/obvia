@@ -3,8 +3,9 @@
  * 
  * Kreatx 2020
  */
+import {Validator} from "/flowerui/components/Validation/Validator.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
 
-//component definition
 var CustomValidator = function (_props) {
     let _self = this,
         _validationFunction;
@@ -56,7 +57,7 @@ var CustomValidator = function (_props) {
         validationFunction: null
     };
 
-    _props = extend(false, false, _defaultParams, _props);
+    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
 
 
     let _label;
@@ -66,3 +67,6 @@ var CustomValidator = function (_props) {
     return r;
 };
 CustomValidator.prototype.ctor = 'CustomValidator';
+export {
+    CustomValidator
+};

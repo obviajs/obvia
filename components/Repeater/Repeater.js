@@ -4,7 +4,17 @@
  * Kreatx 2018
  */
 
-//component definition
+import { Container } from "/flowerui/components/Container.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+import { StringUtils } from "/flowerui/lib/StringUtils.js";
+import { debounce, functionName } from "/flowerui/lib/DecoratorUtils.js";
+import { ArrayEx } from "/flowerui/lib//ArrayEx.js";
+import { ChangeWatcher } from "/flowerui/lib/binding/ChangeWatcher.js";
+import { RepeaterEventArgs } from "/flowerui/components/Repeater/RepeaterEventArgs.js";
+import { Component } from "/flowerui/components/base/Component.js";
+import { Literal } from "/flowerui/lib/Literal.js";
+import { Props } from "/flowerui/components/base/Props.js";
+
 var Repeater = function (_props, _hideComponents = false) {
     let _rowItems = [],
         _rows = [];
@@ -116,17 +126,14 @@ var Repeater = function (_props, _hideComponents = false) {
         get: function dataProvider() {
             return _dataProvider;
         },
-        set: function dataProvider(v) {
+        set: async function dataProvider(v) {
             if ((_dataProvider != v && v) || (v==null && _dataProvider.length>0)) {
-                if (_dpWatcher && _dataProvider) {
-                    _dpWatcher.reset();
+                if (_dataProvider) {
                     _dataProvider.off("propertyChange", _debouncedUpdateDataProvider);
                 }
-                _dataProvider = v == null || Array.isArray(v) ? new ArrayEx(v) : v;                
-                this.updateDataProvider();
+                _dataProvider = v == null || Array.isArray(v) ? new ArrayEx(v) : v;
+                await this.updateDataProvider();
                 if (_dataProvider) {
-                    _dpWatcher = ChangeWatcher.getInstance(_dataProvider);
-                    _dpWatcher.watch(_dataProvider, "length", _debouncedUpdateDataProvider);
                     _dataProvider.on("propertyChange", _debouncedUpdateDataProvider);
                 }
             }
@@ -135,9 +142,8 @@ var Repeater = function (_props, _hideComponents = false) {
         configurable: true
     });
 
-    let _dpWatcher;
     if (!this.hasOwnProperty("updateDataProvider")) {
-        this.updateDataProvider = function () {
+        this.updateDataProvider = async function () {
             _self.trigger('beginDraw');
             let oldValue = _self.rows.length;
             let newValue = _dataProvider ? _dataProvider.length : 0;
@@ -164,9 +170,8 @@ var Repeater = function (_props, _hideComponents = false) {
             } else if (delta < 0) {
                 while (delta < 0) {
                     let index = newValue + delta
-                    let rowComponentsPromises = _self.addRow(_dataProvider[index], index);
-                    _comprenders.splicea(_comprenders.length, 0, rowComponentsPromises);
-               
+                    let rowComponentsPromises = await _self.addRow(_dataProvider[index], index);
+                    _comprenders.splicea(_comprenders.length, 0, rowComponentsPromises);                    
                     ++delta;
                 }
             }
@@ -174,12 +179,12 @@ var Repeater = function (_props, _hideComponents = false) {
                 _$hadow.contents().appendTo(_self.$container);
                 _comprenders = [];
                 _self.trigger('endDraw');
+                let e = jQuery.Event("dataProviderUpdate");
+                e.oldValue = oldValue;
+                e.newValue = newValue;
+                _self.trigger(e, [_self]);
             });
-
-            let e = jQuery.Event("dataProviderUpdate");
-            e.oldValue = oldValue;
-            e.newValue = newValue;
-            _self.trigger(e, [_self]);
+            
             return Promise.resolve(p);
         };
     }
@@ -237,7 +242,7 @@ var Repeater = function (_props, _hideComponents = false) {
 
     let _createdRows = 0;
     //renders a new row, adds components in stack
-    this.addRow = function (data, index, isPreventable = false, focusOnRowAdd = true) {
+    this.addRow = async function (data, index, isPreventable = false, focusOnRowAdd = true) {
         let rp = [];
         index = index == null ? _rows.length : index;
         let renderedRow = $('<div/>');
@@ -255,9 +260,9 @@ var Repeater = function (_props, _hideComponents = false) {
                 if (!_components[cIndex].props.id) {
                     _components[cIndex].props.id = functionName(_components[cIndex].ctor) + "_" + (Component[_components[cIndex].ctor] ? Component[_components[cIndex].ctor].instanceInc : 0);
                 }
-                shallowCopy(_components[cIndex], component, ["props"]);
+                ObjectUtils.shallowCopy(_components[cIndex], component, ["props"]);
                 component.props = {};
-                shallowCopy(_components[cIndex].props, component.props, ["id", "bindingDefaultContext"]);
+                ObjectUtils.shallowCopy(_components[cIndex].props, component.props, ["id", "bindingDefaultContext"]);
                 component.props.id = _components[cIndex].props.id + "_" + index + "_" + cIndex;
                 if (_components[cIndex].props.bindingDefaultContext == null) {
                     component.props.bindingDefaultContext = data;
@@ -266,7 +271,7 @@ var Repeater = function (_props, _hideComponents = false) {
                 component.props.parentRepeater = _self.proxyMaybe;
 
                 component.props.ownerDocument = _props.ownerDocument;
-                let el = Component.fromLiteral(component, data);
+                let el = await Component.fromLiteral(component, data);
                 let cmpId = _components[cIndex].props.id;
 
                 //build components properties, check bindings
@@ -308,12 +313,12 @@ var Repeater = function (_props, _hideComponents = false) {
 
                 el.on('change', function (e, rargs) {
                     let currentItem = _self.dataProvider[index];
-                    if (component.props.value && isString(component.props.value) && component.props.value[0] == '{' && component.props.value[component.props.value.length - 1] == '}') {
+                    if (component.props.value && StringUtils.isString(component.props.value) && component.props.value[0] == '{' && component.props.value[component.props.value.length - 1] == '}') {
                         var bindingExp = this.getBindingExpression("value");
                         if (bindingExp == "currentItem") {
                             _self.dataProvider[rargs.currentIndex] = data = this.value;
                         } else {
-                            setChainValue(_dataProvider[rargs.currentIndex], bindingExp, this.value);
+                            ObjectUtils.setChainValue(_dataProvider[rargs.currentIndex], bindingExp, this.value);
                             data = _dataProvider[rargs.currentIndex];
                         }
 
@@ -453,12 +458,15 @@ var Repeater = function (_props, _hideComponents = false) {
             mode: "append" //prepend
         },
         autoUpdateDisplay: true,
-        type: ContainerType.NONE,
+        type: "",
         dataProvider: new ArrayEx([]),
         guidField: "guid",
         components: []
     };
-    _props = extend(false, false, _defaultParams, _props);
+    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
+    if (Array.isArray(_props.dataProvider)){
+        _props.dataProvider = new ArrayEx(_props.dataProvider);
+    }
     if (!_props.attr) {
         _props.attr = {};
     }
@@ -523,13 +531,19 @@ var Repeater = function (_props, _hideComponents = false) {
         set: function enabled(v) {
             if (_enabled != v) {
                 _enabled = v;
+                if (!v)
+                    this.$el.attr('disabled', 'disabled');
+                else
+                    this.$el.removeAttr('disabled');
                 if (this.dataProvider) {
                     let len = this.dataProvider.length;
                     for (let i = 0; i < len; i++) {
                         let clen = this.components.length;
                         for (let j = 0; j < clen; j++) {
                             let component = this.components[j];
-                            _self[component.props.id][i].enabled = v;
+                            if (_self[component.props.id]) {
+                                _self[component.props.id][i].enabled = v;
+                            }
                         }
                     }
                 }
@@ -588,3 +602,6 @@ var Repeater = function (_props, _hideComponents = false) {
     return r;
 };
 Repeater.prototype.ctor = 'Repeater';
+export {
+    Repeater
+};

@@ -3,7 +3,8 @@
  *
  * Kreatx 2019
  */
-
+import { Container } from "/flowerui/components/Container.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
 var MultiUpload = function (_props) {
     let _self = this;
     let _cmps, _lblDrop, _dropContainer, _listRepeater, _progressRow, _progressBar;
@@ -275,7 +276,7 @@ var MultiUpload = function (_props) {
 
     let _accept, _showBtnRemove, _form;
 
-    _props = extend(false, false, _defaultParams, _props);
+    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
     this.dataProvider = new ArrayEx(_props.dataProvider);
     _form = _props.form;
 
@@ -303,3 +304,6 @@ var MultiUpload = function (_props) {
     };
 };
 MultiUpload.prototype.ctor = 'MultiUpload';
+export {
+    MultiUpload
+};

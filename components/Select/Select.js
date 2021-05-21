@@ -5,11 +5,16 @@
  */
 
 //component definition
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+import { ArrayEx } from "/flowerui/lib/ArrayEx.js";
+import { Repeater } from "/flowerui/components/Repeater/Repeater.js";
+import { ChangeWatcher } from "/flowerui/lib/binding/ChangeWatcher.js";
+import { Option } from "/flowerui/components/Select/Option.js";
 var Select = function (_props) {
     let _self = this,
-        _value, _dataProvider, _rendering, _multiple;
+        _value, _dataProvider, _rendering, _multiple, _labelField, _valueField, _valueLater;
 
-    let myw = ChangeWatcher.getInstance(_self);
+    let myw;
 
     Object.defineProperty(this, "valueField", {
         get: function valueField() {
@@ -57,10 +62,11 @@ var Select = function (_props) {
             if (_value != v) {
                 let oldValue = _value;
                 _value = v;
-                if (this.$el) {
-                    this.$el.val(v);
-                    this.trigger('change');
+                if (_self.$el) {
+                    _self.$el.val(v);
+                    _self.trigger('change');
                     myw.propertyChanged("value", oldValue, _value);
+                    myw.propertyChanged("selectedItem", oldValue, _value);
                 }
             }
         }
@@ -86,8 +92,14 @@ var Select = function (_props) {
 
     let _changeHandler = function (e) {
         let oldValue = _value;
-        _value = this.$el.val();
-        myw.propertyChanged("value", oldValue, _value);
+        let v = _self.$el.val();
+        if (v != null) {
+            _value = v;
+            if (oldValue != _value) {
+                myw.propertyChanged("value", oldValue, _value);
+                myw.propertyChanged("selectedItem", oldValue, _value);
+            }
+        }
     };
 
     this.template = function () {
@@ -96,14 +108,15 @@ var Select = function (_props) {
 
     this.afterAttach = function (e) {
         if (e.target.id == this.domID) {
-            if (_props.value && !this.getBindingExpression("value")) {
+            if (_value == null && _props.value!=null && !this.getBindingExpression("value")) {
                 this.value = _props.value;
             }
-            if (_props.multiple) {
+            if (_multiple == null && _props.multiple!=null) {
                 this.multiple = _props.multiple;
             }
         }
     };
+
     let fnContainerDelayInit = function () {
         return [{
             ctor: Option,
@@ -125,9 +138,9 @@ var Select = function (_props) {
         }
     };
 
-    shallowCopy(extend(false, false, _defaultParams, _props), _props);
-    let _labelField = _props.labelField;
-    let _valueField = _props.valueField;
+    ObjectUtils.shallowCopy(ObjectUtils.extend(false, false, _defaultParams, _props), _props);
+    _labelField = _props.labelField;
+    _valueField = _props.valueField;
 
     _props.components = fnContainerDelayInit();
 
@@ -141,8 +154,9 @@ var Select = function (_props) {
             _change.apply(_self, arguments);
     };
 
-    Repeater.call(this, _props);
-
+    let r = Repeater.call(this, _props);
+    myw = ChangeWatcher.getInstance(_self);
+    
     let propDataProvider = Object.getOwnPropertyDescriptor(this, "dataProvider");
     Object.defineProperty(this, "dataProvider", {
         get: function dataProvider() {
@@ -159,6 +173,9 @@ var Select = function (_props) {
             } else {
                 propDataProvider['set'].call(_self, _dataProvider);
             }
+            Promise.all(_self.renders).then(() => {
+                _self.$el.val(_value);
+            });
         },
         enumerable: true
     });
@@ -177,7 +194,12 @@ var Select = function (_props) {
         enumerable: false,
         configurable: true
     });
+
+    return r;
 };
 
 //component prototype
 Select.prototype.ctor = 'Select';
+export {
+    Select
+};

@@ -3,8 +3,9 @@
  * 
  * Kreatx 2018
  */
-
-//component definition
+import { Parent } from "/flowerui/components/base/Parent.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+import { StringUtils } from "/flowerui/lib/StringUtils.js";
 var Container = function (_props, _hideComponents = false) {
     let _self = this,
         _textAlign;
@@ -51,7 +52,7 @@ var Container = function (_props, _hideComponents = false) {
                             this.$el.css('width', '');
                         } else {
                             let s = (
-                                isString(_width) &&
+                                StringUtils.isString(_width) &&
                                 (
                                     _width.indexOf("vw") > -1 ||
                                     _width.indexOf("em") > -1 ||
@@ -79,7 +80,7 @@ var Container = function (_props, _hideComponents = false) {
                             this.$el.css('min-width', '');
                         } else {
                             let s = (
-                                isString(_minWidth) &&
+                                StringUtils.isString(_minWidth) &&
                                 (
                                     _minWidth.indexOf("vw") > -1 ||
                                     _minWidth.indexOf("em") > -1 ||
@@ -107,7 +108,7 @@ var Container = function (_props, _hideComponents = false) {
                             this.$el.css('min-height', '');
                         } else {
                             let s = (
-                                isString(_minHeight) &&
+                                StringUtils.isString(_minHeight) &&
                                 (
                                     _minHeight.indexOf("vh") > -1 ||
                                     _minHeight.indexOf("em") > -1 ||
@@ -135,7 +136,7 @@ var Container = function (_props, _hideComponents = false) {
                             this.$el.css('height', '');
                         } else {
                             let s = (
-                                isString(_height) &&
+                                StringUtils.isString(_height) &&
                                 (
                                     _height.indexOf("vh") > -1 ||
                                     _height.indexOf("em") > -1 ||
@@ -164,7 +165,7 @@ var Container = function (_props, _hideComponents = false) {
                             this.$el.css('top', '');
                         } else {
                             let s = (
-                                isString(_top) &&
+                                StringUtils.isString(_top) &&
                                 (
                                     _top.indexOf("vh") > -1 ||
                                     _top.indexOf("em") > -1 ||
@@ -193,7 +194,7 @@ var Container = function (_props, _hideComponents = false) {
                             this.$el.css('margin-top', '');
                         } else {
                             let s = (
-                                isString(_marginTop) &&
+                                StringUtils.isString(_marginTop) &&
                                 (
                                     _marginTop.indexOf("vh") > -1 ||
                                     _marginTop.indexOf("em") > -1 ||
@@ -222,7 +223,7 @@ var Container = function (_props, _hideComponents = false) {
                             this.$el.css('margin-left', '');
                         } else {
                             let s = (
-                                isString(_marginLeft) &&
+                                StringUtils.isString(_marginLeft) &&
                                 (
                                     _marginLeft.indexOf("vh") > -1 ||
                                     _marginLeft.indexOf("em") > -1 ||
@@ -337,9 +338,9 @@ var Container = function (_props, _hideComponents = false) {
             if (typeof _afterAttach == 'function')
                 _afterAttach.apply(this, arguments);
             if (!e.isDefaultPrevented()) {
-                if (_props.label)
+                if (_label == null && _props.label)
                     this.label = _props.label;
-                if (_props.textAlign)
+                if (_textAlign ==null && _props.textAlign)
                     _textAlign = _props.textAlign;
             }
             //e.preventDefault();
@@ -347,7 +348,7 @@ var Container = function (_props, _hideComponents = false) {
     };
 
     let _defaultParams = {
-        type: ContainerType.CONTAINER,
+        type: "container",
         components: [],
         spacing: {},
         width: undefined,
@@ -358,9 +359,9 @@ var Container = function (_props, _hideComponents = false) {
         textAlign: "left",
         contenteditable: false
     };
-    //_props = extend(false, false, _defaultParams, _props);
+    //_props = ObjectUtils.extend(false, false, _defaultParams, _props);
 
-    shallowCopy(extend(false, false, _defaultParams, _props), _props);
+    ObjectUtils.shallowCopy(ObjectUtils.extend(false, false, _defaultParams, _props), _props);
     let _width, _minWidth;
     let _height, _minHeight, _top, _marginTop, _marginLeft;
     let _type, _role, _contenteditable;
@@ -383,3 +384,6 @@ var Container = function (_props, _hideComponents = false) {
     return r;
 };
 Container.prototype.ctor = 'Container';
+export {
+    Container
+};

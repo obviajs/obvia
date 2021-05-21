@@ -3,7 +3,8 @@
  *
  * Kreatx 2019
  */
-
+import { List } from "/flowerui/components/List.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
 var MultiSwitch = function (_props) {
     let _self = this,
         _dataProvider;
@@ -57,7 +58,7 @@ var MultiSwitch = function (_props) {
         }
     };
 
-    _props = extend(false, false, _defaultParams, _props);
+    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
 
     let _value = _props.value;
     let _multiselect = _props.multiselect;
@@ -126,3 +127,6 @@ var MultiSwitch = function (_props) {
     });
 };
 MultiSwitch.prototype.ctor = 'MultiSwitch';
+export {
+    MultiSwitch
+};

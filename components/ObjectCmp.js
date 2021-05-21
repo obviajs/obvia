@@ -4,7 +4,9 @@
  * Kreatx 2021
  */
 
-//component definition
+import { Container } from "/flowerui/components/Container.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+
 var ObjectCmp = function (_props, _hideComponents = false) {
     let _self, _data, _type;
 
@@ -51,7 +53,7 @@ var ObjectCmp = function (_props, _hideComponents = false) {
         data: "",
         type: "application/pdf"
     };
-    _props = extend(false, false, _defaultParams, _props);
+    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
 
     let r = Container.call(this, _props, _hideComponents);
     Object.defineProperty(this, "type", {
@@ -74,3 +76,6 @@ var ObjectCmp = function (_props, _hideComponents = false) {
     return r;
 };
 ObjectCmp.prototype.ctor = 'ObjectCmp';
+export {
+    ObjectCmp
+};

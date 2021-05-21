@@ -5,6 +5,9 @@
  */
 
 //component definition
+import { TCell } from "/flowerui/components/Table/TCell.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+
 var Th = function (_props, _hideComponents=false) {
    
     let _beforeAttach = this.beforeAttach;
@@ -25,9 +28,12 @@ var Th = function (_props, _hideComponents=false) {
 
     let _defaultParams = {
     };
-    _props = extend(false, false, _defaultParams, _props);
+    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
 
     let r = TCell.call(this, _props, _hideComponents);
     return r;
 };
 Th.prototype.ctor = 'Th';
+export {
+    Th
+};

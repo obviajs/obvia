@@ -4,3 +4,6 @@ var RepeaterEventArgs = function (row, item, index, deletedRows = null) {
     this.currentItem = item;
     this.deletedRows = deletedRows;
 };
+export {
+    RepeaterEventArgs
+};

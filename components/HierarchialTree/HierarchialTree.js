@@ -4,6 +4,8 @@
  * Kreatx 2019
  */
 
+import { Tree } from "/flowerui/components/Tree/Tree.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
 var HierarchialTree = function (_props) {
     var _self = this;
 
@@ -22,8 +24,11 @@ var HierarchialTree = function (_props) {
         collapseIcon: ''
     };
 
-    _props = extend(false, false, _defaultParams, _props);
+    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
     let r = Tree.call(this, _props);
     return r;
 }
 HierarchialTree.prototype.ctor = "HierarchialTree";
+export {
+    HierarchialTree
+};

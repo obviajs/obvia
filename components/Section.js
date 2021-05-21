@@ -4,7 +4,7 @@
  * Kreatx 2019
  */
 
-//component definition
+import {Container} from "/flowerui/components/Container.js";
 var Section = function(_props)
 {
     //is template overrided ?
@@ -16,3 +16,6 @@ var Section = function(_props)
     Container.call(this, _props);
 };
 Section.prototype.ctor = 'Section';
+export {
+    Section
+};

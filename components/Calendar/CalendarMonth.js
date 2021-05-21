@@ -3,7 +3,9 @@
  * 
  * Kreatx 2019
  */
-
+import { CalendarBase } from "/flowerui/components/Calendar/CalendarBase.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+import { ArrayUtils } from "/flowerui/lib/ArrayUtils.js";
 var CalendarMonth = function(_props)
 {
     let _self = this;
@@ -200,7 +202,7 @@ var CalendarMonth = function(_props)
         return _dataProvider;
     };
 
-    _props = extend(false, false, _defaultParams, _props);
+    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
     let eve = [];
     let _labelField = _props.labelField;
     let _lb = _props.lb;
@@ -228,7 +230,7 @@ var CalendarMonth = function(_props)
     
     this.addEvent = function (event) {
         let gi = _intervalFromDate(event);
-        let ind = indexOfObject(_dataProvider, "dateContent", gi);
+        let ind = ArrayUtils.indexOfObject(_dataProvider, "dateContent", gi);
         if(ind > -1) {
             _dataProvider[ind][_eventsField].splice(_dataProvider[ind][_eventsField].length, 0, event);
         }
@@ -394,3 +396,6 @@ var CalendarMonth = function(_props)
     return r;
 };
 CalendarMonth.prototype.ctor = 'CalendarMonth';
+export {
+    CalendarMonth
+};

@@ -4,7 +4,8 @@
  * Kreatx 2018
  */
 
-//component definition
+import { Container } from "/flowerui/components/Container.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
 var Label = function (_props, _hideComponents = false) {
     let _label, _html, _labelType;
     
@@ -14,7 +15,7 @@ var Label = function (_props, _hideComponents = false) {
         },
         set: function label(v) {
             if (_label != v) {
-                _label = v;
+                _props.label = _label = v;
                 if (this.$el) {
                     //convert html entities
                     v = $(`<div>${v}</div>`).get(0).innerText;
@@ -83,7 +84,7 @@ var Label = function (_props, _hideComponents = false) {
 
     this.afterAttach = function (e) {
         if (e.target.id == this.domID) {
-            if (_props.label) {
+            if (_label == null && _props.label) {
                 this.label = _props.label;
             }
         }
@@ -97,7 +98,7 @@ var Label = function (_props, _hideComponents = false) {
         labelType: LabelType.label,
         type:""
     };
-    _props = extend(false, false, _defaultParams, _props);
+    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
 
     _labelType = _props.labelType;
 
@@ -105,3 +106,18 @@ var Label = function (_props, _hideComponents = false) {
     return r;
 };
 Label.prototype.ctor = 'Label';
+var LabelType =
+{
+    "i": "i",
+    "b": "b",
+    "u": "u",
+    "span": "span",
+    "label": "label",
+    "p": "p",
+    "sup": "sup",
+    "small": "small",
+    "strong": "strong"
+};
+export {
+    Label, LabelType
+};

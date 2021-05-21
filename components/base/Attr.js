@@ -1,3 +1,7 @@
+import { UseBindings } from "/flowerui/lib/UseBindings.js";
+import { isSymbol } from "/flowerui/lib/my.js";
+import { StringUtils } from "/flowerui/lib/StringUtils.js";
+
 var Attr = function (_attr, cmpInst) {
     let _$el = cmpInst.$el, _self = this;
     let p = new Proxy(this, {
@@ -8,7 +12,7 @@ var Attr = function (_attr, cmpInst) {
         },
         set: function (target, property, value, receiver) {
             if (typeof value != "function") {
-                if (value && !isString(value) && isNaN(value)) {
+                if (value && !StringUtils.isString(value) && isNaN(value)) {
                     _$el.attr(property, JSON.stringify(value));
                 } else if (value != null)
                     _$el.attr(property, value);
@@ -25,7 +29,7 @@ var Attr = function (_attr, cmpInst) {
             return Reflect.get(...arguments);
         }
     });
-
+    _self.guid = null;
     UseBindings.call(p, _attr);
     if (_attr) {
         for (let prop in _attr) {
@@ -40,4 +44,7 @@ var Attr = function (_attr, cmpInst) {
         return [this, ...cmpInst.getScopeChain()];
     };
     return p;
+};
+export {
+    Attr
 };

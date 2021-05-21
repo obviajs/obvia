@@ -3,8 +3,8 @@
  * 
  * Kreatx 2018
  */
-
-//component definition
+import { Component } from "/flowerui/components/base/Component.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
 var Image = function (_props) {
     Object.defineProperty(this, "src", {
         get: function src() {
@@ -101,7 +101,7 @@ var Image = function (_props) {
         alt: undefined
     };
 
-    _props = extend(false, false, _defaultParams, _props);
+    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
     if (!_props.attr) {
         _props.attr = {};
     }
@@ -129,3 +129,6 @@ var Image = function (_props) {
     };
 };
 Image.prototype.ctor = 'Image';
+export {
+    Image
+};

@@ -3,8 +3,10 @@
  * 
  * Kreatx 2020
  */
+import { Validator } from "/flowerui/components/Validation/Validator.js";
+import { RangeValidator } from "/flowerui/components/Validation/RangeValidator.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
 
-//component definition
 var DateRangeValidator = function (_props) {
     let _self = this,
         _min, _max;
@@ -16,7 +18,7 @@ var DateRangeValidator = function (_props) {
         outputFormat: "YYYY-MM-DD HH:mm"
     };
 
-    _props = extend(false, false, _defaultParams, _props);
+    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
 
     let _inputFormat = _props.inputFormat;
     let _outputFormat = _props.outputFormat;
@@ -62,3 +64,6 @@ var DateRangeValidator = function (_props) {
     return r;
 };
 DateRangeValidator.prototype.ctor = 'DateRangeValidator';
+export {
+    DateRangeValidator
+};
