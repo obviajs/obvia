@@ -4,11 +4,11 @@
  * Kreatx 2018
  */
 
-import { Container } from "/flowerui/components/Container.js";
-import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
-var Label = function (_props, _hideComponents = false) {
+import { Container } from "/obvia/components/Container.js";
+import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
+var Label = function(_props, _hideComponents = false) {
     let _label, _html, _labelType;
-    
+
     Object.defineProperty(this, "label", {
         get: function label() {
             return _label;
@@ -26,7 +26,7 @@ var Label = function (_props, _hideComponents = false) {
                         else
                             this.$el.appendText(v);
                     else
-                        //this.$el.appendText(v);
+                    //this.$el.appendText(v);
                         this.$el.text(v);
                 }
             }
@@ -75,28 +75,28 @@ var Label = function (_props, _hideComponents = false) {
     });
 
     let _beforeAttach = this.beforeAttach;
-    this.beforeAttach = function (e) {
+    this.beforeAttach = function(e) {
         if (e.target.id == this.domID) {
             if (typeof _beforeAttach == 'function')
                 _beforeAttach.apply(this, arguments);
         }
     };
 
-    this.afterAttach = function (e) {
+    this.afterAttach = function(e) {
         if (e.target.id == this.domID) {
             if (_label == null && _props.label) {
                 this.label = _props.label;
             }
         }
     };
-    this.template = function () {
+    this.template = function() {
         return "<" + _labelType + " id='" + this.domID + "' data-triggers='input'></" + _labelType + ">";
     };
 
     let _defaultParams = {
         label: "",
         labelType: LabelType.label,
-        type:""
+        type: ""
     };
     _props = ObjectUtils.extend(false, false, _defaultParams, _props);
 
@@ -106,8 +106,7 @@ var Label = function (_props, _hideComponents = false) {
     return r;
 };
 Label.prototype.ctor = 'Label';
-var LabelType =
-{
+var LabelType = {
     "i": "i",
     "b": "b",
     "u": "u",
@@ -119,5 +118,6 @@ var LabelType =
     "strong": "strong"
 };
 export {
-    Label, LabelType
+    Label,
+    LabelType
 };

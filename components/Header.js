@@ -4,13 +4,11 @@
  * Kreatx 2019
  */
 
-import {Container} from "/flowerui/components/Container.js";
-var Header = function(_props)
-{
+import { Container } from "/obvia/components/Container.js";
+var Header = function(_props) {
     //is template overrided ?
-    this.template = this.template || function ()
-    { 
-        return  '<header id="' + this.domID + '"></header>'; 
+    this.template = this.template || function() {
+        return '<header id="' + this.domID + '"></header>';
     };
     _props.type = "";
     Container.call(this, _props);

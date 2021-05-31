@@ -3,9 +3,9 @@
  * 
  * Kreatx 2018
  */
-import { Component } from "/flowerui/components/base/Component.js";
-import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
-var Image = function (_props) {
+import { Component } from "/obvia/components/base/Component.js";
+import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
+var Image = function(_props) {
     Object.defineProperty(this, "src", {
         get: function src() {
             return _src;
@@ -76,7 +76,7 @@ var Image = function (_props) {
         enumerable: true
     });
 
-    this.beforeAttach = function () {
+    this.beforeAttach = function() {
         if (_props.width) {
             this.width = _props.width;
         }
@@ -91,7 +91,7 @@ var Image = function (_props) {
         }
     }
 
-    this.template = function () {
+    this.template = function() {
         return '<img id="' + this.domID + '" src="' + this.src + '">';
     };
     var _defaultParams = {
@@ -119,7 +119,7 @@ var Image = function (_props) {
 
     Component.call(this, _props, true);
 
-    this.render = function () {
+    this.render = function() {
         if (this.$el.complete) {
             this.trigger('load');
         }

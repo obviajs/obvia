@@ -3,10 +3,10 @@
  * 
  * Kreatx 2018
  */
-import { Parent } from "/flowerui/components/base/Parent.js";
-import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
-import { StringUtils } from "/flowerui/lib/StringUtils.js";
-var Container = function (_props, _hideComponents = false) {
+import { Parent } from "/obvia/components/base/Parent.js";
+import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
+import { StringUtils } from "/obvia/lib/StringUtils.js";
+var Container = function(_props, _hideComponents = false) {
     let _self = this,
         _textAlign;
 
@@ -31,7 +31,7 @@ var Container = function (_props, _hideComponents = false) {
                         else
                             this.$el.appendText(v);
                         else
-                            //this.$el.appendText(v);
+                        //this.$el.appendText(v);
                             this.$el.text(v);
                     }
                 }
@@ -295,12 +295,12 @@ var Container = function (_props, _hideComponents = false) {
         configurable: true
     });
     //is template overrided ?
-    this.template = this.template || function () {
+    this.template = this.template || function() {
         return '<div id="' + this.domID + '" data-triggers="input"></div>';
     };
 
     let _init = this.init;
-    this.init = function (e) {
+    this.init = function(e) {
         if (e.target.id == this.domID) {
             if (typeof _init == 'function')
                 _init.apply(this, arguments);
@@ -308,7 +308,7 @@ var Container = function (_props, _hideComponents = false) {
     };
 
     let _beforeAttach = this.beforeAttach;
-    this.beforeAttach = function (e) {
+    this.beforeAttach = function(e) {
         if (e.target.id == this.domID) {
             if (typeof _beforeAttach == 'function')
                 _beforeAttach.apply(this, arguments);
@@ -328,7 +328,7 @@ var Container = function (_props, _hideComponents = false) {
         }
     };
     let _afterAttach = this.afterAttach;
-    this.afterAttach = function (e) {
+    this.afterAttach = function(e) {
         if (e.target.id == this.domID) {
             /*if(!_width)
                 _width = this.$el.width();
@@ -340,7 +340,7 @@ var Container = function (_props, _hideComponents = false) {
             if (!e.isDefaultPrevented()) {
                 if (_label == null && _props.label)
                     this.label = _props.label;
-                if (_textAlign ==null && _props.textAlign)
+                if (_textAlign == null && _props.textAlign)
                     _textAlign = _props.textAlign;
             }
             //e.preventDefault();

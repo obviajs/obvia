@@ -1,4 +1,4 @@
-import { EventDispatcher } from "/flowerui/lib/EventDispatcher.js";
+import { EventDispatcher } from "/obvia/lib/EventDispatcher.js";
 var ValidationManager = function () {
     let _self, _validators = [];
     this.$el = $(this);

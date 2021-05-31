@@ -4,40 +4,38 @@
  * Kreatx 2019
  */
 
-import { Component } from "/flowerui/components/base/Component.js";
-import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+import { Component } from "/obvia/components/base/Component.js";
+import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
 
-var RadioButtonEx = function (_props) {
+var RadioButtonEx = function(_props) {
 
-    let  _self = this, _label, _value, _checked, _name;
+    let _self = this,
+        _label, _value, _checked, _name;
 
-    Object.defineProperty(this, "label",
-    {
+    Object.defineProperty(this, "label", {
         get: function label() {
             return _label;
         },
         set: function label(v) {
             if (_label != v) {
                 _label = v;
-                if (this.$el)
-                {
+                if (this.$el) {
                     v = $(`<div>${v}</div>`).get(0).innerText;
                     let last = this.$el.children().last();
-                    if(last && last.length>0)
-                        if(last[0].nextSibling)
+                    if (last && last.length > 0)
+                        if (last[0].nextSibling)
                             last[0].nextSibling.textContent = v;
                         else
                             this.$el.appendText(v);
                     else
-                        //this.$el.appendText(v);
+                    //this.$el.appendText(v);
                         this.$el.text(v);
                 }
             }
         }
     });
 
-    Object.defineProperty(this, "value",
-    {
+    Object.defineProperty(this, "value", {
         get: function value() {
             return _value;
         },
@@ -50,9 +48,8 @@ var RadioButtonEx = function (_props) {
                 this.$input.val(v);
         }
     });
-    
-    Object.defineProperty(this, "checked",
-    {
+
+    Object.defineProperty(this, "checked", {
         get: function checked() {
             return _checked;
         },
@@ -63,11 +60,11 @@ var RadioButtonEx = function (_props) {
                     this.$input.prop('checked', v);
             }
         }
-    });    
+    });
 
     Object.defineProperty(this, "name", {
         set: function name(v) {
-            if(_name!=v){
+            if (_name != v) {
                 _name = v;
                 this.$input.attr("name", v);
             }
@@ -76,40 +73,38 @@ var RadioButtonEx = function (_props) {
             return _name;
         }
     });
-    
-    this.endDraw = function (e) {
+
+    this.endDraw = function(e) {
         if (e.target.id == this.domID) {
             this.$input = this.$el.find("#" + this.domID + "-radio");
         }
     };
-    
-    this.beforeAttach = function (e)
-    {
-        if (e.target.id == this.domID)
-        {       
-            if (_props.name && !this.getBindingExpression("name")){
+
+    this.beforeAttach = function(e) {
+        if (e.target.id == this.domID) {
+            if (_props.name && !this.getBindingExpression("name")) {
                 this.name = _props.name;
             }
-            if (_props.label && !this.getBindingExpression("label")){
+            if (_props.label && !this.getBindingExpression("label")) {
                 this.label = _props.label;
             }
-            if (_props.value && !this.getBindingExpression("value")){
+            if (_props.value && !this.getBindingExpression("value")) {
                 this.value = _props.value;
             }
-            if (_props.checked && !this.getBindingExpression("checked")){
+            if (_props.checked && !this.getBindingExpression("checked")) {
                 this.checked = _props.checked;
             }
-            if (_props.enabled && !this.getBindingExpression("enabled")){
+            if (_props.enabled && !this.getBindingExpression("enabled")) {
                 this.enabled = _props.enabled;
             }
         }
     };
-    
-    let _clickHandler = function () {
+
+    let _clickHandler = function() {
         _checked = !_checked;
     };
 
-    this.template = function () {
+    this.template = function() {
         return "<label id='" + this.domID + "'>" +
             "<input data-triggers='click' id='" + this.domID + "-radio' type='radio' class='no-form-control' ></label>";
     };
@@ -123,7 +118,7 @@ var RadioButtonEx = function (_props) {
     _props = ObjectUtils.extend(false, false, _defaultParams, _props);
     let _click = _props.click;
 
-    _props.click = function () {
+    _props.click = function() {
         if (typeof _click == 'function')
             _click.apply(this, arguments);
 

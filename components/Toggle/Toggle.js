@@ -3,8 +3,8 @@
  *
  * Kreatx 2019
  */
-import {Label} from "/flowerui/components/Label.js";
-import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+import {Label} from "/obvia/components/Label.js";
+import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
 
 var Toggle = function (_props) {
     let _self = this, _checkBox, _span;

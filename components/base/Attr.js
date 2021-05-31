@@ -1,16 +1,17 @@
-import { UseBindings } from "/flowerui/lib/UseBindings.js";
-import { isSymbol } from "/flowerui/lib/my.js";
-import { StringUtils } from "/flowerui/lib/StringUtils.js";
+import { UseBindings } from "/obvia/lib/UseBindings.js";
+import { isSymbol } from "/obvia/lib/my.js";
+import { StringUtils } from "/obvia/lib/StringUtils.js";
 
-var Attr = function (_attr, cmpInst) {
-    let _$el = cmpInst.$el, _self = this;
+var Attr = function(_attr, cmpInst) {
+    let _$el = cmpInst.$el,
+        _self = this;
     let p = new Proxy(this, {
-        deleteProperty: function (target, property) {
+        deleteProperty: function(target, property) {
             _$el.removeAttr(property);
             Reflect.deleteProperty(target, property);
             return true;
         },
-        set: function (target, property, value, receiver) {
+        set: function(target, property, value, receiver) {
             if (typeof value != "function") {
                 if (value && !StringUtils.isString(value) && isNaN(value)) {
                     _$el.attr(property, JSON.stringify(value));
@@ -20,7 +21,7 @@ var Attr = function (_attr, cmpInst) {
             target[property] = value;
             return true;
         },
-        get: function (target, property, receiver) {
+        get: function(target, property, receiver) {
             if (!isSymbol(property) && target[property] == null) {
                 let v = _$el.attr(property);
                 if (v)
@@ -40,7 +41,7 @@ var Attr = function (_attr, cmpInst) {
         }
     }
 
-    this.getScopeChain = function () {
+    this.getScopeChain = function() {
         return [this, ...cmpInst.getScopeChain()];
     };
     return p;

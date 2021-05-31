@@ -1,16 +1,17 @@
-import { UseBindings } from "/flowerui/lib/UseBindings.js";
-import { isSymbol } from "/flowerui/lib/my.js";
-import { StringUtils } from "/flowerui/lib/StringUtils.js";
+import { UseBindings } from "/obvia/lib/UseBindings.js";
+import { isSymbol } from "/obvia/lib/my.js";
+import { StringUtils } from "/obvia/lib/StringUtils.js";
 
-var Css = function (_css, cmpInst) {
-    let _$el = cmpInst.$el, _self = this;
+var Css = function(_css, cmpInst) {
+    let _$el = cmpInst.$el,
+        _self = this;
     let p = new Proxy(this, {
-        deleteProperty: function (target, property) {
+        deleteProperty: function(target, property) {
             _$el.css(property, '');
             Reflect.deleteProperty(target, property);
             return true;
         },
-        set: function (target, property, value, receiver) {
+        set: function(target, property, value, receiver) {
             if (typeof value != "function") {
                 _$el.css(property, value);
             }
@@ -22,7 +23,7 @@ var Css = function (_css, cmpInst) {
                 target[property] = value;
             return true;
         },
-        get: function (target, property, receiver) {
+        get: function(target, property, receiver) {
             if (!isSymbol(property) && target[property] == null) {
                 target[property] = _$el.css(property);
             }
@@ -48,7 +49,7 @@ var Css = function (_css, cmpInst) {
         }
     }
 
-    this.getScopeChain = function () {
+    this.getScopeChain = function() {
         return [this, ...cmpInst.getScopeChain()];
     };
     return p;

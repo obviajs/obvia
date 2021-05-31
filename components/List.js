@@ -3,44 +3,42 @@
  *
  * Kreatx 2019
  */
-import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
-import { ArrayUtils } from "/flowerui/lib/ArrayUtils.js";
-import { Repeater } from "/flowerui/components/Repeater/Repeater.js";
-import { ChangeWatcher } from "/flowerui/lib/binding/ChangeWatcher.js";
-var List = function (_props) {
+import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
+import { ArrayUtils } from "/obvia/lib/ArrayUtils.js";
+import { Repeater } from "/obvia/components/Repeater/Repeater.js";
+import { ChangeWatcher } from "/obvia/lib/binding/ChangeWatcher.js";
+var List = function(_props) {
     let _self = this;
 
-    this.beforeAttach = function () {
-        _states = _states == null ?
-            [
-                {dataProviderField: _classesField, states: {on: _selectedClasses, off: _defaultClasses}}
-            ] : _states;
-        
-        let lookUpValues = _value ? (!Array.isArray(_value) ? (_value=[_value], true):true):false;
+    this.beforeAttach = function() {
+        _states = _states == null ? [
+            { dataProviderField: _classesField, states: { on: _selectedClasses, off: _defaultClasses } }
+        ] : _states;
+
+        let lookUpValues = _value ? (!Array.isArray(_value) ? (_value = [_value], true) : true) : false;
         let ind = -1;
-        for(let i=0;i<this.dataProvider.length;i++)
-        {
-            if(lookUpValues){
-                ind = ArrayUtils.indexOfObject(_value, _valueField,  this.dataProvider[i][_valueField]);
-                _states.forEach(function (state) {
-                    if(ind>-1){
+        for (let i = 0; i < this.dataProvider.length; i++) {
+            if (lookUpValues) {
+                ind = ArrayUtils.indexOfObject(_value, _valueField, this.dataProvider[i][_valueField]);
+                _states.forEach(function(state) {
+                    if (ind > -1) {
                         _self.dataProvider[i][state.dataProviderField] = state.states.on;
                     }
                 });
             }
-            if(!lookUpValues || ind == -1) {
-                _states.forEach(function (state) {
+            if (!lookUpValues || ind == -1) {
+                _states.forEach(function(state) {
                     _self.dataProvider[i][state.dataProviderField] = state.states.off;
                 });
             }
         }
-        
+
         if (_props.value) {
             _self.value = _props.value;
         }
     };
 
-    this.selectComponent = function (e, repeaterEventArgs) {
+    this.selectComponent = function(e, repeaterEventArgs) {
         let componentID = this.id;
         let clickedComponent = repeaterEventArgs.currentRow[componentID];
         let index = repeaterEventArgs.currentIndex;
@@ -65,10 +63,10 @@ var List = function (_props) {
 
     let _defaultParams = {
         rendering: {
-			direction: 'horizontal',
+            direction: 'horizontal',
             separator: false
         },
-        attr:{"data-triggers":"rowAdd rowEdit beforeRowAdd rowDelete beforeRowDelete change itemClick itemDblClick"},
+        attr: { "data-triggers": "rowAdd rowEdit beforeRowAdd rowDelete beforeRowDelete change itemClick itemDblClick" },
         multiselect: false,
         valueField: "id",
         classesField: "",
@@ -89,16 +87,15 @@ var List = function (_props) {
     let _components = _props.components;
     let _rowAdd = _props.rowAdd;
 
-    if (_classesField) { 
+    if (_classesField) {
         _components[0].props.classes = `{?${_classesField}}`;
     }
-    _props.rowAdd = function(e, r, ra){
-        if (e.target.id == _self.domID) 
-        {
+    _props.rowAdd = function(e, r, ra) {
+        if (e.target.id == _self.domID) {
             if (typeof _rowAdd == 'function')
                 _rowAdd.apply(_self, arguments);
             if (!e.isDefaultPrevented()) {
-                for(let p in ra.currentRow){
+                for (let p in ra.currentRow) {
                     ra.currentRow[p].on("click", _click);
                     ra.currentRow[p].on("dblclick", _dblclick);
                 }
@@ -106,7 +103,7 @@ var List = function (_props) {
         }
     }.bind(this);
 
-    let _click = function (e, ra) {
+    let _click = function(e, ra) {
         let itemClickEvent = jQuery.Event("itemClick");
         itemClickEvent.originalEvent = e;
         this.trigger.apply(this, [itemClickEvent, ra]);
@@ -115,7 +112,7 @@ var List = function (_props) {
         }
     };
 
-    let _dblclick = function (e) {
+    let _dblclick = function(e) {
         let itemDblClickEvent = jQuery.Event("itemDblClick");
         itemDblClickEvent.originalEvent = e;
         this.trigger.apply(this, [itemDblClickEvent, ra]);
@@ -130,47 +127,47 @@ var List = function (_props) {
         get: function value() {
             return _value;
         },
-        set: function (value) {
+        set: function(value) {
             let oldValue = _value;
-            let v = {};               
+            let v = {};
             if (value == null) {
                 value = [];
             } else if (typeof value === "string") {
                 v[_valueField] = value;
                 value = [v];
-            } else if (typeof (value) === "object" && !(value instanceof Array)) {
+            } else if (typeof(value) === "object" && !(value instanceof Array)) {
                 value = [value];
-            } else if (!(typeof (value) === "object" && (value instanceof Array))) {
+            } else if (!(typeof(value) === "object" && (value instanceof Array))) {
                 v[_valueField] = value;
                 value = [v];
             }
-            if((!_value && value) || (_value && !_value.equals(value))){
+            if ((!_value && value) || (_value && !_value.equals(value))) {
                 _value = ArrayUtils.intersectOnKeyMatch(this.dataProvider, value, _valueField); //value;
                 let unselect = this.dataProvider.difference(_value);
 
-                unselect.forEach(function (v) {
+                unselect.forEach(function(v) {
                     let arrDpIndex = (v == undefined || v == null || v[_valueField] == undefined) ? -1 : ArrayUtils.indexOfObject(this.dataProvider, _valueField, v[_valueField]);
                     if (arrDpIndex != -1) {
-                        _states.forEach(function (state) {
+                        _states.forEach(function(state) {
                             this.dataProvider[arrDpIndex][state.dataProviderField] = state.states.off;
                         }.bind(this));
                     }
                 }.bind(this));
 
-                this.value.slice(0).forEach(function (v, i) {
+                this.value.slice(0).forEach(function(v, i) {
                     let arrDpIndex = (v == null || v[_valueField] == null) ? -1 : ArrayUtils.indexOfObject(this.dataProvider, _valueField, v[_valueField]);
                     if (arrDpIndex != -1) {
-                        _states.forEach(function (state) {
+                        _states.forEach(function(state) {
                             this.dataProvider[arrDpIndex][state.dataProviderField] = state.states.on;
                         }.bind(this));
                     } else {
                         _self.value.splice(i, 1);
                     }
                 }.bind(this));
-                if(this.attached){
+                if (this.attached) {
                     this.trigger('change');
                 }
-                
+
                 _myw.propertyChanged("value", oldValue, _value);
             }
         }

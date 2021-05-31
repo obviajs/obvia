@@ -4,31 +4,31 @@
  * Kreatx 2019
  */
 
-import { Container } from "/flowerui/components/Container.js";
-import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
-import { StringUtils } from "/flowerui/lib/StringUtils.js";
-import { Label, LabelType } from "/flowerui/components/Label.js";
-import { Form } from "/flowerui/components/Form/Form.js";
-import { Upload } from "/flowerui/components/Form/Upload.js";
-import { Link } from "/flowerui/components/Link/Link.js";
-import { ProgressBar, ProgressBarStyle } from "/flowerui/components/ProgressBar/ProgressBar.js";
-import { whenDefined } from "/flowerui/lib/DecoratorUtils.js";
-import { BinUtils } from "/flowerui/lib/BinUtils.js";
-import { getFontAwesomeIconFromMIME } from "/flowerui/lib/my.js";
-import { downloadFromUrl } from "/flowerui/lib/my.js";
+import { Container } from "/obvia/components/Container.js";
+import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
+import { StringUtils } from "/obvia/lib/StringUtils.js";
+import { Label, LabelType } from "/obvia/components/Label.js";
+import { Form } from "/obvia/components/Form/Form.js";
+import { Upload } from "/obvia/components/Form/Upload.js";
+import { Link } from "/obvia/components/Link/Link.js";
+import { ProgressBar, ProgressBarStyle } from "/obvia/components/ProgressBar/ProgressBar.js";
+import { whenDefined } from "/obvia/lib/DecoratorUtils.js";
+import { BinUtils } from "/obvia/lib/BinUtils.js";
+import { getFontAwesomeIconFromMIME } from "/obvia/lib/my.js";
+import { downloadFromUrl } from "/obvia/lib/my.js";
 
-var UploadEx = function (_props) {
+var UploadEx = function(_props) {
     let _self = this;
     let _upload, _lblFileName, _btnRemove, _iconLbl, _lblFileSize, _progressBar, _progressRow, _btnUpload, _btnSelect, _additionalProperties, _action, _downloadUrl;
     let _lastFileTypeIcon, _autoUpload, _readOnly;
 
-    let upload_change = function (e) {
+    let upload_change = function(e) {
         e.stopPropagation();
         e.stopImmediatePropagation();
         _self.value = e.target.files;
     };
 
-    let _init = function (files) {
+    let _init = function(files) {
         if ((Array.isArray(files) || BinUtils.isFileList(files)) && files.length > 0) {
 
             if (BinUtils.isFile(files[0]) || BinUtils.isBlob(files[0])) {
@@ -69,7 +69,7 @@ var UploadEx = function (_props) {
                 props: {
                     label: ""
                 },
-                classes:["mr-2"]
+                classes: ["mr-2"]
             };
             let acmps = [];
             for (let i = 0; i < files.length; i++) {
@@ -85,7 +85,7 @@ var UploadEx = function (_props) {
                     if (size == null)
                         size = 0;
                     size += files[i].size;
-                }                   
+                }
             }
             _lblFileName.removeAllChildren();
             if (acmps.length > 0) {
@@ -103,12 +103,12 @@ var UploadEx = function (_props) {
         }
     };
 
-    let selectBtn_click = function () {
+    let selectBtn_click = function() {
         _upload.fileDialog();
         console.log("selectBtn_click");
     };
 
-    this.ajaxUpload = function (queuee = false) {
+    this.ajaxUpload = function(queuee = false) {
         if (_form && _form.ctor && _form.ctor == 'Form') {
             _form.removeFormData(_upload.id + "[]");
             _form.off(FormEventType.POST_ERROR, _ajaxUpload_error);
@@ -133,20 +133,20 @@ var UploadEx = function (_props) {
         }
     };
 
-    this.ajaxDownload = function (i) {
+    this.ajaxDownload = function(i) {
         if (_value && Array.isArray(_value) && _value.length > 0 && i < _value.length)
             downloadFromUrl(_value[i].name, _value[i][_fullUrlField]).then().catch();
     };
 
-    let uploadBtn_click = function (e) {
+    let uploadBtn_click = function(e) {
         _self.ajaxUpload();
     };
 
-    let _ajaxUpload_error = function (e, jqXHR, textStatus, errorThrown) {
+    let _ajaxUpload_error = function(e, jqXHR, textStatus, errorThrown) {
         setTimeout(_ajaxUpload_complete, 500);
     };
 
-    let _ajaxUpload_success = function (e) {
+    let _ajaxUpload_success = function(e) {
         setTimeout(_ajaxUpload_complete, 500);
         let data = e.originalEvent.responseObject.response;
         for (let i = 0; i < _value.length; i++) {
@@ -159,12 +159,12 @@ var UploadEx = function (_props) {
         _init(_value);
     };
 
-    let _ajaxUpload_progress = function (e, xhrProgressEvt) {
+    let _ajaxUpload_progress = function(e, xhrProgressEvt) {
         _progressBar.valueNow = e.percentage;
         _btnUpload.fa.css.color = "blue";
     };
 
-    let _ajaxUpload_started = function (e) {
+    let _ajaxUpload_started = function(e) {
         if (_showProgress) {
             let classes = _progressRow.classes.slice(0);
             classes.splice(classes.indexOf("d-none"), 1);
@@ -173,7 +173,7 @@ var UploadEx = function (_props) {
         }
     };
 
-    let _ajaxUpload_complete = function (e) {
+    let _ajaxUpload_complete = function(e) {
         if (_showProgress) {
             let classes = _progressRow.classes.slice(0);
             classes.pushUnique("d-none");
@@ -182,14 +182,14 @@ var UploadEx = function (_props) {
         _btnUpload.fa.css.color = "";
     };
 
-    let removeBtn_click = function () {
+    let removeBtn_click = function() {
         this.value = null;
         _upload.reset();
     };
 
     let _cmps;
 
-    let fnContainerDelay_init = function () {
+    let fnContainerDelay_init = function() {
         _cmps = [{
                 ctor: Container,
                 props: {
@@ -198,21 +198,18 @@ var UploadEx = function (_props) {
                     css: {
                         "display": "flex"
                     },
-                    components: [
-                        {
+                    components: [{
                             ctor: Label,
                             props: {
                                 id: "wrapIconLbl",
                                 width: 50,
-                                components: [
-                                    {
-                                        ctor: Label,
-                                        props: {
-                                            id: "iconLbl",
-                                            labelType: LabelType.i
-                                        }
+                                components: [{
+                                    ctor: Label,
+                                    props: {
+                                        id: "iconLbl",
+                                        labelType: LabelType.i
                                     }
-                                ]
+                                }]
                             }
                         },
                         {
@@ -226,17 +223,15 @@ var UploadEx = function (_props) {
                         {
                             ctor: Form,
                             props: {
-                                id:"form",
-                                components: [
-                                    {
-                                        ctor: Upload,
-                                        props: {
-                                            id: "uploadInput",
-                                            classes: ["d-none"],
-                                            change: upload_change
-                                        }
+                                id: "form",
+                                components: [{
+                                    ctor: Upload,
+                                    props: {
+                                        id: "uploadInput",
+                                        classes: ["d-none"],
+                                        change: upload_change
                                     }
-                                ]
+                                }]
                             }
                         },
                         {
@@ -270,7 +265,7 @@ var UploadEx = function (_props) {
                             ctor: Link,
                             props: {
                                 id: "uploadBtn",
-                                type: "button",                                
+                                type: "button",
                                 href: "javascript:void(0)",
                                 css: {
                                     "width": "45px"
@@ -353,7 +348,7 @@ var UploadEx = function (_props) {
         },
         set: function multiple(v) {
             if (_multiple != v) {
-                let fn = whenDefined(_upload, "multiple", function () {
+                let fn = whenDefined(_upload, "multiple", function() {
                     _upload.multiple = _multiple = v;
                 });
                 fn();
@@ -398,7 +393,7 @@ var UploadEx = function (_props) {
             }
         }
     });
-    
+
     Object.defineProperty(this, "additionalProperties", {
         get: function additionalProperties() {
             return _additionalProperties;
@@ -416,7 +411,7 @@ var UploadEx = function (_props) {
         },
         set: function accept(v) {
             if (_accept != v) {
-                let fn = whenDefined(_upload, "accept", function () {
+                let fn = whenDefined(_upload, "accept", function() {
                     _upload.accept = _accept = v;
                 });
                 fn();
@@ -430,7 +425,7 @@ var UploadEx = function (_props) {
         },
         set: function showBtnRemove(v) {
             if (_showBtnRemove != v) {
-                let fn = whenDefined(_btnRemove, "id", function () {
+                let fn = whenDefined(_btnRemove, "id", function() {
                     if (v) {
                         let classes = _btnRemove.classes.slice(0);
                         classes = classes.splice(classes.indexOf("d-none"), 1);
@@ -473,7 +468,7 @@ var UploadEx = function (_props) {
             }
         }
     });
-    
+
     Object.defineProperty(this, "upload", {
         get: function upload() {
             return _upload;
@@ -485,11 +480,11 @@ var UploadEx = function (_props) {
             let f = false;
             if (_value) {
                 let len = _value.length;
-                    for (let i = 0; i < len && !f; i++) {
-                        if (!_value[i].url) {
-                            f = true;
-                        }
+                for (let i = 0; i < len && !f; i++) {
+                    if (!_value[i].url) {
+                        f = true;
                     }
+                }
             }
             return f ? null : _value;
         },
@@ -497,7 +492,8 @@ var UploadEx = function (_props) {
             if (_value != v) {
                 _setValue(v);
                 if (_autoUpload && _value) {
-                    let len = _value.length, f = false;
+                    let len = _value.length,
+                        f = false;
                     for (let i = 0; i < len && !f; i++) {
                         if (!_value[i].url) {
                             f = true;
@@ -518,7 +514,7 @@ var UploadEx = function (_props) {
         }
     });
 
-    let _setValue = function (v) {
+    let _setValue = function(v) {
         if (v) {
             if (!Array.isArray(v) && !BinUtils.isFileList(v))
                 _value = _upload.files = [v];
@@ -528,7 +524,7 @@ var UploadEx = function (_props) {
                 }
                 _value = _upload.files = v;
             }
-            for (let i = 0; i < _value.length; i++) { 
+            for (let i = 0; i < _value.length; i++) {
                 _value[0] = Object.assign(_value[0], _additionalProperties);
             }
             _init(_value);
@@ -543,7 +539,7 @@ var UploadEx = function (_props) {
         }
     };
 
-    this.endDraw = function (e) {
+    this.endDraw = function(e) {
         if (e.target.id == this.domID) {
             _form = this.mainRow.form;
             _upload = this.mainRow.form.uploadInput;
@@ -569,13 +565,13 @@ var UploadEx = function (_props) {
             if (_props.fullUrlField) {
                 _fullUrlField = _props.fullUrlField;
             }
-            if (_props.additionalProperties) { 
+            if (_props.additionalProperties) {
                 _additionalProperties = _props.additionalProperties;
             }
-            if (_action == null && _props.action) { 
+            if (_action == null && _props.action) {
                 _self.action = _props.action;
             }
-            if (_autoUpload == null && _props.autoUpload) { 
+            if (_autoUpload == null && _props.autoUpload) {
                 _self.autoUpload = _props.autoUpload;
             }
             if (_readOnly == null && _props.readOnly) {
@@ -584,7 +580,7 @@ var UploadEx = function (_props) {
             if (_downloadUrl == null && _props.downloadUrl) {
                 _self.downloadUrl = _props.downloadUrl;
             }
-            e.preventDefault();            
+            e.preventDefault();
         }
     };
 

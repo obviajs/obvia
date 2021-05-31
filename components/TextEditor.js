@@ -4,23 +4,22 @@
  * Kreatx 2018
  */
 
-import { Component } from "/flowerui/components/base/Component.js";
-import { List } from "/flowerui/components/List.js";
+import { Component } from "/obvia/components/base/Component.js";
+import { List } from "/obvia/components/List.js";
 
-var TextEditor =  function(_props, overrided = false) {
+var TextEditor = function(_props, overrided = false) {
     var _self = this;
-    this.beforeAttach = function () {
+    this.beforeAttach = function() {
         this.$input = this.$el;
     };
-   
-    var _changeHandler = function (e) {
+
+    var _changeHandler = function(e) {
         _value = _self.$input.summernote('code');
         if (typeof _change == 'function')
             _change.apply(_self, arguments);
     };
 
-    Object.defineProperty(this, "value",
-    {
+    Object.defineProperty(this, "value", {
         get: function value() {
             return _value;
         },
@@ -32,17 +31,17 @@ var TextEditor =  function(_props, overrided = false) {
             }
         }
     });
-    
-    var _spellCheckClickHandler = function (e) {
+
+    var _spellCheckClickHandler = function(e) {
         var editingArea = _self.$input.parent().find('.note-editing-area');
         var dialog = editingArea.spellCheckInDialog({ defaultDictionary: _self.spellCheck.defaultDictionary });
-        dialog.onDialogClose = function () {
+        dialog.onDialogClose = function() {
             _self.$input.summernote('code', editingArea.find('.note-editable').html());
         }
     };
-    
-    this.template = function () {
-        return  "<textarea id='" + this.domID + "' class='summernote' autofocus>"+_value+"</textarea>";
+
+    this.template = function() {
+        return "<textarea id='" + this.domID + "' class='summernote' autofocus>" + _value + "</textarea>";
     };
 
     var _defaultParams = {
@@ -54,27 +53,21 @@ var TextEditor =  function(_props, overrided = false) {
     _props = ObjectUtils.extend(false, false, _defaultParams, _props);
     var _change = _props.change;
     var _value = _props.value;
-  
+
     Component.call(this, _props, true);
     var base = this.base;
 
-    Object.defineProperty(this, "enabled",
-    {
-        get: function enabled()
-        {
+    Object.defineProperty(this, "enabled", {
+        get: function enabled() {
             return _enabled;
         },
-        set: function enabled(v)
-        {
-            if(_enabled != v)
-            {
+        set: function enabled(v) {
+            if (_enabled != v) {
                 _enabled = v;
-                if(this.$input)
-                    if(_enabled)
-                    {
+                if (this.$input)
+                    if (_enabled) {
                         this.$input.summernote('enable');
-                    }else
-                    {
+                    } else {
                         this.$input.summernote('disable');
                     }
             }
@@ -82,8 +75,8 @@ var TextEditor =  function(_props, overrided = false) {
         configurable: true
     });
 
-    this.afterAttach = function (e) {
-        var SpellCheckButton = function (context) {
+    this.afterAttach = function(e) {
+        var SpellCheckButton = function(context) {
             var ui = $.summernote.ui;
             var button = ui.button({
                 contents: '<i class="fas fa-book"></i> Spell Check',
@@ -96,7 +89,7 @@ var TextEditor =  function(_props, overrided = false) {
                     return button.render();
                 }
             }
-            
+
             return false;
         }.bind(this)
 
@@ -118,17 +111,16 @@ var TextEditor =  function(_props, overrided = false) {
         });
 
         this.$input.summernote('code', this.value);
-    }; 
+    };
 
-    this.registerEvents = function () {
+    this.registerEvents = function() {
         return base.registerEvents.call(this).concat(
-        [
-            {
-                registerTo: this.$input, events: {
+            [{
+                registerTo: this.$input,
+                events: {
                     'summernote.change': _changeHandler,
                 }
-            }
-        ]);
+            }]);
     };
 };
 

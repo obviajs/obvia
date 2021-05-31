@@ -1,8 +1,8 @@
-import { ArrayEx } from "/flowerui/lib/ArrayEx.js";
-import { Parent } from "/flowerui/components/base/Parent.js";
-import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+import { ArrayEx } from "/obvia/lib/ArrayEx.js";
+import { Parent } from "/obvia/components/base/Parent.js";
+import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
 
-var BrowserWindow = function (_props) {
+var BrowserWindow = function(_props) {
     let _self = this,
         _win;
     let _defaultParams = {
@@ -24,13 +24,13 @@ var BrowserWindow = function (_props) {
         ownerDocument: null
     };
 
-    this.endDraw = function (e) {
+    this.endDraw = function(e) {
         if (e.target.id == this.domID) {}
     };
 
-    this.template = function () {
+    this.template = function() {
         _win = window.open(_url, _name, "width=" + _width + ",height=" + _height + ",top=" + _top + ",left=" + _left + ",status=" + _status + ",location=" + _location + ",toolbar=" + _toolbar + ",resizable" + _resizable);
-        _win.addEventListener('beforeunload', function (e) {
+        _win.addEventListener('beforeunload', function(e) {
             _self.removeAllChildren();
             _win = null;
             BrowserWindow.all.splice(BrowserWindow.all.indexOf(_self), 1);
@@ -48,7 +48,7 @@ var BrowserWindow = function (_props) {
         return null;
     };
 
-    this.close = function () {
+    this.close = function() {
         if (_win) {
             _win.close();
             _win = null;
@@ -71,7 +71,7 @@ var BrowserWindow = function (_props) {
 
     let r = Parent.call(this, _props, false, true);
 
-    this.show = function () {
+    this.show = function() {
         if (!this.parent) {
             this.appendTo.append(this.$el);
         }
@@ -83,12 +83,12 @@ var BrowserWindow = function (_props) {
     };
 
     Object.defineProperty(this, 'window', {
-        get: function () {
+        get: function() {
             return _win;
         }
     });
 
-    this.destruct = function (mode = 1) {
+    this.destruct = function(mode = 1) {
         this.close();
     };
     return r;

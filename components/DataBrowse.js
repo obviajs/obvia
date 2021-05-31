@@ -4,10 +4,10 @@
  * Kreatx 2020
  */
 
-import { Container } from "/flowerui/components/Container.js";
-import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
-import { StringUtils } from "/flowerui/lib/StringUtils.js";
-var DataBrowse = function (_props) {
+import { Container } from "/obvia/components/Container.js";
+import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
+import { StringUtils } from "/obvia/lib/StringUtils.js";
+var DataBrowse = function(_props) {
     let _self = this;
     let _dataProvider, _columns = [],
         _fields, _placeholder;
@@ -48,7 +48,7 @@ var DataBrowse = function (_props) {
         enumerable: true
     });
 
-    this.endDraw = function (e) {
+    this.endDraw = function(e) {
         if (e.target.id == this.domID) {
             // _textInput = this.children[this.components[0].props.id].components[0];
             _textInput = this.workArea_66.textField;
@@ -57,11 +57,11 @@ var DataBrowse = function (_props) {
         }
     };
 
-    this.afterAttach = function (e) {
+    this.afterAttach = function(e) {
         if (e.target.id == this.domID) {}
     };
 
-    this.beforeAttach = function (e) {
+    this.beforeAttach = function(e) {
         if (e.target.id == this.domID) {
             if (_props.value) {
                 this.value = _props.value;
@@ -73,7 +73,7 @@ var DataBrowse = function (_props) {
         }
     };
     let _cmps, _dg, _modal;
-    var fnContainerDelayInit = function () {
+    var fnContainerDelayInit = function() {
         _cmps = [{
                 "ctor": "Container",
                 "props": {
@@ -143,11 +143,11 @@ var DataBrowse = function (_props) {
         ];
     };
 
-    let _drawGrid = function (e) {
+    let _drawGrid = function(e) {
         _dg.updateDisplayList();
     };
 
-    let _browse = function (e) {
+    let _browse = function(e) {
         let evt = jQuery.Event("browse");
         _self.trigger(evt);
         if (!evt.isDefaultPrevented()) {
@@ -155,13 +155,13 @@ var DataBrowse = function (_props) {
         }
     };
 
-    let _selectItem = function (e, odg, ra) {
+    let _selectItem = function(e, odg, ra) {
         _textInput.value = ra.currentItem[_labelField];
         _placeholder = ra.currentItem[_labelField];
         _modal.hide();
     };
 
-    let _initColumns = function () {
+    let _initColumns = function() {
         for (let i = 0; i < _fields.length; i++) {
             _columns.push({
                 width: 400,

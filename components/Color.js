@@ -3,11 +3,12 @@
  *
  * Kreatx 2018
  */
-import { Component } from "/flowerui/components/base/Component.js";
-import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
-var Color = function (_props) {
+import { Component } from "/obvia/components/base/Component.js";
+import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
+var Color = function(_props) {
 
-    let _self = this, _value;
+    let _self = this,
+        _value;
 
     Object.defineProperty(this, "value", {
         get: function value() {
@@ -21,24 +22,24 @@ var Color = function (_props) {
         }
     });
 
-    this.beforeAttach = function (e) {
+    this.beforeAttach = function(e) {
         if (e.target.id == this.domID) {
             if (_props.value != null)
                 this.value = _props.value;
         }
     };
 
-    this.afterAttach = function (e) {
+    this.afterAttach = function(e) {
         if (e.target.id == this.$el.attr('id') && !this.attached) {
 
         }
     };
 
-    this.changeHandler = function () {
+    this.changeHandler = function() {
         _value = this.$el.val();
     };
 
-    this.template = function () {
+    this.template = function() {
         return '<input data-triggers="change" type="color" id="' + this.domID + '" >';
     };
 
@@ -54,7 +55,7 @@ var Color = function (_props) {
 
     let _change = _props.change;
 
-    _props.change = function () {
+    _props.change = function() {
         let e = arguments[0];
         if (!e.isDefaultPrevented()) {
             _self.changeHandler(e);

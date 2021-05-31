@@ -1,4 +1,4 @@
-import { UseBindings } from "/flowerui/lib/UseBindings.js";
+import { UseBindings } from "/obvia/lib/UseBindings.js";
 var Rule = function (_rule) {
     let _self = this, _hasBindings = false, _dependencies = [];    
     

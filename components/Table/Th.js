@@ -5,8 +5,8 @@
  */
 
 //component definition
-import { TCell } from "/flowerui/components/Table/TCell.js";
-import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+import { TCell } from "/obvia/components/Table/TCell.js";
+import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
 
 var Th = function (_props, _hideComponents=false) {
    

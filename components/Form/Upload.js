@@ -4,8 +4,8 @@
  * Kreatx 2019
  */
 
-import { Component } from "/flowerui/components/base/Component.js";
-import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+import { Component } from "/obvia/components/base/Component.js";
+import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
 
 var Upload = function (_props) {
     let _self = this,

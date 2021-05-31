@@ -3,13 +3,13 @@
  *
  * Kreatx 2019
  */
-import { DateTime } from "/flowerui/components/DateTime/DateTime.js";
-import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+import { DateTime } from "/obvia/components/DateTime/DateTime.js";
+import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
 
- var DateCmp = function (_props) {
+var DateCmp = function(_props) {
     let _self = this;
 
-    this.template = function () {
+    this.template = function() {
         return "<input data-triggers='input' type='date' id='" + this.domID + "'/>";
     };
 
@@ -21,7 +21,7 @@ import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
         internalFormat: "YYYY-MM-DD",
         value: null,
         min: null,
-        max: null        
+        max: null
     };
 
     _props = ObjectUtils.extend(false, false, _defaultParams, _props);

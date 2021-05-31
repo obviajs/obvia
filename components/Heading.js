@@ -3,10 +3,10 @@
  * 
  * Kreatx 2018
  */
-import { Parent } from "/flowerui/components/base/Parent.js";
-import { Align } from "/flowerui/components/base/Align.js";
-import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
-var Heading = function (_props) {
+import { Parent } from "/obvia/components/base/Parent.js";
+import { Align } from "/obvia/components/base/Align.js";
+import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
+var Heading = function(_props) {
     let _self, _label, _align;
 
     Object.defineProperty(this, "label", {
@@ -25,7 +25,7 @@ var Heading = function (_props) {
                         else
                             this.$el.appendText(v);
                     else
-                        //this.$el.appendText(v);
+                    //this.$el.appendText(v);
                         this.$el.text(v);
                 }
             }
@@ -70,7 +70,7 @@ var Heading = function (_props) {
         enumerable: true
     });
 
-    this.init = function (e) {
+    this.init = function(e) {
         if (e.target.id == this.domID) {
             if (_props.align != null)
                 this.align = _props.align;
@@ -79,12 +79,11 @@ var Heading = function (_props) {
         }
     };
 
-    this.beforeAttach = function (e) {
-        if (e.target.id == this.domID) {
-        }
+    this.beforeAttach = function(e) {
+        if (e.target.id == this.domID) {}
     };
 
-    this.template = function () {
+    this.template = function() {
         return "<" + _headingType + " id='" + this.domID + "'></" + _headingType + ">";
     };
 
@@ -101,8 +100,7 @@ var Heading = function (_props) {
     return r;
 };
 Heading.prototype.ctor = 'Heading';
-var HeadingType =
-{
+var HeadingType = {
     "h1": "h1",
     "h2": "h2",
     "h3": "h3",
@@ -111,5 +109,6 @@ var HeadingType =
     "h6": "h6",
 };
 export {
-    Heading, HeadingType
+    Heading,
+    HeadingType
 };

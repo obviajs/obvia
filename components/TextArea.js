@@ -4,10 +4,10 @@
  * Kreatx 2019
  */
 
-import { Component } from "/flowerui/components/base/Component.js";
-import { List } from "/flowerui/components/List.js";
-import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
-var TextArea = function (_props) {
+import { Component } from "/obvia/components/base/Component.js";
+import { List } from "/obvia/components/List.js";
+import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
+var TextArea = function(_props) {
     let _self = this;
 
     Object.defineProperty(this, "value", {
@@ -71,11 +71,11 @@ var TextArea = function (_props) {
         enumerable: true
     });
 
-    this.beforeAttach = function () {
+    this.beforeAttach = function() {
         this.$input = this.$el;
     };
 
-    this.afterAttach = function (e) {
+    this.afterAttach = function(e) {
         if (e.target.id == this.domID) {
             if (_props.value) {
                 this.value = _props.value;
@@ -86,11 +86,11 @@ var TextArea = function (_props) {
         }
     };
 
-    this.inputHandler = function (e) {
+    this.inputHandler = function(e) {
         _value = this.$el.val();
     };
 
-    this.template = function () {
+    this.template = function() {
         return "<textarea data-triggers='input' id='" + this.domID + "' " + (!this.enabled ? "disabled" : "") + "></textarea>";
     };
 
@@ -108,7 +108,7 @@ var TextArea = function (_props) {
     let _input = _props.input;
     let _dblclick = _props.dblclick;
 
-    _props.dblclick = function () {
+    _props.dblclick = function() {
         if (typeof _dblclick == 'function')
             _dblclick.apply(this, arguments);
 
@@ -116,7 +116,7 @@ var TextArea = function (_props) {
         if (!e.isDefaultPrevented()) {}
     };
 
-    _props.input = function () {
+    _props.input = function() {
         let e = arguments[0];
         if (!e.isDefaultPrevented()) {
             _self.inputHandler(e);

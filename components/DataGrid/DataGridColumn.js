@@ -1,8 +1,8 @@
 
-import { Label } from "/flowerui/components/Label.js";
-import { Props } from "/flowerui/components/base/Props.js";
-import { TwoWayMap } from "/flowerui/lib/TwoWayMap.js";
-import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+import { Label } from "/obvia/components/Label.js";
+import { Props } from "/obvia/components/base/Props.js";
+import { TwoWayMap } from "/obvia/lib/TwoWayMap.js";
+import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
 
 var DataGridColumn = function (_props) {
     let _defaultParams = {

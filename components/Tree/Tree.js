@@ -4,13 +4,13 @@
  * Kreatx 2019
  */
 
-import { Parent } from "/flowerui/components/base/Parent.js";
-import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
-import { Li } from "/flowerui/components/Tree/Li.js";
-import { ArrayEx } from "/flowerui/lib//ArrayEx.js";
-import { ChangeWatcher } from "/flowerui/lib/binding/ChangeWatcher.js";
-import { ArrayUtils } from "/flowerui/lib/ArrayUtils.js";
-import { StringUtils } from "/flowerui/lib/StringUtils.js";
+import { Parent } from "/obvia/components/base/Parent.js";
+import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
+import { Li } from "/obvia/components/Tree/Li.js";
+import { ArrayEx } from "/obvia/lib//ArrayEx.js";
+import { ChangeWatcher } from "/obvia/lib/binding/ChangeWatcher.js";
+import { ArrayUtils } from "/obvia/lib/ArrayUtils.js";
+import { StringUtils } from "/obvia/lib/StringUtils.js";
 var Tree = function (_props) {
     //inner component data
     let _self = this;

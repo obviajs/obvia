@@ -1,15 +1,14 @@
-
-import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
-var Props = function (inst, _props, skip = []) {
+import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
+var Props = function(inst, _props, skip = []) {
     let _dskip = ["props", "children"];
     if (skip) {
         skip.splicea(skip.length, 0, _dskip);
     } else
         skip = _dskip;
-    let _oc = ["Repeater", "RepeaterEx", "Select", "List", "AutoCompleteEx"]; 
+    let _oc = ["Repeater", "RepeaterEx", "Select", "List", "AutoCompleteEx"];
     var _props = Object.getOwnPropertyDescriptors(inst);
     for (let prop in _props) {
-        if ((skip.indexOf(prop) < 0) && _props[prop].enumerable && typeof inst[prop] != 'function' && inst.hasOwnProperty(prop) && (inst[prop]==null || !inst[prop].jquery)) {
+        if ((skip.indexOf(prop) < 0) && _props[prop].enumerable && typeof inst[prop] != 'function' && inst.hasOwnProperty(prop) && (inst[prop] == null || !inst[prop].jquery)) {
             let bindingExp = inst.getBindingExpression && inst.getBindingExpression(prop);
             if (!bindingExp) {
                 switch (prop) {
@@ -45,10 +44,10 @@ var Props = function (inst, _props, skip = []) {
         }
     }
     let _jskip = ["ownerDocument", "input", "inputLabel", "currentItem", "currentRow"];
-    this.toJSON = function () {
+    this.toJSON = function() {
         let obj = {};
         for (let prop in this) {
-            if ((_jskip.indexOf(prop) < 0) && typeof this[prop] != 'function' &&  (inst[prop]==null || !this[prop].jquery)) {
+            if ((_jskip.indexOf(prop) < 0) && typeof this[prop] != 'function' && (inst[prop] == null || !this[prop].jquery)) {
                 switch (prop) {
                     case "dataProvider":
                         if (this.dataProvider) {
@@ -66,9 +65,9 @@ var Props = function (inst, _props, skip = []) {
                         break;
                     default:
                         if (this.hasOwnProperty(prop) && this.propertyIsEnumerable(prop))
-                            if (!isObject(this[prop]) || !Object.isEmpty(this[prop]) || this[prop]==null)
+                            if (!isObject(this[prop]) || !Object.isEmpty(this[prop]) || this[prop] == null)
                                 obj[prop] = this[prop];
-                                
+
                 }
             }
         }

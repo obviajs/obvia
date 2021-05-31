@@ -3,9 +3,9 @@
  *
  * Kreatx 2019
  */
-import { List } from "/flowerui/components/List.js";
-import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
-var CheckBoxGroup = function (_props) {
+import { List } from "/obvia/components/List.js";
+import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
+var CheckBoxGroup = function(_props) {
     let _self = this,
         _dataProvider;
 
@@ -97,7 +97,7 @@ var CheckBoxGroup = function (_props) {
         ];
     }
 
-    let fnContainerDelayInit = function () {
+    let fnContainerDelayInit = function() {
         return [{
             ctor: CheckBoxEx,
             props: {

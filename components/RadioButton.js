@@ -4,10 +4,10 @@
  * Kreatx 2019
  */
 
-import { Component } from "/flowerui/components/base/Component.js";
-import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+import { Component } from "/obvia/components/base/Component.js";
+import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
 
-var RadioButton = function (_props) {
+var RadioButton = function(_props) {
 
     let _self = this,
         _label, _labelForLater, _value, _checked, _name;
@@ -75,11 +75,11 @@ var RadioButton = function (_props) {
         }
     });
 
-    let _clickHandler = function () {
+    let _clickHandler = function() {
         _checked = !_checked;
     };
 
-    this.beforeAttach = function (e) {
+    this.beforeAttach = function(e) {
         if (e.target.id == this.domID) {
             if (_props.label && !this.getBindingExpression("label")) {
                 this.label = _props.label;
@@ -99,13 +99,13 @@ var RadioButton = function (_props) {
         }
     };
 
-    this.afterAttach = function (e) {
+    this.afterAttach = function(e) {
         if (e.target.id == this.domID) {
             this.label = _labelForLater;
         }
     };
 
-    this.template = function () {
+    this.template = function() {
         return "<input type='radio' data-triggers='click' id='" + this.domID + "' class='no-form-control'>";
     };
 
@@ -119,7 +119,7 @@ var RadioButton = function (_props) {
 
     let _click = _props.click;
 
-    _props.click = function () {
+    _props.click = function() {
         let e = arguments[0];
         if (!e.isDefaultPrevented()) {
             _clickHandler.apply(this, arguments);

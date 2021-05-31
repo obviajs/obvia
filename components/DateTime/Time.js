@@ -3,8 +3,8 @@
  *
  * Kreatx 2019
  */
-import { DateTime } from "/flowerui/components/DateTime/DateTime.js";
-import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+import { DateTime } from "/obvia/components/DateTime/DateTime.js";
+import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
 
 var Time = function (_props) {
     let _self = this;

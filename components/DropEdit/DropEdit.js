@@ -4,11 +4,11 @@
  * Kreatx 2020
  */
 
-import { Container } from "/flowerui/components/Container.js";
-import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
-import { StringUtils } from "/flowerui/lib/StringUtils.js";
-import { Repeater } from "/flowerui/components/Repeater/Repeater.js";
-import { Button, ButtonSize } from "/flowerui/components/Button/Button.js";
+import { Container } from "/obvia/components/Container.js";
+import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
+import { StringUtils } from "/obvia/lib/StringUtils.js";
+import { Repeater } from "/obvia/components/Repeater/Repeater.js";
+import { Button, ButtonSize } from "/obvia/components/Button/Button.js";
 
 var DropEdit = function (_props) {
     let _self = this;

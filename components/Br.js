@@ -4,8 +4,8 @@
  * Kreatx 2018
  */
 
-import { Component } from "/flowerui/components/base/Component.js";
-import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+import { Component } from "/obvia/components/base/Component.js";
+import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
 var Br = function(_props)
 {
     this.template = function () 

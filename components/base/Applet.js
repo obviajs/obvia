@@ -1,12 +1,12 @@
-import { Container } from "/flowerui/components/Container.js";
-import { StringUtils } from "/flowerui/lib/StringUtils.js";
-import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
-import { coroutine } from "/flowerui/lib/coroutine.js";
-import { BrowserManager } from "/flowerui/lib/BrowserManager.js";
-import { BrowserUtils } from "/flowerui/lib/BrowserUtils.js";
-import { get } from "/flowerui/lib/my.js";
+import { Container } from "/obvia/components/Container.js";
+import { StringUtils } from "/obvia/lib/StringUtils.js";
+import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
+import { coroutine } from "/obvia/lib/coroutine.js";
+import { BrowserManager } from "/obvia/lib/BrowserManager.js";
+import { BrowserUtils } from "/obvia/lib/BrowserUtils.js";
+import {get } from "/obvia/lib/my.js";
 
-var Applet = function (_props) {
+var Applet = function(_props) {
     this.$el = $(this);
     let _defaultParams = {
         forceReload: false,
@@ -21,24 +21,24 @@ var Applet = function (_props) {
             "enroute": "ENROUTE",
             "preroute": "PREROUTE"
         },
-        type:"",
+        type: "",
         attr: {},
         lazy: true,
         guid: StringUtils.guid(),
-        fetchViewPromise: (p) => { 
-            let rnd = p.forceReload ? "?r=" + Math.random() : "";            
+        fetchViewPromise: (p) => {
+            let rnd = p.forceReload ? "?r=" + Math.random() : "";
             let _base = BrowserManager.getInstance().base;
             let _furl = _base + (p.url[0] == "." ? p.url.substr(1) : p.url);
-            return get(_furl + p.anchor + ".json" + rnd, p.mimeType).then(function (r) { 
+            return get(_furl + p.anchor + ".json" + rnd, p.mimeType).then(function(r) {
                 return JSON.parse(r.response);
             });
         },
-        fetchImplementationPromise: (p, msg) => { 
-            let rnd = p.forceReload ? "?r=" + Math.random() : "";            
+        fetchImplementationPromise: (p, msg) => {
+            let rnd = p.forceReload ? "?r=" + Math.random() : "";
             let _base = BrowserManager.getInstance().base;
             let _furl = _base + (p.url[0] == "." ? p.url.substr(1) : p.url);
             //import uses different starting point (currrent file directory)
-            return import(_furl + p.anchor + ".js" + rnd).then((module) => {                
+            return import (_furl + p.anchor + ".js" + rnd).then((module) => {
                 return new module[_self.anchor](_self, msg);
             });
         },
@@ -78,14 +78,14 @@ var Applet = function (_props) {
     //the component instance of the view
     //the behaviors implementations (ex ctl)
     let _implementation;
-    let _loaded = false;    
+    let _loaded = false;
     //Applet implementation skeleton
     let _behaviors = _props.behaviors;
     let _title = _props.title;
     let _defaultAppletIndex = _props.defaultAppletIndex;
 
-    let _instIndexMap = {"0": 0 };
-    this.route = async function (msg) {
+    let _instIndexMap = { "0": 0 };
+    this.route = async function(msg) {
         if ((_parentApplet == _app) || msg.hash == _anchor) {
             msg = msg || {};
             await _self.routeApplet(msg.map);
@@ -93,24 +93,24 @@ var Applet = function (_props) {
             if (msg.child && _appletsMap[msg.child.hash]) {
                 let appletIndex = msg.child.map.inst && msg.child.map.inst > -1 ? msg.child.map.inst : 0;
                 appletIndex = _instIndexMap[appletIndex];
-                if (appletIndex==null) {
+                if (appletIndex == null) {
                     let applet = _applets[_appletsMap[msg.child.hash][0].appletIndex];
                     _instIndexMap[appletIndex] = _applets.length;
                     inst = _self.addApplet(applet);
-                }else 
+                } else
                     inst = _appletsMap[msg.child.hash][appletIndex];
             } else {
-                if (_defaultAppletIndex!=null && _applets[_defaultAppletIndex]) {
-                    msg.child = {"hash": _applets[_defaultAppletIndex].anchor};
+                if (_defaultAppletIndex != null && _applets[_defaultAppletIndex]) {
+                    msg.child = { "hash": _applets[_defaultAppletIndex].anchor };
                     inst = _appletsMap[_applets[_defaultAppletIndex].anchor][0];
                 }
             }
-            if(inst)
+            if (inst)
                 await inst.route(msg.child);
         }
     };
 
-    this.addApplet = function (applet) {
+    this.addApplet = function(applet) {
         applet.app = _self.app;
         applet.parentApplet = _self;
         _applets.push(applet);
@@ -126,11 +126,12 @@ var Applet = function (_props) {
         return appletInst;
     };
 
-    let _updateHash = function () {
+    let _updateHash = function() {
         let regex = new RegExp('\\b' + _anchor + '\\b');
         let hash = BrowserManager.getInstance().hash;
         let arr = hash.split("#");
-        let len = arr.length, m;
+        let len = arr.length,
+            m;
         for (let i = 0; i < len && !m; i++) {
             m = regex.exec(arr[i]);
             if (m) {
@@ -140,12 +141,12 @@ var Applet = function (_props) {
         }
     };
     let _proxy = {
-        deleteProperty: function (target, property) {
+        deleteProperty: function(target, property) {
             Reflect.deleteProperty(target, property);
             _updateHash();
             return true;
         },
-        set: function (target, property, value, receiver) {
+        set: function(target, property, value, receiver) {
             target[property] = value;
             _updateHash();
             return true;
@@ -162,7 +163,7 @@ var Applet = function (_props) {
     let _msg = {};
     let _proxiedMsg = new Proxy(_msg, _proxy);
 
-    let _initAppletInternal = async function () {
+    let _initAppletInternal = async function() {
         return new Promise((resolve, reject) => {
             let ap;
             if (_loaded) {
@@ -172,7 +173,7 @@ var Applet = function (_props) {
                     _fetchViewPromise.call(_self, _props),
                     //import uses different starting point (currrent file directory)
                     _dataPromise ? (typeof _dataPromise == 'function' ? _dataPromise.call() : _dataPromise) : Promise.resolve(_data),
-                    _fetchImplementationPromise.call(_self, _props, _proxiedMsg)                
+                    _fetchImplementationPromise.call(_self, _props, _proxiedMsg)
                 ]).then((p) => {
                     _implementation = p[2];
                     _data = p[1];
@@ -182,7 +183,7 @@ var Applet = function (_props) {
                     _literal.props.bindingDefaultContext = _props.bindingDefaultContext = _implementation.appletContext;
                     _props.components = [_literal];
                     Container.call(_self, _props);
-                
+
                     _self.addBehaviors(_self, _behaviors, false);
                     _self.addBehaviors(_app, _app.defaultBehaviors, false);
 
@@ -203,11 +204,11 @@ var Applet = function (_props) {
                             _appletsMap[_applets[i].anchor].push(inst);
                         }
                     }
-                }).catch((params) => {                
+                }).catch((params) => {
                     reject(params);
                 });
             }
-            ap.then((async (l) => {                
+            ap.then((async(l) => {
                 _self.trigger("preroute");
                 let p;
                 if (_uiRoute && typeof _uiRoute == 'function') {
@@ -216,22 +217,22 @@ var Applet = function (_props) {
                 _self.trigger("enroute");
                 _loaded = true;
                 resolve(_self);
-            }));                
+            }));
         });
     };
 
-    this.routeApplet = async function (msg) {
+    this.routeApplet = async function(msg) {
         ObjectUtils.inTheImageOf(msg, _msg);
         return await _initAppletInternal();
     };
 
-    this.initApplet = async function (msg) {
+    this.initApplet = async function(msg) {
         //set the hash for this applet by stringifying msg     
         ObjectUtils.shallowCopy(msg, _proxiedMsg);
         return await _initAppletInternal();
     };
 
-    this.addBehaviors = function (cmps, behaviors, recurse = true) {
+    this.addBehaviors = function(cmps, behaviors, recurse = true) {
         var cmps = ObjectUtils.isObject(cmps) && !cmps.forEach ? [cmps] : cmps;
         let eventTypesJoined = "";
         for (let b in behaviors) {
@@ -249,7 +250,7 @@ var Applet = function (_props) {
         }
     };
 
-    this.removeBehaviors = function (cmps, behaviors, recurse = true) {
+    this.removeBehaviors = function(cmps, behaviors, recurse = true) {
         var cmps = ObjectUtils.isObject(cmps) && !cmps.forEach ? [cmps] : cmps;
         let eventTypesJoined = "";
         for (let b in behaviors) {
@@ -363,24 +364,24 @@ var Applet = function (_props) {
     });
 
     let _cachedScope = null
-    this.invalidateScopeChain = function () {
+    this.invalidateScopeChain = function() {
         _cachedScope = null;
     };
 
-    this.getScopeChain = function () {
+    this.getScopeChain = function() {
         let scope = _cachedScope
         if (!_cachedScope) {
             scope = [];
             if (_self == this.bindingDefaultContext || this.proxyMaybe == this.bindingDefaultContext) {
                 if (this.proxyMaybe)
                     scope.push(this.proxyMaybe);
-                else                    
+                else
                     scope.push(this.bindingDefaultContext);
-            } else if (this.proxyMaybe)               
+            } else if (this.proxyMaybe)
                 scope.splice(scope.length, 0, this.bindingDefaultContext, this.proxyMaybe);
-            else                
+            else
                 scope.splice(scope.length, 0, this.bindingDefaultContext, _self);
-            
+
             if (this.parentApplet) {
                 scope.splicea(scope.length, 0, this.parentApplet.getScopeChain())
             } else

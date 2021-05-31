@@ -1,5 +1,5 @@
-import {Container} from "/flowerui/components/Container.js";
-import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+import {Container} from "/obvia/components/Container.js";
+import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
 var ProgressBar = function (_props) {
 
     Object.defineProperty(this, "label",

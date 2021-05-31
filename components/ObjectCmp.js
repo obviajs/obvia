@@ -4,10 +4,10 @@
  * Kreatx 2021
  */
 
-import { Container } from "/flowerui/components/Container.js";
-import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+import { Container } from "/obvia/components/Container.js";
+import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
 
-var ObjectCmp = function (_props, _hideComponents = false) {
+var ObjectCmp = function(_props, _hideComponents = false) {
     let _self, _data, _type;
 
     Object.defineProperty(this, "data", {
@@ -29,7 +29,7 @@ var ObjectCmp = function (_props, _hideComponents = false) {
     });
 
     let _beforeAttach = this.beforeAttach;
-    this.beforeAttach = function (e) {
+    this.beforeAttach = function(e) {
         if (e.target.id == this.domID) {
             if (_props.data) {
                 this.data = _props.data;
@@ -42,10 +42,10 @@ var ObjectCmp = function (_props, _hideComponents = false) {
         }
     };
 
-    this.afterAttach = function (e) {
+    this.afterAttach = function(e) {
         if (e.target.id == this.domID) {}
     };
-    this.template = function () {
+    this.template = function() {
         return '<object id="' + this.domID + '" ></object>';
     };
 

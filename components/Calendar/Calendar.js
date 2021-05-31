@@ -3,12 +3,12 @@
  * 
  * Kreatx 2019
 */
-import { Container } from "/flowerui/components/Container.js";
-import { CalendarDay } from "/flowerui/components/Calendar/CalendarDay.js";
-import { CalendarWeek } from "/flowerui/components/Calendar/CalendarWeek.js";
-import { CalendarMonth } from "/flowerui/components/Calendar/CalendarMonth.js";
-import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
-import { CalendarConstants } from "/flowerui/components/Calendar/CalendarConstants.js";
+import { Container } from "/obvia/components/Container.js";
+import { CalendarDay } from "/obvia/components/Calendar/CalendarDay.js";
+import { CalendarWeek } from "/obvia/components/Calendar/CalendarWeek.js";
+import { CalendarMonth } from "/obvia/components/Calendar/CalendarMonth.js";
+import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
+import { CalendarConstants } from "/obvia/components/Calendar/CalendarConstants.js";
 var Calendar = function(_props){
     let _self = this;
 

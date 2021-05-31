@@ -4,9 +4,9 @@
  * Kreatx 2019
  */
 
-import { Container } from "/flowerui/components/Container.js";
-import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
-import { StringUtils } from "/flowerui/lib/StringUtils.js";
+import { Container } from "/obvia/components/Container.js";
+import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
+import { StringUtils } from "/obvia/lib/StringUtils.js";
 var AutoBrowse = function (_props) {
     let _self = this;
     let _dataProvider, _bindingDefaultContext, _valueField, _labelField, _value, _columns = [],

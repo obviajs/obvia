@@ -4,23 +4,23 @@
  * Kreatx 2018
  */
 
-import { Container } from "/flowerui/components/Container.js";
-import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
-import { Label, LabelType } from "/flowerui/components/Label.js";
-import { Link } from "/flowerui/components/Link/Link.js";
+import { Container } from "/obvia/components/Container.js";
+import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
+import { Label, LabelType } from "/obvia/components/Label.js";
+import { Link } from "/obvia/components/Link/Link.js";
 
-var TokenRenderer = function (_props) {
+var TokenRenderer = function(_props) {
     let _self = this,
         _value, _label, _closeIconSide, _link, _span;
 
-    this.endDraw = function (e) {
+    this.endDraw = function(e) {
         if (e.target.id == this.domID) {
             _link = this.linkCmp;
             _span = this.labelCmp;
         }
     };
 
-    this.beforeAttach = function (e) {
+    this.beforeAttach = function(e) {
         if (e.target.id == this.domID) {
             if (_props.value)
                 _value = _props.value;
@@ -29,7 +29,7 @@ var TokenRenderer = function (_props) {
         }
     };
 
-    let _closeIconClick = function (e) {
+    let _closeIconClick = function(e) {
         _self.trigger("closeiconclick");
     };
 

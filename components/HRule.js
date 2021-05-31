@@ -4,63 +4,48 @@
  * Kreatx 2018
  */
 
-import {Component} from "/flowerui/components/base/Component.js";
-import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
-var HRule = function (_props)
-{
-    
-    Object.defineProperty(this, "height", 
-    {
-        get: function height() 
-        {
+import { Component } from "/obvia/components/base/Component.js";
+import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
+var HRule = function(_props) {
+
+    Object.defineProperty(this, "height", {
+        get: function height() {
             return _height;
         },
-        set: function height(v) 
-        {
-            if(_height != v)
-            {
+        set: function height(v) {
+            if (_height != v) {
                 _height = v;
-                if(this.$el)
-                {
-                    this.$el.css('height', v+"px");
+                if (this.$el) {
+                    this.$el.css('height', v + "px");
                 }
             }
         },
-        enumerable:true
+        enumerable: true
     });
-  
-    Object.defineProperty(this, "align", 
-    {
-        get: function align() 
-        {
+
+    Object.defineProperty(this, "align", {
+        get: function align() {
             return _align;
         },
-        set: function align(v) 
-        {
-            if(_align != v)
-            {
+        set: function align(v) {
+            if (_align != v) {
                 _align = v;
-                if(this.$el)
+                if (this.$el)
                     this.$el.attr('align', v);
             }
         },
         enumerable: true
     });
 
-    Object.defineProperty(this, "width", 
-    {
-        get: function width() 
-        {
+    Object.defineProperty(this, "width", {
+        get: function width() {
             return _width;
         },
-        set: function width(v) 
-        {
-            if(_width != v)
-            {
+        set: function width(v) {
+            if (_width != v) {
                 _width = v;
-                if(this.$el)
-                {
-                    this.$el.css('width', v+"px");
+                if (this.$el) {
+                    this.$el.css('width', v + "px");
                 }
             }
         },
@@ -68,22 +53,21 @@ var HRule = function (_props)
     });
 
 
-    this.template = function () 
-    {        
-        return  '<hr id="' + this.domID + '" align="'+_align +'" style="height:'+_height +'px width="'+_width +'px"" >';    
+    this.template = function() {
+        return '<hr id="' + this.domID + '" align="' + _align + '" style="height:' + _height + 'px width="' + _width + 'px"" >';
     };
 
     var _defaultParams = {
-        width:0,
-        height:0,
-        align:"center" //="left|center|right"
+        width: 0,
+        height: 0,
+        align: "center" //="left|center|right"
     };
 
     _props = ObjectUtils.extend(false, false, _defaultParams, _props);
     var _width = _props.width;
     var _height = _props.height;
     var _align = _props.align;
-   
+
     Component.call(this, _props);
 };
 HRule.prototype.ctor = 'HRule';

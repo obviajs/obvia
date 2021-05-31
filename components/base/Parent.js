@@ -1,17 +1,18 @@
-import { Component } from "/flowerui/components/base/Component.js";
-import { Props } from "/flowerui/components/base/Props.js";
-import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
-import { ArrayUtils } from "/flowerui/lib/ArrayUtils.js";
-var Parent = function (_props, _hideComponents = false) {
+import { Component } from "/obvia/components/base/Component.js";
+import { Props } from "/obvia/components/base/Props.js";
+import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
+import { ArrayUtils } from "/obvia/lib/ArrayUtils.js";
+var Parent = function(_props, _hideComponents = false) {
     let _$hadow = $("<div/>");
     let _comprenders = [];
     let _self = this;
-    let _children = {}, _enabled;
+    let _children = {},
+        _enabled;
 
     if (!this.hasOwnProperty("initProxy")) {
-        this.initProxy = function () {
+        this.initProxy = function() {
             return new Proxy(this, {
-                get: function (target, property, receiver) {
+                get: function(target, property, receiver) {
                     if (!target.hasOwnProperty(property) && !target.constructor.prototype.hasOwnProperty(property)) {
                         if (target.children && target.children[property])
                             return target.children[property];
@@ -21,7 +22,7 @@ var Parent = function (_props, _hideComponents = false) {
                 getOwnPropertyDescriptor(target, property) {
                     if (!target.hasOwnProperty(property) && !target.constructor.prototype.hasOwnProperty(property)) {
                         if (target.children && target.children[property])
-                            return {configurable: true, enumerable: true, get: Reflect.get};
+                            return { configurable: true, enumerable: true, get: Reflect.get };
                     }
                     return Reflect.getOwnPropertyDescriptor(...arguments);
                 }
@@ -63,7 +64,7 @@ var Parent = function (_props, _hideComponents = false) {
         configurable: true
     });
 
-    this.add = function (childOrLiteral, index) {
+    this.add = function(childOrLiteral, index) {
         if (childOrLiteral) {
             if (childOrLiteral.$el)
                 this.addChild(childOrLiteral, index);
@@ -72,7 +73,7 @@ var Parent = function (_props, _hideComponents = false) {
         }
     };
 
-    this.addChild = function (child, index) {
+    this.addChild = function(child, index) {
         if (child && _children[child.id] != child) {
             index = index > -1 ? index : _csorted.length;
             if (index >= 0 && index <= _csorted.length) {
@@ -89,7 +90,7 @@ var Parent = function (_props, _hideComponents = false) {
                 child.repeaterIndex = this.repeaterIndex;
                 child.parentRepeater = this.parentRepeater;
                 let rPromise = child.render();
-                return rPromise.then(function (cmpInstance) {
+                return rPromise.then(function(cmpInstance) {
                     //cmpInstance.applyMyBindings();
                     _self.$el.insertAt(cmpInstance.$el, index);
                     let event = jQuery.Event("childAdded");
@@ -100,8 +101,8 @@ var Parent = function (_props, _hideComponents = false) {
             }
         }
     };
-    
-    this.indexOfChild = function (child) {
+
+    this.indexOfChild = function(child) {
         let ind = -1;
         if (child) {
             //check whether this is a child of this parent
@@ -112,19 +113,19 @@ var Parent = function (_props, _hideComponents = false) {
         return ind;
     };
 
-    this.childAtIndex = function (i) {
+    this.childAtIndex = function(i) {
         if (i >= 0 && i < _csorted.length) {
             return _children[_csorted[i]];
         }
     };
 
-    this.removeAllChildren = function (mode = 1) {
+    this.removeAllChildren = function(mode = 1) {
         for (let cid in this.children) {
             this.removeChild(this.children[cid], mode);
         }
     };
 
-    this.removeChild = function (child, mode = 1) {
+    this.removeChild = function(child, mode = 1) {
         if (child) {
             if (_children[child.id] == child) {
                 let ind = _csorted.indexOf(child.id);
@@ -140,17 +141,17 @@ var Parent = function (_props, _hideComponents = false) {
         }
     };
 
-    this.removeChildAtIndex = function (index, mode = 1) {
+    this.removeChildAtIndex = function(index, mode = 1) {
         if (index >= 0 && index < _csorted.length) {
             this.removeChild(_children[_csorted[index]], mode);
         }
     };
 
-    this.addComponent = function (component, index) {
+    this.addComponent = function(component, index) {
         index = index > -1 ? index : _csorted.length;
         let cr = this.addComponentInContainer(this.$container, component, index);
 
-        cr.promise.then(function (cmpInstance) {
+        cr.promise.then(function(cmpInstance) {
             if (cmpInstance && !cmpInstance.attached) {
                 //cmpInstance.applyMyBindings();
                 if (cmpInstance.appendTo) {
@@ -190,7 +191,7 @@ var Parent = function (_props, _hideComponents = false) {
 
     let _csorted = [];
 
-    this.addComponentInContainer = async function (container, component, index) {
+    this.addComponentInContainer = async function(container, component, index) {
         if (container) {
             component.props.ownerDocument = this.ownerDocument;
             let cmpLit = {};
@@ -227,7 +228,7 @@ var Parent = function (_props, _hideComponents = false) {
         }
     };
     let _init = this.init;
-    this.init = function (e) {
+    this.init = function(e) {
         if (e.target.id == this.domID) {
             this.$container = this.$el;
             if (typeof _init == 'function')
@@ -236,14 +237,14 @@ var Parent = function (_props, _hideComponents = false) {
     };
 
     let _beforeAttach = this.beforeAttach;
-    this.beforeAttach = function (e) {
+    this.beforeAttach = function(e) {
         if (e.target.id == this.domID) {
             if (typeof _beforeAttach == 'function')
                 _beforeAttach.apply(this, arguments);
         }
     };
     let _afterAttach = this.afterAttach;
-    this.afterAttach = function (e) {
+    this.afterAttach = function(e) {
         if (e.target.id == this.domID) {
             if (typeof _afterAttach == 'function')
                 _afterAttach.apply(this, arguments);
@@ -277,7 +278,7 @@ var Parent = function (_props, _hideComponents = false) {
     //_props.afterAttach = this.afterAttach;
     let _sortChildren = _props.sortChildren;
     // this.afterAttach = undefined;
-    this.addComponents = async function (components) {
+    this.addComponents = async function(components) {
         _self.trigger('beginDraw');
         let arrInst = [];
         let cr = [];
@@ -293,7 +294,7 @@ var Parent = function (_props, _hideComponents = false) {
                 }
             }
             cr = ArrayUtils.arrayFromKey(_comprenders, "promise");
-            Promise.all(cr).then(function () {
+            Promise.all(cr).then(function() {
                 _comprenders = [];
                 for (let i = 0; i < _csorted.length; i++) {
                     let cmpInstance = _children[_csorted[i]];
@@ -319,10 +320,10 @@ var Parent = function (_props, _hideComponents = false) {
 
     if (!this.hasOwnProperty("render")) {
         let _rPromise;
-        this.render = function () {
+        this.render = function() {
             if (_rPromise == null) {
                 _rPromise = new Promise((resolve, reject) => {
-                    _self.on("endDraw", function (e) {
+                    _self.on("endDraw", function(e) {
                         if (e.target.id == _self.domID) {
                             resolve(_proxy);
                         }
@@ -362,14 +363,14 @@ var Parent = function (_props, _hideComponents = false) {
             base.destruct(mode);
         }
     */
-    this.childrenEnable = function (v) {
+    this.childrenEnable = function(v) {
         for (let childId in this.children) {
             this.children[childId].enabled = v;
             if (this.children[childId].childrenEnable)
                 this.children[childId].childrenEnable(v);
         }
     };
-    
+
 
     Object.defineProperty(this, "props", {
         get: function props() {

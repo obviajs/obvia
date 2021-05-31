@@ -4,13 +4,11 @@
  * Kreatx 2019
  */
 
-import {Container} from "/flowerui/components/Container.js";
-var Section = function(_props)
-{
+import { Container } from "/obvia/components/Container.js";
+var Section = function(_props) {
     //is template overrided ?
-    this.template = this.template || function ()
-    { 
-        return  '<section id="' + this.domID + '"></section>'; 
+    this.template = this.template || function() {
+        return '<section id="' + this.domID + '"></section>';
     };
     _props.type = ContainerType.NONE;
     Container.call(this, _props);

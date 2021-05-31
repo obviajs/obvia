@@ -1,6 +1,6 @@
-import { Container } from "/flowerui/components/Container.js";
-import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
-var NavParent = function (_props) {
+import { Container } from "/obvia/components/Container.js";
+import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
+var NavParent = function(_props) {
     let _self = this,
         _selectedIndex;
 
@@ -22,7 +22,7 @@ var NavParent = function (_props) {
     });
 
     let _init = this.init;
-    this.init = function (e) {
+    this.init = function(e) {
         if (e.target.id == this.domID) {
             if (typeof _init == 'function')
                 _init.apply(this, arguments);
@@ -30,7 +30,7 @@ var NavParent = function (_props) {
     };
 
     let _endDraw = this.endDraw;
-    this.endDraw = function (e) {
+    this.endDraw = function(e) {
         if (e.target.id == this.domID) {
             if (typeof _endDraw == 'function')
                 _endDraw.apply(this, arguments);
@@ -51,7 +51,7 @@ var NavParent = function (_props) {
     };
 
     let _beforeAttach = this.beforeAttach;
-    this.beforeAttach = function (e) {
+    this.beforeAttach = function(e) {
         if (e.target.id == this.domID) {
             if (typeof _beforeAttach == 'function')
                 _beforeAttach.apply(this, arguments);
@@ -60,7 +60,7 @@ var NavParent = function (_props) {
         }
     };
 
-    let _childClicked = function (e, index) {
+    let _childClicked = function(e, index) {
         _self.selectedIndex = index;
     };
 

@@ -1,14 +1,14 @@
-import { Literal } from "/flowerui/lib/Literal.js";
-import { UseBindings } from "/flowerui/lib/UseBindings.js";
-import { Attr } from "/flowerui/components/base/Attr.js";
-import { Css } from "/flowerui/components/base/Css.js";
-import { StringUtils } from "/flowerui/lib/StringUtils.js";
-import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
-import { ArrayUtils } from "/flowerui/lib/ArrayUtils.js";
-import { RepeaterEventArgs } from "/flowerui/components/Repeater/RepeaterEventArgs.js";
-import { Props } from "/flowerui/components/base/Props.js";
+import { Literal } from "/obvia/lib/Literal.js";
+import { UseBindings } from "/obvia/lib/UseBindings.js";
+import { Attr } from "/obvia/components/base/Attr.js";
+import { Css } from "/obvia/components/base/Css.js";
+import { StringUtils } from "/obvia/lib/StringUtils.js";
+import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
+import { ArrayUtils } from "/obvia/lib/ArrayUtils.js";
+import { RepeaterEventArgs } from "/obvia/components/Repeater/RepeaterEventArgs.js";
+import { Props } from "/obvia/components/base/Props.js";
 
-var Component = function (_props) {
+var Component = function(_props) {
     let _self = this;
     if (!Component[this.ctor]) {
         Component[this.ctor] = {};
@@ -41,7 +41,8 @@ var Component = function (_props) {
     let _guid = _props.guid;
     let _attr, _css;
     let _id = _props.id = ((!_props.id) || (_props.id == "")) ? _defaultParams.id : _props.id;
-    let _enabled, _draggable, _visible = true, _display = true;
+    let _enabled, _draggable, _visible = true,
+        _display = true;
     let _classes = [];
     let _parent = _props.parent;
     let _parentForm = _props.parentForm;
@@ -80,7 +81,7 @@ var Component = function (_props) {
 
     Object.defineProperty(this, "dependencies", {
         get: function dependencies() {
-            return [{"attr":this.attr, "css":this.css}, this.children];
+            return [{ "attr": this.attr, "css": this.css }, this.children];
         },
         enumerable: false
     });
@@ -113,10 +114,10 @@ var Component = function (_props) {
 
     //domID property
     Object.defineProperty(this, 'id', {
-        get: function () {
+        get: function() {
             return _id;
         },
-        set: function (v) {
+        set: function(v) {
             if (v && v.trim() && (_id != v)) {
                 if (!this.parent || !this.parent[v]) {
                     let oldId = _id;
@@ -169,9 +170,9 @@ var Component = function (_props) {
         set: function ownerDocument(v) {
             if (!_ownerDocument || _ownerDocument != v) {
                 _ownerDocument = v;
-                Component.ready(this, function (element) {
+                Component.ready(this, function(element) {
                     _self.proxyMaybe.trigger('afterAttach');
-                }, function (element) {
+                }, function(element) {
                     _self.proxyMaybe.trigger('detached');
                 }, _ownerDocument);
             }
@@ -234,7 +235,7 @@ var Component = function (_props) {
             if (_parent != v) {
                 if (_parent) {
                     if (_parent)
-                        _parent.removeChild(_self);                        
+                        _parent.removeChild(_self);
                 }
                 _parent = v;
                 if (this.children) {
@@ -311,7 +312,7 @@ var Component = function (_props) {
             if (_enabled != v) {
                 _enabled = v;
                 if (this.$el)
-                    this.$el.find("input, select, textarea, button").addBack("input, select, textarea, button").each(function () {
+                    this.$el.find("input, select, textarea, button").addBack("input, select, textarea, button").each(function() {
                         if (!v)
                             $(this).attr('disabled', 'disabled');
                         else
@@ -331,7 +332,7 @@ var Component = function (_props) {
             if (_readonly != v) {
                 _readonly = v;
                 if (this.$el)
-                    this.$el.find("input, select, textarea, button").addBack("input, select, textarea, button").each(function () {
+                    this.$el.find("input, select, textarea, button").addBack("input, select, textarea, button").each(function() {
                         if (!v)
                             $(this).prop('readonly', 'readonly');
                         else
@@ -406,7 +407,7 @@ var Component = function (_props) {
         enumerable: true
     });
 
-    this.my = function (id) {
+    this.my = function(id) {
         return id + "_" + this.guid;
     };
 
@@ -420,14 +421,14 @@ var Component = function (_props) {
     this.$el.ownerDocument = _ownerDocument;
     let dt = this.$el.attr("data-triggers");
 
-    if (dt && !Object.isEmpty(_props.attr) && _props.attr["data-triggers"] && !Object.isEmpty(_props.attr["data-triggers"])) {        
+    if (dt && !Object.isEmpty(_props.attr) && _props.attr["data-triggers"] && !Object.isEmpty(_props.attr["data-triggers"])) {
         _props.attr["data-triggers"] = _props.attr["data-triggers"] + " " + dt;
     }
     _attr = new Attr(_props.attr, this);
     _css = new Css(_props.css, this);
 
     let _DOMMutation = this.DOMMutation;
-    this.DOMMutation = function (e) {
+    this.DOMMutation = function(e) {
         if (typeof _props.DOMMutation == 'function')
             _props.DOMMutation.apply(this.proxyMaybe, arguments);
         if (!e.isDefaultPrevented()) {
@@ -437,7 +438,7 @@ var Component = function (_props) {
     };
 
     let _init = this.init;
-    this.init = function (e) {
+    this.init = function(e) {
         if (e.target.id == this.domID) {
             if (typeof _props.init == 'function')
                 _props.init.apply(this.proxyMaybe, arguments);
@@ -453,7 +454,7 @@ var Component = function (_props) {
     };
 
     let _beforeAttach = this.beforeAttach;
-    this.beforeAttach = function (e) {
+    this.beforeAttach = function(e) {
         if (e.target.id == this.domID) {
             if (typeof _props.beforeAttach == 'function')
                 _props.beforeAttach.apply(this.proxyMaybe, arguments);
@@ -468,7 +469,7 @@ var Component = function (_props) {
     };
     let _drawEnded;
     let _beginDraw = this.beginDraw;
-    this.beginDraw = function (e) {
+    this.beginDraw = function(e) {
         if (e.target.id == this.domID) {
             _drawEnded = false;
             //console.log("beginDraw : Type:", this.ctor + " id:" + this.$el.attr("id"));
@@ -482,7 +483,7 @@ var Component = function (_props) {
     };
 
     let _endDraw = this.endDraw;
-    this.endDraw = function (e) {
+    this.endDraw = function(e) {
         if (e.target.id == this.domID) {
             _drawEnded = true;
             //console.log("endDraw : Type:", this.ctor + " id:" + this.$el.attr("id"));
@@ -500,16 +501,16 @@ var Component = function (_props) {
         }
     };
 
-    this.applyMyBindings = function () {
-        if (_self.bindingsManager.watchers.length == 0) {                
+    this.applyMyBindings = function() {
+        if (_self.bindingsManager.watchers.length == 0) {
             this.applyBindings();
             this.attr.applyBindings();
             this.css.applyBindings();
-        } 
+        }
     };
 
     let _afterAttach = this.afterAttach;
-    this.afterAttach = function (e) {
+    this.afterAttach = function(e) {
         if (e.target.id == this.domID) {
             _attached = true;
             if (typeof _props.afterAttach == 'function')
@@ -523,7 +524,7 @@ var Component = function (_props) {
     };
 
     let _detached = this.detached;
-    this.detached = function (e) {
+    this.detached = function(e) {
         if (e.target.id == this.domID) {
             _self.attached = false;
             if (typeof _props.detached == 'function')
@@ -565,10 +566,10 @@ var Component = function (_props) {
         }
     }];
 
-    this.dataTriggerEvents = function () {
+    this.dataTriggerEvents = function() {
         let customEvents = _defaultHandlers;
 
-        this.$el.find('[data-triggers]').addBack('[data-triggers]').each(function () {
+        this.$el.find('[data-triggers]').addBack('[data-triggers]').each(function() {
             let eventsObj = {};
             let events = $(this).data('triggers');
             let eventsArr = events.split(" ");
@@ -603,7 +604,7 @@ var Component = function (_props) {
     };
 
     let _dataTriggerEventList = this.dataTriggerEvents();
-    this.registerEvents = function () {
+    this.registerEvents = function() {
         return _dataTriggerEventList;
     }; //
     Object.defineProperty(this, "events", {
@@ -617,16 +618,16 @@ var Component = function (_props) {
             return _drawEnded;
         }
     });
-    
+
     if (!this.hasOwnProperty("render")) {
-        this.render = function () {
+        this.render = function() {
             _self.trigger('beginDraw');
             _self.trigger('endDraw');
             return Promise.resolve(this);
         };
     }
     //action methods on component
-    this.show = function () {
+    this.show = function() {
         if (this.$el) {
             this.$el.show();
             _display = true;
@@ -634,32 +635,32 @@ var Component = function (_props) {
         return this;
     };
 
-    this.hide = function () {
+    this.hide = function() {
         if (this.$el) {
             this.$el.hide();
             _display = false;
         }
         return this;
     };
-    this.blur = function () {
+    this.blur = function() {
         if (this.$el)
             this.$el.blur();
         return this;
     };
-    this.scrollTo = function () {
+    this.scrollTo = function() {
         if (this.$el) {
             this.$el[0].scrollTop = this.$el.offset().top - 100;
         }
         return this;
     };
-    this.focus = function (preventScroll = true) {
+    this.focus = function(preventScroll = true) {
         if (this.$el) {
             this.$el[0].focus({
                 "preventScroll": preventScroll
             });
         }
     };
-    this.destruct = function (mode = 1) {
+    this.destruct = function(mode = 1) {
         if (this.$el)
             mode == 1 ? this.$el.remove() : this.$el.detach();
         //_self.attached = false;
@@ -700,8 +701,8 @@ var Component = function (_props) {
         }
     });
 
-    let _generateProxyHandler = function (originalHandler) {
-        let f = function () {
+    let _generateProxyHandler = function(originalHandler) {
+        let f = function() {
             let args = [],
                 e = arguments[0];
             for (let i = 0; i < arguments.length; i++) {
@@ -732,7 +733,7 @@ var Component = function (_props) {
         return f;
     };
 
-    this.on = function (eventType, fnc) {
+    this.on = function(eventType, fnc) {
         eventType = eventType.trim();
         if (typeof fnc !== 'function') {
             throw Error("The specified parameter is not a callback");
@@ -751,7 +752,7 @@ var Component = function (_props) {
                                     "proxyHandler": proxyHandler,
                                     "originalHandler": fnc
                                 });
-                                this.$el.on(eventType, proxyHandler);                                
+                                this.$el.on(eventType, proxyHandler);
                             } else {
                                 console.log("Tried to add a listener that was previously added.");
                             }
@@ -766,12 +767,12 @@ var Component = function (_props) {
 
     let _handlers = {};
 
-    this.trigger = function () {
+    this.trigger = function() {
         if (this.$el)
             this.$el.trigger.apply(this.$el, arguments);
     };
 
-    this.off = function () {
+    this.off = function() {
         if (this.$el) {
             this.$el.off.apply(this.$el, arguments);
             let evt = arguments[0],
@@ -797,12 +798,12 @@ var Component = function (_props) {
         }
     };
 
-    this.hasListener = function (eventType, fnc) {
+    this.hasListener = function(eventType, fnc) {
         let found = ArrayUtils.getMatching(_handlers[eventType], "originalHandler", fnc, true);
         return found.objects.length > 0;
     };
-    
-    this.implement = function (inst) {
+
+    this.implement = function(inst) {
         for (let prop in inst) {
             if (isGetter(inst, prop))
                 copyAccessor(prop, inst, this);
@@ -811,7 +812,7 @@ var Component = function (_props) {
         }
     };
     //"#" + this.$el.attr('id'), 
-    this.initEvents = function (element) {
+    this.initEvents = function(element) {
         //execute inner handlers if theres any registered
         let handlers = [];
 
@@ -841,10 +842,10 @@ var Component = function (_props) {
                 }
             }
         }
-    };    
+    };
 
     Component.instances[_domID] = this.proxyMaybe;
-    
+
     if (_props.visible != null)
         this.visible = _props.visible;
     if (_props.display != null)
@@ -856,21 +857,21 @@ var Component = function (_props) {
 
     //execute functions before component attached on dom
     if (_ownerDocument) {
-        Component.ready(this, function (element) {
+        Component.ready(this, function(element) {
             _self.proxyMaybe.trigger('afterAttach');
-        }, function (element) {
+        }, function(element) {
             _self.proxyMaybe.trigger('detached');
         }, _ownerDocument);
     }
 
-    this.find = function (childId) {
+    this.find = function(childId) {
         let r = ArrayUtils.objectHierarchyGetMatchingMember(this, "id", childId, "children", false),
             m = null;
         if (r && r.match)
             m = r.match;
         return m;
     };
-    this.trigger('init');  
+    this.trigger('init');
 };
 Component.instanceInc = 0;
 Literal.call(Component);
@@ -878,7 +879,7 @@ Component.listeners = {};
 Component.objListeners = {};
 Component.MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
 
-Component.ready = function (cmp, fn, fnDetached, ownerDocument = document) {
+Component.ready = function(cmp, fn, fnDetached, ownerDocument = document) {
     // Store the selector and callback to be monitored
     if (!ownerDocument["id"]) {
         ownerDocument["id"] = StringUtils.guid();
@@ -915,7 +916,7 @@ Component.ready = function (cmp, fn, fnDetached, ownerDocument = document) {
     //Component.check();
 };
 
-Component.check = function (mutations) {
+Component.check = function(mutations) {
     if (mutations && mutations.length > 0) {
         for (let g = 0; g < mutations.length; g++) {
             if (Component.instances[mutations[g].target.id]) {
@@ -948,7 +949,7 @@ Component.check = function (mutations) {
         }
     }
 };
-Component.ch = function (domNode, operation = "fn") {
+Component.ch = function(domNode, operation = "fn") {
 
     let listener = Component.objListeners[domNode.id];
     let len = domNode.children.length;

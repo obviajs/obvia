@@ -3,9 +3,9 @@
  *
  * Kreatx 2019
  */
-import { List } from "/flowerui/components/List.js";
-import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
-var RadioGroup = function (_props) {
+import { List } from "/obvia/components/List.js";
+import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
+var RadioGroup = function(_props) {
     let _self = this,
         _dataProvider;
 
@@ -93,7 +93,7 @@ var RadioGroup = function (_props) {
             }
         ];
     }
-    let fnContainerDelayInit = function () {
+    let fnContainerDelayInit = function() {
         return [{
             ctor: RadioButton,
             props: {
@@ -112,7 +112,7 @@ var RadioGroup = function (_props) {
 
     let r = List.call(this, _props);
 
-    this.afterAttach = function (e) {
+    this.afterAttach = function(e) {
 
     };
 

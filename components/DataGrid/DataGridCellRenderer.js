@@ -4,8 +4,8 @@
  * Kreatx 2018
  */
 
-import {Label} from "/flowerui/components/Label.js";
-var DataGridCellRenderer = function(_props){
+import { Label } from "/obvia/components/Label.js";
+var DataGridCellRenderer = function(_props) {
     //component data
     let r = Label.call(this, _props);
     return r;

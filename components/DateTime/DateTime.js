@@ -3,11 +3,11 @@
  *
  * Kreatx 2019
  */
-import { Parent } from "/flowerui/components/base/Parent.js";
-import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
-import { ChangeWatcher } from "/flowerui/lib/binding/ChangeWatcher.js";
+import { Parent } from "/obvia/components/base/Parent.js";
+import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
+import { ChangeWatcher } from "/obvia/lib/binding/ChangeWatcher.js";
 
-var DateTime = function (_props) {
+var DateTime = function(_props) {
     let _self = this;
 
     Object.defineProperty(this, "value", {
@@ -39,7 +39,7 @@ var DateTime = function (_props) {
         enumerable: true,
         configurable: true
     });
-    
+
     Object.defineProperty(this, "internalFormat", {
         get: function internalFormat() {
             return _internalFormat;
@@ -102,8 +102,8 @@ var DateTime = function (_props) {
         enumerable: true
     });
 
-    this.endDraw = function () {
-        this.$input = this.$el;      
+    this.endDraw = function() {
+        this.$input = this.$el;
         if (_props.displayFormat) {
             this.displayFormat = _props.displayFormat;
         }
@@ -121,10 +121,10 @@ var DateTime = function (_props) {
         }
         if (_props.value) {
             this.value = moment(_props.value, _inputFormat).format(_inputFormat);
-        }        
+        }
     };
 
-    this.inputHandler = function (e) {
+    this.inputHandler = function(e) {
         let oldValue = _value;
         _value = moment(this.$input.val(), _self.internalFormat);
         this.attr['date'] = _value.format(_displayFormat);
@@ -133,7 +133,7 @@ var DateTime = function (_props) {
     };
 
     if (!this.hasOwnProperty("template")) {
-        this.template = function () {
+        this.template = function() {
             return "<input data-triggers='input' type='datetime-local' id='" + this.domID + "'/>";
         };
     }
@@ -146,7 +146,7 @@ var DateTime = function (_props) {
         internalFormat: "YYYY-MM-DDTHH:mm",
         value: null,
         min: null,
-        max: null        
+        max: null
     };
 
     _props = ObjectUtils.extend(false, false, _defaultParams, _props);
@@ -157,7 +157,7 @@ var DateTime = function (_props) {
 
     let _value, _min, _max;
     let _input = _props.input;
-    _props.input = function () {
+    _props.input = function() {
         if (typeof _input == 'function')
             _input.apply(this, arguments);
 

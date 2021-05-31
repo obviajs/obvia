@@ -4,10 +4,10 @@
  * Kreatx 2018
  */
 
-import { Container } from "/flowerui/components/Container.js";
-import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+import { Container } from "/obvia/components/Container.js";
+import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
 
-var LeafletMap = function (_props) {
+var LeafletMap = function(_props) {
     let _self = this,
         _markers = [],
         _layerGroup,
@@ -19,7 +19,7 @@ var LeafletMap = function (_props) {
         _allowNewItem,
         _centerCircle;
 
-    let _initMap = function (e) {
+    let _initMap = function(e) {
         if (!_map) {
             _map = L.map(_self.domID).setView([_latitude | 0, _longitude | 0], _zoomLevel | 0);
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -34,11 +34,11 @@ var LeafletMap = function (_props) {
         }
     };
 
-    let _zoomEnd = function (e) {
+    let _zoomEnd = function(e) {
         _zoomLevel = e.target._zoom;
     };
 
-    this.centerMap = function (lat = _latitude, lng = _longitude) {
+    this.centerMap = function(lat = _latitude, lng = _longitude) {
         if ((!lat || !lng) && _dataProvider.length > 0) {
             lat = _dataProvider[0][_latitudeField];
             lng = _dataProvider[0][_longitudeField];
@@ -63,13 +63,13 @@ var LeafletMap = function (_props) {
         }
     };
 
-    let _initMarker = function (latlng) {
+    let _initMarker = function(latlng) {
         let marker;
         if (_map) {
             marker = L.marker(latlng, {
                 draggable: _props.marker.draggable
             }).addTo(_map);
-            marker.on('dragend', function (e) {
+            marker.on('dragend', function(e) {
                 let pos = e.target.getLatLng();
                 let m = ArrayUtils.getMatching(_dataProvider, _layerIdField, e.target._leaflet_id, true);
                 m.objects[0][_latitudeField] = pos.lat;
@@ -81,7 +81,7 @@ var LeafletMap = function (_props) {
         return marker;
     };
 
-    let _markerClick = function (e) {
+    let _markerClick = function(e) {
         let m = ArrayUtils.getMatching(_dataProvider, _layerIdField, e.target._leaflet_id, true);
         _self.selectedItem = m.objects[0];
     };
@@ -99,7 +99,7 @@ var LeafletMap = function (_props) {
         enumerable: true
     });
 
-    let _moveMarker = function (latlng) {
+    let _moveMarker = function(latlng) {
         if (!_marker) {
             _marker = _initMarker(latlng);
         } else {
@@ -109,7 +109,7 @@ var LeafletMap = function (_props) {
         }
     };
 
-    let _mapClick = function (e) {
+    let _mapClick = function(e) {
         if (_allowNewItem) {
             let pos = e.latlng;
             let m = _initMarker(pos);
@@ -167,14 +167,14 @@ var LeafletMap = function (_props) {
     });
 
     let _init = this.init;
-    this.init = function (e) {
+    this.init = function(e) {
         if (e.target.id == this.domID) {
             if (typeof _init == 'function')
                 _init.apply(this, arguments);
         }
     };
 
-    this.beforeAttach = function (e) {
+    this.beforeAttach = function(e) {
         if (e.target.id == this.domID) {
             if (_props.zoomLevel) {
                 _zoomLevel = _props.zoomLevel;
@@ -205,7 +205,7 @@ var LeafletMap = function (_props) {
     };
 
     let _afterAttach = this.afterAttach;
-    this.afterAttach = function (e) {
+    this.afterAttach = function(e) {
         if (e.target.id == this.domID) {
             _initMap();
             if (_props.dataProvider) {

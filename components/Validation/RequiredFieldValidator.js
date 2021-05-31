@@ -4,9 +4,9 @@
  * Kreatx 2020
  */
 
-import { Validator } from "/flowerui/components/Validation/Validator.js";
-import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
-import { ValidationManager } from "/flowerui/components/Validation/ValidationManager.js";
+import { Validator } from "/obvia/components/Validation/Validator.js";
+import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
+import { ValidationManager } from "/obvia/components/Validation/ValidationManager.js";
 
 var RequiredFieldValidator = function (_props) {
     let _self = this;

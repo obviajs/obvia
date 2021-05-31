@@ -4,20 +4,20 @@
  * Kreatx 2018
  */
 
-import { Container } from "/flowerui/components/Container.js";
-import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
-import { StringUtils, StringMatchType } from "/flowerui/lib/StringUtils.js";
-import { NumberUtils } from "/flowerui/lib/NumberUtils.js";
-import { ArrayUtils } from "/flowerui/lib/ArrayUtils.js";
-import { ArrayEx } from "/flowerui/lib/ArrayEx.js";
-import { Repeater } from "/flowerui/components/Repeater/Repeater.js";
-import { debounce } from "/flowerui/lib/DecoratorUtils.js";
-import { SuggestionRenderer } from "/flowerui/components/AutoComplete/SuggestionRenderer.js";
-import { TokenRenderer } from "/flowerui/components/AutoComplete/TokenRenderer.js";
-import { TextInput } from "/flowerui/components/TextInput/TextInput.js";
-import { ChangeWatcher } from "/flowerui/lib/binding/ChangeWatcher.js";
-import { Literal } from "/flowerui/lib/Literal.js";
-var AutoCompleteEx = function (_props) {
+import { Container } from "/obvia/components/Container.js";
+import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
+import { StringUtils, StringMatchType } from "/obvia/lib/StringUtils.js";
+import { NumberUtils } from "/obvia/lib/NumberUtils.js";
+import { ArrayUtils } from "/obvia/lib/ArrayUtils.js";
+import { ArrayEx } from "/obvia/lib/ArrayEx.js";
+import { Repeater } from "/obvia/components/Repeater/Repeater.js";
+import { debounce } from "/obvia/lib/DecoratorUtils.js";
+import { SuggestionRenderer } from "/obvia/components/AutoComplete/SuggestionRenderer.js";
+import { TokenRenderer } from "/obvia/components/AutoComplete/TokenRenderer.js";
+import { TextInput } from "/obvia/components/TextInput/TextInput.js";
+import { ChangeWatcher } from "/obvia/lib/binding/ChangeWatcher.js";
+import { Literal } from "/obvia/lib/Literal.js";
+var AutoCompleteEx = function(_props) {
     let _separator, _tokenContainer, _tokenRepeater, _suggestionsRepeater, _input, _maxSuggestionsCount, _matchType;
     let _dpWatcher;
     Object.defineProperty(this, "matchType", {
@@ -49,7 +49,7 @@ var AutoCompleteEx = function (_props) {
         },
         enumerable: true
     });
-    let _dpChanged = function (e) {
+    let _dpChanged = function(e) {
         if (_input.$el[0] == document.activeElement)
             _self.refreshSuggestions();
     };
@@ -73,12 +73,12 @@ var AutoCompleteEx = function (_props) {
         enumerable: true
     });
 
-    this.endDraw = async function (e) {
+    this.endDraw = async function(e) {
         if (e.target.id == this.domID) {
             _suggestionsRepeater = this.suggestionsRepeater;
             if (!this.getBindingExpression("dataProvider")) {
                 let d = Literal.fromLiteral(_props.dataProvider);
-                this.dataProvider = await Promise.resolve(d).then(function (dv) {
+                this.dataProvider = await Promise.resolve(d).then(function(dv) {
                     if (dv.hasOwnProperty("parent")) {
                         dv.parent = _self;
                     }
@@ -94,7 +94,7 @@ var AutoCompleteEx = function (_props) {
         }
     };
 
-    this.beforeAttach = function (e) {
+    this.beforeAttach = function(e) {
         if (e.target.id == this.domID) {
             if (_props.value && !this.getBindingExpression("value")) {
                 this.value = _props.value;
@@ -102,23 +102,23 @@ var AutoCompleteEx = function (_props) {
         }
     };
 
-    this.afterAttach = function (e) {
-        if (e.target.id == this.domID) {
-        }
+    this.afterAttach = function(e) {
+        if (e.target.id == this.domID) {}
     };
 
-    let _tokenRendererClickHandler = function (e) {};
+    let _tokenRendererClickHandler = function(e) {};
 
-    let _tokenRendererDoubleClickHandler = function (e) {};
+    let _tokenRendererDoubleClickHandler = function(e) {};
 
-    let _tokenRendererMouseDownHandler = function (e) {};
+    let _tokenRendererMouseDownHandler = function(e) {};
 
-    let _tokenInputReSize = function () {
+    let _tokenInputReSize = function() {
         //_tokenRepeater.token[0].$el.width()
         if (_tokenRepeater) {
             let tokenCount = _tokenRepeater.dataProvider == null ? 0 : _tokenRepeater.dataProvider.length;
             let tokenWidth = 0,
-                rowTop = 0, tokenTop = 0;
+                rowTop = 0,
+                tokenTop = 0;
             for (let i = 0; i < tokenCount; i++) {
                 let tokenPos = _tokenRepeater.token[i].$el.position();
                 if (tokenPos.top != rowTop) {
@@ -128,16 +128,16 @@ var AutoCompleteEx = function (_props) {
                     tokenWidth += _tokenRepeater.token[i].$el[0].clientWidth;
                 }
             }
-            if (_self.$el.width() > 0 && tokenWidth >= 0) {                
-                tokenWidth += tokenWidth?(2 /*border*/ + 2 /*margin*/): 2 /*border of main container*/;                    
-               _input.$el.css({
-                    "width": "calc(100% - "+ tokenWidth+ "px)"
+            if (_self.$el.width() > 0 && tokenWidth >= 0) {
+                tokenWidth += tokenWidth ? (2 /*border*/ + 2 /*margin*/ ) : 2 /*border of main container*/ ;
+                _input.$el.css({
+                    "width": "calc(100% - " + tokenWidth + "px)"
                 });
             }
         }
     };
 
-    let _suggestionsDropDownKeyDown = function (e) {
+    let _suggestionsDropDownKeyDown = function(e) {
         if (typeof _self.suggestionsdropdownkeydown == 'function')
             _self.suggestionsdropdownkeydown.apply(this, arguments);
 
@@ -155,7 +155,7 @@ var AutoCompleteEx = function (_props) {
             }
         }
     };
-    let _suggestionRendererKeyDownHandler = function (e, repeaterEventArgs) {
+    let _suggestionRendererKeyDownHandler = function(e, repeaterEventArgs) {
         switch (e.keyCode) {
             case 9: // TAB - apply and move to next column on the same row 
                 console.log("TAB");
@@ -177,7 +177,7 @@ var AutoCompleteEx = function (_props) {
         }
     };
 
-    let _tokenInputKeyDown = function (e) {
+    let _tokenInputKeyDown = function(e) {
         if (typeof _inputkeydown == 'function')
             _inputkeydown.apply(_self, arguments);
 
@@ -203,7 +203,7 @@ var AutoCompleteEx = function (_props) {
             }
         }
     };
-    let _tokenInputKeyUp = function (e) {
+    let _tokenInputKeyUp = function(e) {
         if (!e.isDefaultPrevented()) {
             let inp = String.fromCharCode(e.keyCode);
             if (/[a-zA-Z0-9-_ ]/.test(inp)) {
@@ -218,11 +218,11 @@ var AutoCompleteEx = function (_props) {
         }
     };
 
-    this.refreshSuggestions = function () {
+    this.refreshSuggestions = function() {
         _querySuggestions(_input.value);
     };
 
-    let _querySuggestions = function (toMatch) {
+    let _querySuggestions = function(toMatch) {
         console.log("querySuggestions for: ", toMatch);
         let ac = ArrayUtils.differenceOnKeyMatch(_dataProvider, _value, _valueField);
         _suggestions = new ArrayEx(StringUtils.sortBestMatch(ac, toMatch, _self.matchType, _labelField, _maxSuggestionsCount));
@@ -232,7 +232,7 @@ var AutoCompleteEx = function (_props) {
     <a href="#" class="inputLink">Did you mean xxyYY?</a>
     */
 
-    let _openSuggestionsList = function () {
+    let _openSuggestionsList = function() {
         //suggestions found
         if (_suggestions.length > 0) {
             _suggestionsRepeater.dataProvider = _suggestions;
@@ -242,7 +242,7 @@ var AutoCompleteEx = function (_props) {
             _suggestionsRepeater.attr["aria-expanded"] = true;
         } else {
             _closeSuggestionsList();
-            _input.$el.attr('placeholder', 'No results found :(').delay(1000).queue(function (n) {
+            _input.$el.attr('placeholder', 'No results found :(').delay(1000).queue(function(n) {
                 $(this).attr('placeholder', 'Search...');
                 n();
             });
@@ -250,7 +250,7 @@ var AutoCompleteEx = function (_props) {
         }
         // myAutoComplete.suggestionsRepeater.rowItems[0]['suggestion'].$el.focus();
     };
-    let _closeSuggestionsList = function () {
+    let _closeSuggestionsList = function() {
         _suggestionsRepeater.attr["aria-expanded"] = false;
         let cls = _suggestionsRepeater.classes.slice(0);
         let ind = cls.indexOf("show");
@@ -260,7 +260,7 @@ var AutoCompleteEx = function (_props) {
         _suggestionsRepeater.classes = cls;
         _input.$el.focus();
     };
-    let _tokenRendererCloseIconClickHandler = function (e, repeaterEventArgs) {
+    let _tokenRendererCloseIconClickHandler = function(e, repeaterEventArgs) {
         if (_enabled) {
             console.log(repeaterEventArgs);
             //"this" refers to the components in the repeater
@@ -268,7 +268,7 @@ var AutoCompleteEx = function (_props) {
             _input.$el.focus();
         }
     };
-    let _suggestionRendererClickHandler = function (e, repeaterEventArgs) {
+    let _suggestionRendererClickHandler = function(e, repeaterEventArgs) {
         console.log(repeaterEventArgs);
         //this.parent.parent.addTokenItems(repeaterEventArgs.currentItem);
         if (_self.multiSelect) {
@@ -284,14 +284,14 @@ var AutoCompleteEx = function (_props) {
         _closeSuggestionsList();
         _input.$el.focus();
     };
-    let _suggestionRendererDoubleClickHandler = function (e, repeaterEventArgs) {
+    let _suggestionRendererDoubleClickHandler = function(e, repeaterEventArgs) {
         console.log(repeaterEventArgs);
     };
-    let _suggestionRendererMouseDownHandler = function (e, repeaterEventArgs) {
+    let _suggestionRendererMouseDownHandler = function(e, repeaterEventArgs) {
         console.log(repeaterEventArgs);
     };
-    let _addTokenItems = function (items) {
-        if (typeof (items) === "object" && !(items instanceof Array)) {
+    let _addTokenItems = function(items) {
+        if (typeof(items) === "object" && !(items instanceof Array)) {
             items = [items];
         }
         let itemsToAdd = [];
@@ -320,7 +320,7 @@ var AutoCompleteEx = function (_props) {
         }
 
     };
-    this.removeSuggestionItemAt = function (index) {
+    this.removeSuggestionItemAt = function(index) {
         //TODO: If we are going to keep item ordering in the view the save as in value
         if (index >= 0 && index < _suggestions.length) {
             _suggestions.splice(index, 1);
@@ -328,15 +328,15 @@ var AutoCompleteEx = function (_props) {
         } else
             console.log("Index out of range. No item will be removed.");
     };
-    this.removeTokenItemAt = function (index) {
+    this.removeTokenItemAt = function(index) {
         //TODO: If we are going to keep item ordering in the view the save as in value
         if (index >= 0 && index < _value.length) {
             _value.splice(index, 1);
         } else
             console.log("Index out of range. No item will be removed.");
     };
-    this.removeTokenItems = function (items) {
-        if (typeof (items) === "object" && !(items instanceof Array)) {
+    this.removeTokenItems = function(items) {
+        if (typeof(items) === "object" && !(items instanceof Array)) {
             items = [items];
         }
         for (let i = 0; i < items.length; i++) {
@@ -349,7 +349,7 @@ var AutoCompleteEx = function (_props) {
 
     };
 
-    this.removeAllTokenItems = function () {
+    this.removeAllTokenItems = function() {
         //_tokenRepeater.removeAllRows();
         _value.splice(0, _value.length);
     };
@@ -378,13 +378,13 @@ var AutoCompleteEx = function (_props) {
                         let vo = {};
                         vo[_labelField] = v;
                         vo[_valueField] = v;
-                        if(_allowNewItem)
+                        if (_allowNewItem)
                             v = vo;
                         else
                             _valueLater = vo;
                     }
                 }
-                if (typeof (v) === "object" && !(v instanceof Array)) {
+                if (typeof(v) === "object" && !(v instanceof Array)) {
                     v = [v];
                 }
                 if (!_value.equals(v)) {
@@ -611,7 +611,7 @@ var AutoCompleteEx = function (_props) {
         set: function enabled(v) {
             if (_enabled != v) {
                 _enabled = v;
-                if(this.$input)
+                if (this.$input)
                     this.$input.prop('disabled', !v);
             }
         },
@@ -631,15 +631,15 @@ var AutoCompleteEx = function (_props) {
         configurable: true,
         enumerable: true
     });
-    
-    this.focus = function () {
+
+    this.focus = function() {
         if (_input) {
             _input.$el[0].focus({
                 preventScroll: true
             });
         }
     };
-    
+
     return r;
 };
 AutoCompleteEx.prototype.ctor = 'AutoCompleteEx';

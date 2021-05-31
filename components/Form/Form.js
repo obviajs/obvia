@@ -3,9 +3,9 @@
  * 
  * Kreatx 2018
  */
-import { ApiClient } from "/flowerui/lib/ApiClientGen/ApiClient.js";
-import { Container } from "/flowerui/components/Container.js";
-import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+import { ApiClient } from "/obvia/lib/ApiClientGen/ApiClient.js";
+import { Container } from "/obvia/components/Container.js";
+import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
 var Form = function (_props) {
     let _formData, _action, _method, _self = this;
 

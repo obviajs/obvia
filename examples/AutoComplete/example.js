@@ -7,22 +7,22 @@ loader.show();
 var myAutoComplete = new AutoCompleteEx({
     id: 'autocomplete',
     valueField: "value",
-    labelField: "ministri",
+    labelField: "Ministries",
     maxSuggestionsCount: 1,
     allowNewItem: false, //allow the user to add items that are not included in the specified dataProvider
     dataProvider: new ArrayEx([{
         "value": "1",
-        "ministri": "Ministria e Puneve te Jashtme"
+        "ministri": "Ministry of Foreign Affairs"
     }, {
         "value": "2",
-        "ministri": "Ministria e Drejtesise"
+        "ministri": "Ministry of Defense"
     }, {
         "value": "3",
-        "ministri": "Ministria e Brendshme"
+        "ministri": "Ministry of Healthcare"
     }]),
     value: new ArrayEx([{
         "value": "1",
-        "ministri": "Ministria e Puneve te Jashtme"
+        "ministri": "Ministry of Foreign Affairs"
     }]),
     remote: {
         getData_Action: "http://139.162.158.49/rca/index.php",
@@ -31,33 +31,12 @@ var myAutoComplete = new AutoCompleteEx({
     multiSelect: false,
     matchType: StringMatchType.STARTS_WITH
 });
-myAutoComplete.on('endDraw', function () {
+myAutoComplete.on('endDraw', function() {
     loader.hide();
-    myAutoComplete.on('noSuggestionsFound', function (e, toMatch) {
+    myAutoComplete.on('noSuggestionsFound', function(e, toMatch) {
         console.log("Nothing found for:" + toMatch);
     });
 });
-myAutoComplete.render().then(function (cmpInstance) {
+myAutoComplete.render().then(function(cmpInstance) {
     $('#root').append(cmpInstance.$el);
 });
-
-/*
-closeIconSide:"left",
-itemRenderer:{
-                ctor: CheckBox,
-                props: {
-                    id: 'checkbox',
-                    colspan: '6',
-                    label: 'Vertete',
-                    fieldName: 'checkbox',
-                    blockProcessAttr: false,
-                    required: true,
-                    value: '{id}',
-                    checked: '{checkboxValue}',
-                    unCheckedLabel:"Jo",
-                    checkedLabel:"Po"
-                }
-            },
-           
-
-*/
