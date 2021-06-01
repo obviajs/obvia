@@ -44,7 +44,6 @@ var Modal = function (_props) {
                 this.trigger(e);
             }
         }
-        //
     };
     let _defaultComponents = {
         "modalBody": _props.components && _props.components.forEach ? _props.components : null,
@@ -121,6 +120,11 @@ var Modal = function (_props) {
         ]
     };
 
+    let _clickHandler = function (e) {
+        if (e.target.id === this.domID)
+            this.hide();
+    };
+
     let _defaultParams = {
         size: ModalSize.LARGE,
         type: "",
@@ -140,7 +144,17 @@ var Modal = function (_props) {
 
     let _title = _props.title;
     let _size = _props.size;
+    let _click = _props.click;
 
+    _props.click = function () {
+        if (typeof _click == 'function')
+            _click.apply(this, arguments);
+
+        let e = arguments[0];
+        if (!e.isDefaultPrevented()) {
+            _clickHandler.apply(this, arguments);
+        }
+    };
 
     this.endDraw = function (e) {
         if (e.target.id == this.domID) {

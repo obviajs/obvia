@@ -225,7 +225,7 @@ var Repeater = function (_props, _hideComponents = false) {
 
         if (!("currentItem" in data)) {
             Object.defineProperty(data, "currentItem", {
-                get: function () { return data; },
+                get: function () { return _self.dataProvider[index]; },
                 enumerable: false,
                 configurable: true                
             });
@@ -237,7 +237,8 @@ var Repeater = function (_props, _hideComponents = false) {
                 enumerable: false,
                 configurable: true
             });
-        }
+        } else
+            data.currentIndex = index;
     };
 
     let _createdRows = 0;

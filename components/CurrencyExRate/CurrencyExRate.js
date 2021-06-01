@@ -6,6 +6,7 @@
 
 import { Container } from "/flowerui/components/Container.js";
 import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+import { ContainerType } from "/flowerui/components/base/ContainerType.js";
 
 var CurrencyExRate = function (_props) {
     let _self = this;
@@ -19,16 +20,16 @@ var CurrencyExRate = function (_props) {
                 _value.exRate = v.exRate;
                 _value.currency = v.currency;
 
-                this.exchangeRate.value = v.exRate;
-                this.exchangeRate.currency = v.currency;
+                this.workArea_53.exchangeRate.value = v.exRate;
+                this.workArea_53.currencySelect.selectedItem.currency_id = v.currency;
             }
         },
         enumerable: true,
     });
 
     this.changeHandler = function (e) {
-        _value.exRate = this.children.exchangeRate.value;
-        _value.currency = this.children.currencySelect.value;
+        _value.exRate = this.workArea_53.exchangeRate.value;
+        _value.currency = this.workArea_53.currencySelect.selectedItem.currency_id;
     };
     this.afterAttach = function (e) {
         if (e.target.id == this.domID) {
@@ -49,7 +50,6 @@ var CurrencyExRate = function (_props) {
                         "width": "100%"
                     },
                     "components": [
-
                         {
                             ctor: DropDown,
                             props: {
@@ -73,10 +73,7 @@ var CurrencyExRate = function (_props) {
                         }
                     ]
                 }
-            },
-
-
-
+            }
         ];
     };
 
@@ -90,8 +87,7 @@ var CurrencyExRate = function (_props) {
         type: ContainerType.NONE,
         currencyList: [],
         labelField: "title",
-        valueField: "key",
-
+        valueField: "key"
     };
     _props = ObjectUtils.extend(false, false, _defaultParams, _props);
 
