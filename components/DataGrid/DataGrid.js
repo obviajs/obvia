@@ -366,7 +366,7 @@ var DataGrid = function (_props) {
                     if (ObjectUtils.deepEqual(_defaultItem, _self.dataProvider[oldValue - 1])) {
                         _self.dataProvider.splice(oldValue - 1, 1);
                     }
-                    _self.dataProvider.pad(ObjectUtils.deepCopy(_defaultItem), 1);
+                    _self.dataProvider.splice(_self.dataProvider.length, 0, ObjectUtils.deepCopy(_defaultItem));
                 }
             }
         });

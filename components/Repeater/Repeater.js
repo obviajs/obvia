@@ -235,7 +235,8 @@ var Repeater = function (_props, _hideComponents = false) {
             Object.defineProperty(data, "currentIndex", {
                 value: index,
                 enumerable: false,
-                configurable: true
+                configurable: true,
+                writable: true
             });
         } else
             data.currentIndex = index;
@@ -292,7 +293,6 @@ var Repeater = function (_props, _hideComponents = false) {
                 if (_self[cmpId][index]) {
                     for (let u = index; u < _self[cmpId].length; u++) {
                         _self[cmpId][u].repeaterIndex += 1;
-                        data.currentIndex += 1;
                     }
                 }
 
@@ -414,11 +414,6 @@ var Repeater = function (_props, _hideComponents = false) {
                     item.repeaterIndex -= 1;
                 }
                 this[component.props.id].splice(index, 1);
-            }
-            //dp element has been removed so start at index
-            let dplen = this.dataProvider.length;
-            for (let i = index; i < dplen; i++) {
-                this.dataProvider[i].currentIndex -= 1;
             }
             this.trigger('rowDelete', [this, ra]);
             this.rowItems.splice(index, 1);

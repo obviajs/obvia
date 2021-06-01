@@ -36,7 +36,7 @@ var AutoCompleteEx = function (_props) {
                     _dpWatcher.reset();
                     _dataProvider.off("propertyChange", _dpChanged);
                 }
-                _props.dataProvider = _dataProvider = v;
+                _props.dataProvider = _dataProvider = v == null || Array.isArray(v) ? new ArrayEx(v) : v;
                 if (_valueLater) {
                     _self.value = _valueLater;
                 }
