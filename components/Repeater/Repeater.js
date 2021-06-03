@@ -126,13 +126,13 @@ var Repeater = function (_props, _hideComponents = false) {
         get: function dataProvider() {
             return _dataProvider;
         },
-        set: async function dataProvider(v) {
+        set: function dataProvider(v) {
             if ((_dataProvider != v && v) || (v==null && _dataProvider.length>0)) {
                 if (_dataProvider) {
                     _dataProvider.off("propertyChange", _debouncedUpdateDataProvider);
                 }
                 _dataProvider = v == null || Array.isArray(v) ? new ArrayEx(v) : v;
-                await this.updateDataProvider();
+                this.updateDataProvider();
                 if (_dataProvider) {
                     _dataProvider.on("propertyChange", _debouncedUpdateDataProvider);
                 }
