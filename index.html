@@ -1,116 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1, shrink-to-fit=no"
+		/>
+		<meta http-equiv="x-ua-compatible" content="ie=edge" />
+		<title>ObviaJS</title>
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>ObviaJS</title>
+		<link
+			rel="stylesheet"
+			href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+			integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+			crossorigin="anonymous"
+		/>
 
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+		<link rel="stylesheet" href="oxana/css/global.css" />
+		<link
+			rel="stylesheet"
+			async
+			href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+		/>
+		<script async src="https://kit.fontawesome.com/51294fb9f5.js"></script>
+	</head>
 
-    <link rel="stylesheet" href="oxana/css/global.css">
-    <link rel="stylesheet" async
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <script async src="https://kit.fontawesome.com/51294fb9f5.js"></script>
-    <script src="lib/rjs.js"></script>
-    <script>
-        function main() {
+	<body>
+		<div id="root"></div>
+	</body>
+	<script
+		src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+		crossorigin="anonymous"
+	></script>
+	<script
+		src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+		integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+		crossorigin="anonymous"
+	></script>
+	<script
+		src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+		integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+		crossorigin="anonymous"
+	></script>
+	<script
+		src="/flowerui/lib/dependencies/scripts/moment.js"
+		type="text/javascript"
+	></script>
 
-            //rjs.define("./examples/cache/example.js", "api_client_cache");
-            //rjs.define("./oxana/report_builder/app/GaiaAPI_reportBuilder/classGenerator.js", "classGenerator");
-
-            //rjs.define("./examples/Filter/example.js", "FilterExample");
-            //rjs.define("./examples/ObjectCmp/example.js", "ObjectCmpExample");
-            //rjs.define("./examples/ApiClient/example.js", "ApiClientExample");
-            //rjs.define("./examples/AutoBrowse/example.js", "AutoBrowseExample");
-            //rjs.define("./examples/DataBrowse/example.js", "DataBrowseExample");
-            //rjs.define("./examples/CurrencyExRate/example.js", "CurrencyExRateExample");
-            //rjs.define("./examples/ApiClient/exampleRB.js", "ApiClientExample");
-            //rjs.define("./examples/Table/example.js", "TableExample");
-            //rjs.define("./examples/wizard/example.js", "wizardExample");
-            //rjs.define("./examples/Validation/example.js", "Validation");
-            //rjs.define("./examples/Validation/repeaterExample.js", "Validation");
-            //rjs.define("./examples/Validation/rangeValidationExample.js", "RangeValidation");
-            // rjs.define("./examples/Validation/regularExpressionValidatorExample.js",
-            //     "regularExpressionValidators");
-            //rjs.define("./examples/Validation/customValidationExample.js", "custom");
-            //rjs.define("./examples/KanBan/example.js", "KanBanExample");
-
-
-            //rjs.define("./examples/Code/example.js", "CodeExample");
-            //rjs.define("./examples/DropEdit/example.js", "DropEditExample");
-            //rjs.define("./examples/ArrayEx/example.js", "ArrayExExample");
-            //rjs.define("./examples/Tree/example.js", "TreeExample");
-            //rjs.define("./examples/DropDown/example.js", "DropDownExample");
-            //rjs.define("./examples/Label/example.js", "LabelExample");
-            //rjs.define("./examples/RadioButton/example.js", "RadioButtonExample");
-            //rjs.define("./examples/AutoComplete/example.js", "AutoComplete");
-            //rjs.define("./examples/Container/example.js", "ContainerExample");
-            //rjs.define("./examples/Tab/example.js", "TabExample");
-            //rjs.define("./examples/DataGrid/example.js", "DataGridExample");
-            rjs.define("./examples/Button/example.js", "ButtonExample");
-            //rjs.define("./examples/Form/form.js", "Form");
-            //rjs.define("./examples/DateTimeCb/example.js", "DateTimeCbExample");
-            //rjs.define("./examples/DateTime/example.js", "Datetime");
-            //rjs.define("./examples/Image/example.js", "ImageExample");
-            //rjs.define("./examples/Text/example.js", "Text");
-            //rjs.define("./examples/Label/example.js", "Label");
-            //rjs.define("./examples/HRule/example.js", "HRuleExample");
-            //rjs.define("./examples/Color/example.js", "ColorExample");
-            //rjs.define("./examples/CheckBox/example.js", "CheckBoxExample");
-            //rjs.define("./examples/RadioButton/example.js", "RadioButtonExample");
-            //rjs.define("./examples/CheckBoxGroup/example.js", "CheckBoxGroupExample");
-            //rjs.define("./examples/RadioGroup/example.js", "RadioGroupExample");
-            //rjs.define("./examples/Toggle/example.js", "ToggleExample");
-            //rjs.define("./examples/Generic/example.js","GenericExample");
-            //rjs.define("./oxana/accounting/invoice.js", "Invoice");
-            //rjs.define("./examples/ScrollPane/example.js", "ScrollPaneExample");
-            //rjs.define("./examples/ScrollPane/exampleFixedHeader.js", "ScrollPaneExampleFixedHeader");
-            //rjs.define("./examples/Select/example.js", "SelectExample");
-            //rjs.define("./oxana/magnetLayout.js", "magnetLayout");
-            //rjs.define("./examples/Upload/singleUploadExample.js", "singleUploadExample");
-            //rjs.define("./examples/ProgressBar/example.js", "example");
-            //rjs.define('./examples/Li/example.js', "LiExample");
-            //rjs.define("./examples/Upload/example.js", "UploadExample");
-            //rjs.define("./examples/Form/example.js", "FormExample");
-            // rjs.define("./examples/Form/ffExample.js", "FormExample");
-            //rjs.define("./examples/Form/ajaxExample.js", "FormExample");
-            //rjs.define("./examples/Form/myexample.js","FormExample");
-            //rjs.define("./examples/List/example.js", "ListExample");
-            //rjs.define("./examples/Repeater/example.js", "RepeaterExample");
-            //rjs.define("./examples/Repeater/exampleEx.js", "RepeaterExample");
-            //rjs.define("./examples/Calendar/example.js", "CalendarExample");            
-            //rjs.define("./examples/Calendar/example_dayView.js", "CalendarDayExample");
-            //rjs.define("./examples/Calendar/example_week.js", "CalendarWeekExample");
-            //rjs.define("./examples/DataBrowse/example.js", "DataBrowse");
-            //rjs.define("./examples/HierachicalTree/example.js", "HierachicalTree");
-            //rjs.define('./examples/CreditCard/example.js', "CreditCard");
-            //rjs.define('./examples/MultiSwitch/example.js', "MultiSwitchExample");
-            //rjs.define("./examples/Link/example.js", "LinkExample");
-            //rjs.define("./examples/Modal/example.js", "ModalExample");
-            //rjs.define('./examples/TextEditor/example.js', "TextEditorExample");
-            //rjs.define('./examples/TextInput/example.js', "TextInputExample");
-            //rjs.define("./examples/AutoComplete/example.js", "AutoCompleteExample");
-            //rjs.define("./examples/DataGrid/example.js", "DataGridExample");
-            //rjs.define("./examples/Map/example.js", "MapExample");
-            //rjs.define('./examples/Amount/example.js', "AmountExample");
-            //rjs.define('./examples/Trippleswitch/example.js', "TrippleSwitchExample");
-        }
-    </script>
-</head>
-
-<body>
-    <div id='root'></div>
-</body>
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous">
-</script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
-</script>
-<script type="text/javascript" src="aml.js"></script>
-
+	<script type="module" src="aml.js"></script>
 </html>

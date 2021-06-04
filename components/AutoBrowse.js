@@ -105,7 +105,7 @@ var AutoBrowse = function (_props) {
 				},
 			},
 			{
-				ctor: "Container",
+				ctor: Container,
 				props: {
 					type: "",
 					id: "workArea_53",

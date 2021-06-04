@@ -107,11 +107,11 @@ var AutoCompleteEx = function (_props) {
         }
     };
 
-    let _tokenRendererClickHandler = function (e) {};
+    let _tokenRendererClickHandler = function (e) { };
 
-    let _tokenRendererDoubleClickHandler = function (e) {};
+    let _tokenRendererDoubleClickHandler = function (e) { };
 
-    let _tokenRendererMouseDownHandler = function (e) {};
+    let _tokenRendererMouseDownHandler = function (e) { };
 
     let _tokenInputReSize = function () {
         //_tokenRepeater.token[0].$el.width()
@@ -128,10 +128,10 @@ var AutoCompleteEx = function (_props) {
                     tokenWidth += _tokenRepeater.token[i].$el[0].clientWidth;
                 }
             }
-            if (_self.$el.width() > 0 && tokenWidth >= 0) {                
-                tokenWidth += tokenWidth?(2 /*border*/ + 2 /*margin*/): 2 /*border of main container*/;                    
-               _input.$el.css({
-                    "width": "calc(100% - "+ tokenWidth+ "px)"
+            if (_self.$el.width() > 0 && tokenWidth >= 0) {
+                tokenWidth += tokenWidth ? (2 /*border*/ + 2 /*margin*/) : 2 /*border of main container*/;
+                _input.$el.css({
+                    "width": "calc(100% - " + tokenWidth + "px)"
                 });
             }
         }
@@ -378,7 +378,7 @@ var AutoCompleteEx = function (_props) {
                         let vo = {};
                         vo[_labelField] = v;
                         vo[_valueField] = v;
-                        if(_allowNewItem)
+                        if (_allowNewItem)
                             v = vo;
                         else
                             _valueLater = vo;
@@ -534,71 +534,71 @@ var AutoCompleteEx = function (_props) {
     };
 
     let _cmps = [{
-            ctor: "Container",
-            "props": {
-                id: "tokenContainer",
-                "type": "",
-                classes: ["border", "d-flex"],
-                attr: {
-                    "role": "menu"
-                },
-                "components": [{
-                        ctor: Repeater,
-                        props: {
-                            id: 'tokenRepeater',
-                            defaultItem: this.defaultItem,
-                            rendering: {
-                                direction: 'horizontal',
-                                separator: _separator || false,
-                                wrap: false
-                            },
-                            classes: ["d-flex"],
-                            ownerDocument: this.ownerDocument,
-                            dataProvider: _value,
-                            components: [_tokenRenderer],
-                            dataProviderUpdate: _tokenInputReSize
-                        }
+        ctor: Container,
+        "props": {
+            id: "tokenContainer",
+            "type": "",
+            classes: ["border", "d-flex"],
+            attr: {
+                "role": "menu"
+            },
+            "components": [{
+                ctor: Repeater,
+                props: {
+                    id: 'tokenRepeater',
+                    defaultItem: this.defaultItem,
+                    rendering: {
+                        direction: 'horizontal',
+                        separator: _separator || false,
+                        wrap: false
                     },
-                    {
-                        ctor: TextInput,
-                        props: {
-                            id: 'tokenInput',
-                            attr: {
-                                "placeholder": 'Search...'
-                            },
-                            versionStyle: '',
-                            keydown: _tokenInputKeyDown,
-                            keyup: _tokenInputKeyUp,
-                            classes: ['border-0', 'ellipsis'],
-                            ownerDocument: this.ownerDocument,
-                            css: {
-                                "outline": "none",
-                                "font-size": "14px"
-                            }
-                        }
+                    classes: ["d-flex"],
+                    ownerDocument: this.ownerDocument,
+                    dataProvider: _value,
+                    components: [_tokenRenderer],
+                    dataProviderUpdate: _tokenInputReSize
+                }
+            },
+            {
+                ctor: TextInput,
+                props: {
+                    id: 'tokenInput',
+                    attr: {
+                        "placeholder": 'Search...'
+                    },
+                    versionStyle: '',
+                    keydown: _tokenInputKeyDown,
+                    keyup: _tokenInputKeyUp,
+                    classes: ['border-0', 'ellipsis'],
+                    ownerDocument: this.ownerDocument,
+                    css: {
+                        "outline": "none",
+                        "font-size": "14px"
                     }
-                ]
+                }
             }
-        },
-        {
-            ctor: Repeater,
-            props: {
-                id: 'suggestionsRepeater',
-                "type": "",
-                classes: ["dropdown-menu", "position-absolute"],
-                defaultItem: this.defaultItem,
-                rendering: {
-                    direction: 'vertical',
-                    separator: _separator || false,
-                    actions: false
-                },
-                dataProvider: _suggestions,
-                components: [_suggestionRenderer],
-                parent: _self,
-                ownerDocument: this.ownerDocument,
-                keydown: _suggestionsDropDownKeyDown.bind(this)
-            }
+            ]
         }
+    },
+    {
+        ctor: Repeater,
+        props: {
+            id: 'suggestionsRepeater',
+            "type": "",
+            classes: ["dropdown-menu", "position-absolute"],
+            defaultItem: this.defaultItem,
+            rendering: {
+                direction: 'vertical',
+                separator: _separator || false,
+                actions: false
+            },
+            dataProvider: _suggestions,
+            components: [_suggestionRenderer],
+            parent: _self,
+            ownerDocument: this.ownerDocument,
+            keydown: _suggestionsDropDownKeyDown.bind(this)
+        }
+    }
     ];
 
     _props.components = _cmps;
@@ -611,7 +611,7 @@ var AutoCompleteEx = function (_props) {
         set: function enabled(v) {
             if (_enabled != v) {
                 _enabled = v;
-                if(this.$input)
+                if (this.$input)
                     this.$input.prop('disabled', !v);
             }
         },
@@ -631,7 +631,7 @@ var AutoCompleteEx = function (_props) {
         configurable: true,
         enumerable: true
     });
-    
+
     this.focus = function () {
         if (_input) {
             _input.$el[0].focus({
@@ -639,7 +639,7 @@ var AutoCompleteEx = function (_props) {
             });
         }
     };
-    
+
     return r;
 };
 AutoCompleteEx.prototype.ctor = 'AutoCompleteEx';

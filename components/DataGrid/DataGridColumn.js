@@ -3,6 +3,8 @@ import { Label } from "/flowerui/components/Label.js";
 import { Props } from "/flowerui/components/base/Props.js";
 import { TwoWayMap } from "/flowerui/lib/TwoWayMap.js";
 import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+import { Th } from "../Table/Th.js";
+import { DataGridCellRenderer } from "./DataGridCellRenderer.js";
 
 var DataGridColumn = function (_props) {
     let _defaultParams = {
@@ -16,14 +18,14 @@ var DataGridColumn = function (_props) {
         sortDirection: "ASC",//DESC
         sortable: false,
         itemRenderer: {
-            ctor: "DataGridCellRenderer",
+            ctor: DataGridCellRenderer,
             props: {
                 id: 'cell_',
                 label: _props && _props.field && _props.field != "" ? '{' + _props.field + '}' : ''
             }
         },
         headerRenderer: {
-            ctor: "Th",
+            ctor: Th,
             props: {
                 id: 'header_',
                 label: _props.description,
@@ -34,7 +36,7 @@ var DataGridColumn = function (_props) {
                             id: "sortSpan",
                             display: _props.sortable == true,
                             labelType: "span",
-                            classes: ["fa", "fa-caret-" + DataGridColumn.sortDirFADic[_props.sortDirection?_props.sortDirection.toLowerCase():"asc"]]
+                            classes: ["fa", "fa-caret-" + DataGridColumn.sortDirFADic[_props.sortDirection ? _props.sortDirection.toLowerCase() : "asc"]]
                         }
                     }
                 ]
@@ -62,7 +64,7 @@ var DataGridColumn = function (_props) {
     let _self = this;
 
     Object.defineProperty(this, "props", {
-        get: function props() {            
+        get: function props() {
             return new Props(_self, _props);
         },
         configurable: true

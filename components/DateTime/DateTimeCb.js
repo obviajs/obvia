@@ -6,6 +6,10 @@
 import { Container } from "/flowerui/components/Container.js";
 import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
 import { CalendarConstants } from "/flowerui/components/Calendar/CalendarConstants.js";
+import { DateTimeMode } from "./DateTimeMode.js";
+import { Select } from "../Select/Select.js";
+import { EventDispatcher } from "../../lib/EventDispatcher.js";
+
 
 var DateTimeCb = function (_props) {
     let _self = this;
@@ -20,15 +24,15 @@ var DateTimeCb = function (_props) {
             for (let i = 0; i < 13; i++) {
                 _dpMonth[i] = { "value": i, "label": CalendarConstants.Months[i] };
             }
-        
+
             for (let i = _startYear; i < _endYear; i++) {
                 _dpYear.push({ "value": i, "label": i });
             }
-            
+
             for (let i = 0; i < 24; i++) {
                 _dpHour[i] = { "value": i, "label": i };
             }
-            
+
             for (let i = 0; i < 60; i++) {
                 _dpMinute[i] = _dpSecond[i] = { "value": i, "label": i };
             }
@@ -55,11 +59,11 @@ var DateTimeCb = function (_props) {
             _dateSelect.value = m.date();
             _monthSelect.value = m.month();
             _yearSelect.value = m.year();
-            if(_hourSelect)
+            if (_hourSelect)
                 _hourSelect.value = m.hour();
-            if(_minuteSelect)
+            if (_minuteSelect)
                 _minuteSelect.value = m.minute();
-            if(_secondSelect)
+            if (_secondSelect)
                 _secondSelect.value = m.second();
         }
     });
@@ -92,15 +96,15 @@ var DateTimeCb = function (_props) {
 
     Object.defineProperty(this, "mode", {
         get: function mode() {
-           return _mode;
+            return _mode;
         },
         set: function mode(v) {
-            if (_mode != v) {                
+            if (_mode != v) {
                 _mode = v;
                 if (_mode & 1 > 0) {
                     _hourSelect.visible = true;
                 } else
-                    _hourSelect.visible = false;    
+                    _hourSelect.visible = false;
                 if (_mode & 2 > 0) {
                     _minuteSelect.visible = true;
                 } else
@@ -116,9 +120,8 @@ var DateTimeCb = function (_props) {
 
 
     this.beforeAttach = function (e) {
-        if (e.target.id == this.domID) 
-        {
-            
+        if (e.target.id == this.domID) {
+
             //e.preventDefault();
         }
     };
@@ -130,12 +133,12 @@ var DateTimeCb = function (_props) {
             _yearSelect = this.cntYs.yearSelect;
             _hourSelect = this.cntHs.hourSelect;
             _minuteSelect = this.cntIs.minuteSelect;
-            _secondSelect = this.cntSs.secondSelect;           
+            _secondSelect = this.cntSs.secondSelect;
             EventDispatcher.listen([_dateSelect, _monthSelect, _yearSelect, _hourSelect, _minuteSelect, _secondSelect], "change", _change);
         }
         console.log("endDraw");
     };
-    
+
     this.afterAttach = function (e) {
         if (e.target.id == this.domID) {
             if (_props.value) {
@@ -143,32 +146,32 @@ var DateTimeCb = function (_props) {
             }
         }
     };
-    
+
     let _change = function (e) {
         let date = moment();
         date.date(_dateSelect.value);
         date.month(_monthSelect.value);
         date.year(_yearSelect.value);
-        if(_hourSelect)
+        if (_hourSelect)
             date.hour(_hourSelect.value);
-        if(_minuteSelect)
+        if (_minuteSelect)
             date.minute(_minuteSelect.value);
-        if(_secondSelect)
+        if (_secondSelect)
             date.second(_secondSelect.value);
         _value = date.format(_outputFormat);
     };
-    
+
     let fnContainerDelayInit = function () {
         _cmps =
             [
                 {
-                    "ctor": "Container",
+                    "ctor": Container,
                     "props": {
-                        type: ContainerType.NONE,
+                        type: "",
                         "id": "cntDs",
                         "components": [
                             {
-                                "ctor": "Select",
+                                "ctor": Select,
                                 "props": {
                                     "id": "dateSelect",
                                     "dataProvider": _dpDate,
@@ -180,13 +183,13 @@ var DateTimeCb = function (_props) {
                     }
                 },
                 {
-                    "ctor": "Container",
+                    "ctor": Container,
                     "props": {
-                        type: ContainerType.NONE,
+                        type: "",
                         "id": "cntMs",
                         "components": [
                             {
-                                "ctor": "Select",
+                                "ctor": Select,
                                 "props": {
                                     "id": "monthSelect",
                                     "dataProvider": _dpMonth,
@@ -198,13 +201,13 @@ var DateTimeCb = function (_props) {
                     }
                 },
                 {
-                    "ctor": "Container",
+                    "ctor": Container,
                     "props": {
-                        type: ContainerType.NONE,
+                        type: "",
                         "id": "cntYs",
                         "components": [
                             {
-                                "ctor": "Select",
+                                "ctor": Select,
                                 "props": {
                                     "id": "yearSelect",
                                     "dataProvider": _dpYear,
@@ -216,14 +219,14 @@ var DateTimeCb = function (_props) {
                     }
                 },
                 {
-                    "ctor": "Container",
+                    "ctor": Container,
                     "props": {
-                        type: ContainerType.NONE,
+                        type: "",
                         "id": "cntHs",
                         classes: ["pl-1"],
                         "components": [
                             {
-                                "ctor": "Select",
+                                "ctor": Select,
                                 "props": {
                                     "id": "hourSelect",
                                     "dataProvider": _dpHour,
@@ -235,13 +238,13 @@ var DateTimeCb = function (_props) {
                     }
                 },
                 {
-                    "ctor": "Container",
+                    "ctor": Container,
                     "props": {
-                        type: ContainerType.NONE,
+                        type: "",
                         "id": "cntIs",
                         "components": [
                             {
-                                "ctor": "Select",
+                                "ctor": Select,
                                 "props": {
                                     "id": "minuteSelect",
                                     "dataProvider": _dpMinute,
@@ -253,13 +256,13 @@ var DateTimeCb = function (_props) {
                     }
                 },
                 {
-                    "ctor": "Container",
+                    "ctor": Container,
                     "props": {
-                        type: ContainerType.NONE,
+                        type: "",
                         "id": "cntSs",
                         "components": [
                             {
-                                "ctor": "Select",
+                                "ctor": Select,
                                 "props": {
                                     "id": "secondSelect",
                                     "dataProvider": _dpSecond,
@@ -292,7 +295,7 @@ var DateTimeCb = function (_props) {
         value: '06/06/2006',
         startYear: 1900,
         endYear: 2100,
-        type: ContainerType.NONE,
+        type: "",
         classes: ["d-flex"]
     };
 
@@ -303,11 +306,11 @@ var DateTimeCb = function (_props) {
     let _value = _props.value;
     let _startYear = _props.startYear;
     let _endYear = _props.endYear;
-    
+
     _initDP();
     fnContainerDelayInit();
     _props.components = _cmps;
-    
+
     let r = Container.call(this, _props, true);
     return r;
 };
@@ -315,7 +318,7 @@ DateTimeCb.prototype.ctor = "DateTimeCb";
 DateTimeCb.init = false;
 DateTimeCb.dpDate = new Array(31);
 DateTimeCb.dpMonth = new Array(12);
-DateTimeCb.dpYear = new Array(); 
+DateTimeCb.dpYear = new Array();
 DateTimeCb.dpHour = new Array(24);
 DateTimeCb.dpMinute = DateTimeCb.dpSecond = new Array(60);
 export {
