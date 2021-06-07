@@ -1,4 +1,3 @@
-
 /**
  * This is a Modal component
  * 
@@ -11,7 +10,7 @@ import { Heading, HeadingType } from "/obvia/components/Heading.js";
 import { Button } from "/obvia/components/Button/Button.js";
 import { Label, LabelType } from "/obvia/components/Label.js";
 
-var Modal = function (_props) {
+var Modal = function(_props) {
     let _self = this;
     Object.defineProperty(this, "title", {
         get: function title() {
@@ -28,7 +27,7 @@ var Modal = function (_props) {
     });
 
     let _displayed = false;
-    this.DOMMutation = function (e) {
+    this.DOMMutation = function(e) {
         if (e.mutation.type == "attributes" && e.mutation.attributeName == "style") {
             let av = e.target.style.getPropertyValue('display');
             if (av.trim() != "" && av != "none" && !_displayed) {
@@ -44,7 +43,6 @@ var Modal = function (_props) {
                 this.trigger(e);
             }
         }
-        //
     };
     let _defaultComponents = {
         "modalBody": _props.components && _props.components.forEach ? _props.components : null,
@@ -79,7 +77,7 @@ var Modal = function (_props) {
                                         classes: ["fas", "fa-times"]
                                     }
                                 }],
-                                click: function (e) {
+                                click: function(e) {
                                     let evt = jQuery.Event('dismiss');
                                     _self.trigger(evt);
                                     if (!evt.isDefaultPrevented()) {
@@ -106,7 +104,7 @@ var Modal = function (_props) {
                                         classes: ["fas", "fa-check"]
                                     }
                                 }],
-                                click: function (e) {
+                                click: function(e) {
                                     let evt = jQuery.Event('accept');
                                     _self.trigger(evt);
                                     if (!evt.isDefaultPrevented()) {
@@ -119,6 +117,11 @@ var Modal = function (_props) {
                 }
             }
         ]
+    };
+
+    let _clickHandler = function(e) {
+        if (e.target.id === this.domID)
+            this.hide();
     };
 
     let _defaultParams = {
@@ -140,9 +143,19 @@ var Modal = function (_props) {
 
     let _title = _props.title;
     let _size = _props.size;
+    let _click = _props.click;
 
+    _props.click = function() {
+        if (typeof _click == 'function')
+            _click.apply(this, arguments);
 
-    this.endDraw = function (e) {
+        let e = arguments[0];
+        if (!e.isDefaultPrevented()) {
+            _clickHandler.apply(this, arguments);
+        }
+    };
+
+    this.endDraw = function(e) {
         if (e.target.id == this.domID) {
             _modalDialog = this.modalDialog;
             _modalContent = _modalDialog.modalContent;
@@ -153,7 +166,7 @@ var Modal = function (_props) {
     };
 
     let _cmps, _modalDialog, _modalContent, _modalHeader, _modalBody, _modalFooter;
-    let fnContainerDelayInit = function () {
+    let fnContainerDelayInit = function() {
         Modal.all.push(_self);
         _props.css["z-index"] = 1040 + Modal.all.length;
         if (!Modal.BackDrop) {
@@ -218,7 +231,7 @@ var Modal = function (_props) {
     fnContainerDelayInit();
     _props.components = _cmps;
     let _init = this.init;
-    this.init = function (e) {
+    this.init = function(e) {
         if (e.target.id == this.domID) {
             if (typeof _init == 'function')
                 _init.apply(this, arguments);
@@ -228,14 +241,14 @@ var Modal = function (_props) {
     let r = Container.call(this, _props);
 
 
-    this.show = function () {
+    this.show = function() {
         if (this.$el) {
             //this.$el.modal('show');
             if (!this.attached) {
                 this.appendTo.append(this.$el);
             }
             if (!Modal.BackDrop.attached) {
-                Modal.BackDrop.render().then(function (cmpInstance) {
+                Modal.BackDrop.render().then(function(cmpInstance) {
                     $(_self.ownerDocument.body).append(cmpInstance.$el);
                 });
             }
@@ -246,7 +259,7 @@ var Modal = function (_props) {
         return this;
     };
 
-    this.hide = function () {
+    this.hide = function() {
         if (this.$el) {
             //this.$el.modal('hide');
             Modal.BackDrop.destruct(2);
@@ -256,7 +269,7 @@ var Modal = function (_props) {
         return this;
     };
     let _destruct = this.destruct;
-    this.destruct = function (mode = 1) {
+    this.destruct = function(mode = 1) {
         if (mode == 1) {
             Modal.all.splice(Modal.all.indexOf(this), 1);
         }
@@ -270,11 +283,11 @@ var Modal = function (_props) {
 Modal.prototype.ctor = 'Modal';
 Modal.all = new ArrayEx();
 Modal.BackDrop = null;
-var ModalSize =
-{
+var ModalSize = {
     "SMALL": "modal-sm",
     "LARGE": "modal-lg"
 };
 export {
-    Modal, ModalSize
+    Modal,
+    ModalSize
 };

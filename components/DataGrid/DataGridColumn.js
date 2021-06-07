@@ -1,10 +1,11 @@
-
 import { Label } from "/obvia/components/Label.js";
 import { Props } from "/obvia/components/base/Props.js";
 import { TwoWayMap } from "/obvia/lib/TwoWayMap.js";
 import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
+import { Th } from "../Table/Th.js";
+import { DataGridCellRenderer } from "./DataGridCellRenderer.js";
 
-var DataGridColumn = function (_props) {
+var DataGridColumn = function(_props) {
     let _defaultParams = {
         width: null,
         calculatedWidth: null,
@@ -13,31 +14,29 @@ var DataGridColumn = function (_props) {
         fieldToFilter: "",
         description: "",
         sortOrder: 0,
-        sortDirection: "ASC",//DESC
+        sortDirection: "ASC", //DESC
         sortable: false,
         itemRenderer: {
-            ctor: "DataGridCellRenderer",
+            ctor: DataGridCellRenderer,
             props: {
                 id: 'cell_',
                 label: _props && _props.field && _props.field != "" ? '{' + _props.field + '}' : ''
             }
         },
         headerRenderer: {
-            ctor: "Th",
+            ctor: Th,
             props: {
                 id: 'header_',
                 label: _props.description,
-                components: [
-                    {
-                        "ctor": Label,
-                        props: {
-                            id: "sortSpan",
-                            display: _props.sortable == true,
-                            labelType: "span",
-                            classes: ["fa", "fa-caret-" + DataGridColumn.sortDirFADic[_props.sortDirection?_props.sortDirection.toLowerCase():"asc"]]
-                        }
+                components: [{
+                    "ctor": Label,
+                    props: {
+                        id: "sortSpan",
+                        display: _props.sortable == true,
+                        labelType: "span",
+                        classes: ["fa", "fa-caret-" + DataGridColumn.sortDirFADic[_props.sortDirection ? _props.sortDirection.toLowerCase() : "asc"]]
                     }
-                ]
+                }]
             }
         },
         itemEditor: null,
@@ -52,7 +51,7 @@ var DataGridColumn = function (_props) {
     this.fieldToFilter = _props.fieldToFilter;
     this.description = _props.description;
     this.sortOrder = _props.sortOrder;
-    this.sortDirection = _props.sortDirection;//DESC
+    this.sortDirection = _props.sortDirection; //DESC
     this.sortable = _props.sortable;
     this.itemRenderer = _props.itemRenderer;
     this.headerRenderer = _props.headerRenderer;
@@ -62,7 +61,7 @@ var DataGridColumn = function (_props) {
     let _self = this;
 
     Object.defineProperty(this, "props", {
-        get: function props() {            
+        get: function props() {
             return new Props(_self, _props);
         },
         configurable: true

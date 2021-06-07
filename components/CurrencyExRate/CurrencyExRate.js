@@ -6,8 +6,9 @@
 
 import { Container } from "/obvia/components/Container.js";
 import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
-
-var CurrencyExRate = function (_props) {
+import { DropDown } from "../DropDown/DropDown.js";
+import { TextInput } from "../TextInput/TextInput.js";
+var CurrencyExRate = function(_props) {
     let _self = this;
 
     Object.defineProperty(this, "value", {
@@ -19,79 +20,69 @@ var CurrencyExRate = function (_props) {
                 _value.exRate = v.exRate;
                 _value.currency = v.currency;
 
-                this.exchangeRate.value = v.exRate;
-                this.exchangeRate.currency = v.currency;
+                this.children.workArea_53.exchangeRate.value = v.exRate;
+                this.children.workArea_53.currencySelect.selectedItem.currency_id =
+                    v.currency;
             }
         },
         enumerable: true,
     });
 
-    this.changeHandler = function (e) {
-        _value.exRate = this.children.exchangeRate.value;
-        _value.currency = this.children.currencySelect.value;
+    this.changeHandler = function(e) {
+        _value.exRate = this.children.workArea_53.exchangeRate.value;
+        _value.currency =
+            this.children.workArea_53.currencySelect.selectedItem.currency_id;
     };
-    this.afterAttach = function (e) {
-        if (e.target.id == this.domID) {
-
-        }
+    this.afterAttach = function(e) {
+        if (e.target.id == this.domID) {}
     };
     let _cmps;
-    let fnContainerDelayInit = function () {
-        _cmps = [
-
-            {
-                "ctor": "Container",
-                "props": {
-                    type: ContainerType.NONE,
-                    "id": "workArea_53",
-                    css: {
-                        "display": "flex",
-                        "width": "100%"
-                    },
-                    "components": [
-
-                        {
-                            ctor: DropDown,
-                            props: {
-                                id: "currencySelect",
-                                dataProvider: _currencyList,
-                                labelField: _labelField,
-                                valueField: _valueField,
-                                value: _value.currency,
-                                css: {
-                                    float: 'left'
-                                }
-                            }
+    let fnContainerDelayInit = function() {
+        _cmps = [{
+            ctor: "Container",
+            props: {
+                type: "",
+                id: "workArea_53",
+                css: {
+                    display: "flex",
+                    width: "100%",
+                },
+                components: [{
+                        ctor: DropDown,
+                        props: {
+                            id: "currencySelect",
+                            dataProvider: _currencyList,
+                            labelField: _labelField,
+                            valueField: _valueField,
+                            value: _value.currency,
+                            css: {
+                                float: "left",
+                            },
                         },
-                        {
-                            ctor: TextInput,
-                            props: {
-                                id: "exchangeRate",
-                                value: _value.exRate,
-                                css: {}
-                            }
-                        }
-                    ]
-                }
+                    },
+                    {
+                        ctor: TextInput,
+                        props: {
+                            id: "exchangeRate",
+                            value: _value.exRate,
+                            css: {},
+                        },
+                    },
+                ],
             },
-
-
-
-        ];
+        }, ];
     };
-
 
     let _defaultParams = {
         value: {
             exRate: "",
-            currency: "1"
+            currency: "1",
         },
         classes: ["d-flex"],
-        type: ContainerType.NONE,
+        type: "",
         currencyList: [],
         labelField: "title",
         valueField: "key",
-
     };
     _props = ObjectUtils.extend(false, false, _defaultParams, _props);
 
@@ -101,10 +92,8 @@ var CurrencyExRate = function (_props) {
     let _valueField = _props.valueField;
     let _change = _props.change;
 
-
-    _props.change = function () {
-        if (typeof _change == 'function')
-            _change.apply(this, arguments);
+    _props.change = function() {
+        if (typeof _change == "function") _change.apply(this, arguments);
 
         let e = arguments[0];
         if (!e.isDefaultPrevented()) {
@@ -117,4 +106,5 @@ var CurrencyExRate = function (_props) {
     return r;
 };
 //component prototype
-CurrencyExRate.prototype.ctor = 'CurrencyExRate';
+CurrencyExRate.prototype.ctor = "CurrencyExRate";
+export { CurrencyExRate };

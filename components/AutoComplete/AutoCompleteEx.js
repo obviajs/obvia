@@ -36,7 +36,7 @@ var AutoCompleteEx = function(_props) {
                     _dpWatcher.reset();
                     _dataProvider.off("propertyChange", _dpChanged);
                 }
-                _props.dataProvider = _dataProvider = v;
+                _props.dataProvider = _dataProvider = v == null || Array.isArray(v) ? new ArrayEx(v) : v;
                 if (_valueLater) {
                     _self.value = _valueLater;
                 }
@@ -424,7 +424,7 @@ var AutoCompleteEx = function(_props) {
             //     this.handleComponentMouseDown.apply(this, arguments);
             // }
         },    
-
+ 
         tokenRendererClickHandler: function (e, repeaterEventArgs) {
         },
         tokenRendererDoubleClickHandler: function (e, repeaterEventArgs) {
@@ -439,16 +439,16 @@ var AutoCompleteEx = function(_props) {
                 this.handleComponentClick.apply(this, arguments);
             }
         },
-
+ 
         doubleClickHandler: function (e) {
             if (typeof this.ondblclick == 'function')
                 this.ondblclick.apply(this, arguments);
-
+ 
             if (!e.isDefaultPrevented()) {
                 this.handleComponentClick.apply(this, arguments);
             }
         },
-
+ 
         handleComponentClick: function (e, repeaterEventArgs) {
             let componentID = _tokenRepeater.components[0].props.id;
             let clickedComponent = repeaterEventArgs.currentRow[componentID];
@@ -534,7 +534,7 @@ var AutoCompleteEx = function(_props) {
     };
 
     let _cmps = [{
-            ctor: "Container",
+            ctor: Container,
             "props": {
                 id: "tokenContainer",
                 "type": "",

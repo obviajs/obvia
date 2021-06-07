@@ -121,6 +121,8 @@ var DateTime = function(_props) {
         }
         if (_props.value) {
             this.value = moment(_props.value, _inputFormat).format(_inputFormat);
+        } else {
+            this.value = moment().format(_inputFormat);
         }
     };
 
