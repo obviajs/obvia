@@ -57,7 +57,7 @@ var CurrencyExRate = function (_props) {
 								dataProvider: _currencyList,
 								labelField: _labelField,
 								valueField: _valueField,
-								value: _value.currency,
+								label: _value.currency,
 								css: {
 									float: "left",
 								},

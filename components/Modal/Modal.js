@@ -48,75 +48,75 @@ var Modal = function (_props) {
     let _defaultComponents = {
         "modalBody": _props.components && _props.components.forEach ? _props.components : null,
         "modalHeader": [{
-                ctor: Heading,
-                props: {
-                    id: "title",
-                    label: _props.title,
-                    headingType: HeadingType.h5,
-                }
-            },
-            {
-                ctor: Container,
-                props: {
-                    type: "btn-group",
-                    id: "headerButtonsCnt",
-                    components: [{
-                            ctor: Button,
-                            props: {
-                                id: 'dismissButton',
-                                type: "button",
-                                classes: ["close", "no-form-control"],
-                                attr: {
-                                    "data-dismiss": "modal",
-                                    "aria-label": "Dismiss"
-                                },
-                                components: [{
-                                    ctor: Label,
-                                    props: {
-                                        id: 'fa',
-                                        labelType: LabelType.i,
-                                        classes: ["fas", "fa-times"]
-                                    }
-                                }],
-                                click: function (e) {
-                                    let evt = jQuery.Event('dismiss');
-                                    _self.trigger(evt);
-                                    if (!evt.isDefaultPrevented()) {
-                                        _self.hide();
-                                    }
-                                }
-                            }
+            ctor: Heading,
+            props: {
+                id: "title",
+                label: _props.title,
+                headingType: HeadingType.h5,
+            }
+        },
+        {
+            ctor: Container,
+            props: {
+                type: "btn-group",
+                id: "headerButtonsCnt",
+                components: [{
+                    ctor: Button,
+                    props: {
+                        id: 'dismissButton',
+                        type: "button",
+                        classes: ["close", "no-form-control"],
+                        attr: {
+                            "data-dismiss": "modal",
+                            "aria-label": "Dismiss"
                         },
-                        {
-                            ctor: Button,
+                        components: [{
+                            ctor: Label,
                             props: {
-                                id: 'acceptButton',
-                                type: "button",
-                                classes: ["close", "no-form-control"],
-                                attr: {
-                                    "data-dismiss": "modal",
-                                    "aria-label": "Accept"
-                                },
-                                components: [{
-                                    ctor: Label,
-                                    props: {
-                                        id: 'fa',
-                                        labelType: LabelType.i,
-                                        classes: ["fas", "fa-check"]
-                                    }
-                                }],
-                                click: function (e) {
-                                    let evt = jQuery.Event('accept');
-                                    _self.trigger(evt);
-                                    if (!evt.isDefaultPrevented()) {
-                                        _self.hide();
-                                    }
-                                }
+                                id: 'fa',
+                                labelType: LabelType.i,
+                                classes: ["fas", "fa-times"]
+                            }
+                        }],
+                        click: function (e) {
+                            let evt = jQuery.Event('dismiss');
+                            _self.trigger(evt);
+                            if (!evt.isDefaultPrevented()) {
+                                _self.hide();
                             }
                         }
-                    ]
+                    }
+                },
+                {
+                    ctor: Button,
+                    props: {
+                        id: 'acceptButton',
+                        type: "button",
+                        classes: ["close", "no-form-control"],
+                        attr: {
+                            "data-dismiss": "modal",
+                            "aria-label": "Accept"
+                        },
+                        components: [{
+                            ctor: Label,
+                            props: {
+                                id: 'fa',
+                                labelType: LabelType.i,
+                                classes: ["fas", "fa-check"]
+                            }
+                        }],
+                        click: function (e) {
+                            let evt = jQuery.Event('accept');
+                            _self.trigger(evt);
+                            if (!evt.isDefaultPrevented()) {
+                                _self.hide();
+                            }
+                        }
+                    }
                 }
+                ]
             }
+        }
         ]
     };
 
@@ -191,37 +191,38 @@ var Modal = function (_props) {
                         type: "",
                         classes: ["modal-content"],
                         id: "modalContent",
+                        css: { resize: "both", overflow: "hidden" },
                         components: [{
-                                ctor: Container,
-                                props: {
-                                    id: "modalHeader",
-                                    type: "",
-                                    classes: ["modal-header"],
-                                    components: _props.components.modalHeader
-                                }
-                            },
-                            {
-                                ctor: Container,
-                                props: {
-                                    id: "modalBody",
-                                    type: "",
-                                    classes: ["modal-body"],
-                                    css: {
-                                        "overflow-y": "auto",
-                                        "max-height": "80vh"
-                                    },
-                                    components: _props.components.modalBody
-                                }
-                            },
-                            {
-                                ctor: Container,
-                                props: {
-                                    id: "modalFooter",
-                                    type: "",
-                                    classes: ["modal-footer"],
-                                    components: _props.components.modalFooter
-                                }
+                            ctor: Container,
+                            props: {
+                                id: "modalHeader",
+                                type: "",
+                                classes: ["modal-header"],
+                                components: _props.components.modalHeader
                             }
+                        },
+                        {
+                            ctor: Container,
+                            props: {
+                                id: "modalBody",
+                                type: "",
+                                classes: ["modal-body"],
+                                css: {
+                                    "overflow-y": "auto",
+                                    "max-height": "80vh"
+                                },
+                                components: _props.components.modalBody
+                            }
+                        },
+                        {
+                            ctor: Container,
+                            props: {
+                                id: "modalFooter",
+                                type: "",
+                                classes: ["modal-footer"],
+                                components: _props.components.modalFooter
+                            }
+                        }
                         ]
                     }
                 }]

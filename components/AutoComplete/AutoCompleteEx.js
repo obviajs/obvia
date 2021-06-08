@@ -528,7 +528,12 @@ var AutoCompleteEx = function (_props) {
             dblclick: _tokenRendererDoubleClickHandler,
             mousedown: _tokenRendererMouseDownHandler,
             css: {
-                "float": "left"
+                // "float": "left",
+                "display": "flex",
+                "justify-content": "space-between",
+                "align-items": "center",
+                "width": "100%",
+                "text-overflow": "ellipsis",
             }
         }
     };
@@ -552,7 +557,11 @@ var AutoCompleteEx = function (_props) {
                         separator: _separator || false,
                         wrap: false
                     },
-                    classes: ["d-flex"],
+                    classes: [],
+                    css: {
+                        width: "min-content",
+                        "max-width": "100%"
+                    },
                     ownerDocument: this.ownerDocument,
                     dataProvider: _value,
                     components: [_tokenRenderer],

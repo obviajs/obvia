@@ -67,10 +67,11 @@ var TokenRenderer = function (_props) {
         closeIconSide: "left",
         components: [],
         "type": "",
-        classes: ["badge", "badge-info", "d-inline"],
+        classes: ["badge", "badge-info"],
         css: {
             "font-size": "14px",
-            "margin": "2px"
+            "height": "100%",
+            "align-items": "center"
         }
     };
     _props = ObjectUtils.extend(false, false, _defaultParams, _props);
@@ -86,6 +87,14 @@ var TokenRenderer = function (_props) {
             labelType: LabelType.span,
             attr: {
                 "tabindex": "-1"
+            },
+            css: {
+                "width": "100%",
+                "text-overflow": "ellipsis",
+                "white-space": "nowrap",
+                "overflow": "hidden",
+                "display": "inline-block",
+                "margin": 0
             }
         }
     };
