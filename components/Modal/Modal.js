@@ -116,10 +116,9 @@ var Modal = function (_props) {
                 }
                 ]
             }
-        }
-        ]
+        }]
     };
-
+    
     let _clickHandler = function (e) {
         if (e.target.id === this.domID)
             this.hide();
