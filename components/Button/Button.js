@@ -6,6 +6,7 @@
 
 import { Container } from "/flowerui/components/Container.js";
 import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+import { DependencyContainer } from "/flowerui/lib/DependencyContainer.js";
 var Button = function(_props)
 {  
     Object.defineProperty(this, "label", 
@@ -86,8 +87,8 @@ var Button = function(_props)
         type:"button",
         components:[]
     };
-    //_props = extend(false, false, _defaultParams, _props);
-    ObjectUtils.shallowCopy(ObjectUtils.extend(false, false, _defaultParams, _props), _props);
+    ObjectUtils.fromDefault(_defaultParams, _props);
+    //ObjectUtils.shallowCopy(ObjectUtils.extend(false, false, _defaultParams, _props), _props);
     let _label;
     let _type = _props.type;
     let _value; 
@@ -135,6 +136,7 @@ var ButtonSize =
     "SMALL": "btn-sm",
     "LARGE": "btn-lg"
 };
+DependencyContainer.getInstance().register("Button", Button, DependencyContainer.simpleResolve);
 export {
     Button, ButtonType, ButtonSize
 };

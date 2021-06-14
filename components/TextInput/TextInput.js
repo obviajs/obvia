@@ -7,6 +7,7 @@
 import { Parent } from "/flowerui/components/base/Parent.js";
 import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
 import { ChangeWatcher } from "/flowerui/lib/binding/ChangeWatcher.js";
+import { DependencyContainer } from "/flowerui/lib/DependencyContainer.js";
 var TextInput = function (_props) {
     let _self = this;
     let _value, _autocomplete, _mask, _placeholder, _type, _input;
@@ -134,15 +135,15 @@ var TextInput = function (_props) {
         return "<input data-triggers='input' type='" + this.type + "' id='" + this.domID + "'>";
     };
 
-    var _defaultParams = {
+    let _defaultParams = {
         value: "",
         type: "text",
         placeholder: "",
         afterAttach: this.afterAttach,
         autocomplete: "off"
     };
-
-    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
+    ObjectUtils.fromDefault(_defaultParams, _props);
+    //_props = ObjectUtils.extend(false, false, _defaultParams, _props);
     _mask = _props.mask;
     _type = _props.type;
     _input = _props.input;
@@ -176,6 +177,7 @@ var TextInputType = {
     "URL": "url",
     "WEEK": "week"
 };
+DependencyContainer.getInstance().register("TextInput", TextInput, DependencyContainer.simpleResolve);
 export {
     TextInput, TextInputType
 };

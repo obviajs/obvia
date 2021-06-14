@@ -10,7 +10,7 @@ import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
 import { Heading, HeadingType } from "/flowerui/components/Heading.js";
 import { Button } from "/flowerui/components/Button/Button.js";
 import { Label, LabelType } from "/flowerui/components/Label.js";
-
+import { DependencyContainer } from "/flowerui/lib/DependencyContainer.js";
 var Modal = function (_props) {
     let _self = this;
     Object.defineProperty(this, "title", {
@@ -136,7 +136,8 @@ var Modal = function (_props) {
         css: {},
         components: _defaultComponents
     };
-    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
+    ObjectUtils.fromDefault(_defaultParams, _props);
+    //_props = ObjectUtils.extend(false, false, _defaultParams, _props);
     if (_props.components && _props.components.forEach) {
         _props.components = _defaultComponents;
     }
@@ -289,6 +290,7 @@ var ModalSize =
     "SMALL": "modal-sm",
     "LARGE": "modal-lg"
 };
+DependencyContainer.getInstance().register("Modal", Modal, DependencyContainer.simpleResolve);
 export {
     Modal, ModalSize
 };

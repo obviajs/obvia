@@ -13,6 +13,7 @@ import { StringUtils } from "/flowerui/lib/StringUtils.js";
 import { Link } from "/flowerui/components/Link/Link.js";
 import { Repeater } from "/flowerui/components/Repeater/Repeater.js";
 import { ChangeWatcher } from "/flowerui/lib/binding/ChangeWatcher.js";
+import { DependencyContainer } from "/flowerui/lib/DependencyContainer.js";
 
 var DropDown = function (_props) {
     let _self = this;
@@ -205,8 +206,8 @@ var DropDown = function (_props) {
         _componentRepeater.$el.removeClass("show");
         e.stopPropagation();
     };
-
-    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
+    ObjectUtils.fromDefault(_defaultParams, _props);
+    //_props = ObjectUtils.extend(false, false, _defaultParams, _props);
     if (!_props.attr) {
         _props.attr = {};
     }
@@ -241,6 +242,7 @@ var DropMenuDirection = {
     "DROPLEFT": "btn-group dropleft",
     "DROPRIGHT": "btn-group dropright",
 };
+DependencyContainer.getInstance().register("DropDown", DropDown, DependencyContainer.simpleResolve);
 export {
     DropDown, DropSplitType, DropMenuDirection
 };

@@ -13,8 +13,8 @@ var JRLabel = function (_props) {
     fontSize: "",
     color: "",
   };
-
-  _props = ObjectUtils.extend(false, false, _defaultParams, _props);
+  ObjectUtils.fromDefault(_defaultParams, _props);
+  //_props = ObjectUtils.extend(false, false, _defaultParams, _props);
   let _width = _props.width;
   let _height = _props.height;
   let _fontSize = _props.fontSize;

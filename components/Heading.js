@@ -6,6 +6,7 @@
 import { Parent } from "/flowerui/components/base/Parent.js";
 import { Align } from "/flowerui/components/base/Align.js";
 import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+import { DependencyContainer } from "/flowerui/lib/DependencyContainer.js";
 var Heading = function (_props) {
     let _self, _label, _align;
 
@@ -93,7 +94,8 @@ var Heading = function (_props) {
         headingType: HeadingType.h1,
         align: Align.left
     };
-    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
+    ObjectUtils.fromDefault(_defaultParams, _props);
+    //_props = ObjectUtils.extend(false, false, _defaultParams, _props);
 
     let _headingType = _props.headingType;
 
@@ -110,6 +112,7 @@ var HeadingType =
     "h5": "h5",
     "h6": "h6",
 };
+DependencyContainer.getInstance().register("Heading", Heading, DependencyContainer.simpleResolve);
 export {
     Heading, HeadingType
 };

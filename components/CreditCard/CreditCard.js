@@ -407,8 +407,8 @@ var CreditCard = function (_props) {
         }];
         _creditCardComponent[0].props.ownerDocument = _self.ownerDocument;
     };
-    
-    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
+    ObjectUtils.fromDefault(_defaultParams, _props);
+    //_props = ObjectUtils.extend(false, false, _defaultParams, _props);
     _initDP();
     fnContaierDelayInit();
     _props.components = _creditCardComponent;

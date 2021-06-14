@@ -10,6 +10,8 @@ import { ArrayEx } from "/flowerui/lib/ArrayEx.js";
 import { Repeater } from "/flowerui/components/Repeater/Repeater.js";
 import { ChangeWatcher } from "/flowerui/lib/binding/ChangeWatcher.js";
 import { Option } from "/flowerui/components/Select/Option.js";
+import { Props } from "/flowerui/components/base/Props.js";
+import { DependencyContainer } from "/flowerui/lib/DependencyContainer.js";
 var Select = function (_props) {
     let _self = this,
         _value, _dataProvider, _rendering, _multiple, _labelField, _valueField, _valueLater;
@@ -137,8 +139,8 @@ var Select = function (_props) {
             wrap: false
         }
     };
-
-    ObjectUtils.shallowCopy(ObjectUtils.extend(false, false, _defaultParams, _props), _props);
+    ObjectUtils.fromDefault(_defaultParams, _props);
+    //ObjectUtils.shallowCopy(ObjectUtils.extend(false, false, _defaultParams, _props), _props);
     _labelField = _props.labelField;
     _valueField = _props.valueField;
 
@@ -197,9 +199,8 @@ var Select = function (_props) {
 
     return r;
 };
-
-//component prototype
 Select.prototype.ctor = 'Select';
+DependencyContainer.getInstance().register("Select", Select, DependencyContainer.simpleResolve);
 export {
     Select
 };

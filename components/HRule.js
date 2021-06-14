@@ -73,16 +73,16 @@ var HRule = function (_props)
         return  '<hr id="' + this.domID + '" align="'+_align +'" style="height:'+_height +'px width="'+_width +'px"" >';    
     };
 
-    var _defaultParams = {
+    let _defaultParams = {
         width:0,
         height:0,
         align:"center" //="left|center|right"
     };
-
-    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
-    var _width = _props.width;
-    var _height = _props.height;
-    var _align = _props.align;
+    ObjectUtils.fromDefault(_defaultParams, _props);
+    //_props = ObjectUtils.extend(false, false, _defaultParams, _props);
+    let _width = _props.width;
+    let _height = _props.height;
+    let _align = _props.align;
    
     Component.call(this, _props);
 };

@@ -275,8 +275,8 @@ var MultiUpload = function (_props) {
     };
 
     let _accept, _showBtnRemove, _form;
-
-    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
+    ObjectUtils.fromDefault(_defaultParams, _props);
+    //_props = ObjectUtils.extend(false, false, _defaultParams, _props);
     this.dataProvider = new ArrayEx(_props.dataProvider);
     _form = _props.form;
 

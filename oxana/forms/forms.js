@@ -1,5 +1,11 @@
+import { MetaProps } from "/flowerui/oxana/forms/metaProps.js";
+import { ComponentList } from "/flowerui/oxana/forms/componentList.js";
+import { Literals } from "/flowerui/oxana/forms/componentLiterals.js";
 //the dataPromise function should return the dataObject when resolved
 //data will be loaded only once :)
+
+SimpleContainer.register("MetaProps", MetaProps, DependencyContainer.simpleResolve);
+
 var _initDP = function () {
     Builder.masks;
     Builder.maskValueField = "";
@@ -150,3 +156,6 @@ var oxana = new App({
 oxana.render().then(function (cmpInstance) {
     $(document.body).append(cmpInstance.$el);
 });
+export {
+    oxana  
+};

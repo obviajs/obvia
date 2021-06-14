@@ -1,5 +1,9 @@
-Builder.initMetaProps = function () {
-    Builder.metaProps = {
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+import { StringUtils, StringMatchType } from "/flowerui/lib/StringUtils.js";
+import { ArrayEx } from "/flowerui/lib/ArrayEx.js";
+import { LinkTarget } from "/flowerui/components/Link/Link.js";
+
+var MetaProps = {
         form_name: {
             ctor: "TextInput",
             label: "Form Name",
@@ -94,7 +98,7 @@ Builder.initMetaProps = function () {
             label: "Target",
             index: 3,
             props: {
-                dataProvider: new ArrayEx(getMembersCollection(LinkTarget, "text", "value")),
+                dataProvider: new ArrayEx(ObjectUtils.getMembersCollection(LinkTarget, "text", "value")),
                 change: function () {
                     this.parent.parent.instance.target = this.value;
                 }
@@ -303,7 +307,7 @@ Builder.initMetaProps = function () {
             label: "Input Format",
             required: true,
             props: {
-                dataProvider: new ArrayEx(getMembersCollection(DateTimeFormat, "text", "value")),
+                dataProvider: new ArrayEx(ObjectUtils.getMembersCollection(DateTimeFormat, "text", "value")),
                 change: function () {
                     this.parent.parent.instance.inputFormat = this.value;
                 }
@@ -315,7 +319,7 @@ Builder.initMetaProps = function () {
             label: "Output Format",
             required: true,
             props: {
-                dataProvider: new ArrayEx(getMembersCollection(DateTimeFormat, "text", "value")),
+                dataProvider: new ArrayEx(ObjectUtils.getMembersCollection(DateTimeFormat, "text", "value")),
                 change: function () {
                     this.parent.parent.instance.outputFormat = this.value;
                 }
@@ -327,7 +331,7 @@ Builder.initMetaProps = function () {
             label: "Display Format",
             required: true,
             props: {
-                dataProvider: new ArrayEx(getMembersCollection(DateTimeFormat, "text", "value")),
+                dataProvider: new ArrayEx(ObjectUtils.getMembersCollection(DateTimeFormat, "text", "value")),
                 change: function () {
                     this.parent.parent.instance.displayFormat = this.value;
                 }
@@ -583,7 +587,7 @@ Builder.initMetaProps = function () {
             ctor: "Select",
             label: "Align",
             props: {
-                dataProvider: new ArrayEx(getMembersCollection(Align, "text", "value")),
+                dataProvider: new ArrayEx(ObjectUtils.getMembersCollection(Align, "text", "value")),
                 change: function () {
                     this.parent.parent.instance.align = this.value;
                 }
@@ -593,7 +597,7 @@ Builder.initMetaProps = function () {
             ctor: "Select",
             label: "Heading Type",
             props: {
-                dataProvider: new ArrayEx(getMembersCollection(HeadingType, "text", "value")),
+                dataProvider: new ArrayEx(ObjectUtils.getMembersCollection(HeadingType, "text", "value")),
                 change: function () {
                     this.parent.parent.instance.headingType = this.value;
                 }
@@ -603,7 +607,7 @@ Builder.initMetaProps = function () {
             ctor: "Select",
             label: "Side",
             props: {
-                dataProvider: new ArrayEx(getMembersCollection(SideNavSide, "text", "value")),
+                dataProvider: new ArrayEx(ObjectUtils.getMembersCollection(SideNavSide, "text", "value")),
                 change: function () {
                     this.parent.parent.instance.side = this.value;
                 }
@@ -690,7 +694,7 @@ Builder.initMetaProps = function () {
         }
     };
 
-    Builder.metaProps.Repeater = {
+    MetaProps.Repeater = {
         components: {
             ctor: "AutoBrowse",
             label: "Repeated Form",
@@ -767,7 +771,7 @@ Builder.initMetaProps = function () {
         }
 
     };
-    Builder.metaProps.RepeaterEx = {
+    MetaProps.RepeaterEx = {
         components: {
             ctor: "AutoBrowse",
             label: "Repeated Form",
@@ -802,7 +806,7 @@ Builder.initMetaProps = function () {
         }
 
     };
-    Builder.metaProps.DataGridColumn = {
+    MetaProps.DataGridColumn = {
         name: {
             ctor: "TextInput",
             label: "Column Name",
@@ -827,12 +831,12 @@ Builder.initMetaProps = function () {
         }
     };
 
-    Builder.metaProps.TextInput = {
+    MetaProps.TextInput = {
         type: {
             ctor: "Select",
             label: "Input Type",
             props: {
-                dataProvider: new ArrayEx(getMembersCollection(TextInputType, "text", "value")),
+                dataProvider: new ArrayEx(ObjectUtils.getMembersCollection(TextInputType, "text", "value")),
                 change: function () {
                     this.parent.parent.instance.type = this.value;
                 }
@@ -878,12 +882,12 @@ Builder.initMetaProps = function () {
         }
     };
 
-    Builder.metaProps.Label = {
+    MetaProps.Label = {
         labelType: {
             ctor: "Select",
             label: "Label Type",
             props: {
-                dataProvider: new ArrayEx(getMembersCollection(LabelType, "value", "text")),
+                dataProvider: new ArrayEx(ObjectUtils.getMembersCollection(LabelType, "value", "text")),
                 change: function () {
                     this.parent.parent.instance.labelType = this.value;
                 }
@@ -891,12 +895,12 @@ Builder.initMetaProps = function () {
         }
     };
 
-    Builder.metaProps.Button = {
+    MetaProps.Button = {
         type: {
             ctor: "Select",
             label: "Button Type",
             props: {
-                dataProvider: new ArrayEx(getMembersCollection(ButtonType, "value", "text")),
+                dataProvider: new ArrayEx(ObjectUtils.getMembersCollection(ButtonType, "value", "text")),
                 change: function () {
                     this.parent.parent.instance.type = this.value;
                 }
@@ -913,7 +917,7 @@ Builder.initMetaProps = function () {
         }
     };
 
-    Builder.metaProps.TextArea = {
+    MetaProps.TextArea = {
         value: {
             ctor: "TextInput",
             label: "Value",
@@ -950,7 +954,7 @@ Builder.initMetaProps = function () {
         }
     };
 
-    Builder.metaProps.DateTime = {
+    MetaProps.DateTime = {
         value: {
             ctor: "TextInput",
             label: "Value",
@@ -962,7 +966,7 @@ Builder.initMetaProps = function () {
         }
     };
 
-    Builder.metaProps.Image = {
+    MetaProps.Image = {
         alt: {
             ctor: "TextInput",
             label: "Alt",
@@ -986,7 +990,7 @@ Builder.initMetaProps = function () {
         }
     };
 
-    Builder.metaProps.CheckBox = {
+    MetaProps.CheckBox = {
         value: {
             ctor: "TextInput",
             label: "Value",
@@ -999,7 +1003,7 @@ Builder.initMetaProps = function () {
         }
     };
 
-    Builder.metaProps.SideNav = {
+    MetaProps.SideNav = {
         width: {
             ctor: "TextInput",
             label: "Width",
@@ -1014,7 +1018,7 @@ Builder.initMetaProps = function () {
         },
     };
 
-    Builder.metaProps.viewStack = {
+    MetaProps.viewStack = {
         width: {
             ctor: "TextInput",
             label: "Width",
@@ -1039,7 +1043,7 @@ Builder.initMetaProps = function () {
         },
     };
 
-    Builder.metaProps.DateTimeCb = {
+    MetaProps.DateTimeCb = {
         value: {
             ctor: "TextInput",
             label: "Value",
@@ -1056,7 +1060,7 @@ Builder.initMetaProps = function () {
             label: "Display Mode",
             props: {
                 //dataProvider: new ArrayEx([{value: "date", text: "Date"}, {value: "time", text: "Time"},{value: "datetime", text: "Datetime"}]),
-                dataProvider: new ArrayEx(getMembersCollection(DateTimeMode, "text", "value")),
+                dataProvider: new ArrayEx(ObjectUtils.getMembersCollection(DateTimeMode, "text", "value")),
                 change: function () {
                     this.parent.parent.instance.mode = this.value;
                 }
@@ -1064,7 +1068,7 @@ Builder.initMetaProps = function () {
         }
     };
 
-    Builder.metaProps.AutoCompleteEx = {
+    MetaProps.AutoCompleteEx = {
         multiSelect: {
             ctor: "Toggle",
             label: "Multi Select",
@@ -1077,7 +1081,7 @@ Builder.initMetaProps = function () {
         }
     };
 
-    Builder.metaProps.Form = {
+    MetaProps.Form = {
         method: {
             ctor: "Select",
             label: "Method",
@@ -1107,12 +1111,12 @@ Builder.initMetaProps = function () {
         }
     };
 
-    Builder.metaProps.Container = {
+    MetaProps.Container = {
         type: {
             ctor: "Select",
             label: "Type",
             props: {
-                dataProvider: new ArrayEx(getMembersCollection(ContainerType, "text", "value")),
+                dataProvider: new ArrayEx(ObjectUtils.getMembersCollection(ContainerType, "text", "value")),
                 change: function () {
                     this.parent.parent.instance.type = this.value;
                 }
@@ -1128,7 +1132,7 @@ Builder.initMetaProps = function () {
             }
         }
     };
-    Builder.metaProps.WizardStep = {
+    MetaProps.WizardStep = {
         stepHeading: {
             ctor: "TextInput",
             label: "Step heading",
@@ -1192,7 +1196,7 @@ Builder.initMetaProps = function () {
             }
         }
     };
-    Builder.metaProps.Wizard = {
+    MetaProps.Wizard = {
         components: {
             ctor: "Button",
             label: "Steps",
@@ -1245,7 +1249,7 @@ Builder.initMetaProps = function () {
         }
     };
 
-    Builder.metaProps.RangeValidator = {
+    MetaProps.RangeValidator = {
         min: {
             ctor: "TextInput",
             label: "Min",
@@ -1273,7 +1277,7 @@ Builder.initMetaProps = function () {
         }
     };
 
-    Builder.metaProps.RegularExpressionValidator = {
+    MetaProps.RegularExpressionValidator = {
         validationExpression: {
             ctor: "TextInput",
             label: "Validation Expression",
@@ -1307,4 +1311,6 @@ Builder.initMetaProps = function () {
 
         }
     };
+export {
+    MetaProps
 };

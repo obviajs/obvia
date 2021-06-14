@@ -65,7 +65,7 @@ var SideNav = function(_props)
         }
     }
     
-    var _defaultParams = {
+    let _defaultParams = {
         type: ContainerType.NONE,
         "components": [],
         open: true,
@@ -73,8 +73,8 @@ var SideNav = function(_props)
         side : SideNavSide.left,
         width: 250
     };
-    
-    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
+    ObjectUtils.fromDefault(_defaultParams, _props);
+    //_props = ObjectUtils.extend(false, false, _defaultParams, _props);
     let r = Container.call(this, _props);
     return r;
 };

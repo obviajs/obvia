@@ -52,7 +52,7 @@ var CodeMerge = function (_props) {
     */
     
     
-    var _defaultParams = {
+    let _defaultParams = {
         value: "", 
         origLeft: null,
         orig: "",
@@ -63,8 +63,8 @@ var CodeMerge = function (_props) {
         collapseIdentical: false,
         theme: "default"
     };
-
-    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
+    ObjectUtils.fromDefault(_defaultParams, _props);
+    //_props = ObjectUtils.extend(false, false, _defaultParams, _props);
     _content = _props.content;
     _mode = _props.mode;
     _theme = _props.theme;

@@ -9,6 +9,7 @@
 import { Container } from "/flowerui/components/Container.js";
 import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
 import { ArrayUtils } from "/flowerui/lib/ArrayUtils.js";
+import { DependencyContainer } from "/flowerui/lib/DependencyContainer.js";
 var ViewStack = function (_props) {
     let _self = this;
     //we override proxy initialization, because we want to create a child if it is requested
@@ -80,8 +81,8 @@ var ViewStack = function (_props) {
         selectedIndex: 0,
         type: ""
     };
-
-    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
+    ObjectUtils.fromDefault(_defaultParams, _props);
+    //_props = ObjectUtils.extend(false, false, _defaultParams, _props);
     let _selectedIndex = _props.selectedIndex;
     let _components = [];
 
@@ -144,6 +145,7 @@ var ViewStack = function (_props) {
     return r;
 };
 ViewStack.prototype.ctor = 'ViewStack';
+DependencyContainer.getInstance().register("ViewStack", ViewStack, DependencyContainer.simpleResolve);
 export {
     ViewStack
 };

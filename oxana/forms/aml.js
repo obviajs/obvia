@@ -1,3 +1,30 @@
+import { oxana } from "/flowerui/oxana/forms/forms.js";
+import { rjs } from "/flowerui/lib/rjs.js";
+rjs.define("/flowerui/lib/dependencies/scripts/jquery.slimscroll.js");
+rjs.define("/flowerui/components/Calendar/css/calendarMonth-default.css");
+rjs.define("/flowerui/components/Calendar/css/calendarWeek-default.css");
+rjs.define("/flowerui/components/Calendar/css/calendarDay-default.css");
+rjs.define("/flowerui/components/Calendar/css/calendar-default.css");
+rjs.define('/flowerui/components/CreditCard/css/creditCard-default.css');
+rjs.define("/flowerui/components/Repeater/css/repeater-default.css");
+rjs.define("/flowerui/components/DataGrid/css/datagrid-default.css");
+rjs.define("/flowerui/components/Toggle/toggle-default.css");
+rjs.define("/flowerui/components/DateTime/css/dateTime_default.css");
+rjs.define("/flowerui/components/AutoComplete/AutoCompleteEx.css");
+rjs.define("/flowerui/lib/dependencies/summernote/summernote.css");
+rjs.define("/flowerui/components/base/css/parent-default.css");
+rjs.define("/flowerui/components/base/css/collapse.css");
+rjs.define("/flowerui/components/HierarchialTree/css/HierarchialTree-default.css");
+rjs.define("/flowerui/components/SideNav/css/sidenav-default.css");
+rjs.define("/flowerui/oxana/Code/css/code.css");
+rjs.define("/flowerui/components/DropEdit/css/DropEdit.css");
+rjs.define("/flowerui/components/Tree/css/tree-default.css");
+rjs.define("/flowerui/components/SideNav/css/sideNav.css");
+rjs.define("/app/assets/css/my.css");
+rjs.define("/flowerui/components/Kanban/css/kanban_default.css");
+rjs.define("/flowerui/components/Filter/Filter.css");
+
+/*
 var flowerCM = window.flowerCM || {};
 //base Components
 rjs.define("/flowerui/lib/Poolable.js", "Poolable");
@@ -455,3 +482,4 @@ let dependencies = [
 rjs.grequire(dependencies).then(() => {
     window.main();
 });
+*/

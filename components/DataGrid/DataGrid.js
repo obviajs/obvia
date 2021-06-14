@@ -19,6 +19,7 @@ import { RepeaterEventArgs } from "/flowerui/components/Repeater/RepeaterEventAr
 import { Env, EnvType } from "/flowerui/lib/Env.js";
 import { StringUtils } from "/flowerui/lib/StringUtils.js";
 import { ArrayUtils } from "/flowerui/lib/ArrayUtils.js";
+import { DependencyContainer } from "/flowerui/lib/DependencyContainer.js";
 var DataGrid = function (_props) {
     let _self = this;
     let _multiSelect;
@@ -49,7 +50,7 @@ var DataGrid = function (_props) {
 
     Object.defineProperty(this, "rowCount", {
         get: function rowCount() {
-            return _rowCount != null ? Math.min(_rowCount, (_self.dataProvider && _self.dataProvider.length ? _self.dataProvider.length : 0)) : _self.dataProvider.length;
+            return _rowCount != null ? Math.min(_rowCount, (_self.dataProvider && _self.dataProvider.length ? _self.dataProvider.length : 0)) : (_self.dataProvider && _self.dataProvider.length ? _self.dataProvider.length : 0);
         },
         enumerable: true
     });
@@ -886,7 +887,8 @@ var DataGrid = function (_props) {
         defaultRowHeight: 60,
         height: 500
     };
-    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
+    ObjectUtils.fromDefault(_defaultParams, _props);
+    //_props = ObjectUtils.extend(false, false, _defaultParams, _props);
     if (!_props.attr) {
         _props.attr = {};
     }
@@ -1089,6 +1091,7 @@ var DataGrid = function (_props) {
     };
 };
 DataGrid.prototype.ctor = 'DataGrid';
+DependencyContainer.getInstance().register("DataGrid", DataGrid, DependencyContainer.simpleResolve);
 export {
     DataGrid
 };

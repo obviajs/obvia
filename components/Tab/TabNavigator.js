@@ -51,7 +51,8 @@ var TabNavigator = function (_props) {
     };
 
     let _defaultParams = {};
-    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
+    ObjectUtils.fromDefault(_defaultParams, _props);
+    //_props = ObjectUtils.extend(false, false, _defaultParams, _props);
 
     let r = NavParent.call(this, _props);
     r.on("changed", _changed);

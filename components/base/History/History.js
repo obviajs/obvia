@@ -8,20 +8,20 @@ import { ChangeWatcher } from "/flowerui/lib/binding/ChangeWatcher.js";
 var History = function(_props)
 { 
     this.$el = $(this);
-    var _defaultParams = {
+    let _defaultParams = {
         cacheProps: {enabled:false, cachedVariableName: null}
     };
-
-    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
-    var _cacheProps = _props.cacheProps;
+    _props = ObjectUtils.fromDefault(_defaultParams, _props);
+    //_props = ObjectUtils.extend(false, false, _defaultParams, _props);
+    let _cacheProps = _props.cacheProps;
     if(_cacheProps.enabled)
 	{
         _cache = Cache.getInstance();
     }
     
-    var _steps = new ArrayEx();
-    var _currentIndex = -1;
-    var _id = StringUtils.guid();
+    let _steps = new ArrayEx();
+    let _currentIndex = -1;
+    let _id = StringUtils.guid();
     Object.defineProperty(this, "id", {
         get: function id()
         {
@@ -29,7 +29,7 @@ var History = function(_props)
         }
     });
 
-    var w = ChangeWatcher.getInstance(_steps);
+    let w = ChangeWatcher.getInstance(_steps);
     w.watch(_steps, "length", function(e){
         //e.oldValue e.newValue
         console.log("qweeqweqw");
@@ -51,7 +51,7 @@ var History = function(_props)
 
     this.track = function(behavior, behaviorName, ret, thisObj, args){
         if(behavior.undo && typeof behavior.undo == 'function' && ((ObjectUtils.isObject(ret) && ret.track) || ret===true)){
-            var step = new HistoryStep();
+            let step = new HistoryStep();
             step.behaviorName = behaviorName; 
             step.behavior = behavior;
             if(ObjectUtils.isObject(ret)){
@@ -69,7 +69,7 @@ var History = function(_props)
             _steps.push(step);
             ++_currentIndex;
 
-            var eventObject = $.Event(HistoryEventType.HISTORY_STEP_ADDED);
+            let eventObject = $.Event(HistoryEventType.HISTORY_STEP_ADDED);
             eventObject.current = step;
             this.trigger(eventObject);
 
@@ -80,7 +80,7 @@ var History = function(_props)
 
     this.clear = function(){
         _steps.splice(0, _steps.length);
-        var eventObject = $.Event(HistoryEventType.HISTORY_NO_MORE_UNDO);
+        let eventObject = $.Event(HistoryEventType.HISTORY_NO_MORE_UNDO);
         this.trigger(eventObject);
         eventObject = $.Event(HistoryEventType.HISTORY_NO_MORE_REDO);
         this.trigger(eventObject);
@@ -90,22 +90,22 @@ var History = function(_props)
         if(_steps.length > 0 && _currentIndex+1 >= 0 && _currentIndex < _steps.length-1)
         {
             ++_currentIndex;
-            var step = _steps[_currentIndex];
-            var behavior = step.behavior;
+            let step = _steps[_currentIndex];
+            let behavior = step.behavior;
             if(behavior.do && typeof behavior.do == 'function'){
                 _steps[_currentIndex].retObj = behavior.do.apply(step.thisObj, step.args.concat(step.retObj));
 
-                var redoEventObject = $.Event(HistoryEventType.HISTORY_REDONE);
+                let redoEventObject = $.Event(HistoryEventType.HISTORY_REDONE);
                 redoEventObject.redone = step;
                 redoEventObject.next = ((_currentIndex+1 >= 0 && _currentIndex < _steps.length-1)?_steps[_currentIndex+1]:null);
                 this.trigger(redoEventObject);
 
-                var eventObject = $.Event(HistoryEventType.HISTORY_CAN_UNDO);
+                let eventObject = $.Event(HistoryEventType.HISTORY_CAN_UNDO);
                 this.trigger(eventObject);
             }
         }else{
             console.log("Nothing to redo.");
-            var eventObject = $.Event(HistoryEventType.HISTORY_NO_MORE_REDO);
+            let eventObject = $.Event(HistoryEventType.HISTORY_NO_MORE_REDO);
             this.trigger(eventObject);
         }
     }
@@ -113,22 +113,22 @@ var History = function(_props)
     this.undo = function(){
         if(_steps.length > 0 && _currentIndex>=0 && _currentIndex <= _steps.length-1)
         {
-            var step = _steps[_currentIndex];
-            var behavior = step.behavior;
+            let step = _steps[_currentIndex];
+            let behavior = step.behavior;
             if(behavior.undo && typeof behavior.undo == 'function'){
                 behavior.undo.apply(step.thisObj, step.args.concat(step.retObj));
             }
             --_currentIndex;
-            var undoEventObject = $.Event(HistoryEventType.HISTORY_UNDONE);
+            let undoEventObject = $.Event(HistoryEventType.HISTORY_UNDONE);
             undoEventObject.undone = step;
             undoEventObject.previous = (_currentIndex>=0?_steps[_currentIndex]:null);
             this.trigger(undoEventObject);
 
-            var eventObject = $.Event(HistoryEventType.HISTORY_CAN_REDO);
+            let eventObject = $.Event(HistoryEventType.HISTORY_CAN_REDO);
             this.trigger(eventObject);
         }else{
             console.log("Nothing to undo.");
-            var eventObject = $.Event(HistoryEventType.HISTORY_NO_MORE_UNDO);
+            let eventObject = $.Event(HistoryEventType.HISTORY_NO_MORE_UNDO);
             this.trigger(eventObject);
         }
     }
@@ -137,13 +137,13 @@ var History = function(_props)
 History.instances = {};
 History.getInstance = function(instName)
 {
-    var instance = History.instances[instName];
+    let instance = History.instances[instName];
     if(!instance)
         instance = History.instances[instName] = new History();
     return instance;
 }     
 History.prototype = Object.create(EventDispatcher.prototype);
-var HistoryEventType =
+let HistoryEventType =
 {
     "HISTORY_STEP_ADDED": "HISTORY_STEP_ADDED",
     "HISTORY_NO_MORE_UNDO": "HISTORY_NO_MORE_UNDO",
@@ -153,8 +153,8 @@ var HistoryEventType =
     "HISTORY_REDONE": "HISTORY_REDONE",
     "HISTORY_UNDONE": "HISTORY_UNDONE"
 };
-var HistoryStep = function (_props) {
-    var _id = StringUtils.guid();
+let HistoryStep = function (_props) {
+    let _id = StringUtils.guid();
     this.behaviorName = "";
     this.description = "";
     this.stepType = 1; //2 type of change Minor/Major

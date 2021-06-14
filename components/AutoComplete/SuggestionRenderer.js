@@ -38,7 +38,8 @@ var SuggestionRenderer = function(_props)
     let _defaultParams = {
         closeIconSide:"left",
     };
-    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
+    ObjectUtils.fromDefault(_defaultParams, _props);
+    //_props = ObjectUtils.extend(false, false, _defaultParams, _props);
     let _value = _props.value;
     let _closeIconSide = _props.closeIconSide;
     

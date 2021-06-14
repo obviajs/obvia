@@ -201,8 +201,8 @@ var CalendarMonth = function(_props)
         }
         return _dataProvider;
     };
-
-    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
+    ObjectUtils.fromDefault(_defaultParams, _props);
+    //_props = ObjectUtils.extend(false, false, _defaultParams, _props);
     let eve = [];
     let _labelField = _props.labelField;
     let _lb = _props.lb;

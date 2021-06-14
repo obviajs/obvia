@@ -20,7 +20,8 @@ var ReportProperties = function (_props) {
         dataviewFields_list: '',
         xml: ''
     };
-    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
+    ObjectUtils.fromDefault(_defaultParams, _props);
+    //_props = ObjectUtils.extend(false, false, _defaultParams, _props);
     this.report_id = _props.report_id;
     this.report_name = _props.report_name;
     this.description = _props.description;

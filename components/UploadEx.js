@@ -16,7 +16,7 @@ import { whenDefined } from "/flowerui/lib/DecoratorUtils.js";
 import { BinUtils } from "/flowerui/lib/BinUtils.js";
 import { getFontAwesomeIconFromMIME } from "/flowerui/lib/my.js";
 import { downloadFromUrl } from "/flowerui/lib/my.js";
-
+import { DependencyContainer } from "/flowerui/lib/DependencyContainer.js";
 var UploadEx = function (_props) {
     let _self = this;
     let _upload, _lblFileName, _btnRemove, _iconLbl, _lblFileSize, _progressBar, _progressRow, _btnUpload, _btnSelect, _additionalProperties, _action, _downloadUrl;
@@ -599,8 +599,8 @@ var UploadEx = function (_props) {
     };
 
     let _multiple, _accept, _showBtnRemove, _form, _value, _showProgress, _fullUrlField;
-
-    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
+    ObjectUtils.fromDefault(_defaultParams, _props);
+    //_props = ObjectUtils.extend(false, false, _defaultParams, _props);
     _showProgress = _props.showProgress;
     fnContainerDelay_init();
     _props.components = _cmps;
@@ -609,6 +609,7 @@ var UploadEx = function (_props) {
     return r;
 };
 UploadEx.prototype.ctor = 'UploadEx';
+DependencyContainer.getInstance().register("UploadEx", UploadEx, DependencyContainer.simpleResolve);
 export {
     UploadEx
 };

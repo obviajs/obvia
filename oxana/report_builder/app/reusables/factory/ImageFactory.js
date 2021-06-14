@@ -12,6 +12,7 @@ var ImageFactory = function (props) {
         "height": 100,
         "src": ""
     };
+    
     this.props = ObjectUtils.extend(this.defaultParams, props);
 
     this.toXml = function () {

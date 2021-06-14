@@ -7,6 +7,7 @@ var Parent = function (_props, _hideComponents = false) {
     let _comprenders = [];
     let _self = this;
     let _children = {}, _enabled;
+    let _components = [];
 
     if (!this.hasOwnProperty("initProxy")) {
         this.initProxy = function () {
@@ -55,9 +56,9 @@ var Parent = function (_props, _hideComponents = false) {
             return _components;
         },
         set: function components(v) {
-            this.removeAllChildren();
-            _components = v;
-            this.addComponents(_components);
+            // this.removeAllChildren();
+            // this.addComponents(v);
+            _components = v;  
         },
         enumerable: true && !_hideComponents,
         configurable: true
@@ -77,10 +78,10 @@ var Parent = function (_props, _hideComponents = false) {
             index = index > -1 ? index : _csorted.length;
             if (index >= 0 && index <= _csorted.length) {
                 index = index > -1 ? index : _csorted.length;
-                let component = {
-                    ctor: child.ctor,
-                    props: child.props
-                };
+                // let component = {
+                //     ctor: child.ctor,
+                //     props: child.props
+                // };
                 _children[child.id] = child;
                 _csorted.splice(index, 0, child.id);
                 child.parent = _proxy;
@@ -254,8 +255,8 @@ var Parent = function (_props, _hideComponents = false) {
         components: [],
         sortChildren: false
     };
-    //_props = extend(false, false, _defaultParams, _props);
-    ObjectUtils.shallowCopy(ObjectUtils.extend(false, false, _defaultParams, _props), _props);
+    ObjectUtils.fromDefault(_defaultParams, _props);
+    //ObjectUtils.shallowCopy(ObjectUtils.extend(false, false, _defaultParams, _props), _props);
     if (!_props.attr) {
         _props.attr = {};
     }
@@ -268,8 +269,7 @@ var Parent = function (_props, _hideComponents = false) {
         }
     }
     _props.attr["data-triggers"] = myDtEvts.join(" ");
-    let _components = _props.components;
-
+    _components = _props.components;
     this.$container = null;
 
     let _creationFinished = false;
@@ -284,11 +284,12 @@ var Parent = function (_props, _hideComponents = false) {
         _comprenders = [];
         if (components && Array.isArray(components) && components.length > 0) {
             if (_sortChildren) {
-                acSort(components, "props.index");
+                ArrayUtils.acSort(components, "props.index");
             }
             for (let i = 0; i < components.length; i++) {
                 if (ObjectUtils.isObject(components[i])) {
                     let cr = await this.addComponentInContainer(_$hadow, components[i], _csorted.length + i);
+                    await cr.promise;
                     arrInst.push(cr.cmp);
                 }
             }

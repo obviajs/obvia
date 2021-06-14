@@ -113,8 +113,8 @@ var CalendarDay = function(_props)
         return _dataProvider;
     };
 
-
-    _props = ObjectUtils.extend(false,false,_defaultParams,_props);
+    ObjectUtils.fromDefault(_defaultParams, _props);
+    //_props = ObjectUtils.extend(false,false,_defaultParams,_props);
     let _guidField = _props.guidField;
     let _labelField = _props.labelField;
     let _labelField1 = _props.labelField1;

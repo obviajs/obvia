@@ -6,6 +6,7 @@
 import { Parent } from "/flowerui/components/base/Parent.js";
 import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
 import { StringUtils } from "/flowerui/lib/StringUtils.js";
+import { DependencyContainer } from "/flowerui/lib/DependencyContainer.js";
 var Container = function (_props, _hideComponents = false) {
     let _self = this,
         _textAlign;
@@ -384,6 +385,7 @@ var Container = function (_props, _hideComponents = false) {
     return r;
 };
 Container.prototype.ctor = 'Container';
+DependencyContainer.getInstance().register("Container", Container, DependencyContainer.simpleResolve);
 export {
     Container
 };

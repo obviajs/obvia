@@ -117,7 +117,7 @@ var ProgressBar = function (_props) {
             this.valueMax=_props.valueMax;
     }
 
-    var _defaultParams={
+    let _defaultParams={
         label: "",
         valueNow: 25,
         valueMin: 0,
@@ -137,9 +137,10 @@ var ProgressBar = function (_props) {
             }
         ]
     };
-    _props = ObjectUtils.extend(false,false,_defaultParams,_props);
+    ObjectUtils.fromDefault(_defaultParams, _props);
+    //_props = ObjectUtils.extend(false,false,_defaultParams,_props);
     
-    var _label,_valueNow,_valueMin,_valueMax;
+    let _label,_valueNow,_valueMin,_valueMax;
     
     Container.call(this, _props);
 };

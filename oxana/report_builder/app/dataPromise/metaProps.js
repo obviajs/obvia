@@ -86,7 +86,7 @@ Builder.initMetaProps = function () {
       index: 3,
       props: {
         dataProvider: new ArrayEx(
-          getMembersCollection(LinkTarget, "text", "value")
+          ObjectUtils.getMembersCollection(LinkTarget, "text", "value")
         ),
         change: function () {
           this.parent.parent.instance.target = this.value;
@@ -370,7 +370,7 @@ Builder.initMetaProps = function () {
       required: true,
       props: {
         dataProvider: new ArrayEx(
-          getMembersCollection(DateTimeFormat, "text", "value")
+          ObjectUtils.getMembersCollection(DateTimeFormat, "text", "value")
         ),
         change: function () {
           this.parent.parent.instance.inputFormat = this.value;
@@ -384,7 +384,7 @@ Builder.initMetaProps = function () {
       required: true,
       props: {
         dataProvider: new ArrayEx(
-          getMembersCollection(DateTimeFormat, "text", "value")
+          ObjectUtils.getMembersCollection(DateTimeFormat, "text", "value")
         ),
         change: function () {
           this.parent.parent.instance.outputFormat = this.value;
@@ -398,7 +398,7 @@ Builder.initMetaProps = function () {
       required: true,
       props: {
         dataProvider: new ArrayEx(
-          getMembersCollection(DateTimeFormat, "text", "value")
+          ObjectUtils.getMembersCollection(DateTimeFormat, "text", "value")
         ),
         change: function () {
           this.parent.parent.instance.displayFormat = this.value;
@@ -661,7 +661,7 @@ Builder.initMetaProps = function () {
       ctor: "Select",
       label: "Align",
       props: {
-        dataProvider: new ArrayEx(getMembersCollection(Align, "text", "value")),
+        dataProvider: new ArrayEx(ObjectUtils.getMembersCollection(Align, "text", "value")),
         change: function () {
           this.parent.parent.instance.align = this.value;
         },
@@ -672,7 +672,7 @@ Builder.initMetaProps = function () {
       label: "Heading Type",
       props: {
         dataProvider: new ArrayEx(
-          getMembersCollection(HeadingType, "text", "value")
+          ObjectUtils.getMembersCollection(HeadingType, "text", "value")
         ),
         change: function () {
           this.parent.parent.instance.headingType = this.value;
@@ -684,7 +684,7 @@ Builder.initMetaProps = function () {
       label: "Side",
       props: {
         dataProvider: new ArrayEx(
-          getMembersCollection(SideNavSide, "text", "value")
+          ObjectUtils.getMembersCollection(SideNavSide, "text", "value")
         ),
         change: function () {
           this.parent.parent.instance.side = this.value;
@@ -890,7 +890,7 @@ Builder.initMetaProps = function () {
       label: "Input Type",
       props: {
         dataProvider: new ArrayEx(
-          getMembersCollection(TextInputType, "text", "value")
+          ObjectUtils.getMembersCollection(TextInputType, "text", "value")
         ),
         change: function () {
           this.parent.parent.instance.type = this.value;
@@ -940,7 +940,7 @@ Builder.initMetaProps = function () {
       label: "Label Type",
       props: {
         dataProvider: new ArrayEx(
-          getMembersCollection(LabelType, "value", "text")
+          ObjectUtils.getMembersCollection(LabelType, "value", "text")
         ),
         change: function () {
           this.parent.parent.instance.labelType = this.value;
@@ -955,7 +955,7 @@ Builder.initMetaProps = function () {
       label: "Button Type",
       props: {
         dataProvider: new ArrayEx(
-          getMembersCollection(ButtonType, "value", "text")
+          ObjectUtils.getMembersCollection(ButtonType, "value", "text")
         ),
         change: function () {
           this.parent.parent.instance.type = this.value;
@@ -1114,7 +1114,7 @@ Builder.initMetaProps = function () {
       props: {
         //dataProvider: new ArrayEx([{value: "date", text: "Date"}, {value: "time", text: "Time"},{value: "datetime", text: "Datetime"}]),
         dataProvider: new ArrayEx(
-          getMembersCollection(DateTimeMode, "text", "value")
+          ObjectUtils.getMembersCollection(DateTimeMode, "text", "value")
         ),
         change: function () {
           this.parent.parent.instance.mode = this.value;
@@ -1156,7 +1156,7 @@ Builder.initMetaProps = function () {
       label: "Type",
       props: {
         dataProvider: new ArrayEx(
-          getMembersCollection(ContainerType, "text", "value")
+          ObjectUtils.getMembersCollection(ContainerType, "text", "value")
         ),
         change: function () {
           this.parent.parent.instance.type = this.value;

@@ -3,7 +3,6 @@
  * 
  * Kreatx 2018
  */
-
 import { Container } from "/flowerui/components/Container.js";
 import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
 import { StringUtils } from "/flowerui/lib/StringUtils.js";
@@ -14,7 +13,7 @@ import { RepeaterEventArgs } from "/flowerui/components/Repeater/RepeaterEventAr
 import { Component } from "/flowerui/components/base/Component.js";
 import { Literal } from "/flowerui/lib/Literal.js";
 import { Props } from "/flowerui/components/base/Props.js";
-
+import { DependencyContainer } from "/flowerui/lib/DependencyContainer.js";
 var Repeater = function (_props, _hideComponents = false) {
     let _rowItems = [],
         _rows = [];
@@ -194,7 +193,7 @@ var Repeater = function (_props, _hideComponents = false) {
         Object.defineProperty(this, "value", {
             get: function value() {
                 let value = {};
-                for (var i = 0; i < _components.length; i++) {
+                for (let i = 0; i < _components.length; i++) {
                     value[_components[i].props.id] = [];
                     for (let j = 0; j < this[_components[i].props.id].length; j++) {
                         value[_components[i].props.id].push(this[_components[i].props.id][j].value);
@@ -315,7 +314,7 @@ var Repeater = function (_props, _hideComponents = false) {
                 el.on('change', function (e, rargs) {
                     let currentItem = _self.dataProvider[index];
                     if (component.props.value && StringUtils.isString(component.props.value) && component.props.value[0] == '{' && component.props.value[component.props.value.length - 1] == '}') {
-                        var bindingExp = this.getBindingExpression("value");
+                        let bindingExp = this.getBindingExpression("value");
                         if (bindingExp == "currentItem") {
                             _self.dataProvider[rargs.currentIndex] = data = this.value;
                         } else {
@@ -446,7 +445,7 @@ var Repeater = function (_props, _hideComponents = false) {
         }
     };
 
-    var _defaultParams = {
+    let _defaultParams = {
         rendering: {
             direction: 'vertical',
             separator: false,
@@ -459,7 +458,8 @@ var Repeater = function (_props, _hideComponents = false) {
         guidField: "guid",
         components: []
     };
-    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
+    ObjectUtils.fromDefault(_defaultParams, _props);
+    //_props = ObjectUtils.extend(false, false, _defaultParams, _props);
     if (Array.isArray(_props.dataProvider)){
         _props.dataProvider = new ArrayEx(_props.dataProvider);
     }
@@ -475,12 +475,12 @@ var Repeater = function (_props, _hideComponents = false) {
     }
     _props.attr["data-triggers"] = myDtEvts.join(" ");
 
-    var _dataProvider;
-    var _rendering = _props.rendering;
-    var _enabled = _props.enabled;
-    var _guidField = _props.guidField;
-    var _components = _props.components;
-    var _keydown = _props.keydown;
+    let _dataProvider;
+    let _rendering = _props.rendering;
+    let _enabled = _props.enabled;
+    let _guidField = _props.guidField;
+    let _components = _props.components;
+    let _keydown = _props.keydown;
     _props.keydown = this.containerKeyDown;
 
     let _rPromise;
@@ -598,6 +598,7 @@ var Repeater = function (_props, _hideComponents = false) {
     return r;
 };
 Repeater.prototype.ctor = 'Repeater';
+DependencyContainer.getInstance().register("Repeater", Repeater, DependencyContainer.simpleResolve);
 export {
     Repeater
 };

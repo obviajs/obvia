@@ -160,7 +160,8 @@ var Validator = function (_props) {
         invalidClasses: [],
         validClasses: []
     };
-    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
+    ObjectUtils.fromDefault(_defaultParams, _props);
+    //_props = ObjectUtils.extend(false, false, _defaultParams, _props);
 
 
     let _validationManager = ValidationManager.getInstance();

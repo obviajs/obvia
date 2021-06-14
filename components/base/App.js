@@ -22,8 +22,8 @@ var App = function (_props) {
         guid: StringUtils.guid(),
         defaultAppletIndex: 0
     };
-
-    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
+    ObjectUtils.fromDefault(_defaultParams, _props);
+    //_props = ObjectUtils.extend(false, false, _defaultParams, _props);
     let _self = this;
     let _idleTime = 0;
     let _idleInterval = _props.idleInterval;
@@ -218,7 +218,7 @@ var App = function (_props) {
             manifestor = target;
         } else if (_self.behaviors[currentTarget.guid] && _self.behaviors[currentTarget.guid][e.type] && ObjectUtils.isObject(_self.behaviors[currentTarget.guid][e.type])) {
             let cmpBehaviors = _self.behaviors[currentTarget.guid][e.type];
-            for (var prop in cmpBehaviors) {
+            for (let prop in cmpBehaviors) {
                 if (cmpBehaviors[prop] && cmpBehaviors[prop].onPropagation) {
                     behaviorObj[prop] = cmpBehaviors[prop];
                 }
@@ -402,7 +402,7 @@ var App = function (_props) {
                         _behaviors[uid][eventType][pb] = null;
                     }
                     if (ObjectUtils.isObject(behaviors[eventType])) {
-                        for (var eb in behaviors[eventType]) {
+                        for (let eb in behaviors[eventType]) {
                             _behaviors[uid][eventType][eb] = behaviors[eventType][eb];
                         }
                     } else {

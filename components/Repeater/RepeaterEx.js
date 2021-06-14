@@ -121,7 +121,8 @@ var RepeaterEx = function (_props) {
         dataProvider: new ArrayEx([]),
         guidField: "guid"
     };
-    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
+    ObjectUtils.fromDefault(_defaultParams, _props);
+    //_props = ObjectUtils.extend(false, false, _defaultParams, _props);
 
     if (!_props.attr) {
         _props.attr = {};

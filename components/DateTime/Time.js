@@ -23,7 +23,8 @@ var Time = function (_props) {
         min: null,
         max: null        
     };
-    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
+    ObjectUtils.fromDefault(_defaultParams, _props);
+    //_props = ObjectUtils.extend(false, false, _defaultParams, _props);
     
     let r = DateTime.call(this, _props);
     

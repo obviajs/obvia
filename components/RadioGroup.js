@@ -65,8 +65,8 @@ var RadioGroup = function (_props) {
         classes: ["radiogroup", "card"],
         multiselect: false
     };
-
-    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
+    ObjectUtils.fromDefault(_defaultParams, _props);
+    //_props = ObjectUtils.extend(false, false, _defaultParams, _props);
 
     let _labelField = _props.labelField;
     let _valueField = _props.valueField;

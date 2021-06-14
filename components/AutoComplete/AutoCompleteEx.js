@@ -17,6 +17,7 @@ import { TokenRenderer } from "/flowerui/components/AutoComplete/TokenRenderer.j
 import { TextInput } from "/flowerui/components/TextInput/TextInput.js";
 import { ChangeWatcher } from "/flowerui/lib/binding/ChangeWatcher.js";
 import { Literal } from "/flowerui/lib/Literal.js";
+import { DependencyContainer } from "/flowerui/lib/DependencyContainer.js";
 var AutoCompleteEx = function (_props) {
     let _separator, _tokenContainer, _tokenRepeater, _suggestionsRepeater, _input, _maxSuggestionsCount, _matchType;
     let _dpWatcher;
@@ -470,8 +471,8 @@ var AutoCompleteEx = function (_props) {
         labelField: "text",
         "matchType": StringMatchType.CONTAINS
     };
-
-    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
+    ObjectUtils.fromDefault(_defaultParams, _props);
+    //_props = ObjectUtils.extend(false, false, _defaultParams, _props);
     if (!_props.attr) {
         _props.attr = {};
     }
@@ -652,6 +653,7 @@ var AutoCompleteEx = function (_props) {
     return r;
 };
 AutoCompleteEx.prototype.ctor = 'AutoCompleteEx';
+DependencyContainer.getInstance().register("AutoCompleteEx", AutoCompleteEx, DependencyContainer.simpleResolve);
 export {
     AutoCompleteEx
 };

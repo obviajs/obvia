@@ -159,7 +159,7 @@ var Code = function (_props) {
     };
 
     let _makeMarker = function () {
-        var marker = document.createElement("div");
+        let marker = document.createElement("div");
         marker.style.color = "#822";
         marker.innerHTML = "●";
         return marker;
@@ -185,7 +185,7 @@ var Code = function (_props) {
                 _errors = _errs;
             },
             "getAnnotations": function (cm, updateLinting, options) {
-                var errors = CodeMirror.lint.javascript(cm, options);
+                let errors = CodeMirror.lint.javascript(cm, options);
                 updateLinting(errors);
                 _errors = errors;
             },
@@ -205,8 +205,8 @@ var Code = function (_props) {
         readOnly: false,
         nocursor: false
     };
-
-    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
+    ObjectUtils.fromDefault(_defaultParams, _props);
+    //_props = ObjectUtils.extend(false, false, _defaultParams, _props);
     _content = _props.content;
     _mode = _props.mode;
     _theme = _props.theme;

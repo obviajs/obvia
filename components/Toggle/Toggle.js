@@ -84,8 +84,8 @@ var Toggle = function (_props) {
             "self":["switch"]
         }
     };
-    
-    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
+    ObjectUtils.fromDefault(_defaultParams, _props);
+    //_props = ObjectUtils.extend(false, false, _defaultParams, _props);
     if(_props.classes["span"]==null)
         _props.classes["span"] = [];
     _props.classes["span"].pushUnique("slider");

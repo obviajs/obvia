@@ -255,8 +255,8 @@ var MapLocationPicker = function (_props) {
         zoomLevel: 7,
         classes: ["wrap"]
     };
-
-    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
+    ObjectUtils.fromDefault(_defaultParams, _props);
+    //_props = ObjectUtils.extend(false, false, _defaultParams, _props);
     fnContainerDelayInit();
     _props.components = _cmps;
     Container.call(this, _props);

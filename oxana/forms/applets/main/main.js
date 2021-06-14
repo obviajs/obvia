@@ -1,7 +1,7 @@
 import { ArrayUtils } from "/flowerui/lib/ArrayUtils.js";
 import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
 
-let Implementation = function (applet) {
+let main = function (applet) {
 
     let app = applet.app;
     let data = applet.data;
@@ -1256,7 +1256,6 @@ let Implementation = function (applet) {
 
     return imp;
 };
-Implementation.ctor = "Implementation";
 export {
-    Implementation
+    main
 };

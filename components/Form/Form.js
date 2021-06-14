@@ -6,6 +6,7 @@
 import { ApiClient } from "/flowerui/lib/ApiClientGen/ApiClient.js";
 import { Container } from "/flowerui/components/Container.js";
 import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+import { DependencyContainer } from "/flowerui/lib/DependencyContainer.js";
 var Form = function (_props) {
     let _formData, _action, _method, _self = this;
 
@@ -188,8 +189,8 @@ var Form = function (_props) {
         method: "POST",
         type: ""
     };
-
-    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
+    ObjectUtils.fromDefault(_defaultParams, _props);
+    //_props = ObjectUtils.extend(false, false, _defaultParams, _props);
     _formData = null;
     _method = _props.method;
 
@@ -205,6 +206,7 @@ var FormEventType =
     "POST_SUCCESS": "POST_SUCCESS",
     "POST_COMPLETE": "POST_COMPLETE"
 };
+DependencyContainer.getInstance().register("Form", Form, DependencyContainer.simpleResolve);
 export {
     Form, FormEventType
 };

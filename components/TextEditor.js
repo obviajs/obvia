@@ -8,12 +8,12 @@ import { Component } from "/flowerui/components/base/Component.js";
 import { List } from "/flowerui/components/List.js";
 
 var TextEditor =  function(_props, overrided = false) {
-    var _self = this;
+    let _self = this;
     this.beforeAttach = function () {
         this.$input = this.$el;
     };
    
-    var _changeHandler = function (e) {
+    let _changeHandler = function (e) {
         _value = _self.$input.summernote('code');
         if (typeof _change == 'function')
             _change.apply(_self, arguments);
@@ -33,9 +33,9 @@ var TextEditor =  function(_props, overrided = false) {
         }
     });
     
-    var _spellCheckClickHandler = function (e) {
-        var editingArea = _self.$input.parent().find('.note-editing-area');
-        var dialog = editingArea.spellCheckInDialog({ defaultDictionary: _self.spellCheck.defaultDictionary });
+    let _spellCheckClickHandler = function (e) {
+        let editingArea = _self.$input.parent().find('.note-editing-area');
+        let dialog = editingArea.spellCheckInDialog({ defaultDictionary: _self.spellCheck.defaultDictionary });
         dialog.onDialogClose = function () {
             _self.$input.summernote('code', editingArea.find('.note-editable').html());
         }
@@ -45,18 +45,18 @@ var TextEditor =  function(_props, overrided = false) {
         return  "<textarea id='" + this.domID + "' class='summernote' autofocus>"+_value+"</textarea>";
     };
 
-    var _defaultParams = {
+    let _defaultParams = {
         value: "",
         class: "form-control",
         afterAttach: this.afterAttach
     };
-
-    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
-    var _change = _props.change;
-    var _value = _props.value;
+    ObjectUtils.fromDefault(_defaultParams, _props);
+    //_props = ObjectUtils.extend(false, false, _defaultParams, _props);
+    let _change = _props.change;
+    let _value = _props.value;
   
     Component.call(this, _props, true);
-    var base = this.base;
+    let base = this.base;
 
     Object.defineProperty(this, "enabled",
     {
@@ -83,9 +83,9 @@ var TextEditor =  function(_props, overrided = false) {
     });
 
     this.afterAttach = function (e) {
-        var SpellCheckButton = function (context) {
-            var ui = $.summernote.ui;
-            var button = ui.button({
+        let SpellCheckButton = function (context) {
+            let ui = $.summernote.ui;
+            let button = ui.button({
                 contents: '<i class="fas fa-book"></i> Spell Check',
                 tooltip: 'Spell Check',
                 click: _spellCheckClickHandler.bind(_self)

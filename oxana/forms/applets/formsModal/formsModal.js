@@ -1,4 +1,4 @@
-let Implementation = function (applet) {
+let formsModal = function (applet) {
 
     let app = applet.app;
     let data = applet.data;
@@ -78,7 +78,6 @@ let Implementation = function (applet) {
     return imp;
 };
 
-Implementation.ctor = "Implementation";
 export {
-    Implementation
+    formsModal
 };

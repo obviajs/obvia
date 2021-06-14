@@ -7,6 +7,7 @@
 import { Component } from "/flowerui/components/base/Component.js";
 import { List } from "/flowerui/components/List.js";
 import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+import { DependencyContainer } from "/flowerui/lib/DependencyContainer.js";
 var TextArea = function (_props) {
     let _self = this;
 
@@ -100,7 +101,8 @@ var TextArea = function (_props) {
         class: "form-control",
         placeholder: ""
     };
-    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
+    ObjectUtils.fromDefault(_defaultParams, _props);
+    //_props = ObjectUtils.extend(false, false, _defaultParams, _props);
 
     let _spellCheck = _props.spellCheck;
     let _value;
@@ -128,6 +130,7 @@ var TextArea = function (_props) {
     Component.call(this, _props);
 };
 TextArea.prototype.ctor = 'TextArea';
+DependencyContainer.getInstance().register("TextArea", TextArea, DependencyContainer.simpleResolve);
 export {
     TextArea
 };

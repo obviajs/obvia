@@ -7,7 +7,7 @@
 import { Container } from "/flowerui/components/Container.js";
 import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
 
-let Kanban = function (_props) {
+var Kanban = function (_props) {
     let _self = this;
     let _dataProvider, _groupField, _descriptionField, _task, _panelRepeater, _bodyRepeater, _listItems, _items, _repeater;
 
@@ -179,8 +179,8 @@ let Kanban = function (_props) {
         
         draggedItem.style.display = 'block';
     };
-
-    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
+    ObjectUtils.fromDefault(_defaultParams, _props);
+    //_props = ObjectUtils.extend(false, false, _defaultParams, _props);
     _dataProvider = _props.dataProvider;
     _groupField = _props.groupField;
     _descriptionField = _props.descriptionField;

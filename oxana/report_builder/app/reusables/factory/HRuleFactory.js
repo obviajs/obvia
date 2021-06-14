@@ -14,6 +14,7 @@ var HRuleFactory = function (props) {
     backgroundColor: "",
     mode: "Opaque",
   };
+  //ObjectUtils.fromDefault(_defaultParams, _props);
   this.props = ObjectUtils.extend(this.defaultParams, props);
 
   if (props.transparent === "Opaque") {

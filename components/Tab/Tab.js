@@ -44,7 +44,8 @@ var Tab = function (_props) {
     };
 
     let _defaultParams = {};
-    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
+    ObjectUtils.fromDefault(_defaultParams, _props);
+    //_props = ObjectUtils.extend(false, false, _defaultParams, _props);
     let _label = _props.label;
     let r = Container.call(this, _props);
     return r;

@@ -7,6 +7,8 @@ import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
 import { ArrayUtils } from "/flowerui/lib/ArrayUtils.js";
 import { Repeater } from "/flowerui/components/Repeater/Repeater.js";
 import { ChangeWatcher } from "/flowerui/lib/binding/ChangeWatcher.js";
+import { DependencyContainer } from "/flowerui/lib/DependencyContainer.js";
+
 var List = function (_props) {
     let _self = this;
 
@@ -76,8 +78,8 @@ var List = function (_props) {
         selectedClasses: ["btn btn-sm btn-success"],
         value: []
     };
-
-    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
+    ObjectUtils.fromDefault(_defaultParams, _props);
+    //_props = ObjectUtils.extend(false, false, _defaultParams, _props);
 
     let _multiselect = _props.multiselect;
     let _value;
@@ -177,8 +179,8 @@ var List = function (_props) {
     });
     return r;
 };
-
 List.prototype.ctor = 'List';
+DependencyContainer.getInstance().register("List", List, DependencyContainer.simpleResolve);
 export {
     List
 };

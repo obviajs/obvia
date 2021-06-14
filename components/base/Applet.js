@@ -24,8 +24,7 @@ var Applet = function (_props) {
         type:"",
         attr: {},
         lazy: true,
-        guid: StringUtils.guid(),
-        fetchViewPromise: (p) => { 
+        fetchViewPromise: function(p) { 
             let rnd = p.forceReload ? "?r=" + Math.random() : "";            
             let _base = BrowserManager.getInstance().base;
             let _furl = _base + (p.url[0] == "." ? p.url.substr(1) : p.url);
@@ -33,13 +32,13 @@ var Applet = function (_props) {
                 return JSON.parse(r.response);
             });
         },
-        fetchImplementationPromise: (p, msg) => { 
+        fetchImplementationPromise: function(p, msg) { 
             let rnd = p.forceReload ? "?r=" + Math.random() : "";            
             let _base = BrowserManager.getInstance().base;
             let _furl = _base + (p.url[0] == "." ? p.url.substr(1) : p.url);
             //import uses different starting point (currrent file directory)
             return import(_furl + p.anchor + ".js" + rnd).then((module) => {                
-                return new module[_self.anchor](_self, msg);
+                return new module[this.anchor](this, msg);
             });
         },
         defaultAppletsUiRoute: null,
@@ -49,7 +48,8 @@ var Applet = function (_props) {
     if (!_props.id) {
         _props.id = _props.anchor;
     }
-    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
+    ObjectUtils.fromDefault(_defaultParams, _props);
+    //_props = ObjectUtils.extend(false, false, _defaultParams, _props);
     let _defaultAppletsUiRoute = _props.defaultAppletsUiRoute;
     let _fetchViewPromise = _props.fetchViewPromise;
     let _fetchImplementationPromise = _props.fetchImplementationPromise;
@@ -62,7 +62,6 @@ var Applet = function (_props) {
     let _uiRoute = _props.uiRoute;
     let _mimeType = _props.mimeType;
     let _lazy = _props.lazy;
-    let _guid = _props.guid;
     //the url after # that will bring this view to focus
     let _anchor = _props.anchor;
     //a two way map, to convert between hashparams to internal params and vice versa
@@ -161,6 +160,7 @@ var Applet = function (_props) {
 
     let _msg = {};
     let _proxiedMsg = new Proxy(_msg, _proxy);
+    let r;
 
     let _initAppletInternal = async function () {
         return new Promise((resolve, reject) => {
@@ -169,19 +169,19 @@ var Applet = function (_props) {
                 ap = Promise.resolve(_literal);
             } else {
                 ap = Promise.all([
-                    _fetchViewPromise.call(_self, _props),
+                    _fetchViewPromise.call(r, _props),
                     //import uses different starting point (currrent file directory)
                     _dataPromise ? (typeof _dataPromise == 'function' ? _dataPromise.call() : _dataPromise) : Promise.resolve(_data),
-                    _fetchImplementationPromise.call(_self, _props, _proxiedMsg)                
+                    _fetchImplementationPromise.call(r, _props, _proxiedMsg)                
                 ]).then((p) => {
                     _implementation = p[2];
                     _data = p[1];
-                    _implementation.guid = _guid;
+                    _implementation.guid = _self.guid;
                     _app.addImplementation(_implementation);
                     _literal = p[0];
                     _literal.props.bindingDefaultContext = _props.bindingDefaultContext = _implementation.appletContext;
-                    _props.components = [_literal];
-                    Container.call(_self, _props);
+                    _self.components = [_literal];
+                    //Container.call(_self, _props);
                 
                     _self.addBehaviors(_self, _behaviors, false);
                     _self.addBehaviors(_app, _app.defaultBehaviors, false);
@@ -203,11 +203,11 @@ var Applet = function (_props) {
                             _appletsMap[_applets[i].anchor].push(inst);
                         }
                     }
-                }).catch((params) => {                
+                }).catch((params) => {               
                     reject(params);
                 });
             }
-            ap.then((async (l) => {                
+            ap.then((async (l) => {
                 _self.trigger("preroute");
                 let p;
                 if (_uiRoute && typeof _uiRoute == 'function') {
@@ -215,7 +215,7 @@ var Applet = function (_props) {
                 }
                 _self.trigger("enroute");
                 _loaded = true;
-                resolve(_self);
+                resolve(_self);                
             }));                
         });
     };
@@ -240,7 +240,7 @@ var Applet = function (_props) {
         let len = cmps.length;
         for (let i = 0; i < len; i++) {
             let cmp = cmps[i];
-            _app.addBehaviors(_guid, cmp, behaviors);
+            _app.addBehaviors(_self.guid, cmp, behaviors);
             if (recurse && !cmp.hasInternalComponents) {
                 for (let cid in cmp.children) {
                     this.addBehaviors(cmp.children[cid], behaviors);
@@ -259,7 +259,7 @@ var Applet = function (_props) {
         let len = cmps.length;
         for (let i = 0; i < len; i++) {
             let cmp = cmps[i];
-            _app.removeBehaviors(_guid, cmp, behaviors);
+            _app.removeBehaviors(_self.guid, cmp, behaviors);
             if (recurse && !cmp.hasInternalComponents) {
                 for (let cid in cmp.children) {
                     this.removeBehaviors(cmp.children[cid], behaviors);
@@ -314,13 +314,6 @@ var Applet = function (_props) {
     Object.defineProperty(this, "behaviors", {
         get: function behaviors() {
             return _behaviors;
-        },
-        configurable: true
-    });
-
-    Object.defineProperty(this, "guid", {
-        get: function guid() {
-            return _guid;
         },
         configurable: true
     });
@@ -389,6 +382,8 @@ var Applet = function (_props) {
         }
         return scope;
     };
+    r = Container.call(_self, _props);
+    return r;
 };
 Applet.ctor = "Applet";
 export {

@@ -6,6 +6,7 @@
 
 import { Container } from "/flowerui/components/Container.js";
 import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+import { DependencyContainer } from "/flowerui/lib/DependencyContainer.js";
 var Label = function (_props, _hideComponents = false) {
     let _label, _html, _labelType;
     
@@ -98,7 +99,8 @@ var Label = function (_props, _hideComponents = false) {
         labelType: LabelType.label,
         type:""
     };
-    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
+    ObjectUtils.fromDefault(_defaultParams, _props);
+    //_props = ObjectUtils.extend(false, false, _defaultParams, _props);
 
     _labelType = _props.labelType;
 
@@ -118,6 +120,7 @@ var LabelType =
     "small": "small",
     "strong": "strong"
 };
+DependencyContainer.getInstance().register("Label", Label, DependencyContainer.simpleResolve);
 export {
     Label, LabelType
 };

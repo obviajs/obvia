@@ -28,7 +28,8 @@ var Td = function (_props, _hideComponents=false) {
 
     let _defaultParams = {
     };
-    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
+    ObjectUtils.fromDefault(_defaultParams, _props);
+    //_props = ObjectUtils.extend(false, false, _defaultParams, _props);
 
     let r = TCell.call(this, _props, _hideComponents);
     return r;

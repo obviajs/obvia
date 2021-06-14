@@ -102,13 +102,14 @@ var ObjectEditor = function (_props) {
 
     let _cmps, _colSpan, _offset, _mb, _mt;
     
-    var _defaultParams = {
+    let _defaultParams = {
         type: ContainerType.NONE,
         "components": [],
         sortChildren: true,
         field: "props"
     };
-    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
+    ObjectUtils.fromDefault(_defaultParams, _props);
+    //_props = ObjectUtils.extend(false, false, _defaultParams, _props);
     this.$container = this.$el;
     
     let r = Container.call(this, _props);

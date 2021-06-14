@@ -1,5 +1,4 @@
-Builder.initComponentLiterals = function () {
-    Builder.components = {
+var Literals = {
         "Modal": {
             literal: {
                 ctor: Modal,
@@ -747,4 +746,6 @@ Builder.initComponentLiterals = function () {
             }
         }
     };
+export {
+    Literals
 };

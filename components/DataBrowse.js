@@ -189,8 +189,8 @@ var DataBrowse = function (_props) {
         // classes:["d-inline-flex"],
         allowNewItem: false
     };
-
-    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
+    ObjectUtils.fromDefault(_defaultParams, _props);
+    //_props = ObjectUtils.extend(false, false, _defaultParams, _props);
     // if (!_props.attr) { 
     //     _props.attr = {};
     // }

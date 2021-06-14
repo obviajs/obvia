@@ -8,7 +8,8 @@ var JRComponent = function (_props) {
     backgroundColor: "",
     transparent: "",
   };
-  var _props = ObjectUtils.extend(false, false, _defaultParams, _props);
+  ObjectUtils.fromDefault(_defaultParams, _props);
+  //var _props = ObjectUtils.extend(false, false, _defaultParams, _props);
 
   let _x = _props.x;
   let _y = _props.y;

@@ -298,8 +298,8 @@ var DateTimeCb = function (_props) {
         type: "",
         classes: ["d-flex"]
     };
-
-    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
+    ObjectUtils.fromDefault(_defaultParams, _props);
+    //_props = ObjectUtils.extend(false, false, _defaultParams, _props);
     let _inputFormat = _props.inputFormat;
     let _outputFormat = _props.outputFormat;
     let _mode = _props.mode;

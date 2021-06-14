@@ -16,6 +16,8 @@ import { Link } from "/flowerui/components/Link/Link.js";
 import { Component } from "/flowerui/components/base/Component.js";
 import { getCaretPosition } from "/flowerui/lib/my.js";
 import { tokenize, findRightMatchingRightParenIndex } from "/flowerui/lib/Tokenizer.js";
+import { DependencyContainer } from "/flowerui/lib/DependencyContainer.js";
+
 var Filter = function (_props) {
     let
         _self = this,
@@ -650,7 +652,7 @@ var Filter = function (_props) {
         }];
     };
 
-    var _getFieldInfoByOrdinal = function (ordinal) {
+    let _getFieldInfoByOrdinal = function (ordinal) {
         let t = null;
         if (ordinal <= repDp.length && ordinal > 0) {
             let f = repDp[ordinal - 1];
@@ -690,7 +692,7 @@ var Filter = function (_props) {
             bt = [];
         while (i < len) {
             if (tokens[i].type == "INTEGER") {
-                var ti = _getFieldInfoByOrdinal(tokens[i].value);
+                let ti = _getFieldInfoByOrdinal(tokens[i].value);
                 if (ti != null) {
                     cond.rules.splice(cond.rules.length, 0, ti);
                 } else {
@@ -749,8 +751,8 @@ var Filter = function (_props) {
         guid: StringUtils.guid(),
         advancedMode: true
     };
-
-    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
+    ObjectUtils.fromDefault(_defaultParams, _props);
+    //_props = ObjectUtils.extend(false, false, _defaultParams, _props);
     _dataProvider = Array.isArray(_props.dataProvider) ? new ArrayEx(_props.dataProvider) : _props.dataProvider;
     _valueField = _props.valueField;
     _labelField = _props.labelField;
@@ -765,6 +767,7 @@ var Filter = function (_props) {
     return r;
 };
 Filter.prototype.ctor = 'Filter';
+DependencyContainer.getInstance().register("Filter", Filter, DependencyContainer.simpleResolve);
 export {
     Filter
 };

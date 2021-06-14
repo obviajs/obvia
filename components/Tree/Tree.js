@@ -11,6 +11,8 @@ import { ArrayEx } from "/flowerui/lib//ArrayEx.js";
 import { ChangeWatcher } from "/flowerui/lib/binding/ChangeWatcher.js";
 import { ArrayUtils } from "/flowerui/lib/ArrayUtils.js";
 import { StringUtils } from "/flowerui/lib/StringUtils.js";
+import { DependencyContainer } from "/flowerui/lib/DependencyContainer.js";
+
 var Tree = function (_props) {
     //inner component data
     let _self = this;
@@ -184,8 +186,8 @@ var Tree = function (_props) {
         ulClasses: [],
         ulClassesField: undefined,
     };
-
-    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
+    ObjectUtils.fromDefault(_defaultParams, _props);
+    //_props = ObjectUtils.extend(false, false, _defaultParams, _props);
     let _dataProvider;
     //let _dataProvider = _props.dataProvider;
     let _expandIcon = _props.expandIcon;
@@ -470,9 +472,9 @@ var Tree = function (_props) {
     };
     return r;
 };
-
 //component prototype
 Tree.prototype.ctor = 'Tree';
+DependencyContainer.getInstance().register("Tree", Tree, DependencyContainer.simpleResolve);
 export {
     Tree
 };

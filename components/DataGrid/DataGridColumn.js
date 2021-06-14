@@ -46,7 +46,8 @@ var DataGridColumn = function (_props) {
         editable: false,
         visible: true
     };
-    var _props = ObjectUtils.extend(false, false, _defaultParams, _props);
+    ObjectUtils.fromDefault(_defaultParams, _props);
+    //var _props = ObjectUtils.extend(false, false, _defaultParams, _props);
     this.width = _props.width;
     this.calculatedWidth = _props.calculatedWidth;
     this.field = _props.field;

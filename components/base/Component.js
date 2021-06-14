@@ -29,7 +29,9 @@ var Component = function (_props) {
         appendTo: undefined,
         attach: true
     };
-    ObjectUtils.shallowCopy(ObjectUtils.extend(false, false, _defaultParams, _props), _props);
+    
+    ObjectUtils.fromDefault(_defaultParams, _props);
+    //ObjectUtils.shallowCopy(ObjectUtils.extend(false, false, _defaultParams, _props), _props);
     UseBindings.call(this, _props);
     for (let prop in _props) {
         if (this.bindedProps.hasOwnProperty(prop))
@@ -233,8 +235,7 @@ var Component = function (_props) {
         set: function parent(v) {
             if (_parent != v) {
                 if (_parent) {
-                    if (_parent)
-                        _parent.removeChild(_self);                        
+                    _parent.removeChild(_self);                        
                 }
                 _parent = v;
                 if (this.children) {
@@ -959,8 +960,8 @@ Component.ch = function (domNode, operation = "fn") {
         if ((!listener.element.attached && operation == "fn") || (listener.element.attached && operation == "fnDetached")) {
             listener[operation].call(listener.element, listener.element.$el);
         }
-    } else
-        console.log("DOMNode not registered as a component", domNode);
+    } //else
+        //console.log("DOMNode not registered as a component", domNode);
 };
 
 Component.defaultContext = window;

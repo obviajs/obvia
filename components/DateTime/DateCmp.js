@@ -5,7 +5,7 @@
  */
 import { DateTime } from "/flowerui/components/DateTime/DateTime.js";
 import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
-
+import { DependencyContainer } from "/flowerui/lib/DependencyContainer.js";
  var DateCmp = function (_props) {
     let _self = this;
 
@@ -23,14 +23,15 @@ import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
         min: null,
         max: null        
     };
-
-    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
+    ObjectUtils.fromDefault(_defaultParams, _props);
+    //_props = ObjectUtils.extend(false, false, _defaultParams, _props);
 
     let r = DateTime.call(this, _props);
 
     return r;
 };
 DateCmp.prototype.ctor = "DateCmp";
+DependencyContainer.getInstance().register("DateCmp", DateCmp, DependencyContainer.simpleResolve);
 export {
     DateCmp
 };

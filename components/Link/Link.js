@@ -6,6 +6,7 @@
 
 import { Parent } from "/flowerui/components/base/Parent.js";
 import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+import { DependencyContainer } from "/flowerui/lib/DependencyContainer.js";
 var Link = function (_props) {
     Object.defineProperty(this, "title", {
         get: function title() {
@@ -112,8 +113,8 @@ var Link = function (_props) {
         target: LinkTarget.self,
         title: undefined
     };
-
-    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
+    ObjectUtils.fromDefault(_defaultParams, _props);
+    //_props = ObjectUtils.extend(false, false, _defaultParams, _props);
 
     let _label, _href, _target, _title;
 
@@ -129,6 +130,7 @@ var LinkTarget =
     "top": "_top",
     "framename": "_framename"
 };
+DependencyContainer.getInstance().register("Link", Link, DependencyContainer.simpleResolve);
 export {
     Link, LinkTarget
 };

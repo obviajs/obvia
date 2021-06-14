@@ -7,7 +7,8 @@ var JRBand = function (_props) {
         name : "",
         bandOrder : 0,
     };
-    _props = ObjectUtils.extend(false, false, _defaultParams, _props);
+    ObjectUtils.fromDefault(_defaultParams, _props);
+    //_props = ObjectUtils.extend(false, false, _defaultParams, _props);
     let _name = _props.name;
     let _bandOrder = _props.bandOrder;
 
