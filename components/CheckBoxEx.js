@@ -132,8 +132,8 @@ var CheckBoxEx = function (_props) {
 
     Component.call(this, _props);
 };
-CheckBoxEx.prototype.ctor = "CheckBoxEx";
 DependencyContainer.getInstance().register("CheckBoxEx", CheckBoxEx, DependencyContainer.simpleResolve);
+CheckBoxEx.prototype.ctor = "CheckBoxEx";
 export {
     CheckBoxEx
 };

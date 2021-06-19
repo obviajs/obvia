@@ -4,9 +4,11 @@
  * Kreatx 2018
  */
 
-import {Container} from "/flowerui/components/Container.js";
+import { Container } from "/flowerui/components/Container.js";
 import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
-
+import { MetaProps } from "/flowerui/oxana/forms/metaProps.js";
+import { Literals } from "/flowerui/oxana/forms/componentLiterals.js";
+import { DependencyContainer } from "/flowerui/lib/DependencyContainer.js";
 var ObjectEditor = function (_props) {
     let _self = this, _instance, _field;
 
@@ -25,13 +27,16 @@ var ObjectEditor = function (_props) {
     });
 
     this.initFields = function (inst, fld) {
-        props = (fld != null && fld != "") ? inst[fld] : inst;
+        let props = (fld != null && fld != "") ? inst[fld] : inst;
         let rows = [];
+        if (MetaProps[inst.ctor]) {
+            
+        }
         for (let prop in props) {
             //let propsMeta = ObjectUtils.extend(true, Builder.metaProps[inst.ctor] && Builder.metaProps[inst.ctor][prop] ? Builder.metaProps[inst.ctor][prop] : Builder.metaProps[prop]);
-            let propsMeta = Builder.metaProps[inst.ctor] && Builder.metaProps[inst.ctor][prop] ? Builder.metaProps[inst.ctor][prop] : Builder.metaProps[prop];
+            let propsMeta = MetaProps[inst.ctor] && MetaProps[inst.ctor][prop] ? MetaProps[inst.ctor][prop] : MetaProps[prop];
             if (propsMeta && !Object.isEmpty(propsMeta)) {
-                let propEditor = ObjectUtils.extend(true, Builder.components[propsMeta.ctor]);
+                let propEditor = ObjectUtils.extend(true, Literals[propsMeta.ctor]);
                 if (propEditor) {
                     let itemEditorLit = propEditor.literal;
                     if (propsMeta.props && typeof propsMeta.props != 'function')
@@ -43,7 +48,7 @@ var ObjectEditor = function (_props) {
                         itemEditorLit.props.instance = props[prop];
                         itemEditorLit.props.field = null;
                     }
-                    let ff = ObjectUtils.extend(true, Builder.components["FormField"].literal);
+                    let ff = ObjectUtils.extend(true, Literals["FormField"].literal);
                     ff.props.id = prop;
                     ff.props.label = propsMeta.label;
                     ff.props.placeholder = propsMeta.label;
@@ -93,17 +98,14 @@ var ObjectEditor = function (_props) {
     };
     this.endDraw = function (e) {
         if (e.target.id == this.domID) {
-            if(_props.instance){
-                _field = _props.field;
-                this.instance = _props.instance;
-            }
+            
         }
     };
 
     let _cmps, _colSpan, _offset, _mb, _mt;
     
     let _defaultParams = {
-        type: ContainerType.NONE,
+        type: "",
         "components": [],
         sortChildren: true,
         field: "props"
@@ -111,10 +113,16 @@ var ObjectEditor = function (_props) {
     ObjectUtils.fromDefault(_defaultParams, _props);
     //_props = ObjectUtils.extend(false, false, _defaultParams, _props);
     this.$container = this.$el;
-    
+    _field = _props.field;
+    if(_props.instance){
+        _instance = _props.instance;
+        _props.components = this.initFields(_instance, _field);
+    }
+
     let r = Container.call(this, _props);
     return r;
 };
+DependencyContainer.getInstance().register("ObjectEditor", ObjectEditor, DependencyContainer.simpleResolve);
 ObjectEditor.prototype.ctor = 'ObjectEditor';
 export {
     ObjectEditor

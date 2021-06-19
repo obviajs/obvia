@@ -1,5 +1,14 @@
 import { ArrayUtils } from "/flowerui/lib/ArrayUtils.js";
 import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+import { Literals } from "/flowerui/oxana/forms/componentLiterals.js";
+import { debounce } from "/flowerui/lib/DecoratorUtils.js";
+import { ArrayEx } from "/flowerui/lib/ArrayEx.js";
+import { ComponentList } from "/flowerui/oxana/forms/componentList.js";
+import { KeyboardUtils } from "/flowerui/lib/KeyboardUtils.js";
+import { BrowserWindow } from "/flowerui/components/base/BrowserWindow.js";
+import { Component } from "/flowerui/components/base/Component.js";
+import { Container } from "/flowerui/components/Container.js";
+import { ObjectEditor } from "/flowerui/oxana/inspect/ObjectEditor.js";
 
 let main = function (applet) {
 
@@ -8,9 +17,9 @@ let main = function (applet) {
 
     let activeComponent;
     let activeContainer;
-    let _cmpList = new ArrayEx(data.componentList);
+    let _cmpList = new ArrayEx(ComponentList);
 
-    let propertyEditorViewStack, propertyEditorContainer, fileSelectModal, browseFile, componentsContainer,
+    let mainContainer, propertyEditorViewStack, propertyEditorContainer, fileSelectModal, browseFile, componentsContainer,
         rightSideNav, listHistorySteps, workArea, workAreaColumn, workAreaRowL2,
         cmpSearchTextInput, undoButton, redoButton, duplicateButton, cmpTrash, toggleSideNavLeft, toggleSideNavRight,
         splitHorizontal, splitVertical, uploadIcon, saveLayout, selectBtn, componentList,
@@ -27,37 +36,32 @@ let main = function (applet) {
 
     let imp = {
         "BEGIN_DRAW": function (e) {
-            console.log("APPLET_BEGIN_DRAW");
-            let paths = findMember(applet.literal, "id", [], "listHistorySteps", false);
-            paths[0].pop();
-            let propsListHistorySteps = ObjectUtils.ObjectUtils.getChainValue(applet.literal, paths[0]);
-            propsListHistorySteps.dataProvider = app.history.steps;
-
-            paths = findMember(applet.literal, "id", [], "componentList", false);
-            paths[0].pop();
-            let propsComponentList = ObjectUtils.ObjectUtils.getChainValue(applet.literal, paths[0]);
-            propsComponentList.dataProvider = _cmpList;
+        
         },
-        "END_DRAW": function (e) {
-            appLoader = app.viewStack.mainContainer.appLoader;
+        "END_DRAW": async function (e) {
+            mainContainer = app.viewStack.main.mainContainer;
+            appLoader = mainContainer.appLoader;
             appLoader.hide();
 
-            propertyEditorViewStack = app.viewStack.mainContainer.container.rightSideNav.rightSideContainer.propertyEditorViewStack;
+            propertyEditorViewStack = mainContainer.container.rightSideNav.rightSideContainer.propertyEditorViewStack;
             propertyEditorContainer = propertyEditorViewStack.propertyEditorContainerWrap.propertyEditorContainer;
-            fileSelectModal = app.viewStack.mainContainer.container.children.fileSelectModal;
+            fileSelectModal = mainContainer.container.children.fileSelectModal;
             browseFile = fileSelectModal.modalDialog.modalContent.modalBody.browseFile;
-            componentsContainer = app.viewStack.mainContainer.container.componentsContainer;
-            middleNav = app.viewStack.mainContainer.nav.middleNav;
-            rightSideNav = app.viewStack.mainContainer.container.rightSideNav;
+            componentsContainer = mainContainer.container.componentsContainer;
+            middleNav = mainContainer.nav.middleNav;
+            rightSideNav = mainContainer.container.rightSideNav;
             listHistorySteps = middleNav.listHistorySteps;
-            workAreaColumn = app.viewStack.mainContainer.container.workArea.workAreaRow.workAreaColumn;
+            workAreaColumn = mainContainer.container.workArea.workAreaRow.workAreaColumn;
             workAreaRowL2 = workAreaColumn.workAreaCell.workAreaRowL2;
             workArea = workAreaRowL2.workAreaColumnL2;
             componentList = componentsContainer.componentList;
-            footer = app.viewStack.mainContainer.container.workArea.workAreaRow.workAreaColumn.workAreaCell.footer;
+            footer = mainContainer.container.workArea.workAreaRow.workAreaColumn.workAreaCell.footer;
             removeSearchText = componentsContainer.container.buttonDel;
+            
+            listHistorySteps.dataProvider = app.history.steps;
+            componentList.dataProvider = _cmpList;
 
-            applet.addBehaviors(applet.view, {
+            applet.addBehaviors(applet, {
                 "idChanged": {
                     "UPDATE_BEHAVIOR_BINDINGS": {
                         onPropagation: true
@@ -69,17 +73,17 @@ let main = function (applet) {
                 "rowAdd": "PREPARE_CMP",
             }, false);
 
-            let len = componentList.rowItems.length;
-            for (let i = 0; i < len; i++) {
-                let currentRow = componentList.rowItems[i];
-                applet.addBehaviors(currentRow.component, {
-                    "dragstart": "INITIAL_DRAGSTART",
-                }, false);
-            }
+            applet.addBehaviors(componentList, {
+                "dragstart": {
+                    "INITIAL_DRAGSTART": {
+                        onPropagation: true
+                    }
+                }
+            }, false);
 
             applet.addBehaviors(propertyEditorContainer, vspewbehaviors, false);
 
-            cmpSearchTextInput = app.viewStack.mainContainer.container.componentsContainer.container.cmpSearchTextInput;
+            cmpSearchTextInput = mainContainer.container.componentsContainer.container.cmpSearchTextInput;
             applet.addBehaviors(cmpSearchTextInput, {
                 "keyup": "SEARCH_CMP",
             }, false);
@@ -96,14 +100,14 @@ let main = function (applet) {
             applet.addBehaviors(duplicateButton, {
                 "click": "DUPLICATE_CMP"
             });
-            cmpTrash = app.viewStack.mainContainer.container.rightSideNav.rightSideContainer.propertyEditorViewStack.cmpTrash;
+            cmpTrash = await mainContainer.container.rightSideNav.rightSideContainer.propertyEditorViewStack.cmpTrash;
             applet.addBehaviors(cmpTrash, daBehaviors, false);
 
-            toggleSideNavLeft = app.viewStack.mainContainer.nav.leftNav.toggleSideNavLeft;
+            toggleSideNavLeft = mainContainer.nav.leftNav.toggleSideNavLeft;
             applet.addBehaviors(toggleSideNavLeft, {
                 "click": "TOGGLE_VISIBILITY_LEFT",
             }, false);
-            toggleSideNavRight = app.viewStack.mainContainer.nav.rightNav.toggleSideNavRight;
+            toggleSideNavRight = mainContainer.nav.rightNav.toggleSideNavRight;
             applet.addBehaviors(toggleSideNavRight, {
                 "click": "TOGGLE_VISIBILITY_RIGHT",
             }, false);
@@ -219,13 +223,13 @@ let main = function (applet) {
         },
         "ADD_COMPONENT": {
             description: "Add component ",
-            do: function (e) {
+            do: async function (e) {
                 if (!formField) {
-                    formField = data.components["FormField"].literal;
+                    formField = Literals["FormField"].literal;
                 }
                 console.log('CREATED_');
                 e.preventDefault();
-                let workArea = Component.instances[e.target.id];
+                let workArea = this; //Component.instances[e.target.id];
                 let domID = e.originalEvent.dataTransfer.getData("domID");
                 let ctor = e.originalEvent.dataTransfer.getData("ctor");
                 let move = e.originalEvent.dataTransfer.getData("move");
@@ -235,14 +239,14 @@ let main = function (applet) {
                 };
                 if (move == "") {
                     console.log("ADD_COMPONENT_ " + domID);
-                    let lit = data.components[ctor].literal;
-                    if (noNeedFF.indexOf(ctor) == -1 && (workArea.ctor == "Form" || (objectHierarchyGetMatching(workArea, "ctor", "Form", "parent", 1))["match"] != null)) {
-                        let ff = extend(true, formField);
+                    let lit = Literals[ctor].literal;
+                    if (noNeedFF.indexOf(ctor) == -1 && (workArea.ctor == "Form" || (ArrayUtils.objectHierarchyGetMatching(workArea, "ctor", "Form", "parent", 1))["match"] != null)) {
+                        let ff = ObjectUtils.deepCopy(formField);
                         ff.props.component = lit;
                         lit = ff;
                     }
 
-                    lit = extend(true, lit);
+                    lit = ObjectUtils.deepCopy(lit);
                     lit.props.afterAttach = function (e) {
                         let evt = new jQuery.Event("dropped");
                         this.trigger(evt);
@@ -265,7 +269,7 @@ let main = function (applet) {
                     //     console.log("Can not add other components at footer except validators.");
                     //     return;
                     // }
-                    inst = workArea.addComponent(lit);
+                    inst = await workArea.addComponent(lit);
                     let classes = inst.classes.slice(0);
                     classes.pushUnique("selected-component");
                     inst.classes = classes;
@@ -284,7 +288,7 @@ let main = function (applet) {
                 } else {
                     console.log("MOVED_", domID, workArea.domID);
                     inst = Component.instances[domID];
-                    let lit = Builder.components[ctor].literal;
+                    let lit = Literals[ctor].literal;
                     if (inst.parent && (inst.parent != workArea) && (domID != workArea.domID)) {
                         inst.parent.removeChild(inst, 0);
                         if (inst.ctor == "FormField" && workArea.ctor != "Form") {
@@ -306,7 +310,7 @@ let main = function (applet) {
                                 classes.splice(ind, 1);
                             inst.classes = classes;
                             inst.draggable = false;
-                            let ff = extend(true, formField);
+                            let ff = ObjectUtils.deepCopy(formField);
                             ff.props.component = inst.literal;
                             ff.props.draggable = true;
                             ff.props.classes = !Array.isArray(ff.props.classes) ? [] : ff.props.classes;
@@ -339,20 +343,20 @@ let main = function (applet) {
             do: function (e) {
                 console.log("SELECT_COMPONENT " + this.id);
                 //this will hold the instance of the component who manifested this behavior (the manifestor)
-                if (activeComponent && activeComponent != this && ((isObject(activeComponent.classes) && activeComponent.classes["self"].indexOf("selected-component")) || activeComponent.classes.indexOf("selected-component") > -1)) {
-                    let classes = isObject(activeComponent.classes) ? activeComponent.classes["self"].slice(0) : activeComponent.classes.slice(0);
+                if (activeComponent && activeComponent != this && ((ObjectUtils.isObject(activeComponent.classes) && activeComponent.classes["self"].indexOf("selected-component")) || activeComponent.classes.indexOf("selected-component") > -1)) {
+                    let classes = ObjectUtils.isObject(activeComponent.classes) ? activeComponent.classes["self"].slice(0) : activeComponent.classes.slice(0);
                     let ind = classes.indexOf("selected-component");
                     if (ind > -1)
                         classes.splice(ind, 1);
                     classes.pushUnique("default-component");
-                    if (isObject(activeComponent.classes))
+                    if (ObjectUtils.isObject(activeComponent.classes))
                         activeComponent.classes["self"] = classes;
                     else
                         activeComponent.classes = classes;
                 }
-                let classes = isObject(this.classes) ? this.classes["self"].slice(0) : this.classes.slice(0);
+                let classes = ObjectUtils.isObject(this.classes) ? this.classes["self"].slice(0) : this.classes.slice(0);
                 classes.pushUnique("selected-component");
-                if (isObject(this.classes))
+                if (ObjectUtils.isObject(this.classes))
                     this.classes["self"] = classes;
                 else
                     this.classes = classes;
@@ -366,7 +370,7 @@ let main = function (applet) {
                     }
                 };
                 propertyEditorContainer.removeAllChildren();
-                propertyEditorContainer.components = [oeLit];
+                propertyEditorContainer.addComponent(oeLit);
             },
             stopPropagation: true
         },
@@ -377,7 +381,7 @@ let main = function (applet) {
                 e.originalEvent.dataTransfer.setData("domID", this.domID);
                 e.originalEvent.dataTransfer.setData("ctor", this.ctor);
                 e.originalEvent.dataTransfer.setData("move", 1);
-                let $elem = app.viewStack.mainContainer.dragImage.$el[0];
+                let $elem = mainContainer.dragImage.$el[0];
                 e.originalEvent.dataTransfer.setDragImage($elem, 0, 0);
             }
         },
@@ -474,7 +478,7 @@ let main = function (applet) {
             console.log(arguments);
             e.originalEvent.dataTransfer.setData("domID", e.target.id);
             e.originalEvent.dataTransfer.setData("ctor", ra.currentItem.ctor);
-            let $elem = app.viewStack.mainContainer.dragImage.$el[0];
+            let $elem = mainContainer.dragImage.$el[0];
             e.originalEvent.dataTransfer.setDragImage($elem, 0, 0);
         },
 
@@ -516,7 +520,7 @@ let main = function (applet) {
 
         "LOAD_LAYOUT": function (e) {
             let _cmp = e.content;
-            let res = ArrayUtils.objectHierarchyGetMatchingMember(_cmp, "props.id", "workAreaRowL2", "props.components");
+            let res = ArrayUtils.ArrayUtils.objectHierarchyGetMatchingMember(_cmp, "props.id", "workAreaRowL2", "props.components");
             if (res.match) {
                 _cmp = res.match;
             }
@@ -561,7 +565,7 @@ let main = function (applet) {
                     let c = confirm("Do you want to delete " + inst.id.toUpperCase() + "?");
                     if (c) {
                         inst.parent.removeChild(inst, 2);
-                        propertyEditorContainer.components = [];
+                        propertyEditorContainer.removeAllChildren();
                     }
                     activeComponent = null;
                 } else {
@@ -591,7 +595,7 @@ let main = function (applet) {
         "SPLIT_HOR": {
             //description: "Split selected container horizontally",
             description: "Ndaje horizontalisht",
-            do: function (e) {
+            do: async function (e) {
                 let retFromRedoMaybe = arguments[arguments.length - 1];
                 if (retFromRedoMaybe.container) {
                     activeContainer = retFromRedoMaybe.container;
@@ -605,15 +609,10 @@ let main = function (applet) {
                     ctor: Container,
                     props: {
                         id: '',
-                        type: ContainerType.ROW,
-                        spacing: {
-                            h: 100,
-                            m: "auto"
-                        },
+                        classes:["row", "h-100", "m-auto"],
                         components: [{
                             ctor: Container,
                             props: {
-                                type: ContainerType.COLUMN,
                                 id: 'workArea',
                                 classes: ["border", "col"],
                                 attr: {
@@ -624,18 +623,18 @@ let main = function (applet) {
                     }
                 };
                 let newRow2;
-                if (activeContainer.ctor == "Form" || (objectHierarchyGetMatching(activeContainer, "ctor", "Form", "parent", 1))["match"] != null) {
+                if (activeContainer.ctor == "Form" || (ArrayUtils.objectHierarchyGetMatching(activeContainer, "ctor", "Form", "parent", 1))["match"] != null) {
                     newRow.props.type = ContainerType.FORM_ROW;
                 }
                 if (activeContainer.components.length == 0) {
-                    newRow2 = extend(true, newRow);
+                    newRow2 = ObjectUtils.deepCopy(newRow);
                 }
                 let newRowInstance;
                 if (retFromRedoMaybe.child) {
                     newRowInstance = retFromRedoMaybe.child;
                     activeContainer.addChild(newRowInstance);
                 } else {
-                    newRowInstance = activeContainer.addComponent(newRow);
+                    newRowInstance = await activeContainer.addComponent(newRow);
                     newRowInstance.attr.isWa = true;
                 }
 
@@ -650,7 +649,7 @@ let main = function (applet) {
                         newRowInstance2 = retFromRedoMaybe.child2;
                         activeContainer.addChild(newRowInstance2);
                     } else {
-                        newRowInstance2 = activeContainer.addComponent(newRow2);
+                        newRowInstance2 = await activeContainer.addComponent(newRow2);
                         newRowInstance2.attr.isWa = true;
                     }
 
@@ -691,7 +690,7 @@ let main = function (applet) {
 
         "SPLIT_VERT": {
             description: "Split selected container vertically",
-            do: function (e) {
+            do: async function (e) {
                 let retFromRedoMaybe = arguments[arguments.length - 1];
                 console.log(retFromRedoMaybe);
                 if (retFromRedoMaybe.container) {
@@ -706,15 +705,10 @@ let main = function (applet) {
                     ctor: Container,
                     props: {
                         id: '',
-                        type: ContainerType.ROW,
-                        spacing: {
-                            h: 100,
-                            m: "auto"
-                        },
+                        classes:["row", "h-100", "m-auto"],
                         components: [{
                                 ctor: Container,
                                 props: {
-                                    type: ContainerType.COLUMN,
                                     id: 'workArea',
                                     classes: ["border", "col"],
                                     attr: {
@@ -725,7 +719,6 @@ let main = function (applet) {
                             {
                                 ctor: Container,
                                 props: {
-                                    type: ContainerType.COLUMN,
                                     id: 'workArea',
                                     classes: ["border", "col"],
                                     attr: {
@@ -740,7 +733,6 @@ let main = function (applet) {
                 let newCell = {
                     ctor: Container,
                     props: {
-                        type: ContainerType.COLUMN,
                         id: 'workArea',
                         classes: ["border", "col"],
                         attr: {
@@ -830,7 +822,7 @@ let main = function (applet) {
                     //         field: "props"
                     //     }
                     // };
-                    propertyEditorContainer.components = [];
+                    propertyEditorContainer.removeAllChildren();
                 }
             },
             stopPropagation: true
@@ -994,11 +986,11 @@ let main = function (applet) {
             stopPropagation: false
         },
 
-        "DUPLICATE_CMP": function (e) {
+        "DUPLICATE_CMP": async function (e) {
             if (activeComponent && activeComponent.attr.isCmp) {
                 let lit = activeComponent.literal;
-                lit = extend(true, lit);
-                let inst = activeComponent.parent.addComponent(lit);
+                lit = ObjectUtils.deepCopy(lit);
+                let inst = await activeComponent.parent.addComponent(lit);
                 applet.addBehaviors(inst, cmpWaBehaviors, false);
                 inst.draggable = true;
                 let isCont = isContainer.call(inst);

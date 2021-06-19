@@ -243,7 +243,8 @@ var Component = function (_props) {
                         this.children[cid].invalidateScopeChain();
                     }
                 }
-                this.invalidateScopeChain();
+                if(this.invalidateScopeChain && typeof this.invalidateScopeChain == 'function')
+                    this.invalidateScopeChain();
             }
         },
         enumerable: false

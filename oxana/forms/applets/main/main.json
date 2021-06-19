@@ -454,17 +454,17 @@
                                        "ctor": "Container",
                                        "props": {
                                           "type": "",
-                                          "spacing": {
-                                             "colSpan": 12
-                                          },
+                                          "classes": [
+                                             "col"
+                                          ],
                                           "id": "workAreaColumn",
                                           "components": [
                                              {
                                                 "ctor": "Container",
                                                 "props": {
-                                                   "spacing": {
-                                                      "h": 100
-                                                   },
+                                                   "classes": [
+                                                      "h-100"
+                                                   ],
                                                    "id": "workAreaCell",
                                                    "type": "",
                                                    "components": [
@@ -473,21 +473,19 @@
                                                          "props": {
                                                             "id": "workAreaRowL2",
                                                             "type": "row",
-                                                            "spacing": {
-                                                               "h": 100
-                                                            },
+                                                            "classes": [
+                                                               "h-100"
+                                                            ],
                                                             "components": [
                                                                {
                                                                   "ctor": "Container",
                                                                   "props": {
                                                                      "type": "",
-                                                                     "spacing": {
-                                                                        "h": 100
-                                                                     },
                                                                      "id": "workAreaColumnL2",
                                                                      "classes": [
                                                                         "border",
-                                                                        "col"
+                                                                        "col",
+                                                                        "h-100"
                                                                      ]
                                                                   }
                                                                }

@@ -3,9 +3,10 @@
  *
  * Kreatx 2019
  */
-import {Label} from "/flowerui/components/Label.js";
+import { Label, LabelType } from "/flowerui/components/Label.js";
 import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
-
+import { CheckBox } from "/flowerui/components/CheckBox.js";
+import { DependencyContainer } from "/flowerui/lib/DependencyContainer.js";
 var Toggle = function (_props) {
     let _self = this, _checkBox, _span;
     Object.defineProperty(this, "value", {
@@ -110,7 +111,7 @@ var Toggle = function (_props) {
     let r = Label.call(this, _props, true);
     return r;
 };
-
+DependencyContainer.getInstance().register("Toggle", Toggle, DependencyContainer.simpleResolve);
 Toggle.prototype.ctor = "Toggle";
 export {
     Toggle

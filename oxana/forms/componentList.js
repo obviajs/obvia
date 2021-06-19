@@ -1,4 +1,4 @@
-var ComponentList = new ArrayEx([{
+var ComponentList = [{
         "componentNameLabel": "Label",
         "ctor": "Label"
     },
@@ -176,7 +176,7 @@ var ComponentList = new ArrayEx([{
         "componentNameLabel": "DataBrowse",
         "ctor": "DataBrowse"
     }
-]);
+];
 export {
     ComponentList
 };

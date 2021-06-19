@@ -5,6 +5,7 @@
  */
 import { Component } from "/flowerui/components/base/Component.js";
 import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+import { DependencyContainer } from "/flowerui/lib/DependencyContainer.js";
 var CheckBox = function (_props) {
     let _self = this,
         _label, _labelForLater, _value, _checked, _name;
@@ -129,6 +130,7 @@ var CheckBox = function (_props) {
     Component.call(this, _props);
 
 };
+DependencyContainer.getInstance().register("CheckBox", CheckBox, DependencyContainer.simpleResolve);
 CheckBox.prototype.ctor = "CheckBox";
 export {
     CheckBox

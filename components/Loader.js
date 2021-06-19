@@ -7,6 +7,7 @@
 // import { Env } from "../lib/Env.js";
 import { Component } from "/flowerui/components/base/Component.js";
 import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+import { DependencyContainer } from "/flowerui/lib/DependencyContainer.js";
 var Loader = function (_props) {
 	this.template = function () {
 		return `
@@ -49,7 +50,6 @@ var Loader = function (_props) {
 
 	Component.call(this, _props);
 };
-
-//component prototype
+DependencyContainer.getInstance().register("Loader", Loader, DependencyContainer.simpleResolve);
 Loader.prototype.ctor = "Loader";
 export { Loader };

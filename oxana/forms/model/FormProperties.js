@@ -15,7 +15,7 @@ var FormProperties = function (_props) {
         form_literal_view: '',
         form_guid: null
     };
-    ObjectUtils.fromDefault(_defaultParams, _props);
+    _props = ObjectUtils.fromDefault(_defaultParams, _props);
     //_props = ObjectUtils.extend(false, false, _defaultParams, _props);
     this.form_id = _props.form_id;
     this.form_name = _props.form_name;

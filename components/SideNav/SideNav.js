@@ -6,10 +6,11 @@
 
 import { Container } from "/flowerui/components/Container.js";
 import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+import { DependencyContainer } from "/flowerui/lib/DependencyContainer.js";
 
 var SideNav = function(_props)
 {
-    let _self = this, _open, _width, _side;
+    let _self = this, _open, _width, _minWidth, _side;
 
     Object.defineProperty(this, "side", {
         get: function side()
@@ -66,7 +67,7 @@ var SideNav = function(_props)
     }
     
     let _defaultParams = {
-        type: ContainerType.NONE,
+        type: "",
         "components": [],
         open: true,
         classes: ["sidenav"],
@@ -78,4 +79,13 @@ var SideNav = function(_props)
     let r = Container.call(this, _props);
     return r;
 };
+var SideNavSide =
+{
+    "left": 1,
+    "right": 2
+};
+DependencyContainer.getInstance().register("SideNav", SideNav, DependencyContainer.simpleResolve);
 SideNav.prototype.ctor = 'SideNav';
+export {
+    SideNav, SideNavSide
+};

@@ -5,6 +5,7 @@
  */
 import { List } from "/flowerui/components/List.js";
 import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+import { DependencyContainer } from "/flowerui/lib/DependencyContainer.js";
 var RadioGroup = function (_props) {
     let _self = this,
         _dataProvider;
@@ -142,7 +143,7 @@ var RadioGroup = function (_props) {
     });
     return r;
 };
-
+DependencyContainer.getInstance().register("RadioGroup", RadioGroup, DependencyContainer.simpleResolve);
 RadioGroup.prototype.ctor = "RadioGroup";
 export {
     RadioGroup

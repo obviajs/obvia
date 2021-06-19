@@ -8,6 +8,7 @@ import { get } from "/flowerui/lib/my.js";
 
 var Applet = function (_props) {
     this.$el = $(this);
+    let r;
     let _defaultParams = {
         forceReload: false,
         mimeType: "application/json",
@@ -38,7 +39,7 @@ var Applet = function (_props) {
             let _furl = _base + (p.url[0] == "." ? p.url.substr(1) : p.url);
             //import uses different starting point (currrent file directory)
             return import(_furl + p.anchor + ".js" + rnd).then((module) => {                
-                return new module[this.anchor](this, msg);
+                return new module[this.anchor](r, msg);
             });
         },
         defaultAppletsUiRoute: null,
@@ -160,7 +161,6 @@ var Applet = function (_props) {
 
     let _msg = {};
     let _proxiedMsg = new Proxy(_msg, _proxy);
-    let r;
 
     let _initAppletInternal = async function () {
         return new Promise((resolve, reject) => {
@@ -211,11 +211,11 @@ var Applet = function (_props) {
                 _self.trigger("preroute");
                 let p;
                 if (_uiRoute && typeof _uiRoute == 'function') {
-                    p = await _uiRoute.call(_self, _self);
+                    p = await _uiRoute.call(r, r);
                 }
                 _self.trigger("enroute");
                 _loaded = true;
-                resolve(_self);                
+                resolve(r);                
             }));                
         });
     };

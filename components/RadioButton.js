@@ -6,6 +6,7 @@
 
 import { Component } from "/flowerui/components/base/Component.js";
 import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+import { DependencyContainer } from "/flowerui/lib/DependencyContainer.js";
 
 var RadioButton = function (_props) {
 
@@ -130,6 +131,7 @@ var RadioButton = function (_props) {
     };
     Component.call(this, _props);
 };
+DependencyContainer.getInstance().register("RadioButton", RadioButton, DependencyContainer.simpleResolve);
 RadioButton.prototype.ctor = 'RadioButton';
 export {
     RadioButton

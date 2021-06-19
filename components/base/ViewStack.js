@@ -23,8 +23,11 @@ var ViewStack = function (_props) {
                         let ind = ArrayUtils.indexOfObject (_components, "props.id", property);
                         if (ind > -1) {
                             _components[ind].props.display = false;
-                            _addComponents([_components[ind]]);
-                            return target.children[property];
+                            let p = _addComponents([_components[ind]]);
+                            p.then((cr) => {
+                                return cr[0];
+                            });
+                            return p;//target.children[property];
                         }
                     }
                 }

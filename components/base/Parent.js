@@ -147,9 +147,9 @@ var Parent = function (_props, _hideComponents = false) {
         }
     };
 
-    this.addComponent = function (component, index) {
+    this.addComponent = async function (component, index) {
         index = index > -1 ? index : _csorted.length;
-        let cr = this.addComponentInContainer(this.$container, component, index);
+        let cr = await _addComponentInContainer(this.$container, component, index);
 
         cr.promise.then(function (cmpInstance) {
             if (cmpInstance && !cmpInstance.attached) {
@@ -191,9 +191,9 @@ var Parent = function (_props, _hideComponents = false) {
 
     let _csorted = [];
 
-    this.addComponentInContainer = async function (container, component, index) {
+    let _addComponentInContainer = async function (container, component, index) {
         if (container) {
-            component.props.ownerDocument = this.ownerDocument;
+            component.props.ownerDocument = _self.ownerDocument;
             let cmpLit = {};
             ObjectUtils.shallowCopy(component, cmpLit, ["props"]);
             cmpLit.props = {};
@@ -288,7 +288,7 @@ var Parent = function (_props, _hideComponents = false) {
             }
             for (let i = 0; i < components.length; i++) {
                 if (ObjectUtils.isObject(components[i])) {
-                    let cr = await this.addComponentInContainer(_$hadow, components[i], _csorted.length + i);
+                    let cr = await _addComponentInContainer(_$hadow, components[i], _csorted.length + i);
                     await cr.promise;
                     arrInst.push(cr.cmp);
                 }

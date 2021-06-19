@@ -1,7 +1,8 @@
 import { ArrayEx } from "/flowerui/lib/ArrayEx.js";
 import { Parent } from "/flowerui/components/base/Parent.js";
 import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
-
+import { CSSUtils } from "/flowerui/lib/CSSUtils.js";
+import { DependencyContainer } from "/flowerui/lib/DependencyContainer.js";
 var BrowserWindow = function (_props) {
     let _self = this,
         _win;
@@ -93,6 +94,7 @@ var BrowserWindow = function (_props) {
     };
     return r;
 };
+DependencyContainer.getInstance().register("BrowserWindow", BrowserWindow, DependencyContainer.simpleResolve);
 BrowserWindow.prototype.ctor = 'BrowserWindow';
 BrowserWindow.all = new ArrayEx();
 export {

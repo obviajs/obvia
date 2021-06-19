@@ -5,6 +5,7 @@
  */
 import { List } from "/flowerui/components/List.js";
 import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+import { DependencyContainer } from "/flowerui/lib/DependencyContainer.js";
 var CheckBoxGroup = function (_props) {
     let _self = this,
         _dataProvider;
@@ -141,7 +142,7 @@ var CheckBoxGroup = function (_props) {
     });
     return r;
 };
-
+DependencyContainer.getInstance().register("CheckBoxGroup", CheckBoxGroup, DependencyContainer.simpleResolve);
 CheckBoxGroup.prototype.ctor = "CheckBoxGroup";
 export {
     CheckBoxGroup

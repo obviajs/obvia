@@ -6,6 +6,7 @@
 
 import {Component} from "/flowerui/components/base/Component.js";
 import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+import { DependencyContainer } from "/flowerui/lib/DependencyContainer.js";
 var HRule = function (_props)
 {
     
@@ -86,6 +87,7 @@ var HRule = function (_props)
    
     Component.call(this, _props);
 };
+DependencyContainer.getInstance().register("HRule", HRule, DependencyContainer.simpleResolve);
 HRule.prototype.ctor = 'HRule';
 export {
     HRule

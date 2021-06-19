@@ -1,23 +1,26 @@
+let providerValueField = "dataview_id";
+let providerLabelField = "description";
+
 var Literals = {
         "Modal": {
             literal: {
-                ctor: Modal,
+                ctor: "Modal",
                 props: {
                     id: 'modal',
-                    size: ModalSize.LARGE,
+                    size: "modal-lg",
                     title: 'Motal Title',
                 }
             }
         },
         "FormField": {
             literal: {
-                ctor: FormField,
+                ctor: "FormField",
                 props: {
                     id: 'formField',
                     label: 'Label',
                     placeholder: 'Placeholder',
                     name: 'formField',
-                    size: FormFieldSize.SMALL,
+                    size: "form-control-sm",
                     //spacing:{colSpan:2},
                     component: {},
                     width: "100%"
@@ -28,7 +31,7 @@ var Literals = {
         },
         "Label": {
             literal: {
-                "ctor": Label,
+                "ctor": "Label",
                 "props": {
                     id: 'label',
                     label: ""
@@ -39,12 +42,12 @@ var Literals = {
         },
         "Heading": {
             literal: {
-                "ctor": Heading,
+                "ctor": "Heading",
                 "props": {
                     id: 'heading',
                     label: 'Heading',
-                    headingType: HeadingType.h1,
-                    align: Align.left,
+                    headingType: "h1",
+                    align: "left",
                     classes: [],
                     components: []
                 }
@@ -54,7 +57,7 @@ var Literals = {
         },
         "Link": {
             literal: {
-                "ctor": Link,
+                "ctor": "Link",
                 "props": {
                     id: 'label',
                     label: "Click Me",
@@ -67,7 +70,7 @@ var Literals = {
         },
         "HRule": {
             literal: {
-                "ctor": HRule,
+                "ctor": "HRule",
                 "props": {
                     id: 'hrule',
                     align: "center",
@@ -80,7 +83,7 @@ var Literals = {
         },
         "Button": {
             literal: {
-                "ctor": Button,
+                "ctor": "Button",
                 "props": {
                     id: 'button',
                     type: "button",
@@ -94,7 +97,7 @@ var Literals = {
         },
         "TextInput": {
             literal: {
-                "ctor": TextInput,
+                "ctor": "TextInput",
                 "props": {
                     id: 'textField',
                 }
@@ -107,7 +110,7 @@ var Literals = {
         },
         "TextArea": {
             literal: {
-                "ctor": TextArea,
+                "ctor": "TextArea",
                 "props": {
                     id: 'textarea',
                     value: ''
@@ -118,13 +121,13 @@ var Literals = {
         },
         "DateTime": {
             literal: {
-                "ctor": DateTime,
+                "ctor": "DateTime",
                 "props": {
                     id: 'datetime',
                     inputFormat: 'YYYY-MM-DD',
                     outputFormat: 'YYYY-MM-DD',
                     displayFormat: 'DD/MM/YYYY',
-                    value: moment().format('YYYY-MM-DD')
+                    value: dayjs().format('YYYY-MM-DD')
 
                 }
             },
@@ -133,10 +136,10 @@ var Literals = {
         },
         "DateTimeCb": {
             literal: {
-                "ctor": DateTimeCb,
+                "ctor": "DateTimeCb",
                 props: {
                     id: 'dateTimeCb',
-                    mode: DateTimeMode.DATE_TIME_SECOND,
+                    mode: 1 | 2 | 3,
                     versionStyle: '',
                     inputFormat: 'DD/MM/YYYY',
                     outputFormat: 'DD-MM-YYYY',
@@ -149,7 +152,7 @@ var Literals = {
         },
         "Image": {
             literal: {
-                "ctor": Image,
+                "ctor": "Image",
                 "props": {
                     id: 'image',
                     src: 'https://d28hgpri8am2if.cloudfront.net/book_images/cvr9781451648539_9781451648539_hr.jpg',
@@ -163,7 +166,7 @@ var Literals = {
         },
         "Select": {
             literal: {
-                "ctor": Select,
+                "ctor": "Select",
                 "props": {
                     id: 'select',
                     labelField: "text",
@@ -176,13 +179,13 @@ var Literals = {
         },
         "DropDown": {
             literal: {
-                "ctor": DropDown,
+                "ctor": "DropDown",
                 "props": {
                     id: 'dropdown',
                     hrefField: "key",
                     labelField: "title",
                     label: "Click me",
-                    dataProvider: new ArrayEx([{
+                    dataProvider: [{
                             key: "#",
                             title: "Folder 1"
                         },
@@ -194,7 +197,7 @@ var Literals = {
                             key: "#",
                             title: "Folder 3"
                         }
-                    ])
+                    ]
                 }
             },
             label: "DropDown",
@@ -202,7 +205,7 @@ var Literals = {
         },
         "Amount": {
             literal: {
-                "ctor": Amount,
+                "ctor": "Amount",
                 "props": {
                     id: 'amount',
                     currencyList: [{
@@ -226,20 +229,20 @@ var Literals = {
         },
         "Tree": {
             literal: {
-                "ctor": Tree,
+                "ctor": "Tree",
                 "props": {
                     id: 'tree',
                     valueField: "key",
                     labelField: "title",
                     childrenField: "children",
-                    dataProvider: new ArrayEx([{
+                    dataProvider: [{
                             title: "Node 1",
                             key: "1"
                         },
                         {
                             title: "Folder 2",
                             key: "2",
-                            children: new ArrayEx([{
+                            children: [{
                                     title: "Node 2.1",
                                     key: "3",
                                     myOwnAttr: "abc"
@@ -248,9 +251,9 @@ var Literals = {
                                     title: "Node 2.2",
                                     key: "4"
                                 }
-                            ])
+                            ]
                         }
-                    ]),
+                    ],
                     expandIcon: "fa-chevron-circle-right",
                     collapseIcon: "fa-chevron-circle-down",
                 }
@@ -260,14 +263,14 @@ var Literals = {
         },
         "AutoCompleteEx": {
             literal: {
-                "ctor": AutoCompleteEx,
+                "ctor": "AutoCompleteEx",
                 "props": {
                     id: 'AutoCompleteEx',
                     allowNewItem: false,
-                    value: new ArrayEx([]),
-                    dataProvider: new ArrayEx([]),
+                    value: [],
+                    dataProvider: [],
                     multiSelect: false,
-                    matchType: StringMatchType.STARTS_WITH
+                    matchType: 0
                 }
             },
             set: null,
@@ -278,20 +281,20 @@ var Literals = {
         },
         "AutoBrowse": {
             literal: {
-                "ctor": AutoBrowse,
+                "ctor": "AutoBrowse",
                 "props": {
                     id: "AutoBrowse",
-                    labelField: Builder.providerLabelField,
-                    valueField: Builder.providerValueField,
-                    dataProvider: Builder.sources,
+                    labelField: providerLabelField,
+                    valueField: providerValueField,
+                    dataProvider: [],
                     classes: ["ml-0"],
                     fields: [{
-                        "field": Builder.providerValueField,
-                        "description": Builder.providerValueField,
+                        "field": providerValueField,
+                        "description": providerValueField,
                         "visible": false
                     }, {
-                        "field": Builder.providerLabelField,
-                        "description": Builder.providerLabelField
+                        "field": providerLabelField,
+                        "description": providerLabelField
                     }]
                 }
             },
@@ -301,7 +304,7 @@ var Literals = {
         },
         "RadioGroup": {
             literal: {
-                "ctor": RadioGroup,
+                "ctor": "RadioGroup",
                 "props": {
                     id: 'radiogroup',
                     dataProvider: [{
@@ -342,7 +345,7 @@ var Literals = {
         },
         "CheckBox": {
             literal: {
-                "ctor": CheckBox,
+                "ctor": "CheckBox",
                 "props": {
                     id: 'checkBoxField',
                     label: 'CheckBox Label',
@@ -355,7 +358,7 @@ var Literals = {
         },
         "Toggle": {
             literal: {
-                "ctor": Toggle,
+                "ctor": "Toggle",
                 "props": {
                     id: 'toggle',
                     value: true,
@@ -374,7 +377,7 @@ var Literals = {
         },
         "CheckBoxGroup": {
             literal: {
-                "ctor": CheckBoxGroup,
+                "ctor": "CheckBoxGroup",
                 "props": {
                     id: 'checkBoxGroup',
                     dataProvider: [{
@@ -426,7 +429,7 @@ var Literals = {
         },
         "Form": {
             literal: {
-                "ctor": Form,
+                "ctor": "Form",
                 "props": {
                     id: 'form',
                     formName: 'My Form',
@@ -442,7 +445,7 @@ var Literals = {
         },
         "Header": {
             literal: {
-                ctor: Header,
+                "ctor": "Header",
                 props: {
                     id: 'header'
                 }
@@ -452,7 +455,7 @@ var Literals = {
         },
         "Footer": {
             literal: {
-                ctor: Footer,
+                "ctor": "Footer",
                 props: {
                     id: 'footer'
                 }
@@ -462,7 +465,7 @@ var Literals = {
         },
         "SideNav": {
             literal: {
-                ctor: SideNav,
+                "ctor": "SideNav",
                 props: {
                     id: 'sideNav',
                     classes: ["sidenav"]
@@ -473,10 +476,10 @@ var Literals = {
         },
         "Container": {
             literal: {
-                ctor: Container,
+                "ctor": "Container",
                 props: {
                     id: 'container',
-                    type: ContainerType.NONE,
+                    type: "",
                     classes: ["default-component", "default-cnt"],
                     height: "100%"
                 }
@@ -486,7 +489,7 @@ var Literals = {
         },
         "ViewStack": {
             literal: {
-                ctor: ViewStack,
+                "ctor": "ViewStack",
                 props: {
                     id: 'viewStack',
                     classes: ["default-component", "default-cnt"]
@@ -497,7 +500,7 @@ var Literals = {
         },
         "UploadEx": {
             literal: {
-                ctor: UploadEx,
+                "ctor": "UploadEx",
                 props: {
                     id: 'upload',
                     multiple: true
@@ -508,7 +511,7 @@ var Literals = {
         },
         "MultiUpload": {
             literal: {
-                ctor: MultiUpload,
+                "ctor": "MultiUpload",
                 props: {
                     id: 'multiUpload',
                 }
@@ -518,7 +521,7 @@ var Literals = {
         },
         "MapLocationPicker": {
             literal: {
-                ctor: MapLocationPicker,
+                "ctor": "MapLocationPicker",
                 props: {
                     id: 'map',
                     value: {
@@ -533,7 +536,7 @@ var Literals = {
         },
         "Repeater": {
             literal: {
-                ctor: Repeater,
+                "ctor": "Repeater",
                 props: {
                     id: 'repeater',
                 }
@@ -543,7 +546,7 @@ var Literals = {
         },
         "RepeaterEx": {
             literal: {
-                ctor: RepeaterEx,
+                "ctor": "RepeaterEx",
                 props: {
                     id: 'repeater',
                 }
@@ -553,11 +556,11 @@ var Literals = {
         },
         "List": {
             literal: {
-                ctor: List,
+                "ctor": "List",
                 props: {
                     id: 'list',
                     multiselect: true,
-                    dataProvider: new ArrayEx([{
+                    dataProvider: [{
                             "id": "1",
                             "text": "Option 1",
                             "buttonClass": ["btn-default"]
@@ -577,7 +580,7 @@ var Literals = {
                             "text": "Option 4",
                             "buttonClass": ["btn-default"]
                         }
-                    ]),
+                    ],
                     valueField: "id",
                     classesField: "buttonClass",
                     defaultClasses: ["btn-default"],
@@ -586,7 +589,7 @@ var Literals = {
                         "id": "1"
                     }],
                     components: [{
-                        ctor: Button,
+                        "ctor": "Button",
                         props: {
                             id: 'button',
                             type: "button",
@@ -602,10 +605,10 @@ var Literals = {
         },
         "DataGrid": {
             literal: {
-                ctor: DataGrid,
+                "ctor": "DataGrid",
                 props: {
                     id: 'dataGrid',
-                    columns: new ArrayEx([])
+                    columns: []
                 }
             },
             label: "DataGrid",
@@ -613,7 +616,7 @@ var Literals = {
         },
         "CalendarDay": {
             literal: {
-                ctor: CalendarDay,
+                "ctor": "CalendarDay",
                 props: {
                     id: 'calendarDay',
                 }
@@ -623,7 +626,7 @@ var Literals = {
         },
         "CalendarWeek": {
             literal: {
-                ctor: CalendarWeek,
+                "ctor": "CalendarWeek",
                 props: {
                     id: 'calendarWeek',
                 }
@@ -633,7 +636,7 @@ var Literals = {
         },
         "SpacingEditor": {
             literal: {
-                "ctor": SpacingEditor,
+                "ctor": "SpacingEditor",
                 "props": {}
             },
             valueField: null,
@@ -642,7 +645,7 @@ var Literals = {
         },
         "CollectionEditor": {
             literal: {
-                "ctor": CollectionEditor,
+                "ctor": "CollectionEditor",
                 "props": {}
             },
             valueField: null,
@@ -651,7 +654,7 @@ var Literals = {
         },
         "ObjectEditor": {
             literal: {
-                "ctor": ObjectEditor,
+                "ctor": "ObjectEditor",
                 "props": {}
             },
             valueField: null,
@@ -660,7 +663,7 @@ var Literals = {
         },
         "BrowserWindow": {
             literal: {
-                ctor: BrowserWindow,
+                "ctor": "BrowserWindow",
                 props: {
                     id: "window"
                 }
@@ -670,7 +673,7 @@ var Literals = {
         },
         "DataBrowse":{
             literal: {
-                "ctor": DataBrowse,
+                "ctor": "DataBrowse",
                 "props": {
                     id: "bdata"
                 }
@@ -680,7 +683,7 @@ var Literals = {
         },
         "CurrencyExRate":{
             literal: {
-                "ctor": CurrencyExRate,
+                "ctor": "CurrencyExRate",
                 "props": {
                     id: "currencyEx"
                 }
@@ -690,7 +693,7 @@ var Literals = {
         },
         "DataGridCellRenderer": {
             literal: {
-                "ctor": DataGridCellRenderer,
+                "ctor": "DataGridCellRenderer",
                 "props": {
                     id: 'label',
                     label: "Click Me"
@@ -701,26 +704,15 @@ var Literals = {
         },
         "CreditCard": {
             literal: {
-                "ctor": CreditCard,
+                "ctor": "CreditCard",
                 "props": {
                     id: "creditCard"
                 }
             }
         },
-        "Wizard": {
-            literal: {
-                "ctor": Wizard,
-                "props": {
-                    id: "wizard",
-                    stepPath: "attr.step",
-                    detailsPath: "attr.details",
-                    components: []
-                }
-            }
-        },
         "RequiredFieldValidator": {
             "literal": {
-                "ctor": RequiredFieldValidator,
+                "ctor": "RequiredFieldValidator",
                 "props": {
                     "id": "requiredFieldValidator",
                     "label": "Required Field Validation"

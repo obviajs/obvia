@@ -2,6 +2,71 @@ import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
 import { StringUtils, StringMatchType } from "/flowerui/lib/StringUtils.js";
 import { ArrayEx } from "/flowerui/lib/ArrayEx.js";
 import { LinkTarget } from "/flowerui/components/Link/Link.js";
+import { Literals } from "/flowerui/oxana/forms/componentLiterals.js";
+import { ComponentList } from "/flowerui/oxana/forms/componentList.js";
+
+import { LabelType } from "/flowerui/components/Label.js";
+import { DateTimeFormat } from "/flowerui/components/DateTime/DateTimeFormat.js";
+import { ContainerType } from "/flowerui/components/base/ContainerType.js";
+
+let providerValueField = "dataview_id";
+let providerLabelField = "description";
+let maskValueField = "";
+let maskLabelField = "";
+let componentValueField = "ctor";
+let componentLabelField = "label";
+
+let dataviews = [];
+let forms = [];
+let masks = [];
+let dateTimeFormats = ObjectUtils.getMembersCollection(DateTimeFormat, "value", "text");
+
+let alignOptions = ["left",
+    "center",
+    "right",
+    "justify"
+];
+
+let headingTypes = [
+    "h1",
+    "h2",
+    "h3",
+    "h4",
+    "h5",
+    "h6"
+];
+let sidenavSides = ["left",
+    "right"
+];
+let textInputTypes = [
+    "email",
+    "password",
+    "number",
+    "text",
+    "date",
+    "datetime-local",
+    "month",
+    "range",
+    "tel",
+    "time",
+    "url",
+    "WEEK"
+];
+let labelTypes = ObjectUtils.getMembersCollection(LabelType, "value", "text");
+
+let linkTargetOptions = [
+    "blank",
+    "self",
+    "parent",
+    "top"
+];
+
+let buttonTypes = [
+    "button",
+    "submit",
+    "reset"
+];
+let containerTypes = ObjectUtils.getMembersCollection(ContainerType, "value", "text");
 
 var MetaProps = {
         form_name: {
@@ -98,7 +163,7 @@ var MetaProps = {
             label: "Target",
             index: 3,
             props: {
-                dataProvider: new ArrayEx(ObjectUtils.getMembersCollection(LinkTarget, "text", "value")),
+                dataProvider: linkTargetOptions,
                 change: function () {
                     this.parent.parent.instance.target = this.value;
                 }
@@ -202,9 +267,9 @@ var MetaProps = {
             label: "Data Provider",
             required: true,
             props: {
-                valueField: Builder.providerValueField,
-                labelField: Builder.providerLabelField,
-                dataProvider: Builder.dataviews,
+                valueField: providerValueField,
+                labelField: providerLabelField,
+                dataProvider: dataviews,
                 classes: ["no-form-control"],
                 change: function () {
                     //propsForm.children["dataProvider"].value
@@ -214,10 +279,10 @@ var MetaProps = {
                         let _self = this;
                         //let url = "http://flower-gaia/api/dataview_pid_1/yaml";
                         let url = "https://gaia.oxana.io/api/" + this.value[0].name + "/yaml";
-                        if (!Builder.data[_self.value[0][Builder.providerValueField]]) {
+                        if (!Builder.data[_self.value[0][providerValueField]]) {
                             GaiaAPI_Utils.generateAndLoadDataView(url, Builder.recordsPerPage).then(function (aex) {
                                 console.log(aex);
-                                _self.parent.parent.instance.dataProvider = Builder.data[_self.value[0][Builder.providerValueField]] = aex;
+                                _self.parent.parent.instance.dataProvider = Builder.data[_self.value[0][providerValueField]] = aex;
                                 if (_self.parent.parent.labelField && aex && aex.length > 0) {
                                     let dpFieldNames = Object.keys(aex[0]);
                                     let len = dpFieldNames.length;
@@ -233,8 +298,8 @@ var MetaProps = {
                                 }
                             });
                         } else {
-                            _self.parent.parent.instance.dataProvider = Builder.data[_self.value[0][Builder.providerValueField]];
-                            let aex = Builder.data[_self.value[0][Builder.providerValueField]];
+                            _self.parent.parent.instance.dataProvider = Builder.data[_self.value[0][providerValueField]];
+                            let aex = Builder.data[_self.value[0][providerValueField]];
                             if (_self.parent.parent.labelField && aex && aex.length > 0) {
                                 let dpFieldNames = Object.keys(aex[0]);
                                 let len = dpFieldNames.length;
@@ -249,13 +314,13 @@ var MetaProps = {
                                     _self.parent.parent.valueField.input.dataProvider = dpFields;
                             }
                         }
-                        this.parent.parent.instance.attr[Builder.providerValueField] = this.value[0][Builder.providerValueField];
+                        this.parent.parent.instance.attr[providerValueField] = this.value[0][providerValueField];
                     }
                 }
             },
             setter: function () {
-                if (this.attr[Builder.providerValueField]) {
-                    let m = ArrayUtils.getMatching(Builder.sources, Builder.providerValueField, this.attr[Builder.providerValueField]);
+                if (this.attr[providerValueField]) {
+                    let m = ArrayUtils.getMatching(Builder.sources, providerValueField, this.attr[providerValueField]);
                     if (m.objects.length > 0) {
                         return new ArrayEx(m.objects);
                     }
@@ -296,9 +361,9 @@ var MetaProps = {
             label: "Data Provider",
             required: true,
             props: {
-                valueField: Builder.maskValueField,
-                labelField: Builder.maskLabelField,
-                dataProvider: Builder.masks
+                valueField: maskValueField,
+                labelField: maskLabelField,
+                dataProvider: masks
             },
             index: 11
         },
@@ -307,7 +372,7 @@ var MetaProps = {
             label: "Input Format",
             required: true,
             props: {
-                dataProvider: new ArrayEx(ObjectUtils.getMembersCollection(DateTimeFormat, "text", "value")),
+                dataProvider: dateTimeFormats,
                 change: function () {
                     this.parent.parent.instance.inputFormat = this.value;
                 }
@@ -319,7 +384,7 @@ var MetaProps = {
             label: "Output Format",
             required: true,
             props: {
-                dataProvider: new ArrayEx(ObjectUtils.getMembersCollection(DateTimeFormat, "text", "value")),
+                dataProvider: dateTimeFormats,
                 change: function () {
                     this.parent.parent.instance.outputFormat = this.value;
                 }
@@ -331,7 +396,7 @@ var MetaProps = {
             label: "Display Format",
             required: true,
             props: {
-                dataProvider: new ArrayEx(ObjectUtils.getMembersCollection(DateTimeFormat, "text", "value")),
+                dataProvider: dateTimeFormats,
                 change: function () {
                     this.parent.parent.instance.displayFormat = this.value;
                 }
@@ -376,10 +441,10 @@ var MetaProps = {
                 label: "Manage Columns",
                 classes: ["btn", "btn-secondary"],
                 components: [{
-                    ctor: Label,
+                    "ctor": "Label",
                     props: {
                         id: 'fa',
-                        labelType: LabelType.i,
+                        labelType: "i",
                         classes: ["fas", "fa-list"]
                     }
                 }],
@@ -390,7 +455,7 @@ var MetaProps = {
                         if (Builder.data[dpName] && Builder.data[dpName].length > 0) {
                             let win = this.parent.parent.columnsEditModal;
                             if (!win) {
-                                let lit = extend(true, Builder.components.Modal.literal);
+                                let lit = extend(true, Literals.Modal.literal);
                                 lit.props.id = "columnsEditModal";
                                 lit.props.title = "Edit Columns";
                                 lit.props.components = [{
@@ -452,7 +517,7 @@ var MetaProps = {
                             };
                         }
 
-                        let lit = extend(true, Builder.components.Modal.literal);
+                        let lit = extend(true, Literals.Modal.literal);
                         lit.props.id = "ClassesEditModal";
                         lit.props.title = "Edit Classes";
                         lit.props.components = [{
@@ -498,10 +563,10 @@ var MetaProps = {
                                             id: 'removeButton',
                                             type: "button",
                                             components: [{
-                                                ctor: Label,
+                                                "ctor": "Label",
                                                 props: {
                                                     id: 'fa',
-                                                    labelType: LabelType.i,
+                                                    labelType: "i",
                                                     classes: ["fas", "fa-minus-circle"]
                                                 }
                                             }],
@@ -587,7 +652,7 @@ var MetaProps = {
             ctor: "Select",
             label: "Align",
             props: {
-                dataProvider: new ArrayEx(ObjectUtils.getMembersCollection(Align, "text", "value")),
+                dataProvider: alignOptions,
                 change: function () {
                     this.parent.parent.instance.align = this.value;
                 }
@@ -597,7 +662,7 @@ var MetaProps = {
             ctor: "Select",
             label: "Heading Type",
             props: {
-                dataProvider: new ArrayEx(ObjectUtils.getMembersCollection(HeadingType, "text", "value")),
+                dataProvider: headingTypes,
                 change: function () {
                     this.parent.parent.instance.headingType = this.value;
                 }
@@ -607,7 +672,7 @@ var MetaProps = {
             ctor: "Select",
             label: "Side",
             props: {
-                dataProvider: new ArrayEx(ObjectUtils.getMembersCollection(SideNavSide, "text", "value")),
+                dataProvider: sidenavSides,
                 change: function () {
                     this.parent.parent.instance.side = this.value;
                 }
@@ -627,16 +692,16 @@ var MetaProps = {
             label: "Item Renderer",
             required: true,
             props: {
-                valueField: Builder.componentValueField,
-                labelField: Builder.componentValueField,
-                dataProvider: Builder.componentList,
+                valueField: componentValueField,
+                labelField: componentValueField,
+                dataProvider: ComponentList,
                 fields: [{
-                    "field": Builder.componentValueField,
-                    "description": Builder.componentValueField,
+                    "field": componentValueField,
+                    "description": componentValueField,
                     "visible": false
                 }, {
-                    "field": Builder.componentLabelField,
-                    "description": Builder.componentLabelField
+                    "field": componentLabelField,
+                    "description": componentLabelField
                 }],
                 classes: ["no-form-control"],
                 change: function () {
@@ -655,16 +720,16 @@ var MetaProps = {
             label: "Item Editor",
             required: false,
             props: {
-                valueField: Builder.componentValueField,
-                labelField: Builder.componentValueField,
-                dataProvider: Builder.componentList,
+                valueField: componentValueField,
+                labelField: componentValueField,
+                dataProvider: ComponentList,
                 fields: [{
-                    "field": Builder.componentValueField,
-                    "description": Builder.componentValueField,
+                    "field": componentValueField,
+                    "description": componentValueField,
                     "visible": false
                 }, {
-                    "field": Builder.componentLabelField,
-                    "description": Builder.componentLabelField
+                    "field": componentLabelField,
+                    "description": componentLabelField
                 }],
                 classes: ["no-form-control"],
                 change: function () {
@@ -702,7 +767,7 @@ var MetaProps = {
             props: {
                 valueField: "form_id",
                 labelField: "form_name",
-                dataProvider: Builder.forms,
+                dataProvider: forms,
                 fields: [{
                     "field": "form_id",
                     "description": "form_id",
@@ -728,7 +793,7 @@ var MetaProps = {
              */
             setter: function () {
                 if (this.attr.repeated_id_form) {
-                    let m = ArrayUtils.getMatching(Builder.forms, "form_id", this.attr.repeated_id_form);
+                    let m = ArrayUtils.getMatching(forms, "form_id", this.attr.repeated_id_form);
                     if (m.objects.length > 0) {
                         return new ArrayEx(m.objects);
                     }
@@ -747,9 +812,9 @@ var MetaProps = {
             required: true,
             index: 4,
             props: {
-                valueField: Builder.providerValueField,
-                labelField: Builder.providerLabelField,
-                dataProvider: Builder.dataviews,
+                valueField: providerValueField,
+                labelField: providerLabelField,
+                dataProvider: dataviews,
                 classes: ["no-form-control"],
                 change: function () {
                     //propsForm.children["dataProvider"].value
@@ -779,7 +844,7 @@ var MetaProps = {
             props: {
                 valueField: "form_id",
                 labelField: "form_name",
-                dataProvider: Builder.forms,
+                dataProvider: forms,
                 fields: [{
                     "field": "form_id",
                     "description": "form_id",
@@ -836,7 +901,7 @@ var MetaProps = {
             ctor: "Select",
             label: "Input Type",
             props: {
-                dataProvider: new ArrayEx(ObjectUtils.getMembersCollection(TextInputType, "text", "value")),
+                dataProvider: textInputTypes,
                 change: function () {
                     this.parent.parent.instance.type = this.value;
                 }
@@ -887,7 +952,7 @@ var MetaProps = {
             ctor: "Select",
             label: "Label Type",
             props: {
-                dataProvider: new ArrayEx(ObjectUtils.getMembersCollection(LabelType, "value", "text")),
+                dataProvider: labelTypes,
                 change: function () {
                     this.parent.parent.instance.labelType = this.value;
                 }
@@ -900,7 +965,7 @@ var MetaProps = {
             ctor: "Select",
             label: "Button Type",
             props: {
-                dataProvider: new ArrayEx(ObjectUtils.getMembersCollection(ButtonType, "value", "text")),
+                dataProvider: buttonTypes,
                 change: function () {
                     this.parent.parent.instance.type = this.value;
                 }
@@ -1060,7 +1125,7 @@ var MetaProps = {
             label: "Display Mode",
             props: {
                 //dataProvider: new ArrayEx([{value: "date", text: "Date"}, {value: "time", text: "Time"},{value: "datetime", text: "Datetime"}]),
-                dataProvider: new ArrayEx(ObjectUtils.getMembersCollection(DateTimeMode, "text", "value")),
+                dataProvider: [],
                 change: function () {
                     this.parent.parent.instance.mode = this.value;
                 }
@@ -1116,7 +1181,7 @@ var MetaProps = {
             ctor: "Select",
             label: "Type",
             props: {
-                dataProvider: new ArrayEx(ObjectUtils.getMembersCollection(ContainerType, "text", "value")),
+                dataProvider: containerTypes,
                 change: function () {
                     this.parent.parent.instance.type = this.value;
                 }
@@ -1162,7 +1227,7 @@ var MetaProps = {
             props: {
                 valueField: "form_id",
                 labelField: "form_name",
-                dataProvider: Builder.forms,
+                dataProvider: forms,
                 fields: [{
                     "field": "form_id",
                     "description": "form_id",
@@ -1187,7 +1252,7 @@ var MetaProps = {
              */
             setter: function () {
                 if (this.id_form) {
-                    let m = ArrayUtils.getMatching(Builder.forms, "form_id", this.id_form);
+                    let m = ArrayUtils.getMatching(forms, "form_id", this.id_form);
                     if (m.objects.length > 0) {
                         return new ArrayEx(m.objects);
                     }
@@ -1205,17 +1270,17 @@ var MetaProps = {
                 label: "Manage Steps",
                 classes: ["btn", "btn-secondary"],
                 components: [{
-                    ctor: Label,
+                    "ctor": "Label",
                     props: {
                         id: 'fa',
-                        labelType: LabelType.i,
+                        labelType: "i",
                         classes: ["fas", "fa-list"]
                     }
                 }],
                 click: function (e) {
                     let win = this.parent.parent.stepsEditModal;
                     if (!win) {
-                        let lit = extend(true, Builder.components.Modal.literal);
+                        let lit = extend(true, Literals.Modal.literal);
                         lit.props.id = "stepsEditModal";
                         lit.props.title = "Edit Steps";
                         let inst;
