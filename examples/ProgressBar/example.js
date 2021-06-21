@@ -11,9 +11,11 @@ var pbContainer = new ProgressBar({
     valueMax: 100,
     label: "10%",
     width: 800,
-    classes: {
-        "self": ["progress"],
-        "progressBar": [BgStyle.BG_INFO, ProgressBarStyle.PROGRESS, ProgressBarStyle.PROGRESS_ANIMATED, ProgressBarStyle.PROGRESS_STRIPED]
+    classes: ["progress"],
+    props: {
+        "progressBar": {
+            classes: [BgStyle.BG_INFO, ProgressBarStyle.PROGRESS, ProgressBarStyle.PROGRESS_ANIMATED, ProgressBarStyle.PROGRESS_STRIPED]
+        }
     }
 });
 

@@ -12,7 +12,7 @@ let Implementation = function (applet) {
   //bahavior declaration
   let imp = {
     END_DRAW: (e) => {
-      modal = applet.view;
+      modal = applet.childAtIndex(0);
       modalBody = modal.modalDialog.modalContent.modalBody;
       modalFooter = modal.modalDialog.modalContent.modalFooter;
 

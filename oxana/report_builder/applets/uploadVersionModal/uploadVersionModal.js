@@ -7,7 +7,7 @@ let Implementation = function (applet) {
 
   let imp = {
     END_DRAW: (e) => {
-      modal = applet.view;
+      modal = applet.childAtIndex(0);
 
       //datagrid
       dataGridVersions = modal.find("dataGridVersions");

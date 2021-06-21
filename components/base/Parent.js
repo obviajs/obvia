@@ -198,6 +198,7 @@ var Parent = function (_props, _hideComponents = false) {
             ObjectUtils.shallowCopy(component, cmpLit, ["props"]);
             cmpLit.props = {};
             ObjectUtils.shallowCopy(component.props, cmpLit.props, ["id"]);
+            let id = component.props.id;
             if (component.props.id && _children[component.props.id]) {
                 cmpLit.props.id = component.props.id + '_' + Object.keys(_children).length;
             } else
@@ -207,6 +208,10 @@ var Parent = function (_props, _hideComponents = false) {
             // if (cmpLit.props.bindingDefaultContext == null) {
             //     cmpLit.props.bindingDefaultContext = _self.bindingDefaultContext;
             // }
+            if (_props.props && _props.props[id] && ObjectUtils.isObject(_props.props[id])) {
+                let cprops = ObjectUtils.deepCopy(_props.props[id]);            
+                cmpLit.props = ObjectUtils.fromDefault(cmpLit.props, cprops);
+            }
             let cmp = await Component.fromLiteral(cmpLit);
             //component.props.id = cmp.id;
             if (_children[cmp.id])
@@ -262,7 +267,7 @@ var Parent = function (_props, _hideComponents = false) {
     }
     let myDtEvts = ["childAdded"];
 
-    if (!Object.isEmpty(_props.attr) && _props.attr["data-triggers"] && !Object.isEmpty(_props.attr["data-triggers"])) {
+    if (!ObjectUtils.isEmpty(_props.attr) && _props.attr["data-triggers"] && !ObjectUtils.isEmpty(_props.attr["data-triggers"])) {
         let dt = _props.attr["data-triggers"].split(" ");
         for (let i = 0; i < dt.length; i++) {
             myDtEvts.pushUnique(dt[i]);

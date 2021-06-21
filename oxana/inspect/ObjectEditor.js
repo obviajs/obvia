@@ -35,7 +35,7 @@ var ObjectEditor = function (_props) {
         for (let prop in props) {
             //let propsMeta = ObjectUtils.extend(true, Builder.metaProps[inst.ctor] && Builder.metaProps[inst.ctor][prop] ? Builder.metaProps[inst.ctor][prop] : Builder.metaProps[prop]);
             let propsMeta = MetaProps[inst.ctor] && MetaProps[inst.ctor][prop] ? MetaProps[inst.ctor][prop] : MetaProps[prop];
-            if (propsMeta && !Object.isEmpty(propsMeta)) {
+            if (propsMeta && !ObjectUtils.isEmpty(propsMeta)) {
                 let propEditor = ObjectUtils.extend(true, Literals[propsMeta.ctor]);
                 if (propEditor) {
                     let itemEditorLit = propEditor.literal;

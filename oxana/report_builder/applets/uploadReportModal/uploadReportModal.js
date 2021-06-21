@@ -17,7 +17,7 @@ let Implementation = function (applet) {
   
     let imp = {
       END_DRAW: e => {
-        modal = applet.view;
+        modal = applet.childAtIndex(0);
 
         uploadRepeater = modal.find('uploadRepeater')
         uploadRepeater.dataProvider = data.reportsList;

@@ -10,7 +10,7 @@ let formsModal = function (applet) {
         "BEGIN_DRAW": function (e) {},
 
         "END_DRAW": function (e) {
-            modal = applet.view;
+            modal = applet.childAtIndex(0);
             let modalBody = modal.modalDialog.modalContent.modalBody;
 
             let itemList = modal.find("formsList");

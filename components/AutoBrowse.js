@@ -212,9 +212,9 @@ var AutoBrowse = function (_props) {
 
 	let myDtEvts = ["browse"];
 	if (
-		!Object.isEmpty(_props.attr) &&
+		!ObjectUtils.isEmpty(_props.attr) &&
 		_props.attr["data-triggers"] &&
-		!Object.isEmpty(_props.attr["data-triggers"])
+		!ObjectUtils.isEmpty(_props.attr["data-triggers"])
 	) {
 		let dt = _props.attr["data-triggers"].split(" ");
 		for (let i = 0; i < dt.length; i++) {

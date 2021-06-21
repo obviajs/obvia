@@ -9,7 +9,7 @@ let saveForm = function (applet) {
         "BEGIN_DRAW": function (e) {},
 
         "END_DRAW": function (e) {
-            modal = applet.view;
+            modal = applet.childAtIndex(0);
 
             applet.addBehaviors(modal, {
                 "accept": "SAVE_FORM"

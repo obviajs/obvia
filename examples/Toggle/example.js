@@ -11,9 +11,13 @@ var myToggle = new FormField({
             value: 1,
             checked: true,
             change: changeTest,
-            classes:{
-                "checkBox":[ToggleBgStyle.BG_INFO],
-                "span":["round"]
+            props: {
+                "checkBox": {
+                    classes: [ToggleBgStyle.BG_INFO]
+                },
+                "span": {
+                    classes: ["round"]
+                }
             }
         }
     }

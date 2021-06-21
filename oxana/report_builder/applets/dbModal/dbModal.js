@@ -31,7 +31,7 @@ let Implementation = function (applet) {
 
   let imp = {
     END_DRAW: e => {
-      modal = applet.view;
+      modal = applet.childAtIndex(0);
   
       //dataSource dropdown
       dsDropDown = modal.find('dbModalDatasourceDropdown');

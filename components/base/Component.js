@@ -359,50 +359,32 @@ var Component = function (_props) {
         },
         enumerable: true
     });
+
+    let _classesClone;
+
     Object.defineProperty(this, "classes", {
         get: function classes() {
-            let r = _classes;
-            if (1 != 1 && this.children) {
-                let p;
-                for (let _cid in this.children) {
-                    if (this[this.childrenRID[_cid]] && this[this.childrenRID[_cid]]["ctor"]) {
-                        if (!p)
-                            r = {};
-                        r[this.childrenRID[_cid]] = this[this.childrenRID[_cid]].classes;
-                        p = true;
-                    }
-                }
-                if (p) {
-                    r["self"] = _classes;
-                }
-            }
-            return r;
+            return _classes;
         },
         set: function classes(v) {
             if ((!_classes && v) || (_classes && (!_classes.equals(v)))) {
                 if (this.$el) {
                     if (Array.isArray(v)) {
-                        _classes = v.difference(_classes, true);
-                        for (let i = 0; i < _classes.length; i++) {
+                        _classes = v.difference(_classesClone, true);
+                        let len = _classes.length; 
+                        for (let i = 0; i < len; i++) {
                             let _class = _classes[i];
                             if (this.$el.hasClass(_class))
                                 this.$el.removeClass(_class);
                         }
                         _classes = v;
-                        for (let i = 0; i < _classes.length; i++) {
+                        len = _classes.length;
+                        for (let i = 0; i < len; i++) {
                             this.$el.addClass(_classes[i]);
                         }
-                    } else {
-                        for (let _cid in v) {
-                            if (_cid == "self")
-                                this.classes = v[_cid];
-                            else if (this.proxyMaybe[_cid] && this.proxyMaybe[_cid]["ctor"]) {
-                                this.proxyMaybe[_cid].classes = v[_cid];
-                            }
-                        }
+                        _classesClone = _classes.slice(0);
                     }
                 }
-
             }
         },
         enumerable: true
@@ -422,7 +404,7 @@ var Component = function (_props) {
     this.$el.ownerDocument = _ownerDocument;
     let dt = this.$el.attr("data-triggers");
 
-    if (dt && !Object.isEmpty(_props.attr) && _props.attr["data-triggers"] && !Object.isEmpty(_props.attr["data-triggers"])) {        
+    if (dt && !ObjectUtils.isEmpty(_props.attr) && _props.attr["data-triggers"] && !ObjectUtils.isEmpty(_props.attr["data-triggers"])) {        
         _props.attr["data-triggers"] = _props.attr["data-triggers"] + " " + dt;
     }
     _attr = new Attr(_props.attr, this);

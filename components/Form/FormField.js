@@ -173,7 +173,7 @@ var FormField = function (_props) {
     let _size = _props.size;
 
     _props.components = [_lblCmp];
-    if (_component && !Object.isEmpty(_component)) {
+    if (_component && !ObjectUtils.isEmpty(_component)) {
         _props.components.push(_component);
     }
 

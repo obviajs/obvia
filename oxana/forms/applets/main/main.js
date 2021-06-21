@@ -1,5 +1,6 @@
 import { ArrayUtils } from "/flowerui/lib/ArrayUtils.js";
 import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+import { download } from "/flowerui/lib/my.js";
 import { Literals } from "/flowerui/oxana/forms/componentLiterals.js";
 import { debounce } from "/flowerui/lib/DecoratorUtils.js";
 import { ArrayEx } from "/flowerui/lib/ArrayEx.js";
@@ -394,7 +395,7 @@ let main = function (applet) {
         },
 
         "OPEN_MODAL_FORMS": function (e) {
-            app.appletsMap["formsModal"][0].init().then(() => {
+            app.appletsMap["formsModal"][0].initApplet().then(() => {
                 data.formList.filter();
                 console.log("Applet formsModal inited");
                 applet.addBehaviors(app.appletsMap["formsModal"][0].view, {
@@ -404,7 +405,7 @@ let main = function (applet) {
         },
 
         "OPEN_MODAL_FORM_FOR_SAVE": function (e) {
-            app.appletsMap["saveForm"][0].init().then(() => {
+            app.appletsMap["saveForm"][0].initApplet().then(() => {
                 console.log('Applet saveForm inited.');
             });
             data.selectedForm.form_literal = workAreaRowL2.literal;
@@ -1168,10 +1169,26 @@ let main = function (applet) {
     };
 
     let noNeedClasses = ["selected-component", "default-component", "border", "active-container"];
+    let removeMembers = {
+        attr: ["guid", "data-triggers", "isCmp"],
+        css: ["guid"]
+    };
 
     let stripHandle = function (lit) {
-        if (lit.props["components"] && Array.isArray(lit.props["components"]))
-            for (let i = 0; i < lit.props.components.length; i++) {
+        for (let prop in removeMembers) {
+            let len = removeMembers[prop].length;
+            for (let i = 0; i < len; i++) {
+                delete lit.props[prop][removeMembers[prop][i]];
+            }
+        }
+        for (let prop in lit.props) {
+            if (ObjectUtils.isEmpty(lit.props[prop]) || ObjectUtils.isEmpty(JSON.parse(JSON.stringify(lit.props[prop])))) {
+                delete lit.props[prop];
+            }
+        }
+        if (lit.props["components"] && Array.isArray(lit.props["components"])) {
+            let clen = lit.props.components.length;
+            for (let i = 0; i < clen; i++) {
                 if (lit.props.components[i].props["attr"] && lit.props.components[i].props.attr["handle"]) {
                     lit.props.components[i] = lit.props.components[i].props.components[0];
                 }
@@ -1184,6 +1201,7 @@ let main = function (applet) {
                 if (lit.props.components[i].props["components"] && Array.isArray(lit.props.components[i].props["components"]))
                     stripHandle(lit.props.components[i]);
             }
+        }
     };
 
     let daBehaviors = {

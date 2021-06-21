@@ -37,7 +37,7 @@ var Props = function (inst, _props, skip = []) {
                         }
                         break;
                     default:
-                        if (!ObjectUtils.isObject(inst[prop]) || !Object.isEmpty(inst[prop]))
+                        if (!ObjectUtils.isObject(inst[prop]) || !ObjectUtils.isEmpty(inst[prop]))
                             this[prop] = inst[prop];
                 }
             } else
@@ -66,7 +66,7 @@ var Props = function (inst, _props, skip = []) {
                         break;
                     default:
                         if (this.hasOwnProperty(prop) && this.propertyIsEnumerable(prop))
-                            if (!isObject(this[prop]) || !Object.isEmpty(this[prop]) || this[prop]==null)
+                            if (!ObjectUtils.isObject(this[prop]) || !ObjectUtils.isEmpty(this[prop]) || this[prop]==null)
                                 obj[prop] = this[prop];
                                 
                 }

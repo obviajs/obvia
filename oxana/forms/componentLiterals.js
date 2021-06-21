@@ -363,9 +363,11 @@ var Literals = {
                     id: 'toggle',
                     value: true,
                     checked: false,
-                    classes: {
-                        "self": ["switch", "block"],
-                        "span": ["slider"]
+                    classes: ["switch", "block"],
+                    props: {
+                        "span": {
+                            classes: ["slider"]
+                        }
                     }
                 }
             },
