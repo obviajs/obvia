@@ -51,6 +51,13 @@ var Parent = function (_props, _hideComponents = false) {
         enumerable: true
     });
 
+    Object.defineProperty(this, "numChildren", {
+        get: function numChildren() {
+            return _children ? Object.keys(_children).length : 0;
+        },
+        enumerable: true
+    });
+    
     Object.defineProperty(this, "components", {
         get: function components() {
             return _components;

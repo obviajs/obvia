@@ -13,6 +13,7 @@ import { Modal, ModalSize } from "/flowerui/components/Modal/Modal.js";
 import { Label, LabelType } from "/flowerui/components/Label.js";
 import { DataGrid } from "/flowerui/components/DataGrid/DataGrid.js";
 import { AutoCompleteEx } from "/flowerui/components/AutoComplete/AutoCompleteEx.js";
+import { DependencyContainer } from "/flowerui/lib/DependencyContainer.js";
 var AutoBrowse = function (_props) {
 	let _self = this;
 	let _dataProvider,
@@ -239,5 +240,6 @@ var AutoBrowse = function (_props) {
 
 	Container.call(this, _props, true);
 };
+DependencyContainer.getInstance().register("AutoBrowse", AutoBrowse, DependencyContainer.simpleResolve);
 AutoBrowse.prototype.ctor = "AutoBrowse";
 export { AutoBrowse };

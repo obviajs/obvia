@@ -367,7 +367,7 @@ var Component = function (_props) {
             return _classes;
         },
         set: function classes(v) {
-            if ((!_classes && v) || (_classes && (!_classes.equals(v)))) {
+            if (v  && (!_classesClone || !_classesClone.equals(v))) {
                 if (this.$el) {
                     if (Array.isArray(v)) {
                         _classes = v.difference(_classesClone, true);

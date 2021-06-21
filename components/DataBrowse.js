@@ -5,12 +5,23 @@
  */
 
 import { Container } from "/flowerui/components/Container.js";
+import { Button } from "/flowerui/components/Button/Button.js";
+import { Label, LabelType } from "/flowerui/components/Label.js";
+import { Modal, ModalSize } from "/flowerui/components/Modal/Modal.js";
+import { DataGrid } from "/flowerui/components/DataGrid/DataGrid.js";
 import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
 import { StringUtils } from "/flowerui/lib/StringUtils.js";
+import { ArrayEx } from "/flowerui/lib//ArrayEx.js";
+import { DependencyContainer } from "/flowerui/lib/DependencyContainer.js";
 var DataBrowse = function (_props) {
     let _self = this;
     let _dataProvider, _columns = [],
-        _fields, _placeholder;
+        _fields, _placeholder,
+        _valueField,
+        _labelField,
+        _value,
+        _textInput, _modal, _dg, _cmps;
+   
 
     Object.defineProperty(this, "dataProvider", {
         get: function dataProvider() {
@@ -72,12 +83,11 @@ var DataBrowse = function (_props) {
             e.preventDefault();
         }
     };
-    let _cmps, _dg, _modal;
     var fnContainerDelayInit = function () {
         _cmps = [{
                 "ctor": "Container",
                 "props": {
-                    type: ContainerType.NONE,
+                    type: "",
                     "id": "workArea_66",
                     css: {
                         "display": "flex"
@@ -178,7 +188,7 @@ var DataBrowse = function (_props) {
     };
 
     let _defaultParams = {
-        type: ContainerType.NONE,
+        type: "",
         "components": [],
         dataProvider: new ArrayEx(),
         fields: [],
@@ -225,6 +235,7 @@ var DataBrowse = function (_props) {
 
     Container.call(this, _props, true);
 };
+DependencyContainer.getInstance().register("DataBrowse", DataBrowse, DependencyContainer.simpleResolve);
 DataBrowse.prototype.ctor = 'DataBrowse';
 export {
     DataBrowse

@@ -526,7 +526,7 @@ let main = function (applet) {
                 _cmp = res.match;
             }
             workAreaRowL2.removeAllChildren(0);
-            for (let i = 0; i < _cmp.props.components.length; i++) {
+            for (let i = 0; i < _cmp.props.numChildren; i++) {
                 let inst = workAreaRowL2.addComponent(_cmp.props.components[i]);
                 applet.addBehaviors(inst, cmpWaBehaviors, true);
             }
@@ -627,7 +627,7 @@ let main = function (applet) {
                 if (activeContainer.ctor == "Form" || (ArrayUtils.objectHierarchyGetMatching(activeContainer, "ctor", "Form", "parent", 1))["match"] != null) {
                     newRow.props.type = ContainerType.FORM_ROW;
                 }
-                if (activeContainer.components.length == 0) {
+                if (activeContainer.numChildren == 0) {
                     newRow2 = ObjectUtils.deepCopy(newRow);
                 }
                 let newRowInstance;
@@ -644,7 +644,7 @@ let main = function (applet) {
                 // app.behaviors[newWorkArea.id]["mousemove"]["WA_RESIZE_EW"] = isMouseMoveEW;
                 //{filter: isMouseMoveEw, otherProperties...}
 
-                if (activeContainer.components.length == 1) {
+                if (activeContainer.numChildren == 1) {
                     let newRowInstance2;
                     if (retFromRedoMaybe.child2) {
                         newRowInstance2 = retFromRedoMaybe.child2;
@@ -744,7 +744,7 @@ let main = function (applet) {
                 let toAdd = [newCell];
                 let parent = activeContainer.parent;
                 let notWa = false;
-                if (activeContainer.attr.isNotWa && activeContainer.components.length == 0) {
+                if (activeContainer.attr.isNotWa && activeContainer.numChildren == 0) {
                     notWa = true;
                     newRow.props.type = ContainerType.FORM_ROW;
                     toAdd = [newRow];
@@ -753,9 +753,9 @@ let main = function (applet) {
                     parent = activeContainer.children[activeContainer.csorted[0]];
 
                 }
-                let children_len = parent.components.length;
+                let numChildren = parent.numChildren;
 
-                if (children_len < 12) {
+                if (numChildren < 12) {
                     let newInstance;
                     if (retFromRedoMaybe.child) {
                         newInstance = retFromRedoMaybe.child;
@@ -889,12 +889,12 @@ let main = function (applet) {
                 };
                 console.log("Container REMOVE ", arguments);
                 let c = true;
-                if (this.components.length > 0) {
+                if (this.numChildren > 0) {
                     c = confirm("Container has children, still want to remove ?");
                 }
                 if (c) {
-                    if (this.parent.parent.components.length == 1) {
-                        if (this.parent.components.length > 2) {
+                    if (this.parent.parent.numChildren == 1) {
+                        if (this.parent.numChildren > 2) {
                             let row = this.parent;
                             row.removeChild(this);
                             childrenAutoWidth(row);
@@ -905,10 +905,10 @@ let main = function (applet) {
                         } else {
 
                         }
-                        console.log("column ", this.parent.components.length);
+                        console.log("column ", this.parent.numChildren);
                         //this.parent.components
                     } else {
-                        if (this.parent.parent.components.length > 2) {
+                        if (this.parent.parent.numChildren > 2) {
                             let container = this.parent.parent;
                             container.removeChild(this.parent, 0);
                             childrenAutoHeight(container);
@@ -919,7 +919,7 @@ let main = function (applet) {
                         } else {
 
                         }
-                        console.log("row ", this.parent.parent.components.length);
+                        console.log("row ", this.parent.parent.numChildren);
                     }
 
                 }
@@ -1027,7 +1027,7 @@ let main = function (applet) {
     let d0;
 
     let isMouseMoveNS = function (e) {
-        if (((e.which && e.which == 1) || (e.buttons && e.buttons == 1)) && (this.parent.parent.components.length >= 2 || this.parent.components.length >= 2)) {
+        if (((e.which && e.which == 1) || (e.buttons && e.buttons == 1)) && (this.parent.parent.numChildren >= 2 || this.parent.numChildren >= 2)) {
             let manifestor = this;
             let classes = manifestor.classes.slice(0);
             classes = classes.difference(["ns-resize", "ew-resize"]);
@@ -1063,11 +1063,11 @@ let main = function (applet) {
                     let dy = p1.y - p0.y;
                     let dx = p1.x - p0.x;
                     let evt = new jQuery.Event("resize");
-                    if (dy != 0 && manifestor.parent.parent.components.length >= 2) {
+                    if (dy != 0 && manifestor.parent.parent.numChildren >= 2) {
                         dy = -dy;
                         evt.dy = dy;
                     }
-                    if (dx != 0 && manifestor.parent.components.length >= 2) {
+                    if (dx != 0 && manifestor.parent.numChildren >= 2) {
                         dx = -dx;
                         evt.dx = dx;
                     }
@@ -1106,37 +1106,59 @@ let main = function (applet) {
 
 
     let childrenAutoWidth = function (container) {
-        let children_len = container.components.length;
-        let colSpan = Math.floor(12 / children_len);
-        let delta = 12 - colSpan * children_len;
+        let numChildren = container.numChildren;
+        let colSpan = Math.floor(12 / numChildren);
+        let delta = 12 - colSpan * numChildren;
         let i = 0;
         for (let childID in container.children) {
             ++i;
-            if (i == children_len - 1)
-                container.children[childID].spacing.colSpan = colSpan + delta;
-            else
-                container.children[childID].spacing.colSpan = colSpan;
+            let cls = container.children[childID].classes;
+            for (let j = 0; j < 12; j++) {
+                let ind = cls.indexOf(`col-sm-${j}`);
+                if (ind > 0) {
+                    cls.splice(ind, 1);
+                }
+            }
+            if (i == numChildren - 1) {
+                cls.push("col-sm-"+(colSpan + delta));
+                container.children[childID].classes = cls;
+            }
+            else {
+                cls.push(`col-sm-${colSpan}`);
+                container.children[childID].classes = cls;
+            }
         }
     };
 
     let childrenAutoHeight = function (container) {
-        let children_len = container.components.length;
-        let height = Math.floor(100 / children_len);
-        let delta = 100 - height * children_len;
+        let numChildren = container.numChildren;
+        let height = Math.floor(100 / numChildren);
+        let delta = 100 - height * numChildren;
         let i = 0;
         for (let childID in container.children) {
             ++i;
-            if (i == children_len - 1)
-                container.children[childID].spacing.h = height + delta;
-            else
-                container.children[childID].spacing.h = height;
+            let cls = container.children[childID].classes;
+            for (let j = 1; j <= 100; j++) {
+                let ind = cls.indexOf(`h-${j}`);
+                if (ind > 0) {
+                    cls.splice(ind, 1);
+                }
+            }
+            if (i == numChildren - 1) {
+                cls.push("h-"+(height + delta));
+                container.children[childID].classes = cls;
+            }
+            else {
+                cls.push(`h-${height}`);
+                container.children[childID].classes = cls;
+            }
         }
     };
 
     let containerResize = function (container, dx, dy) {
-        if (dy && !isNaN(dy) && dy != 0 && container.parent.parent.components.length >= 2) {
+        if (dy && !isNaN(dy) && dy != 0 && container.parent.parent.numChildren >= 2) {
             let mpi = ArrayUtils.indexOfObject(container.parent.parent.components, "props.id", container.parent.id);
-            if (mpi == container.parent.parent.components.length - 1) {
+            if (mpi == container.parent.parent.numChildren - 1) {
                 dy = -dy;
                 --mpi;
             } else
@@ -1150,9 +1172,9 @@ let main = function (applet) {
             let sibling_id = container.parent.parent.components[mpi].props.id;
             container.parent.parent.children[sibling_id].spacing.h += ha_rel;
         }
-        if (dx && !isNaN(dx) && dx != 0 && container.parent.components.length >= 2) {
+        if (dx && !isNaN(dx) && dx != 0 && container.parent.numChildren >= 2) {
             let mpi = ArrayUtils.indexOfObject(container.parent.components, "props.id", container.id);
-            if (mpi == container.parent.components.length - 1) {
+            if (mpi == container.parent.numChildren - 1) {
                 dx = -dx;
                 --mpi;
             } else
@@ -1187,7 +1209,7 @@ let main = function (applet) {
             }
         }
         if (lit.props["components"] && Array.isArray(lit.props["components"])) {
-            let clen = lit.props.components.length;
+            let clen = lit.props.numChildren;
             for (let i = 0; i < clen; i++) {
                 if (lit.props.components[i].props["attr"] && lit.props.components[i].props.attr["handle"]) {
                     lit.props.components[i] = lit.props.components[i].props.components[0];

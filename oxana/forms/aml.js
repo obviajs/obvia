@@ -73,6 +73,8 @@ import { RequiredFieldValidator } from "/flowerui/components/Validation/Required
 import { RegularExpressionValidator } from "/flowerui/components/Validation/RegularExpressionValidator.js";
 import { CustomValidator } from "/flowerui/components/Validation/CustomValidator.js";
 import { AutoCompleteEx } from "/flowerui/components/AutoComplete/AutoCompleteEx.js";
+import { DataBrowse } from "/flowerui/components/DataBrowse.js";
+import { AutoBrowse } from "/flowerui/components/AutoBrowse.js";
 import { TokenRenderer } from "/flowerui/components/AutoComplete/TokenRenderer.js";
 import { SuggestionRenderer } from "/flowerui/components/AutoComplete/SuggestionRenderer.js";
 import { ProgressBar } from "/flowerui/components/ProgressBar/ProgressBar.js";
