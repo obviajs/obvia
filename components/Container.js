@@ -361,8 +361,7 @@ var Container = function (_props, _hideComponents = false) {
         contenteditable: false
     };
     //_props = ObjectUtils.extend(false, false, _defaultParams, _props);
-
-    ObjectUtils.shallowCopy(ObjectUtils.extend(false, false, _defaultParams, _props), _props);
+    ObjectUtils.fromDefault(_defaultParams, _props);
     let _width, _minWidth;
     let _height, _minHeight, _top, _marginTop, _marginLeft;
     let _type, _role, _contenteditable;
