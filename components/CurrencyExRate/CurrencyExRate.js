@@ -8,6 +8,8 @@ import { Container } from "/flowerui/components/Container.js";
 import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
 import { DropDown } from "../DropDown/DropDown.js";
 import { TextInput } from "../TextInput/TextInput.js";
+import { DependencyContainer } from "/flowerui/lib/DependencyContainer.js";
+
 var CurrencyExRate = function (_props) {
 	let _self = this;
 
@@ -112,4 +114,10 @@ var CurrencyExRate = function (_props) {
 };
 //component prototype
 CurrencyExRate.prototype.ctor = "CurrencyExRate";
+DependencyContainer.getInstance().register(
+	"CurrencyExRate",
+	CurrencyExRate,
+	DependencyContainer.simpleResolve
+);
+
 export { CurrencyExRate };
