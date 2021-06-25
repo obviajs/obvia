@@ -212,12 +212,12 @@ var Filter = function (_props) {
 
     let _addFilterItem = function (e) {
         valueAutoComplete = e.newValue;
-        if (!repDp) {
+        if (!repDp && this.parent.parent.children.filterMainContainer.repeater) {
             repDp = this.parent.parent.children.filterMainContainer.repeater.dataProvider;
-        }
-        let i = ObjectUtils.deepCopy(valueAutoComplete[0]);
-        delete i.guid;
-        repDp.push(i);
+            let i = ObjectUtils.deepCopy(valueAutoComplete[0]);
+            delete i.guid;
+            repDp.push(i);
+        }        
         e.preventDefault();
         this.proxyMaybe.tokenContainer.tokenInput.value = "";
     };

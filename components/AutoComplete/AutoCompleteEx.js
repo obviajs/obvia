@@ -385,7 +385,7 @@ var AutoCompleteEx = function (_props) {
                             _valueLater = vo;
                     }
                 }
-                if (typeof (v) === "object" && !(v instanceof Array)) {
+                if (typeof (v) === "object" && !v.forEach) {
                     v = [v];
                 }
                 if (!_value.equals(v)) {
