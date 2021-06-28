@@ -74,11 +74,6 @@ var AutoBrowse = function (_props) {
 			_dg = _modal.modalDialog.modalContent.modalBody.dataGrid;
 		}
 	};
-	this.afterAttach = function (e) {
-		if (e.target.id == this.domID) {
-			this.autocomplete.width = this.$el.width() - this.workArea_53.$el.width();
-		}
-	};
 
 	this.beforeAttach = function (e) {
 		if (e.target.id == this.domID) {
@@ -103,6 +98,7 @@ var AutoBrowse = function (_props) {
 					value: _value,
 					multiSelect: false,
 					matchType: StringMatchType.STARTS_WITH,
+					css: { "flex-grow": "1", width: "80%" },
 				},
 			},
 			{
@@ -240,6 +236,10 @@ var AutoBrowse = function (_props) {
 
 	Container.call(this, _props, true);
 };
-DependencyContainer.getInstance().register("AutoBrowse", AutoBrowse, DependencyContainer.simpleResolve);
+DependencyContainer.getInstance().register(
+	"AutoBrowse",
+	AutoBrowse,
+	DependencyContainer.simpleResolve
+);
 AutoBrowse.prototype.ctor = "AutoBrowse";
 export { AutoBrowse };
