@@ -124,3 +124,4 @@ rjs.define("/flowerui/components/SideNav/css/sideNav.css");
 rjs.define("/flowerui/components/Kanban/css/kanban_default.css");
 rjs.define("/flowerui/components/Filter/Filter.css");
 rjs.define("/flowerui/oxana/forms/css/forms.css");
+rjs.define("/flowerui/oxana/css/global.css");

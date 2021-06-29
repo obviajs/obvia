@@ -11,13 +11,16 @@ Context.localizationManager = new LocalizationManager({
 		localeString: "en_US",
 	},
 	fetchPromise: function (p) {
-		return get(
+		let fp = get(
 			BrowserManager.getInstance().base +
 			"/oxanaui/app/locale/" +
 			p.localeString +
 			".json",
 			"application/json"
 		);
+		return fp.then((r) => {
+			return JSON.parse(r.response);
+		});
 	},
 });
 //myButton.localizationManager = localizationManager;

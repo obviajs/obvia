@@ -4,10 +4,14 @@ import { ArrayEx } from "/flowerui/lib/ArrayEx.js";
 import { LinkTarget } from "/flowerui/components/Link/Link.js";
 import { Literals } from "/flowerui/oxana/forms/componentLiterals.js";
 import { ComponentList } from "/flowerui/oxana/forms/componentList.js";
-
 import { LabelType } from "/flowerui/components/Label.js";
 import { DateTimeFormat } from "/flowerui/components/DateTime/DateTimeFormat.js";
 import { ContainerType } from "/flowerui/components/base/ContainerType.js";
+import { Align } from "/flowerui/components/base/Align.js";
+import { HeadingType } from "/flowerui/components/Heading.js";
+import { TextInputType } from "/flowerui/components/TextInput/TextInput.js";
+import { ButtonType } from "/flowerui/components/Button/Button.js";
+import { SideNavSide } from "/flowerui/components/SideNav/SideNav.js";
 
 let providerValueField = "dataview_id";
 let providerLabelField = "description";
@@ -20,52 +24,13 @@ let dataviews = [];
 let forms = [];
 let masks = [];
 let dateTimeFormats = ObjectUtils.getMembersCollection(DateTimeFormat, "value", "text");
-
-let alignOptions = ["left",
-    "center",
-    "right",
-    "justify"
-];
-
-let headingTypes = [
-    "h1",
-    "h2",
-    "h3",
-    "h4",
-    "h5",
-    "h6"
-];
-let sidenavSides = ["left",
-    "right"
-];
-let textInputTypes = [
-    "email",
-    "password",
-    "number",
-    "text",
-    "date",
-    "datetime-local",
-    "month",
-    "range",
-    "tel",
-    "time",
-    "url",
-    "WEEK"
-];
+let alignOptions = ObjectUtils.getMembersCollection(Align, "value", "text");
+let headingTypes = ObjectUtils.getMembersCollection(HeadingType, "value", "text");
+let sidenavSides = ObjectUtils.getMembersCollection(SideNavSide, "value", "text");
+let textInputTypes =  ObjectUtils.getMembersCollection(TextInputType, "value", "text");
 let labelTypes = ObjectUtils.getMembersCollection(LabelType, "value", "text");
-
-let linkTargetOptions = [
-    "blank",
-    "self",
-    "parent",
-    "top"
-];
-
-let buttonTypes = [
-    "button",
-    "submit",
-    "reset"
-];
+let linkTargetOptions = ObjectUtils.getMembersCollection(LinkTarget, "value", "text");
+let buttonTypes = ObjectUtils.getMembersCollection(ButtonType, "value", "text");
 let containerTypes = ObjectUtils.getMembersCollection(ContainerType, "value", "text");
 
 var MetaProps = {

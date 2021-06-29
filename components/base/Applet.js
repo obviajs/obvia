@@ -37,9 +37,10 @@ var Applet = function (_props) {
             let rnd = p.forceReload ? "?r=" + Math.random() : "";            
             let _base = BrowserManager.getInstance().base;
             let _furl = _base + (p.url[0] == "." ? p.url.substr(1) : p.url);
+            let _self = this;
             //import uses different starting point (currrent file directory)
             return import(_furl + p.anchor + ".js" + rnd).then((module) => {                
-                return new module[this.anchor](r, msg);
+                return new module[_self.anchor](_self, msg);
             });
         },
         defaultAppletsUiRoute: null,
