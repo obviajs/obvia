@@ -112,8 +112,6 @@ var DataGrid = function (_props) {
 
             let deltaScroll = _prevScrollTop - scrollTop;
 
-            let scrollRowStep = Math.ceil(Math.abs(deltaScroll) / _avgRowHeight) * (deltaScroll / Math.abs(deltaScroll));
-
             if (deltaScroll < 0) {
                 console.log("scroll down");
 
@@ -121,40 +119,41 @@ var DataGrid = function (_props) {
                 console.log("scroll up");
 
             }
-
-            virtualIndex = (_self.rowCount + virtualIndex < _self.dataProvider.length) ? virtualIndex : (_self.dataProvider.length - _self.rowCount);
-            if (_virtualIndex != virtualIndex) {
-                _prevScrollTop = scrollTop;
-                _self.$message.show();                
-                _virtualIndex = virtualIndex;
-                _bindingsPromise = _self.applyVirtualBindings(_virtualIndex);
-                _self.$message.hide();
-            } else {
-                if (deltaScroll < 0) {
-                    if (_self.dataProvider.nextPage && _self.dataProvider.totalRecords == Infinity) {
-                        _prevScrollTop = scrollTop;
-                        _self.dataProvider.nextPage().then(function () {
-                            let vinc = Math.ceil(Math.abs(deltaScroll / _avgRowHeight));
-                            virtualIndex += vinc;
-                            virtualIndex = (_self.rowCount + virtualIndex < _self.dataProvider.length) ? virtualIndex : (_self.dataProvider.length - _self.rowCount);
-                            if (_virtualIndex != virtualIndex) {
-                                _virtualIndex = virtualIndex;
-                                _self.$message.show();
-                                _bindingsPromise = _self.applyVirtualBindings(_virtualIndex);
-                            } else {
-                                alert("ehlo");
-                            }
+            if (deltaScroll != 0) {
+                virtualIndex = (_self.rowCount + virtualIndex < _self.dataProvider.length) ? virtualIndex : (_self.dataProvider.length - _self.rowCount);
+                if (_virtualIndex != virtualIndex) {
+                    _prevScrollTop = scrollTop;
+                    _self.$message.show();
+                    _virtualIndex = virtualIndex;
+                    _bindingsPromise = _self.applyVirtualBindings(_virtualIndex);
+                    _self.$message.hide();
+                } else {
+                    if (deltaScroll < 0) {
+                        if (_self.dataProvider.nextPage && _self.dataProvider.totalRecords == Infinity) {
+                            _prevScrollTop = scrollTop;
+                            _self.dataProvider.nextPage().then(function () {
+                                let vinc = Math.ceil(Math.abs(deltaScroll / _avgRowHeight));
+                                virtualIndex += vinc;
+                                virtualIndex = (_self.rowCount + virtualIndex < _self.dataProvider.length) ? virtualIndex : (_self.dataProvider.length - _self.rowCount);
+                                if (_virtualIndex != virtualIndex) {
+                                    _virtualIndex = virtualIndex;
+                                    _self.$message.show();
+                                    _bindingsPromise = _self.applyVirtualBindings(_virtualIndex);
+                                } else {
+                                    alert("ehlo");
+                                }
+                                _self.$message.hide();
+                            });
+                        } else {
+                           // _self.$table[0].style.marginTop = _prevScrollTop + "px";
+                            r = false;
                             _self.$message.hide();
-                        });
+                        }
+
                     } else {
-                        _self.$table[0].style.marginTop = _prevScrollTop + "px";
                         r = false;
                         _self.$message.hide();
                     }
-
-                } else {
-                    r = false;
-                    _self.$message.hide();
                 }
             }
         }
@@ -181,19 +180,21 @@ var DataGrid = function (_props) {
         
         this.delayScroll = debouncePromise(_onScroll, 10);
         this.$bodyWrapper.on("scroll", function (e) {
-            this.$table[0].style.marginTop = e.target.scrollTop + "px";
+            if (e.target.scrollTop + this.$bodyWrapper.height() < _virtualHeight) {
+                //this.$table[0].style.marginTop = e.target.scrollTop + "px";
             
-            Promise.resolve(_bindingsPromise).then(function () {
-                _self.delayScroll.apply(_self, [e]).then(function (r) {
-                    if (!r) {
-                        //_self.$table.css({ "margin-top": mtt + "px" });
-                        //_self.$scrollArea.css({ "margin-top": smt + "px" });
-                    } else {
-                        // mtt = e.target.scrollTop;
-                        // smt = (-(_self.realHeight) - e.target.scrollTop);
-                    }
+                Promise.resolve(_bindingsPromise).then(function () {
+                    _self.delayScroll.apply(_self, [e]).then(function (r) {
+                        if (!r) {
+                            //_self.$table.css({ "margin-top": mtt + "px" });
+                            //_self.$scrollArea.css({ "margin-top": smt + "px" });
+                        } else {
+                            // mtt = e.target.scrollTop;
+                            // smt = (-(_self.realHeight) - e.target.scrollTop);
+                        }
+                    });
                 });
-            });
+            }
         }.bind(this));
     };
 
@@ -206,10 +207,10 @@ var DataGrid = function (_props) {
     this.template = function () {
         let html =
             "<div id='" + this.domID + "'>" +
-            "<table class='table' style='margin-bottom:0px;table-layout: fixed;' id='" + this.domID + "-fixed-table'>" +
-            "<thead id='" + this.domID + "-header'></thead></table>" +
-            "<div id='" + this.domID + "-body-wrapper' style='overflow-y: auto; overflow-x:hidden; position:relative;'>" +
-            "<table class='table' id='" + this.domID + "-table' style='position:relative;table-layout: fixed;'></table>" +
+            // "<table class='table' style='margin-bottom:0px;table-layout: fixed;' id='" + this.domID + "-fixed-table'>" +
+            // "<thead id='" + this.domID + "-header'></thead></table>" +
+            "<div id='" + this.domID + "-body-wrapper' style='overflow-y: auto; overflow-x:auto; position:relative;'>" +
+            "<table class='table' id='" + this.domID + "-table' style='table-layout: fixed;'><thead id='" + this.domID + "-header'></thead></table>" +
             "</div></div>";
         return html;
     };
@@ -217,10 +218,12 @@ var DataGrid = function (_props) {
 
     this.setCellsWidth = function () {
         //at least one row ?    
-        this.$bodyWrapper.css({ "height": "calc(100% - " + this.$fixedTable.height() + "px" });
+        //this.$bodyWrapper.css({ "height": "calc(100% - " + this.$fixedTable.height() + "px" });
+        this.$bodyWrapper.css({ "height": "calc(100% - 0px)" });
+
 
         let scrollAreaWidth = (this.$bodyWrapper.width() - this.$bodyWrapper[0].clientWidth);
-        this.$fixedTable.css({ "width": "calc(100% - " + scrollAreaWidth + "px)" }); 
+        //this.$fixedTable.css({ "width": "calc(100% - " + scrollAreaWidth + "px)" }); 
         let actualWidth = this.$table[0].clientWidth - _thOptWidth - (_thNumbering ? _thNumberingWidth : 0);
             
         if (_columns && _columns.length > 0 && actualWidth>0 && _headerCells.length>0) {

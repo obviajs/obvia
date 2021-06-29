@@ -18,3 +18,10 @@
 .table tr:hover .row-action-link {
     visibility:visible;
 }
+.table {
+    position: sticky;
+    top: 0px;
+}
+.table {
+    text-align: left;
+}
