@@ -261,9 +261,6 @@ var AutoCompleteEx = function (_props) {
 		);
 		_openSuggestionsList();
 	};
-	/*
-    <a href="#" class="inputLink">Did you mean xxyYY?</a>
-    */
 
 	let _openSuggestionsList = function () {
 		//suggestions found

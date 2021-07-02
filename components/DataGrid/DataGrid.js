@@ -218,9 +218,8 @@ var DataGrid = function (_props) {
 
     this.setCellsWidth = function () {
         //at least one row ?    
-        //this.$bodyWrapper.css({ "height": "calc(100% - " + this.$fixedTable.height() + "px" });
-        this.$bodyWrapper.css({ "height": "calc(100% - 0px)" });
-
+        //this.$bodyWrapper.css({ "height": "calc(100% - 0px)" });
+        this.$bodyWrapper.css({ "height": "100%" });
 
         let scrollAreaWidth = (this.$bodyWrapper.width() - this.$bodyWrapper[0].clientWidth);
         //this.$fixedTable.css({ "width": "calc(100% - " + scrollAreaWidth + "px)" }); 
@@ -756,12 +755,12 @@ var DataGrid = function (_props) {
     let _bodyHeight, mtt, smt;
     this.updateDisplayList = function () {        
         if (!_props.rowCount) {
-            this.$el.css("height", this.$el.height() + 'px');
-            this.$table.css("height", (_self.rowCount * _props.defaultRowHeight) + 'px');
-            _rowCount = Math.floor(this.$bodyWrapper.height() / _props.defaultRowHeight);            
+            this.$el.css("height", this.$el.height() + 'px');            
+            _rowCount = Math.floor(this.$bodyWrapper.height() / _props.defaultRowHeight);                  
         }
+        _bodyHeight = _self.rowCount * _props.defaultRowHeight;
+        this.$table.css("height", _bodyHeight + 'px');   
         if (_self.dataProvider.length > 0) {
-            _bodyHeight = this.$table.height();
             _avgRowHeight = _bodyHeight / _self.rowCount;
         
             _virtualHeight = (_self.dataProvider.length + (_allowNewItem ? 1 : 0)) * _avgRowHeight;

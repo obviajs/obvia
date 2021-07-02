@@ -33,14 +33,14 @@ var Applet = function (_props) {
                 return JSON.parse(r.response);
             });
         },
-        fetchImplementationPromise: function(p, msg) { 
+        fetchImplementationPromise: function(p) { 
             let rnd = p.forceReload ? "?r=" + Math.random() : "";            
             let _base = BrowserManager.getInstance().base;
             let _furl = _base + (p.url[0] == "." ? p.url.substr(1) : p.url);
             let _self = this;
             //import uses different starting point (currrent file directory)
             return import(_furl + p.anchor + ".js" + rnd).then((module) => {                
-                return new module[_self.anchor](_self, msg);
+                return module[_self.anchor];
             });
         },
         defaultAppletsUiRoute: null,
@@ -60,7 +60,7 @@ var Applet = function (_props) {
     let _forceReload = _props.forceReload;
     let _app = _props.app;
     let _dataPromise = _props.dataPromise;
-    let _data = _props.data;
+    let _data;
     let _uiRoute = _props.uiRoute;
     let _mimeType = _props.mimeType;
     let _lazy = _props.lazy;
@@ -171,18 +171,17 @@ var Applet = function (_props) {
             } else {
                 ap = Promise.all([
                     _fetchViewPromise.call(r, _props),
-                    //import uses different starting point (currrent file directory)
                     _dataPromise ? (typeof _dataPromise == 'function' ? _dataPromise.call() : _dataPromise) : Promise.resolve(_data),
-                    _fetchImplementationPromise.call(r, _props, _proxiedMsg)                
+                    _fetchImplementationPromise.call(r, _props)                
                 ]).then((p) => {
-                    _implementation = p[2];
                     _data = p[1];
+                    let impCFN = p[2];
+                    _self.bindingDefaultContext = _data;
+                    _implementation = new impCFN(_self, _proxiedMsg);
                     _implementation.guid = _self.guid;
                     _app.addImplementation(_implementation);
                     _literal = p[0];
-                    _literal.props.bindingDefaultContext = _props.bindingDefaultContext = _implementation.appletContext;
                     _self.components = [_literal];
-                    //Container.call(_self, _props);
                 
                     _self.addBehaviors(_self, _behaviors, false);
                     _self.addBehaviors(_app, _app.defaultBehaviors, false);
