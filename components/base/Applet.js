@@ -5,6 +5,7 @@ import { coroutine } from "/flowerui/lib/coroutine.js";
 import { BrowserManager } from "/flowerui/lib/BrowserManager.js";
 import { BrowserUtils } from "/flowerui/lib/BrowserUtils.js";
 import { get } from "/flowerui/lib/my.js";
+import { Injector } from "/flowerui/lib/Injector.js";
 
 var Applet = function (_props) {
     this.$el = $(this);
@@ -173,11 +174,15 @@ var Applet = function (_props) {
                     _fetchViewPromise.call(r, _props),
                     _dataPromise ? (typeof _dataPromise == 'function' ? _dataPromise.call() : _dataPromise) : Promise.resolve(_data),
                     _fetchImplementationPromise.call(r, _props)                
-                ]).then((p) => {
+                ]).then(async (p) => {
                     _data = p[1];
                     let impCFN = p[2];
                     _self.bindingDefaultContext = _data;
-                    _implementation = new impCFN(_self, _proxiedMsg);
+                    //_implementation = new impCFN(_self, _proxiedMsg);
+                    _implementation = await Injector.getInstance().inject(impCFN, {
+                        "applet": _self,
+                        "msg": _proxiedMsg
+                    });
                     _implementation.guid = _self.guid;
                     _app.addImplementation(_implementation);
                     _literal = p[0];
