@@ -4,6 +4,7 @@
  * Kreatx 2019
  */
 import { List } from "/flowerui/components/List.js";
+import { CheckBoxEx } from "/flowerui/components/CheckBoxEx.js";
 import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
 import { DependencyContainer } from "/flowerui/lib/DependencyContainer.js";
 var CheckBoxGroup = function (_props) {
@@ -108,6 +109,7 @@ var CheckBoxGroup = function (_props) {
                 checked: "{" + _checkedField + "}",
                 classes: "{" + _classesField + "}",
                 enabled: "{" + _enabledField + "}",
+                name: _self.id
             }
         }];
     };

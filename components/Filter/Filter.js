@@ -35,6 +35,12 @@ var Filter = function (_props) {
         _valid = true,
         _advancedMode,
         _defaultOperators = new ArrayEx([{
+                value: "contains",
+                operatorLabel: "contains",
+                friendly: "contains ({value})",
+                inputVisible: true,
+                rangeInput: false
+            },{
                 value: "equal",
                 operatorLabel: "equals",
                 friendly: "equals to {value}",

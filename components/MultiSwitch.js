@@ -4,7 +4,9 @@
  * Kreatx 2019
  */
 import { List } from "/flowerui/components/List.js";
+import { Button } from "/flowerui/components/Button/Button.js";
 import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+import { DependencyContainer } from "/flowerui/lib/DependencyContainer.js";
 var MultiSwitch = function (_props) {
     let _self = this,
         _dataProvider;
@@ -58,7 +60,6 @@ var MultiSwitch = function (_props) {
         }
     };
     ObjectUtils.fromDefault(_defaultParams, _props);
-    //_props = ObjectUtils.extend(false, false, _defaultParams, _props);
 
     let _value = _props.value;
     let _multiselect = _props.multiselect;
@@ -127,6 +128,7 @@ var MultiSwitch = function (_props) {
     });
 };
 MultiSwitch.prototype.ctor = 'MultiSwitch';
+DependencyContainer.getInstance().register("MultiSwitch", MultiSwitch, DependencyContainer.simpleResolve);
 export {
     MultiSwitch
 };

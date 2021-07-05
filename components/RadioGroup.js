@@ -4,6 +4,7 @@
  * Kreatx 2019
  */
 import { List } from "/flowerui/components/List.js";
+import { RadioButton } from "/flowerui/components/RadioButton.js";
 import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
 import { DependencyContainer } from "/flowerui/lib/DependencyContainer.js";
 var RadioGroup = function (_props) {
@@ -104,7 +105,7 @@ var RadioGroup = function (_props) {
                 checked: "{" + _checkedField + "}",
                 class: "{?" + _classesField + "}",
                 enabled: "{?" + _enabledField + "}",
-                name: this.id
+                name: _self.id
             }
         }];
     };
