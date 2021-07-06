@@ -103,7 +103,7 @@ var RadioGroup = function (_props) {
                 label: "{" + _labelField + "}",
                 value: "{" + _valueField + "}",
                 checked: "{" + _checkedField + "}",
-                class: "{?" + _classesField + "}",
+                classes: "{?" + _classesField + "}",
                 enabled: "{?" + _enabledField + "}",
                 name: _self.id
             }

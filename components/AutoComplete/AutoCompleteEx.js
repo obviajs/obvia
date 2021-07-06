@@ -542,7 +542,6 @@ var AutoCompleteEx = function (_props) {
 	_matchType = _props.matchType;
 
 	let _allowNewItem = _props.allowNewItem;
-	let _label = _props.label;
 	let _closeIconSide = _props.closeIconSide;
 	let _suggestions = new ArrayEx([]);
 	let _enabled = true;

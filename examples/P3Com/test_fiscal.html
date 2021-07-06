@@ -164,7 +164,7 @@
                 type: "button",
                 label: "Print Fiscal Receipt",
                 style: "",
-                class: "btn btn-success",
+                classes: ["btn btn-success"],
                 click: printFiscalReceipt
             });
 
@@ -173,7 +173,7 @@
                 type: "button",
                 label: "Write Configuration",
                 style: "",
-                class: "btn btn-success",
+                classes: ["btn btn-success"],
                 click: openModal
             });
 
@@ -182,7 +182,7 @@
                 type: "button",
                 label: "Save Configuration",
                 style: "",
-                class: "btn btn-success",
+                classes: ["btn btn-success"],
                 click: saveConfiguration
             });
 
@@ -193,7 +193,7 @@
             });
 
             var fiscalFilePath = new TextInput({
-                class: 'form-control',
+                classes: ['form-control'],
                 id: 'fiscal-filepath',
                 required: true,
                 mask: '',
@@ -201,7 +201,7 @@
             });
 
             var fiscalBackupPath = new TextInput({
-                class: 'form-control',
+                classes: ['form-control'],
                 id: 'fiscal-backuppath',
                 required: true,
                 mask: '',
@@ -217,7 +217,7 @@
             });
 
             var fileName = new TextInput({
-                class: 'form-control',
+                classes: ['form-control'],
                 id: 'fiscal-filename',
                 required: true,
                 mask: '',
@@ -225,7 +225,7 @@
             });
 
             var fiscalExePath = new TextInput({
-                class: 'form-control',
+                classes: ['form-control'],
                 id: 'fiscal-exepath',
                 required: true,
                 mask: '',
@@ -241,7 +241,7 @@
             });
 
             var priceCoeficient = new TextInput({
-                class: 'form-control',
+                classes: ['form-control'],
                 id: 'price-coeficient',
                 required: true,
                 mask: '',
@@ -249,7 +249,7 @@
             });
 
             var invFooterMessage = new TextInput({
-                class: 'form-control',
+                classes: ['form-control'],
                 id: 'footer-message',
                 required: true,
                 mask: '',
@@ -257,7 +257,7 @@
             });
 
             var invCelNumber = new TextInput({
-                class: 'form-control',
+                classes: ['form-control'],
                 id: 'cel-number',
                 required: true,
                 mask: '',

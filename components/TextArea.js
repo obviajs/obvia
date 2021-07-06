@@ -98,7 +98,7 @@ var TextArea = function (_props) {
     let _defaultParams = {
         value: "",
         spellCheck: null,
-        class: "form-control",
+        classes: ["form-control"],
         placeholder: ""
     };
     ObjectUtils.fromDefault(_defaultParams, _props);

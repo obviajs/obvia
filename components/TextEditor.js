@@ -47,7 +47,7 @@ var TextEditor =  function(_props, overrided = false) {
 
     let _defaultParams = {
         value: "",
-        class: "form-control",
+        classes: ["form-control"],
         afterAttach: this.afterAttach
     };
     ObjectUtils.fromDefault(_defaultParams, _props);

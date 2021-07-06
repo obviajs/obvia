@@ -226,7 +226,7 @@ var myRepeater = new Repeater({
                 type: "button",
                 value: "{textValue}",
                 label:"{textValue}",
-                class: "btn btn-success",
+                classes: ["btn btn-success"],
                 click : function(e, rargs){
                     console.log("From ClickAction");
                     myRepeater.dataProvider[rargs.currentIndex].textValue = "Clicked";

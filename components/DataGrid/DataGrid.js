@@ -499,7 +499,6 @@ var DataGrid = function (_props) {
                 column.itemEditor.props.repeaterIndex = rowIndex;
                 column.itemEditor.props.bindingDefaultContext = data;
                 itemEditor = await Component.fromLiteral(column.itemEditor);
-                column.itemEditor.props.label = column.description;
                 //let props = extend(true, true, column.itemEditor.props);
                 //delete props["value"];
 
