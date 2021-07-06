@@ -80,7 +80,7 @@ var DataGrid = function (_props) {
         configurable: true,
         enumerable: true
     });
-
+    
     let _prevScrollTop = 0;
     let _avgRowHeight;
     let _virtualIndex = 0;
@@ -323,7 +323,7 @@ var DataGrid = function (_props) {
                 let rcp = Promise.all(rowComponentsPromises);
                 p.push(rcp);
                 rcp.then(function () {
-                    let rargs = new RepeaterEventArgs(_rowItems, _self.dataProvider[index], index);
+                    let rargs = new RepeaterEventArgs(_self.rowItems, _self.dataProvider[index], index);
                     rargs.virtualIndex = _virtualIndex;
                     _self.trigger('rowAdd', [_self, rargs]);
                 });
@@ -335,8 +335,8 @@ var DataGrid = function (_props) {
         for (let i = 0; i < newValue && _self.dataProvider && (i + _virtualIndex) < dpLen; i++) {
             let vr = i + _virtualIndex;
             if (i < rb) {
-                for (let cmpID in _rowItems[i]) {
-                    let cmp = _rowItems[i][cmpID];
+                for (let cmpID in _self.rowItems[i]) {
+                    let cmp = _self.rowItems[i][cmpID];
                     if (cmp.refreshBindings) {
                         cmp.refreshBindings(_self.dataProvider[vr]);
                         cmp.attr[_self.guidField] = _self.dataProvider[vr][_self.guidField];
@@ -383,12 +383,12 @@ var DataGrid = function (_props) {
                 let itemRenderer = _cellItemRenderers[rowIndex][columnIndex];
                 _cellItemRenderers[rowIndex][columnIndex].repeaterIndex = rowIndex + virtualIndex;
                 pb[rowIndex] = itemRenderer.refreshBindings(_self.dataProvider[rowIndex + virtualIndex]);
-                let rargs = new RepeaterEventArgs(_rowItems[rowIndex], _self.dataProvider[rowIndex + virtualIndex], rowIndex);
+                let rargs = new RepeaterEventArgs(_self.rowItems[rowIndex], _self.dataProvider[rowIndex + virtualIndex], rowIndex);
                 rargs.virtualIndex = virtualIndex;
                 rargs.columnIndex = columnIndex;
                 _self.trigger('columnBindingsRefreshed', [_self, rargs]);        
             }
-            let rargs2 = new RepeaterEventArgs(_rowItems[rowIndex], _self.dataProvider[rowIndex + virtualIndex], rowIndex);
+            let rargs2 = new RepeaterEventArgs(_self.rowItems[rowIndex], _self.dataProvider[rowIndex + virtualIndex], rowIndex);
             rargs2.virtualIndex = virtualIndex;
             _self.trigger('rowBindingsRefreshed', [_self, rargs2]);  
             _cells[rowIndex][0].prev().text(rowIndex + virtualIndex + 1);
@@ -652,7 +652,7 @@ var DataGrid = function (_props) {
 
     this.cellEditCanceled = function (rowIndex, columnIndex) {
         let e = jQuery.Event('cellEditCanceled');
-        let rargs = new RepeaterEventArgs(_rowItems[rowIndex], _self.dataProvider[rowIndex + _virtualIndex], rowIndex);
+        let rargs = new RepeaterEventArgs(_self.rowItems[rowIndex], _self.dataProvider[rowIndex + _virtualIndex], rowIndex);
         rargs.virtualIndex = _virtualIndex;
         rargs.columnIndex = columnIndex;
         _self.trigger(e, [_self, rargs]);
@@ -667,7 +667,7 @@ var DataGrid = function (_props) {
         let r = true;
         let e = jQuery.Event('cellEditFinishing');
 
-        let rargs = new RepeaterEventArgs(_rowItems[rowIndex], _self.dataProvider[rowIndex + _virtualIndex], rowIndex);
+        let rargs = new RepeaterEventArgs(_self.rowItems[rowIndex], _self.dataProvider[rowIndex + _virtualIndex], rowIndex);
         rargs.virtualIndex = _virtualIndex;
         rargs.columnIndex = columnIndex;
         _self.trigger(e, [_self, rargs]);
@@ -720,7 +720,7 @@ var DataGrid = function (_props) {
     let _notifyRemoveRow = function (index, focusOnRowDelete = false) {
         if (!_allowNewItem || !_self.isDefaultItem(_self.dataProvider[index + _virtualIndex])) {
             let beforeRowDeleteEvent = jQuery.Event("beforeRowDelete");
-            let ra = new RepeaterEventArgs(_rowItems[index], _self.dataProvider[index + _virtualIndex], index);
+            let ra = new RepeaterEventArgs(_self.rowItems[index], _self.dataProvider[index + _virtualIndex], index);
             ra.virtualIndex = _virtualIndex;
             _self.trigger(beforeRowDeleteEvent, [_self, ra]);
 
@@ -733,7 +733,7 @@ var DataGrid = function (_props) {
     };
 
     this.removeRow = function (index) {       
-        let ra = new RepeaterEventArgs(_rowItems[index], null, index);
+        let ra = new RepeaterEventArgs(_self.rowItems[index], null, index);
         ra.virtualIndex = _virtualIndex;
         let rlen = _cellItemRenderers.length;
         for (let i = index; i < rlen; i++) {
@@ -745,7 +745,7 @@ var DataGrid = function (_props) {
         }
         _rows[index].detach();
         _rows.splice(index, 1);
-        _rowItems.splice(index, 1);
+        _self.rowItems.splice(index, 1);
         _cells.splice(index, 1);
         _cellItemRenderers.splice(index, 1);
         _self.trigger('rowDelete', [this, ra]);
@@ -929,7 +929,7 @@ var DataGrid = function (_props) {
     let _columns = _props.columns;
     let _cellItemRenderers = [];
     let _cellItemEditors = [];
-    let _cells = [], _rows = [], _rowItems = []; // matrix
+    let _cells = [], _rows = []; // matrix
     let _headerCells = [];
     let _fitWidth = _props.fitWidth;
     let _editPosition = null, _futureEditPosition;
@@ -966,7 +966,7 @@ var DataGrid = function (_props) {
     this.addRow = async function (data, index, isPreventable = false, focusOnRowAdd = true) {
         let rp = [];
         let beforeRowAddEvent = jQuery.Event("beforeRowAdd");
-        let rargs = new RepeaterEventArgs(_rowItems[index], data, index);
+        let rargs = new RepeaterEventArgs(_self.rowItems[index], data, index);
         rargs.virtualIndex = _virtualIndex;
         this.trigger(beforeRowAddEvent, [_self, rargs]);
 
@@ -981,17 +981,17 @@ var DataGrid = function (_props) {
                 renderedRow.append('<th scope="row" ' + style + '>' + (index + 1) + '</th>');
             }
             renderedRow.on("click", function (evt) {
-                let rargs = new RepeaterEventArgs(_rowItems[index], _self.dataProvider[index + _virtualIndex], index);
+                let rargs = new RepeaterEventArgs(_self.rowItems[index], _self.dataProvider[index + _virtualIndex], index);
                 rargs.virtualIndex = _virtualIndex;
                 _self.trigger("rowClick", [_self, rargs]);
             });
 
             renderedRow.on('dblclick', function (evt) {
-                let rargs = new RepeaterEventArgs(_rowItems[index], _self.dataProvider[index + _virtualIndex], index);
+                let rargs = new RepeaterEventArgs(_self.rowItems[index], _self.dataProvider[index + _virtualIndex], index);
                 rargs.virtualIndex = _virtualIndex;
                 _self.trigger("rowDblClick", [_self, rargs]);
             });
-            let rargs = new RepeaterEventArgs(_rowItems[index], _self.dataProvider[index + _virtualIndex], index);
+            let rargs = new RepeaterEventArgs(_self.rowItems[index], _self.dataProvider[index + _virtualIndex], index);
             rargs.virtualIndex = _virtualIndex;
             let rsEvt = jQuery.Event('rowStyling', [_self, rargs]);
             let clen = _columns.length;
@@ -1036,7 +1036,7 @@ var DataGrid = function (_props) {
                 let columnName = column.name || `column_${columnIndex}`;
                 rowItems[columnName] = el;
 
-                let csEvt = jQuery.Event('cellStyling', [_self, index, columnIndex, _rowItems, column, data]);
+                let csEvt = jQuery.Event('cellStyling', [_self, index, columnIndex, _self.rowItems, column, data]);
 
                 if (column.editable) {
                     el.on('dblclick', function () {
@@ -1058,7 +1058,7 @@ var DataGrid = function (_props) {
                 //width='"+column.calculatedWidth+"'
                 let cell = $("<td id='cell_" + (index) + "_" + columnIndex + "'></td>");
                 cell.on("click", function (evt) {
-                    let rargs = new RepeaterEventArgs(_rowItems[index], _self.dataProvider[index + _virtualIndex], index);
+                    let rargs = new RepeaterEventArgs(_self.rowItems[index], _self.dataProvider[index + _virtualIndex], index);
                     rargs.virtualIndex = _virtualIndex;
                     rargs.columnIndex = columnIndex;
                     _self.trigger("cellClick", [_self, rargs]);
@@ -1072,7 +1072,7 @@ var DataGrid = function (_props) {
                 });
                 rp.push(cp);
             }
-            _rowItems[index] = rowItems;
+            _self.rowItems[index] = rowItems;
             _rows[index] = renderedRow;
 
             Promise.all(rp).then(function () {
