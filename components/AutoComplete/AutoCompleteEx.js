@@ -276,7 +276,7 @@ var AutoCompleteEx = function (_props) {
 				.attr("placeholder", "No results found :(")
 				.delay(1000)
 				.queue(function (n) {
-					$(this).attr("placeholder", "Search...");
+					$(this).attr("placeholder", _placeholder);
 					n();
 				});
 			_self.trigger("noSuggestionsFound", [_input.value]);
@@ -322,61 +322,6 @@ var AutoCompleteEx = function (_props) {
 	};
 	let _suggestionRendererMouseDownHandler = function (e, repeaterEventArgs) {
 		console.log(repeaterEventArgs);
-	};
-	let _addTokenItems = function (items) {
-		if (typeof items === "object" && !(items instanceof Array)) {
-			items = [items];
-		}
-		let itemsToAdd = [];
-		for (let i = 0; i < items.length; i++) {
-			let item = items[i];
-			if (
-				item != null &&
-				item[_valueField] != undefined &&
-				item[_labelField] != undefined
-			) {
-				let itemToAdd = [item];
-				if (!this.allowNewItem) {
-					itemToAdd = ArrayUtils.intersectOnKeyMatch(
-						_dataProvider,
-						itemToAdd,
-						_valueField
-					); //value;
-					if (itemToAdd.length == 0) {
-						itemToAdd = ArrayUtils.intersectOnKeyMatch(
-							_suggestions,
-							itemToAdd,
-							_valueField
-						); //value;
-						if (itemToAdd.length == 0) {
-							console.log(
-								"This value was not found in the dataProvider and you are not allowed to add new items."
-							);
-							continue;
-						}
-					}
-				}
-				itemsToAdd.push(itemToAdd[0]);
-			} else
-				console.log(
-					"Please specify a valid object on row: " +
-						i +
-						". The provided one is either null or doesn`t have '" +
-						_valueField +
-						"' and '" +
-						_labelField +
-						"' properties."
-				);
-		}
-		//TODO:If Repeating will be allowed we need to add condition below based on a new property to control this setting
-		itemsToAdd = ArrayUtils.differenceOnKeyMatch(
-			itemsToAdd,
-			_value,
-			_valueField
-		);
-		for (let j = 0; j < itemsToAdd.length; j++) {
-			_value.push(itemsToAdd[j]);
-		}
 	};
 	this.removeSuggestionItemAt = function (index) {
 		//TODO: If we are going to keep item ordering in the view the save as in value
@@ -523,6 +468,7 @@ var AutoCompleteEx = function (_props) {
 		type: "",
 		valueField: "id",
 		labelField: "text",
+		placeholder: "Search...",
 		matchType: StringMatchType.CONTAINS,
 	};
 	ObjectUtils.fromDefault(_defaultParams, _props);
@@ -537,7 +483,8 @@ var AutoCompleteEx = function (_props) {
 	_props.attr["data-triggers"] = "noSuggestionsFound beforeChange";
 
 	let _valueField = _props.valueField;
-	let _labelField = _props.labelField;
+	let _labelField = _props.labelField;	
+	let _placeholder = _props.placeholder;
 	let _dataProvider;
 	_matchType = _props.matchType;
 
@@ -629,7 +576,7 @@ var AutoCompleteEx = function (_props) {
 						props: {
 							id: "tokenInput",
 							attr: {
-								placeholder: "Search...",
+								placeholder: _placeholder,
 							},
 							versionStyle: "",
 							keydown: _tokenInputKeyDown,

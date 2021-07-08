@@ -97,6 +97,7 @@ var AutoBrowse = function (_props) {
 					bindingDefaultContext: _bindingDefaultContext,
 					value: _value,
 					multiSelect: false,
+					placeholder: _props.placeholder,
 					matchType: StringMatchType.STARTS_WITH,
 					css: { "flex-grow": "1", width: "80%" },
 				},
@@ -133,7 +134,7 @@ var AutoBrowse = function (_props) {
 				props: {
 					id: "recordSelectModal",
 					size: ModalSize.LARGE,
-					title: "Select an Item",
+					title: _props.title,
 					components: [
 						{
 							ctor: DataGrid,
@@ -197,6 +198,7 @@ var AutoBrowse = function (_props) {
 		classes: ["d-inline-flex"],
 		valueField: "",
 		allowNewItem: false,
+		title: "Select an Item"
 	};
 	ObjectUtils.fromDefault(_defaultParams, _props);
 	//_props = ObjectUtils.extend(false, false, _defaultParams, _props);
