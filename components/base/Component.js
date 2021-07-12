@@ -643,14 +643,14 @@ var Component = function (_props) {
             });
         }
     };
-    this.destruct = function (mode = 1) {
-        let arrow = (e) => {
-            if (e.target.id == _self.domID) {
-                resolve();
-            }
-            _self.proxyMaybe.off('detached', arrow);
-        };
+    this.destruct = function (mode = 1) {       
         return new Promise((resolve, reject) => {
+            let arrow = (e) => {
+                if (e.target.id == _self.domID) {
+                    resolve();
+                }
+                _self.proxyMaybe.off('detached', arrow);
+            };
             _self.proxyMaybe.on('detached', arrow);
             if (this.$el)
                 mode == 1 ? this.$el.remove() : this.$el.detach();

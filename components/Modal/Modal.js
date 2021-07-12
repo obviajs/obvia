@@ -165,13 +165,12 @@ var Modal = function (_props) {
             _modalFooter = _modalContent.modalFooter;
         }
     };
-
-    let _cmps, _modalDialog, _modalContent, _modalHeader, _modalBody, _modalFooter;
+    let _cmps, _modalDialog, _modalContent, _modalHeader, _modalBody, _modalFooter, _backDrop;
     let fnContainerDelayInit = function () {
         Modal.all.push(_self);
         _props.css["z-index"] = 1040 + Modal.all.length;
-        if (!Modal.BackDrop) {
-            Modal.BackDrop = new Container({
+        if (!_backDrop) {
+            _backDrop = new Container({
                 type: "",
                 classes: ["modal-backdrop", "fade", "show"]
             });
@@ -249,12 +248,12 @@ var Modal = function (_props) {
             if (!this.attached) {
                 this.appendTo.append(this.$el);
             }
-            if (!Modal.BackDrop.attached) {
-                Modal.BackDrop.render().then(function (cmpInstance) {
+            if (!_backDrop.attached) {
+                _backDrop.render().then(function (cmpInstance) {
                     $(_self.ownerDocument.body).append(cmpInstance.$el);
                 });
             }
-            Modal.BackDrop.show();
+            _backDrop.show();
             this.css.display = "block";
             //$(this.$el[0].ownerDocument.body).addClass('modal-open');
         }
@@ -264,7 +263,7 @@ var Modal = function (_props) {
     this.hide = function () {
         if (this.$el) {
             //this.$el.modal('hide');
-            Modal.BackDrop.destruct(2);
+            _backDrop.destruct(2);
             delete this.css["display"];
             //$(this.$el[0].ownerDocument.body).removeClass('modal-open');
         }
@@ -284,7 +283,6 @@ var Modal = function (_props) {
 };
 Modal.prototype.ctor = 'Modal';
 Modal.all = new ArrayEx();
-Modal.BackDrop = null;
 var ModalSize =
 {
     "SMALL": "modal-sm",
