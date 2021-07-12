@@ -743,12 +743,18 @@ var DataGrid = function (_props) {
             }
             _cells[i][0].prev().text(i);
         }
-        _rows[index].detach();
+        let len = _cellItemRenderers[index].length;
+        let rp = new Array(len);
+        for (let i = 0; i < len; i++) {
+            rp[i] = _cellItemRenderers[index][i].destruct(1);
+        }
+        _rows[index].remove();
         _rows.splice(index, 1);
         _self.rowItems.splice(index, 1);
         _cells.splice(index, 1);
         _cellItemRenderers.splice(index, 1);
         _self.trigger('rowDelete', [this, ra]);
+        return Promise.all(rp);
     };
 
     let _bodyHeight, mtt, smt;

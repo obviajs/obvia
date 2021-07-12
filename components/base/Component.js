@@ -644,8 +644,17 @@ var Component = function (_props) {
         }
     };
     this.destruct = function (mode = 1) {
-        if (this.$el)
-            mode == 1 ? this.$el.remove() : this.$el.detach();
+        let arrow = (e) => {
+            if (e.target.id == _self.domID) {
+                resolve();
+            }
+            _self.proxyMaybe.off('detached', arrow);
+        };
+        return new Promise((resolve, reject) => {
+            _self.proxyMaybe.on('detached', arrow);
+            if (this.$el)
+                mode == 1 ? this.$el.remove() : this.$el.detach();
+        });
         //_self.attached = false;
     };
 
