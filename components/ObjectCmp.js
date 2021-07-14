@@ -8,7 +8,7 @@ import { Container } from "/flowerui/components/Container.js";
 import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
 import { DependencyContainer } from "/flowerui/lib/DependencyContainer.js";
 
-var ObjectCmp = function (_props, _hideComponents = false) {
+var ObjectCmp = function (_props) {
 	let _self, _data, _type;
 
 	Object.defineProperty(this, "data", {
@@ -56,7 +56,7 @@ var ObjectCmp = function (_props, _hideComponents = false) {
 	ObjectUtils.fromDefault(_defaultParams, _props);
 	//_props = ObjectUtils.extend(false, false, _defaultParams, _props);
 
-	let r = Container.call(this, _props, _hideComponents);
+	let r = Container.call(this, _props);
 	Object.defineProperty(this, "type", {
 		get: function type() {
 			return _type;

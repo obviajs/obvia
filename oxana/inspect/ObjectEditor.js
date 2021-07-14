@@ -6,10 +6,8 @@
 
 import { Container } from "/flowerui/components/Container.js";
 import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
-import { MetaProps } from "/flowerui/oxana/forms/metaProps.js";
-import { Literals } from "/flowerui/oxana/forms/componentLiterals.js";
 import { DependencyContainer } from "/flowerui/lib/DependencyContainer.js";
-var ObjectEditor = function (_props) {
+var ObjectEditor = function (_props, metaProps, literals) {
     let _self = this, _instance, _field;
 
     Object.defineProperty(this, "instance",
@@ -29,14 +27,14 @@ var ObjectEditor = function (_props) {
     this.initFields = function (inst, fld) {
         let props = (fld != null && fld != "") ? inst[fld] : inst;
         let rows = [];
-        if (MetaProps[inst.ctor]) {
+        if (metaProps[inst.ctor]) {
             
         }
         for (let prop in props) {
             //let propsMeta = ObjectUtils.extend(true, Builder.metaProps[inst.ctor] && Builder.metaProps[inst.ctor][prop] ? Builder.metaProps[inst.ctor][prop] : Builder.metaProps[prop]);
-            let propsMeta = MetaProps[inst.ctor] && MetaProps[inst.ctor][prop] ? MetaProps[inst.ctor][prop] : MetaProps[prop];
+            let propsMeta = metaProps[inst.ctor] && metaProps[inst.ctor][prop] ? metaProps[inst.ctor][prop] : metaProps[prop];
             if (propsMeta && !ObjectUtils.isEmpty(propsMeta)) {
-                let propEditor = ObjectUtils.extend(true, Literals[propsMeta.ctor]);
+                let propEditor = ObjectUtils.extend(true, literals[propsMeta.ctor]);
                 if (propEditor) {
                     let itemEditorLit = propEditor.literal;
                     if (propsMeta.props && typeof propsMeta.props != 'function')
@@ -48,7 +46,7 @@ var ObjectEditor = function (_props) {
                         itemEditorLit.props.instance = props[prop];
                         itemEditorLit.props.field = null;
                     }
-                    let ff = ObjectUtils.extend(true, Literals["FormField"].literal);
+                    let ff = ObjectUtils.extend(true, literals["FormField"].literal);
                     ff.props.id = prop;
                     ff.props.label = propsMeta.label;
                     ff.props.placeholder = propsMeta.label;

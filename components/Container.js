@@ -7,7 +7,7 @@ import { Parent } from "/flowerui/components/base/Parent.js";
 import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
 import { StringUtils } from "/flowerui/lib/StringUtils.js";
 import { DependencyContainer } from "/flowerui/lib/DependencyContainer.js";
-var Container = function (_props, _hideComponents = false) {
+var Container = function (_props) {
     let _self = this,
         _textAlign;
 
@@ -369,7 +369,7 @@ var Container = function (_props, _hideComponents = false) {
     //_props.afterAttach = this.afterAttach;
     let _label;
 
-    let r = Parent.call(this, _props, _hideComponents);
+    let r = Parent.call(this, _props);
 
     if (_props.minWidth)
         this.minWidth = _props.minWidth;

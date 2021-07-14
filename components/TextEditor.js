@@ -7,7 +7,7 @@
 import { Component } from "/flowerui/components/base/Component.js";
 import { List } from "/flowerui/components/List.js";
 
-var TextEditor =  function(_props, overrided = false) {
+var TextEditor =  function(_props) {
     let _self = this;
     this.beforeAttach = function () {
         this.$input = this.$el;

@@ -14,7 +14,7 @@ import { Component } from "/flowerui/components/base/Component.js";
 import { Literal } from "/flowerui/lib/Literal.js";
 import { Props } from "/flowerui/components/base/Props.js";
 import { DependencyContainer } from "/flowerui/lib/DependencyContainer.js";
-var Repeater = function (_props, _hideComponents = false) {
+var Repeater = function (_props) {
     let _rowItems = [],
         _rows = [];
     let _self = this;
@@ -487,7 +487,7 @@ var Repeater = function (_props, _hideComponents = false) {
 
     let _rPromise;
     _autoUpdateDisplay = _props.autoUpdateDisplay;
-    let r = Container.call(this, _props, _hideComponents);
+    let r = Container.call(this, _props);
     /*
         var click =  props.click;
         _props.click = function(e)

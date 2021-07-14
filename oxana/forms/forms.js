@@ -8,7 +8,8 @@ import { App } from "/flowerui/components/base/App.js";
 //the dataPromise function should return the dataObject when resolved
 //data will be loaded only once :)
 let SimpleContainer = DependencyContainer.getInstance();
-SimpleContainer.register("MetaProps", MetaProps, DependencyContainer.simpleResolve);
+SimpleContainer.register("metaProps", MetaProps, DependencyContainer.simpleResolve);
+SimpleContainer.register("literals", Literals, DependencyContainer.simpleResolve);
 var Builder = {};
 var _initDP = function () {
     // Builder.masks;

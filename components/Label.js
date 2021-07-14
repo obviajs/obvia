@@ -7,7 +7,7 @@
 import { Container } from "/flowerui/components/Container.js";
 import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
 import { DependencyContainer } from "/flowerui/lib/DependencyContainer.js";
-var Label = function (_props, _hideComponents = false) {
+var Label = function (_props) {
     let _label, _html, _labelType;
     
     Object.defineProperty(this, "label", {
@@ -104,7 +104,7 @@ var Label = function (_props, _hideComponents = false) {
 
     _labelType = _props.labelType;
 
-    let r = Container.call(this, _props, _hideComponents);
+    let r = Container.call(this, _props);
     return r;
 };
 Label.prototype.ctor = 'Label';

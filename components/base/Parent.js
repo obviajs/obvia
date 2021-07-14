@@ -2,7 +2,7 @@ import { Component } from "/flowerui/components/base/Component.js";
 import { Props } from "/flowerui/components/base/Props.js";
 import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
 import { ArrayUtils } from "/flowerui/lib/ArrayUtils.js";
-var Parent = function (_props, _hideComponents = false) {
+var Parent = function (_props) {
     let _$hadow = $("<div/>");
     let _comprenders = [];
     let _self = this;
@@ -31,12 +31,6 @@ var Parent = function (_props, _hideComponents = false) {
     }
 
     let _proxy = this.initProxy();
-
-    Object.defineProperty(this, "hasInternalComponents", {
-        get: function hasInternalComponents() {
-            return _hideComponents;
-        }
-    });
 
     Object.defineProperty(this, "proxy", {
         get: function proxy() {
@@ -67,7 +61,7 @@ var Parent = function (_props, _hideComponents = false) {
             // this.addComponents(v);
             _components = v;  
         },
-        enumerable: true && !_hideComponents,
+        enumerable: true,
         configurable: true
     });
 

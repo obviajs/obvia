@@ -246,7 +246,7 @@ var Applet = function (_props) {
         for (let i = 0; i < len; i++) {
             let cmp = cmps[i];
             _app.addBehaviors(_self.guid, cmp, behaviors);
-            if (recurse && !cmp.hasInternalComponents) {
+            if (recurse) {
                 for (let cid in cmp.children) {
                     this.addBehaviors(cmp.children[cid], behaviors);
                 }
@@ -265,7 +265,7 @@ var Applet = function (_props) {
         for (let i = 0; i < len; i++) {
             let cmp = cmps[i];
             _app.removeBehaviors(_self.guid, cmp, behaviors);
-            if (recurse && !cmp.hasInternalComponents) {
+            if (recurse) {
                 for (let cid in cmp.children) {
                     this.removeBehaviors(cmp.children[cid], behaviors);
                 }
