@@ -37,7 +37,7 @@ var myModal = new Modal({
                                     "inputFormat": "YYYY-DD-MM HH:mm",
                                     "outputFormat": "YYYY-DD-MM HH:mm",
                                     "displayFormat": "DD/MM/YYYY hh:mm A",
-                                    "value": "{moment().format(this.inputFormat)}"
+                                    "value": "{dayjs().format(this.inputFormat)}"
                                 }
                             }
                         }
@@ -55,7 +55,7 @@ var myModal = new Modal({
                                     "inputFormat": "YYYY-DD-MM HH:mm",
                                     "outputFormat": "YYYY-DD-MM HH:mm",
                                     "displayFormat": "DD/MM/YYYY hh:mm A",
-                                    "value": "{moment().format(this.inputFormat)}"
+                                    "value": "{dayjs().format(this.inputFormat)}"
                                 }
                             }
                         }
@@ -96,8 +96,8 @@ function saveButton_click(e)
     let methods = [myCalendar.calendarDay.addEvent, myCalendar.calendarWeek.addEvent, myCalendar.calendarMonth.addEvent];
     var event = {};
     event[myCalendar.descriptionField] = eventDescription.value;
-    event[myCalendar.startDateTimeField] = moment(startDate.value, startDate.outputFormat).format(myCalendar.inputFormat);
-    event[myCalendar.endDateTimeField] = moment(endDate.value, endDate.outputFormat).format(myCalendar.inputFormat);
+    event[myCalendar.startDateTimeField] = dayjs(startDate.value, startDate.outputFormat).format(myCalendar.inputFormat);
+    event[myCalendar.endDateTimeField] = dayjs(endDate.value, endDate.outputFormat).format(myCalendar.inputFormat);
 
     methods[myCalendar.viewStack.selectedIndex](event);
     myModal.hide();
@@ -122,7 +122,7 @@ myCalendar.on("calendarEventClick", function (e, ra) {
 
 myCalendar.on("cellClick", function (e, ra) {
     eventDescription.value = "";
-    let dtStr = moment(e[myCalendar.startDateTimeField]).format(startDate.inputFormat);
+    let dtStr = dayjs(e[myCalendar.startDateTimeField]).format(startDate.inputFormat);
     startDate.value = dtStr;
     endDate.value = dtStr;
     myModal.show();

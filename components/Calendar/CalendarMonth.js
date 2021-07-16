@@ -54,7 +54,7 @@ var CalendarMonth = function(_props)
     
     let _intervalToIndex = {};
     let _intervalFromDate = function (currentValue) {
-        return moment(currentValue[_self.startDateTimeField], _self.inputFormat).format(_self.internalFormat);
+        return dayjs(currentValue[_self.startDateTimeField], _self.inputFormat).format(_self.internalFormat);
     };
 
     let _createData = function () {

@@ -152,7 +152,7 @@ var Parent = function (_props) {
         index = index > -1 ? index : _csorted.length;
         let cr = await _addComponentInContainer(this.$container, component, index);
 
-        cr.promise.then(function (cmpInstance) {
+        await cr.promise.then(function (cmpInstance) {
             if (cmpInstance && !cmpInstance.attached) {
                 //cmpInstance.applyMyBindings();
                 if (cmpInstance.appendTo) {

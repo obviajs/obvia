@@ -49,7 +49,7 @@ var CalendarDay = function(_props)
 
     let _intervalToIndex = {};
     let _intervalFromDate = function (currentValue) {
-        let m = moment(currentValue[_self.startDateTimeField], _self.inputFormat);
+        let m = dayjs(currentValue[_self.startDateTimeField], _self.inputFormat);
         let hours = m.hours();
         let minutes = m.minutes();
         let h = hours % 12;
@@ -66,7 +66,7 @@ var CalendarDay = function(_props)
     let _createHours = function () {
         let groupedEvents = _self.calendarEvents.groupReduce(_intervalFromDate);
         let _dataProvider = [];
-        let dateContent = moment(_self.nowDate).format(_self.internalFormat);
+        let dateContent = dayjs(_self.nowDate).format(_self.internalFormat);
         for (let i = _startHourCalendar; i < _endHourCalendar; i++) {
             let hours = i;
             hours = hours % 12;

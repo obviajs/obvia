@@ -155,7 +155,7 @@ rjs.define("/flowerui/components/Toggle/Toggle.js", "Toggle");
 //MultiSwitch
 rjs.define("/flowerui/components/MultiSwitch.js", "MultiSwitch");
 //Upload
-rjs.define("/flowerui/lib/dependencies/scripts/jquery.slimscroll.js", "SlimScroll");
+rjs.define("/flowerui/lib/dependencies/jquery.slimscroll.js", "SlimScroll");
 
 rjs.define("/flowerui/components/Form/Upload.js", "Upload");
 rjs.define("/flowerui/components/UploadEx.js", "UploadEx");

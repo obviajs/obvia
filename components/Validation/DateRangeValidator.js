@@ -32,7 +32,7 @@ var DateRangeValidator = function (_props) {
             return _min;
         },
         set: function min(v) {
-            _min = moment(v, _inputFormat).format("X");
+            _min = dayjs(v, _inputFormat).format("X");
         },
         enumerable: true,
         configurable: true
@@ -43,7 +43,7 @@ var DateRangeValidator = function (_props) {
             return _max;
         },
         set: function max(v) {
-            _max = moment(v, _inputFormat).format("X");
+            _max = dayjs(v, _inputFormat).format("X");
         },
         enumerable: true,
         configurable: true
@@ -52,7 +52,7 @@ var DateRangeValidator = function (_props) {
     this.validate = function () {
         let _controlToValidateInstance = _self.controlToValidateInstance;
         if (_controlToValidateInstance) {
-            let v = moment(_controlToValidateInstance.value, _outputFormat).format("X");;
+            let v = dayjs(_controlToValidateInstance.value, _outputFormat).format("X");;
             if (!_self.enabled || ( (_self.min == null || v >= _self.min) && (_self.max ==null || v <= _self.max))) {
                 _self.isValid = true;
             } else

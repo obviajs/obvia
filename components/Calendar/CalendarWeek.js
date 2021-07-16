@@ -63,14 +63,14 @@ var CalendarWeek = function(_props)
     
     let _intervalToIndex = {};
     let _intervalFromDate = function (currentValue) {
-        let date = moment(currentValue[_self.startDateTimeField], _self.inputFormat);
+        let date = dayjs(currentValue[_self.startDateTimeField], _self.inputFormat);
         let weekDayNumber = date.weekday();
         return date.week() + "-" + weekDayNumber;
     };
 
     let _prepareEvent = function (event) {
-        let ds = moment(event[_self.startDateTimeField], _self.inputFormat);
-        let de = moment(event[_self.endDateTimeField], _self.inputFormat);
+        let ds = dayjs(event[_self.startDateTimeField], _self.inputFormat);
+        let de = dayjs(event[_self.endDateTimeField], _self.inputFormat);
         let d_ds = ds.toDate();
         let h = d_ds.getHours();
         let m = d_ds.getMinutes();
@@ -94,12 +94,12 @@ var CalendarWeek = function(_props)
         let input = new Date(_self.nowDate.getTime());
         let result = _self.dates(input);
         let len = result.length;
-        let wn = moment(_self.nowDate).week();
+        let wn = dayjs(_self.nowDate).week();
         for (let i = 0; i < len; i++) {
             let date_string = result[i].getDate();
             let day_string = CalendarConstants.Days[result[i].getDay()];
             let result_complete = day_string + " " + date_string;
-            let mr = moment(result[i]);
+            let mr = dayjs(result[i]);
             let dateContent = mr.format(_self.internalFormat);
             let gi = wn + "-"+ mr.weekday();
             let dp1 = {
@@ -277,7 +277,7 @@ var CalendarWeek = function(_props)
     };
     
     this.previous = function () {
-        let two_weeks_a = moment(_dataProvider[0].dateContent, _self.internalFormat).toDate();
+        let two_weeks_a = dayjs(_dataProvider[0].dateContent, _self.internalFormat).toDate();
         let two_weeks_ago = new Date(two_weeks_a.getTime() - 7 * 24 * 60 * 60 * 1000);
         _self.nowDate = two_weeks_ago;
         let new_dp_prev = _createDataProvider();
@@ -288,7 +288,7 @@ var CalendarWeek = function(_props)
     };
 
     this.next = function () {        
-        let one_week_n = moment(_dataProvider[0].dateContent, _self.internalFormat).toDate();
+        let one_week_n = dayjs(_dataProvider[0].dateContent, _self.internalFormat).toDate();
         let one_week_next = new Date(one_week_n.getTime() + 7 * 24 * 60 * 60 * 1000);
         _self.nowDate = one_week_next;
         let new_dp_next = _createDataProvider();

@@ -95,14 +95,18 @@ import { BindingsManager } from "/flowerui/lib/binding/BindingsManager.js";
 import { ChangeWatcher } from "/flowerui/lib/binding/ChangeWatcher.js";
 import { LocalizationManager } from "/flowerui/lib/LocalizationManager.js";
 
-import { DateUtils } from "/flowerui/lib/DateUtils.js";
-window.DateUtils = DateUtils;
+
 import { NumberUtils } from "/flowerui/lib/NumberUtils.js";
 window.NumberUtils = NumberUtils;
 
-import { oxana } from "/flowerui/oxana/forms/forms.js";
 import { rjs } from "/flowerui/lib/rjs.js";
-rjs.define("/flowerui/lib/dependencies/scripts/jquery.slimscroll.js");
+await rjs.define("/flowerui/lib/dependencies/dayjs/dayjs.min.js");
+window.dayjs = dayjs;
+import { DateUtils } from "/flowerui/lib/DateUtils.js";
+window.DateUtils = DateUtils;
+
+import { oxana } from "/flowerui/oxana/forms/forms.js";
+rjs.define("/flowerui/lib/dependencies/jquery.slimscroll.js");
 rjs.define("/flowerui/lib/dependencies/summernote/summernote.css");
 rjs.define("/flowerui/components/Calendar/css/calendarMonth-default.css");
 rjs.define("/flowerui/components/Calendar/css/calendarWeek-default.css");
@@ -125,3 +129,4 @@ rjs.define("/flowerui/components/Kanban/css/kanban_default.css");
 rjs.define("/flowerui/components/Filter/Filter.css");
 rjs.define("/flowerui/oxana/forms/css/forms.css");
 rjs.define("/flowerui/oxana/css/global.css");
+rjs.define("/flowerui/lib/dependencies/yaml.js");

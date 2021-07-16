@@ -13,12 +13,12 @@ var DateTime = function (_props) {
 
     Object.defineProperty(this, "value", {
         get: function value() {
-            let date = moment(this.$input.val(), _self.internalFormat).format(_outputFormat);
+            let date = dayjs(this.$input.val(), _self.internalFormat).format(_outputFormat);
             return (date == "Invalid date" || date == "") ? "" : date;
         },
         set: function value(v) {
             let oldValue = _value;
-            _value = moment(v, _inputFormat);
+            _value = dayjs(v, _inputFormat);
             if (this.$el) {
                 this.attr['date'] = _value.format(_displayFormat);
                 this.$el.val(_value.format(_self.internalFormat));
@@ -33,7 +33,7 @@ var DateTime = function (_props) {
             return _min;
         },
         set: function min(v) {
-            _min = moment(v, _inputFormat);
+            _min = dayjs(v, _inputFormat);
             if (this.$el)
                 this.attr['min'] = _min.format(_internalFormat);
         },
@@ -57,7 +57,7 @@ var DateTime = function (_props) {
             return _max;
         },
         set: function max(v) {
-            _max = moment(v, _inputFormat);
+            _max = dayjs(v, _inputFormat);
             if (this.$el)
                 this.attr['max'] = _max.format(_internalFormat);
         },
@@ -115,21 +115,21 @@ var DateTime = function (_props) {
             this.outputFormat = _props.outputFormat;
         }
         if (_props.min) {
-            this.min = moment(_props.min, _inputFormat).format(_inputFormat);
+            this.min = dayjs(_props.min, _inputFormat).format(_inputFormat);
         }
         if (_props.max) {
-            this.max = moment(_props.max, _inputFormat).format(_inputFormat);
+            this.max = dayjs(_props.max, _inputFormat).format(_inputFormat);
         }
         if (_props.value) {
-            this.value = moment(_props.value, _inputFormat).format(_inputFormat);
+            this.value = dayjs(_props.value, _inputFormat).format(_inputFormat);
         } else {
-            this.value = moment().format(_inputFormat);
+            this.value = dayjs().format(_inputFormat);
         }
     };
 
     this.inputHandler = function (e) {
         let oldValue = _value;
-        _value = moment(this.$input.val(), _self.internalFormat);
+        _value = dayjs(this.$input.val(), _self.internalFormat);
         this.attr['date'] = _value.format(_displayFormat);
         this.$el.val(_value.format(_self.internalFormat));
         _myw.propertyChanged("value", oldValue, _value);

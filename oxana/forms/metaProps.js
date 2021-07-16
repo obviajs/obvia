@@ -12,6 +12,9 @@ import { HeadingType } from "/flowerui/components/Heading.js";
 import { TextInputType } from "/flowerui/components/TextInput/TextInput.js";
 import { ButtonType } from "/flowerui/components/Button/Button.js";
 import { SideNavSide } from "/flowerui/components/SideNav/SideNav.js";
+import { RepeaterEx } from "/flowerui/components/Repeater/RepeaterEx.js";
+import { TextInput } from "/flowerui/components/TextInput/TextInput.js";
+import { Button } from "/flowerui/components/Button/Button.js";
 
 let providerValueField = "dataview_id";
 let providerLabelField = "description";
@@ -420,7 +423,7 @@ var MetaProps = {
                         if (Builder.data[dpName] && Builder.data[dpName].length > 0) {
                             let win = this.parent.parent.columnsEditModal;
                             if (!win) {
-                                let lit = extend(true, Literals.Modal.literal);
+                                let lit = ObjectUtils.extend(true, Literals.Modal.literal);
                                 lit.props.id = "columnsEditModal";
                                 lit.props.title = "Edit Columns";
                                 lit.props.components = [{
@@ -482,7 +485,7 @@ var MetaProps = {
                             };
                         }
 
-                        let lit = extend(true, Literals.Modal.literal);
+                        let lit = ObjectUtils.extend(true, Literals.Modal.literal);
                         lit.props.id = "ClassesEditModal";
                         lit.props.title = "Edit Classes";
                         lit.props.components = [{
@@ -544,15 +547,15 @@ var MetaProps = {
                             }
                         }];
 
-                        win = this.parent.parent.addComponent(lit);
+                        win =  this.parent.parent.addComponent(lit);
                     }
-                    let classesInstances = win.modalDialog.modalContent.modalBody.classesEditor;
-                    if (classesInstances) {
-                        win.attached = true;
-                        win.show();
-                    }
-
-
+                    Promise.resolve(win).then((win) => {
+                        let classesInstances = win.modalDialog.modalContent.modalBody.classesEditor;
+                        if (classesInstances) {
+                            win.attached = true;
+                            win.show();
+                        }
+                    });
                 }
             }
         },
@@ -1245,7 +1248,7 @@ var MetaProps = {
                 click: function (e) {
                     let win = this.parent.parent.stepsEditModal;
                     if (!win) {
-                        let lit = extend(true, Literals.Modal.literal);
+                        let lit = ObjectUtils.extend(true, Literals.Modal.literal);
                         lit.props.id = "stepsEditModal";
                         lit.props.title = "Edit Steps";
                         let inst;

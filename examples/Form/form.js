@@ -108,7 +108,7 @@ var myForm = new Container(
                                                         "inputFormat": "YYYY-DD-MM HH:mm",
                                                         "outputFormat": "YYYY-DD-MM HH:mm",
                                                         "displayFormat": "DD/MM/YYYY hh:mm A",
-                                                        "value": "{moment().format(this.inputFormat)}"
+                                                        "value": "{dayjs().format(this.inputFormat)}"
                                                     }
                                                 },
                                                 "label": "Data e hapjes se procesit",
@@ -154,7 +154,7 @@ var myForm = new Container(
                                                         "inputFormat": "YYYY-DD-MM HH:mm",
                                                         "outputFormat": "YYYY-DD-MM HH:mm",
                                                         "displayFormat": "DD/MM/YYYY hh:mm A",
-                                                        "value": "{moment().format(this.inputFormat)}"
+                                                        "value": "{dayjs().format(this.inputFormat)}"
                                                     }
                                                 },
                                                 "label": "Data e hapjes se pranimit te ofertave",
@@ -198,7 +198,7 @@ var myForm = new Container(
                                                             "inputFormat": "YYYY-DD-MM HH:mm",
                                                             "outputFormat": "YYYY-DD-MM HH:mm",
                                                             "displayFormat": "DD/MM/YYYY hh:mm A",
-                                                            "value": "{moment().format(this.inputFormat)}",
+                                                            "value": "{dayjs().format(this.inputFormat)}",
                                                             "guid": "bd0a3cc9-4e44-4b5e-ba52-277d7d35d84a",
                                                             "id": "endDateOffer"
                                                         }
@@ -253,7 +253,7 @@ var myForm = new Container(
                                                             "inputFormat": "YYYY-DD-MM HH:mm",
                                                             "outputFormat": "YYYY-DD-MM HH:mm",
                                                             "displayFormat": "DD/MM/YYYY hh:mm A",
-                                                            "value": "{moment().format(this.inputFormat)}",
+                                                            "value": "{dayjs().format(this.inputFormat)}",
                                                             "id": "endDate"
                                                         }
                                                     },
@@ -541,7 +541,7 @@ var myForm = new Container(
                                                         "inputFormat": "YYYY-DD-MM HH:mm",
                                                         "outputFormat": "YYYY-DD-MM HH:mm",
                                                         "displayFormat": "DD/MM/YYYY hh:mm A",
-                                                        "value": "{moment().format(this.inputFormat)}"
+                                                        "value": "{dayjs().format(this.inputFormat)}"
                                                     }
                                                 },
                                                 "label": "Data e fillimit me furnizim energji",
@@ -587,7 +587,7 @@ var myForm = new Container(
                                                         "inputFormat": "YYYY-DD-MM HH:mm",
                                                         "outputFormat": "YYYY-DD-MM HH:mm",
                                                         "displayFormat": "DD/MM/YYYY hh:mm A",
-                                                        "value": "{moment().format(this.inputFormat)}"
+                                                        "value": "{dayjs().format(this.inputFormat)}"
                                                     }
                                                 },
                                                 "label": "Data e perfundimit te furnizimi me energji",
@@ -764,7 +764,7 @@ var myForm = new Container(
                                                         "inputFormat": "YYYY-DD-MM HH:mm",
                                                         "outputFormat": "YYYY-DD-MM HH:mm",
                                                         "displayFormat": "DD/MM/YYYY hh:mm A",
-                                                        "value": "{moment().format(this.inputFormat)}"
+                                                        "value": "{dayjs().format(this.inputFormat)}"
                                                     }
                                                 },
                                                 "label": "Data e ankeses",

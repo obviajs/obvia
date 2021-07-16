@@ -1,6 +1,11 @@
 import { Container } from "/flowerui/components/Container.js";
+import { Repeater } from "/flowerui/components/Repeater/Repeater.js";
+import { Button } from "/flowerui/components/Button/Button.js";
+import { Label, LabelType } from "/flowerui/components/Label.js";
 import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
-
+import { ArrayEx } from "/flowerui/lib/ArrayEx.js";
+import { ChangeWatcher } from "/flowerui/lib/binding/ChangeWatcher.js";
+import { DependencyContainer } from "/flowerui/lib/DependencyContainer.js";
 var RepeaterEx = function (_props) {
     let _self = this;
     Object.defineProperty(this, "dataProvider", {
@@ -49,14 +54,14 @@ var RepeaterEx = function (_props) {
     };
 
     let fnContainerDelayInit = function () {
-        _cmps = [{
+        return [{
                 ctor: Repeater,
                 props: _propsRepeater
             },
             {
                 "ctor": "Container",
                 "props": {
-                    type: ContainerType.Container,
+                    type: "",
                     "id": "buttonContainer",
                     "components": [{
                             ctor: Button,
@@ -109,7 +114,7 @@ var RepeaterEx = function (_props) {
     };
 
     let _defaultParams = {
-        type: ContainerType.CONTAINER,
+        type: "",
         rendering: {
             direction: 'vertical',
             separator: true,
@@ -148,14 +153,14 @@ var RepeaterEx = function (_props) {
         "components": _components
     };
     //avoid circular reference, by shallow copying, and later adding components to _props
-    _propsRepeater.minHeight = 40;
-    fnContainerDelayInit();
-    _props.components = _cmps;
+    _propsRepeater.minHeight = 40;    
+    _props.components = fnContainerDelayInit();;
 
     let r = Container.call(this, _props);
     return r;
 };
 RepeaterEx.prototype.ctor = 'RepeaterEx';
+DependencyContainer.getInstance().register("RepeaterEx", RepeaterEx, DependencyContainer.simpleResolve);
 export {
     RepeaterEx
 };

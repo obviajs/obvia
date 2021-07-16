@@ -52,8 +52,8 @@ var DateTimeCb = function (_props) {
             return _value;
         },
         set: function (v) {
-            let date = moment(v).format(_inputFormat);
-            let m = moment(date);
+            let date = dayjs(v).format(_inputFormat);
+            let m = dayjs(date);
             _value = m.format(_outputFormat);
 
             _dateSelect.value = m.date();
@@ -148,7 +148,7 @@ var DateTimeCb = function (_props) {
     };
 
     let _change = function (e) {
-        let date = moment();
+        let date = dayjs();
         date.date(_dateSelect.value);
         date.month(_monthSelect.value);
         date.year(_yearSelect.value);
