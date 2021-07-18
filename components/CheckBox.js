@@ -3,7 +3,9 @@
  *
  * Kreatx 2019
  */
-
+import { Component } from "/flowerui/components/base/Component.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+import { DependencyContainer } from "/flowerui/lib/DependencyContainer.js";
 var CheckBox = function (_props) {
     let _self = this,
         _label, _labelForLater, _value, _checked, _name;
@@ -111,8 +113,8 @@ var CheckBox = function (_props) {
         enabled: true,
         checked: false
     };
-
-    _props = extend(false, false, _defaultParams, _props);
+    ObjectUtils.fromDefault(_defaultParams, _props);
+    //_props = ObjectUtils.extend(false, false, _defaultParams, _props);
 
     let _click = _props.click;
 
@@ -128,4 +130,8 @@ var CheckBox = function (_props) {
     Component.call(this, _props);
 
 };
+DependencyContainer.getInstance().register("CheckBox", CheckBox, DependencyContainer.simpleResolve);
 CheckBox.prototype.ctor = "CheckBox";
+export {
+    CheckBox
+};

@@ -1,3 +1,5 @@
+import { Container } from "/flowerui/components/Container.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
 var NavParent = function (_props) {
     let _self = this,
         _selectedIndex;
@@ -66,13 +68,14 @@ var NavParent = function (_props) {
     let _defaultParams = {
         selectedIndex: 0
     };
-    _props = extend(false, false, _defaultParams, _props);
+    ObjectUtils.fromDefault(_defaultParams, _props);
+    //_props = ObjectUtils.extend(false, false, _defaultParams, _props);
 
     if (!_props.attr) {
         _props.attr = {};
     }
     let myDtEvts = ["change", "changed"];
-    if (!Object.isEmpty(_props.attr) && _props.attr["data-triggers"] && !Object.isEmpty(_props.attr["data-triggers"])) {
+    if (!ObjectUtils.isEmpty(_props.attr) && _props.attr["data-triggers"] && !ObjectUtils.isEmpty(_props.attr["data-triggers"])) {
         let dt = _props.attr["data-triggers"].split(" ");
         for (let i = 0; i < dt.length; i++) {
             myDtEvts.pushUnique(dt[i]);
@@ -84,3 +87,6 @@ var NavParent = function (_props) {
     return r;
 };
 NavParent.prototype.ctor = 'NavParent';
+export {
+    NavParent
+};

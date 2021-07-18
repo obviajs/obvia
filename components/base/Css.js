@@ -1,5 +1,9 @@
-var Css = function (_css, $el) {
-    let _$el = $el;
+import { UseBindings } from "/flowerui/lib/UseBindings.js";
+import { isSymbol } from "/flowerui/lib/my.js";
+import { StringUtils } from "/flowerui/lib/StringUtils.js";
+
+var Css = function (_css, cmpInst) {
+    let _$el = cmpInst.$el, _self = this;
     let p = new Proxy(this, {
         deleteProperty: function (target, property) {
             _$el.css(property, '');
@@ -7,8 +11,15 @@ var Css = function (_css, $el) {
             return true;
         },
         set: function (target, property, value, receiver) {
-            _$el.css(property, value);
-            target[property] = value;
+            if (typeof value != "function") {
+                _$el.css(property, value);
+            }
+            if (_css && _css[property] && Array.isArray(_css[property])) {
+                if (!target[property])
+                    target[property] = [];
+                target[property].push(value);
+            } else
+                target[property] = value;
             return true;
         },
         get: function (target, property, receiver) {
@@ -19,19 +30,29 @@ var Css = function (_css, $el) {
         }
     });
 
+    UseBindings.call(p, _css);
     if (_css) {
-        _$el.css(_css);
         for (let prop in _css) {
-            if (Array.isArray(_css[prop])) {
-                let len = _css[prop].length;
-                for (let i = 0; i < len; i++) {
-                    p[prop] = _css[prop][i];
+            if (this.bindedProps.hasOwnProperty(prop))
+                delete _css[prop];
+            else {
+                if (Array.isArray(_css[prop])) {
+                    let len = _css[prop].length;
+                    for (let i = 0; i < len; i++) {
+                        p[prop] = _css[prop][i];
+                    }
+                } else {
+                    p[prop] = _css[prop];
                 }
-            } else {
-                p[prop] = _css[prop];
             }
         }
     }
 
+    this.getScopeChain = function () {
+        return [this, ...cmpInst.getScopeChain()];
+    };
     return p;
+};
+export {
+    Css
 };

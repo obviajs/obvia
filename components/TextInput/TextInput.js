@@ -4,9 +4,13 @@
  * Kreatx 2019
  */
 
-//component definition
+import { Parent } from "/flowerui/components/base/Parent.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+import { ChangeWatcher } from "/flowerui/lib/binding/ChangeWatcher.js";
+import { DependencyContainer } from "/flowerui/lib/DependencyContainer.js";
 var TextInput = function (_props) {
     let _self = this;
+    let _value, _autocomplete, _mask, _placeholder, _type, _input;
 
     Object.defineProperty(this, "value", {
         get: function value() {
@@ -14,6 +18,7 @@ var TextInput = function (_props) {
         },
         set: function value(v) {
             if (_value != v) {
+                let oldValue = _value;
                 _value = v;
                 if (_value != null) {
                     if (this.$el) {
@@ -26,6 +31,7 @@ var TextInput = function (_props) {
                         this.$el.val("");
                     }
                 }
+                _myw.propertyChanged("value", oldValue, value);
             }
         },
         enumerable: true
@@ -114,7 +120,9 @@ var TextInput = function (_props) {
     };
 
     this.inputHandler = function () {
+        let oldValue = _value;
         _value = this.$el.val();
+        _myw.propertyChanged("value", oldValue, _value);
     };
 
     this.focus = function () {
@@ -127,21 +135,18 @@ var TextInput = function (_props) {
         return "<input data-triggers='input' type='" + this.type + "' id='" + this.domID + "'>";
     };
 
-    var _defaultParams = {
+    let _defaultParams = {
         value: "",
         type: "text",
         placeholder: "",
         afterAttach: this.afterAttach,
         autocomplete: "off"
     };
-
-    _props = extend(false, false, _defaultParams, _props);
-    let _autocomplete;
-    let _value;
-    let _mask = _props.mask;
-    let _placeholder;
-    let _type = _props.type;
-    let _input = _props.input;
+    ObjectUtils.fromDefault(_defaultParams, _props);
+    //_props = ObjectUtils.extend(false, false, _defaultParams, _props);
+    _mask = _props.mask;
+    _type = _props.type;
+    _input = _props.input;
 
     _props.input = function () {
         let e = arguments[0];
@@ -152,8 +157,27 @@ var TextInput = function (_props) {
             _input.apply(this, arguments);
     };
     let r = Parent.call(this, _props);
+    let _myw = ChangeWatcher.getInstance(r);
     return r;
 };
 
 //component prototype
 TextInput.prototype.ctor = 'TextInput';
+var TextInputType = {
+    "EMAIL": "email",
+    "PASSWORD": "password",
+    "NUMBER": "number",
+    "TEXT": "text",
+    "DATE": "date",
+    "DATETIME-LOCAL": "datetime-local",
+    "MONTH": "month",
+    "RANGE": "range",
+    "TEL": "tel",
+    "TIME": "time",
+    "URL": "url",
+    "WEEK": "week"
+};
+DependencyContainer.getInstance().register("TextInput", TextInput, DependencyContainer.simpleResolve);
+export {
+    TextInput, TextInputType
+};

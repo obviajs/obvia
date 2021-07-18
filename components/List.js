@@ -3,6 +3,11 @@
  *
  * Kreatx 2019
  */
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+import { ArrayUtils } from "/flowerui/lib/ArrayUtils.js";
+import { Repeater } from "/flowerui/components/Repeater/Repeater.js";
+import { ChangeWatcher } from "/flowerui/lib/binding/ChangeWatcher.js";
+import { DependencyContainer } from "/flowerui/lib/DependencyContainer.js";
 
 var List = function (_props) {
     let _self = this;
@@ -18,7 +23,7 @@ var List = function (_props) {
         for(let i=0;i<this.dataProvider.length;i++)
         {
             if(lookUpValues){
-                ind = indexOfObject(_value, _valueField,  this.dataProvider[i][_valueField]);
+                ind = ArrayUtils.indexOfObject(_value, _valueField,  this.dataProvider[i][_valueField]);
                 _states.forEach(function (state) {
                     if(ind>-1){
                         _self.dataProvider[i][state.dataProviderField] = state.states.on;
@@ -31,6 +36,10 @@ var List = function (_props) {
                 });
             }
         }
+        
+        if (_props.value) {
+            _self.value = _props.value;
+        }
     };
 
     this.selectComponent = function (e, repeaterEventArgs) {
@@ -40,7 +49,7 @@ var List = function (_props) {
 
         let v = repeaterEventArgs.currentItem;
         let arrDpIndex = -1;
-        let arrValueIndex = indexOfObject(_self.value, _valueField, v[_valueField]);
+        let arrValueIndex = ArrayUtils.indexOfObject(_self.value, _valueField, v[_valueField]);
         let newValue = _self.value.slice();
         if (arrValueIndex == -1) {
             if (_multiselect) {
@@ -69,11 +78,11 @@ var List = function (_props) {
         selectedClasses: ["btn btn-sm btn-success"],
         value: []
     };
-
-    _props = extend(false, false, _defaultParams, _props);
+    ObjectUtils.fromDefault(_defaultParams, _props);
+    //_props = ObjectUtils.extend(false, false, _defaultParams, _props);
 
     let _multiselect = _props.multiselect;
-    let _value = _props.value;
+    let _value;
     let _states = _props.states;
     let _valueField = _props.valueField;
     let _classesField = _props.classesField;
@@ -117,31 +126,32 @@ var List = function (_props) {
         }
     };
 
-    Repeater.call(this, _props);
-    
+    let r = Repeater.call(this, _props);
+    let _myw = ChangeWatcher.getInstance(r);
     Object.defineProperty(this, "value", {
         get: function value() {
             return _value;
         },
         set: function (value) {
+            let oldValue = _value;
+            let v = {};               
+            if (value == null) {
+                value = [];
+            } else if (typeof value === "string") {
+                v[_valueField] = value;
+                value = [v];
+            } else if (typeof (value) === "object" && !(value instanceof Array)) {
+                value = [value];
+            } else if (!(typeof (value) === "object" && (value instanceof Array))) {
+                v[_valueField] = value;
+                value = [v];
+            }
             if((!_value && value) || (_value && !_value.equals(value))){
-               let v = {};
-                if (value == undefined || value == null) {
-                    value = [];
-                } else if (typeof value === "string") {
-                    v[_valueField] = value;
-                    value = [v];
-                } else if (typeof (value) === "object" && !(value instanceof Array)) {
-                    value = [value];
-                } else if (!(typeof (value) === "object" && (value instanceof Array))) {
-                    v[_valueField] = value;
-                    value = [v];
-                }
-                _value = intersectOnKeyMatch(this.dataProvider, value, _valueField); //value;
+                _value = ArrayUtils.intersectOnKeyMatch(this.dataProvider, value, _valueField); //value;
                 let unselect = this.dataProvider.difference(_value);
 
                 unselect.forEach(function (v) {
-                    let arrDpIndex = (v == undefined || v == null || v[_valueField] == undefined) ? -1 : indexOfObject(this.dataProvider, _valueField, v[_valueField]);
+                    let arrDpIndex = (v == undefined || v == null || v[_valueField] == undefined) ? -1 : ArrayUtils.indexOfObject(this.dataProvider, _valueField, v[_valueField]);
                     if (arrDpIndex != -1) {
                         _states.forEach(function (state) {
                             this.dataProvider[arrDpIndex][state.dataProviderField] = state.states.off;
@@ -150,7 +160,7 @@ var List = function (_props) {
                 }.bind(this));
 
                 this.value.slice(0).forEach(function (v, i) {
-                    let arrDpIndex = (v == null || v[_valueField] == null) ? -1 : indexOfObject(this.dataProvider, _valueField, v[_valueField]);
+                    let arrDpIndex = (v == null || v[_valueField] == null) ? -1 : ArrayUtils.indexOfObject(this.dataProvider, _valueField, v[_valueField]);
                     if (arrDpIndex != -1) {
                         _states.forEach(function (state) {
                             this.dataProvider[arrDpIndex][state.dataProviderField] = state.states.on;
@@ -162,10 +172,15 @@ var List = function (_props) {
                 if(this.attached){
                     this.trigger('change');
                 }
+                
+                _myw.propertyChanged("value", oldValue, _value);
             }
         }
     });
-
+    return r;
 };
-
 List.prototype.ctor = 'List';
+DependencyContainer.getInstance().register("List", List, DependencyContainer.simpleResolve);
+export {
+    List
+};

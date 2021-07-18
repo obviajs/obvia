@@ -1,10 +1,16 @@
+
 /**
  * This is a Modal component
  * 
  * Kreatx 2018
  */
-
-//component definition
+import { ArrayEx } from "/flowerui/lib/ArrayEx.js";
+import { Container } from "/flowerui/components/Container.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+import { Heading, HeadingType } from "/flowerui/components/Heading.js";
+import { Button } from "/flowerui/components/Button/Button.js";
+import { Label, LabelType } from "/flowerui/components/Label.js";
+import { DependencyContainer } from "/flowerui/lib/DependencyContainer.js";
 var Modal = function (_props) {
     let _self = this;
     Object.defineProperty(this, "title", {
@@ -38,86 +44,89 @@ var Modal = function (_props) {
                 this.trigger(e);
             }
         }
-        //
     };
     let _defaultComponents = {
         "modalBody": _props.components && _props.components.forEach ? _props.components : null,
         "modalHeader": [{
-                ctor: Heading,
-                props: {
-                    id: "title",
-                    label: _props.title,
-                    headingType: HeadingType.h5,
-                }
-            },
-            {
-                ctor: Container,
-                props: {
-                    type: ContainerType.BTN_GROUP,
-                    id: "headerButtonsCnt",
-                    components: [{
-                            ctor: Button,
-                            props: {
-                                id: 'dismissButton',
-                                type: "button",
-                                classes: ["close", "no-form-control"],
-                                attr: {
-                                    "data-dismiss": "modal",
-                                    "aria-label": "Dismiss"
-                                },
-                                components: [{
-                                    ctor: Label,
-                                    props: {
-                                        id: 'fa',
-                                        labelType: LabelType.i,
-                                        classes: ["fas", "fa-times"]
-                                    }
-                                }],
-                                click: function (e) {
-                                    let evt = jQuery.Event('dismiss');
-                                    _self.trigger(evt);
-                                    if (!evt.isDefaultPrevented()) {
-                                        _self.hide();
-                                    }
-                                }
-                            }
+            ctor: Heading,
+            props: {
+                id: "title",
+                label: _props.title,
+                headingType: HeadingType.h5,
+            }
+        },
+        {
+            ctor: Container,
+            props: {
+                type: "btn-group",
+                id: "headerButtonsCnt",
+                components: [{
+                    ctor: Button,
+                    props: {
+                        id: 'dismissButton',
+                        type: "button",
+                        classes: ["close", "no-form-control"],
+                        attr: {
+                            "data-dismiss": "modal",
+                            "aria-label": "Dismiss"
                         },
-                        {
-                            ctor: Button,
+                        components: [{
+                            ctor: Label,
                             props: {
-                                id: 'acceptButton',
-                                type: "button",
-                                classes: ["close", "no-form-control"],
-                                attr: {
-                                    "data-dismiss": "modal",
-                                    "aria-label": "Accept"
-                                },
-                                components: [{
-                                    ctor: Label,
-                                    props: {
-                                        id: 'fa',
-                                        labelType: LabelType.i,
-                                        classes: ["fas", "fa-check"]
-                                    }
-                                }],
-                                click: function (e) {
-                                    let evt = jQuery.Event('accept');
-                                    _self.trigger(evt);
-                                    if (!evt.isDefaultPrevented()) {
-                                        _self.hide();
-                                    }
-                                }
+                                id: 'fa',
+                                labelType: LabelType.i,
+                                classes: ["fas", "fa-times"]
+                            }
+                        }],
+                        click: function (e) {
+                            let evt = jQuery.Event('dismiss');
+                            _self.trigger(evt);
+                            if (!evt.isDefaultPrevented()) {
+                                _self.hide();
                             }
                         }
-                    ]
+                    }
+                },
+                {
+                    ctor: Button,
+                    props: {
+                        id: 'acceptButton',
+                        type: "button",
+                        classes: ["close", "no-form-control"],
+                        attr: {
+                            "data-dismiss": "modal",
+                            "aria-label": "Accept"
+                        },
+                        components: [{
+                            ctor: Label,
+                            props: {
+                                id: 'fa',
+                                labelType: LabelType.i,
+                                classes: ["fas", "fa-check"]
+                            }
+                        }],
+                        click: function (e) {
+                            let evt = jQuery.Event('accept');
+                            _self.trigger(evt);
+                            if (!evt.isDefaultPrevented()) {
+                                _self.hide();
+                            }
+                        }
+                    }
                 }
+                ]
             }
-        ]
+        }]
+    };
+    
+    let _clickHandler = function (e) {
+        if (e.target.id === this.domID)
+            this.hide();
     };
 
     let _defaultParams = {
         size: ModalSize.LARGE,
-        type: ContainerType.NONE,
+        type: "",
         classes: ["modal", "modal-fullscreen"],
         attr: {
             "data-triggers": "displayListUpdated accept dismiss shown hidden",
@@ -127,14 +136,25 @@ var Modal = function (_props) {
         css: {},
         components: _defaultComponents
     };
-    _props = extend(false, false, _defaultParams, _props);
+    ObjectUtils.fromDefault(_defaultParams, _props);
+    //_props = ObjectUtils.extend(false, false, _defaultParams, _props);
     if (_props.components && _props.components.forEach) {
         _props.components = _defaultComponents;
     }
 
     let _title = _props.title;
     let _size = _props.size;
+    let _click = _props.click;
 
+    _props.click = function () {
+        if (typeof _click == 'function')
+            _click.apply(this, arguments);
+
+        let e = arguments[0];
+        if (!e.isDefaultPrevented()) {
+            _clickHandler.apply(this, arguments);
+        }
+    };
 
     this.endDraw = function (e) {
         if (e.target.id == this.domID) {
@@ -145,24 +165,20 @@ var Modal = function (_props) {
             _modalFooter = _modalContent.modalFooter;
         }
     };
-
-    let _cmps, _modalDialog, _modalContent, _modalHeader, _modalBody, _modalFooter;
+    let _cmps, _modalDialog, _modalContent, _modalHeader, _modalBody, _modalFooter, _backDrop;
     let fnContainerDelayInit = function () {
         Modal.all.push(_self);
         _props.css["z-index"] = 1040 + Modal.all.length;
-        if (!Modal.BackDrop) {
-            Modal.BackDrop = Component.fromLiteral({
-                ctor: Container,
-                props: {
-                    type: ContainerType.NONE,
-                    classes: ["modal-backdrop", "fade", "show"]
-                }
+        if (!_backDrop) {
+            _backDrop = new Container({
+                type: "",
+                classes: ["modal-backdrop", "fade", "show"]
             });
         }
         _cmps = [{
             ctor: Container,
             props: {
-                type: ContainerType.NONE,
+                type: "",
                 classes: ["modal-dialog", _size],
                 attr: {
                     role: "document"
@@ -171,40 +187,41 @@ var Modal = function (_props) {
                 components: [{
                     ctor: Container,
                     props: {
-                        type: ContainerType.NONE,
+                        type: "",
                         classes: ["modal-content"],
                         id: "modalContent",
+                        css: { resize: "both", overflow: "hidden" },
                         components: [{
-                                ctor: Container,
-                                props: {
-                                    id: "modalHeader",
-                                    type: ContainerType.NONE,
-                                    classes: ["modal-header"],
-                                    components: _props.components.modalHeader
-                                }
-                            },
-                            {
-                                ctor: Container,
-                                props: {
-                                    id: "modalBody",
-                                    type: ContainerType.NONE,
-                                    classes: ["modal-body"],
-                                    css: {
-                                        "overflow-y": "auto",
-                                        "max-height": "80vh"
-                                    },
-                                    components: _props.components.modalBody
-                                }
-                            },
-                            {
-                                ctor: Container,
-                                props: {
-                                    id: "modalFooter",
-                                    type: ContainerType.NONE,
-                                    classes: ["modal-footer"],
-                                    components: _props.components.modalFooter
-                                }
+                            ctor: Container,
+                            props: {
+                                id: "modalHeader",
+                                type: "",
+                                classes: ["modal-header"],
+                                components: _props.components.modalHeader
                             }
+                        },
+                        {
+                            ctor: Container,
+                            props: {
+                                id: "modalBody",
+                                type: "",
+                                classes: ["modal-body"],
+                                css: {
+                                    "overflow-y": "auto",
+                                    "max-height": "80vh"
+                                },
+                                components: _props.components.modalBody
+                            }
+                        },
+                        {
+                            ctor: Container,
+                            props: {
+                                id: "modalFooter",
+                                type: "",
+                                classes: ["modal-footer"],
+                                components: _props.components.modalFooter
+                            }
+                        }
                         ]
                     }
                 }]
@@ -231,12 +248,12 @@ var Modal = function (_props) {
             if (!this.attached) {
                 this.appendTo.append(this.$el);
             }
-            if (!Modal.BackDrop.attached) {
-                Modal.BackDrop.render().then(function (cmpInstance) {
+            if (!_backDrop.attached) {
+                _backDrop.render().then(function (cmpInstance) {
                     $(_self.ownerDocument.body).append(cmpInstance.$el);
                 });
             }
-            Modal.BackDrop.show();
+            _backDrop.show();
             this.css.display = "block";
             //$(this.$el[0].ownerDocument.body).addClass('modal-open');
         }
@@ -246,7 +263,7 @@ var Modal = function (_props) {
     this.hide = function () {
         if (this.$el) {
             //this.$el.modal('hide');
-            Modal.BackDrop.destruct(2);
+            _backDrop.destruct(2);
             delete this.css["display"];
             //$(this.$el[0].ownerDocument.body).removeClass('modal-open');
         }
@@ -266,4 +283,12 @@ var Modal = function (_props) {
 };
 Modal.prototype.ctor = 'Modal';
 Modal.all = new ArrayEx();
-Modal.BackDrop = null;
+var ModalSize =
+{
+    "SMALL": "modal-sm",
+    "LARGE": "modal-lg"
+};
+DependencyContainer.getInstance().register("Modal", Modal, DependencyContainer.simpleResolve);
+export {
+    Modal, ModalSize
+};

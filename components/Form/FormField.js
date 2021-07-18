@@ -3,8 +3,11 @@
  * 
  * Kreatx 2018
  */
-
-//component definition
+import { Container } from "/flowerui/components/Container.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+import { Label } from "/flowerui/components/Label.js";
+import { Props } from "/flowerui/components/base/Props.js";
+import { DependencyContainer } from "/flowerui/lib/DependencyContainer.js";
 var FormField = function (_props) {
     let _self = this;
     let _input, _lbl;
@@ -148,13 +151,13 @@ var FormField = function (_props) {
         enabled: true,
         required: false,
         size: FormFieldSize.SMALL,
-        type: ContainerType.NONE,
+        type: "",
         name: "",
         label: "",
         input: null
     };
-
-    _props = extend(false, false, _defaultParams, _props);
+    ObjectUtils.fromDefault(_defaultParams, _props);
+    //_props = ObjectUtils.extend(false, false, _defaultParams, _props);
     let _placeholder;
     let _name;
     let _required;
@@ -170,7 +173,7 @@ var FormField = function (_props) {
     let _size = _props.size;
 
     _props.components = [_lblCmp];
-    if (_component && !Object.isEmpty(_component)) {
+    if (_component && !ObjectUtils.isEmpty(_component)) {
         _props.components.push(_component);
     }
 
@@ -220,3 +223,12 @@ var FormField = function (_props) {
 };
 //component prototype
 FormField.prototype.ctor = 'FormField';
+var FormFieldSize =
+{
+    "SMALL": "form-control-sm",
+    "LARGE": "form-control-lg"
+};
+DependencyContainer.getInstance().register("FormField", FormField, DependencyContainer.simpleResolve);
+export {
+    FormField, FormFieldSize
+};

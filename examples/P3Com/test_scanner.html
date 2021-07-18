@@ -221,7 +221,7 @@
         saveScan.enabled = false;
         $('#root').append(saveScan.render());
 
-        myModal.on('creationComplete', function (e) {
+        myModal.on('endDraw', function (e) {
             //trigger autocomplete complete
             e.stopPropagation();
         })

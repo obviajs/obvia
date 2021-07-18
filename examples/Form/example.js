@@ -1211,7 +1211,7 @@ var myForm2 = new Form({
     ]
 });
 
-myForm.on('creationComplete', function () {
+myForm.on('endDraw', function () {
     loader.hide();
 
     myForm.repeater.on('onBeforeRowAdd', function (e) {

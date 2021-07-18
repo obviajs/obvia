@@ -1,3 +1,13 @@
+import { Literal } from "/flowerui/lib/Literal.js";
+import { UseBindings } from "/flowerui/lib/UseBindings.js";
+import { Attr } from "/flowerui/components/base/Attr.js";
+import { Css } from "/flowerui/components/base/Css.js";
+import { StringUtils } from "/flowerui/lib/StringUtils.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+import { ArrayUtils } from "/flowerui/lib/ArrayUtils.js";
+import { RepeaterEventArgs } from "/flowerui/components/Repeater/RepeaterEventArgs.js";
+import { Props } from "/flowerui/components/base/Props.js";
+
 var Component = function (_props) {
     let _self = this;
     if (!Component[this.ctor]) {
@@ -5,7 +15,7 @@ var Component = function (_props) {
         Component[this.ctor].instanceInc = 0;
     }
     ++Component[this.ctor].instanceInc;
-
+    delete _props["guid"];
     let _defaultParams = {
         id: this.ctor + "_" + Component[this.ctor].instanceInc,
         classes: [],
@@ -19,22 +29,21 @@ var Component = function (_props) {
         appendTo: undefined,
         attach: true
     };
-    shallowCopy(extend(false, false, _defaultParams, _props), _props);
-    let ppb = Component.processPropertyBindings(_props);
+    
+    ObjectUtils.fromDefault(_defaultParams, _props);
+    //ObjectUtils.shallowCopy(ObjectUtils.extend(false, false, _defaultParams, _props), _props);
+    UseBindings.call(this, _props);
     for (let prop in _props) {
-        if (!ppb.processedProps.hasOwnProperty(prop))
+        if (this.bindedProps.hasOwnProperty(prop))
             delete _props[prop];
     }
-    if (_props.bindingDefaultContext == null) {
-        _props.bindingDefaultContext = this;
-    }
+
     let _parentRepeater = _props.parentRepeater;
     let _repeaterIndex = _props.repeaterIndex;
-    let _bindingDefaultContext = _props.bindingDefaultContext;
     let _guid = _props.guid;
     let _attr, _css;
     let _id = _props.id = ((!_props.id) || (_props.id == "")) ? _defaultParams.id : _props.id;
-    let _enabled, _draggable, _visible = true;
+    let _enabled, _draggable, _visible = true, _display = true;
     let _classes = [];
     let _parent = _props.parent;
     let _parentForm = _props.parentForm;
@@ -47,7 +56,6 @@ var Component = function (_props) {
     let _blur = _props.blur;
     let _keydown = _props.keydown;
     let _keyup = _props.keyup;
-    let _creationComplete = _props.creationComplete;
     let _change = _props.change;
     let _drop = _props.drop;
     let _dragover = _props.dragover;
@@ -56,18 +64,13 @@ var Component = function (_props) {
     let _dragleave = _props.dragleave;
     let _dragend = _props.dragend;
     let _idChanged = _props.idChanged;
-    let _ownerDocument = _props.ownerDocument;
-    let _watchers = [];
-    let _bindings = ppb.bindings;
+    let _ownerDocument = _props.ownerDocument || _defaultParams.ownerDocument;
     let _attached = false;
     let _attach = _props.attach;
     let _index = _props.index;
     let _appendTo = _props.appendTo;
 
     let _domID = _id + '_' + _guid;
-
-    Component.instances[_domID] = this;
-    let _bindingsManager = BindingsManager.getInstance(this);
     //let _propUpdateMap = {"label":{"o":$el, "fn":"html", "p":[] }, "hyperlink":{}};
     //generate GUID for this component
     Object.defineProperty(this, "guid", {
@@ -75,6 +78,13 @@ var Component = function (_props) {
             return _guid;
         },
         enumerable: true
+    });
+
+    Object.defineProperty(this, "dependencies", {
+        get: function dependencies() {
+            return [{"attr":this.attr, "css":this.css}, this.children];
+        },
+        enumerable: false
     });
 
     Object.defineProperty(this, "attach", {
@@ -86,23 +96,11 @@ var Component = function (_props) {
         get: function attached() {
             return _attached;
         },
-        set: function (v) {
+        set: function attached(v) {
             if (_attached != v) {
                 _attached = v;
             }
         }
-    });
-    Object.defineProperty(this, "bindingDefaultContext", {
-        get: function bindingDefaultContext() {
-            return _bindingDefaultContext;
-        },
-        set: function bindingDefaultContext(v) {
-            if (_bindingDefaultContext != v) {
-                _bindingDefaultContext = v;
-                this.refreshBindings(_bindingDefaultContext);
-            }
-        },
-        enumerable: false
     });
 
     Object.defineProperty(this, "proxyMaybe", {
@@ -129,7 +127,7 @@ var Component = function (_props) {
                     delete Component.instances[this.domID];
                     _id = v;
                     _domID = _id + '_' + _guid;
-                    Component.instances[_domID] = this;
+                    Component.instances[_domID] = this.proxyMaybe;
 
                     if (this.parent) {
                         if (this.parent.ctor == "Repeater") {
@@ -138,9 +136,6 @@ var Component = function (_props) {
                         } else {
                             this.parent.children[_id] = this.parent.children[oldId];
                             delete this.parent.children[oldId];
-
-                            this.parent.ccRelation[_id] = this.parent.ccRelation[oldId];
-                            delete this.parent.ccRelation[oldId];
 
                             let ind = this.parent.csorted.indexOf(oldId);
                             if (ind > -1) {
@@ -203,12 +198,6 @@ var Component = function (_props) {
         }
     });
 
-    Object.defineProperty(this, "spacing", {
-        get: function spacing() {
-            return _spacing;
-        },
-        enumerable: true
-    });
     Object.defineProperty(this, "attr", {
         get: function attr() {
             return _attr;
@@ -246,14 +235,16 @@ var Component = function (_props) {
         set: function parent(v) {
             if (_parent != v) {
                 if (_parent) {
-                    if (_self.$el) {
-                        if (_parent)
-                            _parent.$el.detach(_self.$el);
-                        if (v)
-                            v.$el.append(_self.$el);
-                    }
+                    _parent.removeChild(_self);                        
                 }
                 _parent = v;
+                if (this.children) {
+                    for (let cid in this.children) {
+                        this.children[cid].invalidateScopeChain();
+                    }
+                }
+                if(this.invalidateScopeChain && typeof this.invalidateScopeChain == 'function')
+                    this.invalidateScopeChain();
             }
         },
         enumerable: false
@@ -276,12 +267,6 @@ var Component = function (_props) {
         enumerable: false
     });
 
-    Object.defineProperty(this, "bindings", {
-        get: function bindings() {
-            return _bindings;
-        }
-    });
-
     Object.defineProperty(this, "visible", {
         get: function visible() {
             return _visible;
@@ -291,6 +276,25 @@ var Component = function (_props) {
                 _visible = v;
                 if (this.$el) {
                     if (_visible)
+                        this.$el.css({ "visibility": "visible" });
+                    else
+                        this.$el.css({ "visibility": "hidden" });
+                }
+            }
+        },
+        configurable: true,
+        enumerable: true
+    });
+
+    Object.defineProperty(this, "display", {
+        get: function display() {
+            return _display;
+        },
+        set: function display(v) {
+            if (_display != v) {
+                _display = v;
+                if (this.$el) {
+                    if (_display)
                         this.show();
                     else
                         this.hide();
@@ -311,7 +315,7 @@ var Component = function (_props) {
                 if (this.$el)
                     this.$el.find("input, select, textarea, button").addBack("input, select, textarea, button").each(function () {
                         if (!v)
-                            $(this).prop('disabled', 'disabled');
+                            $(this).attr('disabled', 'disabled');
                         else
                             $(this).removeAttr('disabled');
                     });
@@ -355,50 +359,32 @@ var Component = function (_props) {
         },
         enumerable: true
     });
+
+    let _classesClone;
+
     Object.defineProperty(this, "classes", {
         get: function classes() {
-            let r = _classes;
-            if (1 != 1 && this.children) {
-                let p;
-                for (let _cid in this.children) {
-                    if (this[this.childrenRID[_cid]] && this[this.childrenRID[_cid]]["ctor"]) {
-                        if (!p)
-                            r = {};
-                        r[this.childrenRID[_cid]] = this[this.childrenRID[_cid]].classes;
-                        p = true;
-                    }
-                }
-                if (p) {
-                    r["self"] = _classes;
-                }
-            }
-            return r;
+            return _classes;
         },
         set: function classes(v) {
-            if ((!_classes && v) || (_classes && (!_classes.equals(v)))) {
+            if (v  && (!_classesClone || !_classesClone.equals(v))) {
                 if (this.$el) {
                     if (Array.isArray(v)) {
-                        _classes = v.difference(_classes, true);
-                        for (let i = 0; i < _classes.length; i++) {
+                        _classes = v.difference(_classesClone, true);
+                        let len = _classes.length; 
+                        for (let i = 0; i < len; i++) {
                             let _class = _classes[i];
                             if (this.$el.hasClass(_class))
                                 this.$el.removeClass(_class);
                         }
                         _classes = v;
-                        for (let i = 0; i < _classes.length; i++) {
+                        len = _classes.length;
+                        for (let i = 0; i < len; i++) {
                             this.$el.addClass(_classes[i]);
                         }
-                    } else {
-                        for (let _cid in v) {
-                            if (_cid == "self")
-                                this.classes = v[_cid];
-                            else if (this.proxyMaybe[_cid] && this.proxyMaybe[_cid]["ctor"]) {
-                                this.proxyMaybe[_cid].classes = v[_cid];
-                            }
-                        }
+                        _classesClone = _classes.slice(0);
                     }
                 }
-
             }
         },
         enumerable: true
@@ -415,9 +401,14 @@ var Component = function (_props) {
         this.$el = tpl;
     else if (tpl && tpl != "")
         this.$el = $(tpl);
+    this.$el.ownerDocument = _ownerDocument;
+    let dt = this.$el.attr("data-triggers");
 
-    _attr = new Attr(_props.attr, this.$el);
-    _css = new Css(_props.css, this.$el);
+    if (dt && !ObjectUtils.isEmpty(_props.attr) && _props.attr["data-triggers"] && !ObjectUtils.isEmpty(_props.attr["data-triggers"])) {        
+        _props.attr["data-triggers"] = _props.attr["data-triggers"] + " " + dt;
+    }
+    _attr = new Attr(_props.attr, this);
+    _css = new Css(_props.css, this);
 
     let _DOMMutation = this.DOMMutation;
     this.DOMMutation = function (e) {
@@ -455,11 +446,15 @@ var Component = function (_props) {
                 if (typeof _beforeAttach == 'function')
                     _beforeAttach.apply(this.proxyMaybe, arguments);
             }
+            if (_props.enabled != null)
+                this.enabled = _props.enabled;
         }
     };
+    let _drawEnded;
     let _beginDraw = this.beginDraw;
     this.beginDraw = function (e) {
         if (e.target.id == this.domID) {
+            _drawEnded = false;
             //console.log("beginDraw : Type:", this.ctor + " id:" + this.$el.attr("id"));
             if (typeof _props.beginDraw == 'function')
                 _props.beginDraw.apply(this.proxyMaybe, arguments);
@@ -473,6 +468,7 @@ var Component = function (_props) {
     let _endDraw = this.endDraw;
     this.endDraw = function (e) {
         if (e.target.id == this.domID) {
+            _drawEnded = true;
             //console.log("endDraw : Type:", this.ctor + " id:" + this.$el.attr("id"));
             if (typeof _props.endDraw == 'function')
                 _props.endDraw.apply(this.proxyMaybe, arguments);
@@ -481,10 +477,19 @@ var Component = function (_props) {
                 if (typeof _endDraw == 'function')
                     _endDraw.apply(this.proxyMaybe, arguments);
             }
-            if ((_props.applyBindings == null || _props.applyBindings == true) && _bindingsManager.watchers.length == 0)
-                this.applyBindings(_bindingDefaultContext);
-            _self.trigger('beforeAttach');
+            if (!_attached) {
+                this.applyMyBindings();
+                _self.trigger('beforeAttach');
+            }
         }
+    };
+
+    this.applyMyBindings = function () {
+        if (_self.bindingsManager.watchers.length == 0) {                
+            this.applyBindings();
+            this.attr.applyBindings();
+            this.css.applyBindings();
+        } 
     };
 
     let _afterAttach = this.afterAttach;
@@ -496,10 +501,6 @@ var Component = function (_props) {
             if (!e.isDefaultPrevented()) {
                 if (typeof _afterAttach == 'function')
                     _afterAttach.apply(this.proxyMaybe, arguments);
-                if (!e.isDefaultPrevented()) {
-                    this.trigger('creationComplete');
-                    //console.log("CreationComplete : Type:",this.ctor+" id:"+ this.$el.attr("id"));
-                }
             }
             //console.log("AfterAttach : Type:",this.ctor+" id:"+ this.$el.attr("id"));
         }
@@ -530,7 +531,6 @@ var Component = function (_props) {
             'blur': _blur && typeof _blur == 'function' ? _blur.bind(_self) : undefined,
             'keydown': _keydown && typeof _keydown == 'function' ? _keydown.bind(_self) : undefined,
             'keyup': _keyup && typeof _keyup == 'function' ? _keyup.bind(_self) : undefined,
-            'creationComplete': _creationComplete && typeof _creationComplete == 'function' ? _creationComplete.bind(_self) : undefined,
             'change': _change && typeof _change == 'function' ? _change.bind(_self) : undefined,
             'drop': _drop && typeof _drop == 'function' ? _drop.bind(_self) : undefined,
             'dragover': _dragover && typeof _dragover == 'function' ? _dragover.bind(_self) : undefined,
@@ -569,7 +569,7 @@ var Component = function (_props) {
             let found = false;
             for (let i = 0; i < customEvents.length; i++) {
                 if (customEvents[i].registerTo.attr('id') == $(this).attr('id')) {
-                    customEvents[i].events = extend(false, false, eventsObj, customEvents[i].events);
+                    customEvents[i].events = ObjectUtils.extend(false, false, eventsObj, customEvents[i].events);
                     found = true;
                     break;
                 }
@@ -596,6 +596,12 @@ var Component = function (_props) {
         }
     });
 
+    Object.defineProperty(this, "drawEnded", {
+        get: function drawEnded() {
+            return _drawEnded;
+        }
+    });
+    
     if (!this.hasOwnProperty("render")) {
         this.render = function () {
             _self.trigger('beginDraw');
@@ -607,7 +613,7 @@ var Component = function (_props) {
     this.show = function () {
         if (this.$el) {
             this.$el.show();
-            _visible = true;
+            _display = true;
         }
         return this;
     };
@@ -615,7 +621,7 @@ var Component = function (_props) {
     this.hide = function () {
         if (this.$el) {
             this.$el.hide();
-            _visible = false;
+            _display = false;
         }
         return this;
     };
@@ -637,9 +643,18 @@ var Component = function (_props) {
             });
         }
     };
-    this.destruct = function (mode = 1) {
-        if (this.$el)
-            mode == 1 ? this.$el.remove() : this.$el.detach();
+    this.destruct = function (mode = 1) {       
+        return new Promise((resolve, reject) => {
+            let arrow = (e) => {
+                if (e.target.id == _self.domID) {
+                    resolve();
+                }
+                _self.proxyMaybe.off('detached', arrow);
+            };
+            _self.proxyMaybe.on('detached', arrow);
+            if (this.$el)
+                mode == 1 ? this.$el.remove() : this.$el.detach();
+        });
         //_self.attached = false;
     };
 
@@ -729,7 +744,7 @@ var Component = function (_props) {
                                     "proxyHandler": proxyHandler,
                                     "originalHandler": fnc
                                 });
-                                this.$el.on(eventType, proxyHandler);
+                                this.$el.on(eventType, proxyHandler);                                
                             } else {
                                 console.log("Tried to add a listener that was previously added.");
                             }
@@ -765,7 +780,7 @@ var Component = function (_props) {
             }
             let found;
             for (let i = 0; i < evt.length; i++) {
-                found = getMatching(_handlers[evt[i]], "originalHandler", handler, true);
+                found = ArrayUtils.getMatching(_handlers[evt[i]], "originalHandler", handler, true);
                 if (found.objects.length > 0) {
                     arguments[ind] = found.objects[0].proxyHandler;
                     this.$el.off.apply(this.$el, arguments);
@@ -776,133 +791,10 @@ var Component = function (_props) {
     };
 
     this.hasListener = function (eventType, fnc) {
-        let found = getMatching(_handlers[eventType], "originalHandler", fnc, true);
+        let found = ArrayUtils.getMatching(_handlers[eventType], "originalHandler", fnc, true);
         return found.objects.length > 0;
     };
-
-    this.getBindingExpression = function (property) {
-        let match = getMatching(_bindings, "property", property, true);
-        let expression = null;
-        if (match.objects.length > 0) {
-            expression = match.objects[0]["expression"];
-        }
-        return expression;
-    };
-
-    this.resetBindings = function () {
-        _bindingsManager.resetBindings();
-    };
-
-    this.setBindingExpression = function (property, expression) {
-        let match = getMatching(_bindings, "property", property, true);
-        if (match.indices.length > 0) {
-            let b = getBindingExp(expression);
-            if (b) {
-                let newBinding = {
-                    "expression": b.expression,
-                    "property": property,
-                    "nullable": false
-                };
-                _bindings.splice(match.indices[0], 1, newBinding);
-
-                let currentItem = _bindingDefaultContext;
-                let bindingExp = expression;
-                let site = this;
-                let site_chain = [property];
-                let nullable = false;
-
-                //this here refers to window context
-                let defaultBindTo = "currentItem_" + _self.guid;
-                window[defaultBindTo] = (currentItem || this);
-                if (!("currentItem" in window[defaultBindTo])) {
-                    // window[defaultBindTo]["currentItem"] = window[defaultBindTo];
-                    Object.defineProperty(window[defaultBindTo], "currentItem", {
-                        value: window[defaultBindTo],
-                        enumerable: false,
-                        configurable: true
-                    });
-                }
-                // let context = extend(false, true, this, obj);
-                let fn = function () {
-                    _bindingsManager.getValue(window, bindingExp, site_chain, defaultBindTo);
-                };
-                if (nullable) {
-                    let fnDelayed = whenDefined(window[defaultBindTo], bindingExp, fn);
-                    fnDelayed();
-                } else {
-                    fn();
-                }
-            }
-        }
-    };
-
-    let _bindedTo;
-    this.refreshBindings = function (data) {
-        if (_bindedTo != data) {
-            this.resetBindings();
-            this.applyBindings(data);
-            if (this.children) {
-                for (let cid in this.children) {
-                    if (this.children[cid].bindingDefaultContext == _bindingDefaultContext)
-                        this.children[cid].refreshBindings(data);
-                }
-            }
-        }
-        _bindingDefaultContext = data;
-    };
-
-    this.applyBindings = function (data) {
-        _bindedTo = data;
-        for (let bi = 0; bi < _bindings.length; bi++) {
-            let currentItem = data;
-            let bindingExp = _bindings[bi].expression;
-
-            let site_chain = [_bindings[bi].property];
-            let nullable = _bindings[bi].nullable;
-
-            //this here refers to window context
-            let defaultBindTo = "currentItem_" + _self.guid;
-            window[defaultBindTo] = (currentItem || this);
-            if (!("currentItem" in window[defaultBindTo])) {
-                Object.defineProperty(window[defaultBindTo], "currentItem", {
-                    value: window[defaultBindTo],
-                    enumerable: false,
-                    configurable: true
-                });
-            }
-            // let context = extend(false, true, this, obj);
-            let fn = function () {
-                _bindingsManager.getValue(window, bindingExp, site_chain, defaultBindTo);
-            };
-            if (nullable) {
-                let identifierTokens = BindingsManager.getIdentifiers(bindingExp);
-                if (identifierTokens) {
-                    let len = identifierTokens.length;
-                    let cc = window[defaultBindTo];
-                    coroutine(function* () {
-                        for (let i = 0; i < len; i++) {
-                            yield whenDefinedPromise(cc, identifierTokens[i].value);
-                            cc = cc[identifierTokens[i].value];
-                        }
-                        fn();
-                    });
-                }
-            } else {
-                fn();
-            }
-        }
-    };
-
-    this.keepBase = function () {
-        this.base = {};
-        for (let prop in this) {
-            if (isGetter(this, prop))
-                copyAccessor(prop, this, this.base);
-            else
-                this.base[prop] = this[prop];
-        }
-    };
-
+    
     this.implement = function (inst) {
         for (let prop in inst) {
             if (isGetter(inst, prop))
@@ -942,15 +834,16 @@ var Component = function (_props) {
                 }
             }
         }
-    };
+    };    
 
-    if (_props.enabled != null)
-        this.enabled = _props.enabled;
+    Component.instances[_domID] = this.proxyMaybe;
+    
     if (_props.visible != null)
         this.visible = _props.visible;
+    if (_props.display != null)
+        this.display = _props.display;
     if (_props.draggable != null)
         this.draggable = _props.draggable;
-    let _spacing = new Spacing(_props.spacing, this.$el);
 
     _self.initEvents(this.$el);
 
@@ -964,64 +857,16 @@ var Component = function (_props) {
     }
 
     this.find = function (childId) {
-        let r = objectHierarchyGetMatchingMember(this, "id", childId, "children", false),
+        let r = ArrayUtils.objectHierarchyGetMatchingMember(this, "id", childId, "children", false),
             m = null;
         if (r && r.match)
             m = r.match;
         return m;
     };
-
-    this.trigger('init');
+    this.trigger('init');  
 };
-
-Component.processPropertyBindings = function (props) {
-    let _bindings = [];
-    //build components properties, check bindings
-    let _processedProps = {};
-
-    for (let prop in props) {
-        if (typeof prop == 'string') {
-            //check for binding
-            let b = getBindingExp(props[prop]);
-            if (b) {
-                if (prop != "bindingDefaultContext") {
-                    _bindings.push({
-                        "expression": b.expression,
-                        "property": prop,
-                        "nullable": b.nullable
-                    });
-                } else
-                    _bindings.unshift({
-                        "expression": b.expression,
-                        "property": prop,
-                        "nullable": b.nullable
-                    });
-            } else {
-                //no binding
-                _processedProps[prop] = props[prop];
-            }
-        }
-    }
-    return {
-        "bindings": _bindings,
-        "processedProps": _processedProps
-    };
-};
-
 Component.instanceInc = 0;
-Component.fromLiteral = function (_literal) {
-    //let _literal = Object.assign({}, _literal);
-    //let props = Object.assign({}, _literal.props);
-    let props = _literal.props;
-
-    if (_literal.ctor) {
-        if (typeof _literal.ctor == "string") {
-            _literal.ctor = window[_literal.ctor];
-        }
-        let el = new _literal.ctor(props);
-        return el;
-    }
-};
+Literal.call(Component);
 Component.listeners = {};
 Component.objListeners = {};
 Component.MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
@@ -1107,11 +952,14 @@ Component.ch = function (domNode, operation = "fn") {
         if ((!listener.element.attached && operation == "fn") || (listener.element.attached && operation == "fnDetached")) {
             listener[operation].call(listener.element, listener.element.$el);
         }
-    } else
-        console.log("DOMNode not registered as a component", domNode);
+    } //else
+        //console.log("DOMNode not registered as a component", domNode);
 };
 
 Component.defaultContext = window;
 Component.registered = {};
 Component.instances = {};
 Component.observer = {};
+export {
+    Component
+};

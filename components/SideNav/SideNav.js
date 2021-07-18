@@ -4,10 +4,13 @@
  * Kreatx 2019
  */
 
-//component definition
+import { Container } from "/flowerui/components/Container.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+import { DependencyContainer } from "/flowerui/lib/DependencyContainer.js";
+
 var SideNav = function(_props)
 {
-    let _self = this, _open, _width, _side;
+    let _self = this, _open, _width, _minWidth, _side;
 
     Object.defineProperty(this, "side", {
         get: function side()
@@ -63,17 +66,26 @@ var SideNav = function(_props)
         }
     }
     
-    var _defaultParams = {
-        type: ContainerType.NONE,
+    let _defaultParams = {
+        type: "",
         "components": [],
         open: true,
         classes: ["sidenav"],
         side : SideNavSide.left,
         width: 250
     };
-    
-    _props = extend(false, false, _defaultParams, _props);
+    ObjectUtils.fromDefault(_defaultParams, _props);
+    //_props = ObjectUtils.extend(false, false, _defaultParams, _props);
     let r = Container.call(this, _props);
     return r;
 };
+var SideNavSide =
+{
+    "left": 1,
+    "right": 2
+};
+DependencyContainer.getInstance().register("SideNav", SideNav, DependencyContainer.simpleResolve);
 SideNav.prototype.ctor = 'SideNav';
+export {
+    SideNav, SideNavSide
+};

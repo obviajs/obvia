@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>RCA</title>
+
+	 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+		crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+		crossorigin="anonymous"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+		crossorigin="anonymous">
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+		crossorigin="anonymous"></script>
+	<script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+	
+
+	<script src="lib/ArrayUtils.js"></script>
+	<script src="lib/ObjectUtils.js"></script>
+	<script src="lib/base64.js"></script>
+	
+	<script src="lib/my.js"></script>
+	
+    <script src="lib/rca/RemoteCursorEvent.js"></script>
+	<script src="lib/rca/RemoteCursorArray.js"></script>
+	
+    <!--script src="lib/RemoteCursor.js"></script-->
+    <script src="lib/rca/SortField.js"></script>
+    <script type="text/javascript">
+		var rca = new RemoteCursorArray({post:{"testKey":"testValue"}});
+		rca.getData_Action = "http://139.162.158.49/rca/index.php";
+		//generated via querybuilder http://querybuilder.js.org/demo.html
+		rca.filterData =  
+		{
+		"condition": "AND",
+		"rules": [
+			{
+			"id": "price",
+			"field": "price",
+			"type": "double",
+			"input": "number",
+			"operator": "less",
+			"value": "10.25"
+			},
+			{
+			"condition": "OR",
+			"rules": [
+				{
+				"id": "category",
+				"field": "category",
+				"type": "integer",
+				"input": "select",
+				"operator": "equal",
+				"value": "2"
+				},
+				{
+				"id": "category",
+				"field": "category",
+				"type": "integer",
+				"input": "select",
+				"operator": "equal",
+				"value": "1"
+				}
+			]
+			}
+		],
+		"valid": true
+		};
+
+		rca.recordsPerPage = 5;
+		
+		rca.init();
+
+
+		rca.on(RemoteCursorEventType.REQUEST_BEGUN, function(e)
+		{
+			//rca.offIndex("RemoteCursorEvent", eventIndex);
+			console.log("RemoteCursorEventType.REQUEST_BEGUN");
+		
+		});
+		
+		rca.on(RemoteCursorEventType.REQUEST_SUCCESS, function(e)
+		{
+			//rca.offIndex("RemoteCursorEvent", eventIndex2);
+			console.log("RemoteCursorEventType.REQUEST_SUCCESS");
+			
+
+		});
+		rca.on(RemoteCursorEventType.CURRENT_PAGE_CHANGED, function(e)
+		{
+			//rca.offIndex("RemoteCursorEvent", eventIndex2);
+			console.log("RemoteCursorEventType.CURRENT_PAGE_CHANGED");
+		});
+
+		rca.on(RemoteCursorEventType.CURRENT_RECORD_CHANGED, function(e)
+		{
+			//rca.offIndex("RemoteCursorEvent", eventIndex2);
+			console.log("RemoteCursorEventType.CURRENT_RECORD_CHANGED");
+			$("#cp").html(rca.currentPageIndex);
+			$("#cr").html(rca.currentRecordIndex);
+
+			$("#inputEmail").val(rca.currentRecord.email);
+			$("#inputFirstName").val(rca.currentRecord.first_name);
+			$("#inputLastName").val(rca.currentRecord.last_name);
+		});
+
+		$(document).ready(function()
+		{
+			//page navigation
+			$("#btnNext").click(function()
+			{
+				console.log(rca.nextPage());
+			});
+			$("#btnPrev").click(function()
+			{
+				console.log(rca.previousPage());
+			});
+			$("#btnLast").click(function()
+			{
+				console.log(rca.lastPage());
+			});
+			$("#btnFirst").click(function()
+			{
+				console.log(rca.firstPage());
+			});	
+			$("#btnToPage").click(function()
+			{
+				console.log(rca.gotoPage(parseInt($("#pageNumber").val())));
+			});
+
+			//record navigation
+			$("#btnNextR").click(function()
+			{
+				console.log(rca.nextRecord());
+			});
+			$("#btnPrevR").click(function()
+			{
+				console.log(rca.previousRecord());
+			});
+			$("#btnLastR").click(function()
+			{
+				console.log(rca.lastRecord());
+			});
+			$("#btnFirstR").click(function()
+			{
+				console.log(rca.firstRecord());
+			});	
+			$("#btnToRecord").click(function()
+			{
+				console.log(rca.gotoRecord(parseInt($("#recordNumber").val())));
+			});
+
+		});
+
+		
+	</script>
+  </head>
+  <body>
+	
+	<div class="container" style="width:400px">
+        <label for="inputEmail" class="sr-only">Email address</label>
+		<input type="text" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
+
+		<label for="inputFirstName" class="sr-only">First Name</label>
+		<input type="text" id="inputFirstName" class="form-control" placeholder="First Name" required autofocus>
+
+		<label for="inputLastName" class="sr-only">Last Name</label>
+        <input type="text" id="inputLastName" class="form-control" placeholder="Last Name" required autofocus>
+    </div> <!-- /container -->
+
+	<button id="btnNext" type="button" class="btn btn-lg btn-default">Next Page</button>
+	<button id="btnPrev" type="button" class="btn btn-lg btn-default">Prev Page</button>
+	<button id="btnLast" type="button" class="btn btn-lg btn-default">Last Page</button>
+	<button id="btnFirst" type="button" class="btn btn-lg btn-default">First Page</button>
+	<label>Current Page Number </label><label id="cp">0</label>
+	<input type="text" id="pageNumber" class="form-control" placeholder="Page Number">
+	<button id="btnToPage" type="button" class="btn btn-lg btn-default">Go To Page</button>
+	<hr/>
+	<button id="btnNextR" type="button" class="btn btn-lg btn-default">Next Record</button>
+	<button id="btnPrevR" type="button" class="btn btn-lg btn-default">Prev Record</button>
+	<button id="btnLastR" type="button" class="btn btn-lg btn-default">Last Record</button>
+	<button id="btnFirstR" type="button" class="btn btn-lg btn-default">First Record</button>
+	<label>Current Record Number </label><label id="cr">0</label>
+	<input type="text" id="recordNumber" class="form-control" placeholder="Record Number">
+	<button id="btnToRecord" type="button" class="btn btn-lg btn-default">Go To Record</button>
+   
+  </body>
+</html>

@@ -338,7 +338,7 @@ let cnt = new Container({
                         type: ContainerType.NONE,
                         height: '100vh',  
                         changes: changesMade,
-                        creationComplete: _focusEditor
+                        endDraw: _focusEditor
                     }
                 },
             ]
@@ -421,7 +421,7 @@ get("https://api.myjson.com/bins/190n0g").then(function (r)
         cnt.ideContainer.mySideNav.cmCnt.componentModelTree.dataProvider = cmDp;
       });
 });
-let lifecycleEvents = ["afterAttach", "beforeAttach", "beginDraw", "endDraw", "creationComplete"];
+let lifecycleEvents = ["afterAttach", "beforeAttach", "beginDraw", "endDraw"];
 function initComponentModel(cmInstance)
 { 
     let dp = new ArrayEx();

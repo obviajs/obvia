@@ -1,7 +1,17 @@
+import { EventDispatcher } from "/flowerui/lib/EventDispatcher.js";
 var ValidationManager = function () {
     let _self, _validators = [];
     this.$el = $(this);
 
+    this.getGroupValidators = function(validationGroup = null){
+        if (validationGroup) {
+            let groups = _validators.groupReduce((currentValue, index) => {
+                return currentValue.validationGroup;
+            });
+            return groups[validationGroup];
+        }
+    };
+        
     this.validate = function (validationGroup = null) {      
         let promises = [];
         if (validationGroup) {
@@ -47,3 +57,6 @@ ValidationManager.getInstance = function () {
     return ValidationManager.instance;
 };     
 ValidationManager.prototype = Object.create(EventDispatcher.prototype);
+export {
+    ValidationManager
+};

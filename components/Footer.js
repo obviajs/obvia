@@ -4,7 +4,8 @@
  * Kreatx 2019
  */
 
-//component definition
+import { Container } from "/flowerui/components/Container.js";
+import { DependencyContainer } from "/flowerui/lib/DependencyContainer.js";
 var Footer = function(_props)
 {
     //is template overrided ?
@@ -12,7 +13,11 @@ var Footer = function(_props)
     { 
         return  '<footer id="' + this.domID + '"></footer>'; 
     };
-    _props.type = ContainerType.NONE;
+    _props.type = "";
     Container.call(this, _props);
 };
 Footer.prototype.ctor = 'Footer';
+DependencyContainer.getInstance().register("Footer", Footer, DependencyContainer.simpleResolve);
+export {
+    Footer
+};

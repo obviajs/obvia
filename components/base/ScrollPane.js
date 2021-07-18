@@ -188,7 +188,7 @@ var ScrollPane = function(_props)
         _props.attr = {};
     }
     let myDtEvts = ["virtualScrollStart", "virtualScrollEnd"];
-    if (!Object.isEmpty(_props.attr) && _props.attr["data-triggers"] && !Object.isEmpty(_props.attr["data-triggers"]))
+    if (!ObjectUtils.isEmpty(_props.attr) && _props.attr["data-triggers"] && !ObjectUtils.isEmpty(_props.attr["data-triggers"]))
     {
         let dt = _props.attr["data-triggers"].split(" ");
         for (let i = 0; i < dt.length; i++)
@@ -207,7 +207,7 @@ var ScrollPane = function(_props)
     _component = _props.component;
     _props.components = [];
 
-    if(_component && !Object.isEmpty(_component)){
+    if(_component && !ObjectUtils.isEmpty(_component)){
         _props.components.push(_component);
     }
     let _delayScroll = debounce(_virtualScroll, 400);

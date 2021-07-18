@@ -3,7 +3,10 @@
  *
  * Kreatx 2019
  */
-
+import { List } from "/flowerui/components/List.js";
+import { RadioButton } from "/flowerui/components/RadioButton.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+import { DependencyContainer } from "/flowerui/lib/DependencyContainer.js";
 var RadioGroup = function (_props) {
     let _self = this,
         _dataProvider;
@@ -18,7 +21,7 @@ var RadioGroup = function (_props) {
                 this.components = fnContainerDelayInit();
                 this.removeAllRows();
                 if (_dataProvider && _dataProvider.length > 0) {
-                    let dpFields = Object.keys(_dataProvider[0]);
+                    let dpFields = Object.getOwnPropertyNames(_dataProvider[0]);
                     if (propDataProvider && dpFields.includes(_labelField) && dpFields.includes(_valueField)) {
                         propDataProvider['set'].call(_self, _dataProvider);
                     }
@@ -38,7 +41,7 @@ var RadioGroup = function (_props) {
                 this.components = fnContainerDelayInit();
                 this.removeAllRows();
                 if (_dataProvider && _dataProvider.length > 0) {
-                    let dpFields = Object.keys(_dataProvider[0]);
+                    let dpFields = Object.getOwnPropertyNames(_dataProvider[0]);
                     if (propDataProvider && dpFields.includes(_labelField) && dpFields.includes(_valueField)) {
                         propDataProvider['set'].call(_self, _dataProvider);
                     }
@@ -64,8 +67,8 @@ var RadioGroup = function (_props) {
         classes: ["radiogroup", "card"],
         multiselect: false
     };
-
-    _props = extend(false, false, _defaultParams, _props);
+    ObjectUtils.fromDefault(_defaultParams, _props);
+    //_props = ObjectUtils.extend(false, false, _defaultParams, _props);
 
     let _labelField = _props.labelField;
     let _valueField = _props.valueField;
@@ -99,17 +102,17 @@ var RadioGroup = function (_props) {
                 id: 'radioButton',
                 label: "{" + _labelField + "}",
                 value: "{" + _valueField + "}",
-                checked: "{?" + _checkedField + "}",
-                class: "{?" + _classesField + "}",
+                checked: "{" + _checkedField + "}",
+                classes: "{?" + _classesField + "}",
                 enabled: "{?" + _enabledField + "}",
-                name: this.id
+                name: _self.id
             }
         }];
     };
 
     _props.components = fnContainerDelayInit();
 
-    List.call(this, _props);
+    let r = List.call(this, _props);
 
     this.afterAttach = function (e) {
 
@@ -128,8 +131,8 @@ var RadioGroup = function (_props) {
             _dataProvider = v;
             this.removeAllRows();
 
-            if (v.length > 0) {
-                let dpFields = Object.keys(v[0]);
+            if (v && v.length > 0) {
+                let dpFields = Object.getOwnPropertyNames(v[0]);
                 if (dpFields.includes(_labelField) && dpFields.includes(_valueField)) {
                     propDataProvider['set'].call(_self, _dataProvider);
                 }
@@ -139,7 +142,10 @@ var RadioGroup = function (_props) {
         },
         enumerable: true
     });
-
+    return r;
 };
-
+DependencyContainer.getInstance().register("RadioGroup", RadioGroup, DependencyContainer.simpleResolve);
 RadioGroup.prototype.ctor = "RadioGroup";
+export {
+    RadioGroup
+};

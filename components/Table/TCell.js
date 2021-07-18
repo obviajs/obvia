@@ -4,10 +4,38 @@
  * Kreatx 2020
  */
 
-//component definition
-var TCell = function (_props, _hideComponents=false) {
+import {Parent} from "/flowerui/components/base/Parent.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+
+var TCell = function (_props) {
     
-    let _colspan, _rowspan;
+    let _colspan, _rowspan, _label;
+
+    Object.defineProperty(this, "label", {
+        get: function label() {
+            return _label;
+        },
+        set: function label(v) {
+            if (_label != v) {
+                _props.label = _label = v;
+                if (this.$el) {
+                    //convert html entities
+                    v = $(`<div>${v}</div>`).get(0).innerText;
+                    let last = this.$el.children().last();
+                    if (last && last.length > 0)
+                        if (last[0].nextSibling)
+                            last[0].nextSibling.textContent = v;
+                        else
+                            this.$el.appendText(v);
+                    else
+                        //this.$el.appendText(v);
+                        this.$el.text(v);
+                }
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
 
     Object.defineProperty(this, "colspan", 
     {
@@ -76,6 +104,8 @@ var TCell = function (_props, _hideComponents=false) {
                 this.colspan = _props.colspan;
             if(_props.rowspan)
                 this.rowspan = _props.rowspan;
+            if (_props.label)
+                this.label = _props.label;
         }
     };
 
@@ -86,9 +116,13 @@ var TCell = function (_props, _hideComponents=false) {
 
     let _defaultParams = {
     };
-    _props = extend(false, false, _defaultParams, _props);
+    ObjectUtils.fromDefault(_defaultParams, _props);
+    //_props = ObjectUtils.extend(false, false, _defaultParams, _props);
 
-    let r = Parent.call(this, _props, _hideComponents);
+    let r = Parent.call(this, _props);
     return r;
 };
 TCell.prototype.ctor = 'TCell';
+export {
+    TCell
+};

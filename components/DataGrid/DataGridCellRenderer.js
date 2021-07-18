@@ -4,11 +4,17 @@
  * Kreatx 2018
  */
 
-//component definition
+import { Label } from "/flowerui/components/Label.js";
+import { DependencyContainer } from "/flowerui/lib/DependencyContainer.js";
 var DataGridCellRenderer = function(_props){
     //component data
-    Label.call(this, _props);
+    let r = Label.call(this, _props);
+    return r;
 };
 
 //component prototype
 DataGridCellRenderer.prototype.ctor = 'DataGridCellRenderer';
+DependencyContainer.getInstance().register("DataGridCellRenderer", DataGridCellRenderer, DependencyContainer.simpleResolve);
+export {
+    DataGridCellRenderer
+};

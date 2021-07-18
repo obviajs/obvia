@@ -10,7 +10,7 @@ var _initDP = (function() {
 var uiRoute = function(applet) {
     //check applet.view.attached if you want to addChild only when its not already
     let _appendTo = "viewStack";
-    let viewContainer = applet.parent.find(applet.port);
+    let viewContainer = applet.parent.find(_appendTo);
     return viewContainer.addChild(applet.view);
 };
 

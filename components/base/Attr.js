@@ -1,5 +1,9 @@
-var Attr = function (_attr, $el) {
-    let _$el = $el;
+import { UseBindings } from "/flowerui/lib/UseBindings.js";
+import { isSymbol } from "/flowerui/lib/my.js";
+import { StringUtils } from "/flowerui/lib/StringUtils.js";
+
+var Attr = function (_attr, cmpInst) {
+    let _$el = cmpInst.$el, _self = this;
     let p = new Proxy(this, {
         deleteProperty: function (target, property) {
             _$el.removeAttr(property);
@@ -7,10 +11,12 @@ var Attr = function (_attr, $el) {
             return true;
         },
         set: function (target, property, value, receiver) {
-            if (value && !isString(value) && isNaN(value)) {
-                _$el.attr(property, JSON.stringify(value));
-            } else if (value != null)
-                _$el.attr(property, value);
+            if (typeof value != "function") {
+                if (value && !StringUtils.isString(value) && isNaN(value)) {
+                    _$el.attr(property, JSON.stringify(value));
+                } else if (value != null)
+                    _$el.attr(property, value);
+            }
             target[property] = value;
             return true;
         },
@@ -23,12 +29,22 @@ var Attr = function (_attr, $el) {
             return Reflect.get(...arguments);
         }
     });
-
+    _self.guid = null;
+    UseBindings.call(p, _attr);
     if (_attr) {
         for (let prop in _attr) {
-            _$el.attr(prop, _attr[prop]);
-            p[prop] = _attr[prop];
+            if (this.bindedProps.hasOwnProperty(prop))
+                delete _attr[prop];
+            else
+                p[prop] = _attr[prop];
         }
     }
+
+    this.getScopeChain = function () {
+        return [this, ...cmpInst.getScopeChain()];
+    };
     return p;
+};
+export {
+    Attr
 };

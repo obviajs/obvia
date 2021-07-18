@@ -1,5 +1,10 @@
-var ProgressBar=function(_props){
+import { Container } from "/flowerui/components/Container.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+import { DependencyContainer } from "/flowerui/lib/DependencyContainer.js";
+var ProgressBar = function (_props) {
 
+    let _label,_valueNow,_valueMin,_valueMax;
+    
     Object.defineProperty(this, "label",
     {
         get:function label()
@@ -105,40 +110,48 @@ var ProgressBar=function(_props){
     let _progressBar;
     let _pbBeforeAttach = function(e){
         _progressBar = this;
-        if(_props.label)
-            this.label=_props.label;
-        if(_props.valueNow)
-            this.valueNow=_props.valueNow;
-        if(_props.valueMin)
-            this.valueMin=_props.valueMin;
-        if(_props.valueMax)
-            this.valueMax=_props.valueMax;
+        if (_props.label)
+            this.label = _props.label;
+        if (_props.valueNow)
+            this.valueNow = _props.valueNow;
+        if (_props.valueMin)
+            this.valueMin = _props.valueMin;
+        if (_props.valueMax)
+            this.valueMax = _props.valueMax;
     }
 
-    var _defaultParams={
+    let _defaultParams = {
         label: "",
         valueNow: 25,
         valueMin: 0,
         valueMax: 100,
-        classes:["progress"],
-        type: ContainerType.NONE,
-        components:[
+        classes: ["progress"],
+        type: "",
+        components: [
             {
                 ctor: Container,
-                props:{
-                    id:"progressBar",
-                    classes:[ProgressBarStyle.PROGRESS],
-                    type: ContainerType.NONE,
+                props: {
+                    id: "progressBar",
+                    classes: [ProgressBarStyle.PROGRESS],
+                    type: "",
                     role: "progressbar",
-                    beforeAttach:_pbBeforeAttach
+                    beforeAttach: _pbBeforeAttach
                 }
             }
         ]
     };
-    _props=extend(false,false,_defaultParams,_props);
-    
-    var _label,_valueNow,_valueMin,_valueMax;
-    
+    ObjectUtils.fromDefault(_defaultParams, _props);
+    //_props = ObjectUtils.extend(false,false,_defaultParams,_props);
     Container.call(this, _props);
 };
+DependencyContainer.getInstance().register("ProgressBar", ProgressBar, DependencyContainer.simpleResolve);
 ProgressBar.prototype.ctor = 'ProgressBar';
+var ProgressBarStyle =
+{
+    "PROGRESS": "progress-bar",
+    "PROGRESS_STRIPED": "progress-bar-striped ",
+    "PROGRESS_ANIMATED": "progress-bar-animated"
+};
+export {
+    ProgressBar, ProgressBarStyle
+};

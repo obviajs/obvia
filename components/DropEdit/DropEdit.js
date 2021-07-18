@@ -4,7 +4,12 @@
  * Kreatx 2020
  */
 
-//component definition
+import { Container } from "/flowerui/components/Container.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+import { StringUtils } from "/flowerui/lib/StringUtils.js";
+import { Repeater } from "/flowerui/components/Repeater/Repeater.js";
+import { Button, ButtonSize } from "/flowerui/components/Button/Button.js";
+import { DependencyContainer } from "/flowerui/lib/DependencyContainer.js";
 var DropEdit = function (_props) {
     let _self = this;
     let _creationFinished;
@@ -18,9 +23,8 @@ var DropEdit = function (_props) {
             if (_labelField != v) {
                 _labelField = v;
                 _componentRepeater.components = fnInitCmpLink();
-                _componentRepeater.removeAllRows();
                 if (_dataProvider && _dataProvider.length > 0) {
-                    let dpFields = Object.keys(_dataProvider[0]);
+                    let dpFields = Object.getOwnPropertyNames(_dataProvider[0]);
                     if (dpFields.includes(_labelField)) {
                         _componentRepeater.dataProvider = _dataProvider;
                     }
@@ -36,10 +40,9 @@ var DropEdit = function (_props) {
         },
         set: function dataProvider(v) {
             _dataProvider = v;
-            _componentRepeater.removeAllRows();
 
-            if (v.length > 0) {
-                let dpFields = Object.keys(v[0]);
+            if (v && v.length > 0) {
+                let dpFields = Object.getOwnPropertyNames(v[0]);
                 if (dpFields.includes(_labelField)) {
                     _componentRepeater.dataProvider = _dataProvider;
                 }
@@ -136,7 +139,7 @@ var DropEdit = function (_props) {
             ctor: Repeater,
             props: {
                 id: "repeater",
-                type: ContainerType.NONE,
+                type: "",
                 classes: ["dropdown-menu", "drop-edit"],
                 components: [_componentLink],
                 dataProvider: _dataProvider
@@ -155,7 +158,7 @@ var DropEdit = function (_props) {
         classes: [DropMenuDirection.DROPDOWN],
         label: "",
         size: ButtonSize.SMALL,
-        type: ContainerType.NONE,
+        type: "",
         split: DropSplitType.SPLIT,
         guidField: "guid"
     };
@@ -164,7 +167,7 @@ var DropEdit = function (_props) {
         _inputDD.value = this.label;
         let linkObj = {};
         linkObj[_guidField] = ra.currentItem[_guidField];
-        _self.selectedItem = getMatching(_dataProvider, _guidField, linkObj[_guidField]).objects[0];
+        _self.selectedItem = ArrayUtils.getMatching(_dataProvider, _guidField, linkObj[_guidField]).objects[0];
         _componentRepeater.$el.removeClass("show");
         e.stopPropagation();
     };
@@ -175,7 +178,7 @@ var DropEdit = function (_props) {
         _componentRepeater.$el.toggleClass("show");
     };
 
-    _props = extend(false, false, _defaultParams, _props);
+    ObjectUtils.fromDefault(_defaultParams, _props);
     if (!_props.attr) {
         _props.attr = {};
     }
@@ -190,12 +193,17 @@ var DropEdit = function (_props) {
     let _selectedItem = _props.selectedItem;
     let _guidField = _props.guidField;
 
-    if (_props.dataProvider && !getBindingExp(_props.dataProvider)) {
+    if (_props.dataProvider && !StringUtils.getBindingExp(_props.dataProvider)) {
         _dataProvider = _props.dataProvider;
     } else
         _dataProvider = new ArrayEx();
     _props.components = fnContainerDelayInit();
 
-    Container.call(this, _props, true);
+    let r = Container.call(this, _props, true);
+    return r;
 };
+DependencyContainer.getInstance().register("DropEdit", DropEdit, DependencyContainer.simpleResolve);
 DropEdit.prototype.ctor = 'DropEdit';
+export {
+    DropEdit
+};

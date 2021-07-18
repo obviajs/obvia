@@ -1,8 +1,6 @@
-//var flowerCM = window.flowerCM || {};
-//rjs.define('./js/components/TextInput.js', 'TextInput');
-//rjs.define('./lib/flower_dependencies/scripts/jquery.inputmask.bundle.min.js', 'InputMaskBundle');
-//rjs.require(["InputMaskBundle", "TextInput"], function () {
-var myText = new TextInput({
+import { TextInput } from "../../components/TextInput/TextInput.js";
+
+var myTextInput = new TextInput({
     id: 'textField',
     mask: 'currency',
     value: '',
@@ -10,6 +8,8 @@ var myText = new TextInput({
     placeholder: "Username"
 });
 
-myText.render().then(function (cmpInstance) {
-    $('#root').append(cmpInstance.$el);
+myTextInput.render().then(function(cmpInstance) {
+    $(document.body).append(cmpInstance.$el);
 });
+
+export { myTextInput }

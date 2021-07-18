@@ -1,25 +1,36 @@
-var Parent = function (_props, _hideComponents = false) {
+import { Component } from "/flowerui/components/base/Component.js";
+import { Props } from "/flowerui/components/base/Props.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+import { ArrayUtils } from "/flowerui/lib/ArrayUtils.js";
+var Parent = function (_props) {
     let _$hadow = $("<div/>");
     let _comprenders = [];
     let _self = this;
-    let _children = {};
-    let _enabled;
+    let _children = {}, _enabled;
+    let _components = [];
 
-    let _proxy = new Proxy(this, {
-        get: function (target, property, receiver) {
-            if (!target.hasOwnProperty(property)) {
-                if (target.children && target.children[property])
-                    return target.children[property];
-            }
-            return Reflect.get(...arguments);
-        }
-    });
+    if (!this.hasOwnProperty("initProxy")) {
+        this.initProxy = function () {
+            return new Proxy(this, {
+                get: function (target, property, receiver) {
+                    if (!target.hasOwnProperty(property) && !target.constructor.prototype.hasOwnProperty(property)) {
+                        if (target.children && target.children[property])
+                            return target.children[property];
+                    }
+                    return Reflect.get(...arguments);
+                },
+                getOwnPropertyDescriptor(target, property) {
+                    if (!target.hasOwnProperty(property) && !target.constructor.prototype.hasOwnProperty(property)) {
+                        if (target.children && target.children[property])
+                            return {configurable: true, enumerable: true, get: Reflect.get};
+                    }
+                    return Reflect.getOwnPropertyDescriptor(...arguments);
+                }
+            });
+        };
+    }
 
-    Object.defineProperty(this, "hasInternalComponents", {
-        get: function hasInternalComponents() {
-            return _hideComponents;
-        }
-    });
+    let _proxy = this.initProxy();
 
     Object.defineProperty(this, "proxy", {
         get: function proxy() {
@@ -34,16 +45,23 @@ var Parent = function (_props, _hideComponents = false) {
         enumerable: true
     });
 
+    Object.defineProperty(this, "numChildren", {
+        get: function numChildren() {
+            return _children ? Object.keys(_children).length : 0;
+        },
+        enumerable: true
+    });
+    
     Object.defineProperty(this, "components", {
         get: function components() {
             return _components;
         },
         set: function components(v) {
-            this.removeAllChildren();
-            _components = v;
-            this.addComponents();
+            // this.removeAllChildren();
+            // this.addComponents(v);
+            _components = v;  
         },
-        enumerable: true && !_hideComponents,
+        enumerable: true,
         configurable: true
     });
 
@@ -57,57 +75,65 @@ var Parent = function (_props, _hideComponents = false) {
     };
 
     this.addChild = function (child, index) {
-        if (child && !_children[child.id]) {
-            index = index > -1 ? index : _components.length;
-            if (index >= 0 && index <= _components.length) {
-                index = index > -1 ? index : _components.length;
-                let component = {
-                    ctor: child.ctor,
-                    props: child.props
-                };
-                _components.splice(index, 0, component);
+        if (child && _children[child.id] != child) {
+            index = index > -1 ? index : _csorted.length;
+            if (index >= 0 && index <= _csorted.length) {
+                index = index > -1 ? index : _csorted.length;
+                // let component = {
+                //     ctor: child.ctor,
+                //     props: child.props
+                // };
                 _children[child.id] = child;
                 _csorted.splice(index, 0, child.id);
-                _ccRelation[child.id] = component;
                 child.parent = _proxy;
                 child.parentType = this.type;
-                child.parentForm = _proxy.ctor == 'Form' ? _proxy : _proxy.parentForm;
+                child.parentForm = _self.ctor == 'Form' ? _proxy : _proxy.parentForm;
                 child.repeaterIndex = this.repeaterIndex;
                 child.parentRepeater = this.parentRepeater;
-
-                return child.render().then(function (cmpInstance) {
+                let rPromise = child.render();
+                return rPromise.then(function (cmpInstance) {
+                    //cmpInstance.applyMyBindings();
                     _self.$el.insertAt(cmpInstance.$el, index);
                     let event = jQuery.Event("childAdded");
                     event.child = child;
                     _self.trigger(event);
+                    return rPromise;
                 });
             }
         }
     };
+    
     this.indexOfChild = function (child) {
         let ind = -1;
         if (child) {
-            ind = _components.indexOf(_ccRelation[child.id]);
+            //check whether this is a child of this parent
+            if (_children[child.id] == child) {
+                ind = _csorted.indexOf(child.id);
+            }
         }
         return ind;
     };
+
+    this.childAtIndex = function (i) {
+        if (i >= 0 && i < _csorted.length) {
+            return _children[_csorted[i]];
+        }
+    };
+
     this.removeAllChildren = function (mode = 1) {
         for (let cid in this.children) {
             this.removeChild(this.children[cid], mode);
         }
     };
+
     this.removeChild = function (child, mode = 1) {
         if (child) {
-            //TODO: kur fshijme child, beji resize siblings; kur fshijme row/col dhe jane 2 gjithsej hiq container prind 
-            let ind = _components.indexOf(_ccRelation[child.id]);
-            if (ind > -1) {
-                _components.splice(ind, 1);
-                ind = _csorted.indexOf(child.id);
+            if (_children[child.id] == child) {
+                let ind = _csorted.indexOf(child.id);
                 if (ind > -1) {
                     _csorted.splice(ind, 1);
                 }
                 delete _children[child.id];
-                delete _ccRelation[child.id];
                 child.destruct(mode);
                 child.parent = null;
             } else {
@@ -117,18 +143,18 @@ var Parent = function (_props, _hideComponents = false) {
     };
 
     this.removeChildAtIndex = function (index, mode = 1) {
-        if (index >= 0 && index < _components.length) {
-            this.removeChild(_children[_components[index].props.id], mode);
+        if (index >= 0 && index < _csorted.length) {
+            this.removeChild(_children[_csorted[index]], mode);
         }
     };
 
-    this.addComponent = function (component, index) {
-        index = index > -1 ? index : _components.length;
-        _components.splice(index, 0, component);
-        let cr = this.addComponentInContainer(this.$container, component, index);
+    this.addComponent = async function (component, index) {
+        index = index > -1 ? index : _csorted.length;
+        let cr = await _addComponentInContainer(this.$container, component, index);
 
-        cr.promise.then(function (cmpInstance) {
-            if (cmpInstance && cmpInstance.attach && !cmpInstance.attached) {
+        await cr.promise.then(function (cmpInstance) {
+            if (cmpInstance && !cmpInstance.attached) {
+                //cmpInstance.applyMyBindings();
                 if (cmpInstance.appendTo) {
                     cmpInstance.appendTo.append(cmpInstance.$el);
                 } else
@@ -164,51 +190,41 @@ var Parent = function (_props, _hideComponents = false) {
         configurable: true
     });
 
-    Object.defineProperty(this, "ccRelation", {
-        get: function ccRelation() {
-            return _ccRelation;
-        },
-        enumerable: false,
-        configurable: true
-    });
+    let _csorted = [];
 
-    let _ccRelation = {},
-        _csorted = [];
-    this.getChildDefinedProperties = function (c) {
-        return _ccRelation[c.id];
-    };
-
-    this.addComponentInContainer = function (container, component, index) {
+    let _addComponentInContainer = async function (container, component, index) {
         if (container) {
-            component.props.ownerDocument = this.ownerDocument;
+            component.props.ownerDocument = _self.ownerDocument;
             let cmpLit = {};
-            shallowCopy(component, cmpLit, ["props"]);
+            ObjectUtils.shallowCopy(component, cmpLit, ["props"]);
             cmpLit.props = {};
-            shallowCopy(component.props, cmpLit.props, ["id", "bindingDefaultContext"]);
+            ObjectUtils.shallowCopy(component.props, cmpLit.props, ["id"]);
+            let id = component.props.id;
             if (component.props.id && _children[component.props.id]) {
                 cmpLit.props.id = component.props.id + '_' + Object.keys(_children).length;
             } else
                 cmpLit.props.id = component.props.id;
-            if (component.props.bindingDefaultContext == null) {
-                cmpLit.props.bindingDefaultContext = this.bindingDefaultContext;
-            } else {
-                cmpLit.props.bindingDefaultContext = component.props.bindingDefaultContext;
-            }
             cmpLit.props.repeaterIndex = _self.repeaterIndex;
             cmpLit.props.parentRepeater = _self.parentRepeater;
-            let cmp = Component.fromLiteral(cmpLit);
+            // if (cmpLit.props.bindingDefaultContext == null) {
+            //     cmpLit.props.bindingDefaultContext = _self.bindingDefaultContext;
+            // }
+            if (_props.props && _props.props[id] && ObjectUtils.isObject(_props.props[id])) {
+                let cprops = ObjectUtils.deepCopy(_props.props[id]);            
+                cmpLit.props = ObjectUtils.fromDefault(cmpLit.props, cprops);
+            }
+            let cmp = await Component.fromLiteral(cmpLit);
             //component.props.id = cmp.id;
             if (_children[cmp.id])
                 throw new Error("Child id: " + cmp.id + " is already used in Parent with id: " + _self.id + ". Components ids should be unique within their parent.");
             else
                 _children[cmp.id] = cmp;
-            _ccRelation[cmp.id] = component;
             _csorted.splice(index, 0, cmp.id);
             cmp.parent = _proxy;
             cmp.parentType = _self.type;
-            cmp.parentForm = _proxy.ctor == 'Form' ? _proxy : _proxy.parentForm;
+            cmp.parentForm = _self.ctor == 'Form' ? _proxy : _proxy.parentForm;
 
-            index = index > -1 ? index : _components.length;
+            index = index > -1 ? index : _csorted.length;
             let cr = {
                 "cmp": cmp,
                 "promise": cmp.render()
@@ -231,8 +247,6 @@ var Parent = function (_props, _hideComponents = false) {
         if (e.target.id == this.domID) {
             if (typeof _beforeAttach == 'function')
                 _beforeAttach.apply(this, arguments);
-            if (_props.enabled != null && !this.getBindingExpression("enabled"))
-                this.enabled = _props.enabled;
         }
     };
     let _afterAttach = this.afterAttach;
@@ -240,57 +254,57 @@ var Parent = function (_props, _hideComponents = false) {
         if (e.target.id == this.domID) {
             if (typeof _afterAttach == 'function')
                 _afterAttach.apply(this, arguments);
-
         }
     };
 
     let _defaultParams = {
         components: [],
-        enabled: true,
         sortChildren: false
     };
-    //_props = extend(false, false, _defaultParams, _props);
-    shallowCopy(extend(false, false, _defaultParams, _props), _props);
-    let _components = _props.components;
+    ObjectUtils.fromDefault(_defaultParams, _props);
+    //ObjectUtils.shallowCopy(ObjectUtils.extend(false, false, _defaultParams, _props), _props);
+    if (!_props.attr) {
+        _props.attr = {};
+    }
+    let myDtEvts = ["childAdded"];
 
+    if (!ObjectUtils.isEmpty(_props.attr) && _props.attr["data-triggers"] && !ObjectUtils.isEmpty(_props.attr["data-triggers"])) {
+        let dt = _props.attr["data-triggers"].split(" ");
+        for (let i = 0; i < dt.length; i++) {
+            myDtEvts.pushUnique(dt[i]);
+        }
+    }
+    _props.attr["data-triggers"] = myDtEvts.join(" ");
+    _components = _props.components;
     this.$container = null;
 
     let _creationFinished = false;
     //let _afterAttach = _props.afterAttach;
     //_props.afterAttach = this.afterAttach;
     let _sortChildren = _props.sortChildren;
-    //override because creationComplete will be thrown when all children components are created
     // this.afterAttach = undefined;
-    this.addComponents = function (cmps) {
+    this.addComponents = async function (components) {
         _self.trigger('beginDraw');
         let arrInst = [];
-        let components;
-        if (cmps) {
-            components = cmps;
-            //_self.$container.contents().appendTo(_$hadow);
-        } else {
-            components = this.components;
-        }
+        let cr = [];
         _comprenders = [];
         if (components && Array.isArray(components) && components.length > 0) {
             if (_sortChildren) {
-                acSort(components, "props.index");
+                ArrayUtils.acSort(components, "props.index");
             }
             for (let i = 0; i < components.length; i++) {
-                if (isObject(components[i])) {
-                    if (cmps) {
-                        _components.splice(i, 0, components[i]);
-                    }
-                    let cr = this.addComponentInContainer(_$hadow, components[i], i);
+                if (ObjectUtils.isObject(components[i])) {
+                    let cr = await _addComponentInContainer(_$hadow, components[i], _csorted.length + i);
+                    await cr.promise;
                     arrInst.push(cr.cmp);
                 }
             }
-            let cr = arrayFromKey(_comprenders, "promise");
+            cr = ArrayUtils.arrayFromKey(_comprenders, "promise");
             Promise.all(cr).then(function () {
                 _comprenders = [];
                 for (let i = 0; i < _csorted.length; i++) {
                     let cmpInstance = _children[_csorted[i]];
-                    if (cmpInstance && cmpInstance.attach && !cmpInstance.attached) {
+                    if (cmpInstance && !cmpInstance.attached) {
                         if (cmpInstance.appendTo) {
                             cmpInstance.appendTo.insertAt(cmpInstance.$el, i);
                         } else
@@ -307,7 +321,7 @@ var Parent = function (_props, _hideComponents = false) {
             _creationFinished = true;
             _self.trigger('endDraw');
         }
-        return arrInst;
+        return Promise.all(cr);
     };
 
     if (!this.hasOwnProperty("render")) {
@@ -320,7 +334,7 @@ var Parent = function (_props, _hideComponents = false) {
                             resolve(_proxy);
                         }
                     });
-                    this.addComponents();
+                    this.addComponents(_components);
                 });
             }
             return _rPromise;
@@ -328,6 +342,24 @@ var Parent = function (_props, _hideComponents = false) {
     }
 
     Component.call(this, _props);
+
+    Object.defineProperty(this, "enabled", {
+        get: function enabled() {
+            return _enabled;
+        },
+        set: function enabled(v) {
+            if (_enabled != v) {
+                _enabled = v;
+                if (!v)
+                    this.$el.attr('disabled', 'disabled');
+                else
+                    this.$el.removeAttr('disabled');
+            }
+        },
+        configurable: true,
+        enumerable: true
+    });
+
     /*
         this.destruct = function (mode=1)
         {
@@ -337,25 +369,14 @@ var Parent = function (_props, _hideComponents = false) {
             base.destruct(mode);
         }
     */
-    let objFromDesc = Object.getOwnPropertyDescriptor(this, "enabled");
-    let _oenabled = objFromDesc['set'];
-    Object.defineProperty(this, "enabled", {
-        get: function enabled() {
-            return _enabled;
-        },
-        set: function enabled(v) {
-            if (_enabled != v) {
-                _enabled = v;
-                _oenabled.call(this, v);
-                for (let childId in this.children) {
-                    this.children[childId].enabled = v;
-                }
-            }
-        },
-        enumerable: true,
-        configurable: true
-    });
-
+    this.childrenEnable = function (v) {
+        for (let childId in this.children) {
+            this.children[childId].enabled = v;
+            if (this.children[childId].childrenEnable)
+                this.children[childId].childrenEnable(v);
+        }
+    };
+    
 
     Object.defineProperty(this, "props", {
         get: function props() {
@@ -366,3 +387,6 @@ var Parent = function (_props, _hideComponents = false) {
     return _proxy;
 };
 Parent.prototype.ctor = 'Parent';
+export {
+    Parent
+};

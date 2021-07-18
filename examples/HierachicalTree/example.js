@@ -20,12 +20,12 @@ var myHierarchialTree = new HierarchialTree({
 
 
 
-myHierarchialTree.on('creationComplete',function(){
+myHierarchialTree.on('endDraw',function(){
     myHierarchialTree.on('click',function(){
         //alert("Test");
     });
 });
 myHierarchialTree.render().then(function (cmpInstance)
 {
-  $('#root').append(cmpInstance.$el);
+    $('#root').append(cmpInstance.$el);
 });

@@ -31,7 +31,7 @@ var myModal = new Modal({
 
 });
 
-myModal.on('creationComplete', function (e) {
+myModal.on('endDraw', function (e) {
     //trigger autocomplete complete
     e.stopPropagation();
 

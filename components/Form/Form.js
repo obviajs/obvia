@@ -3,6 +3,10 @@
  * 
  * Kreatx 2018
  */
+import { ApiClient } from "/flowerui/lib/ApiClientGen/ApiClient.js";
+import { Container } from "/flowerui/components/Container.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+import { DependencyContainer } from "/flowerui/lib/DependencyContainer.js";
 var Form = function (_props) {
     let _formData, _action, _method, _self = this;
 
@@ -33,7 +37,7 @@ var Form = function (_props) {
         },
         set: function action(v) {
             if (_action != v) {
-                if (_action) {
+                if (v) {
                     if (this.$el) {
                         this.$el.attr('action', v);
                         _action = v;
@@ -115,6 +119,17 @@ var Form = function (_props) {
         this.$el.get(0).reset();
     };
 
+    let _endDraw = this.endDraw;
+    this.endDraw = function (e) {
+        if (e.target.id == this.domID) {
+            if (typeof _endDraw == 'function')
+                _endDraw.apply(this, arguments);
+            if (_action == null && _props.action) { 
+                _self.action = _props.action;
+            }
+        }
+    };
+
     let _xhrProgress = function (e) {
         let postProgress = jQuery.Event(FormEventType.POST_PROGRESS);
         if (e.originalEvent.lengthComputable) {
@@ -128,31 +143,31 @@ var Form = function (_props) {
             postProgress.percentage = percentage;
         }
         postProgress.originalEvent = e;
-        _self.trigger(postProgress, [_self]);
+        _self.trigger(postProgress);
     };
 
     let _xhrStarted = function (e) {
         let postStarted = jQuery.Event(FormEventType.POST_STARTED);
         postStarted.originalEvent = e;
-        _self.trigger(postStarted, [_self]);
+        _self.trigger(postStarted);
     };
 
     let _requestComplete = function (e) {
         let postComplete = jQuery.Event(FormEventType.POST_COMPLETE);
         postComplete.originalEvent = e;
-        _self.trigger(postComplete, [_self]);
+        _self.trigger(postComplete);
     };
 
     let _xhrRejected = function (e) {
         let postError = jQuery.Event(FormEventType.POST_ERROR);
         postError.originalEvent = e;
-        _self.trigger(postError, [_self]);
+        _self.trigger(postError);
     };
 
     let _xhrResolved = function (e) {
         let postSuccess = jQuery.Event(FormEventType.POST_SUCCESS);
         postSuccess.originalEvent = e;
-        _self.trigger(postSuccess, [_self]);
+        _self.trigger(postSuccess);
     };
 
     let _apiClient = new ApiClient();
@@ -174,13 +189,24 @@ var Form = function (_props) {
         method: "POST",
         type: ""
     };
-
-    _props = extend(false, false, _defaultParams, _props);
+    ObjectUtils.fromDefault(_defaultParams, _props);
+    //_props = ObjectUtils.extend(false, false, _defaultParams, _props);
     _formData = null;
-    _action = _props.action;
     _method = _props.method;
 
     let r = Container.call(this, _props);
     return r;
 };
 Form.prototype.ctor = 'Form';
+var FormEventType =
+{
+    "POST_STARTED": "POST_STARTED",
+    "POST_PROGRESS": "POST_PROGRESS",
+    "POST_ERROR": "POST_ERROR",
+    "POST_SUCCESS": "POST_SUCCESS",
+    "POST_COMPLETE": "POST_COMPLETE"
+};
+DependencyContainer.getInstance().register("Form", Form, DependencyContainer.simpleResolve);
+export {
+    Form, FormEventType
+};

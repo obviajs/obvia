@@ -2,3 +2,26 @@
     border-left: solid 1px #3498db;
     background: #ecf0f1;
 }
+.table tbody th .row-action-link.action-delete,
+.table tbody td .row-action-link.action-delete {
+    color: #d9534f;
+    visibility:hidden;
+}
+.table tbody tr:hover .row-action-link {
+    visibility:visible;
+}
+.table th .row-action-link.action-delete,
+.table td .row-action-link.action-delete {
+    color: #d9534f;
+    visibility:hidden;
+}
+.table tr:hover .row-action-link {
+    visibility:visible;
+}
+.table {
+    position: sticky;
+    top: 0px;
+}
+.table {
+    text-align: left;
+}

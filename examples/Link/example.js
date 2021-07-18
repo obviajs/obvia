@@ -9,7 +9,7 @@ var mySGRenderer = new SuggestionRenderer({
     label: 'Suggestion :)',
     value: 5
 });
-mySGRenderer.on('creationComplete', function (e) {
+mySGRenderer.on('endDraw', function (e) {
     loader.hide();
     mySGRenderer.label = "Loaded";
     mySGRenderer.value = 6;

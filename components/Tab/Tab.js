@@ -4,7 +4,9 @@
  * Kreatx 2018
  */
 
-//component definition
+import { Container } from "/flowerui/components/Container.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+
 var Tab = function (_props) {
 
     Object.defineProperty(this, "label", {
@@ -42,7 +44,8 @@ var Tab = function (_props) {
     };
 
     let _defaultParams = {};
-    _props = extend(false, false, _defaultParams, _props);
+    ObjectUtils.fromDefault(_defaultParams, _props);
+    //_props = ObjectUtils.extend(false, false, _defaultParams, _props);
     let _label = _props.label;
     let r = Container.call(this, _props);
     return r;

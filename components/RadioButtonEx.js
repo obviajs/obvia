@@ -4,7 +4,9 @@
  * Kreatx 2019
  */
 
-//component definition
+import { Component } from "/flowerui/components/base/Component.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+
 var RadioButtonEx = function (_props) {
 
     let  _self = this, _label, _value, _checked, _name;
@@ -118,7 +120,8 @@ var RadioButtonEx = function (_props) {
         checked: false,
         enabled: true,
     };
-    _props = extend(false, false, _defaultParams, _props);
+    ObjectUtils.fromDefault(_defaultParams, _props);
+    //_props = ObjectUtils.extend(false, false, _defaultParams, _props);
     let _click = _props.click;
 
     _props.click = function () {
@@ -130,6 +133,10 @@ var RadioButtonEx = function (_props) {
             _clickHandler.apply(this, arguments);
         }
     };
-    Component.call(this, _props);
+    let r = Component.call(this, _props);
+    return r;
 };
 RadioButtonEx.prototype.ctor = 'RadioButtonEx';
+export {
+    RadioButtonEx
+};

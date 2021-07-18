@@ -4,15 +4,19 @@
  * Kreatx 2018
  */
 
-//component definition
-var Label = function (_props, _hideComponents = false) {
+import { Container } from "/flowerui/components/Container.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+import { DependencyContainer } from "/flowerui/lib/DependencyContainer.js";
+var Label = function (_props) {
+    let _label, _html, _labelType;
+    
     Object.defineProperty(this, "label", {
         get: function label() {
             return _label;
         },
         set: function label(v) {
             if (_label != v) {
-                _label = v;
+                _props.label = _label = v;
                 if (this.$el) {
                     //convert html entities
                     v = $(`<div>${v}</div>`).get(0).innerText;
@@ -32,21 +36,20 @@ var Label = function (_props, _hideComponents = false) {
         configurable: true
     });
 
-    Object.defineProperty(this, "contenteditable", {
-        get: function contenteditable() {
-            return _contenteditable;
+    Object.defineProperty(this, "html", {
+        get: function html() {
+            return _html = this.$el.html();
         },
-        set: function contenteditable(v) {
-            if (_contenteditable != v) {
-                _contenteditable = v;
+        set: function html(v) {
+            if (_html != v) {
+                _html = v;
                 if (this.$el) {
-                    if (v)
-                        this.$el.attr('contenteditable', v);
-                    else
-                        this.$el.removeAttr('contenteditable');
+                    this.$el.html(v);
                 }
             }
-        }
+        },
+        enumerable: true,
+        configurable: true
     });
 
     Object.defineProperty(this, "labelType", {
@@ -82,11 +85,8 @@ var Label = function (_props, _hideComponents = false) {
 
     this.afterAttach = function (e) {
         if (e.target.id == this.domID) {
-            if (_props.label) {
+            if (_label == null && _props.label) {
                 this.label = _props.label;
-            }
-            if (_props.contenteditable) {
-                this.contenteditable = _props.contenteditable;
             }
         }
     };
@@ -97,14 +97,30 @@ var Label = function (_props, _hideComponents = false) {
     let _defaultParams = {
         label: "",
         labelType: LabelType.label,
-        contenteditable: false
+        type:""
     };
-    _props = extend(false, false, _defaultParams, _props);
+    ObjectUtils.fromDefault(_defaultParams, _props);
+    //_props = ObjectUtils.extend(false, false, _defaultParams, _props);
 
-    let _label, _contenteditable;
-    let _labelType = _props.labelType;
+    _labelType = _props.labelType;
 
-    let r = Parent.call(this, _props, _hideComponents);
+    let r = Container.call(this, _props);
     return r;
 };
 Label.prototype.ctor = 'Label';
+var LabelType =
+{
+    "i": "i",
+    "b": "b",
+    "u": "u",
+    "span": "span",
+    "label": "label",
+    "p": "p",
+    "sup": "sup",
+    "small": "small",
+    "strong": "strong"
+};
+DependencyContainer.getInstance().register("Label", Label, DependencyContainer.simpleResolve);
+export {
+    Label, LabelType
+};

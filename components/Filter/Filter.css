@@ -21,6 +21,7 @@
     border: 1px solid #dee2e6;
     border-radius: 6px;
     margin-bottom: 5px;
+    transition: all 0.3s ease;
 }
 
 .filter .repeater-container {
@@ -29,7 +30,9 @@
 }
 
 .filter .expression-container {
-    border: 1px solid #555;
+    border: 1px solid #5555556b;
+    border-radius: 10px;
+    outline: none;
 }
 
 .filter .initial_style.initial_style {
@@ -56,4 +59,9 @@
     font-size: 16px;
     color: #1a73e8;
     margin: 0;
+}
+
+.fall {
+    transform: translateY(2rem) rotateZ(10deg);
+    opacity: 0;
 }

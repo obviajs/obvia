@@ -6,174 +6,149 @@
  * However, the old child container still exists; it is just invisible.
  * Kreatx 2019
  */
-
-//component definition
-var ViewStack = function(_props)
-{
+import { Container } from "/flowerui/components/Container.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+import { ArrayUtils } from "/flowerui/lib/ArrayUtils.js";
+import { DependencyContainer } from "/flowerui/lib/DependencyContainer.js";
+var ViewStack = function (_props) {
     let _self = this;
-    Object.defineProperty(this, "selectedIndex", 
-    {
-        get: function selectedIndex() 
-        {
-            return _selectedIndex;
-        },
-        set: function selectedIndex(v) 
-        {
-            if(_selectedIndex != v)
-            {
-                let event = jQuery.Event("change");
-                this.$el.trigger(event, [_selectedIndex, v]);
-                if (!event.isDefaultPrevented()) 
-                {
-                    _selectedIndex = v;
-                    for(let i=0;i<_self.components.length;i++)
-                    {
-                        let c = this.children[(_self.components[i]).props.id];
-                        if(c)
-                        {
-                            if(i==v){
-                                this.$container.append(c.$el);
-                                event = jQuery.Event("changed");
-                                this.trigger(event, [_selectedIndex, v]);
-                            }else if(c.$el.parent().length > 0){
-                                c.$el.detach();
+    //we override proxy initialization, because we want to create a child if it is requested
+    this.initProxy = function () {
+        return new Proxy(this, {
+            get: function (target, property, receiver) {
+                if (!target.hasOwnProperty(property) && !target.constructor.prototype.hasOwnProperty(property)) {
+                    if (target.children && target.children[property])
+                        return target.children[property];
+                    else {
+                        let ind = ArrayUtils.indexOfObject (_components, "props.id", property);
+                        if (ind > -1) {
+                            _components[ind].props.display = false;
+                            let p = _addComponents([_components[ind]]);
+                            p.then((cr) => {
+                                return cr[0];
+                            });
+                            return p;//target.children[property];
+                        }
+                    }
+                }
+                return Reflect.get(...arguments);
+            },
+            getOwnPropertyDescriptor(target, property) {
+                if (!target.hasOwnProperty(property) && !target.constructor.prototype.hasOwnProperty(property)) {
+                    if (target.children && target.children[property])
+                        return { configurable: true, enumerable: true };
+                    else {
+                            let ind = ArrayUtils.indexOfObject (_components, "props.id", property);
+                            if (ind > -1) {
+                                _components[ind].props.display = false;
+                                _addComponents([_components[ind]]);
+                                return { configurable: true, enumerable: true };
                             }
                         }
-                    } 
                 }
+                return Reflect.getOwnPropertyDescriptor(...arguments);
+            }
+        });
+    };
+
+    Object.defineProperty(this, "selectedIndex", {
+        get: function selectedIndex() {
+            return _selectedIndex;
+        },
+        set: function selectedIndex(v) {
+            if (_selectedIndex != v) {
+                let event = jQuery.Event("beforeChange");
+                event.newValue = v;
+                event.oldValue = _selectedIndex;
+                this.trigger(event);
+                if (!event.isDefaultPrevented()) {
+                    _selectedIndex = v;
+                    _renderSelectedChild(_selectedIndex).then((pr) => {
+                        let e = jQuery.Event("change");
+                        e.newValue = v;
+                        e.oldValue = _selectedIndex;
+                        _self.trigger(e);
+                    });
+                } else
+                    return false;
             }
         },
         enumerable: true
     });
-    
-    let _mutationHandler = function (e, ci) {
-        let c = _self.children[(_components[ci]).props.id];
-        if (c) {
-            let parent = c.children[c.components[0].props.id];
-            let c = parent.children[e.oldValue.props.id];
-            delete parent.children[e.oldValue.props.id];
-            //
-            if (c.$el.parent().length > 0) {
-                c.$el.detach();
-            }
-            let cmp = Component.fromLiteral(e.newValue);
-            e.newValue.props.id = cmp.id;
-            parent.$container.insertAt(cmp.$el, 0);
 
-            //parent.$container.append(cmp.$el);
-            parent.children[cmp.id] = cmp;
-            //pergjithesoje, komponenti i ri te shtohet te indexi ku ishte i vjetri
-            cmp.parent = _self;
-            cmp.parentType = _self.type;
-            cmp.parentForm = _self;
-        }
-        console.log(arguments);
+    this.beforeAttach = function () {
+
     };
 
-    this.beforeAttach = function() 
-    {
-       
-    }
     let _defaultParams = {
         selectedIndex: 0,
-        type: ContainerType.NONE
+        type: ""
     };
-
-    _props = extend(false, false, _defaultParams, _props);
+    ObjectUtils.fromDefault(_defaultParams, _props);
+    //_props = ObjectUtils.extend(false, false, _defaultParams, _props);
     let _selectedIndex = _props.selectedIndex;
-    let _components = _props.components;
-    
-    if(_components && _components.length > 0){
-        for (let i = 0; i < _props.components.length; i++)
-        { 
-            _props.components[i].props.attach = (i == _selectedIndex);
-        }
-    }
-    if (!_props.attr) { 
+    let _components = [];
+
+    if (!_props.attr) {
         _props.attr = {};
     }
     let myDtEvts = ["change", "changed"];
-    if (!Object.isEmpty(_props.attr) && _props.attr["data-triggers"] && !Object.isEmpty(_props.attr["data-triggers"]))
-    {
+    if (!ObjectUtils.isEmpty(_props.attr) && _props.attr["data-triggers"] && !ObjectUtils.isEmpty(_props.attr["data-triggers"])) {
         let dt = _props.attr["data-triggers"].split(" ");
-        for (let i = 0; i < dt.length; i++)
-        {   
+        for (let i = 0; i < dt.length; i++) {
             myDtEvts.pushUnique(dt[i]);
         }
     }
     _props.attr["data-triggers"] = myDtEvts.join(" ");
-    
+
     let r = Container.call(this, _props);
-    
-    // this.addComponents = function (cmps)
-    // {
-    //     _self.trigger('beginDraw');
-    //     let components;
-    //     if(cmps){
-    //         components = cmps;
-    //     }else{
-    //         components = this.components;
-    //     }
-    //     if(components && Array.isArray(components))
-    //     {
-    //         for(let i=0;i<components.length;i++)
-    //         {
-    //             let cmp, cmpLiteral, w;
-    //             cmp = cmpLiteral = components[i];
-    //             if(cmpLiteral.type == "JTemplate")
-    //             {
-    //                 cmp = components[i] = cmpLiteral.parse();   
-    //             }
-    //             let cmp = Component.fromLiteral(cmp);
-    //             components[i].props.id = cmp.id;
-    //             (function(i){
-    //                 cmp.on('creationComplete', function (e) {
-    //                         e.stopImmediatePropagation();
-    //                         e.stopPropagation();
-            
-    //                         _ccComponents.push(components[i].props.id);
-                        
-    //                         if (_ccComponents.length == _self.components.length && !_creationFinished) {
-    //                             _creationFinished = true;
-    //                             _self.trigger('creationComplete');
-    //                         }
-        
-    //                 });
-    //                 if(cmpLiteral.type == "JTemplate")
-    //                 {
-    //                     for(let j=0;j<cmpLiteral.mutations.length;j++)
-    //                     {
-    //                         w = ChangeWatcher.getInstance(cmpLiteral.mutations[j]["host"]);
-    //                         w.watch(cmpLiteral.mutations[j]["host"], cmpLiteral.mutations[j]["chain"], function(e) {_mutationHandler(e, i);});
-    //                     }
-    //                 }
-    //             })(i);
-    //             let maxIndex = this.$container.children().length;
-    //             if(_selectedIndex==i)
-    //                 if (cmp.render)
-    //                 {
-    //                     _comprenders.push({
-    //                         "cmp": cmp, "promise": cmp.render().then(function (cmpInstance)
-    //                         {
-    //                             if (cmpInstance.appendTo)
-    //                             {
-    //                                 cmpInstance.appendTo.append(cmpInstance.$el);
-    //                             } else
-    //                                 _self.$container.append(cmpInstance.$el);
-    //                         })
-    //                     });
-    //                 }else
-    //                     this.$container.append(cmp.render());
-    //             //expose component model
-    //             components[i].props.id = cmp.id;
-    //             _children[cmp.id] = cmp;
-    
-    //             cmp.parent = _self;
-    //             cmp.parentType = _self.type;
-    //             cmp.parentForm = _self;
-    //         }
-    //     }
-    // }
+    let _addComponents = this.addComponents.bind(_self);
+
+    let _renderSelectedChild = function (si) {
+        let len = _self.csorted.length;
+        for (let i = 0; i < len; i++) {
+            if (i != si)
+                _self.childAtIndex(i).display = false;
+            else
+                _self.childAtIndex(i).display = true;
+        }
+        let p;
+        let c = _self.childAtIndex(si);
+        if (!c) {
+            let cmp = _components[si];
+            if (cmp) {
+                p = _addComponents([cmp]);
+            } else {
+                p = _addComponents([]);
+            }
+        }
+        return Promise.resolve(p);
+    };
+
+    this.addComponents = function (components) {
+        if (components && components.length > 0) {
+            _components.splicea(_components.length, 0, components);
+        }
+        return Promise.resolve(_renderSelectedChild(_selectedIndex));
+    };
+
+    Object.defineProperty(this, "components", {
+        get: function components() {
+            return _components;
+        },
+        set: function components(v) {
+            this.removeAllChildren();
+            _components = v;
+            this.addComponents(_components);
+        },
+        enumerable: true,
+        configurable: true
+    });
+
     return r;
 };
 ViewStack.prototype.ctor = 'ViewStack';
+DependencyContainer.getInstance().register("ViewStack", ViewStack, DependencyContainer.simpleResolve);
+export {
+    ViewStack
+};

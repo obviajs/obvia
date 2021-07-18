@@ -3,8 +3,9 @@
  * 
  * Kreatx 2018
  */
-
-//component definition
+import { Component } from "/flowerui/components/base/Component.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+import { DependencyContainer } from "/flowerui/lib/DependencyContainer.js";
 var Image = function (_props) {
     Object.defineProperty(this, "src", {
         get: function src() {
@@ -94,19 +95,19 @@ var Image = function (_props) {
     this.template = function () {
         return '<img id="' + this.domID + '" src="' + this.src + '">';
     };
-    var _defaultParams = {
+    let _defaultParams = {
         width: 0,
         height: 0,
         title: undefined,
         alt: undefined
     };
-
-    _props = extend(false, false, _defaultParams, _props);
+    ObjectUtils.fromDefault(_defaultParams, _props);
+    //_props = ObjectUtils.extend(false, false, _defaultParams, _props);
     if (!_props.attr) {
         _props.attr = {};
     }
     let myDtEvts = ["load"];
-    if (!Object.isEmpty(_props.attr) && _props.attr["data-triggers"] && !Object.isEmpty(_props.attr["data-triggers"])) {
+    if (!ObjectUtils.isEmpty(_props.attr) && _props.attr["data-triggers"] && !ObjectUtils.isEmpty(_props.attr["data-triggers"])) {
         let dt = _props.attr["data-triggers"].split(" ");
         for (let i = 0; i < dt.length; i++) {
             myDtEvts.pushUnique(dt[i]);
@@ -129,3 +130,7 @@ var Image = function (_props) {
     };
 };
 Image.prototype.ctor = 'Image';
+DependencyContainer.getInstance().register("Image", Image, DependencyContainer.simpleResolve);
+export {
+    Image
+};

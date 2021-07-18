@@ -3,7 +3,8 @@
  *
  * Kreatx 2018
  */
-
+import { Component } from "/flowerui/components/base/Component.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
 var Color = function (_props) {
 
     let _self = this, _value;
@@ -48,8 +49,8 @@ var Color = function (_props) {
             "height": "20px"
         }
     };
-
-    _props = extend(false, false, _defaultParams, _props);
+    ObjectUtils.fromDefault(_defaultParams, _props);
+    //_props = ObjectUtils.extend(false, false, _defaultParams, _props);
 
     let _change = _props.change;
 
@@ -66,3 +67,6 @@ var Color = function (_props) {
 };
 
 Color.prototype.ctor = "Color";
+export {
+    Color
+};

@@ -1,29 +1,60 @@
-let apiClient = new ApiClient();
-apiClient.get("https://api.mocki.io/v1/8dea432f").then(r => {
-    var myRepeater = new Repeater({
-        id: 'repeater',
-        dataProvider: new ArrayEx(r.response),
-        components: [{
-                ctor: Label,
-                props: {
-                    id: 'lblCmp',
-                    label: "{currentIndex + 1}",
-                }
-            },
-            {
-                ctor: Button,
-                props: {
-                    id: 'btnCmp',
-                    label: "{name+' '+company}",
-                }
-            }
-        ]
-    });
+import { Button } from "../../components/Button/Button.js";
+import { Label } from "../../components/Label.js";
+import { Repeater } from "../../components/Repeater/Repeater.js";
+import { ArrayEx } from "../../lib/ArrayEx.js";
 
-    myRepeater.render().then(function (cmpInstance) {
-        $('#root').append(cmpInstance.$el);
-    });
+let myRepeater;
+myRepeater = new Repeater({
+    id: 'repeater',
+    css: { width: "30%" },
+    dataProvider: new ArrayEx({
+        name: "Test name",
+        company: "Test company"
+    }, {
+        name: "Test name",
+        company: "Test company"
+    }, {
+        name: "Test name",
+        company: "Test company"
+    }, {
+        name: "Test name",
+        company: "Test company"
+    }),
+    components: [{
+            ctor: Label,
+            props: {
+                id: 'lblCmp',
+                label: "{currentIndex}",
+                css: {
+                    "margin-right": "2rem",
+                    "margin-top": "1.4rem"
+                },
+
+            }
+        },
+        {
+            ctor: Button,
+            props: {
+                id: 'btnCmp',
+                label: "{name}",
+                classes: ["button", "form-control"],
+                css: {
+                    display: "inline",
+                    width: "80%"
+                }
+
+            }
+        }
+    ]
 });
+
+myRepeater.render().then(function(cmpInstance) {
+    $(document.body).append(cmpInstance.$el);
+});
+
+
+export { myRepeater }
+
 /*
 var dp = new ArrayEx([{label:"test"}, {label:"anonimous", children:[{label:"hulk"}]}]);
 var myRepeater = new Repeater({
@@ -54,11 +85,11 @@ var myRepeater = new Repeater({
 
 var myRepeater = new Repeater({
     id: 'repeater',
-	rendering: {
-				direction: 'vertical',
-				separator: true,
-				actions: false
-			},
+    rendering: {
+                direction: 'vertical',
+                separator: true,
+                actions: false
+            },
     defaultItem: {
         comboLabel: 'Zgjidh Shtetin',
         comboValue: "",
@@ -72,8 +103,8 @@ var myRepeater = new Repeater({
             zoomLevel: 7
         }
     },
-    dataProvider:  
-		[
+    dataProvider:
+        [
             {
                 comboLabel: 'Zgjidh Shtetin',
                 comboValue: "",
@@ -185,7 +216,7 @@ var myRepeater = new Repeater({
                 dataProvider: [{ "id": "1", "text": "Ministria e Puneve te Jashtme"}, { "id": "2", "text": "Ministria e Drejtesise"}, { "id": "3", "text": "Ministria e Brendshme"}],
                 labelField: 'text',
                 valueField: 'id',
-                value: '{radioValue}' 
+                value: '{radioValue}'
             }
         }
         {

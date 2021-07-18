@@ -1,3 +1,7 @@
+import { Component } from "/flowerui/components/base/Component.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+import { DependencyContainer } from "/flowerui/lib/DependencyContainer.js";
+
 var Option = function (_props) {
     let _self = this, _label, _value;
     Object.defineProperty(this, "label", 
@@ -54,10 +58,12 @@ var Option = function (_props) {
         label: "",
         value: ""
     };
-
-    _props = extend(false, false, _defaultParams, _props);
-    //_props.applyBindings = false;
+    ObjectUtils.fromDefault(_defaultParams, _props);
+    //_props = ObjectUtils.extend(false, false, _defaultParams, _props);
     Component.call(this, _props);
 };
-//component prototype
 Option.prototype.ctor = 'Option';
+DependencyContainer.getInstance().register("Option", Option, DependencyContainer.simpleResolve);
+export {
+    Option
+};

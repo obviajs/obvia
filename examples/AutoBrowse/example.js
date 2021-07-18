@@ -1,26 +1,27 @@
+import { AutoBrowse } from "../../components/AutoBrowse.js";
+import { ArrayEx } from "../../lib/ArrayEx.js";
+
+
 var myAutoBrowser = new AutoBrowse({
 
     id: 'AutoBrowse',
-    bindingDefaultContext: window,
     labelField: "customer_name",
-    valueField: "customer_name",
+    valueField: "NID",
     value: [],
     attr: {
         "data-triggers": "browse"
     },
     fields: [{
-            "field": "customer_name",
-            "description": "Customer Name"
-        },
-        {
-            "field": "NID",
-            "description": "Customer ID"
-        }
+        "field": "customer_name",
+        "description": "Customer Name"
+    },
+    {
+        "field": "NID",
+        "description": "Customer ID"
+    }
     ],
 
-    dataProvider: "{?AutoB}",
-});
-window.AutoB = new ArrayEx([{
+    dataProvider: new ArrayEx([{
         customer_name: "Any signal...",
         NID: 1,
     },
@@ -33,8 +34,13 @@ window.AutoB = new ArrayEx([{
         customer_name: "Any signal... (3)",
         NID: 3
     }
-]);
+    ])
+
+});
+
 
 myAutoBrowser.render().then(function (cmpInstance) {
-    $('#root').append(cmpInstance.$el);
+    $(document.body).append(cmpInstance.$el);
 });
+
+export { myAutoBrowser }

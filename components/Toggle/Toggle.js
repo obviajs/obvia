@@ -3,15 +3,18 @@
  *
  * Kreatx 2019
  */
-
+import { Label, LabelType } from "/flowerui/components/Label.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+import { CheckBox } from "/flowerui/components/CheckBox.js";
+import { DependencyContainer } from "/flowerui/lib/DependencyContainer.js";
 var Toggle = function (_props) {
-    let _self = this, _checkBox, _span;
+    let _self = this;
     Object.defineProperty(this, "value", {
         get: function value() {
-            return _checkBox.value;
+            return _self.proxyMaybe.checkBox.value;
         },
         set: function value(v) {
-            _checkBox.value = v;
+            _self.proxyMaybe.checkBox.value = v;
         },
         enumerable:true
     });
@@ -19,36 +22,20 @@ var Toggle = function (_props) {
     Object.defineProperty(this, "checked",
     {
         get: function checked() {
-            return _checkBox.checked;
+            return _self.proxyMaybe.checkBox.checked;
         },
         set: function checked(v) {
-            _checkBox.checked = !!v;
+            _self.proxyMaybe.checkBox.checked = !!v;
         },
         enumerable:true
     });
 
     this.beforeAttach = function () {
-        this.$input = _checkBox.$el;
+        this.$input = _self.proxyMaybe.checkBox.$el;
     };
-    Object.defineProperty(this, "checkBox",
-    {
-        get:function checkBox(){
-            return _checkBox;
-        },
-        enumerable:false
-    });
-    Object.defineProperty(this, "span",
-    {
-        get:function label(){
-            return _span;
-        },
-        enumerable:false
-    });
  
     this.endDraw = function (e) {
         if (e.target.id == this.domID) {
-            _checkBox = this.checkBoxCmp;
-            _span = this.spanCmp;
             if (_props.value)
                 _self.value = _props.value;
             if (_props.checked)
@@ -66,30 +53,28 @@ var Toggle = function (_props) {
             {
                 ctor: CheckBox,
                 props:{
-                    id: 'checkBoxCmp'
+                    id: 'checkBox'
                 }
             },
             {
                 ctor: Label,
                 props:{
-                    id: 'spanCmp',
+                    id: 'span',
                     labelType: LabelType.span,
                     classes: ["slider"]
                 }
             }
         ],
-        classes: {
-            "self":["switch"]
+        classes: ["switch"],
+        props: {
+            span: {
+                classes: ["slider"],
+            }
         }
     };
+    ObjectUtils.fromDefault(_defaultParams, _props);
+    //_props = ObjectUtils.extend(false, false, _defaultParams, _props);
     
-    _props = extend(false, false, _defaultParams, _props);
-    if(_props.classes["span"]==null)
-        _props.classes["span"] = [];
-    _props.classes["span"].pushUnique("slider");
-    if(_props.classes["self"]==null)
-        _props.classes["self"] = [];
-    _props.classes["self"].pushUnique("switch");
     let _change = _props.change;
     _props.components[0].props.change = function () {
         if (typeof _change == 'function')
@@ -105,7 +90,11 @@ var Toggle = function (_props) {
     };
     _props.change = null;
 
-    Label.call(this, _props, true);
+    let r = Label.call(this, _props, true);
+    return r;
 };
-
+DependencyContainer.getInstance().register("Toggle", Toggle, DependencyContainer.simpleResolve);
 Toggle.prototype.ctor = "Toggle";
+export {
+    Toggle
+};

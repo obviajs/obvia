@@ -4,11 +4,24 @@
  * Kreatx 2020
  */
 
-//component definition
+import { Container } from "/flowerui/components/Container.js";
+import { Button } from "/flowerui/components/Button/Button.js";
+import { Label, LabelType } from "/flowerui/components/Label.js";
+import { Modal, ModalSize } from "/flowerui/components/Modal/Modal.js";
+import { DataGrid } from "/flowerui/components/DataGrid/DataGrid.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+import { StringUtils } from "/flowerui/lib/StringUtils.js";
+import { ArrayEx } from "/flowerui/lib//ArrayEx.js";
+import { DependencyContainer } from "/flowerui/lib/DependencyContainer.js";
 var DataBrowse = function (_props) {
     let _self = this;
     let _dataProvider, _columns = [],
-        _fields, _placeholder;
+        _fields, _placeholder,
+        _valueField,
+        _labelField,
+        _value,
+        _textInput, _modal, _dg, _cmps;
+   
 
     Object.defineProperty(this, "dataProvider", {
         get: function dataProvider() {
@@ -70,12 +83,11 @@ var DataBrowse = function (_props) {
             e.preventDefault();
         }
     };
-    let _cmps, _dg, _modal;
     var fnContainerDelayInit = function () {
         _cmps = [{
                 "ctor": "Container",
                 "props": {
-                    type: ContainerType.NONE,
+                    type: "",
                     "id": "workArea_66",
                     css: {
                         "display": "flex"
@@ -176,7 +188,7 @@ var DataBrowse = function (_props) {
     };
 
     let _defaultParams = {
-        type: ContainerType.NONE,
+        type: "",
         "components": [],
         dataProvider: new ArrayEx(),
         fields: [],
@@ -187,8 +199,8 @@ var DataBrowse = function (_props) {
         // classes:["d-inline-flex"],
         allowNewItem: false
     };
-
-    _props = extend(false, false, _defaultParams, _props);
+    ObjectUtils.fromDefault(_defaultParams, _props);
+    //_props = ObjectUtils.extend(false, false, _defaultParams, _props);
     // if (!_props.attr) { 
     //     _props.attr = {};
     // }
@@ -198,7 +210,7 @@ var DataBrowse = function (_props) {
     //     _props.classes.pushUnique("d-flex");
 
     let myDtEvts = ["browse"];
-    if (!Object.isEmpty(_props.attr) && _props.attr["data-triggers"] && !Object.isEmpty(_props.attr["data-triggers"])) {
+    if (!ObjectUtils.isEmpty(_props.attr) && _props.attr["data-triggers"] && !ObjectUtils.isEmpty(_props.attr["data-triggers"])) {
         let dt = _props.attr["data-triggers"].split(" ");
         for (let i = 0; i < dt.length; i++) {
             myDtEvts.pushUnique(dt[i]);
@@ -206,7 +218,7 @@ var DataBrowse = function (_props) {
     }
     _props.attr["data-triggers"] = myDtEvts.join(" ");
 
-    if (_props.dataProvider && !getBindingExp(_props.dataProvider)) {
+    if (_props.dataProvider && !StringUtils.getBindingExp(_props.dataProvider)) {
         _dataProvider = _props.dataProvider;
     }
     if (_props.bindingDefaultContext) {
@@ -223,4 +235,8 @@ var DataBrowse = function (_props) {
 
     Container.call(this, _props, true);
 };
+DependencyContainer.getInstance().register("DataBrowse", DataBrowse, DependencyContainer.simpleResolve);
 DataBrowse.prototype.ctor = 'DataBrowse';
+export {
+    DataBrowse
+};

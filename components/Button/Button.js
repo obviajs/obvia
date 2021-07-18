@@ -4,7 +4,9 @@
  * Kreatx 2018
  */
 
-//component definition
+import { Container } from "/flowerui/components/Container.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+import { DependencyContainer } from "/flowerui/lib/DependencyContainer.js";
 var Button = function(_props)
 {  
     Object.defineProperty(this, "label", 
@@ -85,13 +87,12 @@ var Button = function(_props)
         type:"button",
         components:[]
     };
-    //_props = extend(false, false, _defaultParams, _props);
-    shallowCopy(extend(false, false, _defaultParams, _props), _props);
+    ObjectUtils.fromDefault(_defaultParams, _props);
+    //ObjectUtils.shallowCopy(ObjectUtils.extend(false, false, _defaultParams, _props), _props);
     let _label;
     let _type = _props.type;
     let _value; 
     
-   // Component.call(this, _props);
     let r = Container.call(this, _props);
 
     Object.defineProperty(this, "type", 
@@ -125,3 +126,17 @@ var Button = function(_props)
     return r;
 };
 Button.prototype.ctor = 'Button';
+let ButtonType = {
+    "button": "button",
+    "submit": "submit",
+    "reset": "reset"
+};
+var ButtonSize =
+{
+    "SMALL": "btn-sm",
+    "LARGE": "btn-lg"
+};
+DependencyContainer.getInstance().register("Button", Button, DependencyContainer.simpleResolve);
+export {
+    Button, ButtonType, ButtonSize
+};

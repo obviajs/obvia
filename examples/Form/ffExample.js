@@ -120,7 +120,7 @@ var myForm = new Form({
     ]
 });
 
-myForm.on('creationComplete', function (e) {
+myForm.on('endDraw', function (e) {
     loader.hide();
 });
 

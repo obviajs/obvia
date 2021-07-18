@@ -5,3 +5,6 @@ var ToggleBgStyle =
     "BG_WARNING":"warning",
     "BG_DANGER":"danger"
 }
+export {
+    ToggleBgStyle
+};

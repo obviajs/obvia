@@ -1,26 +1,68 @@
-var loader = new Loader({
-  id: 'loader'
-});
-$('#root').append(await loader.render().$el);
-loader.show();
+import { Button } from "../../components/Button/Button.js";
+import { Container } from "../../components/Container.js";
+import { BrowserManager } from "../../lib/BrowserManager.js";
+import { LocalizationManager } from "../../lib/LocalizationManager.js";
+import {get } from "../../lib/my.js";
 
-var myButton = new Button({
-  id: 'button',
-  type: "",
-  value: "",
-  label: "Click me",
-  classes: ["btn", "btn-success"],
-  click: function (e) {
-    console.log("From ClickAction");
-  }
+let Context = {};
+Context.localizationManager = new LocalizationManager({
+    selectedLocale: {
+        displayLanguage: "English",
+        localeString: "en_US",
+    },
+    fetchPromise: function(p) {
+        return get(
+            BrowserManager.getInstance().base +
+            "/oxanaui/app/locale/" +
+            p.localeString +
+            ".json",
+            "application/json"
+        );
+    },
 });
-myButton.on('creationComplete', function () {
-  loader.hide();
-  myButton.on('click', function () {
+//myButton.localizationManager = localizationManager;
+var myButton = new Container({
+    components: [{
+            ctor: Button,
+            props: {
+                id: "button1",
+                type: "",
+                value: "",
+                label: "Fixed Label",
+                classes: ["btn", "btn-success"],
+                click: function(e) {
+                    console.log("From ClickAction");
+                },
+                bindingDefaultContext: Context,
+            },
+        },
+        {
+            ctor: Button,
+            props: {
+                id: "button2",
+                type: "",
+                value: "",
+                label: "{localizationManager.getLocaleString('Forms', 'successfullySaved', localizationManager.selectedLocale) + button1.label}",
+                classes: ["btn", "btn-success"],
+                click: function(e) {
+                    console.log("From ClickAction");
+                },
+                bindingDefaultContext: Context,
+            },
+        },
+    ],
+});
 
-    // alert("test");
-  });
+Context.localizationManager.loaded.then((d) => {
+    myButton.render().then(function(cmpInstance) {
+        myButton.button1.on("click", function() {
+            Context.localizationManager.setSelectedLocale({
+                displayLanguage: "Shqip",
+                localeString: "sq_AL",
+            });
+        });
+        $(document.body).append(cmpInstance.$el);
+    });
 });
-myButton.render().then(function (cmpInstance) {
-  $('#root').append(cmpInstance.$el);
-});
+
+export { myButton };

@@ -3,6 +3,10 @@
  * 
  * Kreatx 2019
 */
+import { CalendarBase } from "/flowerui/components/Calendar/CalendarBase.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+import { ArrayUtils } from "/flowerui/lib/ArrayUtils.js";
+import { CalendarConstants } from "/flowerui/components/Calendar/CalendarConstants.js";
 var CalendarWeek = function(_props)
 {
     let _self = this;
@@ -19,38 +23,38 @@ var CalendarWeek = function(_props)
         }
     });
 
-    this.afterAttach = function(e){
-        if(typeof _afterAttach == 'function')
-        _afterAttach.apply(this,arguments);
+    this.afterAttach = function (e) {
+        if (typeof _afterAttach == 'function')
+            _afterAttach.apply(this, arguments);
         _creationFinished = true;
-    }
+    };
 
-       
     let _defaultParams = {
         dataProvider: [],
         type: ContainerType.NONE,
-        labelField:'label',
-        labelFieldHour:'label',
-        interval:'',
-        dateContent:"",
-        duration:"",
-        time :" ",
-        startHour:" ",
-        startHourCalendar:0,
-        endHourCalendar:24,
-        endHour:" ",
-        classField1:" ",
-        descriptionField:" ",
-        heightField:"",       
+        labelField: 'label',
+        labelFieldHour: 'label',        
+        descriptionField: "description",
+        interval: 30,
+        duration: "",
+        time: " ",
+        startTime: " ",        
+        endTime: " ",
+        startHourCalendar: 0,
+        endHourCalendar: 24,
+        classField1: " ",
+        heightField: "",
         css: { display: "flex" },
-        cellHeight:20
-    }
+        cellHeight: 20,        
+        eventsField: "cellEvents",
+        internalFormat: "YYYY-MM-DD"
+    };
     
     this.dates = function(today){
-        var week= []; 
-        today.setDate(today.getDate() - today.getDay() +1);
+        let week = []; 
+        today.setDate(today.getDate() - today.getDay() + 1);
         _self.calendarStartDate = new Date(today.getTime());
-        for (var i = 0; i < 7; i++){
+        for (let i = 0; i < 7; i++){
             week.push(new Date(today)); 
             today.setDate(today.getDate() +1);
         }
@@ -58,152 +62,118 @@ var CalendarWeek = function(_props)
     };
     
     let _intervalToIndex = {};
-    let _intervalFromDate = function(currentValue){    
-        let date = moment(currentValue.startDateTime, _self.inputFormat);
-        let  weekDayNumber = date.weekday();
-        return  weekDayNumber-1;
-    }
-   
-    let _createDataProvider = function(){
+    let _intervalFromDate = function (currentValue) {
+        let date = dayjs(currentValue[_self.startDateTimeField], _self.inputFormat);
+        let weekDayNumber = date.weekday();
+        return date.week() + "-" + weekDayNumber;
+    };
+
+    let _prepareEvent = function (event) {
+        let ds = dayjs(event[_self.startDateTimeField], _self.inputFormat);
+        let de = dayjs(event[_self.endDateTimeField], _self.inputFormat);
+        let d_ds = ds.toDate();
+        let h = d_ds.getHours();
+        let m = d_ds.getMinutes();
+        let hm = (h + 1) * 60 + m + 1;
+        _eventCount[hm] = _eventCount[hm] != null ? ++_eventCount[hm] : 0;
+        event.valueHour = " ";
+        event.duration = de.diff(ds, "minutes");
+        event.top = _getTop(hm);
+        event.height = _getHeight(event.duration);
+        event.marginTop = _eventCount[hm] * 10;
+        event.marginLeft = _eventCount[hm] * 10;
+        return event;
+    };
+
+    let _eventCount = {};
+            
+    let _createDataProvider = function () {
+        _eventCount = {};
         let groupedEvents = _self.calendarEvents.groupReduce(_intervalFromDate);
         let _dataProvider = [];
         let input = new Date(_self.nowDate.getTime());
         let result = _self.dates(input);
-        let result_final=result.map(d=> d.toString());
-        
-        for (let i=0;i<result_final.length;i++){ 
-            let day_dp = result_final[i].split(" ").slice(0,1);
-            let date_dp = result_final[i].split(" ").slice(2,3);
-            let day_string = day_dp[0];
-            let date_string = date_dp[0];
+        let len = result.length;
+        let wn = dayjs(_self.nowDate).week();
+        for (let i = 0; i < len; i++) {
+            let date_string = result[i].getDate();
+            let day_string = CalendarConstants.Days[result[i].getDay()];
             let result_complete = day_string + " " + date_string;
-            let result_second = new Date (result_final[i]);
-            let eventCount = {};
+            let mr = dayjs(result[i]);
+            let dateContent = mr.format(_self.internalFormat);
+            let gi = wn + "-"+ mr.weekday();
             let dp1 = {
-                "value":result_complete,
-                "dateContent":result_final,    
-                "startHour":" ",
-                "endHour":" ",
-                "duration":"",
-                "valueHour":" ",
-                "top":" ",
-                "height":" ",
-                "marginTop":0,
-                "marginLeft":0,
-                "children":new ArrayEx([]),
+                "value": result_complete,
+                "dateContent": dateContent,
+                "startTime": " ",
+                "endTime": " ",
+                "duration": "",
+                "valueHour": " ",
+                "top": " ",
+                "height": " ",
+                "marginTop": 0,
+                "marginLeft": 0,
+                "gi":gi
             };
+            dp1[_eventsField] = new ArrayEx([]);
             dp1[_self.guidField] = StringUtils.guid();
-        
-            for (let j = 0; groupedEvents[i] && j < groupedEvents[i].length; j++)
-            {
-                
-                let ds = moment(groupedEvents[i][j].startDateTime, _self.inputFormat);
-                let de = moment(groupedEvents[i][j].endDateTime, _self.inputFormat);
-                let d_ds = ds.toDate();
-                let h = d_ds.getHours();
-                let m = d_ds.getMinutes();
-                let hm = (h + 1) * 60 + m + 1;
-                eventCount[hm] = eventCount[hm]!= null ? ++eventCount[hm]: 0;
-                groupedEvents[i][j].value =  result_complete;
-                groupedEvents[i][j].valueHour = " ";
-                groupedEvents[i][j].duration = de.diff(ds, "minutes");
-                groupedEvents[i][j].dateContent = result_second.toJSON().slice(0, 10);
-                groupedEvents[i][j].top = _getTop(hm);
-                groupedEvents[i][j].height = _getHeight(groupedEvents[i][j].duration);
-                groupedEvents[i][j].marginTop = eventCount[hm]*10;
-                groupedEvents[i][j].marginLeft = eventCount[hm]*10;                                       
+            for (let j = 0; groupedEvents[gi] && j < groupedEvents[gi].length; j++) {
+                _prepareEvent(groupedEvents[gi][j]);
             }
-            if(groupedEvents[i]){
-                dp1.children = new ArrayEx(groupedEvents[i]);
+            if (groupedEvents[gi]) {
+                dp1[_eventsField] = new ArrayEx(groupedEvents[gi]);
             }
-            _dataProvider.push(dp1); 
-        } 
-        return _dataProvider;
-    }
-    
-
-    _props = extend(false, false, _defaultParams, _props);
-    if (!_props.attr) { 
-        _props.attr = {};
-    }
-    let myDtEvts = ["cellClick"];
-    if (!Object.isEmpty(_props.attr) && _props.attr["data-triggers"] && !Object.isEmpty(_props.attr["data-triggers"]))
-    {
-        let dt = _props.attr["data-triggers"].split(" ");
-        for (let i = 0; i < dt.length; i++)
-        {   
-            myDtEvts.pushUnique(dt[i]);
+            _dataProvider.push(dp1);
         }
-    }
-    _props.attr["data-triggers"] = myDtEvts.join(" ");
+        return _dataProvider;
+    };    
+    ObjectUtils.fromDefault(_defaultParams, _props);
+    //_props = ObjectUtils.extend(false, false, _defaultParams, _props);
     let _cellHeight = _props.cellHeight;
     let _labelField = _props.labelField;
     let _labelFieldHour = _props._labelFieldHour;
-    let _startHour = _props.startHour;
+    let _startTime = _props.startTime;
     let _duration = _props.duration;
-    let _endHour = _props.endHour;
+    let _endTime = _props.endTime;
     let _interval = _props.interval;
-    let _children = _props.children;
     let _descriptionField = _props.descriptionField;
     let _time = _props.time;
-    let _dateContent = _props.dateContent;
     let  _timing = _props.timing;
     let  _valueHour = _props.valueHour;
     let _classFieldWeek = _props.classFieldWeek;
     let _height = _props.height;
     let _startHourCalendar = _props.startHourCalendar;
     let _endHourCalendar = _props.endHourCalendar;
-    let eve = [];
     let _dataProvider ;
     let _dataProvider_Hour;
-    let _cmpCalendar_Week ;
-    let _component_Mday;
-
+    let _eventsField = _props.eventsField;
     
     let _getTop = function(minutes){
-        return (minutes*_cellHeight)/30;
+        return (minutes*_cellHeight) / _interval;
     };
 
-    this.addEvent = function(event){
-        let result = _self.dataProvider;
-        result.reduce(function (r, a) { return r.concat(a); }, [])
-        event.value = day;
-        console.log("event.value",event.value);
-        let ind = indexOfObject(result, "value", event.value);
-        event.height = _getHeight(event.duration);
+    this.addEvent = function (event) {
+        let gi = _intervalFromDate(event);
+        let ind = ArrayUtils.indexOfObject(_dataProvider, "gi", gi);
         
-        if(ind>-1){
-            event.marginLeft =  (result[ind].children.length)*10;
-            event.marginTop =  (result[ind].children.length)*10;
-            event.height = _getHeight(event.duration);
-            
-            let ds = moment(event.startDateTime, _self.inputFormat);
-            let d_ds = ds.toDate();
-            let h = d_ds.getHours();
-            let m = d_ds.getMinutes();
-            let hm = (h + 1) * 60 + m + 1;
-            event.top = _getTop(hm);
-            
-            result[ind].children.splice(result[ind].children.length,0,event);
+        if (ind > -1) {
+            _prepareEvent(event);            
+            _dataProvider[ind][_eventsField].splice(_dataProvider[ind][_eventsField].length, 0, event);
         }
-        let key = event.value; 
-        if(_self.calendarEvents[key] == null){
-            _self.calendarEvents[key] = [];
-        }       
-        _self.calendarEvents[key].push(event);
+        _self.calendarEvents.push(event);
     };
     
     let _getHeight = function(duration){
-        let totalHeight =  Math.max(_cellHeight * duration/30, _cellHeight);
+        let totalHeight =  Math.max(_cellHeight * duration/_interval, _cellHeight);
         return totalHeight;   
     };
 
     this.substract = function (time, minsToAdd) {
-        let _displayHour = function (h){ return (h < 10? '0':'') + h;};
+        let _displayHour = function (h) { return (h < 10 ? '0' : '') + h; };
         let split = time.split(':');
-        let mins = split[0]*60 + +split[1] + +minsToAdd;
-        return _displayHour(mins%(24*60)/60 | 0) + ':' + _displayHour(mins%60);  
-    }  
+        let mins = split[0] * 60 + +split[1] + +minsToAdd;
+        return _displayHour(mins % (24 * 60) / 60 | 0) + ':' + _displayHour(mins % 60);
+    };
 
     let _repeater_for_week;
     let _repeater_for_hour;
@@ -219,49 +189,47 @@ var CalendarWeek = function(_props)
 
     let initHourGrid = function(){
         let dataProvider_second = new ArrayEx();
-        for(let j=_startHourCalendar;j<_endHourCalendar;j++){
+        for (let j = _startHourCalendar; j < _endHourCalendar; j++) {
             let hours = j;
-                hours = hours % 12;
-                hours = hours ? hours : 12; // Hour: '0' -> '12'
-                let ampm = j >=12 ? 'pm':'am';
-         
-            let arrayHours = new ArrayEx(_self.dataProvider.length*2);
-            for(let k=0;k<_self.dataProvider.length;k++){
+            hours = hours % 12;
+            hours = hours ? hours : 0;
+            let ampm = j >= 12 ? 'pm' : 'am';
+            
+            let arrayHours = new ArrayEx(_self.dataProvider.length * 2);
+            for (let k = 0; k < _self.dataProvider.length; k++) {
                 
                 let dp1 = {
-                    "value":" ",
-                    "valueHour": k==0 ? hours+":00" :" ",
-                    "startHour":hours+":00"+ " "+ ampm,
-                    "startHourC":hours+":00",
-                    "duration":"",
-                    "endHour":hours+':30',
-                    "interval":(hours+":00") + "-" + (hours+':30') + ampm,
-                    "timing": ampm,
-                    "descriptionField":" ",
-                    "children": new ArrayEx([]),
-                }
-                
+                    "value": " ",
+                    "valueHour": k == 0 ? hours + ":00" : " ",
+                    "startTime": hours + ":00" + " " + ampm,
+                    "startTimeC": hours + ":00",
+                    "duration": "",
+                    "endTime": hours + ":" + _interval,
+                    "interval": (hours + ":00") + "-" + (hours + ":" + _interval) + ampm,
+                    "timing": ampm
+                };
+                dp1[_descriptionField] = "";
+                dp1[_eventsField] = new ArrayEx([]);
                 dp1[_self.guidField] = StringUtils.guid();
                 arrayHours[k] = dp1;
 
                 let dp2 = {
-                    "value":" ",
-                    "valueHour":" ",
-                    "startHour":hours+":30" + "" +ampm ,
-                    "startHourC":hours+":30",
-                    "duration":" ",
-                    "classes":[],
-                    "endHour":(hours+1)+':00',
-                    "interval":(hours+":30") + "-" + ((hours == 12 ) ? ((j%12)+1) : (hours+1))+':00' + ampm,
-                    "descriptionField":" ",
-                    "children":new ArrayEx([]),
-                }
-                
+                    "value": " ",
+                    "valueHour": " ",
+                    "startTime": hours + ":" + _interval + "" + ampm,
+                    "startTimeC": hours + ":" + _interval,
+                    "duration": " ",
+                    "classes": [],
+                    "endTime": (hours + 1) + ':00',
+                    "interval": (hours + ":" + _interval) + "-" + ((hours == 12) ? ((j % 12) + 1) : (hours + 1)) + ':00' + ampm
+                };
+                dp2[_descriptionField] = "";
+                dp2[_eventsField] = new ArrayEx([]);
                 dp2[_self.guidField] = StringUtils.guid();
                 arrayHours[k + _self.dataProvider.length] = dp2;
 
             }
-            dataProvider_second.splicea(dataProvider_second.length, 0, arrayHours);                                                           
+            dataProvider_second.splicea(dataProvider_second.length, 0, arrayHours);
         }
         return dataProvider_second; 
     };
@@ -277,119 +245,110 @@ var CalendarWeek = function(_props)
         
     
             let dp1 = {
-                "value":" ",
-                "valueHour":hours+":00",
-                "startHour":hours+":00"+ " "+ ampm,
-                "startHourC":hours+":00",
-                "duration":"",
-                "endHour":hours+':30',
-                "interval":(hours+":00") + "-" + (hours+':30') + ampm,
-                "timing": ampm,
-                "descriptionField":" ",
-                "children": new ArrayEx([]),
-            }
-            
+                "value": " ",
+                "valueHour": hours + ":00",
+                "startTime": hours + ":00" + " " + ampm,
+                "startTimeC": hours + ":00",
+                "duration": "",
+                "endTime": hours + ":"+ _interval,
+                "interval": (hours + ":00") + "-" + (hours + ":"+ _interval) + ampm,
+                "timing": ampm
+            };
+            dp1[_descriptionField] = "";
+            dp1[_eventsField] = new ArrayEx([]);
             dp1[_self.guidField] = StringUtils.guid();
 
             let dp2 = {
-                "value":" ",
-                "valueHour":" ",
-                "startHour":hours+":30" + "" +ampm ,
-                "startHourC":hours+":30",
-                "duration":" ",
-                "classes":[],
-                "endHour":(hours+1)+':00',
-                "interval":(hours+":30") + "-" + ((hours == 12 ) ? ((j%12)+1) : (hours+1))+':00' + ampm,
-                "descriptionField":" ",
-                "children":new ArrayEx([]),
-            }
-            
+                "value": " ",
+                "valueHour": " ",
+                "startTime": hours + ":"+ _interval + "" + ampm,
+                "startTimeC": hours + ":"+ _interval,
+                "duration": " ",
+                "classes": [],
+                "endTime": (hours + 1) + ':00',
+                "interval": (hours + ":"+ _interval ) + "-" + ((hours == 12) ? ((j % 12) + 1) : (hours + 1)) + ':00' + ampm
+            };
+            dp2[_descriptionField] = "";
+            dp2[_eventsField] = new ArrayEx([]);
             dp2[_self.guidField] = StringUtils.guid();
             dataProvider_second.splicea(dataProvider_second.length, 0, [dp1, dp2]);                                                           
         }
         return dataProvider_second; 
     };
     
-    this.previous = function(){
-        let two_weeks_a = new Date(_dataProvider[0].dateContent[0]);
-        let two_weeks_ago = new Date(two_weeks_a.getTime() - 7 * 24 * 60 * 60 * 1000) ;
-        let new_dp_prev = _createDataProvider(two_weeks_ago);
+    this.previous = function () {
+        let two_weeks_a = dayjs(_dataProvider[0].dateContent, _self.internalFormat).toDate();
+        let two_weeks_ago = new Date(two_weeks_a.getTime() - 7 * 24 * 60 * 60 * 1000);
         _self.nowDate = two_weeks_ago;
+        let new_dp_prev = _createDataProvider();
         let new_dp_prev_1 = new_dp_prev;
         let dp_first = _repeater_for_week.dataProvider;
-        dp_first.splicea(0,dp_first.length,new_dp_prev_1);
+        dp_first.splicea(0, dp_first.length, new_dp_prev_1);
         _self.dataProvider = new_dp_prev;
-    }
+    };
 
-
-    this.next = function() {
-        
-        let one_week_n = new Date(_dataProvider[0].dateContent[0]);
+    this.next = function () {        
+        let one_week_n = dayjs(_dataProvider[0].dateContent, _self.internalFormat).toDate();
         let one_week_next = new Date(one_week_n.getTime() + 7 * 24 * 60 * 60 * 1000);
-        let new_dp_next = _createDataProvider(one_week_next);
         _self.nowDate = one_week_next;
+        let new_dp_next = _createDataProvider();
         let new_dp_next_1 = new_dp_next;
         let dp_first = _repeater_for_week.dataProvider;
-        dp_first.splicea(0,dp_first.length,new_dp_next_1);
+        dp_first.splicea(0, dp_first.length, new_dp_next_1);
         _self.dataProvider = new_dp_next;
-    }
+    };
 
-    let previous_click = function(){
-        _self.previous();
-    }
-
-    let next_click = function(){
-        _self.next();
-    }
-
-    this.generateDay = function(ra){
-     
-        let d  = ra.currentIndex % 7;
-        day =_self.dataProvider[d].value;
-        console.log("day",day);
+    this.generateDay = function (ra) {
+        let d = ra.currentIndex % 7;
+        day = _self.dataProvider[d].value;
+        console.log("day", day);
         return day;
-    }
+    };
 
-    this.convertHour = function (time){
+    this.convertHour = function (time) {
         let hours = parseInt(time.substr(0, 2));
-        if(time.indexOf('am') != -1 && hours == 12) {
+        if (time.indexOf('am') != -1 && hours == 12) {
             time = time.replace('12', '00');
         }
-        if(time.indexOf('pm')  != -1 && hours < 12) {
+        if (time.indexOf('pm') != -1 && hours < 12) {
             time = time.replace(hours, (hours + 12));
         }
         return time.replace(/(am|pm)/, '');
 
 
-            // let ts = time;
-            // let te = ts.split(' ')[1];
-            // let H = +te.substr(0, 2);
-            // let h = (H % 12) || 12;
-            // h = (h < 10)?("0"+h):h;  // leading 0 at the left for 1 digit hours
-            // let ampm = H < 12 ? " AM" : " PM";
-            // te = h + te.substr(2, 3) + ampm;
-            // return te;
+        // let ts = time;
+        // let te = ts.split(' ')[1];
+        // let H = +te.substr(0, 2);
+        // let h = (H % 12) || 12;
+        // h = (h < 10)?("0"+h):h;  // leading 0 at the left for 1 digit hours
+        // let ampm = H < 12 ? " AM" : " PM";
+        // te = h + te.substr(2, 3) + ampm;
+        // return te;
         
-    }
-    let _cellClick = function(e,ra) {
-       
+    };
+    
+    let _calendarEventClick = function (e, ra) {
+        let event = jQuery.Event("calendarEventClick");
+        event.cell = this.parent;
+        event.eventCell = this;
+        event.originalEvent = e;
+        _self.trigger(event, [ra]);
+    };
+
+    let _cellClick = function(e,ra) {       
         let event = jQuery.Event("cellClick");
         //Konvertimi i ores 12 ne 24 
-        event.startHour = _self.convertHour(ra.currentItem.startHour);
+        event.startTime = _self.convertHour(ra.currentItem.startTime);
         event.dateContent = _self.generateDay(ra);
-        let addDays = function (date, days) {
-            let result = new Date(date);
-            result.setDate(result.getDate() + days);
-            return result;
-        }
-        
-        let time =  addDays(_self.calendarStartDate, ra.currentIndex%7);
-        let  timeToDate = new Date(time);
-        let hourS = event.startHour.split(':');
-        let timeToDateHour = timeToDate.setHours(parseInt(hourS[0],10),parseInt(hourS[1],10),0);
-        event.startDateTime = new Date(timeToDateHour);
+        let date = (new Date(_self.calendarStartDate));
+        date.setDate(_self.calendarStartDate.getDate() + (ra.currentIndex % 7));
+
+        let arrtime = event.startTime.split(':');
+        date.setHours(parseInt(arrtime[0], 10), parseInt(arrtime[1], 10), 0);
+        event[_self.startDateTimeField] = date;
         event.cell = this;
-        _self.trigger(event);
+        event.originalEvent = e;
+        _self.trigger(event, [ra]);
     };
     
     let _cmps;
@@ -457,7 +416,7 @@ var CalendarWeek = function(_props)
                                                     ctor: Repeater,
                                                     props: {
                                                         id: "repeater_top",
-                                                        dataProvider: "{children}",
+                                                        dataProvider: "{" + _eventsField + "}",
                                                         rendering: {
                                                             direction: "vertical",
                                                             separator: false,
@@ -474,8 +433,9 @@ var CalendarWeek = function(_props)
                                                                     marginTop: "{marginTop}",
                                                                     marginLeft: "{marginLeft}",
                                                                     id: "Container_top",
-                                                                    label: "{descriptionField}",
+                                                                    label: "{" + _descriptionField + "}",
                                                                     classes: ["fc-event-first"],
+                                                                    "click": _calendarEventClick
                                                                 }
                                                             }
                                                         ]
@@ -520,8 +480,7 @@ var CalendarWeek = function(_props)
                 }
             }
         ];
-    };
-   
+    };   
     
     let r = CalendarBase.call(this, _props);
     
@@ -537,14 +496,11 @@ var CalendarWeek = function(_props)
                 }
             });                   
         });
-        if(_props.calendarEvents){
-            this.calendarEvents = _props.calendarEvents;
-        }
-        _dataProvider = _createDataProvider( new Date(_self.nowDate.getTime() ));
+
+        _dataProvider = _createDataProvider();
         _dataProvider_Hour = initHourGrid();
         _dataProvider_Hour_Prim = initHourGrid_Prim();
         fnContainerDelayInit(); 
-        //_props.components = _cmps;
         this.addComponents(_cmps);
         return _rPromise;
     }; 
@@ -552,3 +508,6 @@ var CalendarWeek = function(_props)
     return r;
 }
 CalendarWeek.prototype.ctor = 'CalendarWeek';
+export {
+    CalendarWeek
+};

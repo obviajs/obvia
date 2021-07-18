@@ -4,7 +4,11 @@
  * Kreatx 2018
  */
 
-//component definition
+import { Container } from "/flowerui/components/Container.js";
+import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+import { Label, LabelType } from "/flowerui/components/Label.js";
+import { Link } from "/flowerui/components/Link/Link.js";
+
 var TokenRenderer = function (_props) {
     let _self = this,
         _value, _label, _closeIconSide, _link, _span;
@@ -59,17 +63,19 @@ var TokenRenderer = function (_props) {
     });
 
     //"font-size: 14px; margin:2px"
-    var _defaultParams = {
+    let _defaultParams = {
         closeIconSide: "left",
         components: [],
-        "type": ContainerType.NONE,
-        classes: ["badge", "badge-info", "d-inline"],
+        "type": "",
+        classes: ["badge", "badge-info"],
         css: {
             "font-size": "14px",
-            "margin": "2px"
+            "height": "100%",
+            "align-items": "center"
         }
     };
-    _props = extend(false, false, _defaultParams, _props);
+    ObjectUtils.fromDefault(_defaultParams, _props);
+    //_props = ObjectUtils.extend(false, false, _defaultParams, _props);
     if (!_props.attr) {
         _props.attr = {};
     }
@@ -82,6 +88,14 @@ var TokenRenderer = function (_props) {
             labelType: LabelType.span,
             attr: {
                 "tabindex": "-1"
+            },
+            css: {
+                "width": "100%",
+                "text-overflow": "ellipsis",
+                "white-space": "nowrap",
+                "overflow": "hidden",
+                "display": "inline-block",
+                "margin": 0
             }
         }
     };
@@ -104,6 +118,10 @@ var TokenRenderer = function (_props) {
         _props.components.push(_spanLit);
         _props.components.push(_linkLit);
     }
-    Container.call(this, _props);
+    let r = Container.call(this, _props);
+    return r;
 };
 TokenRenderer.prototype.ctor = 'TokenRenderer';
+export {
+    TokenRenderer
+};
