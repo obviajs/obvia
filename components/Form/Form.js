@@ -3,7 +3,7 @@
  * 
  * Kreatx 2018
  */
-import { ApiClient } from "/flowerui/lib/ApiClientGen/ApiClient.js";
+import { HttpClient } from "/flowerui/lib/OpenApi/HttpClient.js";
 import { Container } from "/flowerui/components/Container.js";
 import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
 import { DependencyContainer } from "/flowerui/lib/DependencyContainer.js";
@@ -170,7 +170,7 @@ var Form = function (_props) {
         _self.trigger(postSuccess);
     };
 
-    let _apiClient = new ApiClient();
+    let _apiClient = new HttpClient();
     this.post = function (dataType) {
         let type = dataType ? dataType : "json";
         _apiClient.on("xhrProgress", _xhrProgress);
