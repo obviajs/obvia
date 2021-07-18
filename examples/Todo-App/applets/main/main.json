@@ -1,0 +1,126 @@
+{
+    "ctor": "Container",
+    "props": {
+        "type": "row",
+        "components": [{
+            "ctor": "Container",
+            "props": {
+                "components": [{
+                        "ctor": "TextInput",
+                        "props": {
+                            "value": "",
+                            "placeholder": "What needs to be done?",
+                            "type": "text",
+                            "autocomplete": "off",
+                            "components": [],
+                            "sortChildren": false,
+                            "guid": "b5eeca5e-4642-4012-96b9-8b927ea76c47",
+                            "id": "textField",
+                            "index": 0,
+                            "spacing": {},
+                            "attr": {
+                                "isCmp": true
+                            },
+                            "css": {},
+                            "visible": true,
+                            "enabled": true,
+                            "draggable": true,
+                            "classes": ["todo-input"]
+                        }
+                    },
+                    {
+                        "ctor": "Repeater",
+                        "props": {
+                            "rendering": {
+                                "direction": "vertical",
+                                "separator": false,
+                                "wrap": true,
+                                "mode": "append"
+                            },
+                            "dataProvider": [],
+                            "components": [{
+                                    "ctor": "Button",
+                                    "props": {
+                                        "label": "☐",
+                                        "type": "button",
+                                        "components": [],
+                                        "sortChildren": false,
+                                        "id": "addbutton",
+                                        "index": 0,
+                                        "spacing": {},
+                                        "attr": {
+                                            "isCmp": true
+                                        },
+                                        "css": {},
+                                        "visible": true,
+                                        "enabled": true,
+                                        "draggable": true,
+                                        "classes": ["addbutton"]
+                                    }
+                                },
+                                {
+                                    "ctor": "Label",
+                                    "props": {
+                                        "labelType": "label",
+                                        "label": "{?title}",
+                                        "components": [],
+                                        "sortChildren": false,
+                                        "guid": "5ce9b5d5-a60a-4508-b0a4-9841795cec3e",
+                                        "id": "todo",
+                                        "index": 0,
+                                        "spacing": {},
+                                        "attr": {
+                                            "isCmp": true
+                                        },
+                                        "css": {},
+                                        "visible": true,
+                                        "enabled": true,
+                                        "draggable": true,
+                                        "classes": ["todo"]
+                                    }
+                                }
+                            ],
+                            "sortChildren": false,
+                            "guid": "40ce3472-1cac-4271-93e5-024488016ead",
+                            "id": "todolist",
+                            "index": 0,
+                            "spacing": {},
+                            "attr": {
+                                "data-triggers": "rowAdd rowEdit beforeRowAdd rowDelete beforeRowDelete dataProviderLengthChanged",
+                                "isCmp": true
+                            },
+                            "css": {},
+                            "visible": true,
+                            "enabled": true,
+                            "draggable": true,
+                            "classes": ["todo-list"]
+                        }
+                    }
+                ],
+                "sortChildren": false,
+                "guid": "dcc282d3-1bfa-47a3-a024-1cbd4a1f7513",
+                "id": "workAreaColumnL2",
+                "index": 0,
+                "spacing": {
+                    "h": 100
+                },
+                "css": {},
+                "visible": true,
+                "enabled": true,
+                "classes": ["border", "col"],
+                "parentType": "row"
+            }
+        }],
+        "sortChildren": false,
+        "guid": "93e6b62c-06d2-426a-86eb-86e7b46bad0e",
+        "id": "workAreaRowL2",
+        "index": 0,
+        "spacing": {
+            "h": 100
+        },
+        "css": {},
+        "visible": true,
+        "enabled": true,
+        "classes": []
+    }
+}

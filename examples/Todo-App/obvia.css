@@ -1,0 +1,41 @@
+.todo-input {
+    width: 30%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 5px 0px;
+    text-align: center;
+    font-size: 16px;
+    margin-top: 40px;
+    margin-bottom: 16px;
+}
+
+.todo {
+    padding: 5px 0px;
+    text-align: left;
+    font-size: 16px;
+    margin-left: 1%;
+}
+
+.todo-list {
+    display: block;
+    margin: 0 auto;
+}
+
+.addbutton {
+    display: block;
+    background-color: white;
+    border: none;
+    color: black;
+    text-align: left;
+    font-size: 20px;
+    font-style: normal;
+    margin: 0px 0px;
+    cursor: pointer;
+    margin-left: 35%;
+    outline: none;
+}
+
+.d-flex {
+    margin-left: 30%;
+}
