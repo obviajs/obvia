@@ -3,10 +3,10 @@
  *
  * Kreatx 2021
  */
-import { Select } from "/flowerui/components/Select/Select.js";
-import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
-import { ArrayEx } from "/flowerui/lib/ArrayEx.js";
-import { DependencyContainer } from "/flowerui/lib/DependencyContainer.js";
+import { Select } from "/obvia/components/Select/Select.js";
+import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
+import { ArrayEx } from "/obvia/lib/ArrayEx.js";
+import { DependencyContainer } from "/obvia/lib/DependencyContainer.js";
 var HourPicker = function (_props) {
     let _self = this;
 

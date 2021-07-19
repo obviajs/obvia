@@ -3,10 +3,10 @@
  *
  * Kreatx 2019
  */
-import { Label, LabelType } from "/flowerui/components/Label.js";
-import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
-import { CheckBox } from "/flowerui/components/CheckBox.js";
-import { DependencyContainer } from "/flowerui/lib/DependencyContainer.js";
+import { Label, LabelType } from "/obvia/components/Label.js";
+import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
+import { CheckBox } from "/obvia/components/CheckBox.js";
+import { DependencyContainer } from "/obvia/lib/DependencyContainer.js";
 var Toggle = function (_props) {
     let _self = this;
     Object.defineProperty(this, "value", {

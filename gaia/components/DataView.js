@@ -1,13 +1,13 @@
-import { Literal } from "/flowerui/lib/Literal.js";
-import { ArrayEx } from "/flowerui/lib/ArrayEx.js";
-import { UseBindings } from "/flowerui/lib/UseBindings.js";
-import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
-import { Cache } from "/flowerui/lib/cache/Cache.js";
-import { Rule } from "/flowerui/components/base/Rule.js";
-import { debounce } from "/flowerui/lib/DecoratorUtils.js";
-import { OpenAPI_utils } from "/flowerui/lib/OpenAPI/OpenAPI_utils.js";
-import { RemoteArray } from "/flowerui/lib/rca/RemoteArray.js";
-import { DependencyContainer } from "/flowerui/lib/DependencyContainer.js";
+import { Literal } from "/obvia/lib/Literal.js";
+import { ArrayEx } from "/obvia/lib/ArrayEx.js";
+import { UseBindings } from "/obvia/lib/UseBindings.js";
+import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
+import { Cache } from "/obvia/lib/cache/Cache.js";
+import { Rule } from "/obvia/components/base/Rule.js";
+import { debounce } from "/obvia/lib/DecoratorUtils.js";
+import { OpenAPI_utils } from "/obvia/lib/OpenAPI/OpenAPI_utils.js";
+import { RemoteArray } from "/obvia/lib/rca/RemoteArray.js";
+import { DependencyContainer } from "/obvia/lib/DependencyContainer.js";
 var DataView = function (_props) {
     let _defaultParams = {
         url: null,

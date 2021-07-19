@@ -4,10 +4,10 @@
  * Kreatx 2019
  */
 
-import { Component } from "/flowerui/components/base/Component.js";
-import { List } from "/flowerui/components/List.js";
-import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
-import { DependencyContainer } from "/flowerui/lib/DependencyContainer.js";
+import { Component } from "/obvia/components/base/Component.js";
+import { List } from "/obvia/components/List.js";
+import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
+import { DependencyContainer } from "/obvia/lib/DependencyContainer.js";
 var TextArea = function (_props) {
     let _self = this;
 

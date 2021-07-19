@@ -5,13 +5,13 @@
  */
 
 //component definition
-import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
-import { ArrayEx } from "/flowerui/lib/ArrayEx.js";
-import { Repeater } from "/flowerui/components/Repeater/Repeater.js";
-import { ChangeWatcher } from "/flowerui/lib/binding/ChangeWatcher.js";
-import { Option } from "/flowerui/components/Select/Option.js";
-import { Props } from "/flowerui/components/base/Props.js";
-import { DependencyContainer } from "/flowerui/lib/DependencyContainer.js";
+import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
+import { ArrayEx } from "/obvia/lib/ArrayEx.js";
+import { Repeater } from "/obvia/components/Repeater/Repeater.js";
+import { ChangeWatcher } from "/obvia/lib/binding/ChangeWatcher.js";
+import { Option } from "/obvia/components/Select/Option.js";
+import { Props } from "/obvia/components/base/Props.js";
+import { DependencyContainer } from "/obvia/lib/DependencyContainer.js";
 var Select = function (_props) {
     let _self = this,
         _value, _dataProvider, _rendering, _multiple, _labelField, _valueField, _valueLater;

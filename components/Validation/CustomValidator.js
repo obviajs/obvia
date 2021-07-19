@@ -3,9 +3,9 @@
  * 
  * Kreatx 2020
  */
-import { Validator } from "/flowerui/components/Validation/Validator.js";
-import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
-import { DependencyContainer } from "/flowerui/lib/DependencyContainer.js";
+import { Validator } from "/obvia/components/Validation/Validator.js";
+import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
+import { DependencyContainer } from "/obvia/lib/DependencyContainer.js";
 
 var CustomValidator = function (_props) {
     let _self = this,

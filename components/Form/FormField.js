@@ -3,11 +3,11 @@
  * 
  * Kreatx 2018
  */
-import { Container } from "/flowerui/components/Container.js";
-import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
-import { Label } from "/flowerui/components/Label.js";
-import { Props } from "/flowerui/components/base/Props.js";
-import { DependencyContainer } from "/flowerui/lib/DependencyContainer.js";
+import { Container } from "/obvia/components/Container.js";
+import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
+import { Label } from "/obvia/components/Label.js";
+import { Props } from "/obvia/components/base/Props.js";
+import { DependencyContainer } from "/obvia/lib/DependencyContainer.js";
 var FormField = function (_props) {
     let _self = this;
     let _input, _lbl;

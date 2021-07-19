@@ -3,10 +3,10 @@
  * 
  * Kreatx 2018
  */
-import { Parent } from "/flowerui/components/base/Parent.js";
-import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
-import { StringUtils } from "/flowerui/lib/StringUtils.js";
-import { DependencyContainer } from "/flowerui/lib/DependencyContainer.js";
+import { Parent } from "/obvia/components/base/Parent.js";
+import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
+import { StringUtils } from "/obvia/lib/StringUtils.js";
+import { DependencyContainer } from "/obvia/lib/DependencyContainer.js";
 var Container = function (_props) {
     let _self = this,
         _textAlign;

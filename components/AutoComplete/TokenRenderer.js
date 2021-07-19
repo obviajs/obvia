@@ -4,10 +4,10 @@
  * Kreatx 2018
  */
 
-import { Container } from "/flowerui/components/Container.js";
-import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
-import { Label, LabelType } from "/flowerui/components/Label.js";
-import { Link } from "/flowerui/components/Link/Link.js";
+import { Container } from "/obvia/components/Container.js";
+import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
+import { Label, LabelType } from "/obvia/components/Label.js";
+import { Link } from "/obvia/components/Link/Link.js";
 
 var TokenRenderer = function (_props) {
     let _self = this,

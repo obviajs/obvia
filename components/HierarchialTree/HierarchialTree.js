@@ -4,8 +4,8 @@
  * Kreatx 2019
  */
 
-import { Tree } from "/flowerui/components/Tree/Tree.js";
-import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+import { Tree } from "/obvia/components/Tree/Tree.js";
+import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
 var HierarchialTree = function (_props) {
     let _self = this;
 

@@ -3,10 +3,10 @@
  * 
  * Kreatx 2018
  */
-import { Parent } from "/flowerui/components/base/Parent.js";
-import { Align } from "/flowerui/components/base/Align.js";
-import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
-import { DependencyContainer } from "/flowerui/lib/DependencyContainer.js";
+import { Parent } from "/obvia/components/base/Parent.js";
+import { Align } from "/obvia/components/base/Align.js";
+import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
+import { DependencyContainer } from "/obvia/lib/DependencyContainer.js";
 var Heading = function (_props) {
     let _self, _label, _align;
 

@@ -4,8 +4,8 @@
  * Kreatx 2018
  */
 
-import { Component } from "/flowerui/components/base/Component.js";
-import { List } from "/flowerui/components/List.js";
+import { Component } from "/obvia/components/base/Component.js";
+import { List } from "/obvia/components/List.js";
 
 var TextEditor =  function(_props) {
     let _self = this;

@@ -3,11 +3,11 @@
  *
  * Kreatx 2019
  */
-import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
-import { ArrayUtils } from "/flowerui/lib/ArrayUtils.js";
-import { Repeater } from "/flowerui/components/Repeater/Repeater.js";
-import { ChangeWatcher } from "/flowerui/lib/binding/ChangeWatcher.js";
-import { DependencyContainer } from "/flowerui/lib/DependencyContainer.js";
+import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
+import { ArrayUtils } from "/obvia/lib/ArrayUtils.js";
+import { Repeater } from "/obvia/components/Repeater/Repeater.js";
+import { ChangeWatcher } from "/obvia/lib/binding/ChangeWatcher.js";
+import { DependencyContainer } from "/obvia/lib/DependencyContainer.js";
 
 var List = function (_props) {
     let _self = this;

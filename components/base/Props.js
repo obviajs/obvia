@@ -1,5 +1,5 @@
 
-import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
 var Props = function (inst, _props, skip = []) {
     let _dskip = ["props", "children"];
     if (skip) {

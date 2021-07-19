@@ -4,19 +4,19 @@
  * Kreatx 2019
  */
 
-import { Container } from "/flowerui/components/Container.js";
-import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
-import { StringUtils } from "/flowerui/lib/StringUtils.js";
-import { Label, LabelType } from "/flowerui/components/Label.js";
-import { Form } from "/flowerui/components/Form/Form.js";
-import { Upload } from "/flowerui/components/Form/Upload.js";
-import { Link } from "/flowerui/components/Link/Link.js";
-import { ProgressBar, ProgressBarStyle } from "/flowerui/components/ProgressBar/ProgressBar.js";
-import { whenDefined } from "/flowerui/lib/DecoratorUtils.js";
-import { BinUtils } from "/flowerui/lib/BinUtils.js";
-import { getFontAwesomeIconFromMIME } from "/flowerui/lib/my.js";
-import { downloadFromUrl } from "/flowerui/lib/my.js";
-import { DependencyContainer } from "/flowerui/lib/DependencyContainer.js";
+import { Container } from "/obvia/components/Container.js";
+import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
+import { StringUtils } from "/obvia/lib/StringUtils.js";
+import { Label, LabelType } from "/obvia/components/Label.js";
+import { Form } from "/obvia/components/Form/Form.js";
+import { Upload } from "/obvia/components/Form/Upload.js";
+import { Link } from "/obvia/components/Link/Link.js";
+import { ProgressBar, ProgressBarStyle } from "/obvia/components/ProgressBar/ProgressBar.js";
+import { whenDefined } from "/obvia/lib/DecoratorUtils.js";
+import { BinUtils } from "/obvia/lib/BinUtils.js";
+import { getFontAwesomeIconFromMIME } from "/obvia/lib/my.js";
+import { downloadFromUrl } from "/obvia/lib/my.js";
+import { DependencyContainer } from "/obvia/lib/DependencyContainer.js";
 var UploadEx = function (_props) {
     let _self = this;
     let _upload, _lblFileName, _btnRemove, _iconLbl, _lblFileSize, _progressBar, _progressRow, _btnUpload, _btnSelect, _additionalProperties, _action, _downloadUrl;

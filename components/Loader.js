@@ -5,15 +5,15 @@
  */
 
 // import { Env } from "../lib/Env.js";
-import { Component } from "/flowerui/components/base/Component.js";
-import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
-import { DependencyContainer } from "/flowerui/lib/DependencyContainer.js";
+import { Component } from "/obvia/components/base/Component.js";
+import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
+import { DependencyContainer } from "/obvia/lib/DependencyContainer.js";
 var Loader = function (_props) {
 	this.template = function () {
 		return `
 		<div class="spinner">
 		<svg class="svg_spinner">
-		  <use href="/flowerui/assets/icons.svg#icon-loader"></use>
+		  <use href="/obvia/assets/icons.svg#icon-loader"></use>
 		</svg>
 	  </div>
 		`;
@@ -35,7 +35,7 @@ var Loader = function (_props) {
 	// 		"opacity: 0.9;" +
 	// 		"background: url('" +
 	// 		Env.getInstance().baseurl +
-	// 		"/flowerui/lib/dependencies/images/loader.gif')center no-repeat #fff;" +
+	// 		"/obvia/lib/dependencies/images/loader.gif')center no-repeat #fff;" +
 	// 		"}" +
 	// 		"</style>" +
 	// 		"<div class='se-pre-con'></div>" +

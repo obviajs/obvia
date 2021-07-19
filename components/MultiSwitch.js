@@ -3,10 +3,10 @@
  *
  * Kreatx 2019
  */
-import { List } from "/flowerui/components/List.js";
-import { Button } from "/flowerui/components/Button/Button.js";
-import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
-import { DependencyContainer } from "/flowerui/lib/DependencyContainer.js";
+import { List } from "/obvia/components/List.js";
+import { Button } from "/obvia/components/Button/Button.js";
+import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
+import { DependencyContainer } from "/obvia/lib/DependencyContainer.js";
 var MultiSwitch = function (_props) {
     let _self = this,
         _dataProvider;
