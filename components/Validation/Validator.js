@@ -4,9 +4,9 @@
  * Kreatx 2020
  */
 
-import { Label, LabelType } from "/flowerui/components/Label.js";
-import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
-import { ValidationManager } from "/flowerui/components/Validation/ValidationManager.js";
+import { Label, LabelType } from "/obvia/components/Label.js";
+import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
+import { ValidationManager } from "/obvia/components/Validation/ValidationManager.js";
 
 var Validator = function (_props) {
     let _self = this,

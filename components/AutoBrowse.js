@@ -4,16 +4,16 @@
  * Kreatx 2019
  */
 
-import { Container } from "/flowerui/components/Container.js";
-import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
-import { StringUtils, StringMatchType } from "/flowerui/lib/StringUtils.js";
-import { ArrayEx } from "/flowerui/lib/ArrayEx.js";
-import { Button } from "/flowerui/components/Button/Button.js";
-import { Modal, ModalSize } from "/flowerui/components/Modal/Modal.js";
-import { Label, LabelType } from "/flowerui/components/Label.js";
-import { DataGrid } from "/flowerui/components/DataGrid/DataGrid.js";
-import { AutoCompleteEx } from "/flowerui/components/AutoComplete/AutoCompleteEx.js";
-import { DependencyContainer } from "/flowerui/lib/DependencyContainer.js";
+import { Container } from "/obvia/components/Container.js";
+import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
+import { StringUtils, StringMatchType } from "/obvia/lib/StringUtils.js";
+import { ArrayEx } from "/obvia/lib/ArrayEx.js";
+import { Button } from "/obvia/components/Button/Button.js";
+import { Modal, ModalSize } from "/obvia/components/Modal/Modal.js";
+import { Label, LabelType } from "/obvia/components/Label.js";
+import { DataGrid } from "/obvia/components/DataGrid/DataGrid.js";
+import { AutoCompleteEx } from "/obvia/components/AutoComplete/AutoCompleteEx.js";
+import { DependencyContainer } from "/obvia/lib/DependencyContainer.js";
 var AutoBrowse = function (_props) {
 	let _self = this;
 	let _dataProvider,

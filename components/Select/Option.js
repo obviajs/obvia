@@ -1,6 +1,6 @@
-import { Component } from "/flowerui/components/base/Component.js";
-import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
-import { DependencyContainer } from "/flowerui/lib/DependencyContainer.js";
+import { Component } from "/obvia/components/base/Component.js";
+import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
+import { DependencyContainer } from "/obvia/lib/DependencyContainer.js";
 
 var Option = function (_props) {
     let _self = this, _label, _value;

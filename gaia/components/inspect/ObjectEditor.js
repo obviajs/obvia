@@ -4,9 +4,9 @@
  * Kreatx 2018
  */
 
-import { Container } from "/flowerui/components/Container.js";
-import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
-import { DependencyContainer } from "/flowerui/lib/DependencyContainer.js";
+import { Container } from "/obvia/components/Container.js";
+import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
+import { DependencyContainer } from "/obvia/lib/DependencyContainer.js";
 var ObjectEditor = function (_props, metaProps, literals) {
     let _self = this, _instance, _field;
 

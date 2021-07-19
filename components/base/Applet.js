@@ -1,11 +1,11 @@
-import { Container } from "/flowerui/components/Container.js";
-import { StringUtils } from "/flowerui/lib/StringUtils.js";
-import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
-import { coroutine } from "/flowerui/lib/coroutine.js";
-import { BrowserManager } from "/flowerui/lib/BrowserManager.js";
-import { BrowserUtils } from "/flowerui/lib/BrowserUtils.js";
-import { get } from "/flowerui/lib/my.js";
-import { Injector } from "/flowerui/lib/Injector.js";
+import { Container } from "/obvia/components/Container.js";
+import { StringUtils } from "/obvia/lib/StringUtils.js";
+import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
+import { coroutine } from "/obvia/lib/coroutine.js";
+import { BrowserManager } from "/obvia/lib/BrowserManager.js";
+import { BrowserUtils } from "/obvia/lib/BrowserUtils.js";
+import { get } from "/obvia/lib/my.js";
+import { Injector } from "/obvia/lib/Injector.js";
 
 var Applet = function (_props) {
     this.$el = $(this);

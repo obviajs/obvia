@@ -3,8 +3,8 @@
  * 
  * Kreatx 2020
  */
-import {Container} from "/flowerui/components/Container.js";
-import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+import {Container} from "/obvia/components/Container.js";
+import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
 
 var Wizard = function (_props) {
     let _self = this;

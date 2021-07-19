@@ -1,14 +1,14 @@
 
-import { Component } from "/flowerui/components/base/Component.js";
-import { Container } from "/flowerui/components/Container.js";
-import { StringUtils } from "/flowerui/lib/StringUtils.js";
-import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
-import { BrowserManager } from "/flowerui/lib/BrowserManager.js";
-import { BrowserUtils } from "/flowerui/lib/BrowserUtils.js";
-import { AutoObject } from "/flowerui/components/base/AutoObject.js";
-import { debounce, debouncePromise, whenDefined, whenDefinedPromise, functionName } from "/flowerui/lib/DecoratorUtils.js";
-import { History, HistoryStep, HistoryEventType } from "/flowerui/components/base/History/History.js";
-import { Applet } from "/flowerui/components/base/Applet.js";
+import { Component } from "/obvia/components/base/Component.js";
+import { Container } from "/obvia/components/Container.js";
+import { StringUtils } from "/obvia/lib/StringUtils.js";
+import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
+import { BrowserManager } from "/obvia/lib/BrowserManager.js";
+import { BrowserUtils } from "/obvia/lib/BrowserUtils.js";
+import { AutoObject } from "/obvia/components/base/AutoObject.js";
+import { debounce, debouncePromise, whenDefined, whenDefinedPromise, functionName } from "/obvia/lib/DecoratorUtils.js";
+import { History, HistoryStep, HistoryEventType } from "/obvia/components/base/History/History.js";
+import { Applet } from "/obvia/components/base/Applet.js";
 
 var App = function (_props) {
     let _defaultParams = {

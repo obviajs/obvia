@@ -3,10 +3,10 @@
  *
  * Kreatx 2019
  */
-import { Parent } from "/flowerui/components/base/Parent.js";
-import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
-import { ChangeWatcher } from "/flowerui/lib/binding/ChangeWatcher.js";
-import { DependencyContainer } from "/flowerui/lib/DependencyContainer.js";
+import { Parent } from "/obvia/components/base/Parent.js";
+import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
+import { ChangeWatcher } from "/obvia/lib/binding/ChangeWatcher.js";
+import { DependencyContainer } from "/obvia/lib/DependencyContainer.js";
 
 var DateTime = function (_props) {
     let _self = this;

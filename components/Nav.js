@@ -4,8 +4,8 @@
  * Kreatx 2019
  */
 
-import { Container } from "/flowerui/components/Container.js";
-import { DependencyContainer } from "/flowerui/lib/DependencyContainer.js";
+import { Container } from "/obvia/components/Container.js";
+import { DependencyContainer } from "/obvia/lib/DependencyContainer.js";
 var Nav = function (_props)
 {
     //is template overrided ?

@@ -4,13 +4,13 @@
  * 
  * Kreatx 2018
  */
-import { ArrayEx } from "/flowerui/lib/ArrayEx.js";
-import { Container } from "/flowerui/components/Container.js";
-import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
-import { Heading, HeadingType } from "/flowerui/components/Heading.js";
-import { Button } from "/flowerui/components/Button/Button.js";
-import { Label, LabelType } from "/flowerui/components/Label.js";
-import { DependencyContainer } from "/flowerui/lib/DependencyContainer.js";
+import { ArrayEx } from "/obvia/lib/ArrayEx.js";
+import { Container } from "/obvia/components/Container.js";
+import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
+import { Heading, HeadingType } from "/obvia/components/Heading.js";
+import { Button } from "/obvia/components/Button/Button.js";
+import { Label, LabelType } from "/obvia/components/Label.js";
+import { DependencyContainer } from "/obvia/lib/DependencyContainer.js";
 var Modal = function (_props) {
     let _self = this;
     Object.defineProperty(this, "title", {

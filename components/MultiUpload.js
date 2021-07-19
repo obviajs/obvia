@@ -3,8 +3,8 @@
  *
  * Kreatx 2019
  */
-import { Container } from "/flowerui/components/Container.js";
-import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+import { Container } from "/obvia/components/Container.js";
+import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
 var MultiUpload = function (_props) {
     let _self = this;
     let _cmps, _lblDrop, _dropContainer, _listRepeater, _progressRow, _progressBar;

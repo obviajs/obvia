@@ -6,10 +6,10 @@
  * However, the old child container still exists; it is just invisible.
  * Kreatx 2019
  */
-import { Container } from "/flowerui/components/Container.js";
-import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
-import { ArrayUtils } from "/flowerui/lib/ArrayUtils.js";
-import { DependencyContainer } from "/flowerui/lib/DependencyContainer.js";
+import { Container } from "/obvia/components/Container.js";
+import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
+import { ArrayUtils } from "/obvia/lib/ArrayUtils.js";
+import { DependencyContainer } from "/obvia/lib/DependencyContainer.js";
 var ViewStack = function (_props) {
     let _self = this;
     //we override proxy initialization, because we want to create a child if it is requested

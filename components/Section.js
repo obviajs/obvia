@@ -4,7 +4,7 @@
  * Kreatx 2019
  */
 
-import {Container} from "/flowerui/components/Container.js";
+import {Container} from "/obvia/components/Container.js";
 var Section = function(_props)
 {
     //is template overrided ?

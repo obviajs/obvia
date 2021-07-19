@@ -4,9 +4,9 @@
  * Kreatx 2018
  */
 
-import { Parent } from "/flowerui/components/base/Parent.js";
-import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
-import { DependencyContainer } from "/flowerui/lib/DependencyContainer.js";
+import { Parent } from "/obvia/components/base/Parent.js";
+import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
+import { DependencyContainer } from "/obvia/lib/DependencyContainer.js";
 var Link = function (_props) {
     Object.defineProperty(this, "title", {
         get: function title() {

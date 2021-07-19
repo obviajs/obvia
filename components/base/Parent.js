@@ -1,7 +1,7 @@
-import { Component } from "/flowerui/components/base/Component.js";
-import { Props } from "/flowerui/components/base/Props.js";
-import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
-import { ArrayUtils } from "/flowerui/lib/ArrayUtils.js";
+import { Component } from "/obvia/components/base/Component.js";
+import { Props } from "/obvia/components/base/Props.js";
+import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
+import { ArrayUtils } from "/obvia/lib/ArrayUtils.js";
 var Parent = function (_props) {
     let _$hadow = $("<div/>");
     let _comprenders = [];

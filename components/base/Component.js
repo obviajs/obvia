@@ -1,12 +1,12 @@
-import { Literal } from "/flowerui/lib/Literal.js";
-import { UseBindings } from "/flowerui/lib/UseBindings.js";
-import { Attr } from "/flowerui/components/base/Attr.js";
-import { Css } from "/flowerui/components/base/Css.js";
-import { StringUtils } from "/flowerui/lib/StringUtils.js";
-import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
-import { ArrayUtils } from "/flowerui/lib/ArrayUtils.js";
-import { RepeaterEventArgs } from "/flowerui/components/Repeater/RepeaterEventArgs.js";
-import { Props } from "/flowerui/components/base/Props.js";
+import { Literal } from "/obvia/lib/Literal.js";
+import { UseBindings } from "/obvia/lib/UseBindings.js";
+import { Attr } from "/obvia/components/base/Attr.js";
+import { Css } from "/obvia/components/base/Css.js";
+import { StringUtils } from "/obvia/lib/StringUtils.js";
+import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
+import { ArrayUtils } from "/obvia/lib/ArrayUtils.js";
+import { RepeaterEventArgs } from "/obvia/components/Repeater/RepeaterEventArgs.js";
+import { Props } from "/obvia/components/base/Props.js";
 
 var Component = function (_props) {
     let _self = this;

@@ -3,8 +3,8 @@
  * 
  * Kreatx 2018
  */
-import { Link } from "/flowerui/components/Link/Link.js";
-import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
+import { Link } from "/obvia/components/Link/Link.js";
+import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
 var SuggestionRenderer = function(_props)
 {
     this.beforeAttach = function () 

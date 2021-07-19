@@ -3,10 +3,10 @@
  *
  * Kreatx 2019
  */
-import { List } from "/flowerui/components/List.js";
-import { RadioButton } from "/flowerui/components/RadioButton.js";
-import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
-import { DependencyContainer } from "/flowerui/lib/DependencyContainer.js";
+import { List } from "/obvia/components/List.js";
+import { RadioButton } from "/obvia/components/RadioButton.js";
+import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
+import { DependencyContainer } from "/obvia/lib/DependencyContainer.js";
 var RadioGroup = function (_props) {
     let _self = this,
         _dataProvider;

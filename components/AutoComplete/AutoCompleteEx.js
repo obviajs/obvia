@@ -4,20 +4,20 @@
  * Kreatx 2018
  */
 
-import { Container } from "/flowerui/components/Container.js";
-import { ObjectUtils } from "/flowerui/lib/ObjectUtils.js";
-import { StringUtils, StringMatchType } from "/flowerui/lib/StringUtils.js";
-import { NumberUtils } from "/flowerui/lib/NumberUtils.js";
-import { ArrayUtils } from "/flowerui/lib/ArrayUtils.js";
-import { ArrayEx } from "/flowerui/lib/ArrayEx.js";
-import { Repeater } from "/flowerui/components/Repeater/Repeater.js";
-import { debounce } from "/flowerui/lib/DecoratorUtils.js";
-import { SuggestionRenderer } from "/flowerui/components/AutoComplete/SuggestionRenderer.js";
-import { TokenRenderer } from "/flowerui/components/AutoComplete/TokenRenderer.js";
-import { TextInput } from "/flowerui/components/TextInput/TextInput.js";
-import { ChangeWatcher } from "/flowerui/lib/binding/ChangeWatcher.js";
-import { Literal } from "/flowerui/lib/Literal.js";
-import { DependencyContainer } from "/flowerui/lib/DependencyContainer.js";
+import { Container } from "/obvia/components/Container.js";
+import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
+import { StringUtils, StringMatchType } from "/obvia/lib/StringUtils.js";
+import { NumberUtils } from "/obvia/lib/NumberUtils.js";
+import { ArrayUtils } from "/obvia/lib/ArrayUtils.js";
+import { ArrayEx } from "/obvia/lib/ArrayEx.js";
+import { Repeater } from "/obvia/components/Repeater/Repeater.js";
+import { debounce } from "/obvia/lib/DecoratorUtils.js";
+import { SuggestionRenderer } from "/obvia/components/AutoComplete/SuggestionRenderer.js";
+import { TokenRenderer } from "/obvia/components/AutoComplete/TokenRenderer.js";
+import { TextInput } from "/obvia/components/TextInput/TextInput.js";
+import { ChangeWatcher } from "/obvia/lib/binding/ChangeWatcher.js";
+import { Literal } from "/obvia/lib/Literal.js";
+import { DependencyContainer } from "/obvia/lib/DependencyContainer.js";
 var AutoCompleteEx = function (_props) {
 	let _separator,
 		_tokenContainer,
