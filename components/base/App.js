@@ -7,7 +7,7 @@ import { BrowserManager } from "/obvia/lib/BrowserManager.js";
 import { BrowserUtils } from "/obvia/lib/BrowserUtils.js";
 import { AutoObject } from "/obvia/components/base/AutoObject.js";
 import { debounce, debouncePromise, whenDefined, whenDefinedPromise, functionName } from "/obvia/lib/DecoratorUtils.js";
-import { History, HistoryStep, HistoryEventType } from "/obvia/components/base/History/History.js";
+import { State, StateEventType } from "/obvia/components/base/State/State.js";
 import { Applet } from "/obvia/components/base/Applet.js";
 
 var App = function (_props) {
@@ -15,22 +15,22 @@ var App = function (_props) {
         idleInterval: 60000,
         inactivityInterval: 60000,
         components: [],
-        historyProps: {
-            enabled: true
-        },
         type: "",
         guid: StringUtils.guid(),
-        defaultAppletIndex: 0
+        defaultAppletIndex: 0,
+        initialState: {},
+        enableViewState: true
     };
     ObjectUtils.fromDefault(_defaultParams, _props);
     //_props = ObjectUtils.extend(false, false, _defaultParams, _props);
     let _self = this;
     let _idleTime = 0;
+    let _initialState = _props.initialState;
+    let _enableViewState = _props.enableViewState;
     let _idleInterval = _props.idleInterval;
     let _inactivityInterval = _props.inactivityInterval;
     let _style = _props.style;
-    let _historyProps = _props.historyProps;
-    let _history;
+    let _state;
     let _applets = _props.applets;
     let _browserManager = BrowserManager.getInstance();
     let _guid = _props.guid;
@@ -53,9 +53,9 @@ var App = function (_props) {
         configurable: true
     });
 
-    Object.defineProperty(this, 'history', {
-        get: function history() {
-            return _history;
+    Object.defineProperty(this, 'state', {
+        get: function state() {
+            return _state;
         }
     });
 
@@ -136,22 +136,6 @@ var App = function (_props) {
             return _defaultBehaviors;
         }
     });
-
-    let _initDefaultBehaviors = function () {
-        if (_historyProps.enabled) {
-            _history = History.getInstance(".history_" + _self.domID);
-            /*_history.on(HistoryEventType.HISTORY_UNDONE + " " + HistoryEventType.HISTORY_REDONE + " " + HistoryEventType.HISTORY_STEP_ADDED, function (e) {
-                _self.trigger(e);
-            });
-            */
-            let historyBehaviors = {};
-            historyBehaviors[HistoryEventType.HISTORY_UNDONE] = "HISTORY_UNDONE";
-            historyBehaviors[HistoryEventType.HISTORY_REDONE] = "HISTORY_REDONE";
-            historyBehaviors[HistoryEventType.HISTORY_STEP_ADDED] = "HISTORY_STEP_ADDED";
-            _self.addBehaviors(_guid, _history, historyBehaviors);
-        }
-        _self.addBehaviors(_guid, _self, _defaultBehaviors);
-    };
 
     _behaviorimplementations[_guid]["APP_UNLOADED"] = function (e) {
         //window.open("http://google.com/");
@@ -279,9 +263,6 @@ var App = function (_props) {
                                 behavior = behavior_implementations[bi];
                                 if (ObjectUtils.isObject(behavior)) {
                                     ret = behavior.do.apply(manifestor, args);
-                                    if (_historyProps.enabled) {
-                                        _history.track(behavior, behaviorName, ret, manifestor, args);
-                                    }
                                     if (behavior.stopPropagation) {
                                         e.stopPropagation();
                                     }
@@ -296,6 +277,12 @@ var App = function (_props) {
                                 }
                             }
                         }
+                        if (_enableViewState && ret) {
+                            Promise.resolve(ret).then((rpv) => {
+                                if(rpv)
+                                    _state.track(behavior.description, behaviorName, rpv, args);    
+                            });                            
+                        }                      
                         //return ret;
                     }
                 }
@@ -308,6 +295,12 @@ var App = function (_props) {
             if (_props.title) {
                 _self.title = _props.title;
             }
+            if (_enableViewState) {
+                _state = State.getInstance();
+                _state.initState(_initialState);
+                _defaultBehaviors.stateStepAdded = "STATE_STEP_ADDED";
+            }
+            _self.addBehaviors(_guid, _self, _defaultBehaviors);
         }
     };
 
@@ -477,7 +470,7 @@ var App = function (_props) {
     let r = Container.call(this, _props);
     window.id = _self.domID;
 
-    _initDefaultBehaviors();
+    //_initDefaultBehaviors();
     //this.registerBehaviors();   
     return r;
 };

@@ -13,34 +13,25 @@ var Applet = function (_props) {
     let _defaultParams = {
         forceReload: false,
         mimeType: "application/json",
-        behaviors: {
-            "beginDraw": "BEGIN_DRAW",
-            "endDraw": "END_DRAW",
-            "afterAttach": "AFTER_ATTACH",
-            "beforeAttach": "BEFORE_ATTACH",
-            "detached": "DETACHED",
-            "init": "INIT",
-            "enroute": "ENROUTE",
-            "preroute": "PREROUTE"
-        },
-        type:"",
+        behaviors: {},
+        type: "",
         attr: {},
         lazy: true,
-        fetchViewPromise: function(p) { 
-            let rnd = p.forceReload ? "?r=" + Math.random() : "";            
+        fetchViewPromise: function (p) {
+            let rnd = p.forceReload ? "?r=" + Math.random() : "";
             let _base = BrowserManager.getInstance().base;
             let _furl = _base + (p.url[0] == "." ? p.url.substr(1) : p.url);
-            return get(_furl + p.anchor + ".json" + rnd, p.mimeType).then(function (r) { 
+            return get(_furl + p.anchor + ".json" + rnd, p.mimeType).then(function (r) {
                 return JSON.parse(r.response);
             });
         },
-        fetchImplementationPromise: function(p) { 
-            let rnd = p.forceReload ? "?r=" + Math.random() : "";            
+        fetchImplementationPromise: function (p) {
+            let rnd = p.forceReload ? "?r=" + Math.random() : "";
             let _base = BrowserManager.getInstance().base;
             let _furl = _base + (p.url[0] == "." ? p.url.substr(1) : p.url);
             let _self = this;
             //import uses different starting point (currrent file directory)
-            return import(_furl + p.anchor + ".js" + rnd).then((module) => {                
+            return import(_furl + p.anchor + ".js" + rnd).then((module) => {
                 return module[_self.anchor];
             });
         },
@@ -80,9 +71,18 @@ var Applet = function (_props) {
     //the component instance of the view
     //the behaviors implementations (ex ctl)
     let _implementation;
-    let _loaded = false;    
+    let _loaded = false;
     //Applet implementation skeleton
-    let _behaviors = _props.behaviors;
+    let _behaviors = ObjectUtils.fromDefault({
+        "beginDraw": "BEGIN_DRAW",
+        "endDraw": "END_DRAW",
+        "afterAttach": "AFTER_ATTACH",
+        "beforeAttach": "BEFORE_ATTACH",
+        "detached": "DETACHED",
+        "init": "INIT",
+        "enroute": "ENROUTE",
+        "preroute": "PREROUTE"
+    }, _props.behaviors);
     let _title = _props.title;
     let _defaultAppletIndex = _props.defaultAppletIndex;
 

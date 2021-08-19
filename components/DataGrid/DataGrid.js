@@ -178,7 +178,7 @@ var DataGrid = function (_props) {
         this.$bodyWrapper = this.$el.find('#' + this.domID + '-body-wrapper');
         this.$container = this.$table;
         
-        this.delayScroll = debouncePromise(_onScroll, 10);
+        this.delayScroll = debouncePromise(_onScroll, 50);
         this.$bodyWrapper.on("scroll", function (e) {
             if (e.target.scrollTop + this.$bodyWrapper.height() < _virtualHeight) {
                 //this.$table[0].style.marginTop = e.target.scrollTop + "px";
@@ -210,7 +210,7 @@ var DataGrid = function (_props) {
             // "<table class='table' style='margin-bottom:0px;table-layout: fixed;' id='" + this.domID + "-fixed-table'>" +
             // "<thead id='" + this.domID + "-header'></thead></table>" +
             "<div id='" + this.domID + "-body-wrapper' style='overflow-y: auto; overflow-x:auto; position:relative;'>" +
-            "<table class='table' id='" + this.domID + "-table' style='table-layout: fixed;'><thead id='" + this.domID + "-header'></thead></table>" +
+            "<table class='table' id='" + this.domID + "-table' style='table-layout: fixed;' ><thead id='" + this.domID + "-header'></thead></table>" +
             "</div></div>";
         return html;
     };
@@ -297,54 +297,52 @@ var DataGrid = function (_props) {
         let p = [];
         _self.trigger('beginDraw');
         _self.$hadow.empty();
-        let oldValue = _rows.length;
-    
-        if (_self.attached)
-            _self.updateDisplayList();
-        let newValue = _self.rowCount;
-        let rb = Math.min(oldValue, newValue);
-        let dpLen = _self.dataProvider.length;
-        let delta = oldValue - newValue;
-        console.log("values: ",oldValue, " ", newValue, " ", dpLen);
-        if (delta > 0) {
-            let deltaScroll = delta * _avgRowHeight;
-            while (delta > 0) {
-                _self.removeRow(newValue + delta - 1);
-                --delta;
+        let oldValue = _rows.length, newValue = 0;
+        if (_self.attached || _props.rowCount) {
+            newValue = _self.rowCount;
+            let rb = Math.min(oldValue, newValue);
+            let dpLen = _self.dataProvider.length;
+            let delta = oldValue - newValue;
+            console.log("values: ", oldValue, " ", newValue, " ", dpLen);
+            if (delta > 0) {
+                let deltaScroll = delta * _avgRowHeight;
+                while (delta > 0) {
+                    _self.removeRow(newValue + delta - 1);
+                    --delta;
+                }
+                let cs = _self.$bodyWrapper.scrollTop();
+                _self.$bodyWrapper.scrollTop(Math.max(cs - deltaScroll, 0));
+            } else if (delta < 0) {
+                while (delta < 0) {
+                    let index = newValue + delta;
+                    ++delta;
+                    let rowComponentsPromises = await _self.addRow(_self.dataProvider[index], index);
+                    _comprenders.splicea(_comprenders.length, 0, rowComponentsPromises);
+                    let rcp = Promise.all(rowComponentsPromises);
+                    p.push(rcp);
+                    rcp.then(function () {
+                        let rargs = new RepeaterEventArgs(_self.rowItems, _self.dataProvider[index], index);
+                        rargs.virtualIndex = _virtualIndex;
+                        _self.trigger('rowAdd', [_self, rargs]);
+                    });
+                }
             }
-            let cs = _self.$bodyWrapper.scrollTop();
-            _self.$bodyWrapper.scrollTop(Math.max(cs - deltaScroll, 0));
-        } else if (delta < 0) {
-            while (delta < 0) {
-                let index = newValue + delta;
-                ++delta;
-                let rowComponentsPromises = await _self.addRow(_self.dataProvider[index], index);
-                _comprenders.splicea(_comprenders.length, 0, rowComponentsPromises);
-                let rcp = Promise.all(rowComponentsPromises);
-                p.push(rcp);
-                rcp.then(function () {
-                    let rargs = new RepeaterEventArgs(_self.rowItems, _self.dataProvider[index], index);
-                    rargs.virtualIndex = _virtualIndex;
-                    _self.trigger('rowAdd', [_self, rargs]);
-                });
+            for (let i = 0; i < _self.dataProvider.length; i++) {
+                _self.prepareBindingShortcuts(_self.dataProvider[i], i);
             }
-        }
-        for (let i = 0; i < _self.dataProvider.length; i++) {
-            _self.prepareBindingShortcuts(_self.dataProvider[i], i);
-        }
-        for (let i = 0; i < newValue && _self.dataProvider && (i + _virtualIndex) < dpLen; i++) {
-            let vr = i + _virtualIndex;
-            if (i < rb) {
-                for (let cmpID in _self.rowItems[i]) {
-                    let cmp = _self.rowItems[i][cmpID];
-                    if (cmp.refreshBindings) {
-                        cmp.refreshBindings(_self.dataProvider[vr]);
-                        cmp.attr[_self.guidField] = _self.dataProvider[vr][_self.guidField];
+            for (let i = 0; i < newValue && _self.dataProvider && (i + _virtualIndex) < dpLen; i++) {
+                let vr = i + _virtualIndex;
+                if (i < rb) {
+                    for (let cmpID in _self.rowItems[i]) {
+                        let cmp = _self.rowItems[i][cmpID];
+                        if (cmp.refreshBindings) {
+                            cmp.refreshBindings(_self.dataProvider[vr]);
+                            cmp.attr[_self.guidField] = _self.dataProvider[vr][_self.guidField];
+                        }
                     }
                 }
             }
         }
-
         let cr = Promise.all(_comprenders);
         p.push(cr);
         cr.then(function () {
@@ -418,7 +416,7 @@ var DataGrid = function (_props) {
 
     let _thOpt, _thNumbering;
     this.createHeader = async function () {
-        let $header = $("<tr></tr>");   
+        let $header = $("<tr height='"+_props.defaultRowHeight+"px'></tr>");   
         if (_showRowIndex) {
             _thNumbering = $("<th style='max-width:50px'>#</th>");
             $header.append(_thNumbering);
@@ -758,45 +756,48 @@ var DataGrid = function (_props) {
     };
 
     let _bodyHeight, mtt, smt;
-    this.updateDisplayList = function () {        
-        if (!_props.rowCount) {
-            this.$el.css("height", this.$el.height() + 'px');            
-            _rowCount = Math.floor(this.$bodyWrapper.height() / _props.defaultRowHeight);                  
-        }
-        _bodyHeight = _self.rowCount * _props.defaultRowHeight;
-        this.$table.css("height", _bodyHeight + 'px');   
-        if (_self.dataProvider.length > 0) {
-            _avgRowHeight = _bodyHeight / _self.rowCount;
+    this.updateDisplayList = function () {
+        if (_self.attached || _props.rowCount) {
+            if (!_props.rowCount) {
+                this.$el.css("height", this.$el.height() + 'px');
+                _rowCount = Math.floor(this.$bodyWrapper.height() / _props.defaultRowHeight);
+            }
+            _bodyHeight = _self.rowCount * _props.defaultRowHeight;
+            this.$table.css("height", _bodyHeight + 'px');
+            if (_self.dataProvider.length > 0) {
+                _avgRowHeight = _bodyHeight / _self.rowCount;
         
-            _virtualHeight = (_self.dataProvider.length + (_allowNewItem ? 1 : 0)) * _avgRowHeight;
+                _virtualHeight = (_self.dataProvider.length + (_allowNewItem ? 1 : 0)) * _avgRowHeight;
 
-            let pos = this.$table.position();
-            let left = pos.left + this.$table.width() - 14;
-            let top = pos.top + this.$el.height();
-            if (!this.$message) {
-                this.$message = $("<div style='display:none;position:absolute;bottom:0px;left:0px;z-index:9999'>Creating Rows</div>");
-                //     "background-color": "white",
-                this.$table.after(this.$message);
-            }
+                let pos = this.$table.position();
+                let left = pos.left + this.$table.width() - 14;
+                let top = pos.top + this.$el.height();
+                if (!this.$message) {
+                    this.$message = $("<div style='display:none;position:absolute;bottom:0px;left:0px;z-index:9999'>Creating Rows</div>");
+                    //     "background-color": "white",
+                    this.$table.after(this.$message);
+                }
 
-            if (!this.$scrollArea) {
-                this.$scrollArea = $("<div/>");
-                this.$table.after(this.$scrollArea);
+                if (!this.$scrollArea) {
+                    this.$scrollArea = $("<div/>");
+                    this.$table.after(this.$scrollArea);
+                }
+                //<div style="opacity: 0; position: absolute; top: 0px; left: 0px; width: 1px; height: 3.1e+07px;"></div>
+                this.$scrollArea.css({
+                    opacity: 0,
+                    position: "absolute",
+                    top: "0px",
+                    left: "0px",
+                    width: "1px",
+                    height: _virtualHeight + "px"
+                });
             }
-            //<div style="opacity: 0; position: absolute; top: 0px; left: 0px; width: 1px; height: 3.1e+07px;"></div>
-            this.$scrollArea.css({
-                opacity: 0,
-                position: "absolute",
-                top: "0px",
-                left: "0px",
-                width: "1px",
-                height: _virtualHeight + "px"
-            });
+            if (!_self.dataProvider || (_rowCount > _self.dataProvider.length))
+                this.$bodyWrapper.scrollTop(0);
+            if (_self.dataProvider && _self.dataProvider.length)
+                _self.setCellsWidth();
+            _self.updateDataProvider();
         }
-        if(!_self.dataProvider || (_rowCount>_self.dataProvider.length))
-            this.$bodyWrapper.scrollTop(0);
-        if (_self.dataProvider && _self.dataProvider.length)
-            _self.setCellsWidth();
     };
 
     Object.defineProperty(this, "multiSelect", {
@@ -977,7 +978,7 @@ var DataGrid = function (_props) {
         this.trigger(beforeRowAddEvent, [_self, rargs]);
 
         if (!isPreventable || (isPreventable && !beforeRowAddEvent.isDefaultPrevented())) {
-            let renderedRow = $('<tr>');
+            let renderedRow = $('<tr height="'+_props.defaultRowHeight+'px">');
             let rowItems = {};
             let style = "";
             if (_showRowIndex) {
