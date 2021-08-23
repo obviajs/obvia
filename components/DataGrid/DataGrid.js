@@ -418,7 +418,7 @@ var DataGrid = function (_props) {
     this.createHeader = async function () {
         let $header = $("<tr height='"+_props.defaultRowHeight+"px'></tr>");   
         if (_showRowIndex) {
-            _thNumbering = $("<th style='max-width:50px'>#</th>");
+            _thNumbering = $("<th style='max-width:50px;min-width:20px;'>#</th>");
             $header.append(_thNumbering);
         }
         let len = _columns.length;

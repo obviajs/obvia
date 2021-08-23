@@ -165,10 +165,12 @@ var Applet = function (_props) {
     let _proxiedMsg = new Proxy(_msg, _proxy);
 
     let _initAppletInternal = async function () {
-        return new Promise((resolve, reject) => {
+        return new Promise(async (resolve, reject) => {
             let ap;
             if (_loaded) {
                 ap = Promise.resolve(_literal);
+                await _routeApply();
+                resolve(r);  
             } else {
                 ap = Promise.all([
                     _fetchViewPromise.call(r, _props),
@@ -208,32 +210,35 @@ var Applet = function (_props) {
                             _appletsMap[_applets[i].anchor].push(inst);
                         }
                     }
-                }).catch((params) => {               
+                }).then((async (l) => {
+                    await _routeApply();
+                    resolve(r);                
+                })).catch((params) => {               
                     reject(params);
                 });
-            }
-            ap.then((async (l) => {
-                _self.trigger("preroute");
-                let p;
-                if (_uiRoute && typeof _uiRoute == 'function') {
-                    p = await _uiRoute.call(r, r);
-                }
-                _self.trigger("enroute");
-                _loaded = true;
-                resolve(r);                
-            }));                
+            }              
         });
+    };
+
+    let _routeApply = async function(){
+        _self.trigger("preroute");
+        let p;
+        if (_uiRoute && typeof _uiRoute == 'function') {
+            p = await _uiRoute.call(r, r);
+        }
+        _self.trigger("enroute");
+        _loaded = true;
     };
 
     this.routeApplet = async function (msg) {
         ObjectUtils.inTheImageOf(msg, _msg);
-        return await _initAppletInternal();
+        return _initAppletInternal();
     };
 
     this.initApplet = async function (msg) {
         //set the hash for this applet by stringifying msg     
         ObjectUtils.shallowCopy(msg, _proxiedMsg);
-        return await _initAppletInternal();
+        return _initAppletInternal();
     };
 
     this.addBehaviors = function (cmps, behaviors, recurse = true) {

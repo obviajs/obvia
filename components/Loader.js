@@ -11,7 +11,7 @@ import { DependencyContainer } from "/obvia/lib/DependencyContainer.js";
 var Loader = function (_props) {
 	this.template = function () {
 		return `
-		<div class="spinner">
+		<div class="spinner"  id='` + this.domID + `' >
 		<svg class="svg_spinner">
 		  <use href="/obvia/assets/icons.svg#icon-loader"></use>
 		</svg>
