@@ -5,7 +5,7 @@ import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
 import { Cache } from "/obvia/lib/cache/Cache.js";
 import { Rule } from "/obvia/components/base/Rule.js";
 import { debounce } from "/obvia/lib/DecoratorUtils.js";
-import { OpenAPI_utils } from "/obvia/lib/OpenAPI/OpenAPI_utils.js";
+import { OpenAPI_utils } from "/obvia/lib/OpenApi/OpenAPI_utils.js";
 import { RemoteArray } from "/obvia/lib/rca/RemoteArray.js";
 import { DependencyContainer } from "/obvia/lib/DependencyContainer.js";
 var DataView = function (_props) {

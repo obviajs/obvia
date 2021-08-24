@@ -13,34 +13,25 @@ var Applet = function (_props) {
     let _defaultParams = {
         forceReload: false,
         mimeType: "application/json",
-        behaviors: {
-            "beginDraw": "BEGIN_DRAW",
-            "endDraw": "END_DRAW",
-            "afterAttach": "AFTER_ATTACH",
-            "beforeAttach": "BEFORE_ATTACH",
-            "detached": "DETACHED",
-            "init": "INIT",
-            "enroute": "ENROUTE",
-            "preroute": "PREROUTE"
-        },
-        type:"",
+        behaviors: {},
+        type: "",
         attr: {},
         lazy: true,
-        fetchViewPromise: function(p) { 
-            let rnd = p.forceReload ? "?r=" + Math.random() : "";            
+        fetchViewPromise: function (p) {
+            let rnd = p.forceReload ? "?r=" + Math.random() : "";
             let _base = BrowserManager.getInstance().base;
             let _furl = _base + (p.url[0] == "." ? p.url.substr(1) : p.url);
-            return get(_furl + p.anchor + ".json" + rnd, p.mimeType).then(function (r) { 
+            return get(_furl + p.anchor + ".json" + rnd, p.mimeType).then(function (r) {
                 return JSON.parse(r.response);
             });
         },
-        fetchImplementationPromise: function(p) { 
-            let rnd = p.forceReload ? "?r=" + Math.random() : "";            
+        fetchImplementationPromise: function (p) {
+            let rnd = p.forceReload ? "?r=" + Math.random() : "";
             let _base = BrowserManager.getInstance().base;
             let _furl = _base + (p.url[0] == "." ? p.url.substr(1) : p.url);
             let _self = this;
             //import uses different starting point (currrent file directory)
-            return import(_furl + p.anchor + ".js" + rnd).then((module) => {                
+            return import(_furl + p.anchor + ".js" + rnd).then((module) => {
                 return module[_self.anchor];
             });
         },
@@ -80,9 +71,18 @@ var Applet = function (_props) {
     //the component instance of the view
     //the behaviors implementations (ex ctl)
     let _implementation;
-    let _loaded = false;    
+    let _loaded = false;
     //Applet implementation skeleton
-    let _behaviors = _props.behaviors;
+    let _behaviors = ObjectUtils.fromDefault({
+        "beginDraw": "BEGIN_DRAW",
+        "endDraw": "END_DRAW",
+        "afterAttach": "AFTER_ATTACH",
+        "beforeAttach": "BEFORE_ATTACH",
+        "detached": "DETACHED",
+        "init": "INIT",
+        "enroute": "ENROUTE",
+        "preroute": "PREROUTE"
+    }, _props.behaviors);
     let _title = _props.title;
     let _defaultAppletIndex = _props.defaultAppletIndex;
 
@@ -165,10 +165,12 @@ var Applet = function (_props) {
     let _proxiedMsg = new Proxy(_msg, _proxy);
 
     let _initAppletInternal = async function () {
-        return new Promise((resolve, reject) => {
+        return new Promise(async (resolve, reject) => {
             let ap;
             if (_loaded) {
                 ap = Promise.resolve(_literal);
+                await _routeApply();
+                resolve(r);  
             } else {
                 ap = Promise.all([
                     _fetchViewPromise.call(r, _props),
@@ -208,32 +210,35 @@ var Applet = function (_props) {
                             _appletsMap[_applets[i].anchor].push(inst);
                         }
                     }
-                }).catch((params) => {               
+                }).then((async (l) => {
+                    await _routeApply();
+                    resolve(r);                
+                })).catch((params) => {               
                     reject(params);
                 });
-            }
-            ap.then((async (l) => {
-                _self.trigger("preroute");
-                let p;
-                if (_uiRoute && typeof _uiRoute == 'function') {
-                    p = await _uiRoute.call(r, r);
-                }
-                _self.trigger("enroute");
-                _loaded = true;
-                resolve(r);                
-            }));                
+            }              
         });
+    };
+
+    let _routeApply = async function(){
+        _self.trigger("preroute");
+        let p;
+        if (_uiRoute && typeof _uiRoute == 'function') {
+            p = await _uiRoute.call(r, r);
+        }
+        _self.trigger("enroute");
+        _loaded = true;
     };
 
     this.routeApplet = async function (msg) {
         ObjectUtils.inTheImageOf(msg, _msg);
-        return await _initAppletInternal();
+        return _initAppletInternal();
     };
 
     this.initApplet = async function (msg) {
         //set the hash for this applet by stringifying msg     
         ObjectUtils.shallowCopy(msg, _proxiedMsg);
-        return await _initAppletInternal();
+        return _initAppletInternal();
     };
 
     this.addBehaviors = function (cmps, behaviors, recurse = true) {

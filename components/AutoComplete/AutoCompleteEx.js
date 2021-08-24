@@ -53,13 +53,14 @@ var AutoCompleteEx = function (_props) {
 					_dpWatcher.watch(_dataProvider, "length", _dpChanged);
 					_dataProvider.on("propertyChange", _dpChanged);
 				}
-				_self.refreshSuggestions();
+				if (_input && _input.$el[0] == document.activeElement) 
+					_self.refreshSuggestions();
 			}
 		},
 		enumerable: true,
 	});
 	let _dpChanged = function (e) {
-		if (_input.$el[0] == document.activeElement) _self.refreshSuggestions();
+		if (_input && _input.$el[0] == document.activeElement) _self.refreshSuggestions();
 	};
 
 	Object.defineProperty(this, "valueField", {

@@ -8,19 +8,20 @@ var Parent = function (_props) {
     let _self = this;
     let _children = {}, _enabled;
     let _components = [];
+    let _csorted = [];
 
     if (!this.hasOwnProperty("initProxy")) {
         this.initProxy = function () {
             return new Proxy(this, {
                 get: function (target, property, receiver) {
-                    if (!target.hasOwnProperty(property) && !target.constructor.prototype.hasOwnProperty(property)) {
+                    if (!(property in target)) {
                         if (target.children && target.children[property])
                             return target.children[property];
                     }
                     return Reflect.get(...arguments);
                 },
                 getOwnPropertyDescriptor(target, property) {
-                    if (!target.hasOwnProperty(property) && !target.constructor.prototype.hasOwnProperty(property)) {
+                    if (!(property in target)) {
                         if (target.children && target.children[property])
                             return {configurable: true, enumerable: true, get: Reflect.get};
                     }
@@ -59,7 +60,8 @@ var Parent = function (_props) {
         set: function components(v) {
             // this.removeAllChildren();
             // this.addComponents(v);
-            _components = v;  
+            
+            _props.components = _components = v;
         },
         enumerable: true,
         configurable: true
@@ -124,6 +126,7 @@ var Parent = function (_props) {
         for (let cid in this.children) {
             this.removeChild(this.children[cid], mode);
         }
+        
     };
 
     this.removeChild = function (child, mode = 1) {
@@ -189,8 +192,6 @@ var Parent = function (_props) {
         enumerable: false,
         configurable: true
     });
-
-    let _csorted = [];
 
     let _addComponentInContainer = async function (container, component, index) {
         if (container) {
@@ -275,7 +276,6 @@ var Parent = function (_props) {
         }
     }
     _props.attr["data-triggers"] = myDtEvts.join(" ");
-    _components = _props.components;
     this.$container = null;
 
     let _creationFinished = false;
@@ -292,6 +292,7 @@ var Parent = function (_props) {
             if (_sortChildren) {
                 ArrayUtils.acSort(components, "props.index");
             }
+            _components.splicea(_components.length, 0, components);
             for (let i = 0; i < components.length; i++) {
                 if (ObjectUtils.isObject(components[i])) {
                     let cr = await _addComponentInContainer(_$hadow, components[i], _csorted.length + i);
@@ -334,7 +335,8 @@ var Parent = function (_props) {
                             resolve(_proxy);
                         }
                     });
-                    this.addComponents(_components);
+                    _components = [];
+                    this.addComponents(_props.components);
                 });
             }
             return _rPromise;
