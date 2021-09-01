@@ -6,6 +6,7 @@ import { BrowserManager } from "/obvia/lib/BrowserManager.js";
 import { BrowserUtils } from "/obvia/lib/BrowserUtils.js";
 import { get } from "/obvia/lib/my.js";
 import { Injector } from "/obvia/lib/Injector.js";
+import { evalJSX } from "/obvia/lib/jsx/evalJSX.js";
 
 var Applet = function (_props) {
     this.$el = $(this);
@@ -17,14 +18,7 @@ var Applet = function (_props) {
         type: "",
         attr: {},
         lazy: true,
-        fetchViewPromise: function (p) {
-            let rnd = p.forceReload ? "?r=" + Math.random() : "";
-            let _base = BrowserManager.getInstance().base;
-            let _furl = _base + (p.url[0] == "." ? p.url.substr(1) : p.url);
-            return get(_furl + p.anchor + ".json" + rnd, p.mimeType).then(function (r) {
-                return JSON.parse(r.response);
-            });
-        },
+        fetchViewPromise: Applet.fetchViewJSON,
         fetchImplementationPromise: function (p) {
             let rnd = p.forceReload ? "?r=" + Math.random() : "";
             let _base = BrowserManager.getInstance().base;
@@ -396,6 +390,22 @@ var Applet = function (_props) {
     return r;
 };
 Applet.ctor = "Applet";
+Applet.fetchViewJSON = function (p) {
+    let rnd = p.forceReload ? "?r=" + Math.random() : "";
+    let _base = BrowserManager.getInstance().base;
+    let _furl = _base + (p.url[0] == "." ? p.url.substr(1) : p.url);
+    return get(_furl + p.anchor + ".json" + rnd, p.mimeType).then(function (r) {
+        return JSON.parse(r.response);
+    });
+};
+Applet.fetchViewJSX = function (p) {
+    let rnd = p.forceReload ? "?r=" + Math.random() : "";
+    let _base = BrowserManager.getInstance().base;
+    let _furl = _base + (p.url[0] == "." ? p.url.substr(1) : p.url);
+    return get(_furl + p.anchor + ".jsx" + rnd, p.mimeType).then(function (r) {
+        return evalJSX(r.response);
+    });
+};
 export {
     Applet
 };
