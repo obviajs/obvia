@@ -31,16 +31,10 @@ This is a list of all the open source libraries used in the Obvia framework.
 ## Roadmap
 This is a basic roadmap with some instructions to keep in mind when working with Obvia.
 
-* The implementation class is to be named according to the applet anchor
-* Implement the dependency injection
-* Create a dependency info-structure
-* Create a base-dependent type to return dependencies-related information (array of dependencies info-structure)
-* Implementations will be dependent types
-* Create a Factory Implementation to support the autowiring of dependencies
-* Create the info structure for the types which the Factory will create/return instances of
-* An Applet will not create the implementation instance directly but will ask the Factory for it
+* State management
+* Hot Reload
 * The Applet (& App) should handle URL hash changes via an external dependency (the existing logic is to be wrapped in a default provider)
-* The security is to be provided by external dependencies
+* Security should be provided by external dependencies
 
 ## Contribution
 Thank you to everyone who has contributed to ***Obvia***!
