@@ -86,7 +86,6 @@ var IFrame = function (_props) {
         }
     }
     _props.attr["data-triggers"] = myDtEvts.join(" ");
-    _src = _props.src;
  
     Component.call(this, _props, true);
  
