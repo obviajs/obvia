@@ -7,6 +7,7 @@
 import { Label } from "/obvia/components/Label.js";
 import { DependencyContainer } from "/obvia/lib/DependencyContainer.js";
 import { DateUtils } from "/obvia/lib/DateUtils.js";
+import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
 
 var DateFormatter = function (_props) {
     //component data

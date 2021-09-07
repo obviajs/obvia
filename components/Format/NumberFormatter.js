@@ -7,6 +7,7 @@
 import { Label } from "/obvia/components/Label.js";
 import { DependencyContainer } from "/obvia/lib/DependencyContainer.js";
 import { NumberUtils } from "/obvia/lib/NumberUtils.js";
+import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
 var NumberFormatter = function (_props) {
     //component data
     let _label, _precision;
