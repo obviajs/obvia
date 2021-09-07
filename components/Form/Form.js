@@ -170,14 +170,14 @@ var Form = function (_props) {
         _self.trigger(postSuccess);
     };
 
-    let _apiClient = new HttpClient();
+    let _httpClient = new HttpClient();
     this.post = function (dataType) {
         let type = dataType ? dataType : "json";
-        _apiClient.on("xhrProgress", _xhrProgress);
-        _apiClient.on("xhrStarted", _xhrStarted);
-        _apiClient.on("xhrRejected", _xhrRejected);
-        _apiClient.on("xhrResolved", _xhrResolved);
-        return _apiClient.body(this.getFormData())
+        _httpClient.on("xhrProgress", _xhrProgress);
+        _httpClient.on("xhrStarted", _xhrStarted);
+        _httpClient.on("xhrRejected", _xhrRejected);
+        _httpClient.on("xhrResolved", _xhrResolved);
+        return _httpClient.body(this.getFormData())
             .type('multipart/form-data')
             .query()
             .path()
