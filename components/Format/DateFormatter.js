@@ -13,7 +13,7 @@ var DateFormatter = function (_props) {
     //component data
     let _label, _inputFormat, _outputFormat;
     let _defaultParams = {
-        inputFormat: 'YYYY-MM-DDTHH:mm',
+        inputFormat: 'YYYY-MM-DD HH:mm',
         outputFormat: 'DD/MM/YYYY HH:mm',
     };
     _inputFormat = _props.inputFormat;
