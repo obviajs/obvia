@@ -418,7 +418,7 @@ var DataGrid = function (_props) {
     this.createHeader = async function () {
         let $header = $("<tr height='"+_props.defaultRowHeight+"px'></tr>");   
         if (_showRowIndex) {
-            _thNumbering = $("<th style='max-width:50px;min-width:20px;'>#</th>");
+            _thNumbering = $("<th style='width:50px;'>#</th>");
             $header.append(_thNumbering);
         }
         let len = _columns.length;
@@ -442,7 +442,7 @@ var DataGrid = function (_props) {
                 els[i] = cmpInstance.$el;                
             }
             $header.append(els);
-            _thOpt = $("<th style='max-width:50px'><i class='fa fa-chevron-circle-right' aria-hidden='true'></i></th>");
+            _thOpt = $("<th style='width:50px'><i class='fa fa-chevron-circle-right' aria-hidden='true'></i></th>");
             $header.append(_thOpt);
             _self.$header.append($header);
         });

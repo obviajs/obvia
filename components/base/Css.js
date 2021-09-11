@@ -49,6 +49,9 @@ var Css = function (_css, cmpInst) {
     }
 
     this.getScopeChain = function () {
+        for (let prop in this.bindedProps) {
+            delete this[prop];
+        }
         return [this, ...cmpInst.getScopeChain()];
     };
     return p;
