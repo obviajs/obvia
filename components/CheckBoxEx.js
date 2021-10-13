@@ -4,80 +4,43 @@
  * Kreatx 2019
  */
 import { Component } from "/obvia/components/base/Component.js";
+import { Label } from "/obvia/components/Label.js";
 import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
 import { DependencyContainer } from "/obvia/lib/DependencyContainer.js";
 var CheckBoxEx = function (_props) {
-    let _self = this, _label, _value, _checked, _name;
-
-    Object.defineProperty(this, "label",
-    {
-        get: function label() {
-            return _label;
-        },
-        set: function label(v) {
-            if (_label != v) {
-                _label = v;
-                if (this.$el)
-                {
-                    v = $(`<div>${v}</div>`).get(0).innerText;
-                    let last = this.$el.children().last();
-                    if(last && last.length>0)
-                        if(last[0].nextSibling)
-                            last[0].nextSibling.textContent = v;
-                        else
-                            this.$el.appendText(v);
-                    else
-                        //this.$el.appendText(v);
-                        this.$el.text(v);
-                }
-            }
-        }
-    });
+    let _self = this, _value, _checked, _name;
 
     Object.defineProperty(this, "value", {
         get: function value() {
-            return _value;
+            return _self.proxyMaybe.checkBox.value;
         },
         set: function value(v) {
-            if (_value !== v) {
-                _value = v;
-            } else {
-                _checked = true;
-            }
-            if (this.$input)
-                this.$input.val(v);
+            _self.proxyMaybe.checkBox.value = v;
         }
     });
 
     Object.defineProperty(this, "checked",
     {
         get: function checked() {
-            return _checked;
+            return _self.proxyMaybe.checkBox.checked;
         },
         set: function checked(v) {
-            if (_checked != v) {
-                _checked = !!v;
-                if (this.$input)
-                    this.$input.prop('checked', v);
-            }
+            _self.proxyMaybe.checkBox.checked = v;
         }
     });
     
     Object.defineProperty(this, "name", {
         set: function name(v) {
-            if(_name!=v){
-                _name = v;
-                this.$input.attr("name", v);
-            }
+            _self.proxyMaybe.checkBox.name = v;
         },
         get: function name() {
-            return _name;
+            return _self.proxyMaybe.checkBox.name;
         }
     });
 
     this.endDraw = function (e) {
         if (e.target.id == this.domID) {
-            this.$input = this.$el.find("#" + this.domID + "-checkbox");
+            this.$input = this.checkBox.$el;
         }
     };
             
@@ -104,16 +67,22 @@ var CheckBoxEx = function (_props) {
         _checked = !_checked;
     };
 
-    this.template = function () {
-        return "<label  id='" + this.domID + "'>" +
-            "<input data-triggers='click change' id='" + this.domID + "-checkbox' type='checkbox' class='no-form-control'/></label>";
-    };
+    let _defaultComponents = [
+        {
+            ctor: "CheckBox",
+            props: {
+                id:"checkBox"
+
+            }
+        }
+    ];
 
     let _defaultParams = {
         label: 'CheckBox Label',
         value: null,
         enabled: true,
-        checked: false
+        checked: false,
+        components: _defaultComponents
     };
     ObjectUtils.fromDefault(_defaultParams, _props);
     //_props = ObjectUtils.extend(false, false, _defaultParams, _props);
@@ -130,7 +99,8 @@ var CheckBoxEx = function (_props) {
         }
     };
 
-    Component.call(this, _props);
+    let r = Label.call(this, _props);
+    return r;
 };
 DependencyContainer.getInstance().register("CheckBoxEx", CheckBoxEx, DependencyContainer.simpleResolve);
 CheckBoxEx.prototype.ctor = "CheckBoxEx";

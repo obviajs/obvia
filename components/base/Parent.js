@@ -205,8 +205,6 @@ var Parent = function (_props) {
                 cmpLit.props.id = component.props.id + '_' + Object.keys(_children).length;
             } else
                 cmpLit.props.id = component.props.id;
-            cmpLit.props.repeaterIndex = _self.repeaterIndex;
-            cmpLit.props.parentRepeater = _self.parentRepeater;
             // if (cmpLit.props.bindingDefaultContext == null) {
             //     cmpLit.props.bindingDefaultContext = _self.bindingDefaultContext;
             // }
@@ -214,6 +212,8 @@ var Parent = function (_props) {
                 let cprops = ObjectUtils.deepCopy(_props.props[id]);            
                 cmpLit.props = ObjectUtils.fromDefault(cmpLit.props, cprops);
             }
+            cmpLit.props.repeaterIndex = _self.repeaterIndex;
+            cmpLit.props.parentRepeater = _self.parentRepeater;            
             let cmp = await Component.fromLiteral(cmpLit);
             //component.props.id = cmp.id;
             if (_children[cmp.id])

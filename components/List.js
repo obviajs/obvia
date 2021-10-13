@@ -10,8 +10,32 @@ import { ChangeWatcher } from "/obvia/lib/binding/ChangeWatcher.js";
 import { DependencyContainer } from "/obvia/lib/DependencyContainer.js";
 
 var List = function (_props) {
-    let _self = this;
+    let _self = this, _classesField, _selectedClasses, _defaultClasses, _valueField;
+    
+    Object.defineProperty(this, "classesField", {
+        get: function classesField() {
+            return _classesField;
+        }
+    });
+    
+    Object.defineProperty(this, "defaultClasses", {
+        get: function defaultClasses() {
+            return _defaultClasses;
+        }
+    });
 
+    Object.defineProperty(this, "selectedClasses", {
+        get: function selectedClasses() {
+            return _selectedClasses;
+        }
+    });
+
+    Object.defineProperty(this, "valueField", {
+        get: function valueField() {
+            return _valueField;
+        }
+    });
+    
     this.beforeAttach = function () {
         _states = _states == null ?
             [
@@ -52,12 +76,12 @@ var List = function (_props) {
         let arrValueIndex = ArrayUtils.indexOfObject(_self.value, _valueField, v[_valueField]);
         let newValue = _self.value.slice();
         if (arrValueIndex == -1) {
-            if (_multiselect) {
+            if (_multiSelect) {
                 newValue.push(v);
             } else
                 newValue = [v];
         } else {
-            if (_multiselect) {
+            if (_multiSelect) {
                 newValue.splice(arrValueIndex, 1);
             } else
                 newValue = [];
@@ -71,32 +95,31 @@ var List = function (_props) {
             separator: false
         },
         attr:{"data-triggers":"rowAdd rowEdit beforeRowAdd rowDelete beforeRowDelete change itemClick itemDblClick"},
-        multiselect: false,
+        multiSelect: false,
         valueField: "id",
         classesField: "",
-        defaultClasses: ["btn btn-sm btn-default"],
-        selectedClasses: ["btn btn-sm btn-success"],
+        defaultClasses: ["btn", "btn-sm", "btn-default"],
+        selectedClasses: ["btn", "btn-sm", "btn-success"],
         value: []
     };
     ObjectUtils.fromDefault(_defaultParams, _props);
     //_props = ObjectUtils.extend(false, false, _defaultParams, _props);
 
-    let _multiselect = _props.multiselect;
+    let _multiSelect = _props.multiSelect;
     let _value;
     let _states = _props.states;
-    let _valueField = _props.valueField;
-    let _classesField = _props.classesField;
-    let _selectedClasses = _props.selectedClasses;
-    let _defaultClasses = _props.defaultClasses;
+    _valueField = _props.valueField;
+    _classesField = _props.classesField;
+    _selectedClasses = _props.selectedClasses;
+    _defaultClasses = _props.defaultClasses;
     let _components = _props.components;
     let _rowAdd = _props.rowAdd;
 
-    if (_classesField) { 
-        _components[0].props.classes = `{?${_classesField}}`;
+    if (_classesField && !_components[0].props.classes) { 
+        _components[0].props.classes = `{${_classesField}}`;
     }
     _props.rowAdd = function(e, r, ra){
-        if (e.target.id == _self.domID) 
-        {
+        if (e.target.id == _self.domID) {
             if (typeof _rowAdd == 'function')
                 _rowAdd.apply(_self, arguments);
             if (!e.isDefaultPrevented()) {
@@ -111,7 +134,7 @@ var List = function (_props) {
     let _click = function (e, ra) {
         let itemClickEvent = jQuery.Event("itemClick");
         itemClickEvent.originalEvent = e;
-        this.trigger.apply(this, [itemClickEvent, ra]);
+        this.trigger.apply(_self, [itemClickEvent, ra]);
         if (!itemClickEvent.isDefaultPrevented()) {
             _self.selectComponent.apply(this, arguments);
         }
@@ -120,7 +143,7 @@ var List = function (_props) {
     let _dblclick = function (e) {
         let itemDblClickEvent = jQuery.Event("itemDblClick");
         itemDblClickEvent.originalEvent = e;
-        this.trigger.apply(this, [itemDblClickEvent, ra]);
+        this.trigger.apply(_self, [itemDblClickEvent, ra]);
         if (!itemDblClickEvent.isDefaultPrevented()) {
             _self.selectComponent.apply(this, arguments);
         }
@@ -128,6 +151,27 @@ var List = function (_props) {
 
     let r = Repeater.call(this, _props);
     let _myw = ChangeWatcher.getInstance(r);
+    let propDataProvider = Object.getOwnPropertyDescriptor(this, "dataProvider");
+    
+    Object.defineProperty(this, "dataProvider", {
+        get: function dataProvider() {
+            return propDataProvider['get'].call(_self);
+        },
+        set: function dataProvider(v) {
+            if (v && v.length > 0) {
+                let len = v.length;
+                for (let i = 0; i < len; i++) {
+                    if(!v[i].hasOwnProperty(_classesField)){
+                        v[i][_classesField] = null;
+                    }
+                }
+            }
+            propDataProvider['set'].call(_self, v);
+        },
+        enumerable: true,
+        configurable: true
+    });
+
     Object.defineProperty(this, "value", {
         get: function value() {
             return _value;

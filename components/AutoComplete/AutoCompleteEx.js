@@ -334,7 +334,9 @@ var AutoCompleteEx = function (_props) {
 	this.removeTokenItemAt = function (index) {
 		//TODO: If we are going to keep item ordering in the view the save as in value
 		if (index >= 0 && index < _value.length) {
-			_value.splice(index, 1);
+			let tmp = _value.slice(0);
+			tmp.splice(index, 1);
+			_self.value = tmp;
 		} else console.log("Index out of range. No item will be removed.");
 	};
 	this.removeTokenItems = function (items) {
@@ -404,7 +406,14 @@ var AutoCompleteEx = function (_props) {
 					}
 				}
 			} else {
-				this.removeAllTokenItems();
+				let e = jQuery.Event("beforeChange");
+				e.newValue = v;
+				e.oldValue = _value;
+				this.proxyMaybe.trigger(e);
+				if (!e.isDefaultPrevented()) {
+					_value.splice(0, _value.length);
+					this.trigger("change");
+				}
 			}
 		},
 	});

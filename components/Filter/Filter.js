@@ -8,6 +8,7 @@ import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
 import { ValidationManager } from "/obvia/components/Validation/ValidationManager.js";
 import { ArrayEx } from "/obvia/lib/ArrayEx.js";
 import { StringUtils } from "/obvia/lib/StringUtils.js";
+import { ArrayUtils } from "/obvia/lib/ArrayUtils.js";
 import { Heading, HeadingType } from "/obvia/components/Heading.js";
 import { AutoCompleteEx } from "/obvia/components/AutoComplete/AutoCompleteEx.js";
 import { Repeater } from "/obvia/components/Repeater/Repeater.js";
@@ -127,17 +128,17 @@ var Filter = function (_props) {
         ]),
         _operatorsDp = _defaultOperators;
 
-    /*  Object.defineProperty(this, "dataProvider", {
+    Object.defineProperty(this, "dataProvider", {
        get: function dataProvider() {
-         return _dataProvider;
+            return _dataProvider;
        },
        set: function dataProvider(v) {
-         if (_dataProvider != v) {
-           _dataProvider = v;
-         }
+            if (_dataProvider != v) {
+                _dataProvider = v;
+            }
        },
        enumerable: true
-     }); */
+    });
 
     Object.defineProperty(this, "rules", {
         get: function rules() {
@@ -153,10 +154,16 @@ var Filter = function (_props) {
 
     this.endDraw = function (e) {
         if (e.target.id == this.domID) {
-            _expressionContainer = this.filterMainContainer.expressionContainer;
+            _expressionContainer = this.filterMainContainer.expressionContainer;     
         }
     };
 
+    this.beforeAttach = function (e) {
+        if (e.target.id == this.domID) {        
+            _initDefaultFilters();
+        }
+    };
+    
     let _updateTokens = function () {
         let cp = getCaretPosition(_expressionContainer.$el[0]);
         _tokens = tokenize(_expression).all();
@@ -383,8 +390,9 @@ var Filter = function (_props) {
     };
 
     let _operatorChange = function (e, ra) {
-        ra.currentItem.operator = this.selectedItem;
-        _editFilter(e, ra);
+        ra.currentItem.operatorItem = this.selectedItem;        
+        if(ra.currentRow.repeater_container.filterEditorContainer.mainRow)
+            _editFilter(e, ra);
     };
 
     this.validate = function () {
@@ -405,7 +413,7 @@ var Filter = function (_props) {
         _self.validate().then((valid) => {
             if (valid) {
                 ra.currentItem.value = _getValue(ra);
-                let operator = ra.currentItem.operator;
+                let operator = ra.currentItem.operatorItem;
                 let label = operator.friendly.formatUnicorn(ra.currentItem.value);
 
                 ra.currentRow.repeater_container.filterItemHeading.label = label;
@@ -502,7 +510,6 @@ var Filter = function (_props) {
                                                     id: 'filterEditorContainer',
                                                     display: false,
                                                     type:"",
-                                                    "bindingDefaultContext": "{currentItem}",
                                                     components: [{
                                                             ctor: Container,
                                                             props: {
@@ -528,7 +535,7 @@ var Filter = function (_props) {
                                                                                             "labelField": "operatorLabel",
                                                                                             "valueField": "value",
                                                                                             "dataProvider": _operatorsDp,
-                                                                                            //"selectedItem": "{?operator}",
+                                                                                            "selectedItem": "{operatorItem}",
                                                                                             "change": _operatorChange
                                                                                         }
                                                                                     }
@@ -664,10 +671,10 @@ var Filter = function (_props) {
             let f = repDp[ordinal - 1];
             t = {
                 "field": f[_valueField],
-                "operator": f.operator.value,
+                "operator": f.operatorItem.value,
                 "value": null
             };
-            if (f.operator.rangeInput) {
+            if (f.operatorItem.rangeInput) {
                 t.value = [f.value.min, f.value.max];
             } else
                 t.value = f.value.value;
@@ -687,6 +694,46 @@ var Filter = function (_props) {
     };
 
     let _condOperators = ["AND", "OR"];
+    
+    let _initDefaultFilters = function () {
+        let ret = _build(_rules);
+        _expressionContainer.$el.text(ret.cond);
+        repDp = _self.children.filterMainContainer.repeater.dataProvider = ret.dataProvider;
+        //_expressionInput();
+    };
+
+    let _build = function (crules, i=0) {
+        let ret = { cond: "", dataProvider: new ArrayEx()};
+        if (crules.rules && crules.rules.length > 0) {
+            let j = 0;
+            while (j<crules.rules.length)
+            {
+                console.log("49 " + i)
+                let iret = _build(crules.rules[j], ++i);
+                if (crules.rules[j].hasOwnProperty("condition") && crules.rules[j].condition != null) {
+                    ret.cond += " (" + iret.cond + ")";
+                } else
+                    ret.cond += " " + iret.cond + " " + (j < crules.rules.length - 1 ? crules.condition : "");
+                ret.dataProvider.splicea(ret.dataProvider.length, 0, iret.dataProvider);
+                ++j;
+            }
+        } else {
+            let obj = {};
+            let ind =  ArrayUtils.indexOfObject(_dataProvider, "field", crules.field, 0);
+            obj[_labelField] = _dataProvider[ind][_labelField];                    
+            obj[_valueField] = _dataProvider[ind][_valueField];
+            obj[_itemEditorField] = _dataProvider[ind][_itemEditorField];
+            if (Array.isArray(crules.value)) {
+                obj.value = { "min": crules.value[0],  "max": crules.value[1]};
+            }else
+                obj.value = { "value": crules.value };
+            ind = ArrayUtils.indexOfObject(_defaultOperators, "value", crules.operator, 0);
+            obj["operatorItem"] = _defaultOperators[ind];                
+            ret.dataProvider.splice(ret.dataProvider.length, 0, obj);
+            ret.cond = i;
+        }
+        return ret;
+    };
 
     let _parse = function (tokens) {
         let len = tokens.length;
