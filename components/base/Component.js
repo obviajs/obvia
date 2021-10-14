@@ -522,30 +522,30 @@ var Component = function (_props) {
     let _defaultHandlers = [{
         registerTo: this.$el,
         events: {
-            'mousedown': _mousedown && typeof _mousedown == 'function' ? _mousedown.bind(_self) : undefined,
-            'mouseover': _mouseover && typeof _mouseover == 'function' ? _mouseover.bind(_self) : undefined,
-            'mouseout': _mouseout && typeof _mouseout == 'function' ? _mouseout.bind(_self) : undefined,
-            'mouseup': _mouseup && typeof _mouseup == 'function' ? _mouseup.bind(_self) : undefined,
-            'click': _click && typeof _click == 'function' ? _click.bind(_self) : undefined,
-            'dblclick': _dblclick && typeof _dblclick == 'function' ? _dblclick.bind(_self) : undefined,
-            'blur': _blur && typeof _blur == 'function' ? _blur.bind(_self) : undefined,
-            'keydown': _keydown && typeof _keydown == 'function' ? _keydown.bind(_self) : undefined,
-            'keyup': _keyup && typeof _keyup == 'function' ? _keyup.bind(_self) : undefined,
-            'change': _change && typeof _change == 'function' ? _change.bind(_self) : undefined,
-            'drop': _drop && typeof _drop == 'function' ? _drop.bind(_self) : undefined,
-            'dragover': _dragover && typeof _dragover == 'function' ? _dragover.bind(_self) : undefined,
-            'dragstart': _dragstart && typeof _dragstart == 'function' ? _dragstart.bind(_self) : undefined,
-            'dragend': _dragend && typeof _dragend == 'function' ? _dragend.bind(_self) : undefined,
-            'dragenter': _dragenter && typeof _dragenter == 'function' ? _dragenter.bind(_self) : undefined,
-            'dragleave': _dragleave && typeof _dragleave == 'function' ? _dragleave.bind(_self) : undefined,
-            'idChanged': _idChanged && typeof _idChanged == 'function' ? _idChanged.bind(_self) : undefined,
-            'DOMMutation': this.DOMMutation && typeof this.DOMMutation == 'function' ? this.DOMMutation.bind(_self) : undefined,
-            'afterAttach': this.afterAttach && typeof this.afterAttach == 'function' ? this.afterAttach.bind(_self) : undefined,
-            'detached': this.detached && typeof this.detached == 'function' ? this.detached.bind(_self) : undefined,
-            'beforeAttach': this.beforeAttach && typeof this.beforeAttach == 'function' ? this.beforeAttach.bind(_self) : undefined,
-            'init': this.init && typeof this.init == 'function' ? this.init.bind(_self) : undefined,
-            'beginDraw': this.beginDraw && typeof this.beginDraw == 'function' ? this.beginDraw.bind(_self) : undefined,
-            'endDraw': this.endDraw && typeof this.endDraw == 'function' ? this.endDraw.bind(_self) : undefined
+            'mousedown': _mousedown && typeof _mousedown == 'function' ? _mousedown.bind(_self.proxyMaybe) : undefined,
+            'mouseover': _mouseover && typeof _mouseover == 'function' ? _mouseover.bind(_self.proxyMaybe) : undefined,
+            'mouseout': _mouseout && typeof _mouseout == 'function' ? _mouseout.bind(_self.proxyMaybe) : undefined,
+            'mouseup': _mouseup && typeof _mouseup == 'function' ? _mouseup.bind(_self.proxyMaybe) : undefined,
+            'click': _click && typeof _click == 'function' ? _click.bind(_self.proxyMaybe) : undefined,
+            'dblclick': _dblclick && typeof _dblclick == 'function' ? _dblclick.bind(_self.proxyMaybe) : undefined,
+            'blur': _blur && typeof _blur == 'function' ? _blur.bind(_self.proxyMaybe) : undefined,
+            'keydown': _keydown && typeof _keydown == 'function' ? _keydown.bind(_self.proxyMaybe) : undefined,
+            'keyup': _keyup && typeof _keyup == 'function' ? _keyup.bind(_self.proxyMaybe) : undefined,
+            'change': _change && typeof _change == 'function' ? _change.bind(_self.proxyMaybe) : undefined,
+            'drop': _drop && typeof _drop == 'function' ? _drop.bind(_self.proxyMaybe) : undefined,
+            'dragover': _dragover && typeof _dragover == 'function' ? _dragover.bind(_self.proxyMaybe) : undefined,
+            'dragstart': _dragstart && typeof _dragstart == 'function' ? _dragstart.bind(_self.proxyMaybe) : undefined,
+            'dragend': _dragend && typeof _dragend == 'function' ? _dragend.bind(_self.proxyMaybe) : undefined,
+            'dragenter': _dragenter && typeof _dragenter == 'function' ? _dragenter.bind(_self.proxyMaybe) : undefined,
+            'dragleave': _dragleave && typeof _dragleave == 'function' ? _dragleave.bind(_self.proxyMaybe) : undefined,
+            'idChanged': _idChanged && typeof _idChanged == 'function' ? _idChanged.bind(_self.proxyMaybe) : undefined,
+            'DOMMutation': this.DOMMutation && typeof this.DOMMutation == 'function' ? this.DOMMutation.bind(_self.proxyMaybe) : undefined,
+            'afterAttach': this.afterAttach && typeof this.afterAttach == 'function' ? this.afterAttach.bind(_self.proxyMaybe) : undefined,
+            'detached': this.detached && typeof this.detached == 'function' ? this.detached.bind(_self.proxyMaybe) : undefined,
+            'beforeAttach': this.beforeAttach && typeof this.beforeAttach == 'function' ? this.beforeAttach.bind(_self.proxyMaybe) : undefined,
+            'init': this.init && typeof this.init == 'function' ? this.init.bind(_self.proxyMaybe) : undefined,
+            'beginDraw': this.beginDraw && typeof this.beginDraw == 'function' ? this.beginDraw.bind(_self.proxyMaybe) : undefined,
+            'endDraw': this.endDraw && typeof this.endDraw == 'function' ? this.endDraw.bind(_self.proxyMaybe) : undefined
         }
     }];
 
@@ -564,7 +564,7 @@ var Component = function (_props) {
                     delete customEvents[0].events[eventType];
                 }
                 let privateEvent = _props[eventType];
-                eventsObj[eventsArr[i]] = privateEvent && typeof privateEvent == 'function' ? privateEvent.bind(_self) : undefined;
+                eventsObj[eventsArr[i]] = privateEvent && typeof privateEvent == 'function' ? privateEvent.bind(_self.proxyMaybe) : undefined;
             }
             let found = false;
             for (let i = 0; i < customEvents.length; i++) {

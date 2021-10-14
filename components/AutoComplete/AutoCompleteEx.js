@@ -89,7 +89,8 @@ var AutoCompleteEx = function (_props) {
 				let d = Literal.fromLiteral(_props.dataProvider);
 				this.dataProvider = await Promise.resolve(d).then(function (dv) {
 					if (dv.hasOwnProperty("parent")) {
-						dv.parent = _self;
+						dv.parent = _self;						
+						dv.applyBindings();
 					}
 					return dv;
 				});
@@ -374,6 +375,9 @@ var AutoCompleteEx = function (_props) {
 			return _value;
 		},
 		set: function value(v) {
+			if (_valueLater && typeof v === "object" && !v.forEach){
+				v = v[_valueField];
+			}
 			_valueLater = null;
 			if (v) {
 				if (StringUtils.isString(v) || NumberUtils.isNumber(v)) {
@@ -391,7 +395,7 @@ var AutoCompleteEx = function (_props) {
 				if (typeof v === "object" && !v.forEach) {
 					v = [v];
 				}
-				if (!_value.equals(v)) {
+				if (!_value.equals(v) && _valueLater==null) {
 					let e = jQuery.Event("beforeChange");
 					e.newValue = v;
 					e.oldValue = _value;
@@ -490,7 +494,7 @@ var AutoCompleteEx = function (_props) {
 		_props.value = new ArrayEx([]);
 	}
 	_maxSuggestionsCount = _props.maxSuggestionsCount;
-	_props.attr["data-triggers"] = "noSuggestionsFound beforeChange";
+	_props.attr["data-triggers"] = "noSuggestionsFound beforeChange input";
 
 	let _valueField = _props.valueField;
 	let _labelField = _props.labelField;	

@@ -99,7 +99,12 @@ var DataView = function (_props) {
             return pInit;
         });
     };
-
+    Object.defineProperty(this, "filterData", {
+        get: function filterData() {
+            return _filterData;
+        },
+        configurable: true        
+    });
     Object.defineProperty(this, "url", {
         get: function url() {
             return _url;

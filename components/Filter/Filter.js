@@ -717,7 +717,7 @@ var Filter = function (_props) {
                 ret.dataProvider.splicea(ret.dataProvider.length, 0, iret.dataProvider);
                 ++j;
             }
-        } else {
+        } else if(crules && crules.field!=null){
             let obj = {};
             let ind =  ArrayUtils.indexOfObject(_dataProvider, "field", crules.field, 0);
             obj[_labelField] = _dataProvider[ind][_labelField];                    
