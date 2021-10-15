@@ -767,7 +767,7 @@ var DataGrid = function (_props) {
             if (_self.dataProvider.length > 0) {
                 _avgRowHeight = _bodyHeight / _self.rowCount;
         
-                _virtualHeight = (_self.dataProvider.length + (_allowNewItem ? 1 : 0)) * _avgRowHeight;
+                _virtualHeight = (_self.dataProvider.length + 1) * _avgRowHeight;
 
                 let pos = this.$table.position();
                 let left = pos.left + this.$table.width() - 14;
@@ -1068,7 +1068,9 @@ var DataGrid = function (_props) {
                     let rargs = new RepeaterEventArgs(_self.rowItems[index], _self.dataProvider[index + _virtualIndex], index);
                     rargs.virtualIndex = _virtualIndex;
                     rargs.columnIndex = columnIndex;
-                    _self.trigger("cellClick", [_self, rargs]);
+                    let cellClickEvent = jQuery.Event("cellClick");
+                    cellClickEvent.originalEvent = evt;
+                    _self.trigger(cellClickEvent, [_self, rargs]);
                 });
                 if (_cells[index] == undefined)
                     _cells[index] = [];
