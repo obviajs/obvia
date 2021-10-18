@@ -13,7 +13,7 @@ var Validator = function (_props) {
         _isValid = true,
         _controlToValidate, _controlToValidateInstance,
         _validationGroup, _setFocusOnError, _errorMessage, _initialValue,
-        _invalidClasses, _validClasses;
+        _invalidClasses, _validClasses, _required = false
 
     Object.defineProperty(this, "isValid", {
         get: function isValid() {
@@ -37,6 +37,19 @@ var Validator = function (_props) {
             }
         },
         enumerable: true
+    });
+    
+    Object.defineProperty(this, "required", {
+        get: function required() {
+            return _required;
+        },
+        set: function required(v) {
+            if (_required != v) {
+                _required = v;
+            }
+        },
+        enumerable: true,
+        configurable: true
     });
 
     Object.defineProperty(this, "validationGroup", {
@@ -140,11 +153,14 @@ var Validator = function (_props) {
             if (_props.initialValue && !this.getBindingExpression("initialValue")) {
                 this.label = _initialValue = _props.initialValue;
             }
-            if (_props.setFocusOnError) {
+            if (_props.setFocusOnError && !this.getBindingExpression("setFocusOnError")) {
                 this.setFocusOnError = _props.setFocusOnError;
             }
-            if (_props.validationGroup) {
+            if (_props.validationGroup && !this.getBindingExpression("validationGroup")) {
                 this.validationGroup = _props.validationGroup;
+            }            
+            if (_props.required && !this.getBindingExpression("required")) {
+                this.required = _props.required;
             }
         }
     };

@@ -205,8 +205,8 @@ var Applet = function (_props) {
                         }
                     }
                 }).then((async (l) => {
+                    resolve(r);
                     await _routeApply();
-                    resolve(r);                
                 })).catch((params) => {               
                     reject(params);
                 });

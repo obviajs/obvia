@@ -14,7 +14,7 @@ var RegularExpressionValidator = function (_props) {
     this.validate = function () {
         let _controlToValidateInstance = _self.controlToValidateInstance;
         if (_controlToValidateInstance) {
-            if (!_self.enabled || (_controlToValidateInstance.value && _validationExpressionCompiled.test(_controlToValidateInstance.value))) {
+            if ((!_self.required && _controlToValidateInstance.value=="") || (!_self.enabled && _controlToValidateInstance.value=="") || (_controlToValidateInstance.value && _validationExpressionCompiled.test(_controlToValidateInstance.value))) {
                 _self.isValid = true;
             } else
                 _self.isValid = false;
@@ -50,14 +50,13 @@ var RegularExpressionValidator = function (_props) {
         configurable: true
     });
 
+
     this.beforeAttach = function (e) {
         if (e.target.id == this.domID) {
             if (_props.validationExpression && !this.getBindingExpression("validationExpression"))
                 this.validationExpression = _props.validationExpression;
-
             if (_props.modifiers && !this.getBindingExpression("modifiers"))
-                _modifiers = _props.modifiers;
-
+                this.modifiers = _props.modifiers;
         }
     };
 
