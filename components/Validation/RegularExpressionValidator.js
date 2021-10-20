@@ -14,7 +14,7 @@ var RegularExpressionValidator = function (_props) {
     this.validate = function () {
         let _controlToValidateInstance = _self.controlToValidateInstance;
         if (_controlToValidateInstance) {
-            if ((!_self.required && _controlToValidateInstance.value=="") || (!_self.enabled && _controlToValidateInstance.value=="") || (_controlToValidateInstance.value && _validationExpressionCompiled.test(_controlToValidateInstance.value))) {
+            if ((!_self.required && (_controlToValidateInstance.value ==null || _controlToValidateInstance.value=="")) || (!_self.enabled && _controlToValidateInstance.value=="") || (_controlToValidateInstance.value && _validationExpressionCompiled.test(_controlToValidateInstance.value))) {
                 _self.isValid = true;
             } else
                 _self.isValid = false;

@@ -159,11 +159,10 @@ var Applet = function (_props) {
     let _proxiedMsg = new Proxy(_msg, _proxy);
 
     let _initAppletInternal = async function () {
-        return new Promise(async (resolve, reject) => {
+        let mp = new Promise(async (resolve, reject) => {
             let ap;
             if (_loaded) {
-                ap = Promise.resolve(_literal);
-                await _routeApply();
+                ap = Promise.resolve(_literal);                
                 resolve(r);  
             } else {
                 ap = Promise.all([
@@ -206,12 +205,16 @@ var Applet = function (_props) {
                     }
                 }).then((async (l) => {
                     resolve(r);
-                    await _routeApply();
                 })).catch((params) => {               
                     reject(params);
                 });
             }              
         });
+        mp.then(async function (r) {            
+            await _routeApply();
+            return r;
+        })
+        return mp;
     };
 
     let _routeApply = async function(){
