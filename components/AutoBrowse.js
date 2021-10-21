@@ -172,7 +172,7 @@ var AutoBrowse = function (_props) {
 
 	let _initColumns = function () {
 		for (let i = 0; i < _fields.length; i++) {
-			_columns.push({
+			let cprops = {
 				width: 400,
 				field: _fields[i].field,
 				description: _fields[i].description,
@@ -182,7 +182,12 @@ var AutoBrowse = function (_props) {
 					sortOrder: 0,
 					sortDirection: "ASC",
 				},
-			});
+			};
+			if (_fields[i].itemRenderer)
+				cprops.itemRenderer = _fields[i].itemRenderer;
+			if (_fields[i].itemEditor)
+				cprops.itemEditor = _fields[i].itemEditor;
+			_columns.push(cprops);
 		}
 	};
 
