@@ -34,7 +34,7 @@ var Filter = function (_props) {
         _expressionContainer,
         _rules,
         _valid = true,
-        _advancedMode,
+        _advancedMode, _validationGroupUID = StringUtils.guid(),
         _defaultOperators = new ArrayEx([{
                 value: "contains",
                 operatorLabel: "contains",
@@ -148,6 +148,13 @@ var Filter = function (_props) {
             if (_rules != v) {
                 _rules = v;
             }
+        },
+        enumerable: true
+    });
+    
+    Object.defineProperty(this, "validationGroupUID", {
+        get: function validationGroupUID() {
+            return _validationGroupUID;
         },
         enumerable: true
     });
@@ -267,7 +274,7 @@ var Filter = function (_props) {
                                             "id": "minValueValidator",
                                             "controlToValidate": "minInput",
                                             "errorMessage": "Please enter a value for the lower boundary.",
-                                            "validationGroup": _props.guid,
+                                            "validationGroup": _validationGroupUID,
                                             "enabled": "{currentItem.deleted == null || currentItem.deleted == false}",
                                             "display": false
                                         }
@@ -289,7 +296,7 @@ var Filter = function (_props) {
                                             "id": "maxValueValidator",
                                             "controlToValidate": "maxInput",
                                             "errorMessage": "Please enter a value for the upper boundary.",
-                                            "validationGroup": _props.guid,
+                                            "validationGroup": _validationGroupUID,
                                             "enabled": "{currentItem.deleted == null || currentItem.deleted == false}",
                                             "display": false
                                         }
@@ -315,7 +322,7 @@ var Filter = function (_props) {
                                 "id": "valueValidator",
                                 "controlToValidate": "valueInput",
                                 "errorMessage": "Please enter a value.",
-                                "validationGroup": _props.guid,
+                                "validationGroup": _validationGroupUID,
                                 "display": false
                             }
                         }
@@ -396,7 +403,7 @@ var Filter = function (_props) {
     };
 
     this.validate = function () {
-        return ValidationManager.getInstance().validate(_props.guid).then((result) => {
+        return ValidationManager.getInstance().validate(_validationGroupUID).then((result) => {
             let len = result.length;
             _valid = true;
             for (let i = 0; i < len; i++) {
@@ -547,7 +554,7 @@ var Filter = function (_props) {
                                                                                     "id": "operatorValidator",
                                                                                     "controlToValidate": "{?currentRow.repeater_container.filterEditorContainer.headerRow.mainCol.fOperator.operator.id}",
                                                                                     "errorMessage": "Please select a value for the operator.",
-                                                                                    "validationGroup": _props.guid,
+                                                                                    "validationGroup": _validationGroupUID,
                                                                                     "enabled": "{currentItem.deleted == null || currentItem.deleted == false}",
                                                                                     "display": false
                                                                                 }
@@ -801,7 +808,6 @@ var Filter = function (_props) {
         typeField: undefined,
         operatorsField: undefined,
         itemEditorField: undefined,
-        guid: StringUtils.guid(),
         advancedMode: true
     };
     ObjectUtils.fromDefault(_defaultParams, _props);

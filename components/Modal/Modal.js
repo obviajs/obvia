@@ -108,9 +108,6 @@ var Modal = function (_props) {
                         click: function (e) {
                             let evt = jQuery.Event('accept');
                             _self.trigger(evt);
-                            if (!evt.isDefaultPrevented()) {
-                                _self.hide();
-                            }
                         }
                     }
                 }
