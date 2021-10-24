@@ -26,6 +26,8 @@ var Filter = function (_props) {
         _labelField,
         _operatorsField,
         _itemEditorField,
+        _getLabelField,
+        _getValueField,
         _dataProvider,
         valueAutoComplete,
         repDp,
@@ -379,21 +381,39 @@ var Filter = function (_props) {
     };
 
     let _getValue = function (ra) {
+        let ret = {};
         let input = ra.currentRow.repeater_container.filterEditorContainer.mainRow.mainCol.fItemEditor.input;
         let isRangeInput;
         if (ra.currentRow.repeater_container.filterEditorContainer.headerRow.mainCol.fOperator.operator.selectedItem)
             isRangeInput = ra.currentRow.repeater_container.filterEditorContainer.headerRow.mainCol.fOperator.operator.selectedItem.rangeInput;
-        let value = {};
+        let value = {}, label = {};
         if (isRangeInput) {
             value.min = input.colMin.minInput.valueProp ? input.colMin.minInput[input.colMin.minInput.valueProp] : input.colMin.minInput.value;
             value.max = input.colMax.maxInput.valueProp ? input.colMax.maxInput[input.colMax.maxInput.valueProp] : input.colMax.maxInput.value;
-        } else
-            value.value = input.valueInput.valueProp ? input[input.valueInput.valueProp] : input.valueInput.value;
-        return value;
+            if (ra.currentItem[_getLabelField]) {
+                label.min = ra.currentItem[_getLabelField].call(input.colMin.minInput, value.min);
+                label.max = ra.currentItem[_getLabelField].call(input.colMax.maxInput, value.max);
+            }
+            if (ra.currentItem[_getValueField]) {
+                value.min = label.min = ra.currentItem[_getValueField].call(input.colMin.minInput, value.min);
+                value.max = label.max = ra.currentItem[_getValueField].call(input.colMax.maxInput, value.max);
+            }
+        } else {
+            value.value = input.valueInput.valueProp ? input[input.valueInput.valueProp] : input.valueInput.value;            
+            if (ra.currentItem[_getLabelField]) {
+                label.value = ra.currentItem[_getLabelField].call(input.valueInput, value.value);
+            }
+            if (ra.currentItem[_getValueField]) {
+                value.value = ra.currentItem[_getValueField].call(input.valueInput, value.value);
+            }
+        }
+        ret.label = label;
+        ret.value = value;
+        return ret;
     };
 
     let _filerValueChange = function (e, ra) {
-        ra.currentItem.value = _getValue(ra);
+        ra.currentItem.value = _getValue(ra).value;
     };
 
     let _operatorChange = function (e, ra) {
@@ -419,10 +439,10 @@ var Filter = function (_props) {
     let _acceptFilterItem = function (e, ra) {
         _self.validate().then((valid) => {
             if (valid) {
-                ra.currentItem.value = _getValue(ra);
+                let ret = _getValue(ra);
+                ra.currentItem.value = ret.value;
                 let operator = ra.currentItem.operatorItem;
-                let label = operator.friendly.formatUnicorn(ra.currentItem.value);
-
+                let label = operator.friendly.formatUnicorn(ret.label);
                 ra.currentRow.repeater_container.filterItemHeading.label = label;
 
                 ra.currentRow.filterActionLabel.faRemove.display = true;
@@ -729,7 +749,9 @@ var Filter = function (_props) {
             let ind =  ArrayUtils.indexOfObject(_dataProvider, "field", crules.field, 0);
             obj[_labelField] = _dataProvider[ind][_labelField];                    
             obj[_valueField] = _dataProvider[ind][_valueField];
-            obj[_itemEditorField] = _dataProvider[ind][_itemEditorField];
+            obj[_itemEditorField] = _dataProvider[ind][_itemEditorField];            
+            obj[_getValueField] = _dataProvider[ind][_getValueField];            
+            obj[_getLabelField] = _dataProvider[ind][_getLabelField];
             if (Array.isArray(crules.value)) {
                 obj.value = { "min": crules.value[0],  "max": crules.value[1]};
             }else
@@ -807,7 +829,9 @@ var Filter = function (_props) {
         valueField: undefined,
         typeField: undefined,
         operatorsField: undefined,
-        itemEditorField: undefined,
+        itemEditorField: "itemEditor",
+        getLabelField: "getLabel",
+        getValueField:"getValue",
         advancedMode: true
     };
     ObjectUtils.fromDefault(_defaultParams, _props);
@@ -817,6 +841,9 @@ var Filter = function (_props) {
     _labelField = _props.labelField;
     _operatorsField = _props.operatorsField;
     _itemEditorField = _props.itemEditorField;
+    _getLabelField = _props.getLabelField;
+    _getValueField = _props.getValueField;
+    
     _advancedMode = _props.advancedMode;
 
     fnContainerDelayInit();
