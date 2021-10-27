@@ -33,7 +33,8 @@ var List = function (_props) {
     Object.defineProperty(this, "valueField", {
         get: function valueField() {
             return _valueField;
-        }
+        },
+        configurable: true
     });
     
     this.beforeAttach = function () {

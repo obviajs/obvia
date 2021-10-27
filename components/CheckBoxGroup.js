@@ -11,26 +11,7 @@ var CheckBoxGroup = function (_props) {
     let _self = this,
         _dataProvider;
 
-    Object.defineProperty(this, "valueField", {
-        get: function valueField() {
-            return _valueField;
-        },
-        set: function valueField(v) {
-            if (_valueField != v) {
-                _valueField = v;
-                this.components = fnContainerDelayInit();
-                this.removeAllRows();
-                if (_dataProvider && _dataProvider.length > 0) {
-                    let dpFields = Object.getOwnPropertyNames(_dataProvider[0]);
-                    if (propDataProvider && dpFields.includes(_labelField) && dpFields.includes(_valueField)) {
-                        propDataProvider['set'].call(_self, _dataProvider);
-                    }
-                }
-            }
-        },
-        enumerable: true
-    });
-
+    
     Object.defineProperty(this, "labelField", {
         get: function labelField() {
             return _labelField;
@@ -138,6 +119,25 @@ var CheckBoxGroup = function (_props) {
                 }
             } else {
                 propDataProvider['set'].call(_self, _dataProvider);
+            }
+        },
+        enumerable: true
+    });
+    Object.defineProperty(this, "valueField", {
+        get: function valueField() {
+            return _valueField;
+        },
+        set: function valueField(v) {
+            if (_valueField != v) {
+                _valueField = v;
+                this.components = fnContainerDelayInit();
+                this.removeAllRows();
+                if (_dataProvider && _dataProvider.length > 0) {
+                    let dpFields = Object.getOwnPropertyNames(_dataProvider[0]);
+                    if (propDataProvider && dpFields.includes(_labelField) && dpFields.includes(_valueField)) {
+                        propDataProvider['set'].call(_self, _dataProvider);
+                    }
+                }
             }
         },
         enumerable: true

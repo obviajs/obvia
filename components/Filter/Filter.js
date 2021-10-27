@@ -233,15 +233,17 @@ var Filter = function (_props) {
     };
 
     let _addFilterItem = function (e) {
-        valueAutoComplete = e.newValue;
-        if (!repDp && this.parent.parent.children.filterMainContainer.repeater) {
-            repDp = this.parent.parent.children.filterMainContainer.repeater.dataProvider;
+        if (e.newValue && e.newValue.length > 0) {
+            valueAutoComplete = e.newValue;
+            if (!repDp && this.parent.parent.children.filterMainContainer.repeater) {
+                repDp = this.parent.parent.children.filterMainContainer.repeater.dataProvider;
+            }
+            let i = ObjectUtils.deepCopy(valueAutoComplete[0]);
+            delete i.guid;
+            repDp.push(i);
+            e.preventDefault();
+            this.proxyMaybe.tokenContainer.tokenInput.value = "";
         }
-        let i = ObjectUtils.deepCopy(valueAutoComplete[0]);
-        delete i.guid;
-        repDp.push(i);
-        e.preventDefault();
-        this.proxyMaybe.tokenContainer.tokenInput.value = "";
     };
     let _editFilter = async function (e, ra) {
         let filterItemEditor = ra.currentItem[_itemEditorField];
@@ -701,6 +703,10 @@ var Filter = function (_props) {
                 "operator": f.operatorItem.value,
                 "value": null
             };
+            if (_rules.rules) {
+                let or = ArrayUtils.arrayHierarchyGetMatching(_rules.rules, "field", t.field, "rules");
+                ObjectUtils.fromDefault(or, t);
+            }
             if (f.operatorItem.rangeInput) {
                 t.value = [f.value.min, f.value.max];
             } else

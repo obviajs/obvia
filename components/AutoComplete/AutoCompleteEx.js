@@ -395,7 +395,7 @@ var AutoCompleteEx = function (_props) {
 				if (typeof v === "object" && !v.forEach) {
 					v = [v];
 				}
-				if (!_value.equals(v) && _valueLater==null) {
+				if (_valueLater==null) {
 					let e = jQuery.Event("beforeChange");
 					e.newValue = v;
 					e.oldValue = _value;
@@ -419,7 +419,7 @@ var AutoCompleteEx = function (_props) {
 					this.trigger("change");
 				}
 			}
-		},
+		}
 	});
 
 	/*
