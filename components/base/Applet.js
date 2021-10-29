@@ -46,7 +46,7 @@ var Applet = function (_props) {
     let _forceReload = _props.forceReload;
     let _app = _props.app;
     let _dataPromise = _props.dataPromise;
-    let _data;
+    let _data = {};
     let _uiRoute = _props.uiRoute;
     let _mimeType = _props.mimeType;
     let _lazy = _props.lazy;
@@ -162,7 +162,8 @@ var Applet = function (_props) {
         let mp = new Promise(async (resolve, reject) => {
             let ap;
             if (_loaded) {
-                ap = Promise.resolve(_literal);                
+                ap = Promise.resolve(_literal);                         
+                await _routeApply();
                 resolve(r);  
             } else {
                 ap = Promise.all([
@@ -170,7 +171,7 @@ var Applet = function (_props) {
                     _dataPromise ? (typeof _dataPromise == 'function' ? _dataPromise.call() : _dataPromise) : Promise.resolve(_data),
                     _fetchImplementationPromise.call(r, _props)                
                 ]).then(async (p) => {
-                    _data = p[1];
+                    _data = Object.assign(p[1], _data);
                     let impCFN = p[2];
                     _self.bindingDefaultContext = _data;
                     //_implementation = new impCFN(_self, _proxiedMsg);
@@ -203,17 +204,14 @@ var Applet = function (_props) {
                             _appletsMap[_applets[i].anchor].push(inst);
                         }
                     }
-                }).then((async (l) => {
+                }).then((async (l) => {                             
+                    await _routeApply();
                     resolve(r);
                 })).catch((params) => {               
                     reject(params);
                 });
             }              
         });
-        mp.then(async function (r) {            
-            await _routeApply();
-            return r;
-        })
         return mp;
     };
 

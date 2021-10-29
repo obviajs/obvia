@@ -1045,12 +1045,6 @@ var DataGrid = function (_props) {
 
                 let csEvt = jQuery.Event('cellStyling', [_self, index, columnIndex, _self.rowItems, column, data]);
 
-                if (column.editable) {
-                    el.on('dblclick', function () {
-                        _self.cellEdit(index, columnIndex);
-                    });
-                }
-
                 //handle component change event and delegate it to repeater
                 el.on('change', function (e) {
                     let currentItem = _self.dataProvider[index];
@@ -1072,6 +1066,18 @@ var DataGrid = function (_props) {
                     cellClickEvent.originalEvent = evt;
                     _self.trigger(cellClickEvent, [_self, rargs]);
                 });
+                /*
+                if (column.editable) {
+                    el.on('dblclick', function () {
+                        _self.cellEdit(index, columnIndex);
+                    });
+                }*/
+                
+                if (column.editable) {
+                    cell.on('dblclick', function () {
+                        _self.cellEdit(index, columnIndex);
+                    });
+                }
                 if (_cells[index] == undefined)
                     _cells[index] = [];
                 _cells[index][columnIndex] = cell;
