@@ -409,7 +409,7 @@ var App = function (_props) {
                     _cmpListenerImps[uid][eventType] = [];
                 _cmpListenerImps[uid][eventType].pushUnique(impUid);
             }
-            cmp.on(_eventTypesJoined, _event2behavior);
+            cmp.on(_eventTypesJoined.trim(), _event2behavior);
         }
     };
 

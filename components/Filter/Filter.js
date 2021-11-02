@@ -565,6 +565,7 @@ var Filter = function (_props) {
                                                                                             "valueField": "value",
                                                                                             "dataProvider": _operatorsDp,
                                                                                             "selectedItem": "{operatorItem}",
+                                                                                            "enabled":"{operatorEnabled}",
                                                                                             "change": _operatorChange
                                                                                         }
                                                                                     }

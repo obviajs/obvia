@@ -23,6 +23,7 @@ var AutoBrowse = function (_props) {
 		_value,
 		_columns = [],
 		_fields;
+	let _dgUID = StringUtils.guid();
 
 	Object.defineProperty(this, "dataProvider", {
 		get: function dataProvider() {
@@ -71,7 +72,7 @@ var AutoBrowse = function (_props) {
 		if (e.target.id == this.domID) {
 			_autocomplete = this.autocomplete;
 			_modal = this.children[this.components[2].props.id];
-			_dg = _modal.modalDialog.modalContent.modalBody.dataGrid;
+			_dg = _modal.modalDialog.modalContent.modalBody["dataGrid_"+_dgUID];
 		}
 	};
 
@@ -139,7 +140,7 @@ var AutoBrowse = function (_props) {
 						{
 							ctor: DataGrid,
 							props: {
-								id: "dataGrid",
+								id: "dataGrid_"+_dgUID,
 								allowNewItem: _props.allowNewItem, //allow the user to add items that are not included in the specified dataProvider
 								rowCount: 5, //visible rows count - virtual scrolling wil be applied on scroll
 								dataProvider: _dataProvider,
