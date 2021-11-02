@@ -592,6 +592,7 @@ var AutoCompleteEx = function (_props) {
 							attr: {
 								placeholder: _placeholder,
 							},
+							enabled: _enabled,
 							versionStyle: "",
 							keydown: _tokenInputKeyDown,
 							keyup: _tokenInputKeyUp,
@@ -637,7 +638,13 @@ var AutoCompleteEx = function (_props) {
 		set: function enabled(v) {
 			if (_enabled != v) {
 				_enabled = v;
-				if (this.$input) this.$input.prop("disabled", !v);
+				if (_input)
+				{
+					if (!v)
+						_input.$el.attr('disabled', 'disabled');
+					else
+						_input.$el.removeAttr('disabled');
+				}
 			}
 		},
 		configurable: true,

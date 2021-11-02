@@ -22,7 +22,7 @@ var AutoBrowse = function (_props) {
 		_labelField,
 		_value,
 		_columns = [],
-		_fields;
+		_fields, _enabled = true, _btn;
 	let _dgUID = StringUtils.guid();
 
 	Object.defineProperty(this, "dataProvider", {
@@ -68,11 +68,13 @@ var AutoBrowse = function (_props) {
 		},
 		enumerable: true,
 	});
+
 	this.endDraw = function (e) {
 		if (e.target.id == this.domID) {
-			_autocomplete = this.autocomplete;
+			_autocomplete = this["autocomplete"];
 			_modal = this.children[this.components[2].props.id];
-			_dg = _modal.modalDialog.modalContent.modalBody["dataGrid_"+_dgUID];
+			_dg = _modal.modalDialog.modalContent.modalBody["dataGrid_" + _dgUID];
+			_btn = this["workArea_53_"+_dgUID]["selectBtn_" + _dgUID];
 		}
 	};
 
@@ -107,12 +109,12 @@ var AutoBrowse = function (_props) {
 				ctor: Container,
 				props: {
 					type: "",
-					id: "workArea_53",
+					id: "workArea_53_"+_dgUID,
 					components: [
 						{
 							ctor: Button,
 							props: {
-								id: "selectBtn",
+								id: "selectBtn_"+_dgUID,
 								type: "button",
 								components: [
 									{
@@ -125,10 +127,10 @@ var AutoBrowse = function (_props) {
 									},
 								],
 								click: _browse,
-							},
-						},
-					],
-				},
+							}
+						}
+					]
+				}
 			},
 			{
 				ctor: Modal,
@@ -146,12 +148,12 @@ var AutoBrowse = function (_props) {
 								dataProvider: _dataProvider,
 								columns: _columns,
 								rowDblClick: _selectItem.bind(_self),
-							},
-						},
+							}
+						}
 					],
 					displayListUpdated: _drawGrid,
-				},
-			},
+				}
+			}
 		];
 	};
 
@@ -242,7 +244,23 @@ var AutoBrowse = function (_props) {
 	fnContainerDelayInit();
 	_props.components = _cmps;
 
-	Container.call(this, _props, true);
+	let r = Container.call(this, _props, true);
+
+	Object.defineProperty(this, "enabled", {
+		get: function enabled() {
+			return _enabled;
+		},
+		set: function enabled(v) {
+			if (_enabled != v) {
+				_enabled = v;
+				_autocomplete.enabled = v;
+				_btn.enabled = v;
+			}
+		},
+		configurable: true,
+		enumerable: true,
+	});
+	return r;
 };
 DependencyContainer.getInstance().register(
 	"AutoBrowse",
