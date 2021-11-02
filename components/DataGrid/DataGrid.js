@@ -570,13 +570,18 @@ var DataGrid = function (_props) {
                                     found = false;
                             }
                             if (found && !future) {
-                                let cs = _self.$bodyWrapper.scrollTop();                                   
+                                let cs = _self.$bodyWrapper.scrollTop();
                                 if (rowIndex < _virtualIndex) {
                                     _self.$bodyWrapper.scrollTop(cs - _avgRowHeight);
                                 } else if (rowIndex > _virtualIndex + _self.rowCount)
                                 {
                                     _self.$bodyWrapper.scrollTop(cs - _avgRowHeight);
-                                }                                    
+                                }
+                                
+                                if (rowIndex > _self.rowCount - 1)
+                                {
+                                    rowIndex -= _virtualIndex;
+                                }
                                 _self.cellEdit(rowIndex, columnIndex);
                             } else if (found && future) {
                                 _futureEditPosition = {"rowIndex": Math.min(rowIndex, _rowCount - 1), "columnIndex": columnIndex};
@@ -637,12 +642,10 @@ var DataGrid = function (_props) {
                 itemEditor.show();
                 let e = jQuery.Event('cellEditStarted');
                 _self.trigger(e, [rowIndex, columnIndex, itemEditor]);
-                if (itemEditorInfo != null) {
-                    if (typeof itemEditor.focus === "function") {
-                        // safe to use the function
-                        itemEditor.focus();
-                    }
-                }
+                if (typeof itemEditor.focus === "function") {
+                    // safe to use the function
+                    itemEditor.focus();
+                }                
             });
 
         }
