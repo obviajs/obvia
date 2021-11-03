@@ -28,6 +28,7 @@ var Filter = function (_props) {
         _itemEditorField,
         _getLabelField,
         _getValueField,
+        _operatorEnabledField,
         _dataProvider,
         valueAutoComplete,
         repDp,
@@ -224,12 +225,9 @@ var Filter = function (_props) {
 
     let _removeFilterItem = function (e, ra) {
         const repeated_block = e.target.parentElement.parentElement;
-        repeated_block.classList.add('fall');
-        repeated_block.addEventListener('transitionend', () => {
-            repDp.splice(ra.currentIndex, 1)
-            _update();
-        });
-
+        repDp.splice(ra.currentIndex, 1)
+        _update(); 
+        //repeated_block.classList.add('fall');
     };
 
     let _addFilterItem = function (e) {
@@ -565,7 +563,7 @@ var Filter = function (_props) {
                                                                                             "valueField": "value",
                                                                                             "dataProvider": _operatorsDp,
                                                                                             "selectedItem": "{operatorItem}",
-                                                                                            "enabled":"{operatorEnabled}",
+                                                                                            "enabled":"{"+_operatorEnabledField+"}",
                                                                                             "change": _operatorChange
                                                                                         }
                                                                                     }
@@ -759,6 +757,7 @@ var Filter = function (_props) {
             obj[_itemEditorField] = _dataProvider[ind][_itemEditorField];            
             obj[_getValueField] = _dataProvider[ind][_getValueField];            
             obj[_getLabelField] = _dataProvider[ind][_getLabelField];
+            obj[_operatorEnabledField] = _dataProvider[ind][_operatorEnabledField];
             if (Array.isArray(crules.value)) {
                 obj.value = { "min": crules.value[0],  "max": crules.value[1]};
             }else
@@ -838,7 +837,8 @@ var Filter = function (_props) {
         operatorsField: undefined,
         itemEditorField: "itemEditor",
         getLabelField: "getLabel",
-        getValueField:"getValue",
+        getValueField: "getValue",
+        operatorEnabledField: "operatorEnabled",
         advancedMode: true
     };
     ObjectUtils.fromDefault(_defaultParams, _props);
@@ -850,7 +850,8 @@ var Filter = function (_props) {
     _itemEditorField = _props.itemEditorField;
     _getLabelField = _props.getLabelField;
     _getValueField = _props.getValueField;
-    
+    _operatorEnabledField = _props.operatorEnabledField;
+
     _advancedMode = _props.advancedMode;
 
     fnContainerDelayInit();

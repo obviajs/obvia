@@ -18,7 +18,7 @@ import { DependencyContainer } from "/obvia/lib/DependencyContainer.js";
 var DropDown = function (_props) {
     let _self = this;
 
-    let _dataProvider, _btnDD, _componentRepeater, _label, _selectedItem, _allowNewItem, myw;
+    let _dataProvider, _btnDD, _componentRepeater, _label, _selectedItem, _allowNewItem, myw, _enabled = true;
 
     Object.defineProperty(this, "labelField", {
         get: function labelField() {
@@ -228,7 +228,23 @@ var DropDown = function (_props) {
     }
     _props.components = fnContainerDelayInit();
 
-    Container.call(this, _props, true);
+    let r = Container.call(this, _props, true);
+
+    Object.defineProperty(this, "enabled", {
+        get: function enabled() {
+            return _enabled;
+        },
+        set: function enabled(v) {
+            if (_enabled != v) {
+                _enabled = v;
+                if (_btnDD)
+                    _btnDD.enabled = _enabled;
+            }
+        },
+        configurable: true,
+        enumerable: true
+    });
+    return r;
 };
 DropDown.prototype.ctor = 'DropDown';
 DropDown.prototype.valueProp = 'selectedItem';
