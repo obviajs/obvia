@@ -43,7 +43,7 @@ var Component = function (_props) {
     let _guid = _props.guid;
     let _attr, _css;
     let _id = _props.id = ((!_props.id) || (_props.id == "")) ? _defaultParams.id : _props.id;
-    let _enabled, _draggable, _visible = true, _display = true;
+    let _enabled, _readonly, _draggable, _visible = true, _display = true;
     let _classes = [];
     let _parent = _props.parent;
     let _parentForm = _props.parentForm;
@@ -334,7 +334,7 @@ var Component = function (_props) {
                 _readonly = v;
                 if (this.$el)
                     this.$el.find("input, select, textarea, button").addBack("input, select, textarea, button").each(function () {
-                        if (!v)
+                        if (v)
                             $(this).prop('readonly', 'readonly');
                         else
                             $(this).removeAttr('readonly');
@@ -448,6 +448,8 @@ var Component = function (_props) {
             }
             if (_props.enabled != null)
                 this.enabled = _props.enabled;
+            if (_props.readonly != null)
+                this.readonly = _props.readonly;
         }
     };
     let _drawEnded;
