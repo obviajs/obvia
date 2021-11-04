@@ -715,7 +715,7 @@ var Filter = function (_props) {
     };
 
     let _highlightUnknown = function (str, id, what, tooltip) {
-        let ewhat = escapeRegExp(what);
+        let ewhat = StringUtils.escapeRegExp(what);
         let regex;
         if (ewhat == what)
             regex = new RegExp('\\b' + what + '\\b');
