@@ -278,7 +278,8 @@ var Filter = function (_props) {
                                             "errorMessage": "Please enter a value for the lower boundary.",
                                             "validationGroup": _validationGroupUID,
                                             "enabled": "{currentItem.deleted == null || currentItem.deleted == false}",
-                                            "display": false
+                                            "display": false,
+                                            "css": {"color":"red"}
                                         }
                                     }
                                 ]
@@ -300,7 +301,8 @@ var Filter = function (_props) {
                                             "errorMessage": "Please enter a value for the upper boundary.",
                                             "validationGroup": _validationGroupUID,
                                             "enabled": "{currentItem.deleted == null || currentItem.deleted == false}",
-                                            "display": false
+                                            "display": false,
+                                            "css": {"color":"red"}
                                         }
                                     }
                                 ]
@@ -325,7 +327,8 @@ var Filter = function (_props) {
                                 "controlToValidate": "valueInput",
                                 "errorMessage": "Please enter a value.",
                                 "validationGroup": _validationGroupUID,
-                                "display": false
+                                "display": false,
+                                "css": {"color":"red"}
                             }
                         }
                     ]
@@ -577,7 +580,8 @@ var Filter = function (_props) {
                                                                                     "errorMessage": "Please select a value for the operator.",
                                                                                     "validationGroup": _validationGroupUID,
                                                                                     "enabled": "{currentItem.deleted == null || currentItem.deleted == false}",
-                                                                                    "display": false
+                                                                                    "display": false,
+                                                                                    "css": {"color":"red"}
                                                                                 }
                                                                             }
                                                                         ]
