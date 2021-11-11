@@ -402,7 +402,7 @@ var Filter = function (_props) {
                 value.max = label.max = ra.currentItem[_getValueField].call(input.colMax.maxInput, value.max);
             }
         } else {
-            value.value = input.valueInput.valueProp ? input[input.valueInput.valueProp] : input.valueInput.value;            
+            value.value = input.valueInput.valueProp ? input.valueInput[input.valueInput.valueProp] : input.valueInput.value;            
             if (ra.currentItem[_getLabelField]) {
                 label.value = ra.currentItem[_getLabelField].call(input.valueInput, value.value);
             }
