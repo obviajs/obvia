@@ -50,8 +50,7 @@ var AutoCompleteEx = function (_props) {
 				}
 				if (_dataProvider) {
 					_dpWatcher = ChangeWatcher.getInstance(_dataProvider);
-					_dpWatcher.watch(_dataProvider, "length", _dpChanged);
-					_dataProvider.on("propertyChange", _dpChanged);
+					_dataProvider.on("propertyChange", _debouncedUpdateDataProvider);
 				}
 				if (_input && _input.$el[0] == document.activeElement) 
 					_self.refreshSuggestions();
@@ -62,7 +61,8 @@ var AutoCompleteEx = function (_props) {
 	let _dpChanged = function (e) {
 		if (_input && _input.$el[0] == document.activeElement) _self.refreshSuggestions();
 	};
-
+	let _debouncedUpdateDataProvider = debounce(_dpChanged, 1);
+	
 	Object.defineProperty(this, "valueField", {
 		get: function valueField() {
 			return _valueField;

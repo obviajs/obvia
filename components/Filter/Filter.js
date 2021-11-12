@@ -446,8 +446,8 @@ var Filter = function (_props) {
                 ra.currentItem.value = ret.value;
                 let operator = ra.currentItem.operatorItem;
                 let label = operator.friendly.formatUnicorn(ret.label);
-                ra.currentRow.repeater_container.filterItemHeading.label = label;
-
+                //ra.currentRow.repeater_container.filterItemHeading.label = label;
+                ra.currentItem.filterHeading = label;
                 ra.currentRow.filterActionLabel.faRemove.display = true;
                 ra.currentRow.filterActionLabel.faAccept.display = false;
                 ra.currentRow.repeater_container.filterEditorContainer.hide();
@@ -521,7 +521,7 @@ var Filter = function (_props) {
                                                     type: HeadingType.h6,
                                                     align: 'left',
                                                     "bindingDefaultContext": "{currentItem}",
-                                                    label: "{?" + _labelField + "}",
+                                                    label: "{" + _labelField + "}",
                                                 }
                                             },
                                             {
@@ -530,7 +530,7 @@ var Filter = function (_props) {
                                                     id: 'filterItemHeading',
                                                     classes: ["item-heading"],
                                                     align: 'left',
-                                                    label: "Click to edit filter",
+                                                    label: "{filterHeading?filterHeading:'Click to edit filter'}",
                                                     click: _editFilter
                                                 }
                                             },
@@ -576,7 +576,7 @@ var Filter = function (_props) {
                                                                                 "ctor": "RequiredFieldValidator",
                                                                                 "props": {
                                                                                     "id": "operatorValidator",
-                                                                                    "controlToValidate": "{?currentRow.repeater_container.filterEditorContainer.headerRow.mainCol.fOperator.operator.id}",
+                                                                                    "controlToValidate": "{currentRow.repeater_container.filterEditorContainer.headerRow.mainCol.fOperator.operator.id}",
                                                                                     "errorMessage": "Please select a value for the operator.",
                                                                                     "validationGroup": _validationGroupUID,
                                                                                     "enabled": "{currentItem.deleted == null || currentItem.deleted == false}",
@@ -610,7 +610,7 @@ var Filter = function (_props) {
                                                                                 "id": "fItemEditor",
                                                                                 "size": "form-control-sm",
                                                                                 "bindingDefaultContext": "{currentItem}",
-                                                                                "display": "{?currentRow.repeater_container.filterEditorContainer.headerRow.mainCol.fOperator.operator.selectedItem.inputVisible}"
+                                                                                "display": "{currentRow.repeater_container.filterEditorContainer.headerRow.mainCol.fOperator.operator.selectedItem.inputVisible}"
                                                                             }
                                                                         }]
                                                                     }
@@ -767,7 +767,8 @@ var Filter = function (_props) {
             }else
                 obj.value = { "value": crules.value };
             ind = ArrayUtils.indexOfObject(_defaultOperators, "value", crules.operator, 0);
-            obj["operatorItem"] = _defaultOperators[ind];                
+            obj["operatorItem"] = _defaultOperators[ind];
+            obj["filterHeading"] = "";
             ret.dataProvider.splice(ret.dataProvider.length, 0, obj);
             ret.cond = i;
         }

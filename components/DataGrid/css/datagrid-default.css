@@ -24,4 +24,5 @@
 }
 .table {
     text-align: left;
+    contain: strict;
 }
