@@ -15,7 +15,7 @@ import { Repeater } from "/obvia/components/Repeater/Repeater.js";
 import { Label, LabelType } from "/obvia/components/Label.js";
 import { Link } from "/obvia/components/Link/Link.js";
 import { Component } from "/obvia/components/base/Component.js";
-import { getCaretPosition } from "/obvia/lib/my.js";
+import { getCaretPosition, setCaretPosition } from "/obvia/lib/my.js";
 import { tokenize, findRightMatchingRightParenIndex } from "/obvia/lib/Tokenizer.js";
 import { DependencyContainer } from "/obvia/lib/DependencyContainer.js";
 
@@ -35,7 +35,7 @@ var Filter = function (_props) {
         _tokens,
         _expression,
         _expressionContainer,
-        _rules,
+        _rules, _initialRules,
         _valid = true,
         _advancedMode, _validationGroupUID = StringUtils.guid(),
         _defaultOperators = new ArrayEx([{
@@ -150,6 +150,8 @@ var Filter = function (_props) {
         set: function rules(v) {
             if (_rules != v) {
                 _rules = v;
+                _initialRules = {};
+                ObjectUtils.fromDefault(v, _initialRules);
             }
         },
         enumerable: true
@@ -241,6 +243,7 @@ var Filter = function (_props) {
             repDp.push(i);
             e.preventDefault();
             this.proxyMaybe.tokenContainer.tokenInput.value = "";
+            _update(); 
         }
     };
     let _editFilter = async function (e, ra) {
@@ -707,7 +710,7 @@ var Filter = function (_props) {
                 "value": null
             };
             if (_rules.rules) {
-                let or = ArrayUtils.arrayHierarchyGetMatching(_rules.rules, "field", t.field, "rules");
+                let or = ArrayUtils.arrayHierarchyGetMatching(_initialRules.rules, "field", t.field, "rules");
                 ObjectUtils.fromDefault(or, t);
             }
             if (f.operatorItem.rangeInput) {
@@ -762,13 +765,14 @@ var Filter = function (_props) {
             obj[_getValueField] = _dataProvider[ind][_getValueField];            
             obj[_getLabelField] = _dataProvider[ind][_getLabelField];
             obj[_operatorEnabledField] = _dataProvider[ind][_operatorEnabledField];
+            let dpInd = ind;
             if (Array.isArray(crules.value)) {
-                obj.value = { "min": crules.value[0],  "max": crules.value[1]};
+                _dataProvider[dpInd].value = obj.value = { "min": crules.value[0],  "max": crules.value[1]};
             }else
-                obj.value = { "value": crules.value };
+                _dataProvider[dpInd].value = obj.value = { "value": crules.value };
             ind = ArrayUtils.indexOfObject(_defaultOperators, "value", crules.operator, 0);
-            obj["operatorItem"] = _defaultOperators[ind];
-            obj["filterHeading"] = "";
+            _dataProvider[dpInd]["operatorItem"] = obj["operatorItem"] = _defaultOperators[ind];
+            _dataProvider[dpInd]["filterHeading"] = obj["filterHeading"] = "";
             ret.dataProvider.splice(ret.dataProvider.length, 0, obj);
             ret.cond = i;
         }
@@ -844,7 +848,10 @@ var Filter = function (_props) {
         getLabelField: "getLabel",
         getValueField: "getValue",
         operatorEnabledField: "operatorEnabled",
-        advancedMode: true
+        advancedMode: true,
+        css: {
+            "min-height":"100px"
+        }
     };
     ObjectUtils.fromDefault(_defaultParams, _props);
     //_props = ObjectUtils.extend(false, false, _defaultParams, _props);
