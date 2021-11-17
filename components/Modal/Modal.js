@@ -60,57 +60,59 @@ var Modal = function (_props) {
             props: {
                 type: "btn-group",
                 id: "headerButtonsCnt",
-                components: [{
-                    ctor: Button,
-                    props: {
-                        id: 'dismissButton',
-                        type: "button",
-                        classes: ["close", "no-form-control"],
-                        attr: {
-                            "data-dismiss": "modal",
-                            "aria-label": "Dismiss"
-                        },
-                        components: [{
-                            ctor: Label,
-                            props: {
-                                id: 'fa',
-                                labelType: LabelType.i,
-                                classes: ["fas", "fa-times"]
+                components: [
+                    {
+                        ctor: Button,
+                        props: {
+                            id: 'dismissButton',
+                            type: "button",
+                            classes: ["close", "no-form-control"],
+                            attr: {
+                                "data-dismiss": "modal",
+                                "aria-label": "Dismiss"
+                            },
+                            components: [{
+                                ctor: Label,
+                                props: {
+                                    id: 'fa',
+                                    labelType: LabelType.i,
+                                    classes: ["fas", "fa-times"]
+                                }
+                            }],
+                            click: function (e) {
+                                let evt = jQuery.Event('dismiss');
+                                _self.trigger(evt);
+                                if (!evt.isDefaultPrevented()) {
+                                    _self.hide();
+                                }
                             }
-                        }],
-                        click: function (e) {
-                            let evt = jQuery.Event('dismiss');
-                            _self.trigger(evt);
-                            if (!evt.isDefaultPrevented()) {
-                                _self.hide();
+                        }
+                    },
+                    {
+                        ctor: Button,
+                        props: {
+                            id: 'acceptButton',
+                            type: "button",
+                            classes: ["close", "no-form-control"],
+                            attr: {
+                                "data-dismiss": "modal",
+                                "aria-label": "Accept"
+                            },
+                            components: [{
+                                ctor: Label,
+                                props: {
+                                    id: 'fa',
+                                    labelType: LabelType.i,
+                                    classes: ["fas", "fa-check"]
+                                }
+                            }],
+                            click: function (e)
+                            {
+                                let evt = jQuery.Event('accept');
+                                _self.trigger(evt);
                             }
                         }
                     }
-                },
-                {
-                    ctor: Button,
-                    props: {
-                        id: 'acceptButton',
-                        type: "button",
-                        classes: ["close", "no-form-control"],
-                        attr: {
-                            "data-dismiss": "modal",
-                            "aria-label": "Accept"
-                        },
-                        components: [{
-                            ctor: Label,
-                            props: {
-                                id: 'fa',
-                                labelType: LabelType.i,
-                                classes: ["fas", "fa-check"]
-                            }
-                        }],
-                        click: function (e) {
-                            let evt = jQuery.Event('accept');
-                            _self.trigger(evt);
-                        }
-                    }
-                }
                 ]
             }
         }]
