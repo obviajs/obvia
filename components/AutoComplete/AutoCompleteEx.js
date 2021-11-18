@@ -98,9 +98,9 @@ var AutoCompleteEx = function (_props) {
 			_tokenContainer = this.tokenContainer;
 			_input = this.tokenContainer.tokenInput;
 			_tokenRepeater = this.tokenContainer.tokenRepeater;
-			_suggestionsRepeater.css.left = "inherit";
-			_suggestionsRepeater.css.top = "inherit";
-			_suggestionsRepeater.css.position = "relative";
+			// _suggestionsRepeater.css.left = "inherit";
+			// _suggestionsRepeater.css.top = "inherit";
+			// _suggestionsRepeater.css.position = "relative";
 		}
 	};
 
@@ -484,6 +484,7 @@ var AutoCompleteEx = function (_props) {
 		labelField: "text",
 		placeholder: "Search...",
 		matchType: StringMatchType.CONTAINS,
+		classes: ["dropdown"]
 	};
 	ObjectUtils.fromDefault(_defaultParams, _props);
 	//_props = ObjectUtils.extend(false, false, _defaultParams, _props);
@@ -527,6 +528,7 @@ var AutoCompleteEx = function (_props) {
 			dblclick: _suggestionRendererDoubleClickHandler,
 			mousedown: _suggestionRendererMouseDownHandler,
 			keydown: _suggestionRendererKeyDownHandler,
+			classes: ["dropdown-item"] 
 		},
 	};
 	//TODO: we are overriding those handlers, we should exec them after our internal handlers
@@ -572,7 +574,7 @@ var AutoCompleteEx = function (_props) {
 							rendering: {
 								direction: "horizontal",
 								separator: _separator || false,
-								wrap: false,
+								wrap: false
 							},
 							classes: [],
 							css: {
@@ -582,8 +584,8 @@ var AutoCompleteEx = function (_props) {
 							ownerDocument: this.ownerDocument,
 							dataProvider: _value,
 							components: [_tokenRenderer],
-							dataProviderUpdate: _tokenInputReSize,
-						},
+							dataProviderUpdate: _tokenInputReSize
+						}
 					},
 					{
 						ctor: TextInput,
@@ -600,32 +602,33 @@ var AutoCompleteEx = function (_props) {
 							ownerDocument: this.ownerDocument,
 							css: {
 								outline: "none",
-								"font-size": "14px",
-							},
-						},
-					},
-				],
-			},
+								"font-size": "14px"
+							}
+						}
+					}
+				]
+			}
 		},
 		{
 			ctor: Repeater,
 			props: {
 				id: "suggestionsRepeater",
 				type: "",
-				classes: ["dropdown-menu", "position-absolute"],
+				classes: ["dropdown-menu"],
 				defaultItem: this.defaultItem,
 				rendering: {
 					direction: "vertical",
 					separator: _separator || false,
 					actions: false,
+					wrap: false
 				},
 				dataProvider: _suggestions,
 				components: [_suggestionRenderer],
 				parent: _self,
 				ownerDocument: this.ownerDocument,
-				keydown: _suggestionsDropDownKeyDown.bind(this),
-			},
-		},
+				keydown: _suggestionsDropDownKeyDown.bind(this)
+			}
+		}
 	];
 
 	_props.components = _cmps;
