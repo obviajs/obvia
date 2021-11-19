@@ -104,7 +104,6 @@ var DataGrid = function (_props) {
             _self.cellEditCanceled(_editPosition.rowIndex, _editPosition.columnIndex);                  
         }
         if (scrollTop >= 0) {
-            console.log("scrollTop:", scrollTop);
 
             let virtualIndex = Math.ceil(scrollTop / _avgRowHeight);
             scrollTop = virtualIndex * _avgRowHeight;
@@ -113,10 +112,8 @@ var DataGrid = function (_props) {
             let deltaScroll = _prevScrollTop - scrollTop;
 
             if (deltaScroll < 0) {
-                console.log("scroll down");
 
             } else {
-                console.log("scroll up");
 
             }
             if (deltaScroll != 0) {
@@ -161,7 +158,6 @@ var DataGrid = function (_props) {
     };
 
     let _dataProviderLengthChanged = function (e) {
-        console.log(arguments);
         /*
         _avgRowHeight = (this.$table.height() - this.$header.height()) / _rowCount;
         _avgRowHeight = 46;
@@ -303,7 +299,6 @@ var DataGrid = function (_props) {
             let rb = Math.min(oldValue, newValue);
             let dpLen = _self.dataProvider.length;
             let delta = oldValue - newValue;
-            console.log("values: ", oldValue, " ", newValue, " ", dpLen);
             if (delta > 0) {
                 let deltaScroll = delta * _avgRowHeight;
                 while (delta > 0) {
@@ -530,7 +525,6 @@ var DataGrid = function (_props) {
                     let rowIndex = _editPosition.rowIndex, columnIndex = _editPosition.columnIndex;
                     switch (e.keyCode) {
                         case 13: // ENTER - apply value
-                            console.log("finished editing");
                             e.preventDefault();
                             _self.cellEditFinished(_editPosition.rowIndex, _editPosition.columnIndex, true);
                             break;
@@ -674,8 +668,6 @@ var DataGrid = function (_props) {
         _self.trigger(e, [_self, rargs]);
 
         if (!e.isDefaultPrevented()) {
-            //console.trace();
-            console.log("cellEditFinished:", rowIndex, " ", columnIndex);
             let column = _columns[columnIndex];
             let data = _self.dataProvider[rowIndex + _virtualIndex];
             let value = null,
