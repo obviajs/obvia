@@ -129,7 +129,8 @@ var RadioButton = function (_props) {
         if (typeof _click == 'function')
             _click.apply(this, arguments);
     };
-    Component.call(this, _props);
+    let r = Component.call(this, _props);
+    return r;
 };
 DependencyContainer.getInstance().register("RadioButton", RadioButton, DependencyContainer.simpleResolve);
 RadioButton.prototype.ctor = 'RadioButton';

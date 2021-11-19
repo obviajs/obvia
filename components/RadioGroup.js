@@ -6,10 +6,12 @@
 import { List } from "/obvia/components/List.js";
 import { RadioButton } from "/obvia/components/RadioButton.js";
 import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
+import { StringUtils, StringMatchType } from "/obvia/lib/StringUtils.js";
 import { DependencyContainer } from "/obvia/lib/DependencyContainer.js";
 var RadioGroup = function (_props) {
     let _self = this,
         _dataProvider;
+    let _rgUID = StringUtils.guid();
 
     Object.defineProperty(this, "labelField", {
         get: function labelField() {
@@ -85,7 +87,7 @@ var RadioGroup = function (_props) {
                 checked: "{" + _checkedField + "}",
                 classes: "{?" + _classesField + "}",
                 enabled: "{?" + _enabledField + "}",
-                name: _self.id
+                name: _rgUID
             }
         }];
     };
