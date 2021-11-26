@@ -436,6 +436,8 @@ var Repeater = function (_props) {
         if (e.target.id == this.domID) {
             if (typeof _beforeAttach == 'function')
                 _beforeAttach.apply(this, arguments);
+            if (_props.enabled != null)
+                this.enabled = _props.enabled;
         }
     };
     
@@ -479,7 +481,7 @@ var Repeater = function (_props) {
 
     let _dataProvider;
     let _rendering = _props.rendering;
-    let _enabled = _props.enabled;
+    let _enabled;
     let _guidField = _props.guidField;
     let _components = _props.components;
     let _keydown = _props.keydown;
