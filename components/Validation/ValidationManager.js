@@ -37,7 +37,32 @@ var ValidationManager = function () {
         }
         return Promise.all(promises);
     };
-
+    this.reset = function (validationGroup = null)
+    {
+        let av;
+        if (validationGroup)
+        {
+            let groups = _validators.groupReduce((currentValue, index) =>
+            {
+                return currentValue.validationGroup;
+            });
+            av = groups[validationGroup];
+        } else
+        {
+            av = _validators;
+        }        
+        if (av)
+        {
+            let len = av.length;
+            for (let i = 0; i < len; i++)
+            {
+                if (av[i])
+                {
+                    av[i].isValid = true;
+                }
+            }
+        }
+    };
     this.add = function (validator) {
         _validators.push(validator);
     };

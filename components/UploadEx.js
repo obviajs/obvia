@@ -17,6 +17,7 @@ import { BinUtils } from "/obvia/lib/BinUtils.js";
 import { getFontAwesomeIconFromMIME } from "/obvia/lib/my.js";
 import { downloadFromUrl } from "/obvia/lib/my.js";
 import { DependencyContainer } from "/obvia/lib/DependencyContainer.js";
+import { FormEventType } from "/obvia/components/Form/FormEventType.js";
 var UploadEx = function (_props) {
     let _self = this;
     let _upload, _lblFileName, _btnRemove, _iconLbl, _lblFileSize, _progressBar, _progressRow, _btnUpload, _btnSelect, _additionalProperties, _action, _downloadUrl;

@@ -6,3 +6,5 @@ var FormEventType =
     "POST_SUCCESS": "POST_SUCCESS",
     "POST_COMPLETE": "POST_COMPLETE"
 }
+
+export { FormEventType };
