@@ -349,10 +349,7 @@ var DataGrid = function (_props) {
             e.oldValue = oldValue;
             e.newValue = newValue;
             _self.trigger(e, [_self]);
-            if (_futureEditPosition) {
-                _self.cellEdit(_futureEditPosition.rowIndex, _futureEditPosition.columnIndex);
-            }
-
+            
             if (_allowNewItem) {
                 if (!_defaultItem) {
                     _defaultItem = ArrayUtils.createEmptyObject(_columns, "field", "description");
@@ -364,6 +361,9 @@ var DataGrid = function (_props) {
                     }
                     _self.dataProvider.splice(_self.dataProvider.length, 0, ObjectUtils.deepCopy(_defaultItem));
                 }
+            }
+            if (_futureEditPosition && _futureEditPosition.rowIndex < _self.rowItems.length) {
+                _self.cellEdit(_futureEditPosition.rowIndex, _futureEditPosition.columnIndex);
             }
         });
         return Promise.all(p);
