@@ -2,6 +2,7 @@ import { Component } from "/obvia/components/base/Component.js";
 import { Props } from "/obvia/components/base/Props.js";
 import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
 import { ArrayUtils } from "/obvia/lib/ArrayUtils.js";
+import { ChangeWatcher } from "/obvia/lib/binding/ChangeWatcher.js";
 var Parent = function (_props) {
     let _$hadow = $("<div/>");
     let _comprenders = [];
@@ -230,6 +231,7 @@ var Parent = function (_props) {
                 "cmp": cmp,
                 "promise": cmp.render()
             };
+            _myw.propertyChanged(cmp.id, null, cmp);
             _comprenders.push(cr);
             return cr;
         }
@@ -345,6 +347,8 @@ var Parent = function (_props) {
 
     Component.call(this, _props);
 
+    let _myw = ChangeWatcher.getInstance(_self);
+    
     Object.defineProperty(this, "enabled", {
         get: function enabled() {
             return _enabled;
