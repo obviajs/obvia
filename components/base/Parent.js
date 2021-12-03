@@ -365,16 +365,16 @@ var Parent = function (_props) {
         configurable: true,
         enumerable: true
     });
+    let _destruct = this.destruct;
 
-    /*
-        this.destruct = function (mode=1)
-        {
-            for(let id in _children){
-                _children[id].destruct(mode);
-            }
-            base.destruct(mode);
+    this.destruct = function (mode=1)
+    {
+        for(let id in _children){
+            _children[id].destruct(mode);
         }
-    */
+        _destruct(mode);
+    }
+
     this.childrenEnable = function (v) {
         for (let childId in this.children) {
             this.children[childId].enabled = v;

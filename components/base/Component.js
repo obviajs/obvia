@@ -654,8 +654,8 @@ var Component = function (_props) {
                 _self.proxyMaybe.off('detached', arrow);
             };
             _self.proxyMaybe.on('detached', arrow);
-            if (this.$el)
-                mode == 1 ? this.$el.remove() : this.$el.detach();
+            if (_self.$el)
+                mode == 1 ? _self.$el.remove() : _self.$el.detach();
         });
         //_self.attached = false;
     };
