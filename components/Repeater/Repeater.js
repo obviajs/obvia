@@ -330,7 +330,6 @@ var Repeater = function (_props) {
                 });
                 //rowItems = {};
                 //render component in row
-                _rows.push(renderedRow);
                 let cp = el.render().then(function (cmpInstance) {
                     if (!_rendering.wrap) {
                         // if(_self.mode =="append")
@@ -360,7 +359,8 @@ var Repeater = function (_props) {
                     }
                 });
                 rp.push(cp);
-            }
+            }            
+            _rows.push(renderedRow);
         }
        
         Promise.all(rp).then(function () {
