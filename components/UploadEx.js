@@ -44,12 +44,17 @@ var UploadEx = function (_props) {
             classes.pushUnique("align-middle");
             if (files.length > 1)
                 _lastFileTypeIcon = "fa-files";
-            else if (files.length > 0 && files[0].type) {
+            else if (files.length > 0 && files[0].type)
+            {
                 _lastFileTypeIcon = getFontAwesomeIconFromMIME(files[0].type);
                 if (_lastFileTypeIcon == null)
                     _lastFileTypeIcon = "fa-file";
             } else
+            {
+                let ind = classes.indexOf(_lastFileTypeIcon);
+                classes.splice(ind, 1);
                 _lastFileTypeIcon = null;
+            }
             if (_lastFileTypeIcon != null)
                 classes.pushUnique(_lastFileTypeIcon);
 
@@ -186,6 +191,7 @@ var UploadEx = function (_props) {
     let removeBtn_click = function () {
         this.value = null;
         _upload.reset();
+        _setValue();
     };
 
     let _cmps;

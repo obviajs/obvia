@@ -1005,7 +1005,15 @@ var DataGrid = function (_props) {
                 //column.cellStyleFunction,
                 //column.cellValueFunction,
                 //column.itemEditor    
-                let component = {};
+                let component = ObjectUtils.deepCopy(column.itemRenderer);
+
+                component.props.id = (column.itemRenderer.props.id ? column.itemRenderer.props.id : column.name) + "_" + index + "_" + columnIndex;
+                component.props.bindingDefaultContext = data;
+                component.props.ownerDocument = _props.ownerDocument;
+                component.props.parentRepeater = _self.proxyMaybe;
+                component.props.repeaterIndex = index;
+
+                /*
                 column.itemRenderer.props.id = column.itemRenderer.props.id ? column.itemRenderer.props.id : "column";
                 ObjectUtils.shallowCopy(column.itemRenderer, component, ["props"]);
                 component.props = {};
@@ -1017,6 +1025,7 @@ var DataGrid = function (_props) {
                 component.props.repeaterIndex = index;
                 component.props.css = Object.assign({}, column.itemRenderer.props.css);
                 component.props.attr = Object.assign({}, column.itemRenderer.props.attr);
+                */
                 //build components properties, check bindings
 
                 let dataProviderField = column.field;
