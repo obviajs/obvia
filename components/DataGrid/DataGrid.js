@@ -293,7 +293,7 @@ var DataGrid = function (_props) {
         let p = [];
         _self.trigger('beginDraw');
         _self.$hadow.empty();
-        let oldValue = _rows.length, newValue = 0;
+        let oldValue = _self.rows.length, newValue = 0;
         if (_self.attached || _props.rowCount) {
             newValue = _self.rowCount;
             let rb = Math.min(oldValue, newValue);
@@ -741,8 +741,8 @@ var DataGrid = function (_props) {
         for (let i = 0; i < len; i++) {
             rp[i] = _cellItemRenderers[index][i].destruct(1);
         }
-        _rows[index].remove();
-        _rows.splice(index, 1);
+        _self.rows[index].remove();
+        _self.rows.splice(index, 1);
         _self.rowItems.splice(index, 1);
         _cells.splice(index, 1);
         _cellItemRenderers.splice(index, 1);
@@ -833,17 +833,17 @@ var DataGrid = function (_props) {
                 _selectedItems.splice(0, _selectedItems.length);
             }
         }
-        let len = _rows.length;
+        let len = _self.rows.length;
         for (let i = 0; i < len; i++) {
             let found = false;
             for (let j = 0; j < _selectedIndices.length; j++) {
                 if (i == _selectedIndices[j] - ra.virtualIndex) {
                     found = true;
-                    _rows[i].addClass("datagrid-row-selected");
+                    _self.rows[i].addClass("datagrid-row-selected");
                 }
             }
             if (!found) {
-                _rows[i].removeClass("datagrid-row-selected");
+                _self.rows[i].removeClass("datagrid-row-selected");
             }
         }
     };
@@ -931,7 +931,7 @@ var DataGrid = function (_props) {
     let _columns = _props.columns;
     let _cellItemRenderers = [];
     let _cellItemEditors = [];
-    let _cells = [], _rows = []; // matrix
+    let _cells = []; // matrix
     let _headerCells = [];
     let _fitWidth = _props.fitWidth;
     let _editPosition = null, _futureEditPosition;
@@ -1083,7 +1083,7 @@ var DataGrid = function (_props) {
                 rp.push(cp);
             }
             _self.rowItems[index] = rowItems;
-            _rows[index] = renderedRow;
+            _self.rows[index] = renderedRow;
 
             Promise.all(rp).then(function () {
                 let actionsTh = $('<th scope="row" ' + style + '></i></th>');
