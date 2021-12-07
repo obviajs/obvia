@@ -98,8 +98,15 @@ var Validator = function (_props) {
         set: function controlToValidate(v) {
             if (_controlToValidate != v) {
                 _controlToValidate = v;
-                if (_controlToValidate && _self.parent) {
-                    _controlToValidateInstance = _self.parent.find(_controlToValidate);
+                if (_controlToValidate && _self.parent)
+                {
+                    _controlToValidateInstance = null; let i = 6, parent = _self.parent;
+                    while (_controlToValidateInstance == null && i > 0)
+                    {
+                        _controlToValidateInstance = parent.find(_controlToValidate);
+                        --i;
+                        parent = parent.parent;
+                    }
                 } else
                     _controlToValidateInstance = null;
             }
