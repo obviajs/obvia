@@ -78,7 +78,7 @@ var CalendarWeek = function (_props)
     {
         let date = dayjs(currentValue[_self.startDateTimeField], _self.inputFormat);
         let weekDayNumber = date.weekday();
-        return date.week() + "-" + weekDayNumber;
+        return date.isoWeek() + "-" + weekDayNumber;
     };
 
     let _prepareEvent = function (event)
@@ -109,7 +109,7 @@ var CalendarWeek = function (_props)
         let input = new Date(_self.nowDate.getTime());
         let result = _self.dates(input);
         let len = result.length;
-        let wn = dayjs(_self.nowDate).week();
+        let wn = dayjs(_self.nowDate).isoWeek();
         for (let i = 0; i < len; i++)
         {
             let date_string = result[i].getDate();
@@ -163,7 +163,7 @@ var CalendarWeek = function (_props)
     let _startHourCalendar = _props.startHourCalendar;
     let _endHourCalendar = _props.endHourCalendar;
     let _dataProvider;
-    let _dataProvider_Hour;
+    let _dataProvider_Hour, _dataProvider_Hour_Prim;
     let _eventsField = _props.eventsField;
 
     let _getTop = function (minutes)
