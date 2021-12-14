@@ -1,34 +1,44 @@
 import { Container } from "/obvia/components/Container.js";
 import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
+import { ArrayEx } from "/obvia/lib/ArrayEx.js";
+import { ChangeWatcher } from "/obvia/lib/binding/ChangeWatcher.js";
 
-var CalendarBase = function (_props) {
-    let _self = this, _calendarEvents, _inputFormat, _outputFormat, _internalFormat,
+var CalendarBase = function (_props)
+{
+    let _self = this, _calendarEvents = new ArrayEx(), _inputFormat, _outputFormat, _internalFormat,
         _childrenField, _guidField, _descriptionField, _startDateTimeField, _endDateTimeField,
         _nowDate, _calendarStartDate;
-    
+
     let _dpWatcher;
-    let _dpLengthChanged = function(e){
+    let _dpLengthChanged = function (e)
+    {
         e.stopPropagation();
         e.stopImmediatePropagation();
     }
 
-    let _dpMemberChanged = function(e){
+    let _dpMemberChanged = function (e)
+    {
         e.stopPropagation();
         e.stopImmediatePropagation();
     }
-    
+
     Object.defineProperty(this, "calendarEvents", {
-        get: function calendarEvents(){
+        get: function calendarEvents()
+        {
             return _calendarEvents;
         },
-        set: function calendarEvents(v){
-            if(_calendarEvents != v){
-                if(_dpWatcher && _calendarEvents){
+        set: function calendarEvents(v)
+        {
+            if (_calendarEvents != v)
+            {
+                if (_dpWatcher && _calendarEvents)
+                {
                     _dpWatcher.reset();
                     _calendarEvents.off("propertyChange", _dpMemberChanged);
                 }
                 _calendarEvents = v;
-                if(_calendarEvents){
+                if (_calendarEvents)
+                {
                     _dpWatcher = ChangeWatcher.getInstance(_calendarEvents);
                     _dpWatcher.watch(_calendarEvents, "length", _dpLengthChanged);
                     _calendarEvents.on("propertyChange", _dpMemberChanged);
@@ -36,8 +46,8 @@ var CalendarBase = function (_props) {
             }
         },
         enumerable: true
-    });  
-    
+    });
+
     Object.defineProperty(this, "startDateTimeField", {
         get: function startDateTimeField()
         {
@@ -69,11 +79,14 @@ var CalendarBase = function (_props) {
     });
 
     Object.defineProperty(this, "internalFormat", {
-        get: function internalFormat() {
+        get: function internalFormat()
+        {
             return _internalFormat;
         },
-        set: function internalFormat(v) {
-            if (_internalFormat != v) {
+        set: function internalFormat(v)
+        {
+            if (_internalFormat != v)
+            {
                 _internalFormat = v;
             }
         }
@@ -93,7 +106,7 @@ var CalendarBase = function (_props) {
         },
         enumerable: true
     });
-    
+
     Object.defineProperty(this, "outputFormat", {
         get: function outputFormat()
         {
@@ -108,7 +121,7 @@ var CalendarBase = function (_props) {
         },
         enumerable: true
     });
-    
+
     Object.defineProperty(this, "descriptionField", {
         get: function descriptionField()
         {
@@ -130,17 +143,18 @@ var CalendarBase = function (_props) {
             return _guidField;
         }
     });
-    
+
     Object.defineProperty(this, "childrenField", {
         get: function childrenField()
         {
             return _childrenField;
         }
     });
-    
-    Object.defineProperty(this, "calendarStartDate",{
-        get: function calendarStartDate(){
-            return  _calendarStartDate;
+
+    Object.defineProperty(this, "calendarStartDate", {
+        get: function calendarStartDate()
+        {
+            return _calendarStartDate;
         },
         set: function calendarStartDate(v)
         {
@@ -150,10 +164,11 @@ var CalendarBase = function (_props) {
             }
         }
     });
-    
-    Object.defineProperty(this, "nowDate",{
-        get: function nowDate(){
-            return  _nowDate;
+
+    Object.defineProperty(this, "nowDate", {
+        get: function nowDate()
+        {
+            return _nowDate;
         },
         set: function nowDate(v)
         {
@@ -163,12 +178,22 @@ var CalendarBase = function (_props) {
             }
         }
     });
-    
-    let _defaultParams = {        
-        type: ContainerType.NONE,
+    this.beforeAttach = function (e) 
+    {
+        if (e.target.id == this.domID)
+        {
+            if (_props.calendarEvents && !this.getBindingExpression("calendarEvents"))
+            {
+                this.calendarEvents = _props.calendarEvents;
+            }
+        }
+    };
+
+    let _defaultParams = {
+        type: "",
         calendarEvents: new ArrayEx(),
         inputFormat: 'YYYY-MM-DD HH:mm',
-        outputFormat: 'YYYY-MM-DD HH:mm',        
+        outputFormat: 'YYYY-MM-DD HH:mm',
         internalFormat: "YYYY-MM-DDTHH:mm",
         guidField: "guid",
         childrenField: "children",
@@ -180,7 +205,8 @@ var CalendarBase = function (_props) {
     };
     ObjectUtils.fromDefault(_defaultParams, _props);
     //_props = ObjectUtils.extend(false, false, _defaultParams, _props);
-    if (!_props.attr) { 
+    if (!_props.attr)
+    {
         _props.attr = {};
     }
     let myDtEvts = ["cellClick", "calendarEventClick"];
@@ -188,23 +214,21 @@ var CalendarBase = function (_props) {
     {
         let dt = _props.attr["data-triggers"].split(" ");
         for (let i = 0; i < dt.length; i++)
-        {   
+        {
             myDtEvts.pushUnique(dt[i]);
         }
     }
     _props.attr["data-triggers"] = myDtEvts.join(" ");
-    if (_props.calendarEvents)
-        _self.calendarEvents = _props.calendarEvents;
     if (_props.inputFormat)
         _self.inputFormat = _props.inputFormat;
     if (_props.outputFormat)
         _self.outputFormat = _props.outputFormat;
     if (_props.internalFormat)
-        _self.internalFormat = _props.internalFormat;        
+        _self.internalFormat = _props.internalFormat;
     if (_props.childrenField)
-        _self.childrenField = _props.childrenField;
+        _childrenField = _props.childrenField;
     if (_props.descriptionField)
-        _self.descriptionField = _props.descriptionField;
+        _descriptionField = _props.descriptionField;
     if (_props.nowDate)
         _self.nowDate = _props.nowDate;
     if (_props.calendarStartDate)
@@ -212,14 +236,15 @@ var CalendarBase = function (_props) {
     if (_props.nowDate)
         _self.nowDate = _props.nowDate;
     if (_props.startDateTimeField)
-        _self.startDateTimeField = _props.startDateTimeField; 
+        _self.startDateTimeField = _props.startDateTimeField;
     if (_props.endDateTimeField)
-        _self.endDateTimeField = _props.endDateTimeField; 
+        _self.endDateTimeField = _props.endDateTimeField;
     let r = Container.call(this, _props);
-    
+
     return r;
 }
 CalendarBase.prototype.ctor = 'CalendarBase';
-export {
+export
+{
     CalendarBase
 };

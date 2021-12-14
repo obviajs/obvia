@@ -9,23 +9,34 @@ import { CalendarWeek } from "/obvia/components/Calendar/CalendarWeek.js";
 import { CalendarMonth } from "/obvia/components/Calendar/CalendarMonth.js";
 import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
 import { CalendarConstants } from "/obvia/components/Calendar/CalendarConstants.js";
-var Calendar = function(_props){
+import { DependencyContainer } from "/obvia/lib/DependencyContainer.js";
+import { Label } from "/obvia/components/Label.js";
+import { LabelType } from "/obvia/components/Label.js";
+import { Button, ButtonSize } from "/obvia/components/Button/Button.js";
+import { ViewStack } from "/obvia/components/base/ViewStack.js";
+
+var Calendar = function (_props)
+{
     let _self = this;
 
-    Object.defineProperty(this, "calendarEvents",{
-        get: function calendarEvents(){
+    Object.defineProperty(this, "calendarEvents", {
+        get: function calendarEvents()
+        {
             return _calendarEvents;
         },
-        set: function calendarEvents(v){
-            if(_calendarEvents != v){
-                _calendarEvents = v;  
+        set: function calendarEvents(v)
+        {
+            if (_calendarEvents != v)
+            {
+                _calendarEvents = v;
             }
         }
     });
-    
+
     Object.defineProperty(this, "descriptionField", {
-        get: function descriptionField() {
-            return  _descriptionField;
+        get: function descriptionField()
+        {
+            return _descriptionField;
         }
     });
 
@@ -58,42 +69,48 @@ var Calendar = function(_props){
         },
         enumerable: true
     });
-    Object.defineProperty(this, "calendarWeek",{
-        get: function calendarWeek(){
-            return  _calendarWeek;
+    Object.defineProperty(this, "calendarWeek", {
+        get: function calendarWeek()
+        {
+            return _calendarWeek;
         }
     });
-    Object.defineProperty(this, "calendarMonth",{
-        get: function calendarMonth(){
-            return  _calendarMonth;
+    Object.defineProperty(this, "calendarMonth", {
+        get: function calendarMonth()
+        {
+            return _calendarMonth;
         }
     });
-    
+
     Object.defineProperty(this, "calendarDay", {
-        get: function calendarDay() {
-            return  _calendarDay;
+        get: function calendarDay()
+        {
+            return _calendarDay;
         }
     });
 
     Object.defineProperty(this, "viewStack", {
-        get: function viewStack(){
-            return  _viewStack;
+        get: function viewStack()
+        {
+            return _viewStack;
         }
     });
-    Object.defineProperty(this, "labelMonth",{
-        get: function labelMonth(){
-            return  _labelMonth;
+    Object.defineProperty(this, "labelMonth", {
+        get: function labelMonth()
+        {
+            return _labelMonth;
         }
     });
 
-    Object.defineProperty(this, "labelYear",{
-        get: function labelYear() {
-            return  _labelYear;
+    Object.defineProperty(this, "labelYear", {
+        get: function labelYear()
+        {
+            return _labelYear;
         }
     });
 
     let _defaultParams = {
-        nowDate: " ",
+        nowDate: new Date(),
         guidField: "guid",
         selectedIndex: 0,
         calendarDay: "",
@@ -116,8 +133,10 @@ var Calendar = function(_props){
     let _labelYear;
     let _startDateTimeField, _endDateTimeField;
 
-    this.beforeAttach = function (e) {
-        if (e.target.id == this.domID) {
+    this.beforeAttach = function (e)
+    {
+        if (e.target.id == this.domID)
+        {
             _viewStack = this.container_for_head.viewStack;
             _calendarDay = _viewStack.calendarDay;
             _calendarWeek = _viewStack.calendarWeek;
@@ -129,11 +148,12 @@ var Calendar = function(_props){
     };
 
     let _viewStackComponent;
-    let fnViewStackDelayInit = function () {
+    let fnViewStackDelayInit = function ()
+    {
         _viewStackComponent = {
             ctor: Container,
             props: {
-                type: ContainerType.NONE,
+                type: "",
                 id: "container_for_head",
                 components: [
                     {
@@ -251,7 +271,7 @@ var Calendar = function(_props){
                                         startHourCalendar: 0,
                                         endHourCalendar: 24,
                                         labelField: "value",
-                                        descriptionField: _descriptionField,                                        
+                                        descriptionField: _descriptionField,
                                         startDateTimeField: _startDateTimeField,
                                         endDateTimeField: _endDateTimeField,
                                         duration: "duration",
@@ -283,7 +303,7 @@ var Calendar = function(_props){
                                         classField: "classField",
                                         classField1: "classField1",
                                         startField: "startField",
-                                        descriptionField: _descriptionField,                                        
+                                        descriptionField: _descriptionField,
                                         startDateTimeField: _startDateTimeField,
                                         endDateTimeField: _endDateTimeField,
                                         nowMonth: new Date().getMonth(),
@@ -303,7 +323,7 @@ var Calendar = function(_props){
     ObjectUtils.fromDefault(_defaultParams, _props);
     //_props = ObjectUtils.extend(false, false, _defaultParams, _props);
     let _nowDate = _props.nowDate;
-    let _guidField =  _props.guidField;
+    let _guidField = _props.guidField;
     let _selectedIndex = _props.selectedIndex;
     let _calendarEvents = _props.calendarEvents;
     let _inputFormat = _props.inputFormat;
@@ -311,12 +331,14 @@ var Calendar = function(_props){
     let _eventsField = _props.eventsField;
     let _descriptionField = _props.descriptionField;
     if (_props.startDateTimeField)
-        _self.startDateTimeField = _props.startDateTimeField; 
+        _self.startDateTimeField = _props.startDateTimeField;
     if (_props.endDateTimeField)
         _self.endDateTimeField = _props.endDateTimeField;
-    
-    let _clickDay = function () {
-        if (_self.viewStack.selectedIndex < _self.viewStack.components.length) {
+
+    let _clickDay = function ()
+    {
+        if (_self.viewStack.selectedIndex < _self.viewStack.components.length)
+        {
             _self.viewStack.selectedIndex = 0;
             let actualDateforDay = _self.calendarDay.nowDate;
             _self.labelMonth.label = CalendarConstants.Months[actualDateforDay.getMonth()];
@@ -324,44 +346,54 @@ var Calendar = function(_props){
         }
     };
 
-    let _clickWeek = function () {
-        if (_self.viewStack.selectedIndex < _self.viewStack.components.length) {
+    let _clickWeek = function ()
+    {
+        if (_self.viewStack.selectedIndex < _self.viewStack.components.length)
+        {
             _self.viewStack.selectedIndex = 1;
             let actualDateforWeek = _self.calendarWeek.nowDate;
             _self.labelMonth.label = CalendarConstants.Months[actualDateforWeek.getMonth()];
             _self.labelYear.label = actualDateforWeek.getFullYear();
         }
-        else {
+        else
+        {
             _self.viewStack.selectedIndex = 0;
         }
     };
 
-    let _clickMonth = function () {
-    
-        if (_self.viewStack.selectedIndex < _self.viewStack.components.length) {
+    let _clickMonth = function ()
+    {
+
+        if (_self.viewStack.selectedIndex < _self.viewStack.components.length)
+        {
             _self.viewStack.selectedIndex = 2;
             let actualDateforMonth = _self.calendarMonth.nowDate;
             _self.labelMonth.label = CalendarConstants.Months[actualDateforMonth.getMonth()];
             _self.labelYear.label = actualDateforMonth.getFullYear();
         }
-        else {
+        else
+        {
             _self.viewStack.selectedIndex = 0;
         }
     };
 
-    let _prevHandler = function () {
-        if (_self.viewStack.selectedIndex == 0) {
+    let _prevHandler = function ()
+    {
+        if (_self.viewStack.selectedIndex == 0)
+        {
             _self.calendarDay.previous();
             let actualDateforDay = _self.calendarDay.nowDate;
             _self.labelMonth.label = CalendarConstants.Months[actualDateforDay.getMonth()];
             _self.labelYear.label = actualDateforDay.getFullYear();
-            
-        } else if (_self.viewStack.selectedIndex == 1) {
+
+        } else if (_self.viewStack.selectedIndex == 1)
+        {
             _self.calendarWeek.previous();
             let actualDateforWeek = _self.calendarWeek.nowDate;
             _self.labelMonth.label = CalendarConstants.Months[actualDateforWeek.getMonth()];
             _self.labelYear.label = actualDateforWeek.getFullYear();
-        } else if (_self.viewStack.selectedIndex == 2) {
+        } else if (_self.viewStack.selectedIndex == 2)
+        {
             _self.calendarMonth.previous();
             let actualDateforMonth = _self.calendarMonth.nowDate;
             _self.labelMonth.label = CalendarConstants.Months[actualDateforMonth.getMonth()];
@@ -369,31 +401,36 @@ var Calendar = function(_props){
         }
     };
 
-    let _nextHandler = function () {
-        if (_self.viewStack.selectedIndex == 0) {
+    let _nextHandler = function ()
+    {
+        if (_self.viewStack.selectedIndex == 0)
+        {
             _self.calendarDay.next();
             let actualDateforDay = _self.calendarDay.nowDate;
             _self.labelMonth.label = CalendarConstants.Months[actualDateforDay.getMonth()];
             _self.labelYear.label = actualDateforDay.getFullYear();
-        } else if (_self.viewStack.selectedIndex == 1) {
+        } else if (_self.viewStack.selectedIndex == 1)
+        {
             _self.calendarWeek.next();
             let actualDateforWeek = _self.calendarWeek.nowDate;
             _self.labelMonth.label = CalendarConstants.Months[actualDateforWeek.getMonth()];
             _self.labelYear.label = actualDateforWeek.getFullYear();
-        } else if (_self.viewStack.selectedIndex == 2) {
+        } else if (_self.viewStack.selectedIndex == 2)
+        {
             _self.calendarMonth.next();
             let actualDateforMonth = _self.calendarMonth.nowDate;
             _self.labelMonth.label = CalendarConstants.Months[actualDateforMonth.getMonth()];
             _self.labelYear.label = actualDateforMonth.getFullYear();
         }
-    };    
+    };
 
     fnViewStackDelayInit();
     _props.components = [_viewStackComponent];
     let r = Container.call(this, _props);
     return r;
 }
-Calendar.prototype.ctor = 'Calendar';
-export {
+DependencyContainer.getInstance().register("Calendar", Calendar, DependencyContainer.simpleResolve);
+export
+{
     Calendar
 };
