@@ -86,11 +86,11 @@ var CalendarMonth = function (_props)
             {
                 return d.getMonth() - 1;
             }
-        }
+        };
         let _daysInMonth = function (iMonth, iYear)
         {
             return 32 - new Date(iYear, iMonth, 32).getDate();
-        }
+        };
 
         let previousDaysofMonth = new Date((currentMonth + 1) + "/1/" + currentYear);
         let previousDay = previousDaysofMonth.getDay();
@@ -99,12 +99,12 @@ var CalendarMonth = function (_props)
         {
             previousDay = 7;
         }
-
+        let prevMonth = _getLastMonth(_self.nowDate);
         for (let i = 1; i < previousDay; i++)
         {
-            let j = days_in_month[_getLastMonth(_self.nowDate)] - ((previousDay - 1) - i);
-            _self.calendarStartDate = new Date(currentMonth + "/" + (days_in_month[_getLastMonth(_self.nowDate)] - ((previousDay - 2))) + "/" + currentYear);
-            let m = _getLastMonth(_self.nowDate) + 1;
+            let j = days_in_month[prevMonth] - ((previousDay - 1) - i);
+            _self.calendarStartDate = new Date(currentMonth + "/" + (days_in_month[prevMonth] - ((previousDay - 2))) + "/" + currentYear);
+            let m = prevMonth + 1;
             let m_content = m;
             if (m <= 9)
             {
@@ -126,8 +126,8 @@ var CalendarMonth = function (_props)
             }
             _intervalToIndex[data_controll_past] = _dataProvider.push(dp1) - 1;
         }
-
-        for (let i = 1; i <= _daysInMonth(currentMonth, currentYear); i++)
+        let daysInMonth = _daysInMonth(currentMonth, currentYear);
+        for (let i = 1; i <= daysInMonth; i++)
         {
 
             let iterationday = new Date(currentYear, currentMonth, i).getDay();
@@ -340,7 +340,7 @@ var CalendarMonth = function (_props)
                         separator: false,
                         wrap: false
                     },
-                    css: { display: "flex" },
+                    css: { display: "flex", width: "980px" },
                     dataProvider: new ArrayEx([
                         { value: 'Monday', classes: ['fc-border'] },
                         { value: 'Tuesday', classes: ['fc-border'] },
@@ -372,6 +372,7 @@ var CalendarMonth = function (_props)
                         direction: "horizontal",
                         separator: false
                     },
+                    css: { width: "980px" },
                     dataProvider: _dataProvider,
                     components: [{
                         ctor: Container,

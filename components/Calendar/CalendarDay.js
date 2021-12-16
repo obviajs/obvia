@@ -60,8 +60,8 @@ var CalendarDay = function (_props)
     let _intervalFromDate = function (currentValue)
     {
         let m = dayjs(currentValue[_self.startDateTimeField], _self.inputFormat);
-        let hours = m.hours();
-        let minutes = m.minutes();
+        let hours = m.hour();
+        let minutes = m.minute();
         let h = hours % 12;
         h = h ? h : 12;
         let ampm = hours >= 12 ? 'pm' : 'am';

@@ -133,14 +133,14 @@ var Calendar = function (_props)
     let _labelYear;
     let _startDateTimeField, _endDateTimeField;
 
-    this.beforeAttach = function (e)
+    this.beforeAttach = async function (e)
     {
         if (e.target.id == this.domID)
         {
             _viewStack = this.container_for_head.viewStack;
             _calendarDay = _viewStack.calendarDay;
-            _calendarWeek = _viewStack.calendarWeek;
-            _calendarMonth = _viewStack.calendarMonth;
+            _calendarWeek = (await _viewStack.calendarWeek)[0];
+            _calendarMonth = (await _viewStack.calendarMonth)[0];
             _labelMonth = this.container_for_head.label_for_month;
             _labelYear = this.container_for_head.label_for_year;
             e.preventDefault();
@@ -311,13 +311,13 @@ var Calendar = function (_props)
                                         inputFormat: _inputFormat,
                                         outputFormat: _outputFormat
                                     }
-                                },
+                                }
                             ]
                         }
                     }
                 ]
             }
-        }
+        };
         _viewStackComponent.props.ownerDocument = _self.ownerDocument;
     };
     ObjectUtils.fromDefault(_defaultParams, _props);

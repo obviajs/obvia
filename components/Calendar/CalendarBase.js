@@ -178,10 +178,14 @@ var CalendarBase = function (_props)
             }
         }
     });
+
+    let _beforeAttach = this.beforeAttach;
     this.beforeAttach = function (e) 
     {
         if (e.target.id == this.domID)
         {
+            if (typeof _beforeAttach == 'function')
+                _beforeAttach.apply(this, arguments);
             if (_props.calendarEvents && !this.getBindingExpression("calendarEvents"))
             {
                 this.calendarEvents = _props.calendarEvents;

@@ -442,7 +442,7 @@ var CalendarWeek = function (_props)
                                     {
                                         ctor: Container,
                                         props: {
-                                            type: Container.NONE,
+                                            type: "",
                                             id: "Container_Week_Days",
                                             height: 40,
                                             width: 150,
