@@ -89,12 +89,6 @@ var Calendar = function (_props)
         }
     });
 
-    Object.defineProperty(this, "viewStack", {
-        get: function viewStack()
-        {
-            return _viewStack;
-        }
-    });
     Object.defineProperty(this, "labelMonth", {
         get: function labelMonth()
         {
@@ -137,188 +131,180 @@ var Calendar = function (_props)
     {
         if (e.target.id == this.domID)
         {
-            _viewStack = this.container_for_head.viewStack;
+            _viewStack = this.viewStack;
             _calendarDay = _viewStack.calendarDay;
             _calendarWeek = (await _viewStack.calendarWeek)[0];
             _calendarMonth = (await _viewStack.calendarMonth)[0];
-            _labelMonth = this.container_for_head.label_for_month;
-            _labelYear = this.container_for_head.label_for_year;
+            _labelMonth = this.label_for_month;
+            _labelYear = this.label_for_year;
             e.preventDefault();
         }
     };
 
-    let _viewStackComponent;
+    let _cmps;
     let fnViewStackDelayInit = function ()
     {
-        _viewStackComponent = {
-            ctor: Container,
-            props: {
-                type: "",
-                id: "container_for_head",
-                components: [
-                    {
+        _cmps = [
+            {
+                ctor: Label,
+                props: {
+                    id: "label_for_month",
+                    label: CalendarConstants.Months[_nowDate.getMonth()],
+                    labelType: LabelType.label,
+                    classes: ["fc-label-month-w"],
+                },
+            },
+            {
+                ctor: Label,
+                props: {
+                    id: "label_for_year",
+                    label: _nowDate.getFullYear(),
+                    labelType: LabelType.label,
+                    classes: ["fc-label-year-w"]
+                }
+            },
+            {
+                ctor: Button,
+                props: {
+                    id: "button_for_day",
+                    label: "day",
+                    type: 'button',
+                    classes: [ButtonSize.SMALL, "fc-button-left-w"],
+                    "click": _clickDay,
+                }
+            },
+            {
+                ctor: Button,
+                props: {
+                    id: "button_for_week",
+                    label: "week",
+                    type: "button",
+                    classes: [ButtonSize.SMALL, "fc-button-center-w"],
+                    "click": _clickWeek,
+                }
+            },
+            {
+                ctor: Button,
+                props: {
+                    id: "button_for_month",
+                    label: "month",
+                    type: "button",
+                    classes: [ButtonSize.SMALL, "fc-button-right-w"],
+                    "click": _clickMonth,
+                }
+            },
+            {
+                ctor: Button,
+                props: {
+                    id: "button_previous_week",
+                    type: "button",
+                    classes: ["fc-button-prev-w", ButtonSize.LARGE],
+                    components: [{
                         ctor: Label,
                         props: {
-                            id: "label_for_month",
-                            label: CalendarConstants.Months[_nowDate.getMonth()],
-                            labelType: LabelType.label,
-                            classes: ["fc-label-month-w"],
+                            id: 'fa',
+                            labelType: LabelType.i,
+                            classes: ["fas", "fa-arrow-left"],
+                        }
+                    }],
+                    "click": _prevHandler,
+                }
+            },
+            {
+                ctor: Button,
+                props: {
+                    id: "button_next_week",
+                    type: "button",
+                    classes: ["fc-button-next-w", ButtonSize.LARGE],
+                    components: [{
+                        ctor: Label,
+                        props: {
+                            id: 'fad',
+                            labelType: LabelType.i,
+                            classes: ["fas", "fa-arrow-right"],
+                        }
+                    }],
+                    "click": _nextHandler,
+                }
+            },
+            {
+                ctor: ViewStack,
+                props: {
+                    id: 'viewStack',
+                    selectedIndex: 0,
+                    enabled: true,
+                    components: [
+                        {
+                            ctor: CalendarDay,
+                            props: {
+                                id: 'calendarDay',
+                                labelField: "value",
+                                labelField1: "value",
+                                descriptionField: _descriptionField,
+                                startDateTimeField: _startDateTimeField,
+                                endDateTimeField: _endDateTimeField,
+                                interval: 30,
+                                eventsField: _eventsField,
+                                timing: "timing",
+                                nowDate: new Date(),
+                                calendarEvents: _calendarEvents,
+                                inputFormat: _inputFormat,
+                                outputFormat: _outputFormat
+                            }
                         },
-                    },
-                    {
-                        ctor: Label,
-                        props: {
-                            id: "label_for_year",
-                            label: _nowDate.getFullYear(),
-                            labelType: LabelType.label,
-                            classes: ["fc-label-year-w"]
+                        {
+                            ctor: CalendarWeek,
+                            props: {
+                                id: 'calendarWeek',
+                                nowDate: new Date(),
+                                startHourCalendar: 0,
+                                endHourCalendar: 24,
+                                labelField: "value",
+                                descriptionField: _descriptionField,
+                                startDateTimeField: _startDateTimeField,
+                                endDateTimeField: _endDateTimeField,
+                                duration: "duration",
+                                valueHour: "valueHour",
+                                interval: 30,
+                                startRow: "startRow",
+                                eventsField: _eventsField,
+                                timing: "timing",
+                                classField1: "classField1",
+                                time: "time",
+                                top: "top",
+                                height: "height",
+                                marginTop: "marginTop",
+                                marginLeft: "marginLeft",
+                                calendarEvents: _calendarEvents,
+                                inputFormat: _inputFormat,
+                                outputFormat: _outputFormat
+                            }
+                        },
+                        {
+                            ctor: CalendarMonth,
+                            props: {
+                                id: 'calendarMonth',
+                                labelField: "value",
+                                labelField1: "value",
+                                eventsField: _eventsField,
+                                nowDate: new Date(),
+                                selectedClasses: "selectedClasses",
+                                classField: "classField",
+                                classField1: "classField1",
+                                startField: "startField",
+                                descriptionField: _descriptionField,
+                                startDateTimeField: _startDateTimeField,
+                                endDateTimeField: _endDateTimeField,
+                                nowMonth: new Date().getMonth(),
+                                calendarEvents: _calendarEvents,
+                                inputFormat: _inputFormat,
+                                outputFormat: _outputFormat
+                            }
                         }
-                    },
-                    {
-                        ctor: Button,
-                        props: {
-                            id: "button_for_day",
-                            label: "day",
-                            type: 'button',
-                            classes: [ButtonSize.SMALL, "fc-button-left-w"],
-                            "click": _clickDay,
-                        }
-                    },
-                    {
-                        ctor: Button,
-                        props: {
-                            id: "button_for_week",
-                            label: "week",
-                            type: "button",
-                            classes: [ButtonSize.SMALL, "fc-button-center-w"],
-                            "click": _clickWeek,
-                        }
-                    },
-                    {
-                        ctor: Button,
-                        props: {
-                            id: "button_for_month",
-                            label: "month",
-                            type: "button",
-                            classes: [ButtonSize.SMALL, "fc-button-right-w"],
-                            "click": _clickMonth,
-                        }
-                    },
-                    {
-                        ctor: Button,
-                        props: {
-                            id: "button_previous_week",
-                            type: "button",
-                            classes: ["fc-button-prev-w", ButtonSize.LARGE],
-                            components: [{
-                                ctor: Label,
-                                props: {
-                                    id: 'fa',
-                                    labelType: LabelType.i,
-                                    classes: ["fas", "fa-arrow-left"],
-                                }
-                            }],
-                            "click": _prevHandler,
-                        }
-                    },
-                    {
-                        ctor: Button,
-                        props: {
-                            id: "button_next_week",
-                            type: "button",
-                            classes: ["fc-button-next-w", ButtonSize.LARGE],
-                            components: [{
-                                ctor: Label,
-                                props: {
-                                    id: 'fad',
-                                    labelType: LabelType.i,
-                                    classes: ["fas", "fa-arrow-right"],
-                                }
-                            }],
-                            "click": _nextHandler,
-                        }
-                    },
-                    {
-                        ctor: ViewStack,
-                        props: {
-                            id: 'viewStack',
-                            selectedIndex: 0,
-                            enabled: true,
-                            components: [
-                                {
-                                    ctor: CalendarDay,
-                                    props: {
-                                        id: 'calendarDay',
-                                        labelField: "value",
-                                        labelField1: "value",
-                                        descriptionField: _descriptionField,
-                                        startDateTimeField: _startDateTimeField,
-                                        endDateTimeField: _endDateTimeField,
-                                        interval: 30,
-                                        eventsField: _eventsField,
-                                        timing: "timing",
-                                        nowDate: new Date(),
-                                        calendarEvents: _calendarEvents,
-                                        inputFormat: _inputFormat,
-                                        outputFormat: _outputFormat
-                                    }
-                                },
-                                {
-                                    ctor: CalendarWeek,
-                                    props: {
-                                        id: 'calendarWeek',
-                                        nowDate: new Date(),
-                                        startHourCalendar: 0,
-                                        endHourCalendar: 24,
-                                        labelField: "value",
-                                        descriptionField: _descriptionField,
-                                        startDateTimeField: _startDateTimeField,
-                                        endDateTimeField: _endDateTimeField,
-                                        duration: "duration",
-                                        valueHour: "valueHour",
-                                        interval: 30,
-                                        startRow: "startRow",
-                                        eventsField: _eventsField,
-                                        timing: "timing",
-                                        classField1: "classField1",
-                                        time: "time",
-                                        top: "top",
-                                        height: "height",
-                                        marginTop: "marginTop",
-                                        marginLeft: "marginLeft",
-                                        calendarEvents: _calendarEvents,
-                                        inputFormat: _inputFormat,
-                                        outputFormat: _outputFormat
-                                    }
-                                },
-                                {
-                                    ctor: CalendarMonth,
-                                    props: {
-                                        id: 'calendarMonth',
-                                        labelField: "value",
-                                        labelField1: "value",
-                                        eventsField: _eventsField,
-                                        nowDate: new Date(),
-                                        selectedClasses: "selectedClasses",
-                                        classField: "classField",
-                                        classField1: "classField1",
-                                        startField: "startField",
-                                        descriptionField: _descriptionField,
-                                        startDateTimeField: _startDateTimeField,
-                                        endDateTimeField: _endDateTimeField,
-                                        nowMonth: new Date().getMonth(),
-                                        calendarEvents: _calendarEvents,
-                                        inputFormat: _inputFormat,
-                                        outputFormat: _outputFormat
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                ]
+                    ]
+                }
             }
-        };
-        _viewStackComponent.props.ownerDocument = _self.ownerDocument;
+        ];
     };
     ObjectUtils.fromDefault(_defaultParams, _props);
     //_props = ObjectUtils.extend(false, false, _defaultParams, _props);
@@ -337,95 +323,95 @@ var Calendar = function (_props)
 
     let _clickDay = function ()
     {
-        if (_self.viewStack.selectedIndex < _self.viewStack.components.length)
+        if (_viewStack.selectedIndex < _viewStack.components.length)
         {
-            _self.viewStack.selectedIndex = 0;
-            let actualDateforDay = _self.calendarDay.nowDate;
-            _self.labelMonth.label = CalendarConstants.Months[actualDateforDay.getMonth()];
-            _self.labelYear.label = actualDateforDay.getFullYear();
+            _viewStack.selectedIndex = 0;
+            let actualDateforDay = _calendarDay.nowDate;
+            _labelMonth.label = CalendarConstants.Months[actualDateforDay.getMonth()];
+            _labelYear.label = actualDateforDay.getFullYear();
         }
     };
 
     let _clickWeek = function ()
     {
-        if (_self.viewStack.selectedIndex < _self.viewStack.components.length)
+        if (_viewStack.selectedIndex < _viewStack.components.length)
         {
-            _self.viewStack.selectedIndex = 1;
-            let actualDateforWeek = _self.calendarWeek.nowDate;
-            _self.labelMonth.label = CalendarConstants.Months[actualDateforWeek.getMonth()];
-            _self.labelYear.label = actualDateforWeek.getFullYear();
+            _viewStack.selectedIndex = 1;
+            let actualDateforWeek = _calendarWeek.nowDate;
+            _labelMonth.label = CalendarConstants.Months[actualDateforWeek.getMonth()];
+            _labelYear.label = actualDateforWeek.getFullYear();
         }
         else
         {
-            _self.viewStack.selectedIndex = 0;
+            _viewStack.selectedIndex = 0;
         }
     };
 
     let _clickMonth = function ()
     {
 
-        if (_self.viewStack.selectedIndex < _self.viewStack.components.length)
+        if (_viewStack.selectedIndex < _viewStack.components.length)
         {
-            _self.viewStack.selectedIndex = 2;
-            let actualDateforMonth = _self.calendarMonth.nowDate;
-            _self.labelMonth.label = CalendarConstants.Months[actualDateforMonth.getMonth()];
-            _self.labelYear.label = actualDateforMonth.getFullYear();
+            _viewStack.selectedIndex = 2;
+            let actualDateforMonth = _calendarMonth.nowDate;
+            _labelMonth.label = CalendarConstants.Months[actualDateforMonth.getMonth()];
+            _labelYear.label = actualDateforMonth.getFullYear();
         }
         else
         {
-            _self.viewStack.selectedIndex = 0;
+            _viewStack.selectedIndex = 0;
         }
     };
 
     let _prevHandler = function ()
     {
-        if (_self.viewStack.selectedIndex == 0)
+        if (_viewStack.selectedIndex == 0)
         {
-            _self.calendarDay.previous();
-            let actualDateforDay = _self.calendarDay.nowDate;
-            _self.labelMonth.label = CalendarConstants.Months[actualDateforDay.getMonth()];
-            _self.labelYear.label = actualDateforDay.getFullYear();
+            _calendarDay.previous();
+            let actualDateforDay = _calendarDay.nowDate;
+            _labelMonth.label = CalendarConstants.Months[actualDateforDay.getMonth()];
+            _labelYear.label = actualDateforDay.getFullYear();
 
-        } else if (_self.viewStack.selectedIndex == 1)
+        } else if (_viewStack.selectedIndex == 1)
         {
-            _self.calendarWeek.previous();
-            let actualDateforWeek = _self.calendarWeek.nowDate;
-            _self.labelMonth.label = CalendarConstants.Months[actualDateforWeek.getMonth()];
-            _self.labelYear.label = actualDateforWeek.getFullYear();
-        } else if (_self.viewStack.selectedIndex == 2)
+            _calendarWeek.previous();
+            let actualDateforWeek = _calendarWeek.nowDate;
+            _labelMonth.label = CalendarConstants.Months[actualDateforWeek.getMonth()];
+            _labelYear.label = actualDateforWeek.getFullYear();
+        } else if (_viewStack.selectedIndex == 2)
         {
-            _self.calendarMonth.previous();
-            let actualDateforMonth = _self.calendarMonth.nowDate;
-            _self.labelMonth.label = CalendarConstants.Months[actualDateforMonth.getMonth()];
-            _self.labelYear.label = actualDateforMonth.getFullYear();
+            _calendarMonth.previous();
+            let actualDateforMonth = _calendarMonth.nowDate;
+            _labelMonth.label = CalendarConstants.Months[actualDateforMonth.getMonth()];
+            _labelYear.label = actualDateforMonth.getFullYear();
         }
     };
 
     let _nextHandler = function ()
     {
-        if (_self.viewStack.selectedIndex == 0)
+        if (_viewStack.selectedIndex == 0)
         {
-            _self.calendarDay.next();
-            let actualDateforDay = _self.calendarDay.nowDate;
-            _self.labelMonth.label = CalendarConstants.Months[actualDateforDay.getMonth()];
-            _self.labelYear.label = actualDateforDay.getFullYear();
-        } else if (_self.viewStack.selectedIndex == 1)
+            _calendarDay.next();
+            let actualDateforDay = _calendarDay.nowDate;
+            _labelMonth.label = CalendarConstants.Months[actualDateforDay.getMonth()];
+            _labelYear.label = actualDateforDay.getFullYear();
+        } else if (_viewStack.selectedIndex == 1)
         {
-            _self.calendarWeek.next();
-            let actualDateforWeek = _self.calendarWeek.nowDate;
-            _self.labelMonth.label = CalendarConstants.Months[actualDateforWeek.getMonth()];
-            _self.labelYear.label = actualDateforWeek.getFullYear();
-        } else if (_self.viewStack.selectedIndex == 2)
+            _calendarWeek.next();
+            let actualDateforWeek = _calendarWeek.nowDate;
+            _labelMonth.label = CalendarConstants.Months[actualDateforWeek.getMonth()];
+            _labelYear.label = actualDateforWeek.getFullYear();
+        } else if (_viewStack.selectedIndex == 2)
         {
-            _self.calendarMonth.next();
-            let actualDateforMonth = _self.calendarMonth.nowDate;
-            _self.labelMonth.label = CalendarConstants.Months[actualDateforMonth.getMonth()];
-            _self.labelYear.label = actualDateforMonth.getFullYear();
+            _calendarMonth.next();
+            let actualDateforMonth = _calendarMonth.nowDate;
+            _labelMonth.label = CalendarConstants.Months[actualDateforMonth.getMonth()];
+            _labelYear.label = actualDateforMonth.getFullYear();
         }
     };
 
     fnViewStackDelayInit();
-    _props.components = [_viewStackComponent];
+    _props.components = _cmps;
     let r = Container.call(this, _props);
     return r;
 }

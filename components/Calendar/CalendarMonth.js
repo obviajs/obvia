@@ -258,7 +258,7 @@ var CalendarMonth = function (_props)
     {
         if (e.target.id == this.domID)
         {
-            _repeater_day = this.listRepeater;
+            _repeater_day = this.daysRepeater;
             e.preventDefault();
         }
     };
@@ -333,7 +333,7 @@ var CalendarMonth = function (_props)
             {
                 ctor: Repeater,
                 props: {
-                    id: 'repeaterForWeekDays',
+                    id: 'weekDaysRepeater',
                     ownerDocument: _self.ownerDocument,
                     rendering: {
                         direction: "horizontal",
@@ -366,7 +366,7 @@ var CalendarMonth = function (_props)
             {
                 ctor: Repeater,
                 props: {
-                    id: "listRepeater",
+                    id: "daysRepeater",
                     ownerDocument: _self.ownerDocument,
                     rendering: {
                         direction: "horizontal",
@@ -378,7 +378,7 @@ var CalendarMonth = function (_props)
                         ctor: Container,
                         props: {
                             type: "",
-                            id: "containerOneDay",
+                            id: "dayContainer",
                             classes: ["border-c"],
                             height: 140,
                             width: 140,
@@ -386,7 +386,7 @@ var CalendarMonth = function (_props)
                                 ctor: Container,
                                 props: {
                                     type: "",
-                                    id: "containerforDays",
+                                    id: "dateContainer",
                                     classes: "{classField}",
                                     label: '{' + _labelField + '}'
                                 }
@@ -394,7 +394,7 @@ var CalendarMonth = function (_props)
                             {
                                 ctor: Repeater,
                                 props: {
-                                    id: "eventRepeater",
+                                    id: "eventsRepeater",
                                     dataProvider: "{" + _eventsField + "}",
                                     rendering: {
                                         direction: "horizontal",
@@ -415,7 +415,7 @@ var CalendarMonth = function (_props)
                             }],
                             "click": _cellClick,
                         }
-                    }],
+                    }]
                 }
             }
         ];

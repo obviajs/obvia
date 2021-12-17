@@ -158,7 +158,7 @@ var CalendarWeek = function (_props)
     let _time = _props.time;
     let _timing = _props.timing;
     let _valueHour = _props.valueHour;
-    let _classFieldWeek = _props.classFieldWeek;
+    let _classesFieldWeek = _props.classesFieldWeek;
     let _height = _props.height;
     let _startHourCalendar = _props.startHourCalendar;
     let _endHourCalendar = _props.endHourCalendar;
@@ -206,8 +206,8 @@ var CalendarWeek = function (_props)
 
         if (e.target.id == this.domID)
         {
-            _repeater_for_week = this.cntRow.repeater_For_WeekDays_AND_Dates;
-            _repeater_for_hour = this.cntRow.repeater_for_weekDays_and_dates;
+            _repeater_for_week = this.cellsContainer.weekDaysRepeater;
+            _repeater_for_hour = this.cellsContainer.weekDaysRepeater;
             e.preventDefault();
         }
     };
@@ -395,7 +395,7 @@ var CalendarWeek = function (_props)
             {
                 ctor: Repeater,
                 props: {
-                    id: 'repeaterDayHour',
+                    id: 'dayHoursRepeater',
                     rendering: {
                         direction: "vertical",
                         separator: false,
@@ -422,14 +422,14 @@ var CalendarWeek = function (_props)
             {
                 ctor: Container,
                 props: {
-                    id: 'cntRow',
+                    id: 'cellsContainer',
                     type: "",
                     components: [
                         {
                             ctor: Repeater,
                             props: {
                                 ownerDocument: _self.ownerDocument,
-                                id: "repeater_For_WeekDays_AND_Dates",
+                                id: "weekDaysRepeater",
                                 type: "",
                                 rendering: {
                                     direction: "horizontal",
@@ -443,17 +443,17 @@ var CalendarWeek = function (_props)
                                         ctor: Container,
                                         props: {
                                             type: "",
-                                            id: "Container_Week_Days",
+                                            id: "weekDaysContainer",
                                             height: 40,
                                             width: 150,
                                             label: '{' + _labelField + '}',
-                                            classes: '{' + _classFieldWeek + '}',
+                                            classes: '{' + _classesFieldWeek + '}',
                                             classes: ['fc-week-display'],
                                             components: [
                                                 {
                                                     ctor: Repeater,
                                                     props: {
-                                                        id: "repeater_top",
+                                                        id: "eventsRepeater",
                                                         dataProvider: "{" + _eventsField + "}",
                                                         rendering: {
                                                             direction: "vertical",
@@ -470,7 +470,7 @@ var CalendarWeek = function (_props)
                                                                     height: "{height}",
                                                                     marginTop: "{marginTop}",
                                                                     marginLeft: "{marginLeft}",
-                                                                    id: "Container_top",
+                                                                    id: "eventContainer",
                                                                     label: "{" + _descriptionField + "}",
                                                                     classes: ["fc-event-first"],
                                                                     "click": _calendarEventClick
@@ -488,7 +488,7 @@ var CalendarWeek = function (_props)
                         {
                             ctor: Repeater,
                             props: {
-                                id: 'repeaterDayHour',
+                                id: 'dayHoursCellsRepeater',
                                 type: "",
                                 rendering: {
                                     direction: "horizontal",

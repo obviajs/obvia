@@ -166,8 +166,8 @@ var CalendarDay = function (_props)
     {
         if (e.target.id == this.domID)
         {
-            _repeater_hour = this.Container_Repeater.repeaterForHours;
-            _lbl = this.Label_Displaying_WeekDay;
+            _repeater_hour = this.hoursRepeater;
+            _lbl = this.dayNameLabel;
             e.preventDefault();
         }
     };
@@ -225,85 +225,76 @@ var CalendarDay = function (_props)
             {
                 ctor: Label,
                 props: {
-                    id: 'Label_Displaying_WeekDay',
+                    id: 'dayNameLabel',
                     ownerDocument: _self.ownerDocument,
                     label: CalendarConstants.Days[_self.nowDate.getDay()] + " " + _self.nowDate.getDate(),
                     classes: ["fc-week-day"],
                 }
             },
             {
-                ctor: Container,
+                ctor: Repeater,
                 props: {
+                    id: 'hoursRepeater',
                     type: "",
-                    id: "Container_Repeater",
                     ownerDocument: _self.ownerDocument,
+                    rendering: {
+                        direction: "horizontal",
+                        separator: false
+                    },
                     classes: ["fc-float"],
+                    dataProvider: _dataProvider,
                     components: [
                         {
-                            ctor: Repeater,
+                            ctor: Container,
                             props: {
-                                id: 'repeaterForHours',
-                                rendering: {
-                                    direction: "horizontal",
-                                    separator: false
-                                },
-                                classes: ["fc-float"],
-                                dataProvider: _dataProvider,
-                                components: [
-                                    {
-                                        ctor: Container,
-                                        props: {
-                                            type: "",
-                                            id: "InContainerForHours",
-                                            label: '{' + _labelField + '}',
-                                            classes: ["fc-container-hour"],
-                                            height: 20,
-                                            width: 20,
-                                        }
-                                    },
-                                    {
-                                        ctor: Container,
-                                        props: {
-                                            type: "",
-                                            id: "container_for_both",
-                                            components: [{
-                                                ctor: Container,
-                                                props: {
-                                                    type: "",
-                                                    id: "container_half_1",
-                                                    label: "{timeInterval}",
-                                                    classes: ["fc-hour-day"],
-                                                    height: 10,
-                                                    width: 1050,
-                                                }
-                                            },
-                                            {
-                                                ctor: Repeater,
-                                                props: {
-                                                    id: "event_Repeater",
-                                                    dataProvider: "{" + _eventsField + "}",
-                                                    rendering: {
-                                                        direction: "horizontal",
-                                                        separator: false
-                                                    },
-                                                    components: [{
-                                                        ctor: Container,
-                                                        props: {
-                                                            type: "",
-                                                            id: "event_Container",
-                                                            label: "{" + _self.descriptionField + "}",
-                                                            classes: ["fc-event"],
-                                                            "click": _calendarEventClick
-                                                        }
-                                                    }]
-                                                }
-                                            }],
-                                            "click": _cellClick,
-                                        }
-                                    }
-                                ]
+                                type: "",
+                                id: "hoursContainer",
+                                label: '{' + _labelField + '}',
+                                classes: ["fc-container-hour"],
+                                height: 20,
+                                width: 20,
                             }
                         },
+                        {
+                            ctor: Container,
+                            props: {
+                                type: "",
+                                id: "halvesContainer",
+                                components: [{
+                                    ctor: Container,
+                                    props: {
+                                        type: "",
+                                        id: "halfContainer",
+                                        label: "{timeInterval}",
+                                        classes: ["fc-hour-day"],
+                                        height: 10,
+                                        width: 1050,
+                                    }
+                                },
+                                {
+                                    ctor: Repeater,
+                                    props: {
+                                        id: "eventsRepeater",
+                                        dataProvider: "{" + _eventsField + "}",
+                                        rendering: {
+                                            direction: "horizontal",
+                                            separator: false
+                                        },
+                                        components: [{
+                                            ctor: Container,
+                                            props: {
+                                                type: "",
+                                                id: "eventContainer",
+                                                label: "{" + _self.descriptionField + "}",
+                                                classes: ["fc-event"],
+                                                "click": _calendarEventClick
+                                            }
+                                        }]
+                                    }
+                                }],
+                                "click": _cellClick,
+                            }
+                        }
                     ]
                 }
             }
