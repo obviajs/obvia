@@ -265,7 +265,7 @@ var CalendarWeek = function (_props)
     let initHourGrid_Prim = function ()
     {
         let dataProvider_second = new ArrayEx();
-        for (let j = 0; j < 24; j++)
+        for (let j = _startHourCalendar; j <= _endHourCalendar; j++)
         {
             let hours = j;
             hours = hours % 12;

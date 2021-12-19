@@ -380,6 +380,7 @@ var CalendarMonth = function (_props)
                             type: "",
                             id: "dayContainer",
                             classes: ["border-c"],
+                            css: { "overflow-y": "auto" },
                             height: 140,
                             width: 140,
                             components: [{
