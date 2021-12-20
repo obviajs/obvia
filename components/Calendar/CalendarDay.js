@@ -18,21 +18,7 @@ import { dayjs } from "/obvia/lib/dependencies/dayjs/dayjs.min.js";
 var CalendarDay = function (_props)
 {
     let _self = this;
-    let _lbl;
-
-    let _dpWatcher;
-    let _dpLengthChanged = function (e)
-    {
-        e.stopPropagation();
-        e.stopImmediatePropagation();
-    };
-
-    let _dpMemberChanged = function (e)
-    {
-        e.stopPropagation();
-        e.stopImmediatePropagation();
-        _dataProvider[_intervalToIndex[_intervalFromDate(e.newValue)]][_eventsField].splice(_dataProvider[_intervalToIndex[_intervalFromDate(e.newValue)]][_eventsField].length, 0, e.newValue);
-    };
+    let _lbl, _dataProvider = new ArrayEx();
 
     this.afterAttach = function (e)
     {
@@ -75,10 +61,10 @@ var CalendarDay = function (_props)
         }
     };
 
-    let _createHours = function ()
+    this.fillEvents = function ()
     {
         let groupedEvents = _self.calendarEvents.groupReduce(_intervalFromDate);
-        let _dataProvider = [];
+        let dp = [];
         let dateContent = dayjs(_self.nowDate).format(_self.internalFormat);
         for (let i = _startHourCalendar; i < _endHourCalendar; i++)
         {
@@ -104,7 +90,7 @@ var CalendarDay = function (_props)
             {
                 dp1[_eventsField] = new ArrayEx(groupedEvents[hourInterval_2]);
             }
-            _intervalToIndex[hourInterval_2] = _dataProvider.push(dp1) - 1;
+            _intervalToIndex[hourInterval_2] = dp.push(dp1) - 1;
 
             let dp2 = {
                 "value": " ",
@@ -124,9 +110,11 @@ var CalendarDay = function (_props)
                 dp2[_eventsField] = new ArrayEx(groupedEvents[hourInterval_3]);
             }
 
-            _intervalToIndex[hourInterval_3] = _dataProvider.push(dp2) - 1;
+            _intervalToIndex[hourInterval_3] = dp.push(dp2) - 1;
         }
-        return _dataProvider;
+        _dataProvider.splicea(0, _dataProvider.length, dp);
+        _self.dataProvider = dp;
+        return dp;
     };
 
     ObjectUtils.fromDefault(_defaultParams, _props);
@@ -137,7 +125,6 @@ var CalendarDay = function (_props)
     let _startTime = _props.startTime;
     let _endTime = _props.endTime;
     let _interval = _props.interval;
-    let _dataProvider;
     let _eventsField = _props.eventsField;
     let _startHourCalendar = _props.startHourCalendar;
     let _endHourCalendar = _props.endHourCalendar;
@@ -177,11 +164,8 @@ var CalendarDay = function (_props)
         _self.nowDate.setDate(_self.nowDate.getDate() - 1);
         let new_prev = CalendarConstants.Days[_self.nowDate.getDay()];
         let update_prev_date = _self.nowDate.getDate();
-        let new_dp_prev = _createHours();
-        let dataProvider = _repeater_hour.dataProvider;
-        dataProvider.splicea(0, dataProvider.length, new_dp_prev);
         _lbl.label = new_prev + " " + update_prev_date;
-        _self.dataProvider = new_dp_prev;
+        _self.fillEvents();
     };
 
     this.next = function (eve)
@@ -189,11 +173,8 @@ var CalendarDay = function (_props)
         _self.nowDate.setDate(_self.nowDate.getDate() + 1);
         let new_day = CalendarConstants.Days[_self.nowDate.getDay()];
         let update_date = _self.nowDate.getDate();
-        let new_dp_next = _createHours();
-        let dp = _repeater_hour.dataProvider;
-        dp.splicea(0, dp.length, new_dp_next);
         _lbl.label = new_day + " " + update_date;
-        _self.dataProvider = new_dp_next;
+        _self.fillEvents();
     };
 
     let _calendarEventClick = function (e, ra)
@@ -316,7 +297,7 @@ var CalendarDay = function (_props)
                 }
             });
         });
-        _dataProvider = _createHours();
+        _dataProvider.splicea(0, 0, _self.fillEvents());
         fnContainerDelayInit();
         this.addComponents(_cmps);
         return _rPromise;

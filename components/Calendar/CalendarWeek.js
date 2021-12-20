@@ -19,20 +19,6 @@ var CalendarWeek = function (_props)
     let _self = this;
     let day;
 
-    Object.defineProperty(this, "dataProvider", {
-        get: function dataProvider()
-        {
-            return _dataProvider;
-        },
-        set: function dataProvider(v)
-        {
-            if (_dataProvider != v)
-            {
-                _dataProvider = !ArrayEx.isArrayEx(v) ? new ArrayEx(v) : v;
-            }
-        }
-    });
-
     this.afterAttach = function (e)
     {
         if (typeof _afterAttach == 'function')
@@ -101,11 +87,11 @@ var CalendarWeek = function (_props)
 
     let _eventCount = {};
 
-    let _createDataProvider = function ()
+    this.fillEvents = function ()
     {
         _eventCount = {};
         let groupedEvents = _self.calendarEvents.groupReduce(_intervalFromDate);
-        let _dataProvider = [];
+        let dp = [];
         let input = new Date(_self.nowDate.getTime());
         let result = _self.dates(input);
         let len = result.length;
@@ -141,9 +127,12 @@ var CalendarWeek = function (_props)
             {
                 dp1[_eventsField] = new ArrayEx(groupedEvents[gi]);
             }
-            _dataProvider.push(dp1);
+            dp.push(dp1);
         }
-        return _dataProvider;
+
+        _dataProvider.splicea(0, _dataProvider.length, dp);
+        _self.dataProvider = dp;
+        return dp;
     };
     ObjectUtils.fromDefault(_defaultParams, _props);
     //_props = ObjectUtils.extend(false, false, _defaultParams, _props);
@@ -162,13 +151,13 @@ var CalendarWeek = function (_props)
     let _height = _props.height;
     let _startHourCalendar = _props.startHourCalendar;
     let _endHourCalendar = _props.endHourCalendar;
-    let _dataProvider;
+    let _dataProvider = new ArrayEx();
     let _dataProvider_Hour, _dataProvider_Hour_Prim;
     let _eventsField = _props.eventsField;
 
     let _getTop = function (minutes)
     {
-        return (minutes * _cellHeight) / _interval;
+        return ((minutes * _cellHeight) / _interval) - _startHourCalendar * 40;
     };
 
     this.addEvent = function (event)
@@ -199,7 +188,6 @@ var CalendarWeek = function (_props)
     };
 
     let _repeater_for_week;
-    let _repeater_for_hour;
 
     this.beforeAttach = function (e)
     {
@@ -207,7 +195,6 @@ var CalendarWeek = function (_props)
         if (e.target.id == this.domID)
         {
             _repeater_for_week = this.cellsContainer.weekDaysRepeater;
-            _repeater_for_hour = this.cellsContainer.weekDaysRepeater;
             e.preventDefault();
         }
     };
@@ -215,7 +202,7 @@ var CalendarWeek = function (_props)
     let initHourGrid = function ()
     {
         let dataProvider_second = new ArrayEx();
-        for (let j = _startHourCalendar; j < _endHourCalendar; j++)
+        for (let j = _startHourCalendar; j <= _endHourCalendar; j++)
         {
             let hours = j;
             hours = hours % 12;
@@ -310,11 +297,7 @@ var CalendarWeek = function (_props)
         let two_weeks_a = dayjs(_dataProvider[0].dateContent, _self.internalFormat).toDate();
         let two_weeks_ago = new Date(two_weeks_a.getTime() - 7 * 24 * 60 * 60 * 1000);
         _self.nowDate = two_weeks_ago;
-        let new_dp_prev = _createDataProvider();
-        let new_dp_prev_1 = new_dp_prev;
-        let dp_first = _repeater_for_week.dataProvider;
-        dp_first.splicea(0, dp_first.length, new_dp_prev_1);
-        _self.dataProvider = new_dp_prev;
+        _self.fillEvents();
     };
 
     this.next = function ()
@@ -322,11 +305,7 @@ var CalendarWeek = function (_props)
         let one_week_n = dayjs(_dataProvider[0].dateContent, _self.internalFormat).toDate();
         let one_week_next = new Date(one_week_n.getTime() + 7 * 24 * 60 * 60 * 1000);
         _self.nowDate = one_week_next;
-        let new_dp_next = _createDataProvider();
-        let new_dp_next_1 = new_dp_next;
-        let dp_first = _repeater_for_week.dataProvider;
-        dp_first.splicea(0, dp_first.length, new_dp_next_1);
-        _self.dataProvider = new_dp_next;
+        _self.fillEvents();
     };
 
     this.generateDay = function (ra)
@@ -537,7 +516,7 @@ var CalendarWeek = function (_props)
             });
         });
 
-        _dataProvider = _createDataProvider();
+        _dataProvider.splicea(0, 0, _self.fillEvents());
         _dataProvider_Hour = initHourGrid();
         _dataProvider_Hour_Prim = initHourGrid_Prim();
         fnContainerDelayInit();

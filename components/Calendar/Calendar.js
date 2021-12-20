@@ -14,10 +14,12 @@ import { Label } from "/obvia/components/Label.js";
 import { LabelType } from "/obvia/components/Label.js";
 import { Button, ButtonSize } from "/obvia/components/Button/Button.js";
 import { ViewStack } from "/obvia/components/base/ViewStack.js";
+import { ArrayEx } from "/obvia/lib/ArrayEx.js";
 
 var Calendar = function (_props)
 {
     let _self = this;
+    let _calendarEvents;
 
     Object.defineProperty(this, "calendarEvents", {
         get: function calendarEvents()
@@ -28,7 +30,12 @@ var Calendar = function (_props)
         {
             if (_calendarEvents != v)
             {
-                _calendarEvents = v;
+                if (_calendarDay)
+                    _calendarDay.calendarEvents = v;
+                if (_calendarWeek)
+                    _calendarWeek.calendarEvents = v;
+                if (_calendarMonth)
+                    _calendarMonth.calendarEvents = v;
             }
         }
     });
@@ -110,7 +117,7 @@ var Calendar = function (_props)
         calendarDay: "",
         calendarWeek: "",
         calendarMonth: "",
-        calendarEvents: [],
+        calendarEvents: new ArrayEx(),
         inputFormat: 'YYYY-MM-DD HH:mm',
         outputFormat: 'YYYY-MM-DD HH:mm',
         eventsField: "cellEvents",
@@ -137,6 +144,10 @@ var Calendar = function (_props)
             _calendarMonth = (await _viewStack.calendarMonth)[0];
             _labelMonth = this.label_for_month;
             _labelYear = this.label_for_year;
+            if (_props.calendarEvents && !this.getBindingExpression("calendarEvents"))
+            {
+                this.calendarEvents = _props.calendarEvents;
+            }
             e.preventDefault();
         }
     };
@@ -247,7 +258,7 @@ var Calendar = function (_props)
                                 eventsField: _eventsField,
                                 timing: "timing",
                                 nowDate: new Date(),
-                                calendarEvents: _calendarEvents,
+                                //calendarEvents: _calendarEvents,
                                 inputFormat: _inputFormat,
                                 outputFormat: _outputFormat
                             }
@@ -275,7 +286,7 @@ var Calendar = function (_props)
                                 height: "height",
                                 marginTop: "marginTop",
                                 marginLeft: "marginLeft",
-                                calendarEvents: _calendarEvents,
+                                //calendarEvents: _calendarEvents,
                                 inputFormat: _inputFormat,
                                 outputFormat: _outputFormat
                             }
@@ -296,7 +307,7 @@ var Calendar = function (_props)
                                 startDateTimeField: _startDateTimeField,
                                 endDateTimeField: _endDateTimeField,
                                 nowMonth: new Date().getMonth(),
-                                calendarEvents: _calendarEvents,
+                                //calendarEvents: _calendarEvents,
                                 inputFormat: _inputFormat,
                                 outputFormat: _outputFormat
                             }
@@ -311,7 +322,6 @@ var Calendar = function (_props)
     let _nowDate = _props.nowDate;
     let _guidField = _props.guidField;
     let _selectedIndex = _props.selectedIndex;
-    let _calendarEvents = _props.calendarEvents;
     let _inputFormat = _props.inputFormat;
     let _outputFormat = _props.outputFormat;
     let _eventsField = _props.eventsField;

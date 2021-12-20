@@ -12,12 +12,14 @@ var CalendarBase = function (_props)
     let _dpWatcher;
     let _dpLengthChanged = function (e)
     {
+        _self.fillEvents();
         e.stopPropagation();
         e.stopImmediatePropagation();
     }
 
     let _dpMemberChanged = function (e)
     {
+        _self.fillEvents();
         e.stopPropagation();
         e.stopImmediatePropagation();
     }
@@ -43,6 +45,7 @@ var CalendarBase = function (_props)
                     _dpWatcher.watch(_calendarEvents, "length", _dpLengthChanged);
                     _calendarEvents.on("propertyChange", _dpMemberChanged);
                 }
+                _self.fillEvents();
             }
         },
         enumerable: true
