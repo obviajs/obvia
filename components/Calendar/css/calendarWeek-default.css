@@ -75,7 +75,7 @@
 }
 
 .fc-week-display {
-    font-weight:600;
+    font-weight:300;
     font-size:16px;
     background-color:rgb(39, 38, 38);
     color:white;
@@ -155,4 +155,14 @@ opacity: 0.5;
     transition: border-color .15s;
     font-size:16px;
     font-weight:700;
+}
+
+.fc-week-state-highlight { 
+    border-bottom-width: 1px;
+    background-color: #ff3b30;
+    color: white;
+    font-size: 16px;
+    font-weight: 300;
+    line-height: 30px;
+    text-align: center;
 }

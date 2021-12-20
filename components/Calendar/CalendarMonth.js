@@ -114,7 +114,6 @@ var CalendarMonth = function (_props)
         let daysInMonth = _daysInMonth(currentMonth, currentYear);
         for (let i = 1; i <= daysInMonth; i++)
         {
-
             let iterationday = new Date(currentYear, currentMonth, i).getDay();
             let mm = currentMonth + 1;
             let mm_content = mm;
@@ -321,15 +320,16 @@ var CalendarMonth = function (_props)
                         separator: false,
                         wrap: false
                     },
+                    classes: ["form-row"],
                     css: { display: "flex", width: "980px" },
                     dataProvider: new ArrayEx([
-                        { value: 'Monday', classes: ['fc-border'] },
-                        { value: 'Tuesday', classes: ['fc-border'] },
-                        { value: 'Wednesday', classes: ['fc-border'] },
-                        { value: 'Thursday', classes: ['fc-border'] },
-                        { value: 'Friday', classes: ['fc-border'] },
-                        { value: 'Saturday', classes: ['fc-border-Saturday-Sunday'] },
-                        { value: 'Sunday', classes: ['fc-border-Saturday-Sunday'] },
+                        { value: 'Monday', classes: ['col', 'fc-border'] },
+                        { value: 'Tuesday', classes: ['col', 'fc-border'] },
+                        { value: 'Wednesday', classes: ['col', 'fc-border'] },
+                        { value: 'Thursday', classes: ['col', 'fc-border'] },
+                        { value: 'Friday', classes: ['col', 'fc-border'] },
+                        { value: 'Saturday', classes: ['col', 'fc-border-Saturday-Sunday'] },
+                        { value: 'Sunday', classes: ['col', 'fc-border-Saturday-Sunday'] },
                     ]),
                     components: [{
                         ctor: Container,
@@ -351,18 +351,19 @@ var CalendarMonth = function (_props)
                     ownerDocument: _self.ownerDocument,
                     rendering: {
                         direction: "horizontal",
-                        separator: false
+                        separator: false,
+                        wrap: false
                     },
                     css: { width: "980px" },
+                    classes: ["form-row"],
                     dataProvider: _dataProvider,
                     components: [{
                         ctor: Container,
                         props: {
                             type: "",
                             id: "dayContainer",
-                            classes: ["border-c"],
-                            css: { "overflow-y": "auto" },
-                            height: 140,
+                            classes: ["border-c", "pr-0", "pl-0"],
+                            css: { "min-height": "150px" },
                             width: 140,
                             components: [{
                                 ctor: Container,
@@ -390,6 +391,7 @@ var CalendarMonth = function (_props)
                                             id: "eventContainer",
                                             label: "{" + _descriptionField + "}",
                                             classes: ["fc-event-inner"],
+                                            css: { "width": "100%" },
                                             "click": _calendarEventClick
                                         }
                                     }]

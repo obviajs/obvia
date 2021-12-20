@@ -193,6 +193,7 @@ var CalendarBase = function (_props)
             {
                 this.calendarEvents = _props.calendarEvents;
             }
+
         }
     };
 
@@ -240,6 +241,8 @@ var CalendarBase = function (_props)
         _self.nowDate = _props.nowDate;
     if (_props.calendarStartDate)
         _self.calendarStartDate = _props.calendarStartDate;
+    else
+        _self.calendarStartDate = new Date(_self.nowDate);
     if (_props.nowDate)
         _self.nowDate = _props.nowDate;
     if (_props.startDateTimeField)

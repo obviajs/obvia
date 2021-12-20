@@ -38,19 +38,19 @@ var CalendarWeek = function (_props)
         endTime: " ",
         startHourCalendar: 0,
         endHourCalendar: 24,
-        classField1: " ",
         heightField: "",
         css: { display: "flex" },
         cellHeight: 20,
         eventsField: "cellEvents",
-        internalFormat: "YYYY-MM-DD"
+        internalFormat: "YYYY-MM-DD",
+        classesFieldWeek: "classes"
     };
 
     this.dates = function (today)
     {
+        today = new Date(today.getTime());
         let week = [];
         today.setDate(today.getDate() - today.getDay() + 1);
-        _self.calendarStartDate = new Date(today.getTime());
         for (let i = 0; i < 7; i++)
         {
             week.push(new Date(today));
@@ -79,6 +79,7 @@ var CalendarWeek = function (_props)
         event.valueHour = " ";
         event.duration = de.diff(ds, "minutes");
         event.top = _getTop(hm);
+        event.width = Math.max(de.diff(ds, 'day') * 150, 150);
         event.height = _getHeight(event.duration);
         event.marginTop = _eventCount[hm] * 10;
         event.marginLeft = _eventCount[hm] * 10;
@@ -92,15 +93,19 @@ var CalendarWeek = function (_props)
         _eventCount = {};
         let groupedEvents = _self.calendarEvents.groupReduce(_intervalFromDate);
         let dp = [];
-        let input = new Date(_self.nowDate.getTime());
-        let result = _self.dates(input);
+        let result = _self.dates(_self.calendarStartDate);
         let len = result.length;
-        let wn = dayjs(_self.nowDate).isoWeek();
+        let wn = dayjs(_self.calendarStartDate).isoWeek();
+        let today = _self.nowDate.getDate();
+        let currentMonth = _self.nowDate.getMonth();
+        let currentYear = _self.nowDate.getFullYear();
         for (let i = 0; i < len; i++)
         {
-            let date_string = result[i].getDate();
+            let date = result[i].getDate();
+            let dateMonth = result[i].getMonth();
+            let dateYear = result[i].getFullYear();
             let day_string = CalendarConstants.Days[result[i].getDay()];
-            let result_complete = day_string + " " + date_string;
+            let result_complete = day_string + " " + date;
             let mr = dayjs(result[i]);
             let dateContent = mr.format(_self.internalFormat);
             let gi = wn + "-" + mr.weekday();
@@ -117,11 +122,23 @@ var CalendarWeek = function (_props)
                 "marginLeft": 0,
                 "gi": gi
             };
+
+            if (today == date && currentMonth == dateMonth && currentYear == dateYear)
+                dp1[_classesFieldWeek] = ["fc-week-state-highlight"];
+            else if (i == 5 || i == 6)
+                dp1[_classesFieldWeek] = ["fc-border-Saturday-Sunday"];
+            else
+                dp1[_classesFieldWeek] = ["fc-border"];
+
             dp1[_eventsField] = new ArrayEx([]);
             dp1[_self.guidField] = StringUtils.guid();
-            for (let j = 0; groupedEvents[gi] && j < groupedEvents[gi].length; j++)
+            if (groupedEvents[gi])
             {
-                _prepareEvent(groupedEvents[gi][j]);
+                let glen = groupedEvents[gi].length;
+                for (let j = 0; j < glen; j++)
+                {
+                    _prepareEvent(groupedEvents[gi][j]);
+                }
             }
             if (groupedEvents[gi])
             {
@@ -157,7 +174,7 @@ var CalendarWeek = function (_props)
 
     let _getTop = function (minutes)
     {
-        return ((minutes * _cellHeight) / _interval) - _startHourCalendar * 40;
+        return ((minutes * _cellHeight) / _interval) - _startHourCalendar * 40 - 1 * (minutes / _interval);
     };
 
     this.addEvent = function (event)
@@ -296,7 +313,8 @@ var CalendarWeek = function (_props)
     {
         let two_weeks_a = dayjs(_dataProvider[0].dateContent, _self.internalFormat).toDate();
         let two_weeks_ago = new Date(two_weeks_a.getTime() - 7 * 24 * 60 * 60 * 1000);
-        _self.nowDate = two_weeks_ago;
+        //_self.nowDate = two_weeks_ago;
+        _self.calendarStartDate = two_weeks_ago;
         _self.fillEvents();
     };
 
@@ -304,7 +322,8 @@ var CalendarWeek = function (_props)
     {
         let one_week_n = dayjs(_dataProvider[0].dateContent, _self.internalFormat).toDate();
         let one_week_next = new Date(one_week_n.getTime() + 7 * 24 * 60 * 60 * 1000);
-        _self.nowDate = one_week_next;
+        //_self.nowDate = one_week_next;
+        _self.calendarStartDate = one_week_next;
         _self.fillEvents();
     };
 
@@ -382,7 +401,7 @@ var CalendarWeek = function (_props)
                     },
                     classes: ["fc-float"],
                     dataProvider: _dataProvider_Hour_Prim,
-                    css: { "margin-top": "60px", "margin-right": "40px" },
+                    css: { "margin-top": "40px", "margin-right": "40px" },
                     components: [
                         {
                             ctor: Container,
@@ -427,7 +446,6 @@ var CalendarWeek = function (_props)
                                             width: 150,
                                             label: '{' + _labelField + '}',
                                             classes: '{' + _classesFieldWeek + '}',
-                                            classes: ['fc-week-display'],
                                             components: [
                                                 {
                                                     ctor: Repeater,
@@ -446,6 +464,7 @@ var CalendarWeek = function (_props)
                                                                 props: {
                                                                     type: "",
                                                                     top: "{top}",
+                                                                    width: "{width}",
                                                                     height: "{height}",
                                                                     marginTop: "{marginTop}",
                                                                     marginLeft: "{marginLeft}",
