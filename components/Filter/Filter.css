@@ -4,6 +4,7 @@
 
 .filter .main_autocomplete {
     margin-bottom: 1rem;
+    position: relative;
 }
 
 .filter .main_autocomplete>div {
