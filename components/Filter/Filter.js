@@ -477,8 +477,8 @@ var Filter = function (_props)
     let _operatorChange = function (e, ra)
     {
         ra.currentItem.operatorItem = this.selectedItem;
-        if (ra.currentRow.repeater_container.filterEditorContainer.mainRow)
-            _editFilter(e, ra);
+        // if (ra.currentRow.repeater_container.filterEditorContainer.mainRow)
+        //     _editFilter(e, ra);
     };
 
     this.validate = function ()
@@ -802,7 +802,16 @@ var Filter = function (_props)
 
     let _initDefaultFilters = function ()
     {
-        let ret = _build(_rules);
+        let _defaultRules;
+        for (let i = 0; i < _rules.rules.length; i++)
+        {
+            if (_rules.rules[i].value)
+            {
+                _rules.rules[i].value = null;
+            }
+            _defaultRules = _rules;
+        }
+        let ret = _build(_defaultRules);
         _expressionContainer.$el.text(ret.cond);
         repDp = _self.children.filterMainContainer.repeater.dataProvider = ret.dataProvider;
         //_expressionInput();
