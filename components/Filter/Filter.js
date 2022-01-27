@@ -30,6 +30,7 @@ var Filter = function (_props)
         _getLabelField,
         _getValueField,
         _operatorEnabledField,
+        _requiredField,
         _dataProvider,
         valueAutoComplete,
         repDp,
@@ -353,6 +354,7 @@ var Filter = function (_props)
                         {
                             "ctor": "RequiredFieldValidator",
                             "props": {
+                                "enabled": "{" + ra.currentItem.required + "}",
                                 "id": "valueValidator",
                                 "controlToValidate": "valueInput",
                                 "errorMessage": "Please enter a value.",
@@ -506,16 +508,25 @@ var Filter = function (_props)
             if (valid)
             {
                 let ret = _getValue(ra);
-                ra.currentItem.value = ret.value;
-                let operator = ra.currentItem.operatorItem;
-                let label = operator.friendly.formatUnicorn(ret.label);
-                //ra.currentRow.repeater_container.filterItemHeading.label = label;
-                ra.currentItem.filterHeading = label;
-                ra.currentRow.filterActionLabel.faRemove.display = true;
-                ra.currentRow.filterActionLabel.faAccept.display = false;
-                ra.currentRow.repeater_container.filterEditorContainer.hide();
-                ra.currentRow.repeater_container.filterItemHeading.show();
-                _update();
+                if (ra.currentItem.value.value)
+                {
+                    ra.currentItem.value = ret.value;
+                    let operator = ra.currentItem.operatorItem;
+                    let label = operator.friendly.formatUnicorn(ret.label);
+                    //ra.currentRow.repeater_container.filterItemHeading.label = label;
+                    ra.currentItem.filterHeading = label;
+                    ra.currentRow.filterActionLabel.faRemove.display = true;
+                    ra.currentRow.filterActionLabel.faAccept.display = false;
+                    ra.currentRow.repeater_container.filterEditorContainer.hide();
+                    ra.currentRow.repeater_container.filterItemHeading.show();
+                    _update();
+                }
+                else
+                {
+                    ra.currentRow.repeater_container.filterItemHeading.show();
+                    ra.currentRow.repeater_container.filterEditorContainer.headerRow.mainCol.fOperator.operatorLabel = ra.currentItem[_labelField];
+                    ra.currentRow.repeater_container.filterEditorContainer.hide();
+                }
             }
         });
     };
@@ -845,6 +856,7 @@ var Filter = function (_props)
             obj[_getValueField] = _dataProvider[ind][_getValueField];
             obj[_getLabelField] = _dataProvider[ind][_getLabelField];
             obj[_operatorEnabledField] = _dataProvider[ind][_operatorEnabledField];
+            obj[_requiredField] = _dataProvider[ind][_requiredField] == false ? false : true;
             let dpInd = ind;
             if (Array.isArray(crules.value))
             {
@@ -941,6 +953,7 @@ var Filter = function (_props)
         getLabelField: "getLabel",
         getValueField: "getValue",
         operatorEnabledField: "operatorEnabled",
+        requiredField: "required",
         advancedMode: true,
         css: {
             "min-height": "100px"
@@ -956,6 +969,7 @@ var Filter = function (_props)
     _getLabelField = _props.getLabelField;
     _getValueField = _props.getValueField;
     _operatorEnabledField = _props.operatorEnabledField;
+    _requiredField = _props.requiredField;
 
     _advancedMode = _props.advancedMode;
 
