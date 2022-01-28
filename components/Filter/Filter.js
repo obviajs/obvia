@@ -249,6 +249,20 @@ var Filter = function (_props)
     let _removeFilterItem = function (e, ra)
     {
         const repeated_block = e.target.parentElement.parentElement;
+        let validator = this.parentRepeater.find("valueValidator");
+        if (validator)
+        {
+            ValidationManager.getInstance().remove(validator);
+        } else
+        {
+            let v1 = this.parentRepeater.find("maxValueValidator");
+            if (v1)
+            {
+                let v2 = this.parentRepeater.find("minValueValidator");
+                ValidationManager.getInstance().remove(v1);
+                ValidationManager.getInstance().remove(v2);
+            }
+        }
         repDp.splice(ra.currentIndex, 1)
         _update();
         //repeated_block.classList.add('fall');
@@ -307,7 +321,7 @@ var Filter = function (_props)
                                         "controlToValidate": "minInput",
                                         "errorMessage": "Please enter a value for the lower boundary.",
                                         "validationGroup": _validationGroupUID,
-                                        "enabled": "{currentItem.deleted == null || currentItem.deleted == false}",
+                                        "enabled": (ra.currentItem.deleted == null || ra.currentItem.deleted == false) && ra.currentItem[_requiredField],
                                         "display": false,
                                         "css": { "color": "red" }
                                     }
@@ -330,7 +344,7 @@ var Filter = function (_props)
                                         "controlToValidate": "maxInput",
                                         "errorMessage": "Please enter a value for the upper boundary.",
                                         "validationGroup": _validationGroupUID,
-                                        "enabled": "{currentItem.deleted == null || currentItem.deleted == false}",
+                                        "enabled": (ra.currentItem.deleted == null || ra.currentItem.deleted == false) && ra.currentItem[_requiredField],
                                         "display": false,
                                         "css": { "color": "red" }
                                     }
@@ -354,7 +368,7 @@ var Filter = function (_props)
                         {
                             "ctor": "RequiredFieldValidator",
                             "props": {
-                                "enabled": "{" + ra.currentItem.required + "}",
+                                "enabled": ra.currentItem[_requiredField],
                                 "id": "valueValidator",
                                 "controlToValidate": "valueInput",
                                 "errorMessage": "Please enter a value.",
@@ -479,8 +493,8 @@ var Filter = function (_props)
     let _operatorChange = function (e, ra)
     {
         ra.currentItem.operatorItem = this.selectedItem;
-        // if (ra.currentRow.repeater_container.filterEditorContainer.mainRow)
-        //     _editFilter(e, ra);
+        if (ra.currentRow.repeater_container.filterEditorContainer.mainRow)
+            _editFilter(e, ra);
     };
 
     this.validate = function ()
@@ -508,25 +522,25 @@ var Filter = function (_props)
             if (valid)
             {
                 let ret = _getValue(ra);
-                if (ra.currentItem.value.value)
-                {
-                    ra.currentItem.value = ret.value;
-                    let operator = ra.currentItem.operatorItem;
-                    let label = operator.friendly.formatUnicorn(ret.label);
-                    //ra.currentRow.repeater_container.filterItemHeading.label = label;
-                    ra.currentItem.filterHeading = label;
-                    ra.currentRow.filterActionLabel.faRemove.display = true;
-                    ra.currentRow.filterActionLabel.faAccept.display = false;
-                    ra.currentRow.repeater_container.filterEditorContainer.hide();
-                    ra.currentRow.repeater_container.filterItemHeading.show();
-                    _update();
-                }
-                else
-                {
-                    ra.currentRow.repeater_container.filterItemHeading.show();
-                    ra.currentRow.repeater_container.filterEditorContainer.headerRow.mainCol.fOperator.operatorLabel = ra.currentItem[_labelField];
-                    ra.currentRow.repeater_container.filterEditorContainer.hide();
-                }
+                // if (ra.currentItem.value.value)
+                // {
+                ra.currentItem.value = ret.value;
+                let operator = ra.currentItem.operatorItem;
+                let label = operator.friendly.formatUnicorn(ret.label);
+                //ra.currentRow.repeater_container.filterItemHeading.label = label;
+                ra.currentItem.filterHeading = label;
+                ra.currentRow.filterActionLabel.faRemove.display = true;
+                ra.currentRow.filterActionLabel.faAccept.display = false;
+                ra.currentRow.repeater_container.filterEditorContainer.hide();
+                ra.currentRow.repeater_container.filterItemHeading.show();
+                _update();
+                // }
+                // else
+                // {
+                //     ra.currentRow.repeater_container.filterItemHeading.show();
+                //     ra.currentRow.repeater_container.filterEditorContainer.headerRow.mainCol.fOperator.operatorLabel = ra.currentItem[_labelField];
+                //     ra.currentRow.repeater_container.filterEditorContainer.hide();
+                // }
             }
         });
     };

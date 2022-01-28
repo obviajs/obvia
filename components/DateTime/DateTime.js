@@ -17,7 +17,7 @@ var DateTime = function (_props)
         {
             let d = dayjs(this.$input.val(), _self.internalFormat);
             let date = d.format(_outputFormat);
-            return (d.isValid() || date == "") ? "" : date;
+            return (!d.isValid() || date == "") ? "" : date;
         },
         set: function value(v)
         {
