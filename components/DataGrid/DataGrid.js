@@ -104,22 +104,15 @@ var DataGrid = function (_props)
         enumerable: true
     });
 
-    let _onScroll = function (e)
-    {
-        let scrollTop = e.target.scrollTop;
-        return _scroll(scrollTop);
-    };
     let _bindingsPromise;
     let _scroll = function (scrollTop)
     {
-        let r = true;
         if (_editPosition != null)
         {
             _self.cellEditCanceled(_editPosition.rowIndex, _editPosition.columnIndex);
         }
         if (scrollTop >= 0)
         {
-
             let virtualIndex = Math.ceil(scrollTop / _avgRowHeight);
             scrollTop = virtualIndex * _avgRowHeight;
             //this.scroll(scrollTop);
@@ -168,20 +161,17 @@ var DataGrid = function (_props)
                             });
                         } else
                         {
-                            // _self.$table[0].style.marginTop = _prevScrollTop + "px";
-                            r = false;
                             _self.$message.hide();
                         }
 
                     } else
                     {
-                        r = false;
                         _self.$message.hide();
                     }
                 }
             }
         }
-        return r;
+        return _bindingsPromise;
     };
 
     let _dataProviderLengthChanged = function (e)
@@ -203,16 +193,16 @@ var DataGrid = function (_props)
         this.$bodyWrapper = this.$el.find('#' + this.domID + '-body-wrapper');
         this.$container = this.$table;
 
-        this.delayScroll = debouncePromise(_onScroll, 50);
+        this.delayScroll = debouncePromise(_scroll, 50);
         this.$bodyWrapper.on("scroll", function (e)
         {
-            if (e.target.scrollTop + this.$bodyWrapper.height() < _virtualHeight)
+            if (e.target.scrollTop + this.$bodyWrapper.height() <= _virtualHeight)
             {
                 //this.$table[0].style.marginTop = e.target.scrollTop + "px";
 
                 Promise.resolve(_bindingsPromise).then(function ()
                 {
-                    _self.delayScroll.apply(_self, [e]).then(function (r)
+                    _self.delayScroll.apply(_self, [e.target.scrollTop]).then(function (r)
                     {
                         if (!r)
                         {
@@ -350,6 +340,9 @@ var DataGrid = function (_props)
         _self.trigger('beginDraw');
         _self.$hadow.empty();
         let oldValue = _self.rows.length, newValue = 0;
+        _virtualHeight = (_self.dataProvider.length + 1) * _avgRowHeight;
+        if (_self.$scrollArea)
+            _self.$scrollArea.css({ height: _virtualHeight + "px" });
         if (_self.attached || _props.rowCount)
         {
             newValue = _self.rowCount;
@@ -434,9 +427,9 @@ var DataGrid = function (_props)
                     _self.dataProvider.splice(_self.dataProvider.length, 0, ObjectUtils.deepCopy(_defaultItem));
                 }
             }
-            if (_futureEditPosition && _futureEditPosition.rowIndex < _self.rowItems.length)
+            if (_futureEditPosition && _futureEditPosition.rowIndex < _self.dataProvider.length)
             {
-                _self.cellEdit(_futureEditPosition.rowIndex, _futureEditPosition.columnIndex);
+                _self.cellEdit(_futureEditPosition.rowIndex - _virtualIndex, _futureEditPosition.columnIndex);
             }
         });
         return Promise.all(p);
@@ -546,7 +539,7 @@ var DataGrid = function (_props)
                 {
                     return;
                 }
-                _cellItemRenderers[_editPosition.rowIndex][_editPosition.columnIndex].show();
+                _cellItemRenderers[Math.min(_editPosition.rowIndex, _rowCount - 1)][_editPosition.columnIndex].show();
             }
             if (_editPosition == null)
             {
@@ -556,7 +549,7 @@ var DataGrid = function (_props)
             let data = _self.dataProvider[rowIndex + _virtualIndex];
 
             _editPosition = {
-                "rowIndex": rowIndex,
+                "rowIndex": rowIndex + _virtualIndex,
                 "columnIndex": columnIndex,
                 "column": column,
                 "data": data,
@@ -564,7 +557,7 @@ var DataGrid = function (_props)
             };
             _futureEditPosition = null;
 
-            _cellItemRenderers[rowIndex][columnIndex].hide();
+            _cellItemRenderers[Math.min(rowIndex, _rowCount - 1)][columnIndex].hide();
             let itemEditorInfo = _cellItemEditors[columnIndex];
             let itemEditor;
             if (itemEditorInfo == null)
@@ -640,7 +633,7 @@ var DataGrid = function (_props)
                             {
                                 d = -1;
                             }
-                            rowIndex += _virtualIndex;
+                            //rowIndex += _virtualIndex;
                             columnIndex += 1 * d;
                             let found = false, future = false, r, c;
                             for (; (rowIndex <= _self.dataProvider.length) && (rowIndex > -1) && !found; rowIndex += 1 * d)
@@ -659,7 +652,7 @@ var DataGrid = function (_props)
                             }
                             rowIndex = r;
                             columnIndex = c;
-                            if (rowIndex == _self.dataProvider.length)
+                            if (rowIndex >= _self.dataProvider.length)
                             {
                                 if (_allowNewItem)
                                 {
@@ -670,22 +663,38 @@ var DataGrid = function (_props)
                             if (found && !future)
                             {
                                 let cs = _self.$bodyWrapper.scrollTop();
+
                                 if (rowIndex < _virtualIndex)
                                 {
-                                    _self.$bodyWrapper.scrollTop(cs - _avgRowHeight);
-                                } else if (rowIndex > _virtualIndex + _self.rowCount)
+                                    let fn = function ()
+                                    {
+                                        _self.cellEdit(rowIndex, columnIndex);
+                                        _self.off("bindingsRefreshed", fn);
+                                    };
+                                    _self.on("bindingsRefreshed", fn);
+                                    _self.$bodyWrapper.scrollTop(_prevScrollTop + cs - _avgRowHeight);
+                                } else if (rowIndex >= _virtualIndex + _self.rowCount)
                                 {
-                                    _self.$bodyWrapper.scrollTop(cs - _avgRowHeight);
+                                    let fn = function ()
+                                    {
+                                        _self.cellEdit(Math.min(rowIndex, _rowCount - 1), columnIndex);
+                                        _self.off("bindingsRefreshed", fn);
+                                    }
+                                    _self.on("bindingsRefreshed", fn);
+                                    _self.$bodyWrapper.scrollTop(_prevScrollTop + cs + _avgRowHeight);
+                                } else
+                                {
+                                    _self.cellEdit(Math.min(rowIndex, _rowCount - 1), columnIndex);
                                 }
-
+                                /*
                                 if (rowIndex > _self.rowCount - 1)
                                 {
                                     rowIndex -= _virtualIndex;
                                 }
-                                _self.cellEdit(rowIndex, columnIndex);
+                                */
                             } else if (found && future)
                             {
-                                _futureEditPosition = { "rowIndex": Math.min(rowIndex, _rowCount - 1), "columnIndex": columnIndex };
+                                _futureEditPosition = { "rowIndex": rowIndex, "columnIndex": columnIndex };
                                 _self.cellEditFinished(_editPosition.rowIndex, _editPosition.columnIndex, true);
                             } else
                             {
@@ -739,11 +748,11 @@ var DataGrid = function (_props)
             */
             itemEditor.render().then(function (cmpInstance)
             {
-                let w = parseInt(_cells[rowIndex][columnIndex].width());
+                let w = parseInt(_cells[Math.min(rowIndex, _rowCount - 1)][columnIndex].width());
                 let b = itemEditor.css["border-width"];
 
                 itemEditor.css.width = "100%";
-                _cells[rowIndex][columnIndex].append(cmpInstance.$el);
+                _cells[Math.min(rowIndex, _rowCount - 1)][columnIndex].append(cmpInstance.$el);
                 itemEditor.show();
                 let e = jQuery.Event('cellEditStarted');
                 _self.trigger(e, [rowIndex, columnIndex, itemEditor]);
@@ -768,7 +777,7 @@ var DataGrid = function (_props)
         let itemEditorInfo = _cellItemEditors[columnIndex];
         let itemEditor = itemEditorInfo.itemEditor;
         itemEditor.hide();
-        _cellItemRenderers[rowIndex][columnIndex].show();
+        _cellItemRenderers[Math.min(rowIndex, _rowCount - 1)][columnIndex].show();
     };
 
     this.cellEditFinished = function (rowIndex, columnIndex, applyEdit)
@@ -798,7 +807,7 @@ var DataGrid = function (_props)
             if (!applyEdit || !e.isDefaultPrevented())
             {
                 itemEditor.hide();
-                _cellItemRenderers[rowIndex][columnIndex].show();
+                _cellItemRenderers[Math.min(rowIndex, _rowCount - 1)][columnIndex].show();
                 if (applyEdit)
                 {
                     if (!calledHandler)
@@ -813,13 +822,13 @@ var DataGrid = function (_props)
                         {
                             if (exp == "currentItem")
                             {
-                                _self.dataProvider[rowIndex + _virtualIndex] = value;
+                                _self.dataProvider[rowIndex] = value;
                             } else
                             {
-                                ObjectUtils.setChainValue(_self.dataProvider[rowIndex + _virtualIndex], exp, value);
+                                ObjectUtils.setChainValue(_self.dataProvider[rowIndex], exp, value);
                             }
                         }
-                        _cellItemRenderers[rowIndex][columnIndex].refreshBindings(_self.dataProvider[rowIndex + _virtualIndex]);
+                        _cellItemRenderers[Math.min(rowIndex, _rowCount - 1)][columnIndex].refreshBindings(_self.dataProvider[rowIndex]);
 
                     }
                     //TODO:dataProviderChanged or integrate Binding ? 
@@ -1214,8 +1223,11 @@ var DataGrid = function (_props)
                     {
                         _self.updateDataProvider().then(function ()
                         {
-                            let cs = _self.$bodyWrapper.scrollTop();
-                            _self.$bodyWrapper.scrollTop(cs + _avgRowHeight);
+                            if (_virtualIndex > 0)
+                            {
+                                let cs = _self.$bodyWrapper.scrollTop();
+                                _self.$bodyWrapper.scrollTop(_prevScrollTop + cs + _avgRowHeight);
+                            }
                         });
                     }
                 });
