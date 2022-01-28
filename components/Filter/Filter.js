@@ -813,16 +813,7 @@ var Filter = function (_props)
 
     let _initDefaultFilters = function ()
     {
-        let _defaultRules;
-        for (let i = 0; i < _rules.rules.length; i++)
-        {
-            if (_rules.rules[i].value)
-            {
-                _rules.rules[i].value = null;
-            }
-            _defaultRules = _rules;
-        }
-        let ret = _build(_defaultRules);
+        let ret = _build(_rules);
         _expressionContainer.$el.text(ret.cond);
         repDp = _self.children.filterMainContainer.repeater.dataProvider = ret.dataProvider;
         //_expressionInput();
