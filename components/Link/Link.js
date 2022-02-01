@@ -7,13 +7,17 @@
 import { Parent } from "/obvia/components/base/Parent.js";
 import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
 import { DependencyContainer } from "/obvia/lib/DependencyContainer.js";
-var Link = function (_props) {
+var Link = function (_props)
+{
     Object.defineProperty(this, "title", {
-        get: function title() {
+        get: function title()
+        {
             return _title;
         },
-        set: function title(v) {
-            if (_title != v) {
+        set: function title(v)
+        {
+            if (_title != v)
+            {
                 _title = v;
                 if (this.$el)
                     this.$el.attr('title', v);
@@ -23,18 +27,25 @@ var Link = function (_props) {
     });
 
     Object.defineProperty(this, "href", {
-        get: function href() {
+        get: function href()
+        {
             return _href;
         },
-        set: function href(v) {
-            if (href != v) {
+        set: function href(v)
+        {
+            if (href != v)
+            {
                 _href = v;
-                if (_href) {
-                    if (this.$el) {
+                if (_href)
+                {
+                    if (this.$el)
+                    {
                         this.$el.attr('href', _href);
                     }
-                } else {
-                    if (this.$el) {
+                } else
+                {
+                    if (this.$el)
+                    {
                         this.$el.removeAttr('href');
                     }
                 }
@@ -44,18 +55,25 @@ var Link = function (_props) {
     });
 
     Object.defineProperty(this, "target", {
-        get: function target() {
+        get: function target()
+        {
             return _target;
         },
-        set: function target(v) {
-            if (_target != v) {
+        set: function target(v)
+        {
+            if (_target != v)
+            {
                 _target = v;
-                if (_target) {
-                    if (this.$el) {
+                if (_target)
+                {
+                    if (this.$el)
+                    {
                         this.$el.attr('target', _target);
                     }
-                } else {
-                    if (this.$el) {
+                } else
+                {
+                    if (this.$el)
+                    {
                         this.$el.removeAttr('target');
                     }
                 }
@@ -65,13 +83,17 @@ var Link = function (_props) {
     });
 
     Object.defineProperty(this, "label", {
-        get: function label() {
+        get: function label()
+        {
             return _label;
         },
-        set: function label(v) {
-            if (_label != v) {
+        set: function label(v)
+        {
+            if (_label != v)
+            {
                 _label = v;
-                if (this.$el) {
+                if (this.$el)
+                {
                     v = $(`<div>${v}</div>`).get(0).innerText;
                     let last = this.$el.children().last();
                     if (last && last.length > 0)
@@ -88,22 +110,28 @@ var Link = function (_props) {
         enumerable: true
     });
 
-    this.beforeAttach = function () {
-        if (_props.title) {
+    this.beforeAttach = function ()
+    {
+        if (_props.title)
+        {
             this.title = _props.title;
         }
-        if (_props.label) {
+        if (_props.label && !this.getBindingExpression("label"))
+        {
             this.label = _props.label;
         }
-        if (_props.href) {
+        if (_props.href)
+        {
             this.href = _props.href;
         }
-        if (_props.target) {
+        if (_props.target)
+        {
             this.target = _props.target;
         }
     };
 
-    this.template = function () {
+    this.template = function ()
+    {
         return "<a id='" + this.domID + "'></a>";
     };
 
@@ -131,6 +159,7 @@ var LinkTarget =
     "framename": "_framename"
 };
 DependencyContainer.getInstance().register("Link", Link, DependencyContainer.simpleResolve);
-export {
+export
+{
     Link, LinkTarget
 };
