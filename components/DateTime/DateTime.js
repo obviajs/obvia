@@ -151,7 +151,7 @@ var DateTime = function (_props)
         {
             this.max = dayjs(_props.max, _inputFormat).format(_inputFormat);
         }
-        if (_props.value)
+        if (!this.getBindingExpression("value"))
         {
             this.value = dayjs(_props.value, _inputFormat).format(_inputFormat);
         }
