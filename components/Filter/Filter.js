@@ -143,6 +143,8 @@ var Filter = function (_props)
             if (_dataProvider != v)
             {
                 _dataProvider = v;
+                if (_self.attached)
+                    _initDefaultFilters();
             }
         },
         enumerable: true
