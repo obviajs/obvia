@@ -465,18 +465,21 @@ var DataGrid = function (_props)
 
     let _headerClickHandler = function (e, columnIndex, column)
     {
-        let columnSortEvent = jQuery.Event("columnSort");
-        columnSortEvent.originalEvent = e;
-        let cls = _headerCells[columnIndex].sortSpan.classes;
-        let ind = cls.indexOf("fa-caret-" + DataGridColumn.sortDirFADic[column.sortDirection.toLowerCase()]);
-        if (ind > -1)
+        if (e.target.id.startsWith(!"pay_all"))
         {
-            cls.splice(ind, 1);
+            let columnSortEvent = jQuery.Event("columnSort");
+            columnSortEvent.originalEvent = e;
+            let cls = _headerCells[columnIndex].sortSpan.classes;
+            let ind = cls.indexOf("fa-caret-" + DataGridColumn.sortDirFADic[column.sortDirection.toLowerCase()]);
+            if (ind > -1)
+            {
+                cls.splice(ind, 1);
+            }
+            column.sortDirection = DataGridColumn.twMap[column.sortDirection.toLowerCase()];
+            cls.pushUnique("fa-caret-" + DataGridColumn.sortDirFADic[column.sortDirection.toLowerCase()]);
+            _headerCells[columnIndex].sortSpan.classes = cls;
+            this.trigger(columnSortEvent, [columnIndex, column]);
         }
-        column.sortDirection = DataGridColumn.twMap[column.sortDirection.toLowerCase()];
-        cls.pushUnique("fa-caret-" + DataGridColumn.sortDirFADic[column.sortDirection.toLowerCase()]);
-        _headerCells[columnIndex].sortSpan.classes = cls;
-        this.trigger(columnSortEvent, [columnIndex, column]);
     };
 
 
