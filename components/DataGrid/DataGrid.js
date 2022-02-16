@@ -465,7 +465,7 @@ var DataGrid = function (_props)
 
     let _headerClickHandler = function (e, columnIndex, column)
     {
-        if (e.target.id.startsWith(!"pay_all"))
+        if (!e.isDefaultPrevented())
         {
             let columnSortEvent = jQuery.Event("columnSort");
             columnSortEvent.originalEvent = e;
