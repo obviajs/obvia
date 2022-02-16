@@ -91,6 +91,15 @@ var DataGrid = function (_props)
         enumerable: true
     });
 
+    Object.defineProperty(this, "headerCells", {
+        get: function headerCells()
+        {
+            return _headerCells;
+        },
+        configurable: true,
+        enumerable: true
+    });
+
     let _prevScrollTop = 0;
     let _avgRowHeight;
     let _virtualIndex = 0;
