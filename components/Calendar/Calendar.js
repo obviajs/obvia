@@ -142,8 +142,8 @@ var Calendar = function (_props)
             _calendarDay = _viewStack.calendarDay;
             _calendarWeek = (await _viewStack.calendarWeek)[0];
             _calendarMonth = (await _viewStack.calendarMonth)[0];
-            _labelMonth = this.label_for_month;
-            _labelYear = this.label_for_year;
+            _labelMonth = this.month_year.label_for_month;
+            _labelYear = this.month_year.label_for_year;
             if (_props.calendarEvents && !this.getBindingExpression("calendarEvents"))
             {
                 this.calendarEvents = _props.calendarEvents;
@@ -159,19 +159,28 @@ var Calendar = function (_props)
             {
                 ctor: Label,
                 props: {
-                    id: "label_for_month",
-                    label: CalendarConstants.Months[_nowDate.getMonth()],
-                    labelType: LabelType.label,
-                    classes: ["fc-label-month-w"],
-                },
-            },
-            {
-                ctor: Label,
-                props: {
-                    id: "label_for_year",
-                    label: _nowDate.getFullYear(),
-                    labelType: LabelType.label,
-                    classes: ["fc-label-year-w"]
+                    id: "month_year",
+                    components: [
+                        {
+                            ctor: Label,
+                            props: {
+                                id: "label_for_month",
+                                label: CalendarConstants.Months[_nowDate.getMonth()],
+                                labelType: LabelType.label,
+                                classes: ["fc-label-month-w"],
+                            },
+                        },
+                        {
+                            ctor: Label,
+                            props: {
+                                id: "label_for_year",
+                                label: _nowDate.getFullYear(),
+                                labelType: LabelType.label,
+                                classes: ["fc-label-year-w"]
+                            }
+                        }
+                    ],
+                    classes: ["col-4"]
                 }
             },
             {

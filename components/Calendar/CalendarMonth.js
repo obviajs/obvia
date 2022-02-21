@@ -321,7 +321,7 @@ var CalendarMonth = function (_props)
                         wrap: false
                     },
                     classes: ["form-row"],
-                    css: { display: "flex", width: "980px" },
+                    css: { display: "flex", width: "1115px" },
                     dataProvider: new ArrayEx([
                         { value: 'Monday', classes: ['col', 'fc-border'] },
                         { value: 'Tuesday', classes: ['col', 'fc-border'] },
