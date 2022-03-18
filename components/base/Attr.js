@@ -14,7 +14,7 @@ var Attr = function (_attr, cmpInst)
         },
         set: function (target, property, value, receiver)
         {
-            if (property != "bindingDefaultContext")
+            if (property != "bindingDefaultContext" && property != "guid")
             {
                 if (typeof value != "function")
                 {
