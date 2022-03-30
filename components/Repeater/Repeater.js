@@ -300,14 +300,11 @@ var Repeater = function (_props)
             let len = _components.length;
             for (let cIndex = 0; cIndex < len; cIndex++)
             {
-                let component = {};
+                let component = ObjectUtils.deepCopy(_components[cIndex]);
                 if (!_components[cIndex].props.id)
                 {
                     _components[cIndex].props.id = functionName(_components[cIndex].ctor) + "_" + (Component[_components[cIndex].ctor] ? Component[_components[cIndex].ctor].instanceInc : 0);
                 }
-                ObjectUtils.shallowCopy(_components[cIndex], component, ["props"]);
-                component.props = {};
-                ObjectUtils.shallowCopy(_components[cIndex].props, component.props, ["id", "bindingDefaultContext", "css", "attr"]);
                 component.props.id = _components[cIndex].props.id + "_" + index + "_" + cIndex;
                 if (_components[cIndex].props.bindingDefaultContext == null)
                 {
@@ -316,12 +313,9 @@ var Repeater = function (_props)
                 component.props.ownerDocument = _props.ownerDocument;
                 component.props.parentRepeater = _self.proxyMaybe;
                 component.props.repeaterIndex = index;
-                component.props.css = Object.assign({}, _components[cIndex].props.css);
-                component.props.attr = Object.assign({}, _components[cIndex].props.attr);
 
                 let el = await Component.fromLiteral(component, data);
                 let cmpId = _components[cIndex].props.id;
-
                 //build components properties, check bindings
                 if (_self[cmpId] == undefined)
                 {

@@ -56,9 +56,11 @@ var Component = function (_props)
     let _mouseup = _props.mouseout;
     let _click = _props.click;
     let _dblclick = _props.dblclick;
+    let _focus = _props.focus;
     let _blur = _props.blur;
     let _keydown = _props.keydown;
     let _keyup = _props.keyup;
+    let _keypress = _props.keypress;
     let _change = _props.change;
     let _drop = _props.drop;
     let _dragover = _props.dragover;
@@ -626,9 +628,11 @@ var Component = function (_props)
             'mouseup': _mouseup && typeof _mouseup == 'function' ? _mouseup.bind(_self.proxyMaybe) : undefined,
             'click': _click && typeof _click == 'function' ? _click.bind(_self.proxyMaybe) : undefined,
             'dblclick': _dblclick && typeof _dblclick == 'function' ? _dblclick.bind(_self.proxyMaybe) : undefined,
+            'focus': _focus && typeof _focus == 'function' ? _focus.bind(_self.proxyMaybe) : undefined,
             'blur': _blur && typeof _blur == 'function' ? _blur.bind(_self.proxyMaybe) : undefined,
             'keydown': _keydown && typeof _keydown == 'function' ? _keydown.bind(_self.proxyMaybe) : undefined,
             'keyup': _keyup && typeof _keyup == 'function' ? _keyup.bind(_self.proxyMaybe) : undefined,
+            'keypress': _keypress && typeof _keypress == 'function' ? _keypress.bind(_self.proxyMaybe) : undefined,
             'change': _change && typeof _change == 'function' ? _change.bind(_self.proxyMaybe) : undefined,
             'drop': _drop && typeof _drop == 'function' ? _drop.bind(_self.proxyMaybe) : undefined,
             'dragover': _dragover && typeof _dragover == 'function' ? _dragover.bind(_self.proxyMaybe) : undefined,
