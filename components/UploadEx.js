@@ -101,11 +101,14 @@ var UploadEx = function (_props)
                     size += files[i].size;
                 }
             }
-            _lblFileName.removeAllChildren();
+            // _lblFileName.removeAllChildren();
             if (acmps.length > 0)
             {
                 _lblFileName.label = "";
-                _lblFileName.addComponents(acmps);
+                if (_lblFileName.components.length < 2)
+                {
+                    _lblFileName.addComponents(acmps);
+                }
             } else
                 _lblFileName.label = arr.length > 0 ? arr.join(",") : "No file selected.";
             if (isNaN(size))
