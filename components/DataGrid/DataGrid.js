@@ -1087,7 +1087,7 @@ var DataGrid = function (_props)
         }
     };
 
-    let myDtEvts = ["cellEditCanceled", "cellEditFinishing", "cellEditFinished", "cellEditStarted", "cellEditStarting", "rowEdit", "rowAdd", "rowDelete", "rowClick", "rowDblClick", "cellStyling", "rowStyling", "columnSort", "cellClick", "columnBindingsRefreshed", "rowBindingsRefreshed", "bindingsRefreshed"];
+    let myDtEvts = ["cellEditCanceled", "cellEditFinishing", "cellEditFinished", "cellEditStarted", "cellEditStarting", "rowEdit", "rowAdd", "rowDelete", "rowClick", "rowDblClick", "cellStyling", "rowStyling", "columnSort", "cellClick", "columnBindingsRefreshed", "rowBindingsRefreshed", "bindingsRefreshed", "dataProviderUpdate"];
     if (!ObjectUtils.isEmpty(_props.attr) && _props.attr["data-triggers"] && !ObjectUtils.isEmpty(_props.attr["data-triggers"]))
     {
         let dt = _props.attr["data-triggers"].split(" ");
