@@ -6,10 +6,12 @@
 import { DateTime } from "/obvia/components/DateTime/DateTime.js";
 import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
 
-var Time = function (_props) {
+var Time = function (_props)
+{
     let _self = this;
 
-    this.template = function () {
+    this.template = function ()
+    {
         return "<input data-triggers='input' type='time' id='" + this.domID + "'/>";
     };
 
@@ -21,16 +23,16 @@ var Time = function (_props) {
         internalFormat: "HH:mm",
         value: null,
         min: null,
-        max: null        
+        max: null
     };
     ObjectUtils.fromDefault(_defaultParams, _props);
-    //_props = ObjectUtils.extend(false, false, _defaultParams, _props);
-    
+
     let r = DateTime.call(this, _props);
-    
+
     return r;
 };
 Time.prototype.ctor = "Time";
-export {
+export
+{
     Time
 };

@@ -1,5 +1,5 @@
 /**
- * This is a Filter Component
+ * This is a EasyFilter Component
  *
  * Kreatx 2020
  */
@@ -19,7 +19,7 @@ import { getCaretPosition, setCaretPosition } from "/obvia/lib/my.js";
 import { tokenize, findRightMatchingRightParenIndex } from "/obvia/lib/Tokenizer.js";
 import { DependencyContainer } from "/obvia/lib/DependencyContainer.js";
 
-var Filter = function (_props)
+var EasyFilter = function (_props)
 {
     let
         _self = this,
@@ -179,7 +179,7 @@ var Filter = function (_props)
     {
         if (e.target.id == this.domID)
         {
-            _expressionContainer = this.filterMainContainer.expressionContainer;
+            _expressionContainer = this.expressionContainer;
         }
     };
 
@@ -267,32 +267,14 @@ var Filter = function (_props)
         }
         repDp.splice(ra.currentIndex, 1)
         _update();
-        //repeated_block.classList.add('fall');
     };
 
-    let _addFilterItem = function (e)
-    {
-        if (e.newValue && e.newValue.length > 0)
-        {
-            valueAutoComplete = e.newValue;
-            if (!repDp && this.parent.parent.children.filterMainContainer.repeater)
-            {
-                repDp = this.parent.parent.children.filterMainContainer.repeater.dataProvider;
-            }
-            let i = ObjectUtils.deepCopy(valueAutoComplete[0]);
-            delete i.guid;
-            repDp.push(i);
-            e.preventDefault();
-            this.proxyMaybe.tokenContainer.tokenInput.value = "";
-            _update();
-        }
-    };
     let _editFilter = async function (e, ra)
     {
         let filterItemEditor = ra.currentItem[_itemEditorField];
         let isRangeInput;
-        if (ra.currentRow.repeater_container.filterEditorContainer.headerRow.mainCol.fOperator.operator.selectedItem)
-            isRangeInput = ra.currentRow.repeater_container.filterEditorContainer.headerRow.mainCol.fOperator.operator.selectedItem.rangeInput;
+        if (ra.currentRow.repeater_container.filterEditorContainer.mainCol.fOperator.operator.selectedItem)
+            isRangeInput = ra.currentRow.repeater_container.filterEditorContainer.mainCol.fOperator.operator.selectedItem.rangeInput;
         if (isRangeInput)
         {
             let minLit = Object.assign({}, filterItemEditor);
@@ -392,9 +374,8 @@ var Filter = function (_props)
         {
             _operatorsDp.splicea(0, _operatorsDp.length, _defaultOperators);
         }
-        ra.currentRow.repeater_container.filterItemHeading.hide();
-        ra.currentRow.repeater_container.filterEditorContainer.headerRow.mainCol.fOperator.operatorLabel = ra.currentItem[_labelField];
-        let oldInput = ra.currentRow.repeater_container.filterEditorContainer.mainRow.mainCol.fItemEditor.input;
+        ra.currentRow.repeater_container.filterEditorContainer.mainCol.fOperator.operatorLabel = ra.currentItem[_labelField];
+        let oldInput = ra.currentRow.repeater_container.filterEditorContainer.mainRow.fItemEditor.input;
         if (oldInput)
         {
             if (oldInput.valueValidator)
@@ -405,7 +386,7 @@ var Filter = function (_props)
                 oldInput.colMin.minValueValidator.destruct();
             }
         }
-        ra.currentRow.repeater_container.filterEditorContainer.mainRow.mainCol.fItemEditor.input = filterItemEditor;
+        ra.currentRow.repeater_container.filterEditorContainer.mainRow.fItemEditor.input = filterItemEditor;
         filterItemEditor.render().then(() =>
         {
             if (isRangeInput)
@@ -439,8 +420,6 @@ var Filter = function (_props)
                     }
                 }
             }
-            ra.currentRow.filterActionLabel.faRemove.display = false;
-            ra.currentRow.filterActionLabel.faAccept.display = true;
             ra.currentRow.repeater_container.filterEditorContainer.show();
         });
     };
@@ -448,10 +427,10 @@ var Filter = function (_props)
     let _getValue = function (ra)
     {
         let ret = {};
-        let input = ra.currentRow.repeater_container.filterEditorContainer.mainRow.mainCol.fItemEditor.input;
+        let input = ra.currentRow.repeater_container.filterEditorContainer.mainRow.fItemEditor.input;
         let isRangeInput;
-        if (ra.currentRow.repeater_container.filterEditorContainer.headerRow.mainCol.fOperator.operator.selectedItem)
-            isRangeInput = ra.currentRow.repeater_container.filterEditorContainer.headerRow.mainCol.fOperator.operator.selectedItem.rangeInput;
+        if (ra.currentRow.repeater_container.filterEditorContainer.mainCol.fOperator.operator.selectedItem)
+            isRangeInput = ra.currentRow.repeater_container.filterEditorContainer.mainCol.fOperator.operator.selectedItem.rangeInput;
         let value = {}, label = {};
         if (isRangeInput)
         {
@@ -517,131 +496,76 @@ var Filter = function (_props)
         });
     };
 
-    let _acceptFilterItem = function (e, ra)
-    {
-        _self.validate().then((valid) =>
-        {
-            if (valid)
-            {
-                let ret = _getValue(ra);
-                // if (ra.currentItem.value.value)
-                // {
-                ra.currentItem.value = ret.value;
-                let operator = ra.currentItem.operatorItem;
-                let label = operator.friendly.formatUnicorn(ret.label);
-                //ra.currentRow.repeater_container.filterItemHeading.label = label;
-                ra.currentItem.filterHeading = label;
-                ra.currentRow.filterActionLabel.faRemove.display = true;
-                ra.currentRow.filterActionLabel.faAccept.display = false;
-                ra.currentRow.repeater_container.filterEditorContainer.hide();
-                ra.currentRow.repeater_container.filterItemHeading.show();
-                _update();
-                // }
-                // else
-                // {
-                //     ra.currentRow.repeater_container.filterItemHeading.show();
-                //     ra.currentRow.repeater_container.filterEditorContainer.headerRow.mainCol.fOperator.operatorLabel = ra.currentItem[_labelField];
-                //     ra.currentRow.repeater_container.filterEditorContainer.hide();
-                // }
-            }
-        });
-    };
-
     let _cmps;
 
     let fnContainerDelayInit = function ()
     {
-
-        _cmps = [{
-            ctor: Container,
-            props: {
-                id: 'filterMainContainer',
-                classes: ["filter", "main-container"],
-                type: "",
-                components: [{
-                    ctor: AutoCompleteEx,
-                    props: {
-                        classes: ["filter", "main_autocomplete"],
-                        id: 'filterAutocomplete',
-                        fieldName: 'autocomplete',
-                        multiSelect: false,
-                        valueField: _valueField,
-                        labelField: _labelField,
-                        maxSuggestionsCount: 1,
-                        dataProvider: _dataProvider,
-                        beforeChange: _addFilterItem
-                    }
-                },
-                {
-                    ctor: Repeater,
-                    props: {
-                        id: 'repeater',
-                        dataProvider: new ArrayEx([]),
-                        rendering: {
-                            direction: 'vertical',
-                            wrap: true,
-                        },
-                        classes: ["filter", "repeater"],
-                        components: [{
-                            ctor: Label,
-                            props: {
-                                id: 'indexLabel',
-                                css: {
-                                    margin: 0,
-                                },
-                                classes: ["filter", "index"],
-                                type: HeadingType.h6,
-                                label: "{currentIndex + 1}",
-                            }
-                        },
+        _cmps = [
+            {
+                ctor: Repeater,
+                props: {
+                    id: 'repeater',
+                    dataProvider: new ArrayEx([]),
+                    rendering: {
+                        direction: 'horizontal',
+                        wrap: false,
+                    },
+                    classes: ["filter", "main-container", "repeater", "d-flex"],
+                    components: [
                         {
                             ctor: Container,
                             props: {
                                 id: 'repeater_container',
-                                classes: ["filter", "repeater-container"],
+                                classes: ["filter"],
                                 type: "",
-                                width: "100%",
-                                components: [{
-                                    ctor: Label,
-                                    props: {
-                                        id: 'fieldItemHeading',
-                                        css: {
-                                            margin: 0
-                                        },
-                                        classes: [],
-                                        type: HeadingType.h6,
-                                        align: 'left',
-                                        "bindingDefaultContext": "{currentItem}",
-                                        label: "{" + _labelField + "}",
-                                    }
-                                },
-                                {
-                                    ctor: Heading,
-                                    props: {
-                                        id: 'filterItemHeading',
-                                        classes: ["item-heading"],
-                                        align: 'left',
-                                        label: "{filterHeading?filterHeading:'Click to edit filter'}",
-                                        click: _editFilter
-                                    }
-                                },
-                                {
-                                    ctor: Container,
-                                    props: {
-                                        id: 'filterEditorContainer',
-                                        display: false,
-                                        type: "",
-                                        components: [{
-                                            ctor: Container,
-                                            props: {
-                                                id: 'headerRow',
-                                                classes: ["form-row"],
-                                                type: "",
-                                                components: [{
+                                css: { "width": "300px" },
+                                components: [
+                                    {
+                                        ctor: Label,
+                                        props: {
+                                            id: 'indexLabel',
+                                            css: {
+                                                margin: 0,
+                                            },
+                                            classes: ["filter", "index"],
+                                            type: HeadingType.h6,
+                                            label: "{currentIndex + 1}",
+                                        }
+                                    },
+                                    {
+                                        ctor: Container,
+                                        props: {
+                                            id: 'filterEditorContainer',
+                                            type: "",
+                                            components: [
+                                                {
+                                                    ctor: Container,
+                                                    props: {
+                                                        id: 'headerRow',
+                                                        classes: ["form-row", "col"],
+                                                        type: "",
+                                                        components: [
+                                                            {
+                                                                ctor: Label,
+                                                                props: {
+                                                                    id: 'fieldItemHeading',
+                                                                    css: {
+                                                                        margin: 0
+                                                                    },
+                                                                    classes: [],
+                                                                    type: HeadingType.h6,
+                                                                    align: 'left',
+                                                                    "bindingDefaultContext": "{currentItem}",
+                                                                    label: "{" + _labelField + "}",
+                                                                }
+                                                            }]
+                                                    }
+                                                },
+                                                {
                                                     ctor: Container,
                                                     props: {
                                                         id: 'mainCol',
-                                                        classes: ["col"],
+                                                        classes: ["form-row", "col"],
                                                         type: "",
                                                         components: [{
                                                             "ctor": "FormField",
@@ -667,7 +591,7 @@ var Filter = function (_props)
                                                             "ctor": "RequiredFieldValidator",
                                                             "props": {
                                                                 "id": "operatorValidator",
-                                                                "controlToValidate": "{currentRow.repeater_container.filterEditorContainer.headerRow.mainCol.fOperator.operator.id}",
+                                                                "controlToValidate": "{currentRow.repeater_container.filterEditorContainer.mainCol.fOperator.operator.id}",
                                                                 "errorMessage": "Please select a value for the operator.",
                                                                 "validationGroup": _validationGroupUID,
                                                                 "enabled": "{currentItem.deleted == null || currentItem.deleted == false}",
@@ -677,115 +601,48 @@ var Filter = function (_props)
                                                         }
                                                         ]
                                                     }
-                                                }]
-                                            }
-                                        },
-                                        {
-                                            ctor: Container,
-                                            props: {
-                                                id: 'mainRow',
-                                                classes: ["form-row"],
-                                                type: "",
-                                                "bindingDefaultContext": "{currentItem}",
-                                                components: [{
+                                                },
+                                                {
                                                     ctor: Container,
                                                     props: {
+                                                        id: 'mainRow',
+                                                        classes: ["form-row", "col"],
                                                         type: "",
-                                                        id: 'mainCol',
-                                                        classes: ["col"],
                                                         "bindingDefaultContext": "{currentItem}",
-                                                        components: [{
-                                                            "ctor": "FormField",
-                                                            "props": {
-                                                                "label": "Value",
-                                                                "id": "fItemEditor",
-                                                                "size": "form-control-sm",
-                                                                "bindingDefaultContext": "{currentItem}",
-                                                                "display": "{currentRow.repeater_container.filterEditorContainer.headerRow.mainCol.fOperator.operator.selectedItem.inputVisible}"
+                                                        components: [
+                                                            {
+                                                                "ctor": "FormField",
+                                                                "props": {
+                                                                    "label": "Value",
+                                                                    "id": "fItemEditor",
+                                                                    "css": { "width": "100%" },
+                                                                    "size": "form-control-sm",
+                                                                    "bindingDefaultContext": "{currentItem}",
+                                                                    "beforeAttach": _editFilter,
+                                                                    "display": "{currentRow.repeater_container.filterEditorContainer.mainCol.fOperator.operator.selectedItem.inputVisible}"
+                                                                }
                                                             }
-                                                        }]
+                                                        ]
                                                     }
                                                 }]
-                                            }
-                                        },
-                                        {
-                                            ctor: Container,
-                                            props: {
-                                                id: 'footerRow',
-                                                classes: ["form-row"],
-                                                type: "",
-                                                components: [{
-                                                    ctor: Container,
-                                                    props: {
-                                                        classes: ["col"],
-                                                        type: "",
-                                                        components: []
-                                                    }
-                                                }]
-                                            }
                                         }
-                                        ]
                                     }
-                                }
                                 ]
                             }
-                        },
-                        {
-                            ctor: Label,
-                            props: {
-                                id: 'filterActionLabel',
-                                css: {
-                                    margin: 0,
-                                },
-                                classes: ["filter", "close"],
-                                components: [{
-                                    ctor: Link,
-                                    props: {
-                                        id: 'faRemove',
-                                        label: "",
-                                        href: "javascript:void(0)",
-                                        target: "",
-                                        classes: ["fas", "fa-times"],
-                                        css: {
-                                            "text-decoration": "none"
-                                        },
-                                        click: _removeFilterItem
-                                    }
-                                },
-                                {
-                                    ctor: Link,
-                                    props: {
-                                        id: 'faAccept',
-                                        label: "",
-                                        href: "javascript:void(0)",
-                                        target: "",
-                                        display: false,
-                                        classes: ["fas", "fa-check"],
-                                        css: {
-                                            "text-decoration": "none"
-                                        },
-                                        click: _acceptFilterItem
-                                    }
-                                }
-                                ]
-                            }
-                        }
-                        ]
-                    }
-                },
-                {
-                    ctor: Container,
-                    props: {
-                        id: 'expressionContainer',
-                        classes: ["filter", "expression-container"],
-                        contenteditable: true,
-                        input: _expressionInput,
-                        display: _advancedMode
-                    }
+                        }]
                 }
-                ]
+            },
+            {
+                ctor: Container,
+                props: {
+                    id: 'expressionContainer',
+                    classes: ["filter", "expression-container"],
+                    contenteditable: true,
+                    input: _expressionInput,
+                    display: _advancedMode
+                }
             }
-        }];
+        ];
     };
 
     let _getFieldInfoByOrdinal = function (ordinal)
@@ -831,7 +688,7 @@ var Filter = function (_props)
     {
         let ret = _build(_rules);
         _expressionContainer.$el.text(ret.cond);
-        repDp = _self.children.filterMainContainer.repeater.dataProvider = ret.dataProvider;
+        repDp = _self.children.repeater.dataProvider = ret.dataProvider;
         //_expressionInput();
     };
 
@@ -964,7 +821,9 @@ var Filter = function (_props)
         advancedMode: true,
         css: {
             "min-height": "100px"
-        }
+        },
+        type: "",
+        classes: ["filter"]
     };
     ObjectUtils.fromDefault(_defaultParams, _props);
     //_props = ObjectUtils.extend(false, false, _defaultParams, _props);
@@ -986,9 +845,9 @@ var Filter = function (_props)
     let r = Container.call(this, _props);
     return r;
 };
-Filter.prototype.ctor = 'Filter';
-DependencyContainer.getInstance().register("Filter", Filter, DependencyContainer.simpleResolve);
+EasyFilter.prototype.ctor = 'EasyFilter';
+DependencyContainer.getInstance().register("EasyFilter", EasyFilter, DependencyContainer.simpleResolve);
 export
 {
-    Filter
+    EasyFilter
 };

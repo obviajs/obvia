@@ -6,12 +6,9 @@
 import { DateTime } from "/obvia/components/DateTime/DateTime.js";
 import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
 import { DependencyContainer } from "/obvia/lib/DependencyContainer.js";
- var DateCmp = function (_props) {
+var DateCmp = function (_props)
+{
     let _self = this;
-
-    this.template = function () {
-        return "<input data-triggers='input' type='date' id='" + this.domID + "'/>";
-    };
 
     let _defaultParams = {
         id: 'datetime',
@@ -21,10 +18,16 @@ import { DependencyContainer } from "/obvia/lib/DependencyContainer.js";
         internalFormat: "YYYY-MM-DD",
         value: null,
         min: null,
-        max: null        
+        max: null,
+        props: {
+            dateTimeInput: {
+                attr: {
+                    type: "date"
+                }
+            }
+        }
     };
     ObjectUtils.fromDefault(_defaultParams, _props);
-    //_props = ObjectUtils.extend(false, false, _defaultParams, _props);
 
     let r = DateTime.call(this, _props);
 
@@ -32,6 +35,7 @@ import { DependencyContainer } from "/obvia/lib/DependencyContainer.js";
 };
 DateCmp.prototype.ctor = "DateCmp";
 DependencyContainer.getInstance().register("DateCmp", DateCmp, DependencyContainer.simpleResolve);
-export {
+export
+{
     DateCmp
 };

@@ -3,11 +3,11 @@
  *
  * Kreatx 2019
  */
-import { Parent } from "/obvia/components/base/Parent.js";
+import { Container } from "/obvia/components/Container.js";
 import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
 import { ChangeWatcher } from "/obvia/lib/binding/ChangeWatcher.js";
 import { DependencyContainer } from "/obvia/lib/DependencyContainer.js";
-
+import { TextInput } from "/obvia/components/TextInput/TextInput.js";
 var DateTime = function (_props)
 {
     let _self = this;
@@ -15,9 +15,12 @@ var DateTime = function (_props)
     Object.defineProperty(this, "value", {
         get: function value()
         {
-            let d = dayjs(this.$input.val(), _self.internalFormat);
-            let date = d.format(_outputFormat);
-            return (!d.isValid() || date == "") ? "" : date;
+            let d;
+            if (this.dateTimeInput)
+                d = dayjs(this.dateTimeInput.value, _self.internalFormat);
+            else if (_value)
+                d = dayjs(_value, _self.inputFormat);
+            return !d || !d.isValid() ? "" : d.format(_outputFormat);
         },
         set: function value(v)
         {
@@ -25,12 +28,14 @@ var DateTime = function (_props)
             _value = dayjs(v, _inputFormat);
             if (this.$el && _value.isValid())
             {
-                this.attr['date'] = _value.format(_displayFormat);
-                this.$el.val(_value.format(_self.internalFormat));
+                _dateTimeInput.attr['date'] = _value.format(_displayFormat);
+                _dateTimeInput.$el.val(_value.format(_self.internalFormat));
+                _textInput.value = _value.format(_displayFormat);
             } else
             {
-                this.attr['date'] = "Choose Date";
-                this.$el.val("");
+                _dateTimeInput.attr['date'] = "Choose Date";
+                _dateTimeInput.$el.val("");
+                _textInput.value = _displayFormat;
             }
             _myw.propertyChanged("value", oldValue, value);
         },
@@ -46,7 +51,7 @@ var DateTime = function (_props)
         {
             _min = dayjs(v, _inputFormat);
             if (this.$el)
-                this.attr['min'] = _min.format(_internalFormat);
+                _dateTimeInput.attr['min'] = _min.format(_internalFormat);
         },
         enumerable: true,
         configurable: true
@@ -75,7 +80,7 @@ var DateTime = function (_props)
         {
             _max = dayjs(v, _inputFormat);
             if (this.$el)
-                this.attr['max'] = _max.format(_internalFormat);
+                _dateTimeInput.attr['max'] = _max.format(_internalFormat);
         },
         enumerable: true,
         configurable: true
@@ -130,6 +135,8 @@ var DateTime = function (_props)
 
     this.endDraw = function ()
     {
+        _dateTimeInput = _self.children.dateTimeInput;
+        _textInput = _self.children.textInput;
         this.$input = this.$el;
         if (_props.displayFormat)
         {
@@ -164,26 +171,206 @@ var DateTime = function (_props)
     this.inputHandler = function (e)
     {
         let oldValue = _value;
-        _value = dayjs(this.$input.val(), _self.internalFormat);
+        _value = dayjs(_dateTimeInput.$el.val(), _self.internalFormat);
         if (_value.isValid())
         {
-            this.attr['date'] = _value.format(_displayFormat);
-            this.$el.val(_value.format(_self.internalFormat));
+            _dateTimeInput.attr['date'] = _value.format(_displayFormat);
+            _dateTimeInput.$el.val(_value.format(_self.internalFormat));
+            _self.children.textInput.value = _value.format(_displayFormat);
         } else
         {
-            this.attr['date'] = "Choose Date";
-            this.$el.val("");
+            _dateTimeInput.attr['date'] = "Choose Date";
+            _dateTimeInput.$el.val("");
+            _self.children.textInput.value = _displayFormat;
         }
         _myw.propertyChanged("value", oldValue, _value);
     };
 
-    if (!this.hasOwnProperty("template"))
+    let _cmps;
+
+    let fnContainerDelayInit = function ()
     {
-        this.template = function ()
+        _cmps = [{
+            ctor: TextInput,
+            props: {
+                id: "dateTimeInput",
+                attr: {
+                    type: "datetime-local"
+                },
+                input: function ()
+                {
+                    let e = arguments[0];
+                    if (!e.isDefaultPrevented())
+                    {
+                        _self.inputHandler();
+                    }
+                },
+                mouseclick: function (e)
+                {
+                    _shapeshift(e);
+                },
+                focus: function (e)
+                {
+                    _shapeshift(e);
+                }
+            }
+        },
         {
-            return "<input data-triggers='input' type='datetime-local' id='" + this.domID + "'/>";
-        };
+            ctor: TextInput,
+            props: {
+                id: "textInput",
+                placeholder: _displayFormat,
+                visible: false,
+                attr: {
+                    type: "text"
+                },
+                css: {
+                    position: "absolute",
+                    width: "80%",
+                    top: "1px",
+                    left: "1px",
+                    height: "calc(100% - 3px)",
+                    border: "none",
+                    display: "block",
+                    padding: "0.375rem 0.5rem",
+                    "font-size": "14px",
+                    "line-height": "1.5",
+                    color: "#495057",
+                    "background-color": "#fff",
+                    "background-clip": "padding-box"
+                },
+                classes: ["no-form-control"],
+                blur: function ()
+                {
+                    if (_validate(_self.children.textInput.value))
+                    {
+                        _self.children.dateTimeInput.$el[0].setAttribute("aria-invalid", "false");
+                        _self.children.textInput.visible = false;
+                        _self.value = dayjs(_self.children.textInput.value, _displayFormat).format(_inputFormat);
+                    } else
+                    {
+                        _self.children.dateTimeInput.$el[0].setAttribute("aria-invalid", "true");
+                        _self.children.textInput.visible = true;
+                    }
+                },
+                keypress: function (e)
+                {
+                    if ([...e.key].length === 1 && !e.ctrlKey && !e.metaKey) 
+                    {
+                        let avoid = [37, 38, 39, 40];
+                        if (!avoid.includes(arguments[0].originalEvent.keyCode))
+                        {
+                            let el = this.$el[0];
+                            let selectionEnd = el.selectionEnd + (el.selectionEnd > el.selectionStart ? 0 : 1);
+                            let str = this.value = _format(e, el, this.value);
+
+                            if (selectionEnd)
+                            {
+                                el.focus();
+                                let dformat = Array.from(new Set(_displayFormat.split(""))).join("");
+                                dformat = dformat.replace(/[^a-z]/ig, "");
+                                let regExp = new RegExp("[^0-9" + dformat + "]");
+                                while (str[selectionEnd] && regExp.test(str[selectionEnd]))
+                                    selectionEnd++;
+                                el.setSelectionRange(selectionEnd, selectionEnd + 1);
+                            }
+                            e.preventDefault();
+                        }
+                    }
+                }
+            }
+        }];
     }
+    let _shapeshift = function (e)
+    {
+        if (_value.isValid())
+        {
+            _self.children.textInput.value = _value.format(_displayFormat);
+        } else
+        {
+            _self.children.textInput.value = _displayFormat;
+        }
+        _self.children.textInput.visible = true;
+        _self.children.dateTimeInput.focus();
+        _self.children.textInput.focus();
+        if (e.type == "focus")
+            _self.children.textInput.$el[0].setSelectionRange(_self.children.textInput.$el[0].selectionStart, 0);
+    };
+    let _format = function (e, el, str)
+    {
+        let selectionLength = el.selectionEnd - el.selectionStart;
+        let newStr = str.splice(el.selectionStart, selectionLength == 0 ? 1 : selectionLength, String.fromCharCode(e.charCode));
+        if (newStr.length < _displayFormat.length)
+        {
+            str = newStr.slice(0, el.selectionStart + 1) + _displayFormat.slice(el.selectionStart + 1, el.selectionEnd) + str.slice(el.selectionEnd)
+        } else
+            str = newStr;
+
+        let dformat = Array.from(new Set(_displayFormat.split(""))).join("");
+        dformat = dformat.replace(/[^a-z]/ig, "");
+        let regExp = new RegExp("[^0-9" + dformat + "]", "g");
+        //let strippedStr = str.replace(regExp, "");
+        let selectionStart = el.selectionStart;
+        let count = selectionStart;
+        let pattern = _displayFormat.replace(/[a-z]/ig, "*");
+        let formatted = str.substring(0, selectionStart);
+        let sepsCnt = (formatted.match(regExp) || []).length;
+        count -= sepsCnt;
+        let len = str.length;
+        for (let i = selectionStart; i < len; i++)
+        {
+            const c = pattern[i];
+            if (str[i] && c)
+            {
+                if (/\*/.test(c) && !(regExp.test(str[i])))
+                {
+                    formatted += str[i];
+                } else
+                {
+                    //formatted += c;
+                    formatted += _displayFormat[i];
+                }
+            }
+        }
+        return formatted;
+    };
+
+    let _validate = function (str)
+    {
+        let between = (nr, from, to) => nr > from && nr < to;
+        let validators = {
+            "YY": (part) => part.length == 2 && !isNaN(part),
+            "YYYY": (part) => part.length == 4 && !isNaN(part),
+            "M": (part) => (part.length == 1 || (part[0] != "0" && part.length == 2)) && !isNaN(part) && between(parseInt(part), 0, 13),
+            "MM": (part) => part.length == 2 && !isNaN(part) && between(parseInt(part), 0, 13),
+            "D": (part) => (part.length == 1 || (part[0] != "0" && part.length == 2)) && !isNaN(part) && between(parseInt(part), 0, 32),
+            "DD": (part) => part.length == 2 && !isNaN(part) && between(parseInt(part), 0, 32),
+            "H": (part) => (part.length == 1 || (part[0] != "0" && part.length == 2)) && !isNaN(part) && between(parseInt(part), -1, 24),
+            "HH": (part) => part.length == 2 && !isNaN(part) && between(parseInt(part), -1, 24),
+            "h": (part) => (part.length == 1 || (part[0] != "0" && part.length == 2)) && !isNaN(part) && between(parseInt(part), 0, 13),
+            "hh": (part) => part.length == 2 && !isNaN(part) && between(parseInt(part), 0, 13),
+            "m": (part) => (part.length == 1 || (part[0] != "0" && part.length == 2)) && !isNaN(part) && between(parseInt(part), -1, 60),
+            "mm": (part) => part.length == 2 && !isNaN(part) && between(parseInt(part), -1, 60),
+            "s": (part) => (part.length == 1 || (part[0] != "0" && part.length == 2)) && !isNaN(part) && between(parseInt(part), -1, 60),
+            "ss": (part) => part.length == 2 && !isNaN(part) && between(parseInt(part), -1, 60),
+        };
+
+        let fstrs = _displayFormat.split(/[^a-z0-9]/ig);
+        let parts = str.split(/\D/g);
+        let len = parts.length;
+        let newStr = "", valid = true;
+        for (let i = 0; i < len && valid; i++)
+        {
+            let fstr = fstrs[i];
+            let part = parts[i];
+            if (!(valid = validators[fstr](part)))
+            {
+                console.log(fstr + " input is wrong");
+                break;
+            }
+        }
+        return valid;
+    };
 
     let _defaultParams = {
         id: 'datetime',
@@ -193,29 +380,23 @@ var DateTime = function (_props)
         internalFormat: "YYYY-MM-DDTHH:mm",
         value: null,
         min: null,
-        max: null
+        max: null,
+        type: "",
+        css: { position: "relative" }
     };
     ObjectUtils.fromDefault(_defaultParams, _props);
-    //_props = ObjectUtils.extend(false, false, _defaultParams, _props);
+
     let _inputFormat = _props.inputFormat;
     let _outputFormat = _props.outputFormat;
     let _displayFormat = _props.displayFormat;
     let _internalFormat = _props.internalFormat;
 
-    let _value, _min, _max;
-    let _input = _props.input;
-    _props.input = function ()
-    {
-        if (typeof _input == 'function')
-            _input.apply(this, arguments);
+    let _dateTimeInput, _textInput, _value, _min, _max;
 
-        let e = arguments[0];
-        if (!e.isDefaultPrevented())
-        {
-            _self.inputHandler();
-        }
-    };
-    let r = Parent.call(this, _props);
+    fnContainerDelayInit();
+    _props.components = _cmps;
+
+    let r = Container.call(this, _props);
     let _myw = ChangeWatcher.getInstance(r);
     return r;
 };

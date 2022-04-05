@@ -13,7 +13,7 @@
     color: white;
 }
 
-[type="date"]{
+[type="date"] {
     position: relative;
     color: white;
 }
@@ -23,11 +23,13 @@
 [type="datetime-local"]::-webkit-clear-button {
     display: none;
 }
+
 [type="date"]::-webkit-datetime-edit,
 [type="date"]::-webkit-inner-spin-button,
 [type="date"]::-webkit-clear-button {
     display: none;
 }
+
 [type="datetime-local"]::-webkit-calendar-picker-indicator {
     position: absolute;
     top: auto;
@@ -49,6 +51,15 @@
 [type="datetime-local"] {
     min-width: 100px;
 }
+
 [type="date"] {
     min-width: 100px;
+}
+
+input[type="datetime-local"][aria-invalid='true'] {
+    border: 1px solid red;
+}
+
+input[type="date"][aria-invalid='true'] {
+    border: 1px solid red;
 }
