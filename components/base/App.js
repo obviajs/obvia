@@ -10,7 +10,8 @@ import { debounce, debouncePromise, whenDefined, whenDefinedPromise, functionNam
 import { State, StateEventType } from "/obvia/components/base/State/State.js";
 import { Applet } from "/obvia/components/base/Applet.js";
 
-var App = function (_props) {
+var App = function (_props)
+{
     let _defaultParams = {
         idleInterval: 60000,
         inactivityInterval: 60000,
@@ -37,16 +38,20 @@ var App = function (_props) {
     let _title;
     let _defaultAppletIndex = _props.defaultAppletIndex;
 
-    if (_style) {
+    if (_style)
+    {
         $("<style id='" + _self.domID + "_style' type='text/css'>" + _style + "</style>").appendTo("head");
     }
 
     Object.defineProperty(this, "title", {
-        get: function title() {
+        get: function title()
+        {
             return _title;
         },
-        set: function title(v) {
-            if (title != v) {
+        set: function title(v)
+        {
+            if (title != v)
+            {
                 _browserManager.title = _title = v;
             }
         },
@@ -54,21 +59,25 @@ var App = function (_props) {
     });
 
     Object.defineProperty(this, 'state', {
-        get: function state() {
+        get: function state()
+        {
             return _state;
         }
     });
 
     let _active = true;
     Object.defineProperty(this, 'active', {
-        get: function () {
+        get: function ()
+        {
             return _active;
         }
     });
 
-    let timerIncrement = function () {
+    let timerIncrement = function ()
+    {
         _idleTime = _idleTime + _idleInterval;
-        if (_idleTime >= _inactivityInterval) {
+        if (_idleTime >= _inactivityInterval)
+        {
             let idleCount = Math.floor(_idleTime / _inactivityInterval);
             _active = false;
             let evt = jQuery.Event("InactivityDetected");
@@ -80,17 +89,23 @@ var App = function (_props) {
 
     let _visible = true;
     let visibilityEvents = ['visibilitychange', 'webkitvisibilitychange', 'mozvisibilitychange', 'msvisibilitychange'];
-    visibilityEvents.forEach(function (event) {
-        window.addEventListener(event, function (event) {
-            if (document.hidden || document.webkitHidden || document.mozHidden || document.msHidden) {
-                if (_visible) {
+    visibilityEvents.forEach(function (event)
+    {
+        window.addEventListener(event, function (event)
+        {
+            if (document.hidden || document.webkitHidden || document.mozHidden || document.msHidden)
+            {
+                if (_visible)
+                {
                     _visible = false;
                     let evt = jQuery.Event("WindowHide");
                     evt.guid = _guid;
                     _self.trigger(evt, []);
                 }
-            } else {
-                if (!_visible) {
+            } else
+            {
+                if (!_visible)
+                {
                     _visible = true;
                     let evt = jQuery.Event("WindowShow");
                     evt.guid = _guid;
@@ -103,22 +118,28 @@ var App = function (_props) {
     let _behaviors = new AutoObject();
 
     Object.defineProperty(this, 'behaviors', {
-        get: function () {
+        get: function ()
+        {
             return _behaviors;
         },
-        set: function (v) {
-            if (_behaviors != v) {
+        set: function (v)
+        {
+            if (_behaviors != v)
+            {
                 _behaviors = v;
             }
         }
     });
     let _behaviorimplementations = new AutoObject();
     Object.defineProperty(this, 'behaviorimplementations', {
-        get: function () {
+        get: function ()
+        {
             return _behaviorimplementations;
         },
-        set: function (v) {
-            if (_behaviorimplementations != v) {
+        set: function (v)
+        {
+            if (_behaviorimplementations != v)
+            {
                 _behaviorimplementations = v;
             }
         }
@@ -132,24 +153,29 @@ var App = function (_props) {
     };
 
     Object.defineProperty(this, 'defaultBehaviors', {
-        get: function () {
+        get: function ()
+        {
             return _defaultBehaviors;
         }
     });
 
-    _behaviorimplementations[_guid]["APP_UNLOADED"] = function (e) {
+    _behaviorimplementations[_guid]["APP_UNLOADED"] = function (e)
+    {
         //window.open("http://google.com/");
         //return "You have unsaved changes";
         let len = BrowserWindow.all.length;
-        for (let i = 0; i < len; i++) {
+        for (let i = 0; i < len; i++)
+        {
             BrowserWindow.all[i].close();
         }
     };
 
-    this.addApplet = function (applet) {
+    this.addApplet = function (applet)
+    {
         applet.app = applet.parentApplet = r;
         _applets.push(applet);
-        if (!_appletsMap[applet.anchor]) {
+        if (!_appletsMap[applet.anchor])
+        {
             _appletsMap[applet.anchor] = [];
         }
         let appletInst = new Applet(applet);
@@ -159,31 +185,42 @@ var App = function (_props) {
 
     let _implementations = {};
     let _b2imps = {};
-    this.addImplementation = function (imps) {
-        if (!_implementations[imps.guid]) {
-            for (let behavior in imps) {
-                if (_behaviorimplementations[imps.guid][behavior] == null || imps[behavior].override) {
+    this.addImplementation = function (imps)
+    {
+        if (!_implementations[imps.guid])
+        {
+            for (let behavior in imps)
+            {
+                if (_behaviorimplementations[imps.guid][behavior] == null || imps[behavior].override)
+                {
                     _behaviorimplementations[imps.guid][behavior] = imps[behavior];
-                } else {
-                    if (!_behaviorimplementations[imps.guid][behavior].forEach) {
+                } else
+                {
+                    if (!_behaviorimplementations[imps.guid][behavior].forEach)
+                    {
                         _behaviorimplementations[imps.guid][behavior] = new ArrayEx([_behaviorimplementations[imps.guid][behavior]]);
                     }
                     _behaviorimplementations[imps.guid][behavior].push(imps[behavior]);
                 }
-                if (!_b2imps[behavior]) {
+                if (!_b2imps[behavior])
+                {
                     _b2imps[behavior] = [];
                 }
                 _b2imps[behavior].pushUnique(imps.guid);
             }
             _implementations[imps.guid] = imps;
-        } else {
+        } else
+        {
             console.log("implementations already added.");
         }
     };
 
-    let _event2behavior = function (e) {
-        if (e.type != "InactivityDetected" && e.type != "ActivityDetected" && e.type != "WindowHide" && e.type != "WindowShow") {
-            if (_idleTime >= _inactivityInterval) {
+    let _event2behavior = function (e)
+    {
+        if (e.type != "InactivityDetected" && e.type != "ActivityDetected" && e.type != "WindowHide" && e.type != "WindowShow")
+        {
+            if (_idleTime >= _inactivityInterval)
+            {
                 let idleCount = Math.floor(_idleTime / _inactivityInterval);
                 _active = true;
                 let evt = jQuery.Event("ActivityDetected");
@@ -197,13 +234,17 @@ var App = function (_props) {
         let manifestor;
 
         let behaviorObj = {};
-        if (target && _self.behaviors[target.guid] && _self.behaviors[target.guid][e.type] && currentTarget == target) {
+        if (target && _self.behaviors[target.guid] && _self.behaviors[target.guid][e.type] && currentTarget == target)
+        {
             behaviorObj = _self.behaviors[target.guid][e.type];
             manifestor = target;
-        } else if (_self.behaviors[currentTarget.guid] && _self.behaviors[currentTarget.guid][e.type] && ObjectUtils.isObject(_self.behaviors[currentTarget.guid][e.type])) {
+        } else if (_self.behaviors[currentTarget.guid] && _self.behaviors[currentTarget.guid][e.type] && ObjectUtils.isObject(_self.behaviors[currentTarget.guid][e.type]))
+        {
             let cmpBehaviors = _self.behaviors[currentTarget.guid][e.type];
-            for (let prop in cmpBehaviors) {
-                if (cmpBehaviors[prop] && cmpBehaviors[prop].onPropagation) {
+            for (let prop in cmpBehaviors)
+            {
+                if (cmpBehaviors[prop] && cmpBehaviors[prop].onPropagation)
+                {
                     behaviorObj[prop] = cmpBehaviors[prop];
                 }
             }
@@ -212,77 +253,99 @@ var App = function (_props) {
 
         //console.log(e.type + " " + _idCurrentTarget + " " + _idTarget);
 
-        if (behaviorObj) {
+        if (behaviorObj)
+        {
             let behaviorNameArr = [],
                 behaviorFilterArr = [];
             let behaviorName, behaviorFilter;
 
-            if (ObjectUtils.isObject(behaviorObj)) {
-                for (let prop in behaviorObj) {
+            if (ObjectUtils.isObject(behaviorObj))
+            {
+                for (let prop in behaviorObj)
+                {
                     behaviorNameArr.push(prop);
-                    if (ObjectUtils.isObject(behaviorObj[prop])) {
+                    if (ObjectUtils.isObject(behaviorObj[prop]))
+                    {
                         behaviorFilterArr.push(behaviorObj[prop]["filter"]);
                     } else
                         behaviorFilterArr.push(behaviorObj[prop]);
                 }
-            } else {
+            } else
+            {
                 behaviorNameArr = [behaviorObj];
                 behaviorFilterArr = [null];
             }
 
-            for (let b = 0; b < behaviorNameArr.length; b++) {
+            for (let b = 0; b < behaviorNameArr.length; b++)
+            {
                 behaviorName = behaviorNameArr[b];
                 behaviorFilter = behaviorFilterArr[b];
                 let impsGuidArr = _cmpListenerImps[manifestor.guid][e.type];
-                for (let ii = 0; ii < impsGuidArr.length; ii++) {
+                for (let ii = 0; ii < impsGuidArr.length; ii++)
+                {
                     let impGuid = impsGuidArr[ii];
                     let behavior = _self.behaviorimplementations[impGuid][behaviorName];
                     let qualifies = true,
                         extraArgs = [];
-                    if (behavior && typeof behaviorFilter == 'function') {
+                    if (behavior && typeof behaviorFilter == 'function')
+                    {
                         qualifies = behaviorFilter.apply(manifestor, arguments);
-                        if (ObjectUtils.isObject(qualifies)) {
+                        if (ObjectUtils.isObject(qualifies))
+                        {
                             extraArgs = qualifies.extraArgs;
                             qualifies = qualifies.qualifies;
                         }
                     }
-                    if (behavior && qualifies) {
+                    if (behavior && qualifies)
+                    {
                         let args = [];
-                        for (let i = 0; i < arguments.length; i++) {
+                        for (let i = 0; i < arguments.length; i++)
+                        {
                             args.push(arguments[i]);
                         }
-                        if (extraArgs.length > 0) {
+                        if (extraArgs.length > 0)
+                        {
                             args = args.concat(extraArgs);
                         }
                         let ret;
-                        if (typeof behavior == 'function') {
+                        if (typeof behavior == 'function')
+                        {
                             ret = behavior.apply(manifestor, args);
-                        } else {
+                        } else
+                        {
                             let behavior_implementations = ObjectUtils.isObject(behavior) && !behavior.forEach ? [behavior] : behavior;
-                            for (let bi = 0; bi < behavior_implementations.length; bi++) {
+                            for (let bi = 0; bi < behavior_implementations.length; bi++)
+                            {
                                 behavior = behavior_implementations[bi];
-                                if (ObjectUtils.isObject(behavior)) {
+                                if (ObjectUtils.isObject(behavior))
+                                {
                                     ret = behavior.do.apply(manifestor, args);
-                                    if (behavior.stopPropagation) {
+                                    if (behavior.stopPropagation)
+                                    {
                                         e.stopPropagation();
                                     }
-                                    if (behavior.stopImmediatePropagation) {
+                                    if (behavior.stopImmediatePropagation)
+                                    {
                                         e.stopImmediatePropagation();
                                     }
-                                    if (behavior.preventDefault) {
+                                    if (behavior.preventDefault)
+                                    {
                                         e.preventDefault();
                                     }
-                                } else if (typeof behavior == 'function') {
+                                } else if (typeof behavior == 'function')
+                                {
                                     ret = behavior.apply(manifestor, args);
                                 }
                             }
                         }
-                        if (_enableViewState && ret) {
-                            Promise.resolve(ret).then((rpv) => {
-                                if(rpv)
-                                    _state.track(behavior.description, behaviorName, rpv, args);    
-                            });                            
-                        }                      
+                        if (_enableViewState && ret)
+                        {
+                            Promise.resolve(ret).then((rpv) =>
+                            {
+                                if (rpv)
+                                    _state.track(behavior.description, behaviorName, rpv, args);
+                            });
+                        }
                         //return ret;
                     }
                 }
@@ -290,12 +353,16 @@ var App = function (_props) {
         }
     };
 
-    this.init = function (e) {
-        if (e.target.id == this.domID) {
-            if (_props.title) {
+    this.init = function (e)
+    {
+        if (e.target.id == this.domID)
+        {
+            if (_props.title)
+            {
                 _self.title = _props.title;
             }
-            if (_enableViewState) {
+            if (_enableViewState)
+            {
                 _state = State.getInstance();
                 _state.initState(_initialState);
                 _defaultBehaviors.stateStepAdded = "STATE_STEP_ADDED";
@@ -304,35 +371,45 @@ var App = function (_props) {
         }
     };
 
-    this.endDraw = function (e) {
-        if (e.target.id == this.domID) {
-            
+    this.endDraw = function (e)
+    {
+        if (e.target.id == this.domID)
+        {
+
         }
     };
 
-    let _hashchange = function (e) {
+    let _hashchange = function (e)
+    {
         _route(e.newValue);
     };
 
 
-    let _route = async function (hash) {
+    let _route = async function (hash)
+    {
         let m = BrowserUtils.parse(hash), appletInst;
-        if (m.hash && m.hash != "") {
+        if (m.hash && m.hash != "")
+        {
             let appletInstArr = _appletsMap[m.hash];
             let appletIndex = m.map.inst && m.map.inst < appletInstArr.length ? m.map.inst : 0;
             appletInst = appletInstArr[appletIndex];
-            if (appletInst) {
+            if (appletInst)
+            {
                 await appletInst.route(m);
-            } else {
-                if (_applets && _applets.length > 0) {
+            } else
+            {
+                if (_applets && _applets.length > 0)
+                {
                     appletInst = _appletsMap[_applets[_defaultAppletIndex].anchor][0];
                     await appletInst.route(m);
                 }
             }
             // appletInst.init(m.map).then((literal) => {
             // });
-        } else {
-            if (_applets && _applets.length > 0) {
+        } else
+        {
+            if (_applets && _applets.length > 0)
+            {
                 appletInst = _appletsMap[_applets[_defaultAppletIndex].anchor][0];
                 await appletInst.route(m.map);
             }
@@ -342,13 +419,19 @@ var App = function (_props) {
     _browserManager.on("hashchange", _hashchange);
     let _appletsMap = {};
 
-    this.beginDraw = function (e) {
-        if (e.target.id == this.domID) {
-            $(this.ownerDocument.body).on("keydown keyup", function (e) {
+    this.beginDraw = function (e)
+    {
+        if (e.target.id == this.domID)
+        {
+            $(this.ownerDocument.body).on("keydown keyup", function (e)
+            {
                 //target is always body
-                if (e.target == _self.ownerDocument.body) {
-                    if (!e.guid) {
-                        if (!e.guid) {
+                if (e.target == _self.ownerDocument.body)
+                {
+                    if (!e.guid)
+                    {
+                        if (!e.guid)
+                        {
                             e.guid = _guid;
                         }
                         _self.trigger(e);
@@ -356,12 +439,15 @@ var App = function (_props) {
                 }
             });
 
-            if (_applets && _applets.length > 0) {
+            if (_applets && _applets.length > 0)
+            {
                 let len = _applets.length;
-                for (let i = 0; i < len; i++) {
+                for (let i = 0; i < len; i++)
+                {
                     _applets[i].app = _applets[i].parentApplet = r;
                     let appletInst = new Applet(_applets[i]);
-                    if (!_appletsMap[_applets[i].anchor]) {
+                    if (!_appletsMap[_applets[i].anchor])
+                    {
                         _appletsMap[_applets[i].anchor] = [];
                     }
                     _appletsMap[_applets[i].anchor].push(appletInst);
@@ -373,13 +459,16 @@ var App = function (_props) {
     };
 
     let _cmpListenerImps = {};
-    this.addBehaviors = function (impUid, cmps, behaviors) {
+    this.addBehaviors = function (impUid, cmps, behaviors)
+    {
         var cmps = ObjectUtils.isObject(cmps) && !cmps.forEach ? [cmps] : cmps;
         let len = cmps.length;
-        for (let i = 0; i < len; i++) {
+        for (let i = 0; i < len; i++)
+        {
             let cmp = cmps[i];
             let uid;
-            if (!cmp["guid"]) {
+            if (!cmp["guid"])
+            {
                 uid = cmp["guid"] = StringUtils.guid();
             } else
                 uid = cmp.guid;
@@ -387,18 +476,24 @@ var App = function (_props) {
                 _cmpListenerImps[uid] = {};
 
             let _eventTypesJoined = "";
-            for (let eventType in behaviors) {
-                if (_behaviors[uid][eventType]) {
-                    if (!ObjectUtils.isObject(_behaviors[uid][eventType])) {
+            for (let eventType in behaviors)
+            {
+                if (_behaviors[uid][eventType])
+                {
+                    if (!ObjectUtils.isObject(_behaviors[uid][eventType]))
+                    {
                         let pb = _behaviors[uid][eventType];
                         _behaviors[uid][eventType] = {};
                         _behaviors[uid][eventType][pb] = null;
                     }
-                    if (ObjectUtils.isObject(behaviors[eventType])) {
-                        for (let eb in behaviors[eventType]) {
+                    if (ObjectUtils.isObject(behaviors[eventType]))
+                    {
+                        for (let eb in behaviors[eventType])
+                        {
                             _behaviors[uid][eventType][eb] = behaviors[eventType][eb];
                         }
-                    } else {
+                    } else
+                    {
                         _behaviors[uid][eventType][behaviors[eventType]] = null;
                     }
                 } else
@@ -413,34 +508,47 @@ var App = function (_props) {
         }
     };
 
-    this.removeBehaviors = function (impUid, cmps, behaviors) {
+    this.removeBehaviors = function (impUid, cmps, behaviors)
+    {
         var cmps = ObjectUtils.isObject(cmps) && !cmps.forEach ? [cmps] : cmps;
         let len = cmps.length;
-        for (let i = 0; i < len; i++) {
+        for (let i = 0; i < len; i++)
+        {
             let cmp = cmps[i];
-            if (_behaviors[cmp.guid] != null) {
+            if (_behaviors[cmp.guid] != null)
+            {
                 let _eventTypesJoined = "";
-                for (let eventType in behaviors) {
+                for (let eventType in behaviors)
+                {
                     delete _behaviors[cmp.guid][eventType];
                     _eventTypesJoined += " " + eventType;
-
-                    let ind = _cmpListenerImps[cmp.guid][eventType].indexOf(impUid);
-                    if (ind > -1) {
-                        _cmpListenerImps[cmp.guid][eventType].splice(ind, 1);
-                    }
-                    if (ObjectUtils.isObject(behaviors[eventType])) {
-                        for (let behavior in behaviors[eventType]) {
-                            if (_b2imps[behavior]) {
-                                let ind = _b2imps[behavior].indexOf(impUid);
-                                if (ind > -1) {
-                                    _b2imps[behavior].splice(ind, 1);
+                    if (_cmpListenerImps[cmp.guid] && _cmpListenerImps[cmp.guid][eventType])
+                    {
+                        let ind = _cmpListenerImps[cmp.guid][eventType].indexOf(impUid);
+                        if (ind > -1)
+                        {
+                            _cmpListenerImps[cmp.guid][eventType].splice(ind, 1);
+                        }
+                        if (ObjectUtils.isObject(behaviors[eventType]))
+                        {
+                            for (let behavior in behaviors[eventType])
+                            {
+                                if (_b2imps[behavior])
+                                {
+                                    let ind = _b2imps[behavior].indexOf(impUid);
+                                    if (ind > -1)
+                                    {
+                                        _b2imps[behavior].splice(ind, 1);
+                                    }
                                 }
                             }
-                        }
-                    } else {
-                        let ind = _b2imps[behaviors[eventType]].indexOf(impUid);
-                        if (ind > -1) {
-                            _b2imps[behaviors[eventType]].splice(ind, 1);
+                        } else
+                        {
+                            let ind = _b2imps[behaviors[eventType]].indexOf(impUid);
+                            if (ind > -1)
+                            {
+                                _b2imps[behaviors[eventType]].splice(ind, 1);
+                            }
                         }
                     }
                 }
@@ -450,19 +558,22 @@ var App = function (_props) {
     };
 
     Object.defineProperty(this, "idleInterval", {
-        get: function idleInterval() {
+        get: function idleInterval()
+        {
             return _idleInterval;
         }
     });
 
     Object.defineProperty(this, "inactivityInterval", {
-        get: function inactivityInterval() {
+        get: function inactivityInterval()
+        {
             return _inactivityInterval;
         }
     });
 
     Object.defineProperty(this, "appletsMap", {
-        get: function appletsMap() {
+        get: function appletsMap()
+        {
             return _appletsMap;
         }
     });
@@ -475,6 +586,7 @@ var App = function (_props) {
     return r;
 };
 App.prototype.ctor = 'App';
-export {
+export
+{
     App
 };

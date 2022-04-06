@@ -13,7 +13,7 @@ import { Heading, HeadingType } from "/obvia/components/Heading.js";
 import { AutoCompleteEx } from "/obvia/components/AutoComplete/AutoCompleteEx.js";
 import { Repeater } from "/obvia/components/Repeater/Repeater.js";
 import { Label, LabelType } from "/obvia/components/Label.js";
-import { Link } from "/obvia/components/Link/Link.js";
+import { Button } from "/obvia/components/Button/Button.js";
 import { Component } from "/obvia/components/base/Component.js";
 import { getCaretPosition, setCaretPosition } from "/obvia/lib/my.js";
 import { tokenize, findRightMatchingRightParenIndex } from "/obvia/lib/Tokenizer.js";
@@ -273,8 +273,8 @@ var EasyFilter = function (_props)
     {
         let filterItemEditor = ra.currentItem[_itemEditorField];
         let isRangeInput;
-        if (ra.currentRow.repeater_container.filterEditorContainer.mainCol.fOperator.operator.selectedItem)
-            isRangeInput = ra.currentRow.repeater_container.filterEditorContainer.mainCol.fOperator.operator.selectedItem.rangeInput;
+        if (ra.currentRow.repeater_container.filterEditorContainer.mainCol.operator.selectedItem)
+            isRangeInput = ra.currentRow.repeater_container.filterEditorContainer.mainCol.operator.selectedItem.rangeInput;
         if (isRangeInput)
         {
             let minLit = Object.assign({}, filterItemEditor);
@@ -290,6 +290,7 @@ var EasyFilter = function (_props)
                     "type": "",
                     "id": "formFieldInputRow",
                     "classes": ["form-row"],
+                    "css": { "width": "100%" },
                     "components": [{
                         "ctor": "Container",
                         "props": {
@@ -347,6 +348,7 @@ var EasyFilter = function (_props)
                 "props": {
                     "type": "",
                     "classes": [],
+                    "css": { "width": "100%" },
                     "components": [
                         filterItemEditor,
                         {
@@ -374,8 +376,7 @@ var EasyFilter = function (_props)
         {
             _operatorsDp.splicea(0, _operatorsDp.length, _defaultOperators);
         }
-        ra.currentRow.repeater_container.filterEditorContainer.mainCol.fOperator.operatorLabel = ra.currentItem[_labelField];
-        let oldInput = ra.currentRow.repeater_container.filterEditorContainer.mainRow.fItemEditor.input;
+        let oldInput = ra.currentRow.repeater_container.filterEditorContainer.mainRow.childAtIndex(0);
         if (oldInput)
         {
             if (oldInput.valueValidator)
@@ -386,7 +387,10 @@ var EasyFilter = function (_props)
                 oldInput.colMin.minValueValidator.destruct();
             }
         }
-        ra.currentRow.repeater_container.filterEditorContainer.mainRow.fItemEditor.input = filterItemEditor;
+
+        ra.currentRow.repeater_container.filterEditorContainer.mainRow.removeChild(oldInput);
+        ra.currentRow.repeater_container.filterEditorContainer.mainRow.addChild(filterItemEditor);
+
         filterItemEditor.render().then(() =>
         {
             if (isRangeInput)
@@ -427,10 +431,10 @@ var EasyFilter = function (_props)
     let _getValue = function (ra)
     {
         let ret = {};
-        let input = ra.currentRow.repeater_container.filterEditorContainer.mainRow.fItemEditor.input;
+        let input = ra.currentRow.repeater_container.filterEditorContainer.mainRow.childAtIndex(0);
         let isRangeInput;
-        if (ra.currentRow.repeater_container.filterEditorContainer.mainCol.fOperator.operator.selectedItem)
-            isRangeInput = ra.currentRow.repeater_container.filterEditorContainer.mainCol.fOperator.operator.selectedItem.rangeInput;
+        if (ra.currentRow.repeater_container.filterEditorContainer.mainCol.operator.selectedItem)
+            isRangeInput = ra.currentRow.repeater_container.filterEditorContainer.mainCol.operator.selectedItem.rangeInput;
         let value = {}, label = {};
         if (isRangeInput)
         {
@@ -468,7 +472,19 @@ var EasyFilter = function (_props)
 
     let _filerValueChange = function (e, ra)
     {
-        ra.currentItem.value = _getValue(ra).value;
+        _self.validate().then((valid) =>
+        {
+            if (valid)
+            {
+                let ret = _getValue(ra);
+                ra.currentItem.value = ret.value;
+                let operator = ra.currentItem.operatorItem;
+                let label = operator.friendly.formatUnicorn(ret.label);
+                //ra.currentRow.repeater_container.filterItemHeading.label = label;
+                ra.currentItem.filterHeading = label;
+                _update();
+            }
+        });
     };
 
     let _operatorChange = function (e, ra)
@@ -521,18 +537,6 @@ var EasyFilter = function (_props)
                                 css: { "width": "300px" },
                                 components: [
                                     {
-                                        ctor: Label,
-                                        props: {
-                                            id: 'indexLabel',
-                                            css: {
-                                                margin: 0,
-                                            },
-                                            classes: ["filter", "index"],
-                                            type: HeadingType.h6,
-                                            label: "{currentIndex + 1}",
-                                        }
-                                    },
-                                    {
                                         ctor: Container,
                                         props: {
                                             id: 'filterEditorContainer',
@@ -545,6 +549,18 @@ var EasyFilter = function (_props)
                                                         classes: ["form-row", "col"],
                                                         type: "",
                                                         components: [
+                                                            {
+                                                                ctor: Label,
+                                                                props: {
+                                                                    id: 'indexLabel',
+                                                                    css: {
+                                                                        margin: 0,
+                                                                    },
+                                                                    classes: ["filter", "index"],
+                                                                    type: HeadingType.h6,
+                                                                    label: "{currentIndex + 1}",
+                                                                }
+                                                            },
                                                             {
                                                                 ctor: Label,
                                                                 props: {
@@ -567,38 +583,32 @@ var EasyFilter = function (_props)
                                                         id: 'mainCol',
                                                         classes: ["form-row", "col"],
                                                         type: "",
-                                                        components: [{
-                                                            "ctor": "FormField",
-                                                            "props": {
-                                                                "name": "operator",
-                                                                "id": "fOperator",
-                                                                "size": "form-control-sm",
-                                                                "component": {
-                                                                    "ctor": "DropDown",
-                                                                    "props": {
-                                                                        "id": "operator",
-                                                                        "labelField": "operatorLabel",
-                                                                        "valueField": "value",
-                                                                        "dataProvider": _operatorsDp,
-                                                                        "selectedItem": "{operatorItem}",
-                                                                        "enabled": "{" + _operatorEnabledField + "}",
-                                                                        "change": _operatorChange
-                                                                    }
+                                                        components: [
+                                                            {
+                                                                "ctor": "DropDown",
+                                                                "props": {
+                                                                    "id": "operator",
+                                                                    "css": { "width": "200px" },
+                                                                    "labelField": "operatorLabel",
+                                                                    "valueField": "value",
+                                                                    "dataProvider": _operatorsDp,
+                                                                    "selectedItem": "{operatorItem}",
+                                                                    "enabled": "{" + _operatorEnabledField + "}",
+                                                                    "change": _operatorChange
+                                                                }
+                                                            },
+                                                            {
+                                                                "ctor": "RequiredFieldValidator",
+                                                                "props": {
+                                                                    "id": "operatorValidator",
+                                                                    "controlToValidate": "{currentRow.repeater_container.filterEditorContainer.mainCol.operator.id}",
+                                                                    "errorMessage": "Please select a value for the operator.",
+                                                                    "validationGroup": _validationGroupUID,
+                                                                    "enabled": "{currentItem.deleted == null || currentItem.deleted == false}",
+                                                                    "display": false,
+                                                                    "css": { "color": "red" }
                                                                 }
                                                             }
-                                                        },
-                                                        {
-                                                            "ctor": "RequiredFieldValidator",
-                                                            "props": {
-                                                                "id": "operatorValidator",
-                                                                "controlToValidate": "{currentRow.repeater_container.filterEditorContainer.mainCol.fOperator.operator.id}",
-                                                                "errorMessage": "Please select a value for the operator.",
-                                                                "validationGroup": _validationGroupUID,
-                                                                "enabled": "{currentItem.deleted == null || currentItem.deleted == false}",
-                                                                "display": false,
-                                                                "css": { "color": "red" }
-                                                            }
-                                                        }
                                                         ]
                                                     }
                                                 },
@@ -609,20 +619,9 @@ var EasyFilter = function (_props)
                                                         classes: ["form-row", "col"],
                                                         type: "",
                                                         "bindingDefaultContext": "{currentItem}",
-                                                        components: [
-                                                            {
-                                                                "ctor": "FormField",
-                                                                "props": {
-                                                                    "label": "Value",
-                                                                    "id": "fItemEditor",
-                                                                    "css": { "width": "100%" },
-                                                                    "size": "form-control-sm",
-                                                                    "bindingDefaultContext": "{currentItem}",
-                                                                    "beforeAttach": _editFilter,
-                                                                    "display": "{currentRow.repeater_container.filterEditorContainer.mainCol.fOperator.operator.selectedItem.inputVisible}"
-                                                                }
-                                                            }
-                                                        ]
+                                                        "beforeAttach": _editFilter,
+                                                        "display": "{currentRow.repeater_container.filterEditorContainer.mainCol.operator.selectedItem.inputVisible}",
+                                                        components: []
                                                     }
                                                 }]
                                         }
@@ -636,13 +635,59 @@ var EasyFilter = function (_props)
                 ctor: Container,
                 props: {
                     id: 'expressionContainer',
-                    classes: ["filter", "expression-container"],
+                    classes: ["filter", "expression-container-easy"],
                     contenteditable: true,
                     input: _expressionInput,
                     display: _advancedMode
                 }
+            },
+            {
+                ctor: Button,
+                props: {
+                    id: 'apply',
+                    classes: ["filter", "apply-easy"],
+                    click: _filter,
+                    components: [
+                        {
+                            ctor: Label,
+                            props: {
+                                id: 'faAccept',
+                                labelType: "i",
+                                label: "",
+                                classes: ["fas", "fa-check"],
+                                css: {
+                                    "text-decoration": "none"
+                                }
+                            }
+                        }
+                    ]
+                }
             }
         ];
+    };
+
+    let _filter = function (e)
+    {
+        ValidationManager.getInstance().reset(_self.validationGroupUID);
+        let updatedRules;
+        for (let i = 0; i < _self.rules.rules.length; i++)
+        {
+            if (_self.rules.rules[i].value)
+            {
+                updatedRules = _self.rules;
+                break;
+            }
+        }
+        _self.validate().then((valid) =>
+        {
+            if (valid)
+            {
+                let evt = jQuery.Event("filter");
+                evt.rules = ObjectUtils.deepCopy(updatedRules);
+                evt.originalEvent = e;
+                _self.trigger(evt);
+            }
+        });
     };
 
     let _getFieldInfoByOrdinal = function (ordinal)
@@ -820,7 +865,8 @@ var EasyFilter = function (_props)
         requiredField: "required",
         advancedMode: true,
         css: {
-            "min-height": "100px"
+            "min-height": "100px",
+            "margin-bottom": "10px"
         },
         type: "",
         classes: ["filter"]
@@ -841,6 +887,21 @@ var EasyFilter = function (_props)
 
     fnContainerDelayInit();
     _props.components = _cmps;
+
+    if (!_props.attr)
+    {
+        _props.attr = {};
+    }
+    let myDtEvts = ["filter"];
+    if (!ObjectUtils.isEmpty(_props.attr) && _props.attr["data-triggers"] && !ObjectUtils.isEmpty(_props.attr["data-triggers"]))
+    {
+        let dt = _props.attr["data-triggers"].split(" ");
+        for (let i = 0; i < dt.length; i++)
+        {
+            myDtEvts.pushUnique(dt[i]);
+        }
+    }
+    _props.attr["data-triggers"] = myDtEvts.join(" ");
 
     let r = Container.call(this, _props);
     return r;

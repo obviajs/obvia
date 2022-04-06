@@ -16,8 +16,8 @@ var DateTime = function (_props)
         get: function value()
         {
             let d;
-            if (this.dateTimeInput)
-                d = dayjs(this.dateTimeInput.value, _self.internalFormat);
+            if (_dateTimeInput)
+                d = dayjs(_dateTimeInput.value, _self.internalFormat);
             else if (_value)
                 d = dayjs(_value, _self.inputFormat);
             return !d || !d.isValid() ? "" : d.format(_outputFormat);
@@ -29,12 +29,12 @@ var DateTime = function (_props)
             if (this.$el && _value.isValid())
             {
                 _dateTimeInput.attr['date'] = _value.format(_displayFormat);
-                _dateTimeInput.$el.val(_value.format(_self.internalFormat));
+                _dateTimeInput.value = _value.format(_self.internalFormat);
                 _textInput.value = _value.format(_displayFormat);
             } else
             {
                 _dateTimeInput.attr['date'] = "Choose Date";
-                _dateTimeInput.$el.val("");
+                _dateTimeInput.value = "";
                 _textInput.value = _displayFormat;
             }
             _myw.propertyChanged("value", oldValue, value);
@@ -175,12 +175,12 @@ var DateTime = function (_props)
         if (_value.isValid())
         {
             _dateTimeInput.attr['date'] = _value.format(_displayFormat);
-            _dateTimeInput.$el.val(_value.format(_self.internalFormat));
+            _dateTimeInput.value = _value.format(_self.internalFormat);
             _self.children.textInput.value = _value.format(_displayFormat);
         } else
         {
             _dateTimeInput.attr['date'] = "Choose Date";
-            _dateTimeInput.$el.val("");
+            _dateTimeInput.value = "";
             _self.children.textInput.value = _displayFormat;
         }
         _myw.propertyChanged("value", oldValue, _value);
@@ -212,6 +212,9 @@ var DateTime = function (_props)
                 focus: function (e)
                 {
                     _shapeshift(e);
+                },
+                css: {
+                    width: "100%"
                 }
             }
         },
@@ -252,6 +255,14 @@ var DateTime = function (_props)
                         _self.children.dateTimeInput.$el[0].setAttribute("aria-invalid", "true");
                         _self.children.textInput.visible = true;
                     }
+                },
+                change: function ()
+                {
+                    if (_validate(_self.children.textInput.value))
+                    {
+                        _self.value = dayjs(_self.children.textInput.value, _displayFormat).format(_inputFormat);
+                    } else
+                    { }
                 },
                 keypress: function (e)
                 {
