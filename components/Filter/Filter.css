@@ -48,13 +48,9 @@
 }
 
 .filter .apply-easy {
-    border-top: 1px solid #5555556b;
-    border-bottom: 1px solid #5555556b;
-    border-right: 1px solid #5555556b;
-    border-top-right-radius: 6px;
-    border-bottom-right-radius: 6px;
+    border: 1px solid #5555556b;
+    border-radius: 6px;
     outline: none;
-    width: 20%;
     float: right;
 }
 
@@ -87,4 +83,16 @@
 .fall {
     transform: translateY(2rem) rotateZ(10deg);
     opacity: 0;
+}
+
+.filter .form-row-easy {
+    display: inline-flex;
+    flex-wrap: wrap;
+    margin-right: -5px;
+    margin-left: -5px;
+}
+
+.filter .repeater-easy {
+    display: flex;
+    flex-wrap: wrap;
 }

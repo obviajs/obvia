@@ -40,6 +40,7 @@ var EasyFilter = function (_props)
         _rules, _initialRules,
         _valid = true,
         _advancedMode, _validationGroupUID = StringUtils.guid(),
+        _showOperator,
         _defaultOperators = new ArrayEx([{
             value: "contains",
             operatorLabel: "contains",
@@ -289,8 +290,8 @@ var EasyFilter = function (_props)
                 "props": {
                     "type": "",
                     "id": "formFieldInputRow",
-                    "classes": ["form-row"],
-                    "css": { "width": "100%" },
+                    "classes": ["form-row-easy", "no-form-control"],
+                    "css": { "width": "100%", "font-size": "14px" },
                     "components": [{
                         "ctor": "Container",
                         "props": {
@@ -343,6 +344,11 @@ var EasyFilter = function (_props)
         } else
         {
             filterItemEditor.props.id = "valueInput";
+            filterItemEditor.props.classes = [];
+            filterItemEditor.props.classes.push("no-form-control");
+            if (!filterItemEditor.props.css)
+                filterItemEditor.props.css = {};
+            filterItemEditor.props.css["font-size"] = "14px";
             filterItemEditor = {
                 "ctor": "Container",
                 "props": {
@@ -526,7 +532,7 @@ var EasyFilter = function (_props)
                         direction: 'horizontal',
                         wrap: false,
                     },
-                    classes: ["filter", "main-container", "repeater", "d-flex"],
+                    classes: ["filter", "repeater-easy"],
                     components: [
                         {
                             ctor: Container,
@@ -534,7 +540,6 @@ var EasyFilter = function (_props)
                                 id: 'repeater_container',
                                 classes: ["filter"],
                                 type: "",
-                                css: { "width": "300px" },
                                 components: [
                                     {
                                         ctor: Container,
@@ -546,7 +551,7 @@ var EasyFilter = function (_props)
                                                     ctor: Container,
                                                     props: {
                                                         id: 'headerRow',
-                                                        classes: ["form-row", "col"],
+                                                        classes: ["form-row-easy", "col"],
                                                         type: "",
                                                         components: [
                                                             {
@@ -581,8 +586,9 @@ var EasyFilter = function (_props)
                                                     ctor: Container,
                                                     props: {
                                                         id: 'mainCol',
-                                                        classes: ["form-row", "col"],
+                                                        classes: ["form-row-easy", "col"],
                                                         type: "",
+                                                        display: _showOperator,
                                                         components: [
                                                             {
                                                                 "ctor": "DropDown",
@@ -616,7 +622,7 @@ var EasyFilter = function (_props)
                                                     ctor: Container,
                                                     props: {
                                                         id: 'mainRow',
-                                                        classes: ["form-row", "col"],
+                                                        classes: ["form-row-easy", "col"],
                                                         type: "",
                                                         "bindingDefaultContext": "{currentItem}",
                                                         "beforeAttach": _editFilter,
@@ -863,10 +869,11 @@ var EasyFilter = function (_props)
         getValueField: "getValue",
         operatorEnabledField: "operatorEnabled",
         requiredField: "required",
-        advancedMode: true,
+        advancedMode: false,
+        showOperator: false,
         css: {
-            "min-height": "100px",
-            "margin-bottom": "10px"
+            "margin-bottom": "10px",
+            "display": "flex"
         },
         type: "",
         classes: ["filter"]
@@ -884,6 +891,7 @@ var EasyFilter = function (_props)
     _requiredField = _props.requiredField;
 
     _advancedMode = _props.advancedMode;
+    _showOperator = _props.showOperator;
 
     fnContainerDelayInit();
     _props.components = _cmps;
