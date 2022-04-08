@@ -87,7 +87,6 @@
 
 .filter .form-row-easy {
     display: inline-flex;
-    flex-wrap: wrap;
     margin-right: -5px;
     margin-left: -5px;
 }
@@ -95,4 +94,5 @@
 .filter .repeater-easy {
     display: flex;
     flex-wrap: wrap;
+    flex-flow: row wrap;
 }

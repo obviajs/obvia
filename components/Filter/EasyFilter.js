@@ -274,8 +274,8 @@ var EasyFilter = function (_props)
     {
         let filterItemEditor = ra.currentItem[_itemEditorField];
         let isRangeInput;
-        if (ra.currentRow.repeater_container.filterEditorContainer.mainCol.operator.selectedItem)
-            isRangeInput = ra.currentRow.repeater_container.filterEditorContainer.mainCol.operator.selectedItem.rangeInput;
+        if (ra.currentRow.repeater_container.mainCol.operator.selectedItem)
+            isRangeInput = ra.currentRow.repeater_container.mainCol.operator.selectedItem.rangeInput;
         if (isRangeInput)
         {
             let minLit = Object.assign({}, filterItemEditor);
@@ -382,7 +382,7 @@ var EasyFilter = function (_props)
         {
             _operatorsDp.splicea(0, _operatorsDp.length, _defaultOperators);
         }
-        let oldInput = ra.currentRow.repeater_container.filterEditorContainer.mainRow.childAtIndex(0);
+        let oldInput = ra.currentRow.repeater_container.mainRow.childAtIndex(0);
         if (oldInput)
         {
             if (oldInput.valueValidator)
@@ -394,8 +394,8 @@ var EasyFilter = function (_props)
             }
         }
 
-        ra.currentRow.repeater_container.filterEditorContainer.mainRow.removeChild(oldInput);
-        ra.currentRow.repeater_container.filterEditorContainer.mainRow.addChild(filterItemEditor);
+        ra.currentRow.repeater_container.mainRow.removeChild(oldInput);
+        ra.currentRow.repeater_container.mainRow.addChild(filterItemEditor);
 
         filterItemEditor.render().then(() =>
         {
@@ -430,17 +430,17 @@ var EasyFilter = function (_props)
                     }
                 }
             }
-            ra.currentRow.repeater_container.filterEditorContainer.show();
+            ra.currentRow.repeater_container.show();
         });
     };
 
     let _getValue = function (ra)
     {
         let ret = {};
-        let input = ra.currentRow.repeater_container.filterEditorContainer.mainRow.childAtIndex(0);
+        let input = ra.currentRow.repeater_container.mainRow.childAtIndex(0);
         let isRangeInput;
-        if (ra.currentRow.repeater_container.filterEditorContainer.mainCol.operator.selectedItem)
-            isRangeInput = ra.currentRow.repeater_container.filterEditorContainer.mainCol.operator.selectedItem.rangeInput;
+        if (ra.currentRow.repeater_container.mainCol.operator.selectedItem)
+            isRangeInput = ra.currentRow.repeater_container.mainCol.operator.selectedItem.rangeInput;
         let value = {}, label = {};
         if (isRangeInput)
         {
@@ -496,7 +496,7 @@ var EasyFilter = function (_props)
     let _operatorChange = function (e, ra)
     {
         ra.currentItem.operatorItem = this.selectedItem;
-        if (ra.currentRow.repeater_container.filterEditorContainer.mainRow)
+        if (ra.currentRow.repeater_container.mainRow)
             _editFilter(e, ra);
     };
 
@@ -539,100 +539,93 @@ var EasyFilter = function (_props)
                             props: {
                                 id: 'repeater_container',
                                 classes: ["filter"],
+                                css: { "flex-basis": 0 },
                                 type: "",
                                 components: [
                                     {
                                         ctor: Container,
                                         props: {
-                                            id: 'filterEditorContainer',
+                                            id: 'headerRow',
+                                            classes: ["form-row-easy", "col"],
                                             type: "",
                                             components: [
                                                 {
-                                                    ctor: Container,
+                                                    ctor: Label,
                                                     props: {
-                                                        id: 'headerRow',
-                                                        classes: ["form-row-easy", "col"],
-                                                        type: "",
-                                                        components: [
-                                                            {
-                                                                ctor: Label,
-                                                                props: {
-                                                                    id: 'indexLabel',
-                                                                    css: {
-                                                                        margin: 0,
-                                                                    },
-                                                                    classes: ["filter", "index"],
-                                                                    type: HeadingType.h6,
-                                                                    label: "{currentIndex + 1}",
-                                                                }
-                                                            },
-                                                            {
-                                                                ctor: Label,
-                                                                props: {
-                                                                    id: 'fieldItemHeading',
-                                                                    css: {
-                                                                        margin: 0
-                                                                    },
-                                                                    classes: [],
-                                                                    type: HeadingType.h6,
-                                                                    align: 'left',
-                                                                    "bindingDefaultContext": "{currentItem}",
-                                                                    label: "{" + _labelField + "}",
-                                                                }
-                                                            }]
+                                                        id: 'indexLabel',
+                                                        css: {
+                                                            margin: 0,
+                                                        },
+                                                        classes: ["filter", "index"],
+                                                        type: HeadingType.h6,
+                                                        label: "{currentIndex + 1}",
                                                     }
                                                 },
                                                 {
-                                                    ctor: Container,
+                                                    ctor: Label,
                                                     props: {
-                                                        id: 'mainCol',
-                                                        classes: ["form-row-easy", "col"],
-                                                        type: "",
-                                                        display: _showOperator,
-                                                        components: [
-                                                            {
-                                                                "ctor": "DropDown",
-                                                                "props": {
-                                                                    "id": "operator",
-                                                                    "css": { "width": "200px" },
-                                                                    "labelField": "operatorLabel",
-                                                                    "valueField": "value",
-                                                                    "dataProvider": _operatorsDp,
-                                                                    "selectedItem": "{operatorItem}",
-                                                                    "enabled": "{" + _operatorEnabledField + "}",
-                                                                    "change": _operatorChange
-                                                                }
-                                                            },
-                                                            {
-                                                                "ctor": "RequiredFieldValidator",
-                                                                "props": {
-                                                                    "id": "operatorValidator",
-                                                                    "controlToValidate": "{currentRow.repeater_container.filterEditorContainer.mainCol.operator.id}",
-                                                                    "errorMessage": "Please select a value for the operator.",
-                                                                    "validationGroup": _validationGroupUID,
-                                                                    "enabled": "{currentItem.deleted == null || currentItem.deleted == false}",
-                                                                    "display": false,
-                                                                    "css": { "color": "red" }
-                                                                }
-                                                            }
-                                                        ]
-                                                    }
-                                                },
-                                                {
-                                                    ctor: Container,
-                                                    props: {
-                                                        id: 'mainRow',
-                                                        classes: ["form-row-easy", "col"],
-                                                        type: "",
+                                                        id: 'fieldItemHeading',
+                                                        css: {
+                                                            margin: 0,
+                                                            "white-space": "nowrap"
+                                                        },
+                                                        classes: [],
+                                                        type: HeadingType.h6,
+                                                        align: 'left',
                                                         "bindingDefaultContext": "{currentItem}",
-                                                        "beforeAttach": _editFilter,
-                                                        "display": "{currentRow.repeater_container.filterEditorContainer.mainCol.operator.selectedItem.inputVisible}",
-                                                        components: []
+                                                        label: "{" + _labelField + "}",
                                                     }
                                                 }]
                                         }
-                                    }
-                                ]
+                                    },
+                                    {
+                                        ctor: Container,
+                                        props: {
+                                            id: 'mainCol',
+                                            classes: ["form-row-easy", "col"],
+                                            type: "",
+                                            display: _showOperator,
+                                            components: [
+                                                {
+                                                    "ctor": "DropDown",
+                                                    "props": {
+                                                        "id": "operator",
+                                                        "css": { "width": "200px" },
+                                                        "labelField": "operatorLabel",
+                                                        "valueField": "value",
+                                                        "dataProvider": _operatorsDp,
+                                                        "selectedItem": "{operatorItem}",
+                                                        "enabled": "{" + _operatorEnabledField + "}",
+                                                        "change": _operatorChange
+                                                    }
+                                                },
+                                                {
+                                                    "ctor": "RequiredFieldValidator",
+                                                    "props": {
+                                                        "id": "operatorValidator",
+                                                        "controlToValidate": "{currentRow.repeater_container.mainCol.operator.id}",
+                                                        "errorMessage": "Please select a value for the operator.",
+                                                        "validationGroup": _validationGroupUID,
+                                                        "enabled": "{currentItem.deleted == null || currentItem.deleted == false}",
+                                                        "display": false,
+                                                        "css": { "color": "red" }
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        ctor: Container,
+                                        props: {
+                                            id: 'mainRow',
+                                            classes: ["form-row-easy", "col"],
+                                            type: "",
+                                            "bindingDefaultContext": "{currentItem}",
+                                            "beforeAttach": _editFilter,
+                                            "display": "{currentRow.repeater_container.mainCol.operator.selectedItem.inputVisible}",
+                                            components: []
+                                        }
+                                    }]
                             }
                         }]
                 }
