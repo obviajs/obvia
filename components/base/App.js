@@ -149,7 +149,8 @@ var App = function (_props)
         "ActivityDetected": "APP_ACTIVE",
         "WindowHide": "APP_WINDOW_HIDDEN",
         "WindowShow": "APP_WINDOW_SHOWN",
-        "beforeunload": "APP_UNLOADED"
+        "onunload": "APP_UNLOAD",
+        "beforeunload": "APP_BEFORE_UNLOAD"
     };
 
     Object.defineProperty(this, 'defaultBehaviors', {
@@ -159,7 +160,7 @@ var App = function (_props)
         }
     });
 
-    _behaviorimplementations[_guid]["APP_UNLOADED"] = function (e)
+    _behaviorimplementations[_guid]["APP_UNLOAD"] = function (e)
     {
         //window.open("http://google.com/");
         //return "You have unsaved changes";

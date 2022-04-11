@@ -3,11 +3,12 @@ import { Parent } from "/obvia/components/base/Parent.js";
 import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
 import { CSSUtils } from "/obvia/lib/CSSUtils.js";
 import { DependencyContainer } from "/obvia/lib/DependencyContainer.js";
-var BrowserWindow = function (_props) {
+var BrowserWindow = function (_props)
+{
     let _self = this,
         _win;
     let _defaultParams = {
-        tile: "",
+        title: "",
         status: "",
         url: "",
         name: "_blank",
@@ -25,35 +26,40 @@ var BrowserWindow = function (_props) {
         ownerDocument: null
     };
 
-    this.endDraw = function (e) {
-        if (e.target.id == this.domID) {}
+    this.endDraw = function (e)
+    {
+        if (e.target.id == this.domID) { }
     };
 
-    this.template = function () {
+    this.template = function ()
+    {
         _win = window.open(_url, _name, "width=" + _width + ",height=" + _height + ",top=" + _top + ",left=" + _left + ",status=" + _status + ",location=" + _location + ",toolbar=" + _toolbar + ",resizable" + _resizable);
-        _win.addEventListener('beforeunload', function (e) {
+        _win.document.title = _title;
+        _win.addEventListener('beforeunload', function (e)
+        {
             _self.removeAllChildren();
             _win = null;
-            BrowserWindow.all.splice(BrowserWindow.all.indexOf(_self), 1);
+            BrowserWindow.all.splice(BrowserWindow.all.indexOf(_self.proxyMaybe), 1);
             _self.$el.remove();
             delete e['returnValue'];
             _self.trigger("beforeunload");
         });
-        BrowserWindow.all.push(this);
+        BrowserWindow.all.push(this.proxyMaybe);
         CSSUtils.copyStyles(document, _win.document);
         this.ownerDocument = _win.document;
 
-        this.$el = $("<div/>");
+        this.$el = $(_win.document.body);
         this.$el.attr('id', this.domID);
-        this.appendTo = $(_win.document.body);
         return null;
     };
 
-    this.close = function () {
-        if (_win) {
+    this.close = function ()
+    {
+        if (_win)
+        {
             _win.close();
             _win = null;
-            BrowserWindow.all.splice(BrowserWindow.all.indexOf(this), 1);
+            BrowserWindow.all.splice(BrowserWindow.all.indexOf(this.proxyMaybe), 1);
         }
     };
 
@@ -69,27 +75,30 @@ var BrowserWindow = function (_props) {
     let _location = _props.location;
     let _toolbar = _props.toolbar;
     let _resizable = _props.resizable;
+    let _title = _props.title;
 
     let r = Parent.call(this, _props, false, true);
 
-    this.show = function () {
-        if (!this.parent) {
-            this.appendTo.append(this.$el);
-        }
-        if (!_win || _win.closed) {
+    this.show = function ()
+    {
+        if (!_win || _win.closed)
+        {
             let c = _win && _win.closed;
-        } else {
+        } else
+        {
             _win.focus();
         }
     };
 
     Object.defineProperty(this, 'window', {
-        get: function () {
+        get: function ()
+        {
             return _win;
         }
     });
 
-    this.destruct = function (mode = 1) {
+    this.destruct = function (mode = 1)
+    {
         this.close();
     };
     return r;
@@ -97,6 +106,7 @@ var BrowserWindow = function (_props) {
 DependencyContainer.getInstance().register("BrowserWindow", BrowserWindow, DependencyContainer.simpleResolve);
 BrowserWindow.prototype.ctor = 'BrowserWindow';
 BrowserWindow.all = new ArrayEx();
-export {
+export
+{
     BrowserWindow
 };
