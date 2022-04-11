@@ -14,7 +14,8 @@ import { Label, LabelType } from "/obvia/components/Label.js";
 import { DataGrid } from "/obvia/components/DataGrid/DataGrid.js";
 import { AutoCompleteEx } from "/obvia/components/AutoComplete/AutoCompleteEx.js";
 import { DependencyContainer } from "/obvia/lib/DependencyContainer.js";
-var AutoBrowse = function (_props) {
+var AutoBrowse = function (_props)
+{
 	let _self = this;
 	let _dataProvider,
 		_bindingDefaultContext,
@@ -26,11 +27,14 @@ var AutoBrowse = function (_props) {
 	let _dgUID = StringUtils.guid();
 
 	Object.defineProperty(this, "dataProvider", {
-		get: function dataProvider() {
+		get: function dataProvider()
+		{
 			return _dataProvider;
 		},
-		set: function dataProvider(v) {
-			if (_dataProvider != v) {
+		set: function dataProvider(v)
+		{
+			if (_dataProvider != v)
+			{
 				_dataProvider = v;
 				_autocomplete.dataProvider = v;
 				_dg.dataProvider = v;
@@ -40,54 +44,66 @@ var AutoBrowse = function (_props) {
 	});
 
 	Object.defineProperty(this, "valueField", {
-		get: function valueField() {
+		get: function valueField()
+		{
 			return _valueField;
 		},
-		set: function valueField(v) {
+		set: function valueField(v)
+		{
 			_autocomplete.valueField = _valueField = v;
 		},
 		enumerable: true,
 	});
 
 	Object.defineProperty(this, "labelField", {
-		get: function labelField() {
+		get: function labelField()
+		{
 			return _labelField;
 		},
-		set: function labelField(v) {
+		set: function labelField(v)
+		{
 			_autocomplete.labelField = _labelField = v;
 		},
 		enumerable: true,
 	});
 
 	Object.defineProperty(this, "value", {
-		get: function value() {
+		get: function value()
+		{
 			return _autocomplete.value;
 		},
-		set: function value(v) {
+		set: function value(v)
+		{
 			_autocomplete.value = v;
 		},
 		enumerable: true,
 	});
 
-	this.endDraw = function (e) {
-		if (e.target.id == this.domID) {
+	this.endDraw = function (e)
+	{
+		if (e.target.id == this.domID)
+		{
 			_autocomplete = this["autocomplete"];
 			_modal = this.children[this.components[2].props.id];
 			_dg = _modal.modalDialog.modalContent.modalBody["dataGrid_" + _dgUID];
-			_btn = this["workArea_53_"+_dgUID]["selectBtn_" + _dgUID];
+			_btn = this["workArea_53_" + _dgUID]["selectBtn_" + _dgUID];
 		}
 	};
 
-	this.beforeAttach = function (e) {
-		if (e.target.id == this.domID) {
-			if (_props.value) {
+	this.beforeAttach = function (e)
+	{
+		if (e.target.id == this.domID)
+		{
+			if (_props.value)
+			{
 				this.value = _props.value;
 			}
 			e.preventDefault();
 		}
 	};
 	let _cmps, _autocomplete, _dg, _modal;
-	var fnContainerDelayInit = function () {
+	var fnContainerDelayInit = function ()
+	{
 		_cmps = [
 			{
 				ctor: AutoCompleteEx,
@@ -109,13 +125,16 @@ var AutoBrowse = function (_props) {
 				ctor: Container,
 				props: {
 					type: "",
-					id: "workArea_53_"+_dgUID,
+					id: "workArea_53_" + _dgUID,
 					components: [
 						{
 							ctor: Button,
 							props: {
-								id: "selectBtn_"+_dgUID,
+								id: "selectBtn_" + _dgUID,
 								type: "button",
+								css: {
+									"border-radius": "3px"
+								},
 								components: [
 									{
 										ctor: Label,
@@ -142,7 +161,7 @@ var AutoBrowse = function (_props) {
 						{
 							ctor: DataGrid,
 							props: {
-								id: "dataGrid_"+_dgUID,
+								id: "dataGrid_" + _dgUID,
 								allowNewItem: _props.allowNewItem, //allow the user to add items that are not included in the specified dataProvider
 								rowCount: 5, //visible rows count - virtual scrolling wil be applied on scroll
 								dataProvider: _dataProvider,
@@ -157,24 +176,30 @@ var AutoBrowse = function (_props) {
 		];
 	};
 
-	var _drawGrid = function (e) {
+	var _drawGrid = function (e)
+	{
 		_dg.updateDisplayList();
 	};
 
-	let _browse = function (e) {
+	let _browse = function (e)
+	{
 		let evt = jQuery.Event("browse");
 		_self.trigger(evt);
-		if (!evt.isDefaultPrevented()) {
+		if (!evt.isDefaultPrevented())
+		{
 			_modal.show();
 		}
 	};
-	let _selectItem = function (e, odg, ra) {
+	let _selectItem = function (e, odg, ra)
+	{
 		_autocomplete.value = ra.currentItem;
 		_modal.hide();
 	};
 
-	let _initColumns = function () {
-		for (let i = 0; i < _fields.length; i++) {
+	let _initColumns = function ()
+	{
+		for (let i = 0; i < _fields.length; i++)
+		{
 			let cprops = {
 				width: 400,
 				field: _fields[i].field,
@@ -210,10 +235,12 @@ var AutoBrowse = function (_props) {
 	};
 	ObjectUtils.fromDefault(_defaultParams, _props);
 	//_props = ObjectUtils.extend(false, false, _defaultParams, _props);
-	if (!_props.attr) {
+	if (!_props.attr)
+	{
 		_props.attr = {};
 	}
-	if (!_props.classes) {
+	if (!_props.classes)
+	{
 		_props.classes = ["d-flex"];
 	} else _props.classes.pushUnique("d-flex");
 
@@ -222,18 +249,22 @@ var AutoBrowse = function (_props) {
 		!ObjectUtils.isEmpty(_props.attr) &&
 		_props.attr["data-triggers"] &&
 		!ObjectUtils.isEmpty(_props.attr["data-triggers"])
-	) {
+	)
+	{
 		let dt = _props.attr["data-triggers"].split(" ");
-		for (let i = 0; i < dt.length; i++) {
+		for (let i = 0; i < dt.length; i++)
+		{
 			myDtEvts.pushUnique(dt[i]);
 		}
 	}
 	_props.attr["data-triggers"] = myDtEvts.join(" ");
 
-	if (_props.dataProvider && !StringUtils.getBindingExp(_props.dataProvider)) {
+	if (_props.dataProvider && !StringUtils.getBindingExp(_props.dataProvider))
+	{
 		_dataProvider = _props.dataProvider;
 	}
-	if (_props.bindingDefaultContext) {
+	if (_props.bindingDefaultContext)
+	{
 		_bindingDefaultContext = _props.bindingDefaultContext;
 	}
 	_valueField = _props.valueField;
@@ -247,11 +278,14 @@ var AutoBrowse = function (_props) {
 	let r = Container.call(this, _props, true);
 
 	Object.defineProperty(this, "enabled", {
-		get: function enabled() {
+		get: function enabled()
+		{
 			return _enabled;
 		},
-		set: function enabled(v) {
-			if (_enabled != v) {
+		set: function enabled(v)
+		{
+			if (_enabled != v)
+			{
 				_enabled = v;
 				_autocomplete.enabled = v;
 				_btn.enabled = v;
