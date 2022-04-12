@@ -9,7 +9,6 @@ import { OpenAPI_utils } from "/obvia/lib/OpenApi/OpenAPI_utils.js";
 import { RemoteArray } from "/obvia/lib/rca/RemoteArray.js";
 import { DependencyContainer } from "/obvia/lib/DependencyContainer.js";
 
-
 var DataView = function (_props)
 {
     let _defaultParams = {
