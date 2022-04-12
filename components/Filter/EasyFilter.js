@@ -620,6 +620,9 @@ var EasyFilter = function (_props)
                                             id: 'mainRow',
                                             classes: ["form-row-easy", "col"],
                                             type: "",
+                                            css: {
+                                                "width": "200px"
+                                            },
                                             "bindingDefaultContext": "{currentItem}",
                                             "beforeAttach": _editFilter,
                                             "display": "{currentRow.repeater_container.mainCol.operator.selectedItem.inputVisible}",
