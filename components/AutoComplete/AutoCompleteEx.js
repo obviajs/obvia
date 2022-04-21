@@ -482,6 +482,7 @@ var AutoCompleteEx = function (_props)
 				if (typeof v === "object" && !v.forEach)
 				{
 					v = [v];
+					_closeSuggestionsList();
 				}
 				if (_valueLater == null)
 				{
