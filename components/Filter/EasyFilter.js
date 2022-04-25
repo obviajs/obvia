@@ -532,7 +532,8 @@ var EasyFilter = function (_props)
                         direction: 'horizontal',
                         wrap: false,
                     },
-                    classes: ["filter", "repeater-easy"],
+                    width: "100%",
+                    classes: ["filter", "repeater-easy", "mb-1", "mt-1"],
                     components: [
                         {
                             ctor: Container,

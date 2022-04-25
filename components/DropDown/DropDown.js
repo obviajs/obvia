@@ -15,22 +15,28 @@ import { Repeater } from "/obvia/components/Repeater/Repeater.js";
 import { ChangeWatcher } from "/obvia/lib/binding/ChangeWatcher.js";
 import { DependencyContainer } from "/obvia/lib/DependencyContainer.js";
 
-var DropDown = function (_props) {
+var DropDown = function (_props)
+{
     let _self = this;
 
     let _dataProvider, _btnDD, _componentRepeater, _label, _selectedItem, _allowNewItem, myw, _enabled = true;
 
     Object.defineProperty(this, "labelField", {
-        get: function labelField() {
+        get: function labelField()
+        {
             return _labelField;
         },
-        set: function labelField(v) {
-            if (_labelField != v) {
+        set: function labelField(v)
+        {
+            if (_labelField != v)
+            {
                 _labelField = v;
                 _componentRepeater.components = fnInitCmpLink();
-                if (_dataProvider && _dataProvider.length > 0) {
+                if (_dataProvider && _dataProvider.length > 0)
+                {
                     let dpFields = Object.getOwnPropertyNames(_dataProvider[0]);
-                    if (dpFields.includes(_labelField)) {
+                    if (dpFields.includes(_labelField))
+                    {
                         _componentRepeater.dataProvider = _dataProvider;
                     }
                 }
@@ -40,55 +46,69 @@ var DropDown = function (_props) {
     });
 
     Object.defineProperty(this, "dataProvider", {
-        get: function dataProvider() {
+        get: function dataProvider()
+        {
             return _dataProvider;
         },
-        set: function dataProvider(v) {
+        set: function dataProvider(v)
+        {
             _dataProvider = v;
 
-            if (v && v.length > 0) {
+            if (v && v.length > 0)
+            {
                 let dpFields = Object.getOwnPropertyNames(v[0]);
-                if (dpFields.includes(_labelField)) {
+                if (dpFields.includes(_labelField))
+                {
                     _componentRepeater.dataProvider = _dataProvider;
                 }
-            } else {
+            } else
+            {
                 _componentRepeater.dataProvider = _dataProvider;
             }
         },
         enumerable: true
     });
     Object.defineProperty(this, "valueField", {
-        get: function valueField() {
+        get: function valueField()
+        {
             return _valueField;
         },
         enumerable: true
     });
 
     Object.defineProperty(this, "selectedItem", {
-        get: function selectedItem() {
+        get: function selectedItem()
+        {
 
             return _selectedItem;
         },
-        set: function selectedItem(v) {
-            if (_selectedItem != v) {
+        set: function selectedItem(v)
+        {
+            if (_selectedItem != v)
+            {
                 let oldValue = _selectedItem;
-                if (!ObjectUtils.isObject(v)) {
+                if (!ObjectUtils.isObject(v))
+                {
                     let o = {};
                     o[_valueField] = v;
                     v = o;
                 }
-                if (v.hasOwnProperty(_valueField)) {
+                if (v.hasOwnProperty(_valueField))
+                {
                     let m = ArrayUtils.getMatching(_dataProvider, _valueField, v[_valueField]).objects;
-                    if (m.length > 0) {
+                    if (m.length > 0)
+                    {
                         v = m[0];
                         _selectedItem = v;
                         _btnDD.label = v[_labelField];
-                    } else if (_allowNewItem) {
+                    } else if (_allowNewItem)
+                    {
                         _dataProvider.splice(_dataProvider.length, 0, v);
                         _selectedItem = v;
                         _btnDD.label = v[_labelField];
 
-                    } else {
+                    } else
+                    {
                         _selectedItem = null;
                         _btnDD.label = _label;
                     }
@@ -98,44 +118,55 @@ var DropDown = function (_props) {
             }
         }
     });
-    if (!this.hasOwnProperty("label")) {
+    if (!this.hasOwnProperty("label"))
+    {
         Object.defineProperty(this, "label", {
-            get: function label() {
+            get: function label()
+            {
                 return _label;
             },
-            set: function label(v) {
+            set: function label(v)
+            {
                 _label = v;
             },
             enumerable: true
         });
     }
-    this.endDraw = function (e) {
-        if (e.target.id == this.domID) {
+    this.endDraw = function (e)
+    {
+        if (e.target.id == this.domID)
+        {
             _btnDD = this.button;
             _componentRepeater = this.repeater;
             _componentRepeater.attr["aria-labelledby"] = _btnDD.domID;
-            if (_props.label && !this.getBindingExpression("label")) {
+            if (_props.label && !this.getBindingExpression("label"))
+            {
                 _btnDD.label = this.label = _props.label;
             }
-            if (_props.selectedItem && !this.getBindingExpression("selectedItem")) {
+            if (_props.selectedItem && !this.getBindingExpression("selectedItem"))
+            {
                 this.selectedItem = _props.selectedItem;
             }
         }
     };
 
-    this.init = function (e) {
+    this.init = function (e)
+    {
         myw = ChangeWatcher.getInstance(_self);
     };
 
-    this.beforeAttach = function (e) {
-        if (e.target.id == this.domID) {
+    this.beforeAttach = function (e)
+    {
+        if (e.target.id == this.domID)
+        {
 
         }
     };
 
-    this.afterAttach = function (e) {};
+    this.afterAttach = function (e) { };
 
-    let fnInitCmpLink = function () {
+    let fnInitCmpLink = function ()
+    {
         let _componentLink = {
             ctor: Link,
             props: {
@@ -144,20 +175,26 @@ var DropDown = function (_props) {
                 "click": _clickHandler,
             }
         };
-        if (_hrefField) {
+        if (_hrefField)
+        {
             _componentLink.props.href = '{' + _hrefField + '}';
         }
-        if (_labelField) {
+        if (_labelField)
+        {
             _componentLink.props.label = '{' + _labelField + '}';
         }
         return _componentLink;
     };
-    let fnContainerDelayInit = function () {
+    let fnContainerDelayInit = function ()
+    {
         let _componentButton = {
             ctor: Button,
             props: {
                 id: "button",
                 classes: [_size, _split, "btn", "btn-secondary", "dropdown-toggle"],
+                css: {
+                    "overflow": "hidden"
+                },
                 attr: {
                     "data-toggle": 'dropdown',
                     "aria-haspopup": "true",
@@ -199,7 +236,8 @@ var DropDown = function (_props) {
         guidField: "guid"
     };
 
-    let _clickHandler = function (e, ra) {
+    let _clickHandler = function (e, ra)
+    {
         let linkObj = {};
         linkObj[_guidField] = ra.currentItem[_guidField];
         _self.selectedItem = ArrayUtils.getMatching(_dataProvider, _guidField, linkObj[_guidField]).objects[0];
@@ -208,7 +246,8 @@ var DropDown = function (_props) {
     };
     ObjectUtils.fromDefault(_defaultParams, _props);
     //_props = ObjectUtils.extend(false, false, _defaultParams, _props);
-    if (!_props.attr) {
+    if (!_props.attr)
+    {
         _props.attr = {};
     }
     _props.attr["data-triggers"] = "change";
@@ -223,7 +262,8 @@ var DropDown = function (_props) {
     let _split = _props.split;
     let _guidField = _props.guidField;
 
-    if (_props.dataProvider && !StringUtils.getBindingExp(_props.dataProvider)) {
+    if (_props.dataProvider && !StringUtils.getBindingExp(_props.dataProvider))
+    {
         _dataProvider = _props.dataProvider;
     }
     _props.components = fnContainerDelayInit();
@@ -231,11 +271,14 @@ var DropDown = function (_props) {
     let r = Container.call(this, _props, true);
 
     Object.defineProperty(this, "enabled", {
-        get: function enabled() {
+        get: function enabled()
+        {
             return _enabled;
         },
-        set: function enabled(v) {
-            if (_enabled != v) {
+        set: function enabled(v)
+        {
+            if (_enabled != v)
+            {
                 _enabled = v;
                 if (_btnDD)
                     _btnDD.enabled = _enabled;
@@ -259,6 +302,7 @@ var DropMenuDirection = {
     "DROPRIGHT": "btn-group dropright",
 };
 DependencyContainer.getInstance().register("DropDown", DropDown, DependencyContainer.simpleResolve);
-export {
+export
+{
     DropDown, DropSplitType, DropMenuDirection
 };
