@@ -319,7 +319,6 @@ var AutoCompleteEx = function (_props)
 		);
 		_openSuggestionsList();
 	};
-
 	let _openSuggestionsList = function ()
 	{
 		//suggestions found
@@ -482,7 +481,6 @@ var AutoCompleteEx = function (_props)
 				if (typeof v === "object" && !v.forEach)
 				{
 					v = [v];
-					// _closeSuggestionsList();
 				}
 				if (_valueLater == null)
 				{
@@ -694,7 +692,6 @@ var AutoCompleteEx = function (_props)
 							versionStyle: "",
 							keydown: _tokenInputKeyDown,
 							keyup: _tokenInputKeyUp,
-							blur: _closeSuggestionsList,
 							classes: ["border-0", "ellipsis"],
 							ownerDocument: this.ownerDocument,
 							css: {
