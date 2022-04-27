@@ -183,6 +183,7 @@ var AutoBrowse = function (_props)
 
 	let _browse = function (e)
 	{
+		_autocomplete.closeSuggestionsList();
 		let evt = jQuery.Event("browse");
 		_self.trigger(evt);
 		if (!evt.isDefaultPrevented())

@@ -198,7 +198,7 @@ var AutoCompleteEx = function (_props)
 					break;
 				case 27: // ESC - get back to old value
 					console.log("DD ESCAPE");
-					_closeSuggestionsList();
+					_self.closeSuggestionsList();
 					break;
 			}
 		}
@@ -227,7 +227,7 @@ var AutoCompleteEx = function (_props)
 
 				_self.removeSuggestionItemAt(repeaterEventArgs.currentIndex);
 				// acEx.closeSuggestionsList();
-				_closeSuggestionsList();
+				_self.closeSuggestionsList();
 				_input.$el.focus();
 				break;
 		}
@@ -238,7 +238,7 @@ var AutoCompleteEx = function (_props)
 		if (typeof _inputkeydown == "function")
 			_inputkeydown.apply(_self, arguments);
 
-		// _closeSuggestionsList();
+		// _self.closeSuggestionsList();
 
 		if (!e.isDefaultPrevented())
 		{
@@ -249,7 +249,7 @@ var AutoCompleteEx = function (_props)
 					break;
 				case 27: // ESC - get back to old value
 					console.log("ESCAPE");
-					_closeSuggestionsList();
+					_self.closeSuggestionsList();
 					e.preventDefault();
 					break;
 				case 9: // TAB - apply and move to next column on the same row
@@ -276,7 +276,7 @@ var AutoCompleteEx = function (_props)
 			_openSuggestionsList();
 		} else
 		{
-			_closeSuggestionsList();
+			_self.closeSuggestionsList();
 		}
 		if (!e.isDefaultPrevented())
 		{
@@ -331,7 +331,7 @@ var AutoCompleteEx = function (_props)
 			_suggestionsRepeater.attr["aria-expanded"] = true;
 		} else
 		{
-			_closeSuggestionsList();
+			_self.closeSuggestionsList();
 			_input.$el
 				.attr("placeholder", "No results found :(")
 				.delay(1000)
@@ -344,7 +344,7 @@ var AutoCompleteEx = function (_props)
 		}
 		// myAutoComplete.suggestionsRepeater.rowItems[0]['suggestion'].$el.focus();
 	};
-	let _closeSuggestionsList = function ()
+	this.closeSuggestionsList = function ()
 	{
 		_suggestionsRepeater.attr["aria-expanded"] = false;
 		let cls = _suggestionsRepeater.classes.slice(0);
@@ -382,7 +382,7 @@ var AutoCompleteEx = function (_props)
 
 		_self.removeSuggestionItemAt(repeaterEventArgs.currentIndex);
 		// acEx.closeSuggestionsList();
-		_closeSuggestionsList();
+		_self.closeSuggestionsList();
 		_input.$el.focus();
 	};
 	let _suggestionRendererDoubleClickHandler = function (e, repeaterEventArgs)

@@ -57,6 +57,7 @@ var Component = function (_props)
     let _click = _props.click;
     let _dblclick = _props.dblclick;
     let _focus = _props.focus;
+    let _focusout = _props.focusout;
     let _blur = _props.blur;
     let _keydown = _props.keydown;
     let _keyup = _props.keyup;
@@ -629,6 +630,7 @@ var Component = function (_props)
             'click': _click && typeof _click == 'function' ? _click.bind(_self.proxyMaybe) : undefined,
             'dblclick': _dblclick && typeof _dblclick == 'function' ? _dblclick.bind(_self.proxyMaybe) : undefined,
             'focus': _focus && typeof _focus == 'function' ? _focus.bind(_self.proxyMaybe) : undefined,
+            'focusout': _focusout && typeof _focusout == 'function' ? _focusout.bind(_self.proxyMaybe) : undefined,
             'blur': _blur && typeof _blur == 'function' ? _blur.bind(_self.proxyMaybe) : undefined,
             'keydown': _keydown && typeof _keydown == 'function' ? _keydown.bind(_self.proxyMaybe) : undefined,
             'keyup': _keyup && typeof _keyup == 'function' ? _keyup.bind(_self.proxyMaybe) : undefined,
