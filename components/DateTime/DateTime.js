@@ -262,7 +262,9 @@ var DateTime = function (_props)
                     {
                         _self.value = dayjs(_self.children.textInput.value, _displayFormat).format(_inputFormat);
                     } else
-                    { }
+                    {
+                        _self.value = "";
+                    }
                 },
                 keypress: function (e)
                 {
