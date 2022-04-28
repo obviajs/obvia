@@ -31,6 +31,8 @@ var EasyFilter = function (_props)
         _getValueField,
         _operatorEnabledField,
         _requiredField,
+        _clearButton,
+        _height,
         _dataProvider,
         valueAutoComplete,
         repDp,
@@ -649,28 +651,88 @@ var EasyFilter = function (_props)
                 }
             },
             {
-                ctor: Button,
+                ctor: Container,
                 props: {
-                    id: 'apply',
-                    classes: ["filter", "apply-easy"],
-                    click: _filter,
+                    css: {
+                        "width": "auto",
+                        "display": "flex",
+                        "flex-direction": "column",
+                        "justify-content": "space-around",
+                        "padding": "2px"
+                    },
                     components: [
                         {
-                            ctor: Label,
+                            ctor: Button,
                             props: {
-                                id: 'faAccept',
-                                labelType: "i",
-                                label: "",
-                                classes: ["fas", "fa-check"],
+                                id: 'apply',
+                                classes: ["filter", "apply-easy"],
+                                click: _filter,
                                 css: {
-                                    "text-decoration": "none"
-                                }
+                                    "height": _height
+                                },
+                                components: [
+                                    {
+                                        ctor: Label,
+                                        props: {
+                                            id: 'faAccept',
+                                            labelType: "i",
+                                            label: "",
+                                            classes: ["fas", "fa-check"],
+                                            css: {
+                                                "text-decoration": "none",
+                                                "display": "flex",
+                                                "align-items": "center"
+                                            }
+                                        }
+                                    }
+                                ]
                             }
-                        }
-                    ]
+                        },
+                        {
+                            ctor: Button,
+                            props: {
+                                id: 'clearFilters',
+                                classes: ["filter", "apply-easy"],
+                                display: _clearButton,
+                                css: {
+                                    "height": "49%"
+                                },
+                                click: _clear,
+                                components: [
+                                    {
+                                        ctor: Label,
+                                        props: {
+                                            id: 'faClear',
+                                            labelType: "i",
+                                            label: "",
+                                            classes: ["fa", "fa-times"],
+                                            css: {
+                                                "text-decoration": "none"
+                                            }
+                                        }
+                                    }
+                                ]
+                            }
+                        }]
                 }
             }
         ];
+    };
+
+    let _clear = function (e)
+    {
+        _self.rules.rules.forEach((el) =>
+        {
+            el.value = null;
+        });
+        _self.children.repeater.dataProvider.forEach((el) =>
+        {
+            el.value.value = null;
+        });
+        _self.children.repeater.rowItems.forEach((el) =>
+        {
+            el.repeater_container.children.mainRow.$el[0].children[0].children[0].value = null;
+        });
     };
 
     let _filter = function (e)
@@ -772,6 +834,7 @@ var EasyFilter = function (_props)
             obj[_getValueField] = _dataProvider[ind][_getValueField];
             obj[_getLabelField] = _dataProvider[ind][_getLabelField];
             obj[_operatorEnabledField] = _dataProvider[ind][_operatorEnabledField];
+            obj[_clearButton] = _dataProvider[ind][_clearButton];
             obj[_requiredField] = _dataProvider[ind][_requiredField] == false ? false : true;
             let dpInd = ind;
             if (Array.isArray(crules.value))
@@ -872,6 +935,7 @@ var EasyFilter = function (_props)
         requiredField: "required",
         advancedMode: false,
         showOperator: false,
+        clearButton: false,
         css: {
             "margin-bottom": "10px",
             "display": "flex"
@@ -890,7 +954,8 @@ var EasyFilter = function (_props)
     _getValueField = _props.getValueField;
     _operatorEnabledField = _props.operatorEnabledField;
     _requiredField = _props.requiredField;
-
+    _clearButton = _props.clearButton;
+    _height = _clearButton ? '49%' : '80%';
     _advancedMode = _props.advancedMode;
     _showOperator = _props.showOperator;
 
