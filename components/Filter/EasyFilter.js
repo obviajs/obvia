@@ -235,7 +235,6 @@ var EasyFilter = function (_props)
         _expression = _expressionContainer.$el.text().toUpperCase();
         _updateTokens();
     };
-
     let _update = function ()
     {
         let len = repDp.length;
@@ -627,6 +626,11 @@ var EasyFilter = function (_props)
                                             "bindingDefaultContext": "{currentItem}",
                                             "beforeAttach": _editFilter,
                                             "display": "{currentRow.repeater_container.mainCol.operator.selectedItem.inputVisible}",
+                                            keyup: function (e)
+                                            {
+                                                if (e.keyCode == 13)
+                                                    _filter();
+                                            },
                                             components: []
                                         }
                                     }]
