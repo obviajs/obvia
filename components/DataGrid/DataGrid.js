@@ -572,7 +572,7 @@ var DataGrid = function (_props)
             _cellItemRenderers[Math.min(rowIndex, _rowCount - 1)][columnIndex].hide();
             let itemEditorInfo = _cellItemEditors[columnIndex];
             let itemEditor;
-            if (itemEditorInfo == null)
+            if (itemEditorInfo == null || !document.contains(itemEditorInfo.itemEditor.$el[0]))
             {
                 let ctor;
                 if (typeof column.itemEditor.ctor == "string")
