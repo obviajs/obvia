@@ -31,8 +31,6 @@ var EasyFilter = function (_props)
         _getValueField,
         _operatorEnabledField,
         _requiredField,
-        _clearButton,
-        _height,
         _dataProvider,
         valueAutoComplete,
         repDp,
@@ -668,7 +666,7 @@ var EasyFilter = function (_props)
                                 classes: ["filter", "apply-easy"],
                                 click: _filter,
                                 css: {
-                                    "height": _height
+                                    "height": '49%'
                                 },
                                 components: [
                                     {
@@ -693,7 +691,6 @@ var EasyFilter = function (_props)
                             props: {
                                 id: 'clearFilters',
                                 classes: ["filter", "apply-easy"],
-                                display: _clearButton,
                                 css: {
                                     "height": "49%"
                                 },
@@ -705,7 +702,7 @@ var EasyFilter = function (_props)
                                             id: 'faClear',
                                             labelType: "i",
                                             label: "",
-                                            classes: ["fa", "fa-times"],
+                                            classes: ["fa", "fa-eraser"],
                                             css: {
                                                 "text-decoration": "none"
                                             }
@@ -731,7 +728,31 @@ var EasyFilter = function (_props)
         });
         _self.children.repeater.rowItems.forEach((el) =>
         {
-            el.repeater_container.children.mainRow.$el[0].children[0].children[0].value = null;
+            let filter = el.repeater_container.children.mainRow.childAtIndex(0).children.valueInput;
+
+            if (filter?.ctor)
+            {
+                switch (filter.ctor)
+                {
+                    case 'AutoCompleteEx':
+                        filter.children.tokenContainer.children.tokenRepeater.dataProvider = null;
+                        break;
+                    case 'DropDown':
+                        filter.selectedItem = null;
+                        break;
+                    case 'DateCmp':
+                        filter.value = null;
+                        break;
+                    case 'TextInput':
+                        filter.value = null;
+                        break;
+                }
+            }
+            else
+            {
+                filter.colMin.children.minInput.value = null;
+                filter.colMax.children.maxInput.value = null;
+            }
         });
     };
 
@@ -834,7 +855,6 @@ var EasyFilter = function (_props)
             obj[_getValueField] = _dataProvider[ind][_getValueField];
             obj[_getLabelField] = _dataProvider[ind][_getLabelField];
             obj[_operatorEnabledField] = _dataProvider[ind][_operatorEnabledField];
-            obj[_clearButton] = _dataProvider[ind][_clearButton];
             obj[_requiredField] = _dataProvider[ind][_requiredField] == false ? false : true;
             let dpInd = ind;
             if (Array.isArray(crules.value))
@@ -954,8 +974,6 @@ var EasyFilter = function (_props)
     _getValueField = _props.getValueField;
     _operatorEnabledField = _props.operatorEnabledField;
     _requiredField = _props.requiredField;
-    _clearButton = _props.clearButton;
-    _height = _clearButton ? '49%' : '80%';
     _advancedMode = _props.advancedMode;
     _showOperator = _props.showOperator;
 
