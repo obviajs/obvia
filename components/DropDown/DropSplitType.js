@@ -1,4 +1,4 @@
-var DropSplitType = {
-    "NONE":"",
+export var DropSplitType = {
+    "NONE": "",
     "SPLIT": "dropdown-toggle-split"
 }
