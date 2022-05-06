@@ -142,29 +142,7 @@ var DropEdit = function (_props)
         return _componentLabel;
     };
 
-    let _filter = function (e)
-    {
-        let val = e.target.value.toLowerCase().trim();
-        if (val.length > 0)
-        {
-            _componentRepeater.$el.addClass("show");
-            _componentRepeater.dataProvider.forEach(el =>
-            {
-                if (!el[_labelField].toLowerCase().includes(val))
-                {
-                    el.currentRow.label.display = false;
-                } else
-                    el.currentRow.label.display = true;
-            });
-        } else
-        {
-            _componentRepeater.$el.removeClass("show");
-            _componentRepeater.dataProvider.forEach(el =>
-            {
-                el.currentRow.label.display = true;
-            });
-        }
-    }
+
     let fnContainerDelayInit = function ()
     {
 
@@ -181,8 +159,7 @@ var DropEdit = function (_props)
                     "aria-haspopup": 'true',
                     "aria-expanded": 'false'
                 },
-                keyup: _filter,
-                click: () => { console.log('Text Input is clicked'); }
+                keyup: _filter
             }
         };
 
@@ -224,7 +201,29 @@ var DropEdit = function (_props)
         split: DropSplitType.SPLIT,
         guidField: "guid"
     };
-
+    let _filter = function (e)
+    {
+        let val = e.target.value.toLowerCase().trim();
+        if (val.length > 0)
+        {
+            _componentRepeater.$el.addClass("show");
+            _componentRepeater.dataProvider.forEach(el =>
+            {
+                if (!el[_labelField].toLowerCase().includes(val))
+                {
+                    el.currentRow.label.display = false;
+                } else
+                    el.currentRow.label.display = true;
+            });
+        } else
+        {
+            _componentRepeater.$el.removeClass("show");
+            _componentRepeater.dataProvider.forEach(el =>
+            {
+                el.currentRow.label.display = true;
+            });
+        }
+    }
     let _clickHandler = function (e, ra)
     {
         _inputDD.value = this.label;
@@ -238,8 +237,10 @@ var DropEdit = function (_props)
     let _buttonClickHandler = function (e)
     {
         _inputDD.attr["aria-expanded"] = !_inputDD.attr["aria-expanded"];
-        this.parent.$el.toggleClass("show");
-        _componentRepeater.$el.toggleClass("show");
+        if (_componentRepeater.$el[0].classList.contains("show"))
+            _componentRepeater.$el.removeClass("show");
+        else
+            _componentRepeater.$el.addClass("show");
     };
 
     ObjectUtils.fromDefault(_defaultParams, _props);
