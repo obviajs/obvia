@@ -4,11 +4,13 @@
  * Kreatx 2021
  */
 
+// import { isNumber } from "../../gaia/Code/require/addon/hint/jshint";
 import { Label } from "/obvia/components/Label.js";
 import { DependencyContainer } from "/obvia/lib/DependencyContainer.js";
 import { NumberUtils } from "/obvia/lib/NumberUtils.js";
 import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
-var NumberFormatter = function (_props) {
+var NumberFormatter = function (_props)
+{
     //component data
     let _label, _precision;
     let _defaultParams = {
@@ -20,13 +22,22 @@ var NumberFormatter = function (_props) {
 
     let r = Label.call(this, _props);
     Object.defineProperty(this, "label", {
-        get: function label() {
+        get: function label()
+        {
             return _label;
         },
-        set: function label(v) {
-            if (_label != v) {
+        set: function label(v)
+        {
+            if (_label != v)
+            {
+                if (!NumberUtils.isNumber(v))
+                {
+                    this.$el.appendText(v);
+                    return;
+                }
                 _props.label = _label = v;
-                if (this.$el) {
+                if (this.$el)
+                {
                     //convert html entities
                     v = $(`<div>${v}</div>`).get(0).innerText;
                     let last = this.$el.children().last();
@@ -47,10 +58,11 @@ var NumberFormatter = function (_props) {
     });
     return r;
 };
- 
+
 //component prototype
 NumberFormatter.prototype.ctor = 'NumberFormatter';
 DependencyContainer.getInstance().register("NumberFormatter", NumberFormatter, DependencyContainer.simpleResolve);
-export {
+export
+{
     NumberFormatter
 };
