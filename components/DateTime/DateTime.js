@@ -383,6 +383,24 @@ var DateTime = function (_props)
                 break;
             }
         }
+        if (_min)
+        {
+            let min = _min.format(_displayFormat).split(/\D/g);
+            if (str < min)
+            {
+                console.log('Date input is less than minimum allowed');
+                valid = false;
+            }
+        }
+        if (_max)
+        {
+            let max = _max.format(_displayFormat).split(/\D/g);
+            if (str > max)
+            {
+                console.log('Date input is greater than maximum allowed');
+                valid = false;
+            }
+        }
         return valid;
     };
 
