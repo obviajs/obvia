@@ -249,7 +249,7 @@ var AutoCompleteEx = function (_props)
 					break;
 				case 27: // ESC - get back to old value
 					console.log("ESCAPE");
-					_self.closeSuggestionsList();
+					_self.closeSuggestionsList(e);
 					e.preventDefault();
 					break;
 				case 9: // TAB - apply and move to next column on the same row
@@ -294,7 +294,6 @@ var AutoCompleteEx = function (_props)
 			}
 		}
 	};
-
 	this.refreshSuggestions = function ()
 	{
 		if (_input) _querySuggestions(_input.value);
@@ -354,7 +353,10 @@ var AutoCompleteEx = function (_props)
 			cls.splice(ind, 1);
 		}
 		_suggestionsRepeater.classes = cls;
-		_input.$el.focus();
+		if (arguments[0] && arguments[0].keyCode == 27)
+			_input.$el.blur();
+		else
+			_input.$el.focus();
 	};
 	let _tokenRendererCloseIconClickHandler = function (e, repeaterEventArgs)
 	{
@@ -692,6 +694,7 @@ var AutoCompleteEx = function (_props)
 							versionStyle: "",
 							keydown: _tokenInputKeyDown,
 							keyup: _tokenInputKeyUp,
+							click: _tokenInputKeyUp,
 							classes: ["border-0", "ellipsis"],
 							ownerDocument: this.ownerDocument,
 							css: {
