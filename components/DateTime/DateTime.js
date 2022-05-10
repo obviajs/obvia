@@ -11,6 +11,7 @@ import { TextInput } from "/obvia/components/TextInput/TextInput.js";
 var DateTime = function (_props)
 {
     let _self = this;
+    let _enabled;
 
     Object.defineProperty(this, "value", {
         get: function value()
@@ -411,6 +412,24 @@ var DateTime = function (_props)
 
     let r = Container.call(this, _props);
     let _myw = ChangeWatcher.getInstance(r);
+
+    Object.defineProperty(this, "enabled", {
+        get: function enabled()
+        {
+            return _enabled;
+        },
+        set: function enabled(v)
+        {
+            if (_enabled != v)
+            {
+                _enabled = v;
+                _dateTimeInput.enabled = _enabled;
+                _textInput.enabled = _enabled;
+            }
+        },
+        configurable: true,
+        enumerable: true
+    });
     return r;
 };
 DateTime.prototype.ctor = "DateTime";
