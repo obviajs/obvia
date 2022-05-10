@@ -21,6 +21,7 @@ var AutoBrowse = function (_props)
 		_bindingDefaultContext,
 		_valueField,
 		_labelField,
+		_maxSuggestionsCount,
 		_value,
 		_columns = [],
 		_fields, _enabled = true, _btn;
@@ -115,9 +116,11 @@ var AutoBrowse = function (_props)
 					dataProvider: _dataProvider,
 					bindingDefaultContext: _bindingDefaultContext,
 					value: _value,
+					input: () => this.refreshSuggestions(),
 					multiSelect: false,
+					maxSuggestionsCount: _maxSuggestionsCount,
 					placeholder: _props.placeholder,
-					matchType: StringMatchType.STARTS_WITH,
+					matchType: StringMatchType.CONTAINS,
 					css: { "flex-grow": "1", width: "80%" },
 				},
 			},
@@ -133,7 +136,8 @@ var AutoBrowse = function (_props)
 								id: "selectBtn_" + _dgUID,
 								type: "button",
 								css: {
-									"border-radius": "3px"
+									"border-radius": "3px",
+									"border-color": "#666666"
 								},
 								components: [
 									{
@@ -224,6 +228,7 @@ var AutoBrowse = function (_props)
 		type: "",
 		components: [],
 		dataProvider: new ArrayEx(),
+		maxSuggestionsCount: 10,
 		fields: [],
 		attr: {
 			"data-triggers": "browse",
@@ -235,6 +240,7 @@ var AutoBrowse = function (_props)
 		title: "Select an Item"
 	};
 	ObjectUtils.fromDefault(_defaultParams, _props);
+	_maxSuggestionsCount = _props.maxSuggestionsCount;
 	//_props = ObjectUtils.extend(false, false, _defaultParams, _props);
 	if (!_props.attr)
 	{
@@ -290,6 +296,21 @@ var AutoBrowse = function (_props)
 				_enabled = v;
 				_autocomplete.enabled = v;
 				_btn.enabled = v;
+			}
+		},
+		configurable: true,
+		enumerable: true,
+	});
+	Object.defineProperty(this, "maxSuggestionsCount", {
+		get: function maxSuggestionsCount()
+		{
+			return _maxSuggestionsCount;
+		},
+		set: function maxSuggestionsCount(v)
+		{
+			if (_maxSuggestionsCount != v)
+			{
+				_maxSuggestionsCount = v;
 			}
 		},
 		configurable: true,
