@@ -715,7 +715,6 @@ var EasyFilter = function (_props)
             }
         ];
     };
-
     let _clear = function (e)
     {
         _self.rules.rules.forEach((el) =>
@@ -729,30 +728,8 @@ var EasyFilter = function (_props)
         _self.children.repeater.rowItems.forEach((el) =>
         {
             let filter = el.repeater_container.children.mainRow.childAtIndex(0).children.valueInput;
-
-            if (filter?.ctor)
-            {
-                switch (filter.ctor)
-                {
-                    case 'AutoCompleteEx':
-                        filter.children.tokenContainer.children.tokenRepeater.dataProvider = null;
-                        break;
-                    case 'DropDown':
-                        filter.selectedItem = null;
-                        break;
-                    case 'DateCmp':
-                        filter.value = null;
-                        break;
-                    case 'TextInput':
-                        filter.value = null;
-                        break;
-                }
-            }
-            else
-            {
-                filter.colMin.children.minInput.value = null;
-                filter.colMax.children.maxInput.value = null;
-            }
+            let valueProp = filter.valueProp;
+            filter[valueProp] = null;
         });
     };
 
