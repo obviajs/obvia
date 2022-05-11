@@ -383,22 +383,26 @@ var DateTime = function (_props)
                 break;
             }
         }
-        if (_min)
+        if (valid)
         {
-            let min = _min.format(_displayFormat).split(/\D/g);
-            if (str < min)
+            let value = dayjs(str).valueOf();
+            if (_min)
             {
-                console.log('Date input is less than minimum allowed');
-                valid = false;
+                let min = dayjs(_min.format(_displayFormat)).valueOf();
+                if (value < min)
+                {
+                    console.log('Date input is less than minimum allowed');
+                    valid = false;
+                }
             }
-        }
-        if (_max)
-        {
-            let max = _max.format(_displayFormat).split(/\D/g);
-            if (str > max)
+            if (_max)
             {
-                console.log('Date input is greater than maximum allowed');
-                valid = false;
+                let max = dayjs(_max.format(_displayFormat)).valueOf();
+                if (value > max)
+                {
+                    console.log('Date input is greater than maximum allowed');
+                    valid = false;
+                }
             }
         }
         return valid;
@@ -451,6 +455,7 @@ var DateTime = function (_props)
     return r;
 };
 DateTime.prototype.ctor = "DateTime";
+DateTime.prototype.valueProp = 'value';
 DependencyContainer.getInstance().register("DateTime", DateTime, DependencyContainer.simpleResolve);
 export
 {
