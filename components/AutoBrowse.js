@@ -116,7 +116,10 @@ var AutoBrowse = function (_props)
 					dataProvider: _dataProvider,
 					bindingDefaultContext: _bindingDefaultContext,
 					value: _value,
-					input: () => this.refreshSuggestions(),
+					input: function ()
+					{
+						this.refreshSuggestions();
+					},
 					multiSelect: false,
 					maxSuggestionsCount: _maxSuggestionsCount,
 					placeholder: _props.placeholder,
