@@ -783,6 +783,7 @@ var AutoCompleteEx = function (_props)
 	return r;
 };
 AutoCompleteEx.prototype.ctor = "AutoCompleteEx";
+AutoCompleteEx.prototype.valueProp = 'value';
 DependencyContainer.getInstance().register(
 	"AutoCompleteEx",
 	AutoCompleteEx,

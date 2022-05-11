@@ -271,6 +271,7 @@ var DropEdit = function (_props)
 };
 DependencyContainer.getInstance().register("DropEdit", DropEdit, DependencyContainer.simpleResolve);
 DropEdit.prototype.ctor = 'DropEdit';
+DropEdit.prototype.valueProp = 'selectedItem';
 export
 {
     DropEdit

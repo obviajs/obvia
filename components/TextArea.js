@@ -8,23 +8,31 @@ import { Component } from "/obvia/components/base/Component.js";
 import { List } from "/obvia/components/List.js";
 import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
 import { DependencyContainer } from "/obvia/lib/DependencyContainer.js";
-var TextArea = function (_props) {
+var TextArea = function (_props)
+{
     let _self = this;
 
     Object.defineProperty(this, "value", {
-        get: function value() {
+        get: function value()
+        {
             return _value;
         },
-        set: function value(v) {
-            if (_value != v) {
+        set: function value(v)
+        {
+            if (_value != v)
+            {
                 _value = v;
-                if (_value != null) {
-                    if (this.$el) {
+                if (_value != null)
+                {
+                    if (this.$el)
+                    {
                         this.$el.attr('value', _value);
                         this.$el.val(_value);
                     }
-                } else {
-                    if (this.$el) {
+                } else
+                {
+                    if (this.$el)
+                    {
                         this.$el.removeAttr('value');
                         this.$el.val("");
                     }
@@ -35,18 +43,23 @@ var TextArea = function (_props) {
     });
 
     Object.defineProperty(this, "placeholder", {
-        get: function placeholder() {
+        get: function placeholder()
+        {
             return _placeholder;
         },
-        set: function value(v) {
-            if (_placeholder != v) {
+        set: function value(v)
+        {
+            if (_placeholder != v)
+            {
                 _placeholder = v;
-                if (_placeholder) {
+                if (_placeholder)
+                {
                     if (this.$el)
                         this.$el.attr('placeholder', _placeholder);
 
                 }
-            } else {
+            } else
+            {
                 this.$el.removeAttr('placeholder');
             }
         },
@@ -54,44 +67,57 @@ var TextArea = function (_props) {
     });
 
     Object.defineProperty(this, "spellCheck", {
-        get: function spellCheck() {
+        get: function spellCheck()
+        {
             return _spellCheck;
         },
-        set: function spellCheck(v) {
-            if (_spellCheck != v) {
+        set: function spellCheck(v)
+        {
+            if (_spellCheck != v)
+            {
                 _spellCheck = v;
-                if (_spellCheck) {
-                    if (this.$el) {
+                if (_spellCheck)
+                {
+                    if (this.$el)
+                    {
                         this.$el.attr("spellcheck", _spellCheck);
                     }
                 }
-            } else {
+            } else
+            {
                 this.$el.removeAttr("spellcheck");
             }
         },
         enumerable: true
     });
 
-    this.beforeAttach = function () {
+    this.beforeAttach = function ()
+    {
         this.$input = this.$el;
     };
 
-    this.afterAttach = function (e) {
-        if (e.target.id == this.domID) {
-            if (_props.value) {
+    this.afterAttach = function (e)
+    {
+        if (e.target.id == this.domID)
+        {
+            if (_props.value)
+            {
                 this.value = _props.value;
             }
-            if (_props.placeholder) {
+            if (_props.placeholder)
+            {
                 this.placeholder = _props.placeholder;
             }
         }
     };
 
-    this.inputHandler = function (e) {
+    this.inputHandler = function (e)
+    {
         _value = this.$el.val();
     };
 
-    this.template = function () {
+    this.template = function ()
+    {
         return "<textarea data-triggers='input' id='" + this.domID + "' " + (!this.enabled ? "disabled" : "") + "></textarea>";
     };
 
@@ -110,17 +136,20 @@ var TextArea = function (_props) {
     let _input = _props.input;
     let _dblclick = _props.dblclick;
 
-    _props.dblclick = function () {
+    _props.dblclick = function ()
+    {
         if (typeof _dblclick == 'function')
             _dblclick.apply(this, arguments);
 
         let e = arguments[0];
-        if (!e.isDefaultPrevented()) {}
+        if (!e.isDefaultPrevented()) { }
     };
 
-    _props.input = function () {
+    _props.input = function ()
+    {
         let e = arguments[0];
-        if (!e.isDefaultPrevented()) {
+        if (!e.isDefaultPrevented())
+        {
             _self.inputHandler(e);
         }
         if (typeof _input == 'function')
@@ -130,7 +159,9 @@ var TextArea = function (_props) {
     Component.call(this, _props);
 };
 TextArea.prototype.ctor = 'TextArea';
+TextArea.prototype.valueProp = 'value';
 DependencyContainer.getInstance().register("TextArea", TextArea, DependencyContainer.simpleResolve);
-export {
+export
+{
     TextArea
 };

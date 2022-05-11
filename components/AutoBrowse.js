@@ -327,4 +327,5 @@ DependencyContainer.getInstance().register(
 	DependencyContainer.simpleResolve
 );
 AutoBrowse.prototype.ctor = "AutoBrowse";
+AutoBrowse.prototype.valueProp = 'value';
 export { AutoBrowse };

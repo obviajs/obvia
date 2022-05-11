@@ -707,6 +707,7 @@ var UploadEx = function (_props)
     return r;
 };
 UploadEx.prototype.ctor = 'UploadEx';
+UploadEx.prototype.valueProp = 'value';
 DependencyContainer.getInstance().register("UploadEx", UploadEx, DependencyContainer.simpleResolve);
 export
 {

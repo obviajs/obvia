@@ -34,6 +34,7 @@ var DateCmp = function (_props)
     return r;
 };
 DateCmp.prototype.ctor = "DateCmp";
+DateCmp.prototype.valueProp = 'value';
 DependencyContainer.getInstance().register("DateCmp", DateCmp, DependencyContainer.simpleResolve);
 export
 {
