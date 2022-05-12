@@ -163,6 +163,10 @@ var DateTime = function (_props)
         {
             this.value = dayjs(_props.value, _inputFormat).format(_inputFormat);
         }
+        if (_props.enabled)
+        {
+            this.enabled = _props.enabled;
+        }
         // else
         // {
         //     this.value = dayjs().format(_inputFormat);
@@ -385,10 +389,10 @@ var DateTime = function (_props)
         }
         if (valid)
         {
-            let value = dayjs(str).valueOf();
+            let value = dayjs(str, _displayFormat).valueOf();
             if (_min)
             {
-                let min = dayjs(_min.format(_displayFormat)).valueOf();
+                let min = _min.valueOf();
                 if (value < min)
                 {
                     console.log('Date input is less than minimum allowed');
@@ -397,7 +401,7 @@ var DateTime = function (_props)
             }
             if (_max)
             {
-                let max = dayjs(_max.format(_displayFormat)).valueOf();
+                let max = _max.valueOf();
                 if (value > max)
                 {
                     console.log('Date input is greater than maximum allowed');
