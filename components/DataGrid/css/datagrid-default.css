@@ -1,27 +1,33 @@
-.datagrid-row-selected{
+.datagrid-row-selected {
     border-left: solid 1px #3498db;
-    background: #ecf0f1;
+    background: #abbaff80 !important;
 }
+
 .table tbody th .row-action-link.action-delete,
 .table tbody td .row-action-link.action-delete {
     color: #d9534f;
-    visibility:hidden;
+    visibility: hidden;
 }
+
 .table tbody tr:hover .row-action-link {
-    visibility:visible;
+    visibility: visible;
 }
+
 .table th .row-action-link.action-delete,
 .table td .row-action-link.action-delete {
     color: #d9534f;
-    visibility:hidden;
+    visibility: hidden;
 }
+
 .table tr:hover .row-action-link {
-    visibility:visible;
+    visibility: visible;
 }
+
 .table {
     position: sticky;
     top: 0px;
 }
+
 .table {
     text-align: left;
     contain: layout;

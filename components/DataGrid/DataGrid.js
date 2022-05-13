@@ -221,6 +221,19 @@ var DataGrid = function (_props)
                         {
                             // mtt = e.target.scrollTop;
                             // smt = (-(_self.realHeight) - e.target.scrollTop);
+                            // if (_selectedIndices.length > 0 && _selectedItems.length > 0)
+                            // {
+                            //     _selectedIndices.forEach(ind =>
+                            //     {
+                            //         if (!(_virtualIndex <= ind && ind <= _virtualIndex + _self.rowCount))
+                            //         {
+                            //             _self.rows[ind].removeClass("datagrid-row-selected");
+                            //         } else
+                            //         {
+                            //             _self.rows[ind].addClass("datagrid-row-selected");
+                            //         }
+                            //     });
+                            // }
                         }
                     });
                 });
@@ -974,12 +987,13 @@ var DataGrid = function (_props)
     let _selectedIndices = [];
     let _rowClickHandler = function (e, dgInst, ra)
     {
+        let index = ra.currentIndex + ra.virtualIndex;
         if (_ctrlIsPressed && _multiSelect)
         {
-            let ind = _selectedIndices.indexOf(ra.currentIndex);
+            let ind = _selectedIndices.indexOf(index);
             if (ind < 0)
             {
-                _selectedIndices.push(ra.currentIndex);
+                _selectedIndices.push(index);
                 _selectedItems.push(ra.currentItem);
             } else
             {
@@ -989,9 +1003,9 @@ var DataGrid = function (_props)
 
         } else
         {
-            if (_selectedIndices.indexOf(ra.currentIndex) < 0)
+            if (_selectedIndices.indexOf(index) < 0)
             {
-                _selectedIndices = [ra.currentIndex];
+                _selectedIndices = [index];
                 _selectedItems.splice(0, _selectedItems.length, ra.currentItem);
             } else
             {
