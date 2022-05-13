@@ -35,7 +35,9 @@ var DateTime = function (_props)
             } else
             {
                 _dateTimeInput.attr['date'] = "Choose Date";
+                _self.children.dateTimeInput.$el[0].setAttribute("aria-invalid", "false");
                 _dateTimeInput.value = "";
+                _textInput.visible = false;
                 _textInput.value = _displayFormat;
             }
             _myw.propertyChanged("value", oldValue, value);
@@ -184,10 +186,8 @@ var DateTime = function (_props)
             _self.children.textInput.value = _value.format(_displayFormat);
         } else
         {
-            _self.children.dateTimeInput.$el[0].setAttribute("aria-invalid", "false");
             _dateTimeInput.attr['date'] = "Choose Date";
             _dateTimeInput.value = "";
-            _self.children.textInput.display = false;
             _self.children.textInput.value = _displayFormat;
         }
         _myw.propertyChanged("value", oldValue, _value);
@@ -267,7 +267,6 @@ var DateTime = function (_props)
                     } else
                     {
                         _self.value = "";
-                        _self.inputHandler();
                     }
                 },
                 change: function ()
@@ -284,7 +283,6 @@ var DateTime = function (_props)
                     } else
                     {
                         _self.value = "";
-                        _self.inputHandler();
                     }
                 },
                 keypress: function (e)
@@ -317,7 +315,6 @@ var DateTime = function (_props)
     }
     let _shapeshift = function (e)
     {
-        _textInput.display = true;
         if (_value.isValid())
         {
             _self.children.textInput.value = _value.format(_displayFormat);
