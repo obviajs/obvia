@@ -152,7 +152,9 @@ var DropEdit = function (_props)
                 id: "textInput",
                 classes: ["dropdown-toggle"],
                 css: {
-                    width: '100%'
+                    "width": '100%',
+                    "border": "none",
+                    "border-bottom": "2px solid gray"
                 },
                 attr: {
                     "data-toggle": 'dropdown',
@@ -167,8 +169,15 @@ var DropEdit = function (_props)
             ctor: Button,
             props: {
                 id: "toggleButton",
-                classes: [_size, _split, "btn", "dropdown-toggle", "caret"],
-                click: _buttonClickHandler
+                classes: ["fa", "fa-caret-down"],
+                css: {
+                    "background-color": "white",
+                    "border": "none",
+                    "border-bottom": "2px solid gray",
+                    "outline": "none"
+                },
+                click: _buttonClickHandler,
+                blur: _buttonClickHandler
             }
         };
 
@@ -242,7 +251,6 @@ var DropEdit = function (_props)
         else
             _componentRepeater.$el.addClass("show");
     };
-
     ObjectUtils.fromDefault(_defaultParams, _props);
     if (!_props.attr)
     {
@@ -265,7 +273,6 @@ var DropEdit = function (_props)
     } else
         _dataProvider = new ArrayEx();
     _props.components = fnContainerDelayInit();
-
     let r = Container.call(this, _props, true);
     return r;
 };
