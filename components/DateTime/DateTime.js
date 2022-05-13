@@ -184,8 +184,10 @@ var DateTime = function (_props)
             _self.children.textInput.value = _value.format(_displayFormat);
         } else
         {
+            _self.children.dateTimeInput.$el[0].setAttribute("aria-invalid", "false");
             _dateTimeInput.attr['date'] = "Choose Date";
             _dateTimeInput.value = "";
+            _self.children.textInput.display = false;
             _self.children.textInput.value = _displayFormat;
         }
         _myw.propertyChanged("value", oldValue, _value);
@@ -250,25 +252,39 @@ var DateTime = function (_props)
                 classes: ["no-form-control"],
                 blur: function ()
                 {
-                    if (_validate(_self.children.textInput.value))
+                    if (_self.children.textInput.value && _self.children.textInput.value != _displayFormat)
                     {
-                        _self.children.dateTimeInput.$el[0].setAttribute("aria-invalid", "false");
-                        _self.children.textInput.visible = false;
-                        _self.value = dayjs(_self.children.textInput.value, _displayFormat).format(_inputFormat);
+                        if (_validate(_self.children.textInput.value))
+                        {
+                            _self.children.dateTimeInput.$el[0].setAttribute("aria-invalid", "false");
+                            _self.children.textInput.visible = false;
+                            _self.value = dayjs(_self.children.textInput.value, _displayFormat).format(_inputFormat);
+                        } else
+                        {
+                            _self.children.dateTimeInput.$el[0].setAttribute("aria-invalid", "true");
+                            _self.children.textInput.visible = true;
+                        }
                     } else
                     {
-                        _self.children.dateTimeInput.$el[0].setAttribute("aria-invalid", "true");
-                        _self.children.textInput.visible = true;
+                        _self.value = "";
+                        _self.inputHandler();
                     }
                 },
                 change: function ()
                 {
-                    if (_validate(_self.children.textInput.value))
+                    if (_self.children.textInput.value && _self.children.textInput.value != _displayFormat)
                     {
-                        _self.value = dayjs(_self.children.textInput.value, _displayFormat).format(_inputFormat);
+                        if (_validate(_self.children.textInput.value))
+                        {
+                            _self.value = dayjs(_self.children.textInput.value, _displayFormat).format(_inputFormat);
+                        } else
+                        {
+                            _self.value = "";
+                        }
                     } else
                     {
                         _self.value = "";
+                        _self.inputHandler();
                     }
                 },
                 keypress: function (e)
@@ -301,6 +317,7 @@ var DateTime = function (_props)
     }
     let _shapeshift = function (e)
     {
+        _textInput.display = true;
         if (_value.isValid())
         {
             _self.children.textInput.value = _value.format(_displayFormat);
