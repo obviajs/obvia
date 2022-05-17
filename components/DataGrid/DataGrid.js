@@ -221,19 +221,27 @@ var DataGrid = function (_props)
                         {
                             // mtt = e.target.scrollTop;
                             // smt = (-(_self.realHeight) - e.target.scrollTop);
-                            // if (_selectedIndices.length > 0 && _selectedItems.length > 0)
-                            // {
-                            //     _selectedIndices.forEach(ind =>
-                            //     {
-                            //         if (!(_virtualIndex <= ind && ind <= _virtualIndex + _self.rowCount))
-                            //         {
-                            //             _self.rows[ind].removeClass("datagrid-row-selected");
-                            //         } else
-                            //         {
-                            //             _self.rows[ind].addClass("datagrid-row-selected");
-                            //         }
-                            //     });
-                            // }
+
+                            if (_selectedIndices.length > 0 && _selectedItems.length > 0)
+                            {
+                                _self.rows.forEach(el => el.removeClass("datagrid-row-selected"));
+                                _selectedRowData.forEach(el =>
+                                {
+                                    //calculate item index in the current Window ↓↓
+                                    let _itemIndex = el.index + (el.virtualIndex - _virtualIndex);
+                                    if (0 <= _itemIndex && _itemIndex <= _self.rowCount)
+                                    {
+                                        _self.rows[_itemIndex].addClass("datagrid-row-selected");
+                                    }
+
+                                    // if (_virtualIndex <= el.index + el.virtualIndex && el.index + el.virtualIndex <= _self.rowCount + _virtualIndex)
+                                    // {
+                                    //     _self.rows[el.index + el.virtualIndex - _virtualIndex].addClass("datagrid-row-selected");
+                                    //     el.index = el.index + el.virtualIndex - _virtualIndex;
+                                    //     el.virtualIndex = _virtualIndex;
+                                    // }
+                                })
+                            }
                         }
                     });
                 });
@@ -985,6 +993,7 @@ var DataGrid = function (_props)
     });
     let _selectedItems = new ArrayEx();
     let _selectedIndices = [];
+    let _selectedRowData = [];
     let _rowClickHandler = function (e, dgInst, ra)
     {
         let index = ra.currentIndex + ra.virtualIndex;
@@ -995,10 +1004,12 @@ var DataGrid = function (_props)
             {
                 _selectedIndices.push(index);
                 _selectedItems.push(ra.currentItem);
+                _selectedRowData.push({ "index": ra.currentIndex, "virtualIndex": ra.virtualIndex });
             } else
             {
                 _selectedIndices.splice(ind, 1);
                 _selectedItems.splice(ind, 1);
+                _selectedRowData.splice(ind, 1);
             }
 
         } else
@@ -1007,10 +1018,12 @@ var DataGrid = function (_props)
             {
                 _selectedIndices = [index];
                 _selectedItems.splice(0, _selectedItems.length, ra.currentItem);
+                _selectedRowData = [{ "index": ra.currentIndex, "virtualIndex": ra.virtualIndex }];
             } else
             {
                 _selectedIndices = [];
                 _selectedItems.splice(0, _selectedItems.length);
+                _selectedRowData = [];
             }
         }
         let len = _self.rows.length;
