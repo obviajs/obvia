@@ -13,6 +13,7 @@ import { DropMenuDirection, } from "/obvia/components/DropDown/DropMenuDirection
 import { DropSplitType } from "/obvia/components/DropDown/DropSplitType.js";
 import { DependencyContainer } from "/obvia/lib/DependencyContainer.js";
 import { TextInput } from "/obvia/components/TextInput/TextInput.js";
+import { ChangeWatcher } from "/obvia/lib/binding/ChangeWatcher.js";
 import { Label } from "/obvia/components/Label.js";
 import { ArrayUtils } from "/obvia/lib/ArrayUtils.js";
 import { ArrayEx } from "/obvia/lib/ArrayEx.js";
@@ -20,7 +21,7 @@ var DropEdit = function (_props)
 {
     let _self = this;
     let _creationFinished;
-    let _dataProvider, _inputDD, _componentRepeater, _label;
+    let _dataProvider, _inputDD, _componentRepeater, _label, myw;
 
     Object.defineProperty(this, "labelField", {
         get: function labelField()
@@ -79,10 +80,38 @@ var DropEdit = function (_props)
         },
         set: function selectedItem(v)
         {
+
             if (_selectedItem != v)
             {
-                _selectedItem = v;
-                this.trigger("change");
+                let oldValue = _selectedItem;
+                if (!ObjectUtils.isObject(v))
+                {
+                    let o = {};
+                    o[_valueField] = v;
+                    v = o;
+                }
+                if (v.hasOwnProperty(_valueField))
+                {
+                    let m = ArrayUtils.getMatching(_dataProvider, _valueField, v[_valueField]).objects;
+                    if (m.length > 0)
+                    {
+                        v = m[0];
+                        _selectedItem = v;
+                        _inputDD.value = v[_labelField];
+                    } else if (_allowNewItem)
+                    {
+                        _dataProvider.splice(_dataProvider.length, 0, v);
+                        _selectedItem = v;
+                        _inputDD.value = v[_labelField];
+
+                    } else
+                    {
+                        _selectedItem = null;
+                        _inputDD.value = _label;
+                    }
+                    this.trigger("change");
+                    myw.propertyChanged("selectedItem", oldValue, _selectedItem);
+                }
             }
         }
     });
@@ -108,6 +137,10 @@ var DropEdit = function (_props)
             _componentRepeater = this.repeater;
             _componentRepeater.attr["aria-labelledby"] = _inputDD.domID;
         }
+    };
+    this.init = function (e)
+    {
+        myw = ChangeWatcher.getInstance(_self);
     };
     this.beforeAttach = function (e)
     {
@@ -260,6 +293,7 @@ var DropEdit = function (_props)
 
     let _hrefField = _props.hrefField;
     let _labelField = _props.labelField;
+    let _valueField = _props.valueField;
     let _value = _props.value;
     let _change = _props.change;
     let _size = _props.size;
