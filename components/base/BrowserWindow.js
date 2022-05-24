@@ -37,10 +37,10 @@ var BrowserWindow = function (_props)
         _win.document.title = _title;
         _win.addEventListener('beforeunload', function (e)
         {
-            _self.removeAllChildren();
+            //_self.removeAllChildren();
             _win = null;
             BrowserWindow.all.splice(BrowserWindow.all.indexOf(_self.proxyMaybe), 1);
-            _self.$el.remove();
+            //_self.$el.detach();
             delete e['returnValue'];
             _self.trigger("beforeunload");
         });
