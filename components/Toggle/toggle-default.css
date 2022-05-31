@@ -5,6 +5,7 @@
     width: 60px;
     height: 34px;
 }
+
 .block {
     display: block !important;
 }
@@ -24,63 +25,72 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: #ccc;
+    background-color: lightgray;
     -webkit-transition: .4s;
     transition: .4s;
+    border-radius: 5rem;
+    width: 100%;
 }
 
 .slider:before {
     position: absolute;
-    content: "";
-    height: 26px;
-    width: 26px;
-    left: 4px;
-    bottom: 4px;
+    content: '\2715';
+    height: 2rem;
+    width: 2rem;
+    left: .25rem;
+    bottom: .25rem;
     background-color: white;
     -webkit-transition: .4s;
     transition: .4s;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #f44336;
 }
 
-input:checked + .slider {
-    background-color: #2196F3;
+input:checked+.slider {
+    background-color: #6edb8d;
 }
 
-input:focus + .slider {
-    box-shadow: 0 0 1px #2196F3;
-}
-
-input:checked + .slider:before {
--webkit-transform: translateX(26px);
--ms-transform: translateX(26px);
-transform: translateX(26px);
+input:checked+.slider:before {
+    -webkit-transform: translateX(50%);
+    -ms-transform: translateX(50%);
+    transform: translateX(100%);
+    content: '\2713';
+    color: green;
 }
 
 /* Rounded sliders */
 .slider.round {
-border-radius: 34px;
+    border-radius: 34px;
 }
 
 .slider.round:before {
-border-radius: 50%;
+    border-radius: 50%;
 }
 
 
-input.default:checked + .slider {
+input.default:checked+.slider {
     background-color: #444;
 }
-input.primary:checked + .slider {
+
+input.primary:checked+.slider {
     background-color: #2196F3;
 }
-input.success:checked + .slider {
+
+input.success:checked+.slider {
     background-color: #8bc34a;
 }
-input.info:checked + .slider {
+
+input.info:checked+.slider {
     background-color: #3de0f5;
 }
-input.warning:checked + .slider {
+
+input.warning:checked+.slider {
     background-color: #FFC107;
 }
-input.danger:checked + .slider {
+
+input.danger:checked+.slider {
     background-color: #f44336;
 }
-  
