@@ -79,8 +79,7 @@ var Toggle = function (_props)
                 props: {
                     id: 'span',
                     labelType: LabelType.span,
-                    classes: ["slider"],
-                    click: _self.check
+                    classes: ["slider"]
                 }
             }
         ],

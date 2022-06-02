@@ -1,8 +1,9 @@
 /* The switch - the box around the slider */
+
 .switch {
     position: relative;
     display: inline-block;
-    width: 60px;
+    max-width: 60px;
     height: 34px;
 }
 
@@ -37,7 +38,7 @@
     content: '\2715';
     height: 2rem;
     width: 2rem;
-    left: .25rem;
+    left: .3rem;
     bottom: .25rem;
     background-color: white;
     -webkit-transition: .4s;
@@ -50,12 +51,10 @@
 }
 
 input:checked+.slider {
-    background-color: #6edb8d;
+    background-color: #1f94cd;
 }
 
 input:checked+.slider:before {
-    -webkit-transform: translateX(50%);
-    -ms-transform: translateX(50%);
     transform: translateX(100%);
     content: '\2713';
     color: green;
