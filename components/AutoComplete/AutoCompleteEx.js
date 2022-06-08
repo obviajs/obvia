@@ -287,7 +287,7 @@ var AutoCompleteEx = function (_props)
 				//clearTimeout(t);
 			} else if (e.keyCode == 8)
 			{
-				if (_input.value == "")
+				if ((!_multiSelect && _self.value.length) && _input.value == "")
 				{
 					_delayRemoveTokenItemAt(_self.value.length - 1);
 				}
@@ -676,6 +676,8 @@ var AutoCompleteEx = function (_props)
 							css: {
 								width: "min-content",
 								"max-width": "100%",
+								display: "flex",
+								"overflow-x": "scroll"
 							},
 							ownerDocument: this.ownerDocument,
 							dataProvider: _value,
