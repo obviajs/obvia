@@ -677,7 +677,7 @@ var AutoCompleteEx = function (_props)
 								width: "min-content",
 								"max-width": "100%",
 								display: "flex",
-								"overflow-x": "scroll"
+								"overflow-x": _multiSelect ? "scroll" : "none"
 							},
 							ownerDocument: this.ownerDocument,
 							dataProvider: _value,
