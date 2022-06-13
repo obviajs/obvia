@@ -150,7 +150,8 @@ var App = function (_props)
         "WindowHide": "APP_WINDOW_HIDDEN",
         "WindowShow": "APP_WINDOW_SHOWN",
         "onunload": "APP_UNLOAD",
-        "beforeunload": "APP_BEFORE_UNLOAD"
+        "beforeunload": "APP_BEFORE_UNLOAD",
+        "hashchange": "HASH_CHANGE"
     };
 
     Object.defineProperty(this, 'defaultBehaviors', {
@@ -383,6 +384,7 @@ var App = function (_props)
     let _hashchange = function (e)
     {
         _route(e.newValue);
+        _self.trigger(e);
     };
 
 
