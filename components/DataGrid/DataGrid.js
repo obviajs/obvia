@@ -426,6 +426,7 @@ var DataGrid = function (_props)
                             cmp.attr[_self.guidField] = _self.dataProvider[vr][_self.guidField];
                         }
                     }
+                    _cells[i][0].prev().text(i + 1);
                 }
             }
         }
