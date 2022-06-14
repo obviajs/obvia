@@ -103,7 +103,7 @@ var DropDown = function (_props)
                         _btnDD.label = v[_labelField];
                     } else if (_allowNewItem)
                     {
-                        _dataProvider.splice(_dataProvider.length, 0, v);
+                        _componentRepeater.dataProvider.splice(_componentRepeater.dataProvider.length, 0, v);
                         _selectedItem = v;
                         _btnDD.label = v[_labelField];
 

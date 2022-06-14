@@ -92,7 +92,7 @@ var DropEdit = function (_props)
                 }
                 if (v.hasOwnProperty(_valueField))
                 {
-                    let m = ArrayUtils.getMatching(_dataProvider, _valueField, v[_valueField]).objects;
+                    let m = ArrayUtils.getMatching(_componentRepeater.dataProvider, _valueField, v[_valueField]).objects;
                     if (m.length > 0)
                     {
                         v = m[0];
@@ -100,7 +100,7 @@ var DropEdit = function (_props)
                         _inputDD.value = v[_labelField];
                     } else if (_allowNewItem)
                     {
-                        _dataProvider.splice(_dataProvider.length, 0, v);
+                        _componentRepeater.dataProvider.splice(_componentRepeater.dataProvider.length, 0, v);
                         _selectedItem = v;
                         _inputDD.value = v[_labelField];
 
@@ -271,7 +271,7 @@ var DropEdit = function (_props)
         _inputDD.value = this.label;
         let linkObj = {};
         linkObj[_guidField] = ra.currentItem[_guidField];
-        _self.selectedItem = ArrayUtils.getMatching(_dataProvider, _guidField, linkObj[_guidField]).objects[0];
+        _self.selectedItem = ArrayUtils.getMatching(_componentRepeater.dataProvider, _guidField, linkObj[_guidField]).objects[0];
         _componentRepeater.$el.removeClass("show");
         e.stopPropagation();
     };
