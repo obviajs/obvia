@@ -381,6 +381,7 @@ var DataGrid = function (_props)
             let delta = oldValue - newValue;
             if (delta > 0)
             {
+                _virtualIndex = 0;
                 let deltaScroll = delta * _avgRowHeight;
                 while (delta > 0)
                 {
