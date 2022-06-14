@@ -95,7 +95,7 @@ var DropDown = function (_props)
                 }
                 if (v.hasOwnProperty(_valueField))
                 {
-                    let m = ArrayUtils.getMatching(_dataProvider, _valueField, v[_valueField]).objects;
+                    let m = ArrayUtils.getMatching(_componentRepeater.dataProvider, _valueField, v[_valueField]).objects;
                     if (m.length > 0)
                     {
                         v = m[0];
@@ -240,7 +240,7 @@ var DropDown = function (_props)
     {
         let linkObj = {};
         linkObj[_guidField] = ra.currentItem[_guidField];
-        _self.selectedItem = ra.currentItem;
+        _self.selectedItem = ArrayUtils.getMatching(_componentRepeater.dataProvider, _guidField, linkObj[_guidField]).objects[0];
         _componentRepeater.$el.removeClass("show");
         e.stopPropagation();
     };
