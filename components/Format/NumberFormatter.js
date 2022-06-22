@@ -30,7 +30,7 @@ var NumberFormatter = function (_props)
         {
             if (_label != v)
             {
-                if (!NumberUtils.isNumber(v))
+                if (v != null && !NumberUtils.isNumber(v))
                 {
                     this.$el.appendText(v);
                     return;
