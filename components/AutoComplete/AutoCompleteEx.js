@@ -296,7 +296,8 @@ var AutoCompleteEx = function (_props)
 	};
 	this.refreshSuggestions = function ()
 	{
-		if (_input) _querySuggestions(_input.value);
+		if (_input.value.trim().length > 0)
+			_querySuggestions(_input.value);
 	};
 
 	let _querySuggestions = function (toMatch)
