@@ -124,7 +124,6 @@ var CurrencyExRate = function (_props)
 };
 //component prototype
 CurrencyExRate.prototype.ctor = "CurrencyExRate";
-CurrencyExRate.prototype.valueProp = 'value';
 DependencyContainer.getInstance().register(
 	"CurrencyExRate",
 	CurrencyExRate,
