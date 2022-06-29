@@ -694,7 +694,7 @@ var EasyFilter = function (_props)
                                 css: {
                                     "height": "49%"
                                 },
-                                click: _clear,
+                                click: _self.clear,
                                 components: [
                                     {
                                         ctor: Label,
@@ -715,7 +715,7 @@ var EasyFilter = function (_props)
             }
         ];
     };
-    let _clear = function (e)
+    this.clear = function (e)
     {
         _self.rules.rules.forEach((el) =>
         {
