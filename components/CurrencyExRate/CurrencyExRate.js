@@ -10,15 +10,19 @@ import { DropDown } from "../DropDown/DropDown.js";
 import { TextInput } from "../TextInput/TextInput.js";
 import { DependencyContainer } from "/obvia/lib/DependencyContainer.js";
 
-var CurrencyExRate = function (_props) {
+var CurrencyExRate = function (_props)
+{
 	let _self = this;
 
 	Object.defineProperty(this, "value", {
-		get: function value() {
+		get: function value()
+		{
 			return _value;
 		},
-		set: function value(v) {
-			if (JSON.stringify(_value) != JSON.stringify(v)) {
+		set: function value(v)
+		{
+			if (JSON.stringify(_value) != JSON.stringify(v))
+			{
 				_value.exRate = v.exRate;
 				_value.currency = v.currency;
 
@@ -30,17 +34,21 @@ var CurrencyExRate = function (_props) {
 		enumerable: true,
 	});
 
-	this.changeHandler = function (e) {
+	this.changeHandler = function (e)
+	{
 		_value.exRate = this.children.workArea_53.exchangeRate.value;
 		_value.currency =
 			this.children.workArea_53.currencySelect.selectedItem.currency_id;
 	};
-	this.afterAttach = function (e) {
-		if (e.target.id == this.domID) {
+	this.afterAttach = function (e)
+	{
+		if (e.target.id == this.domID)
+		{
 		}
 	};
 	let _cmps;
-	let fnContainerDelayInit = function () {
+	let fnContainerDelayInit = function ()
+	{
 		_cmps = [
 			{
 				ctor: "Container",
@@ -99,11 +107,13 @@ var CurrencyExRate = function (_props) {
 	let _valueField = _props.valueField;
 	let _change = _props.change;
 
-	_props.change = function () {
+	_props.change = function ()
+	{
 		if (typeof _change == "function") _change.apply(this, arguments);
 
 		let e = arguments[0];
-		if (!e.isDefaultPrevented()) {
+		if (!e.isDefaultPrevented())
+		{
 			_self.changeHandler();
 		}
 	};
@@ -114,6 +124,7 @@ var CurrencyExRate = function (_props) {
 };
 //component prototype
 CurrencyExRate.prototype.ctor = "CurrencyExRate";
+CurrencyExRate.prototype.valueProp = 'value';
 DependencyContainer.getInstance().register(
 	"CurrencyExRate",
 	CurrencyExRate,
