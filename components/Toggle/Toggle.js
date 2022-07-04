@@ -18,6 +18,7 @@ var Toggle = function (_props)
         set: function value(v)
         {
             _self.proxyMaybe.checkBox.value = v;
+            _self.proxyMaybe.checkBox.checked = v;
         },
         enumerable: true
     });
