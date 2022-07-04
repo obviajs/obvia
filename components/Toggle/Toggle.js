@@ -18,7 +18,6 @@ var Toggle = function (_props)
         set: function value(v)
         {
             _self.proxyMaybe.checkBox.value = v;
-            _self.proxyMaybe.checkBox.checked = v;
         },
         enumerable: true
     });
@@ -120,6 +119,7 @@ var Toggle = function (_props)
 };
 DependencyContainer.getInstance().register("Toggle", Toggle, DependencyContainer.simpleResolve);
 Toggle.prototype.ctor = "Toggle";
+Toggle.prototype.valueProp = 'checked';
 export
 {
     Toggle
