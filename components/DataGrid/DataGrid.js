@@ -424,6 +424,7 @@ var DataGrid = function (_props)
                         {
                             cmp.refreshBindings(_self.dataProvider[vr]);
                             cmp.attr[_self.guidField] = _self.dataProvider[vr][_self.guidField];
+                            cmp.repeaterIndex = i + _virtualIndex;
                         }
                     }
                     _cells[i][0].prev().text(i + 1);
@@ -1201,7 +1202,7 @@ var DataGrid = function (_props)
                 {
                     style = "style='width:50px'";
                 }
-                renderedRow.append('<th scope="row" ' + style + '>' + (index + 1) + '</th>');
+                renderedRow.append('<th scope="row" id="ri_' + index + '"' + style + '>' + (index + 1) + '</th>');
             }
             renderedRow.on("click", function (evt)
             {
