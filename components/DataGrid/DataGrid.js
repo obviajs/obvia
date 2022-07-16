@@ -596,7 +596,7 @@ var DataGrid = function (_props)
             _cellItemRenderers[Math.min(rowIndex, _rowCount - 1)][columnIndex].hide();
             let itemEditorInfo = _cellItemEditors[columnIndex];
             let itemEditor;
-            if (itemEditorInfo == null || !document.contains(itemEditorInfo.itemEditor.$el[0]))
+            if (itemEditorInfo == null || !itemEditorInfo.itemEditor.$el[0].isConnected)
             {
                 let ctor;
                 if (typeof column.itemEditor.ctor == "string")
@@ -612,7 +612,8 @@ var DataGrid = function (_props)
                 column.itemEditor.props.parentRepeater = _self.proxyMaybe;
                 column.itemEditor.props.repeaterIndex = rowIndex;
                 column.itemEditor.props.bindingDefaultContext = data;
-                itemEditor = await Component.fromLiteral(column.itemEditor);
+                let component = ObjectUtils.deepCopy(column.itemEditor);
+                itemEditor = await Component.fromLiteral(component);
                 //let props = extend(true, true, column.itemEditor.props);
                 //delete props["value"];
 
