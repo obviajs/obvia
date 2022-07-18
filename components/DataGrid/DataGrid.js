@@ -609,10 +609,10 @@ var DataGrid = function (_props)
                 {
                     column.itemEditor.props[valueProp] = "{?" + column.field + "}";
                 }
-                column.itemEditor.props.parentRepeater = _self.proxyMaybe;
-                column.itemEditor.props.repeaterIndex = rowIndex;
-                column.itemEditor.props.bindingDefaultContext = data;
                 let component = ObjectUtils.deepCopy(column.itemEditor);
+                component.props.parentRepeater = _self.proxyMaybe;
+                component.props.repeaterIndex = rowIndex;
+                component.props.bindingDefaultContext = data;
                 itemEditor = await Component.fromLiteral(component);
                 //let props = extend(true, true, column.itemEditor.props);
                 //delete props["value"];
