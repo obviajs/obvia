@@ -26,8 +26,8 @@ var CurrencyExRate = function (_props)
 				_value.exRate = v.exRate;
 				_value.currency = v.currency;
 
-				this.workArea_53.exchangeRate.value = v.exRate;
-				this.workArea_53.currencySelect.selectedItem.currency_id =
+				this.children.workArea_53.exchangeRate.value = v.exRate;
+				this.children.workArea_53.currencySelect.selectedItem.currency_id =
 					v.currency;
 			}
 		},
@@ -36,8 +36,8 @@ var CurrencyExRate = function (_props)
 
 	this.changeHandler = function (e)
 	{
-		_value.exRate = this.workArea_53.exchangeRate.value;
-		_value.currency = this.workArea_53.currencySelect.selectedItem?.currency_id;
+		_value.exRate = this.children.workArea_53.exchangeRate.value;
+		_value.currency = this.children.workArea_53.currencySelect.selectedItem?.currency_id;
 	};
 	this.afterAttach = function (e)
 	{
