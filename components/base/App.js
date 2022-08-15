@@ -88,6 +88,16 @@ var App = function (_props)
     let t = setInterval(timerIncrement, _idleInterval);
 
     let _visible = true;
+    let unloadingEvents = ['onunload', 'beforeunload'];
+    unloadingEvents.forEach(function (event)
+    {
+        window.addEventListener(event, function (event)
+        {
+            let evt = jQuery.Event(event.type);
+            evt.guid = _guid;
+            _self.trigger(evt, []);
+        });
+    });
     let visibilityEvents = ['visibilitychange', 'webkitvisibilitychange', 'mozvisibilitychange', 'msvisibilitychange'];
     visibilityEvents.forEach(function (event)
     {
@@ -219,7 +229,7 @@ var App = function (_props)
 
     let _event2behavior = function (e)
     {
-        if (e.type != "InactivityDetected" && e.type != "ActivityDetected" && e.type != "WindowHide" && e.type != "WindowShow")
+        if (e.type != "InactivityDetected" && e.type != "ActivityDetected" && e.type != "WindowHide" && e.type != "WindowShow" && e.type != "onunload" && e.type != "beforeunload")
         {
             if (_idleTime >= _inactivityInterval)
             {
