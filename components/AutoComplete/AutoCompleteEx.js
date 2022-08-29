@@ -459,7 +459,7 @@ var AutoCompleteEx = function (_props)
 		},
 		set: function value(v)
 		{
-			if (_valueLater && typeof v === "object" && !v.forEach)
+			if (v && _valueLater && typeof v === "object" && !v.forEach)
 			{
 				v = v[_valueField];
 			}
