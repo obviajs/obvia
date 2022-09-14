@@ -636,6 +636,9 @@ var AutoCompleteEx = function (_props)
 			id: "token",
 			label: "{?" + _labelField + "}",
 			value: "{?" + _valueField + "}",
+			attr: {
+				"title": "{" + _labelField + "}"
+			},
 			closeiconclick: _tokenRendererCloseIconClickHandler.bind(this),
 			closeIconSide: _closeIconSide,
 			click: _tokenRendererClickHandler,
@@ -643,10 +646,10 @@ var AutoCompleteEx = function (_props)
 			mousedown: _tokenRendererMouseDownHandler,
 			css: {
 				// "float": "left",
-				display: "flex",
+				"display": "flex",
 				"justify-content": "space-between",
 				"align-items": "center",
-				width: "100%",
+				"width": "100%",
 				"text-overflow": "ellipsis",
 			},
 		},
