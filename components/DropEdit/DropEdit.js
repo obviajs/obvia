@@ -55,18 +55,18 @@ var DropEdit = function (_props)
         set: function dataProvider(v)
         {
             _dataProvider = v;
-
             if (v && v.length > 0)
             {
                 let dpFields = Object.getOwnPropertyNames(v[0]);
                 if (dpFields.includes(_labelField))
                 {
                     _componentRepeater.dataProvider = _dataProvider;
-
+                    _dataProvider.unshift({ [_labelField]: "Select", [_valueField]: null });
                 }
             } else
             {
                 _componentRepeater.dataProvider = _dataProvider;
+                _dataProvider.unshift({ _labelField: "Select", _valueField: null });
             }
         },
         enumerable: true
@@ -223,7 +223,7 @@ var DropEdit = function (_props)
                 type: "",
                 classes: ["dropdown-menu", "drop-edit"],
                 components: [_componentLink],
-                dataProvider: _dataProvider
+                dataProvider: [..._dataProvider]
             }
         };
         return [_componentInput, _toggleButton, _componentRepeaterLit];
@@ -236,36 +236,35 @@ var DropEdit = function (_props)
         labelField: undefined,
         keyField: "",
         value: null,
+        allowNewItem: false,
         classes: [DropMenuDirection.DROPDOWN],
         label: "",
         size: ButtonSize.SMALL,
         type: "",
+        css: {
+            display: "flex"
+        },
         split: DropSplitType.SPLIT,
         guidField: "guid"
     };
-    let _filter = function (e)
+
+    const _filter = async function (e)
     {
         let val = e.target.value.toLowerCase().trim();
+        _componentRepeater.dataProvider = [..._dataProvider];
         if (val.length > 0)
         {
             _componentRepeater.$el.addClass("show");
-            _componentRepeater.dataProvider.forEach(el =>
+            _componentRepeater.dataProvider.filter((element) =>
             {
-                if (!el[_labelField].toLowerCase().includes(val))
-                {
-                    el.currentRow.label.display = false;
-                } else
-                    el.currentRow.label.display = true;
+                return element[_labelField].toLowerCase().includes(val);
             });
         } else
         {
             _componentRepeater.$el.removeClass("show");
-            _componentRepeater.dataProvider.forEach(el =>
-            {
-                el.currentRow.label.display = true;
-            });
         }
-    }
+    };
+
     let _clickHandler = function (e, ra)
     {
         _inputDD.value = this.label;
@@ -300,6 +299,7 @@ var DropEdit = function (_props)
     let _split = _props.split;
     let _selectedItem = _props.selectedItem;
     let _guidField = _props.guidField;
+    let _allowNewItem = _props.allowNewItem;
 
     if (_props.dataProvider && !StringUtils.getBindingExp(_props.dataProvider))
     {
