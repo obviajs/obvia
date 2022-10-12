@@ -228,7 +228,8 @@ var DropEdit = function (_props)
                 dataProvider: [..._dataProvider],
                 css: {
                     "max-height": '24em',
-                    "overflow-y": 'scroll'
+                    "overflow-y": 'scroll',
+                    "min-width": '100%'
                 }
             }
         };
@@ -284,7 +285,7 @@ var DropEdit = function (_props)
             {
                 _inputDD.attr["aria-expanded"] = true;
                 _componentRepeater.$el.addClass("show");
-                _self.children.textInput.focus();
+                // _self.children.textInput.focus();
             }
             return;
         };
