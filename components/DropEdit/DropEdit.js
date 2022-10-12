@@ -61,12 +61,12 @@ var DropEdit = function (_props)
                 if (dpFields.includes(_labelField))
                 {
                     _componentRepeater.dataProvider = _dataProvider;
-                    _dataProvider.unshift({ [_labelField]: "Select", [_valueField]: null });
+                    _componentRepeater.dataProvider.unshift({ [_labelField]: "Choose", [_valueField]: null });
                 }
             } else
             {
                 _componentRepeater.dataProvider = _dataProvider;
-                _dataProvider.unshift({ _labelField: "Select", _valueField: null });
+                _componentRepeater.dataProvider.unshift({ _labelField: "Choose", _valueField: null });
             }
         },
         enumerable: true
@@ -75,7 +75,6 @@ var DropEdit = function (_props)
     Object.defineProperty(this, "selectedItem", {
         get: function selectedItem()
         {
-
             return _selectedItem;
         },
         set: function selectedItem(v)
@@ -165,7 +164,10 @@ var DropEdit = function (_props)
             props: {
                 id: "label",
                 classes: ['dropdown-item'],
-                "click": _clickHandler,
+                click: _clickHandler,
+                css: {
+                    cursor: "pointer"
+                }
             }
         };
         if (_labelField)
@@ -178,7 +180,6 @@ var DropEdit = function (_props)
 
     let fnContainerDelayInit = function ()
     {
-
         let _componentInput = {
             ctor: TextInput,
             props: {
@@ -192,9 +193,11 @@ var DropEdit = function (_props)
                 attr: {
                     "data-toggle": 'dropdown',
                     "aria-haspopup": 'true',
-                    "aria-expanded": 'false'
+                    "aria-expanded": false
                 },
-                keyup: _filter
+                keyup: _filter,
+                blur: _openOrCloseSuggestions,
+                focus: _openOrCloseSuggestions
             }
         };
 
@@ -209,8 +212,7 @@ var DropEdit = function (_props)
                     "border-bottom": "2px solid gray",
                     "outline": "none"
                 },
-                click: _buttonClickHandler,
-                blur: _buttonClickHandler
+                click: _openOrCloseSuggestions
             }
         };
 
@@ -223,7 +225,11 @@ var DropEdit = function (_props)
                 type: "",
                 classes: ["dropdown-menu", "drop-edit"],
                 components: [_componentLink],
-                dataProvider: [..._dataProvider]
+                dataProvider: [..._dataProvider],
+                css: {
+                    "max-height": '24em',
+                    "overflow-y": 'scroll'
+                }
             }
         };
         return [_componentInput, _toggleButton, _componentRepeaterLit];
@@ -254,14 +260,47 @@ var DropEdit = function (_props)
         _componentRepeater.dataProvider = [..._dataProvider];
         if (val.length > 0)
         {
-            _componentRepeater.$el.addClass("show");
             _componentRepeater.dataProvider.filter((element) =>
             {
-                return element[_labelField].toLowerCase().includes(val);
+                if (element[_valueField])
+                    return element[_labelField].toLowerCase().includes(val);
             });
+            _componentRepeater.$el.addClass("show");
         } else
         {
             _componentRepeater.$el.removeClass("show");
+        }
+    };
+
+    const _openOrCloseSuggestions = async function (e)
+    {
+        if (e.type === 'click')
+        {
+            if (_inputDD.attr["aria-expanded"])
+            {
+                _inputDD.attr["aria-expanded"] = false;
+                _componentRepeater.$el.removeClass("show");
+            } else
+            {
+                _inputDD.attr["aria-expanded"] = true;
+                _componentRepeater.$el.addClass("show");
+                _self.children.textInput.focus();
+            }
+            return;
+        };
+        if (e.type === 'blur')
+        {
+            _inputDD.attr["aria-expanded"] = false;
+            _componentRepeater.$el.removeClass("show");
+            if (this.value.trim().length === 0)
+            {
+                _self.selectedItem = null;
+                _inputDD.value = _label;
+            }
+        } else
+        {
+            _inputDD.attr["aria-expanded"] = true;
+            _componentRepeater.$el.addClass("show");
         }
     };
 
@@ -275,14 +314,6 @@ var DropEdit = function (_props)
         e.stopPropagation();
     };
 
-    let _buttonClickHandler = function (e)
-    {
-        _inputDD.attr["aria-expanded"] = !_inputDD.attr["aria-expanded"];
-        if (_componentRepeater.$el[0].classList.contains("show"))
-            _componentRepeater.$el.removeClass("show");
-        else
-            _componentRepeater.$el.addClass("show");
-    };
     ObjectUtils.fromDefault(_defaultParams, _props);
     if (!_props.attr)
     {
