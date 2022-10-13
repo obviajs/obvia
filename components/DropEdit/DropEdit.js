@@ -55,18 +55,18 @@ var DropEdit = function (_props)
         set: function dataProvider(v)
         {
             _dataProvider = v;
+            _dataProvider.unshift({ [_labelField]: "-- Select --", [_valueField]: null });
+
             if (v && v.length > 0)
             {
                 let dpFields = Object.getOwnPropertyNames(v[0]);
                 if (dpFields.includes(_labelField))
                 {
                     _componentRepeater.dataProvider = _dataProvider;
-                    _componentRepeater.dataProvider.unshift({ [_labelField]: "Choose", [_valueField]: null });
                 }
             } else
             {
                 _componentRepeater.dataProvider = _dataProvider;
-                _componentRepeater.dataProvider.unshift({ _labelField: "Choose", _valueField: null });
             }
         },
         enumerable: true
@@ -177,7 +177,6 @@ var DropEdit = function (_props)
         return _componentLabel;
     };
 
-
     let fnContainerDelayInit = function ()
     {
         let _componentInput = {
@@ -196,8 +195,8 @@ var DropEdit = function (_props)
                     "aria-expanded": false
                 },
                 keyup: _filter,
-                blur: _openOrCloseSuggestions,
-                focus: _openOrCloseSuggestions
+                focus: _clickHandler,
+                blur: _clickHandler
             }
         };
 
@@ -212,7 +211,8 @@ var DropEdit = function (_props)
                     "border-bottom": "2px solid gray",
                     "outline": "none"
                 },
-                click: _openOrCloseSuggestions
+                click: _clickHandler,
+                blur: _clickHandler
             }
         };
 
@@ -223,12 +223,12 @@ var DropEdit = function (_props)
             props: {
                 id: "repeater",
                 type: "",
-                classes: ["dropdown-menu", "drop-edit"],
+                classes: ["dropdown-menu"],
                 components: [_componentLink],
                 dataProvider: [..._dataProvider],
+                dataProviderUpdate: _addScrollableProp,
                 css: {
-                    "max-height": '24em',
-                    "overflow-y": 'scroll',
+                    "max-height": '18em',
                     "min-width": '100%'
                 }
             }
@@ -255,6 +255,17 @@ var DropEdit = function (_props)
         guidField: "guid"
     };
 
+    const _addScrollableProp = function (e)
+    {
+        if (this.dataProvider.length > 6)
+        {
+            this.props.css['overflow-y'] = 'scroll';
+        } else
+        {
+            this.props.css['overflow-y'] = 'hidden';
+        }
+    };
+
     const _filter = async function (e)
     {
         let val = e.target.value.toLowerCase().trim();
@@ -267,15 +278,29 @@ var DropEdit = function (_props)
                     return element[_labelField].toLowerCase().includes(val);
             });
             _componentRepeater.$el.addClass("show");
-        } else
-        {
-            _componentRepeater.$el.removeClass("show");
         }
     };
 
-    const _openOrCloseSuggestions = async function (e)
+    let _clickHandler = function (e, ra)
     {
-        if (e.type === 'click')
+        if (e.type === 'blur')
+        {
+            _inputDD.attr["aria-expanded"] = false;
+            _componentRepeater.$el.removeClass("show");
+            if (_self.children.textInput.value.trim().length === 0)
+            {
+                _self.selectedItem = null;
+                _inputDD.value = _label;
+            }
+            return;
+        };
+        if (e.type === 'focus')
+        {
+            _inputDD.attr["aria-expanded"] = true;
+            _componentRepeater.$el.addClass("show");
+            return;
+        };
+        if (!e.target.id.startsWith('label'))
         {
             if (_inputDD.attr["aria-expanded"])
             {
@@ -285,34 +310,16 @@ var DropEdit = function (_props)
             {
                 _inputDD.attr["aria-expanded"] = true;
                 _componentRepeater.$el.addClass("show");
-                // _self.children.textInput.focus();
-            }
-            return;
-        };
-        if (e.type === 'blur')
-        {
-            _inputDD.attr["aria-expanded"] = false;
-            _componentRepeater.$el.removeClass("show");
-            if (this.value.trim().length === 0)
-            {
-                _self.selectedItem = null;
-                _inputDD.value = _label;
             }
         } else
         {
-            _inputDD.attr["aria-expanded"] = true;
-            _componentRepeater.$el.addClass("show");
+            _inputDD.value = this.label;
+            let linkObj = {};
+            linkObj[_guidField] = ra.currentItem[_guidField];
+            _self.selectedItem = ArrayUtils.getMatching(_componentRepeater.dataProvider, _guidField, linkObj[_guidField]).objects[0];
+            _componentRepeater.$el.removeClass("show");
+            e.stopPropagation();
         }
-    };
-
-    let _clickHandler = function (e, ra)
-    {
-        _inputDD.value = this.label;
-        let linkObj = {};
-        linkObj[_guidField] = ra.currentItem[_guidField];
-        _self.selectedItem = ArrayUtils.getMatching(_componentRepeater.dataProvider, _guidField, linkObj[_guidField]).objects[0];
-        _componentRepeater.$el.removeClass("show");
-        e.stopPropagation();
     };
 
     ObjectUtils.fromDefault(_defaultParams, _props);

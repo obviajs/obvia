@@ -53,6 +53,7 @@ var DropDown = function (_props)
         set: function dataProvider(v)
         {
             _dataProvider = v;
+            _dataProvider.unshift({ [_labelField]: "-- Select --", [_valueField]: null });
 
             if (v && v.length > 0)
             {
@@ -213,7 +214,12 @@ var DropDown = function (_props)
                 type: "",
                 classes: ["dropdown-menu"],
                 components: [_componentLink],
-                dataProvider: _dataProvider
+                dataProvider: _dataProvider,
+                dataProviderUpdate: _addScrollableProp,
+                css: {
+                    "max-height": '18em',
+                    "min-width": '100%'
+                }
             }
         };
         return [_componentButton, _componentRepeaterLit];
@@ -234,6 +240,17 @@ var DropDown = function (_props)
         type: "",
         split: DropSplitType.SPLIT,
         guidField: "guid"
+    };
+
+    const _addScrollableProp = function (e)
+    {
+        if (this.dataProvider.length > 6)
+        {
+            this.props.css['overflow-y'] = 'scroll';
+        } else
+        {
+            this.props.css['overflow-y'] = 'hidden';
+        }
     };
 
     let _clickHandler = function (e, ra)
