@@ -53,10 +53,10 @@ var DropDown = function (_props)
         set: function dataProvider(v)
         {
             _dataProvider = v;
-            _dataProvider.unshift({ [_labelField]: "-- Select --", [_valueField]: null });
 
             if (v && v.length > 0)
             {
+                _dataProvider.unshift({ [_labelField]: "-- Select --", [_valueField]: null });
                 let dpFields = Object.getOwnPropertyNames(v[0]);
                 if (dpFields.includes(_labelField))
                 {
