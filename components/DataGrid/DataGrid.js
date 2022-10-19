@@ -710,7 +710,8 @@ var DataGrid = function (_props)
                                     };
                                     _self.on("bindingsRefreshed", fn);
                                     _self.$bodyWrapper.scrollTop(_prevScrollTop + cs - _avgRowHeight);
-                                } else if (rowIndex >= _virtualIndex + _self.rowCount)
+                                }
+                                else if (rowIndex >= _virtualIndex + _self.rowCount)
                                 {
                                     let fn = function ()
                                     {
@@ -718,10 +719,13 @@ var DataGrid = function (_props)
                                         _self.off("bindingsRefreshed", fn);
                                     }
                                     _self.on("bindingsRefreshed", fn);
-                                    _self.$bodyWrapper.scrollTop(_prevScrollTop + cs + _avgRowHeight);
-                                } else
+                                    _self.$bodyWrapper.scrollTop(/*_prevScrollTop +*/ cs + _avgRowHeight);
+                                }
+                                else
                                 {
-                                    _self.cellEdit(Math.min(rowIndex, _rowCount - 1), columnIndex);
+                                    const index = rowIndex >= _virtualIndex ? rowIndex - _virtualIndex : _virtualIndex - rowIndex;
+                                    console.log(cs);
+                                    _self.cellEdit(Math.min(index, _rowCount - 1), columnIndex);
                                 }
                                 /*
                                 if (rowIndex > _self.rowCount - 1)
@@ -843,8 +847,9 @@ var DataGrid = function (_props)
 
             if (!applyEdit || !e.isDefaultPrevented())
             {
+                const index = rowIndex >= _virtualIndex ? rowIndex - _virtualIndex : _virtualIndex - rowIndex;
                 itemEditor.hide();
-                _cellItemRenderers[Math.min(rowIndex, _rowCount - 1)][columnIndex].show();
+                _cellItemRenderers[Math.min(index, _rowCount - 1)][columnIndex].show();
                 if (applyEdit)
                 {
                     if (!calledHandler)
@@ -865,7 +870,7 @@ var DataGrid = function (_props)
                                 ObjectUtils.setChainValue(_self.dataProvider[rowIndex], exp, value);
                             }
                         }
-                        _cellItemRenderers[Math.min(rowIndex, _rowCount - 1)][columnIndex].refreshBindings(_self.dataProvider[rowIndex]);
+                        _cellItemRenderers[Math.min(index, _rowCount - 1)][columnIndex].refreshBindings(_self.dataProvider[rowIndex]);
 
                     }
                     //TODO:dataProviderChanged or integrate Binding ? 
@@ -1269,7 +1274,7 @@ var DataGrid = function (_props)
                             if (_virtualIndex > 0)
                             {
                                 let cs = _self.$bodyWrapper.scrollTop();
-                                _self.$bodyWrapper.scrollTop(_prevScrollTop + cs + _avgRowHeight);
+                                _self.$bodyWrapper.scrollTop(/*_prevScrollTop +*/ cs + _avgRowHeight);
                             }
                         });
                     }
