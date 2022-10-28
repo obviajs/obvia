@@ -56,7 +56,9 @@ var DropDown = function (_props)
 
             if (v && v.length > 0)
             {
-                _dataProvider.unshift({ [_labelField]: "-- Select --", [_valueField]: null });
+                if (_dataProvider.findIndex(el => el[_labelField] === "-- Select --") < 0)
+                    _dataProvider.unshift({ [_labelField]: "-- Select --", [_valueField]: null });
+
                 let dpFields = Object.getOwnPropertyNames(v[0]);
                 if (dpFields.includes(_labelField))
                 {
