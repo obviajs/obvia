@@ -654,8 +654,11 @@ var DataGrid = function (_props)
                     {
                         case 13: // ENTER - apply value
                             e.preventDefault();
-                            // _self.cellEditFinished(_editPosition.rowIndex, _editPosition.columnIndex, true);
-                            _self.cellEditFinished(_editPosition.rowIndex + 1, _editPosition.columnIndex, true);
+                            //_self.cellEditFinished(_editPosition.rowIndex, _editPosition.columnIndex, true);
+                            if (_editPosition.rowIndex + 1 < _self.rowCount)
+                                _self.cellEdit(_editPosition.rowIndex + 1, _editPosition.columnIndex, true);
+                            else
+                                _self.cellEditFinished(_editPosition.rowIndex, _editPosition.columnIndex, true);
                             break;
                         case 27: // ESC - get back to old value
                             e.preventDefault();
