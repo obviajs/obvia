@@ -19,7 +19,7 @@ var DropDown = function (_props)
 {
     let _self = this;
 
-    let _dataProvider, _btnDD, _componentRepeater, _label, _selectedItem, _allowNewItem, myw, _enabled = true;
+    let _dataProvider, _btnDD, _componentRepeater, _label, _selectedItem, _allowNewItem, myw, _enabled = true, _selectOption;
 
     Object.defineProperty(this, "labelField", {
         get: function labelField()
@@ -56,7 +56,7 @@ var DropDown = function (_props)
 
             if (v && v.length > 0)
             {
-                if (_dataProvider.findIndex(el => el[_labelField] === "-- Select --") < 0)
+                if (_dataProvider.findIndex(el => el[_labelField] === "-- Select --") < 0 && _selectOption)
                     _dataProvider.unshift({ [_labelField]: "-- Select --", [_valueField]: null });
 
                 let dpFields = Object.getOwnPropertyNames(v[0]);
@@ -233,6 +233,7 @@ var DropDown = function (_props)
         hrefField: undefined,
         labelField: undefined,
         valueField: undefined,
+        selectOption: true,
         allowNewItem: false,
         keyField: "",
         value: null,
@@ -272,6 +273,7 @@ var DropDown = function (_props)
     _props.attr["data-triggers"] = "change";
 
     _allowNewItem = _props.allowNewItem;
+    _selectOption = _props.selectOption;
     let _hrefField = _props.hrefField;
     let _labelField = _props.labelField;
     let _valueField = _props.valueField;
