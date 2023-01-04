@@ -655,7 +655,7 @@ var DataGrid = function (_props)
                         case 13: // ENTER - apply value
                             e.preventDefault();
                             //_self.cellEditFinished(_editPosition.rowIndex, _editPosition.columnIndex, true);
-                            if (_editPosition.rowIndex + 1 < _self.rowCount)
+                            if (_editPosition.rowIndex + 1 < _self.rowCount && _newRowOnEnter)
                                 _self.cellEdit(_editPosition.rowIndex + 1, _editPosition.columnIndex, true);
                             else
                                 _self.cellEditFinished(_editPosition.rowIndex, _editPosition.columnIndex, true);
@@ -1096,6 +1096,7 @@ var DataGrid = function (_props)
         },
         showRowIndex: true,
         dataProvider: new ArrayEx([]),
+        newRowOnEnter: false,
         rowCount: null,
         columns: [],
         allowNewItem: false,
@@ -1140,6 +1141,7 @@ var DataGrid = function (_props)
 
     let _rendering = _props.rendering;
     let _showRowIndex = _props.showRowIndex;
+    let _newRowOnEnter = _props.newRowOnEnter;
     let _rowCount;
     if (_props.rowCount)
     {
