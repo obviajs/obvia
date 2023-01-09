@@ -78,6 +78,8 @@ var CurrencyExRate = function (_props)
 								id: "exchangeRate",
 								value: _value.exRate,
 								css: {},
+								type: "number",
+								enabled: _exRateEnabled
 							},
 						},
 					],
@@ -96,6 +98,7 @@ var CurrencyExRate = function (_props)
 		currencyList: [],
 		labelField: "title",
 		valueField: "key",
+		exRateEnabled: true
 	};
 	ObjectUtils.fromDefault(_defaultParams, _props);
 	//_props = ObjectUtils.extend(false, false, _defaultParams, _props);
@@ -105,6 +108,7 @@ var CurrencyExRate = function (_props)
 	let _labelField = _props.labelField;
 	let _valueField = _props.valueField;
 	let _change = _props.change;
+	let _exRateEnabled = _props.exRateEnabled;
 
 	_props.change = function ()
 	{
