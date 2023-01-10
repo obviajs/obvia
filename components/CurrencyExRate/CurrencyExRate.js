@@ -26,8 +26,8 @@ var CurrencyExRate = function (_props)
 				_value.exRate = v.exRate;
 				_value.currency = v.currency;
 
-				this.children.workArea_53.exchangeRate.value = v.exRate;
-				this.children.workArea_53.currencySelect.selectedItem.currency_id =
+				this.children.exchangeRate.value = v.exRate;
+				this.children.currencySelect.selectedItem.currency_id =
 					v.currency;
 			}
 		},
@@ -36,8 +36,8 @@ var CurrencyExRate = function (_props)
 
 	this.changeHandler = function (e)
 	{
-		_value.exRate = this.children.workArea_53.exchangeRate.value;
-		_value.currency = this.children.workArea_53.currencySelect.selectedItem?.currency_id;
+		_value.exRate = this.children.exchangeRate.value;
+		_value.currency = this.children.currencySelect.selectedItem?.currency_id;
 	};
 	this.afterAttach = function (e)
 	{
@@ -50,41 +50,27 @@ var CurrencyExRate = function (_props)
 	{
 		_cmps = [
 			{
-				ctor: "Container",
+				ctor: DropDown,
 				props: {
-					type: "",
-					id: "workArea_53",
+					id: "currencySelect",
+					dataProvider: _currencyList,
+					selectOption: false,
+					labelField: _labelField,
+					valueField: _valueField,
+					label: _value.currency,
 					css: {
-						display: "flex",
-						width: "100%",
+						float: "left",
 					},
-					components: [
-						{
-							ctor: DropDown,
-							props: {
-								id: "currencySelect",
-								dataProvider: _currencyList,
-								labelField: _labelField,
-								valueField: _valueField,
-								label: _value.currency,
-								css: {
-									float: "left",
-								},
-							},
-						},
-						{
-							ctor: TextInput,
-							props: {
-								id: "exchangeRate",
-								value: _value.exRate,
-								css: {},
-								type: "number",
-								enabled: _exRateEnabled
-							},
-						},
-					],
 				},
 			},
+			{
+				ctor: TextInput,
+				props: {
+					id: "exchangeRate",
+					value: _value.exRate,
+					type: "number"
+				}
+			}
 		];
 	};
 
@@ -97,8 +83,7 @@ var CurrencyExRate = function (_props)
 		type: "",
 		currencyList: [],
 		labelField: "title",
-		valueField: "key",
-		exRateEnabled: true
+		valueField: "key"
 	};
 	ObjectUtils.fromDefault(_defaultParams, _props);
 	//_props = ObjectUtils.extend(false, false, _defaultParams, _props);
@@ -108,7 +93,6 @@ var CurrencyExRate = function (_props)
 	let _labelField = _props.labelField;
 	let _valueField = _props.valueField;
 	let _change = _props.change;
-	let _exRateEnabled = _props.exRateEnabled;
 
 	_props.change = function ()
 	{
