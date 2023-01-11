@@ -9,19 +9,24 @@ import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
 import { Label, LabelType } from "/obvia/components/Label.js";
 import { Link } from "/obvia/components/Link/Link.js";
 
-var TokenRenderer = function (_props) {
+var TokenRenderer = function (_props)
+{
     let _self = this,
         _value, _label, _closeIconSide, _link, _span;
 
-    this.endDraw = function (e) {
-        if (e.target.id == this.domID) {
+    this.endDraw = function (e)
+    {
+        if (e.target.id == this.domID)
+        {
             _link = this.linkCmp;
             _span = this.labelCmp;
         }
     };
 
-    this.beforeAttach = function (e) {
-        if (e.target.id == this.domID) {
+    this.beforeAttach = function (e)
+    {
+        if (e.target.id == this.domID)
+        {
             if (_props.value)
                 _value = _props.value;
             if (_props.label)
@@ -29,16 +34,20 @@ var TokenRenderer = function (_props) {
         }
     };
 
-    let _closeIconClick = function (e) {
+    let _closeIconClick = function (e)
+    {
         _self.trigger("closeiconclick");
     };
 
     Object.defineProperty(this, "value", {
-        get: function value() {
+        get: function value()
+        {
             return _value;
         },
-        set: function value(v) {
-            if (_value != v) {
+        set: function value(v)
+        {
+            if (_value != v)
+            {
                 _value = v;
                 if (_span)
                     if (v || v === false)
@@ -50,11 +59,14 @@ var TokenRenderer = function (_props) {
     });
 
     Object.defineProperty(this, "label", {
-        get: function label() {
+        get: function label()
+        {
             return _label;
         },
-        set: function label(v) {
-            if (_label != v) {
+        set: function label(v)
+        {
+            if (_label != v)
+            {
                 _label = v;
                 if (_span)
                     _span.label = v;
@@ -70,13 +82,14 @@ var TokenRenderer = function (_props) {
         classes: ["badge", "badge-info"],
         css: {
             "font-size": "14px",
-            "height": "100%",
+            "max-height": "40px",
             "align-items": "center"
         }
     };
     ObjectUtils.fromDefault(_defaultParams, _props);
     //_props = ObjectUtils.extend(false, false, _defaultParams, _props);
-    if (!_props.attr) {
+    if (!_props.attr)
+    {
         _props.attr = {};
     }
     _props.attr["data-triggers"] = "closeiconclick";
@@ -111,10 +124,12 @@ var TokenRenderer = function (_props) {
         }
     };
 
-    if (_closeIconSide == "left") {
+    if (_closeIconSide == "left")
+    {
         _props.components.push(_linkLit);
         _props.components.push(_spanLit);
-    } else {
+    } else
+    {
         _props.components.push(_spanLit);
         _props.components.push(_linkLit);
     }
@@ -122,6 +137,7 @@ var TokenRenderer = function (_props) {
     return r;
 };
 TokenRenderer.prototype.ctor = 'TokenRenderer';
-export {
+export
+{
     TokenRenderer
 };

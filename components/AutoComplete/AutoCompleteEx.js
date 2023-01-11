@@ -679,8 +679,8 @@ var AutoCompleteEx = function (_props)
 							classes: [],
 							css: {
 								width: "min-content",
-								"max-width": "100%",
-								display: "flex",
+								"max-width": _multiSelect ? "70%" : "100%",
+								display: _multiSelect ? "block" : "flex",
 								"overflow-x": _multiSelect ? "scroll" : "none"
 							},
 							ownerDocument: this.ownerDocument,
@@ -705,7 +705,8 @@ var AutoCompleteEx = function (_props)
 							ownerDocument: this.ownerDocument,
 							css: {
 								outline: "none",
-								"font-size": "14px"
+								"font-size": "14px",
+								height: 'inherit'
 							}
 						}
 					}
