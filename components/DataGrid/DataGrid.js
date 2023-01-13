@@ -229,7 +229,7 @@ var DataGrid = function (_props)
                                 {
                                     //calculate item index in the current Window ↓↓
                                     let _itemIndex = el.index + (el.virtualIndex - _virtualIndex);
-                                    if (0 <= _itemIndex && _itemIndex <= _self.rowCount)
+                                    if (0 <= _itemIndex && _itemIndex <= _self.rowCount - 1)
                                     {
                                         _self.rows[_itemIndex].addClass("datagrid-row-selected");
                                     }
@@ -791,11 +791,10 @@ var DataGrid = function (_props)
             }else
                 itemEditor.value = column.itemEditor.props["value"] || data[column.field];
             */
-            itemEditor.render().then(function (cmpInstance)
+            itemEditor.render().then(async function (cmpInstance)
             {
                 let w = parseInt(_cells[Math.min(rowIndex, _rowCount - 1)][columnIndex].width());
                 let b = itemEditor.css["border-width"];
-
                 itemEditor.css.width = "100%";
                 _cells[Math.min(rowIndex, _rowCount - 1)][columnIndex].append(cmpInstance.$el);
                 itemEditor.show();
