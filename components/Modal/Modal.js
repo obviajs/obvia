@@ -11,16 +11,21 @@ import { Heading, HeadingType } from "/obvia/components/Heading.js";
 import { Button } from "/obvia/components/Button/Button.js";
 import { Label, LabelType } from "/obvia/components/Label.js";
 import { DependencyContainer } from "/obvia/lib/DependencyContainer.js";
-var Modal = function (_props) {
+var Modal = function (_props)
+{
     let _self = this;
     Object.defineProperty(this, "title", {
-        get: function title() {
+        get: function title()
+        {
             return _title;
         },
-        set: function title(v) {
-            if (_title != v) {
+        set: function title(v)
+        {
+            if (_title != v)
+            {
                 _title = v;
-                if (_modalHeader.title) {
+                if (_modalHeader.title)
+                {
                     _modalHeader.title.label = v;
                 }
             }
@@ -28,17 +33,21 @@ var Modal = function (_props) {
     });
 
     let _displayed = false;
-    this.DOMMutation = function (e) {
-        if (e.mutation.type == "attributes" && e.mutation.attributeName == "style") {
+    this.DOMMutation = function (e)
+    {
+        if (e.mutation.type == "attributes" && e.mutation.attributeName == "style")
+        {
             let av = e.target.style.getPropertyValue('display');
-            if (av.trim() != "" && av != "none" && !_displayed) {
+            if (av.trim() != "" && av != "none" && !_displayed)
+            {
                 _displayed = true;
                 let evt = jQuery.Event("displayListUpdated");
                 this.trigger(evt);
 
                 let e = jQuery.Event("shown");
                 this.trigger(e);
-            } else if (_displayed && (av.trim() == "" || av == "none")) {
+            } else if (_displayed && (av.trim() == "" || av == "none"))
+            {
                 _displayed = false;
                 let e = jQuery.Event("hidden");
                 this.trigger(e);
@@ -60,13 +69,17 @@ var Modal = function (_props) {
             props: {
                 type: "btn-group",
                 id: "headerButtonsCnt",
+                css: {
+                    gap: '.25rem'
+                },
                 components: [
                     {
                         ctor: Button,
                         props: {
                             id: 'dismissButton',
                             type: "button",
-                            classes: ["close", "no-form-control"],
+                            classes: ["btn", "btn-secondary"],
+                            width: '2.5rem',
                             attr: {
                                 "data-dismiss": "modal",
                                 "aria-label": "Dismiss"
@@ -79,10 +92,12 @@ var Modal = function (_props) {
                                     classes: ["fas", "fa-times"]
                                 }
                             }],
-                            click: function (e) {
+                            click: function (e)
+                            {
                                 let evt = jQuery.Event('dismiss');
                                 _self.trigger(evt);
-                                if (!evt.isDefaultPrevented()) {
+                                if (!evt.isDefaultPrevented())
+                                {
                                     _self.hide();
                                 }
                             }
@@ -93,7 +108,8 @@ var Modal = function (_props) {
                         props: {
                             id: 'acceptButton',
                             type: "button",
-                            classes: ["close", "no-form-control"],
+                            classes: ["btn", "btn-primary"],
+                            width: '2.5rem',
                             attr: {
                                 "data-dismiss": "modal",
                                 "aria-label": "Accept"
@@ -117,8 +133,9 @@ var Modal = function (_props) {
             }
         }]
     };
-    
-    let _clickHandler = function (e) {
+
+    let _clickHandler = function (e)
+    {
         if (e.target.id === this.domID)
             this.hide();
     };
@@ -137,7 +154,8 @@ var Modal = function (_props) {
     };
     ObjectUtils.fromDefault(_defaultParams, _props);
     //_props = ObjectUtils.extend(false, false, _defaultParams, _props);
-    if (_props.components && _props.components.forEach) {
+    if (_props.components && _props.components.forEach)
+    {
         _props.components = _defaultComponents;
     }
 
@@ -145,18 +163,22 @@ var Modal = function (_props) {
     let _size = _props.size;
     let _click = _props.click;
 
-    _props.click = function () {
+    _props.click = function ()
+    {
         if (typeof _click == 'function')
             _click.apply(this, arguments);
 
         let e = arguments[0];
-        if (!e.isDefaultPrevented()) {
+        if (!e.isDefaultPrevented())
+        {
             _clickHandler.apply(this, arguments);
         }
     };
 
-    this.endDraw = function (e) {
-        if (e.target.id == this.domID) {
+    this.endDraw = function (e)
+    {
+        if (e.target.id == this.domID)
+        {
             _modalDialog = this.modalDialog;
             _modalContent = _modalDialog.modalContent;
             _modalHeader = _modalContent.modalHeader;
@@ -165,10 +187,12 @@ var Modal = function (_props) {
         }
     };
     let _cmps, _modalDialog, _modalContent, _modalHeader, _modalBody, _modalFooter, _backDrop;
-    let fnContainerDelayInit = function () {
+    let fnContainerDelayInit = function ()
+    {
         Modal.all.push(_self);
         _props.css["z-index"] = 1040 + Modal.all.length;
-        if (!_backDrop) {
+        if (!_backDrop)
+        {
             _backDrop = new Container({
                 type: "",
                 classes: ["modal-backdrop", "fade", "show"]
@@ -231,8 +255,10 @@ var Modal = function (_props) {
     fnContainerDelayInit();
     _props.components = _cmps;
     let _init = this.init;
-    this.init = function (e) {
-        if (e.target.id == this.domID) {
+    this.init = function (e)
+    {
+        if (e.target.id == this.domID)
+        {
             if (typeof _init == 'function')
                 _init.apply(this, arguments);
             this.appendTo = $(this.ownerDocument.body);
@@ -241,14 +267,19 @@ var Modal = function (_props) {
     let r = Container.call(this, _props);
 
 
-    this.show = function () {
-        if (this.$el) {
+    this.show = function ()
+    {
+        if (this.$el)
+        {
             //this.$el.modal('show');
-            if (!this.attached) {
+            if (!this.attached)
+            {
                 this.appendTo.append(this.$el);
             }
-            if (!_backDrop.attached) {
-                _backDrop.render().then(function (cmpInstance) {
+            if (!_backDrop.attached)
+            {
+                _backDrop.render().then(function (cmpInstance)
+                {
                     $(_self.ownerDocument.body).append(cmpInstance.$el);
                 });
             }
@@ -259,8 +290,10 @@ var Modal = function (_props) {
         return this;
     };
 
-    this.hide = function () {
-        if (this.$el) {
+    this.hide = function ()
+    {
+        if (this.$el)
+        {
             //this.$el.modal('hide');
             _backDrop.destruct(2);
             delete this.css["display"];
@@ -269,11 +302,14 @@ var Modal = function (_props) {
         return this;
     };
     let _destruct = this.destruct;
-    this.destruct = function (mode = 1) {
-        if (mode == 1) {
+    this.destruct = function (mode = 1)
+    {
+        if (mode == 1)
+        {
             Modal.all.splice(Modal.all.indexOf(this), 1);
         }
-        for (let id in _children) {
+        for (let id in _children)
+        {
             _children[id].destruct(mode);
         }
         _destruct(mode);
@@ -288,6 +324,7 @@ var ModalSize =
     "LARGE": "modal-lg"
 };
 DependencyContainer.getInstance().register("Modal", Modal, DependencyContainer.simpleResolve);
-export {
+export
+{
     Modal, ModalSize
 };
