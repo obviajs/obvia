@@ -78,7 +78,7 @@ var Modal = function (_props)
                         props: {
                             id: 'dismissButton',
                             type: "button",
-                            classes: ["btn", "btn-secondary"],
+                            classes: ["btn", "btn-sm", "btn-secondary"],
                             width: '2.5rem',
                             attr: {
                                 "data-dismiss": "modal",
@@ -108,7 +108,7 @@ var Modal = function (_props)
                         props: {
                             id: 'acceptButton',
                             type: "button",
-                            classes: ["btn", "btn-primary"],
+                            classes: ["btn", "btn-sm", "btn-primary"],
                             width: '2.5rem',
                             attr: {
                                 "data-dismiss": "modal",
@@ -220,6 +220,9 @@ var Modal = function (_props)
                                 id: "modalHeader",
                                 type: "",
                                 classes: ["modal-header"],
+                                css: {
+                                    'align-items': 'baseline'
+                                },
                                 components: _props.components.modalHeader
                             }
                         },
