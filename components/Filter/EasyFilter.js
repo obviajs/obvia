@@ -651,12 +651,12 @@ var EasyFilter = function (_props)
             {
                 ctor: Container,
                 props: {
+                    type: "",
                     css: {
-                        "width": "auto",
                         "display": "flex",
-                        "flex-direction": "column",
-                        "justify-content": "space-around",
-                        "padding": "2px"
+                        "margin-top": "auto",
+                        'margin-right': '.25rem',
+                        'gap': '.15rem'
                     },
                     components: [
                         {
@@ -666,7 +666,8 @@ var EasyFilter = function (_props)
                                 classes: ["filter", "apply-easy"],
                                 click: _filter,
                                 css: {
-                                    "height": '49%'
+                                    "height": '1.75rem',
+                                    "width": '1.75rem'
                                 },
                                 components: [
                                     {
@@ -692,7 +693,8 @@ var EasyFilter = function (_props)
                                 id: 'clearFilters',
                                 classes: ["filter", "apply-easy"],
                                 css: {
-                                    "height": "49%"
+                                    "height": "1.75rem",
+                                    "width": '1.75rem'
                                 },
                                 click: _self.clear,
                                 components: [
@@ -704,8 +706,10 @@ var EasyFilter = function (_props)
                                             label: "",
                                             classes: ["fa", "fa-eraser"],
                                             css: {
-                                                "text-decoration": "none"
-                                            }
+                                                "text-decoration": "none",
+                                                "display": "flex",
+                                                "align-items": "center"
+                                            },
                                         }
                                     }
                                 ]
@@ -731,6 +735,7 @@ var EasyFilter = function (_props)
             let valueProp = filter.valueProp;
             filter[valueProp] = null;
         });
+        _filter(e);
     };
 
     let _filter = function (e)
