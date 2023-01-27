@@ -656,7 +656,8 @@ var EasyFilter = function (_props)
                         "display": "flex",
                         "margin-top": "auto",
                         'margin-right': '.25rem',
-                        'gap': '.15rem'
+                        'gap': '.15rem',
+                        'padding': '7px'
                     },
                     components: [
                         {
@@ -666,7 +667,7 @@ var EasyFilter = function (_props)
                                 classes: ["filter", "apply-easy"],
                                 click: _filter,
                                 css: {
-                                    "height": '1.75rem',
+                                    "height": '1.5rem',
                                     "width": '1.75rem'
                                 },
                                 components: [
@@ -693,7 +694,7 @@ var EasyFilter = function (_props)
                                 id: 'clearFilters',
                                 classes: ["filter", "apply-easy"],
                                 css: {
-                                    "height": "1.75rem",
+                                    "height": "1.5rem",
                                     "width": '1.75rem'
                                 },
                                 click: _self.clear,
