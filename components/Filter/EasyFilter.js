@@ -668,7 +668,10 @@ var EasyFilter = function (_props)
                                 click: _filter,
                                 css: {
                                     "height": '1.5rem',
-                                    "width": '1.75rem'
+                                    "width": '2rem',
+                                    "display": "flex",
+                                    "align-items": "center",
+                                    "justify-content": "center"
                                 },
                                 components: [
                                     {
@@ -679,9 +682,7 @@ var EasyFilter = function (_props)
                                             label: "",
                                             classes: ["fas", "fa-check"],
                                             css: {
-                                                "text-decoration": "none",
-                                                "display": "flex",
-                                                "align-items": "center"
+                                                "text-decoration": "none"
                                             }
                                         }
                                     }
@@ -695,7 +696,10 @@ var EasyFilter = function (_props)
                                 classes: ["filter", "apply-easy"],
                                 css: {
                                     "height": "1.5rem",
-                                    "width": '1.75rem'
+                                    "width": '2rem',
+                                    "display": "flex",
+                                    "align-items": "center",
+                                    "justify-content": "center"
                                 },
                                 click: _self.clear,
                                 components: [
@@ -707,9 +711,7 @@ var EasyFilter = function (_props)
                                             label: "",
                                             classes: ["fa", "fa-eraser"],
                                             css: {
-                                                "text-decoration": "none",
-                                                "display": "flex",
-                                                "align-items": "center"
+                                                "text-decoration": "none"
                                             },
                                         }
                                     }
