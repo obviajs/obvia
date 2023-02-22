@@ -741,7 +741,7 @@ var EasyFilter = function (_props)
         _filter(e);
     };
 
-    let _filter = function (e)
+    let _filter = async function (e)
     {
         ValidationManager.getInstance().reset(_self.validationGroupUID);
         let updatedRules;
@@ -753,16 +753,18 @@ var EasyFilter = function (_props)
                 break;
             }
         }
-        _self.validate().then((valid) =>
+
+        /* called from clear button, no need to validate filters*/
+        if (!e.originalContext.id.startsWith('clearFilters'))
         {
-            if (valid)
-            {
-                let evt = jQuery.Event("filter");
-                evt.rules = ObjectUtils.deepCopy(updatedRules);
-                evt.originalEvent = e;
-                _self.trigger(evt);
-            }
-        });
+            const valid = await _self.validate();
+            if (valid == false) return;
+        }
+
+        let evt = jQuery.Event("filter");
+        evt.rules = ObjectUtils.deepCopy(updatedRules);
+        evt.originalEvent = e;
+        _self.trigger(evt);
     };
 
     let _getFieldInfoByOrdinal = function (ordinal)
