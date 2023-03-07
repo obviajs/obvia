@@ -256,7 +256,10 @@ var UploadEx = function (_props)
                         props: {
                             id: "fileName",
                             label: "No file selected.",
-                            width: "100%"
+                            width: "100%",
+                            css: {
+                                "margin-top": "3px"
+                            }
                         }
                     },
                     {
