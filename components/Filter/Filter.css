@@ -96,3 +96,8 @@
     flex-wrap: wrap;
     flex-flow: row wrap;
 }
+
+.filter .repeater-easy .filter {
+    flex-basis: 0;
+    margin-top: .25rem;
+}

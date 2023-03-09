@@ -348,6 +348,7 @@ var EasyFilter = function (_props)
             if (!filterItemEditor.props.css)
                 filterItemEditor.props.css = {};
             filterItemEditor.props.css["font-size"] = "14px";
+            filterItemEditor.props.css["width"] = "12rem";
             filterItemEditor = {
                 "ctor": "Container",
                 "props": {
@@ -532,14 +533,13 @@ var EasyFilter = function (_props)
                         wrap: false,
                     },
                     width: "100%",
-                    classes: ["filter", "repeater-easy", "mb-1", "mt-1"],
+                    classes: ["filter", "repeater-easy", "mb-2"],
                     components: [
                         {
                             ctor: Container,
                             props: {
                                 id: 'repeater_container',
                                 classes: ["filter"],
-                                css: { "flex-basis": 0 },
                                 type: "",
                                 components: [
                                     {
@@ -621,7 +621,7 @@ var EasyFilter = function (_props)
                                             classes: ["form-row-easy", "col"],
                                             type: "",
                                             css: {
-                                                "width": "200px"
+                                                // "width": "200px"
                                             },
                                             "bindingDefaultContext": "{currentItem}",
                                             "beforeAttach": _editFilter,
@@ -635,7 +635,8 @@ var EasyFilter = function (_props)
                                         }
                                     }]
                             }
-                        }]
+                        }
+                    ]
                 }
             },
             {
