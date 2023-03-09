@@ -75,7 +75,8 @@ var AutoBrowse = function (_props)
 		},
 		set: function value(v)
 		{
-			_autocomplete.value = v;
+			if (!v)
+				_autocomplete.value = new ArrayEx();
 		},
 		enumerable: true,
 	});
@@ -120,7 +121,7 @@ var AutoBrowse = function (_props)
 					{
 						this.refreshSuggestions();
 					},
-					multiSelect: false,
+					multiSelect: _props.multiSelect,
 					maxSuggestionsCount: _maxSuggestionsCount,
 					placeholder: _props.placeholder,
 					matchType: StringMatchType.CONTAINS,
@@ -140,7 +141,7 @@ var AutoBrowse = function (_props)
 								type: "button",
 								css: {
 									"border-radius": "3px",
-									"border-color": "#666666"
+									"border-color": "#666667"
 								},
 								components: [
 									{
@@ -166,6 +167,18 @@ var AutoBrowse = function (_props)
 					title: _props.title,
 					components: [
 						{
+							ctor: Label,
+							props: {
+								id: "infoLabel",
+								label: `Select${_multiSelect ? `at least` : ` `}an item from the table!`,
+								css: {
+									"color": "red",
+									"margin-bottom": ".5rem"
+								},
+								display: false
+							}
+						},
+						{
 							ctor: DataGrid,
 							props: {
 								id: "dataGrid_" + _dgUID,
@@ -173,10 +186,18 @@ var AutoBrowse = function (_props)
 								rowCount: 5, //visible rows count - virtual scrolling wil be applied on scroll
 								dataProvider: _dataProvider,
 								columns: _columns,
+								multiSelect: _props.multiSelect,
 								rowDblClick: _selectItem.bind(_self),
 							}
 						}
 					],
+					accept: function (e)
+					{
+						const items = this.modalDialog.modalContent.modalBody["dataGrid_" + _dgUID].selectedItems;
+						if (items.length == 0) return this.modalDialog.modalContent.modalBody['infoLabel'].display = true;
+
+						_selectItem(e, null, items);
+					},
 					displayListUpdated: _drawGrid,
 				}
 			}
@@ -190,6 +211,7 @@ var AutoBrowse = function (_props)
 
 	let _browse = function (e)
 	{
+		_modal.modalDialog.modalContent.modalBody['infoLabel'].display = false;
 		_autocomplete.closeSuggestionsList();
 		let evt = jQuery.Event("browse");
 		_self.trigger(evt);
@@ -198,10 +220,15 @@ var AutoBrowse = function (_props)
 			_modal.show();
 		}
 	};
-	let _selectItem = function (e, odg, ra)
+	let _selectItem = function (e, odg, items)
 	{
-		_autocomplete.value = ra.currentItem;
 		_modal.hide();
+		if (!_multiSelect) return _autocomplete.value = items.currentItem || items[0];
+
+		for (let i = 0; i < items.length; i++)
+		{
+			_autocomplete.value.push(items[i]);
+		}
 	};
 
 	let _initColumns = function ()
@@ -232,6 +259,7 @@ var AutoBrowse = function (_props)
 		components: [],
 		dataProvider: new ArrayEx(),
 		maxSuggestionsCount: 10,
+		multiSelect: false,
 		fields: [],
 		attr: {
 			"data-triggers": "browse",
@@ -280,12 +308,25 @@ var AutoBrowse = function (_props)
 	_valueField = _props.valueField;
 	_labelField = _props.labelField;
 	_value = _props.value;
+	let _multiSelect = _props.multiSelect;
 	_fields = _props.fields;
 	_initColumns();
 	fnContainerDelayInit();
 	_props.components = _cmps;
 
 	let r = Container.call(this, _props, true);
+
+	Object.defineProperty(this, "multiSelect", {
+		get: function multiSelect()
+		{
+			return _multiSelect;
+		},
+		set: function multiSelect(v)
+		{
+			if (_multiSelect != v) _multiSelect = v;
+		},
+		enumerable: true,
+	});
 
 	Object.defineProperty(this, "enabled", {
 		get: function enabled()

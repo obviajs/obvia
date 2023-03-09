@@ -176,7 +176,7 @@ var AutoCompleteEx = function (_props)
 					? 2 /*border*/ + 2 /*margin*/
 					: 2 /*border of main container*/;
 				_input.$el.css({
-					width: "calc(100% - " + tokenWidth + "px)",
+					// width: "calc(100% - " + tokenWidth + "px)",
 				});
 			}
 		}
@@ -706,7 +706,8 @@ var AutoCompleteEx = function (_props)
 							css: {
 								outline: "none",
 								"font-size": "14px",
-								height: 'inherit'
+								height: 'inherit',
+								width: "100%"
 							}
 						}
 					}
