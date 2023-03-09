@@ -186,7 +186,7 @@ var AutoBrowse = function (_props)
 								rowCount: 5, //visible rows count - virtual scrolling wil be applied on scroll
 								dataProvider: _dataProvider,
 								columns: _columns,
-								multiSelect: _props.multiSelect,
+								multiSelect: _multiSelect,
 								rowDblClick: _selectItem.bind(_self),
 							}
 						}
@@ -323,7 +323,12 @@ var AutoBrowse = function (_props)
 		},
 		set: function multiSelect(v)
 		{
-			if (_multiSelect != v) _multiSelect = v;
+			if (_multiSelect != v)
+			{
+				_multiSelect = v;
+				_autocomplete.multiSelect = _multiSelect;
+				_dg.multiSelect = _multiSelect;
+			};
 		},
 		enumerable: true,
 	});
