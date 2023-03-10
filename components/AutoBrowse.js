@@ -75,8 +75,7 @@ var AutoBrowse = function (_props)
 		},
 		set: function value(v)
 		{
-			if (!v)
-				_autocomplete.value = new ArrayEx();
+			_autocomplete.value = v;
 		},
 		enumerable: true,
 	});
@@ -121,11 +120,11 @@ var AutoBrowse = function (_props)
 					{
 						this.refreshSuggestions();
 					},
-					multiSelect: _props.multiSelect,
+					multiSelect: _multiSelect,
 					maxSuggestionsCount: _maxSuggestionsCount,
 					placeholder: _props.placeholder,
 					matchType: StringMatchType.CONTAINS,
-					css: { "flex-grow": "1", width: "80%" },
+					css: { "flex-grow": "1", width: "80%" }
 				},
 			},
 			{
@@ -265,7 +264,7 @@ var AutoBrowse = function (_props)
 			"data-triggers": "browse",
 		},
 		value: new ArrayEx([]),
-		classes: ["d-inline-flex"],
+		classes: ["d-inline-flex", "align-items-center"],
 		valueField: "",
 		allowNewItem: false,
 		title: "Select an Item"
@@ -315,23 +314,6 @@ var AutoBrowse = function (_props)
 	_props.components = _cmps;
 
 	let r = Container.call(this, _props, true);
-
-	Object.defineProperty(this, "multiSelect", {
-		get: function multiSelect()
-		{
-			return _multiSelect;
-		},
-		set: function multiSelect(v)
-		{
-			if (_multiSelect != v)
-			{
-				_multiSelect = v;
-				_autocomplete.multiSelect = _multiSelect;
-				_dg.multiSelect = _multiSelect;
-			};
-		},
-		enumerable: true,
-	});
 
 	Object.defineProperty(this, "enabled", {
 		get: function enabled()
