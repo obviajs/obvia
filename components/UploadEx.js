@@ -258,7 +258,7 @@ var UploadEx = function (_props)
                             label: "No file selected.",
                             width: "100%",
                             css: {
-                                "margin-top": "3px"
+                                overflow: "hidden"
                             }
                         }
                     },
