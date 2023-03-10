@@ -248,27 +248,6 @@ var EasyFilter = function (_props)
         _updateTokens();
     };
 
-    let _removeFilterItem = function (e, ra)
-    {
-        const repeated_block = e.target.parentElement.parentElement;
-        let validator = this.parentRepeater.find("valueValidator");
-        if (validator)
-        {
-            ValidationManager.getInstance().remove(validator);
-        } else
-        {
-            let v1 = this.parentRepeater.find("maxValueValidator");
-            if (v1)
-            {
-                let v2 = this.parentRepeater.find("minValueValidator");
-                ValidationManager.getInstance().remove(v1);
-                ValidationManager.getInstance().remove(v2);
-            }
-        }
-        repDp.splice(ra.currentIndex, 1)
-        _update();
-    };
-
     let _editFilter = async function (e, ra)
     {
         let filterItemEditor = ra.currentItem[_itemEditorField];
@@ -478,19 +457,19 @@ var EasyFilter = function (_props)
 
     let _filerValueChange = function (e, ra)
     {
-        _self.validate().then((valid) =>
-        {
-            if (valid)
-            {
-                let ret = _getValue(ra);
-                ra.currentItem.value = ret.value;
-                let operator = ra.currentItem.operatorItem;
-                let label = operator.friendly.formatUnicorn(ret.label);
-                //ra.currentRow.repeater_container.filterItemHeading.label = label;
-                ra.currentItem.filterHeading = label;
-                _update();
-            }
-        });
+        // _self.validate().then((valid) =>
+        // {
+        //     if (valid)
+        //     {
+        let ret = _getValue(ra);
+        ra.currentItem.value = ret.value;
+        let operator = ra.currentItem.operatorItem;
+        let label = operator.friendly.formatUnicorn(ret.label);
+        //ra.currentRow.repeater_container.filterItemHeading.label = label;
+        ra.currentItem.filterHeading = label;
+        _update();
+        //     }
+        // });
     };
 
     let _operatorChange = function (e, ra)
