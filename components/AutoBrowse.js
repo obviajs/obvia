@@ -224,10 +224,12 @@ var AutoBrowse = function (_props)
 		_modal.hide();
 		if (!_multiSelect) return _autocomplete.value = items.currentItem || items[0];
 
+		const newValue = [];
 		for (let i = 0; i < items.length; i++)
 		{
-			_autocomplete.value.push(items[i]);
+			newValue.push(items[i]);
 		}
+		_autocomplete.value = newValue;
 	};
 
 	let _initColumns = function ()
