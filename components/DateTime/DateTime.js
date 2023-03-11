@@ -36,11 +36,12 @@ var DateTime = function (_props)
             {
                 _dateTimeInput.attr['date'] = "Choose Date";
                 _self.children.dateTimeInput.$el[0].setAttribute("aria-invalid", "false");
-                _dateTimeInput.value = "";
+                _dateTimeInput.value = null;
                 _textInput.visible = false;
                 _textInput.value = _displayFormat;
             }
             _myw.propertyChanged("value", oldValue, value);
+            this.trigger('change');
         },
         enumerable: true
     });
