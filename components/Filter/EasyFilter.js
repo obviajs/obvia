@@ -380,8 +380,8 @@ var EasyFilter = function (_props)
         {
             if (isRangeInput)
             {
-                filterItemEditor.colMin.minInput.on("change", _filerValueChange);
-                filterItemEditor.colMax.maxInput.on("change", _filerValueChange);
+                filterItemEditor.colMin.minInput.on("change", _filterValueChange);
+                filterItemEditor.colMax.maxInput.on("change", _filterValueChange);
                 if (ra.currentItem.value)
                 {
                     if (filterItemEditor.colMin.minInput.valueProp)
@@ -396,7 +396,7 @@ var EasyFilter = function (_props)
                 }
             } else
             {
-                filterItemEditor.valueInput.on("change", _filerValueChange);
+                filterItemEditor.valueInput.on("change", _filterValueChange);
                 if (ra.currentItem.value)
                 {
                     if (filterItemEditor.valueInput.valueProp)
@@ -455,7 +455,7 @@ var EasyFilter = function (_props)
         return ret;
     };
 
-    let _filerValueChange = function (e, ra)
+    let _filterValueChange = function (e, ra)
     {
         // _self.validate().then((valid) =>
         // {
@@ -608,7 +608,7 @@ var EasyFilter = function (_props)
                                             keyup: function (e)
                                             {
                                                 if (e.keyCode == 13)
-                                                    _filter();
+                                                    _filter(e);
                                             },
                                             components: []
                                         }
