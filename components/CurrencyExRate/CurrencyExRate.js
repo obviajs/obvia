@@ -12,7 +12,7 @@ import { DependencyContainer } from "/obvia/lib/DependencyContainer.js";
 
 var CurrencyExRate = function (_props)
 {
-	let _self = this;
+	let _self = this, _value = {};
 
 	Object.defineProperty(this, "value", {
 		get: function value()
@@ -27,8 +27,7 @@ var CurrencyExRate = function (_props)
 				_value.currency = v.currency;
 
 				this.children.exchangeRate.value = v.exRate;
-				this.children.currencySelect.selectedItem.currency_id =
-					v.currency;
+				this.children.currencySelect.selectedItem = v.currency;
 			}
 		},
 		enumerable: true,
@@ -37,7 +36,7 @@ var CurrencyExRate = function (_props)
 	this.changeHandler = function (e)
 	{
 		_value.exRate = this.children.exchangeRate.value;
-		_value.currency = this.children.currencySelect.selectedItem?.currency_id;
+		_value.currency = this.children.currencySelect.selectedItem?.[_valueField];
 	};
 	this.afterAttach = function (e)
 	{
@@ -60,8 +59,8 @@ var CurrencyExRate = function (_props)
 					label: _value.currency,
 					css: {
 						float: "left",
-					},
-				},
+					}
+				}
 			},
 			{
 				ctor: TextInput,
@@ -88,7 +87,6 @@ var CurrencyExRate = function (_props)
 	ObjectUtils.fromDefault(_defaultParams, _props);
 	//_props = ObjectUtils.extend(false, false, _defaultParams, _props);
 
-	let _value = _props.value;
 	let _currencyList = _props.currencyList;
 	let _labelField = _props.labelField;
 	let _valueField = _props.valueField;
