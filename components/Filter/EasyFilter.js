@@ -396,6 +396,7 @@ var EasyFilter = function (_props)
                 }
             } else
             {
+                filterItemEditor.valueInput.ctor == ''
                 filterItemEditor.valueInput.on("change", _filterValueChange);
                 if (ra.currentItem.value)
                 {
@@ -457,10 +458,6 @@ var EasyFilter = function (_props)
 
     let _filterValueChange = function (e, ra)
     {
-        // _self.validate().then((valid) =>
-        // {
-        //     if (valid)
-        //     {
         let ret = _getValue(ra);
         ra.currentItem.value = ret.value;
         let operator = ra.currentItem.operatorItem;
@@ -468,8 +465,6 @@ var EasyFilter = function (_props)
         //ra.currentRow.repeater_container.filterItemHeading.label = label;
         ra.currentItem.filterHeading = label;
         _update();
-        //     }
-        // });
     };
 
     let _operatorChange = function (e, ra)
@@ -724,14 +719,9 @@ var EasyFilter = function (_props)
     let _filter = async function (e)
     {
         ValidationManager.getInstance().reset(_self.validationGroupUID);
-        let updatedRules;
         for (let i = 0; i < _self.rules.rules.length; i++)
         {
-            if (_self.rules.rules[i].value)
-            {
-                updatedRules = _self.rules;
-                break;
-            }
+            _filterValueChange(e, _self.children.repeater.dataProvider[i]);
         }
 
         /* called from clear button, no need to validate filters*/
@@ -742,7 +732,7 @@ var EasyFilter = function (_props)
         }
 
         let evt = jQuery.Event("filter");
-        evt.rules = ObjectUtils.deepCopy(updatedRules);
+        evt.rules = ObjectUtils.deepCopy(_self.rules);
         evt.originalEvent = e;
         _self.trigger(evt);
     };
