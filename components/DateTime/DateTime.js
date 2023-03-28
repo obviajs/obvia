@@ -41,7 +41,7 @@ var DateTime = function (_props)
                 _textInput.value = _displayFormat;
             }
             _myw.propertyChanged("value", oldValue, value);
-            this.trigger('change');
+            // this.trigger('change');
         },
         enumerable: true
     });
