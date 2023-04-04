@@ -89,6 +89,8 @@ var UploadEx = function (_props)
                 {
                     let clit = ObjectUtils.deepCopy(alit);
                     clit.props.label = files[i].name;
+                    clit.props.attr = {};
+                    clit.props.attr['title'] = files[i].name;
                     clit.props.href = files[i].url || _downloadUrl;
                     acmps.push(clit);
                     acmps.push(lit);
@@ -258,7 +260,11 @@ var UploadEx = function (_props)
                             label: "No file selected.",
                             width: "100%",
                             css: {
-                                overflow: "hidden"
+                                "word-break": "break-all",
+                                "display": "flex",
+                                "height": "1rem",
+                                "overflow": "hidden",
+                                "width": "100%"
                             }
                         }
                     },
