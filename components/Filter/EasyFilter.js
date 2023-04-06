@@ -805,8 +805,9 @@ var EasyFilter = function (_props)
         } else if (crules && crules.field != null)
         {
             let obj = {};
-            // let ind = ArrayUtils.indexOfObject(_dataProvider, "field", crules.field, 0); ↓↓ solution below for filters that modify the same field but have no alias ↓↓
-            let ind = [..._dataProvider].findIndex(rule => crules.field == rule.field && crules.alias == (crules.alias ? rule.alias : crules.alias));
+            // let ind = ArrayUtils.indexOfObject(_dataProvider, "field", crules.field, 0);
+            // let ind = [..._dataProvider].findIndex(rule => crules.field == rule.field && (rule.alias ? rule.alias == crules.alias : true));
+            let ind = i - 1;
             obj[_labelField] = _dataProvider[ind][_labelField];
             obj[_valueField] = _dataProvider[ind][_valueField];
             obj[_itemEditorField] = _dataProvider[ind][_itemEditorField];
