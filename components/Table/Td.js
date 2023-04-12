@@ -1,28 +1,34 @@
 /**
  * This is a Td Element
  * 
- * Kreatx 2020
+ * 
  */
 
 //component definition
 import { TCell } from "/obvia/components/Table/TCell.js";
 import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
 
-var Td = function (_props) {
-   
+var Td = function (_props)
+{
+
     let _beforeAttach = this.beforeAttach;
-    this.beforeAttach = function (e) {
-        if (e.target.id == this.domID) {
+    this.beforeAttach = function (e)
+    {
+        if (e.target.id == this.domID)
+        {
             if (typeof _beforeAttach == 'function')
                 _beforeAttach.apply(this, arguments);
         }
     };
 
-    this.afterAttach = function (e) {
-        if (e.target.id == this.domID) {
+    this.afterAttach = function (e)
+    {
+        if (e.target.id == this.domID)
+        {
         }
     };
-    this.template = function () {
+    this.template = function ()
+    {
         return "<td id='" + this.domID + "'></td>";
     };
 
@@ -35,6 +41,7 @@ var Td = function (_props) {
     return r;
 };
 Td.prototype.ctor = 'Td';
-export {
+export
+{
     Td
 };

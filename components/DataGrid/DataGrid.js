@@ -1,7 +1,7 @@
 /**
  * This is a DataGrid component
  * 
- * Kreatx 2018
+ * 
  */
 
 //component definition

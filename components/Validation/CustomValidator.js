@@ -1,31 +1,39 @@
 /**
  * This is a CustomValidator Element
  * 
- * Kreatx 2020
+ * 
  */
 import { Validator } from "/obvia/components/Validation/Validator.js";
 import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
 import { DependencyContainer } from "/obvia/lib/DependencyContainer.js";
 
-var CustomValidator = function (_props) {
+var CustomValidator = function (_props)
+{
     let _self = this,
         _validationFunction;
 
-    this.validate = function () {
+    this.validate = function ()
+    {
         let _controlToValidateInstance = _self.controlToValidateInstance;
         let r = Promise.resolve(_self.isValid);
-        if (_controlToValidateInstance) {
-            if (_self.enabled && _validationFunction !=null) {
-                if (typeof _validationFunction == "function") {
-                    r = _validationFunction.apply(_self).then((v) => {
+        if (_controlToValidateInstance)
+        {
+            if (_self.enabled && _validationFunction != null)
+            {
+                if (typeof _validationFunction == "function")
+                {
+                    r = _validationFunction.apply(_self).then((v) =>
+                    {
                         _self.isValid = v;
                         return v;
                     });
-                } else {
+                } else
+                {
                     _self.isValid = _validationFunction;
                     r = Promise.resolve(_validationFunction);
-                }                
-            } else {
+                }
+            } else
+            {
                 _self.isValid = !_self.enabled;
                 r = Promise.resolve(_self.isValid);
             }
@@ -34,11 +42,14 @@ var CustomValidator = function (_props) {
     };
 
     Object.defineProperty(this, "validationFunction", {
-        get: function validationFunction() {
+        get: function validationFunction()
+        {
             return _validationFunction;
         },
-        set: function validationFunction(v) {
-            if (_validationFunction != v) {
+        set: function validationFunction(v)
+        {
+            if (_validationFunction != v)
+            {
                 _validationFunction = v;
             }
         },
@@ -46,9 +57,12 @@ var CustomValidator = function (_props) {
         configurable: true
     });
 
-    this.beforeAttach = function (e) {
-        if (e.target.id == this.domID) {
-            if (_props.validationFunction && !this.getBindingExpression("validationFunction")) {
+    this.beforeAttach = function (e)
+    {
+        if (e.target.id == this.domID)
+        {
+            if (_props.validationFunction && !this.getBindingExpression("validationFunction"))
+            {
                 _validationFunction = _props.validationFunction;
             }
         }
@@ -69,6 +83,7 @@ var CustomValidator = function (_props) {
 };
 CustomValidator.prototype.ctor = 'CustomValidator';
 DependencyContainer.getInstance().register("CustomValidator", CustomValidator, DependencyContainer.simpleResolve);
-export {
+export
+{
     CustomValidator
 };

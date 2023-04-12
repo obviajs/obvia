@@ -1,23 +1,28 @@
 /**
  * This is a Heading Element
  * 
- * Kreatx 2018
+ * 
  */
 import { Parent } from "/obvia/components/base/Parent.js";
 import { Align } from "/obvia/components/base/Align.js";
 import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
 import { DependencyContainer } from "/obvia/lib/DependencyContainer.js";
-var Heading = function (_props) {
+var Heading = function (_props)
+{
     let _self, _label, _align;
 
     Object.defineProperty(this, "label", {
-        get: function label() {
+        get: function label()
+        {
             return _label;
         },
-        set: function label(v) {
-            if (_label != v) {
+        set: function label(v)
+        {
+            if (_label != v)
+            {
                 _label = v;
-                if (this.$el) {
+                if (this.$el)
+                {
                     v = $(`<div>${v}</div>`).get(0).innerText;
                     let last = this.$el.children().last();
                     if (last && last.length > 0)
@@ -35,11 +40,14 @@ var Heading = function (_props) {
     });
 
     Object.defineProperty(this, "align", {
-        get: function align() {
+        get: function align()
+        {
             return _align;
         },
-        set: function align(v) {
-            if (_align != v) {
+        set: function align(v)
+        {
+            if (_align != v)
+            {
                 _align = v;
                 if (this.$el)
                     this.$el.attr('align', _align);
@@ -49,13 +57,17 @@ var Heading = function (_props) {
     });
 
     Object.defineProperty(this, "headingType", {
-        get: function headingType() {
+        get: function headingType()
+        {
             return _headingType;
         },
-        set: function headingType(v) {
-            if (_headingType != v) {
+        set: function headingType(v)
+        {
+            if (_headingType != v)
+            {
                 _headingType = v;
-                if (this.$el) {
+                if (this.$el)
+                {
                     let newCls = this.$el[0].className;
                     let drag = this.$el[0].draggable;
                     let $newEl = $(this.template());
@@ -71,8 +83,10 @@ var Heading = function (_props) {
         enumerable: true
     });
 
-    this.init = function (e) {
-        if (e.target.id == this.domID) {
+    this.init = function (e)
+    {
+        if (e.target.id == this.domID)
+        {
             if (_props.align != null)
                 this.align = _props.align;
             if (_props.label)
@@ -80,12 +94,15 @@ var Heading = function (_props) {
         }
     };
 
-    this.beforeAttach = function (e) {
-        if (e.target.id == this.domID) {
+    this.beforeAttach = function (e)
+    {
+        if (e.target.id == this.domID)
+        {
         }
     };
 
-    this.template = function () {
+    this.template = function ()
+    {
         return "<" + _headingType + " id='" + this.domID + "'></" + _headingType + ">";
     };
 
@@ -113,6 +130,7 @@ var HeadingType =
     "h6": "h6",
 };
 DependencyContainer.getInstance().register("Heading", Heading, DependencyContainer.simpleResolve);
-export {
+export
+{
     Heading, HeadingType
 };

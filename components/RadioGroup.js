@@ -1,30 +1,36 @@
 /**
  * This is a RadioGroup component
  *
- * Kreatx 2019
+ * 
  */
 import { List } from "/obvia/components/List.js";
 import { RadioButton } from "/obvia/components/RadioButton.js";
 import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
 import { StringUtils, StringMatchType } from "/obvia/lib/StringUtils.js";
 import { DependencyContainer } from "/obvia/lib/DependencyContainer.js";
-var RadioGroup = function (_props) {
+var RadioGroup = function (_props)
+{
     let _self = this,
         _dataProvider;
     let _rgUID = StringUtils.guid();
 
     Object.defineProperty(this, "labelField", {
-        get: function labelField() {
+        get: function labelField()
+        {
             return _labelField;
         },
-        set: function labelField(v) {
-            if (_labelField != v) {
+        set: function labelField(v)
+        {
+            if (_labelField != v)
+            {
                 _labelField = v;
                 this.components = fnContainerDelayInit();
                 this.removeAllRows();
-                if (_dataProvider && _dataProvider.length > 0) {
+                if (_dataProvider && _dataProvider.length > 0)
+                {
                     let dpFields = Object.getOwnPropertyNames(_dataProvider[0]);
-                    if (propDataProvider && dpFields.includes(_labelField) && dpFields.includes(_valueField)) {
+                    if (propDataProvider && dpFields.includes(_labelField) && dpFields.includes(_valueField))
+                    {
                         propDataProvider['set'].call(_self, _dataProvider);
                     }
                 }
@@ -60,24 +66,26 @@ var RadioGroup = function (_props) {
     let _selectedClasses = _props.selectedClasses;
     let _defaultClasses = _props.defaultClasses;
 
-    if (_props.states == null) {
+    if (_props.states == null)
+    {
         _props.states = [{
-                dataProviderField: _classesField,
-                states: {
-                    on: _selectedClasses,
-                    off: _defaultClasses
-                }
-            },
-            {
-                dataProviderField: _checkedField,
-                states: {
-                    on: true,
-                    off: false
-                }
+            dataProviderField: _classesField,
+            states: {
+                on: _selectedClasses,
+                off: _defaultClasses
             }
+        },
+        {
+            dataProviderField: _checkedField,
+            states: {
+                on: true,
+                off: false
+            }
+        }
         ];
     }
-    let fnContainerDelayInit = function () {
+    let fnContainerDelayInit = function ()
+    {
         return [{
             ctor: RadioButton,
             props: {
@@ -96,7 +104,8 @@ var RadioGroup = function (_props) {
 
     let r = List.call(this, _props);
 
-    this.afterAttach = function (e) {
+    this.afterAttach = function (e)
+    {
 
     };
 
@@ -106,37 +115,47 @@ var RadioGroup = function (_props) {
 
     let propDataProvider = Object.getOwnPropertyDescriptor(this, "dataProvider");
     Object.defineProperty(this, "dataProvider", {
-        get: function dataProvider() {
+        get: function dataProvider()
+        {
             return propDataProvider['get'].call(_self);
         },
-        set: function dataProvider(v) {
+        set: function dataProvider(v)
+        {
             _dataProvider = v;
             this.removeAllRows();
 
-            if (v && v.length > 0) {
+            if (v && v.length > 0)
+            {
                 let dpFields = Object.getOwnPropertyNames(v[0]);
-                if (dpFields.includes(_labelField) && dpFields.includes(_valueField)) {
+                if (dpFields.includes(_labelField) && dpFields.includes(_valueField))
+                {
                     propDataProvider['set'].call(_self, _dataProvider);
                 }
-            } else {
+            } else
+            {
                 propDataProvider['set'].call(_self, _dataProvider);
             }
         },
         enumerable: true
     });
-    
+
     Object.defineProperty(this, "valueField", {
-        get: function valueField() {
+        get: function valueField()
+        {
             return _valueField;
         },
-        set: function valueField(v) {
-            if (_valueField != v) {
+        set: function valueField(v)
+        {
+            if (_valueField != v)
+            {
                 _valueField = v;
                 this.components = fnContainerDelayInit();
                 this.removeAllRows();
-                if (_dataProvider && _dataProvider.length > 0) {
+                if (_dataProvider && _dataProvider.length > 0)
+                {
                     let dpFields = Object.getOwnPropertyNames(_dataProvider[0]);
-                    if (propDataProvider && dpFields.includes(_labelField) && dpFields.includes(_valueField)) {
+                    if (propDataProvider && dpFields.includes(_labelField) && dpFields.includes(_valueField))
+                    {
                         propDataProvider['set'].call(_self, _dataProvider);
                     }
                 }
@@ -149,6 +168,7 @@ var RadioGroup = function (_props) {
 };
 DependencyContainer.getInstance().register("RadioGroup", RadioGroup, DependencyContainer.simpleResolve);
 RadioGroup.prototype.ctor = "RadioGroup";
-export {
+export
+{
     RadioGroup
 };

@@ -1,13 +1,14 @@
 /**
  * This is a Code Element
  * 
- * Kreatx 2019
+ * 
  */
 import { Container } from "/obvia/components/Container.js";
 import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
 import { coroutine } from "/obvia/lib/coroutine.js";
 
-var Code = function (_props) {
+var Code = function (_props)
+{
     let _self = this,
         _cmInst, _errors = [],
         _mode, _theme, _content, _readOnly, _nocursor;
@@ -20,8 +21,10 @@ var Code = function (_props) {
         }
     }];
 
-    this.insertTextAtCursor = function (text) {
-        if (_cmInst) {
+    this.insertTextAtCursor = function (text)
+    {
+        if (_cmInst)
+        {
             let doc = _cmInst.getDoc();
             let cursor = doc.getCursor();
             //var line = doc.getLine(cursor.line);
@@ -31,30 +34,37 @@ var Code = function (_props) {
     };
 
     Object.defineProperty(this, "cmInst", {
-        get: function cmInst() {
+        get: function cmInst()
+        {
             return _cmInst;
         },
         enumerable: true
     });
 
     Object.defineProperty(this, "errors", {
-        get: function errors() {
+        get: function errors()
+        {
             return _errors;
         },
         enumerable: true
     });
 
     Object.defineProperty(this, "content", {
-        get: function content() {
-            if (_cmInst) {
+        get: function content()
+        {
+            if (_cmInst)
+            {
                 _content = _cmInst.getValue();
             }
             return _content;
         },
-        set: function content(v) {
-            if (this.content != v) {
+        set: function content(v)
+        {
+            if (this.content != v)
+            {
                 _content = v;
-                if (_cmInst) {
+                if (_cmInst)
+                {
                     _cmInst.setValue(_content);
                 }
             }
@@ -63,16 +73,21 @@ var Code = function (_props) {
     });
 
     Object.defineProperty(this, "readOnly", {
-        get: function readOnly() {
+        get: function readOnly()
+        {
             return _readOnly;
         },
-        set: function readOnly(v) {
-            if (_readOnly != v) {
-                if (_readOnly) {
+        set: function readOnly(v)
+        {
+            if (_readOnly != v)
+            {
+                if (_readOnly)
+                {
                     _nocursor = false;
                 }
                 _readOnly = v;
-                if (_cmInst) {
+                if (_cmInst)
+                {
                     _cmInst.setOption('readOnly', _readOnly);
                 }
             }
@@ -81,13 +96,17 @@ var Code = function (_props) {
     });
 
     Object.defineProperty(this, "nocursor", {
-        get: function nocursor() {
+        get: function nocursor()
+        {
             return _nocursor;
         },
-        set: function nocursor(v) {
-            if (_nocursor != v) {
+        set: function nocursor(v)
+        {
+            if (_nocursor != v)
+            {
                 _nocursor = v;
-                if (_cmInst) {
+                if (_cmInst)
+                {
                     if (_nocursor)
                         _cmInst.setOption('readOnly', 'nocursor');
                     else if (_readOnly)
@@ -99,14 +118,19 @@ var Code = function (_props) {
     });
 
     Object.defineProperty(this, "theme", {
-        get: function theme() {
+        get: function theme()
+        {
             return _theme;
         },
-        set: function theme(v) {
-            if (_theme != v) {
+        set: function theme(v)
+        {
+            if (_theme != v)
+            {
                 _theme = v;
-                if (_cmInst) {
-                    CodeTheme.require(_theme).then(function () {
+                if (_cmInst)
+                {
+                    CodeTheme.require(_theme).then(function ()
+                    {
                         _cmInst.setOption("theme", _theme);
                     });
                 }
@@ -115,8 +139,10 @@ var Code = function (_props) {
         enumerable: true
     });
 
-    this.beforeAttach = function (e) {
-        if (e.target.id == this.domID) {
+    this.beforeAttach = function (e)
+    {
+        if (e.target.id == this.domID)
+        {
             this.$container = this.$el;
             //let arrInst = this.addComponents(_cmps);
 
@@ -125,40 +151,48 @@ var Code = function (_props) {
         }
     }
 
-    this.afterAttach = function (e) {
+    this.afterAttach = function (e)
+    {
         e.preventDefault();
         _codeArea = this.codeArea;
-        coroutine(function* () {
+        coroutine(function* ()
+        {
             yield CodeMode.require(_mode.name);
             yield CodeTheme.require(_theme);
-        }).then(function () {
+        }).then(function ()
+        {
             _cmInst = CodeMirror.fromTextArea(_codeArea.$el[0], _props);
             _cmInst.setValue(_content);
             _cmInst.setSize('100%', '100%');
             _cmInst.on("changes", _changes);
-            _cmInst.on("gutterClick", function (cm, n) {
+            _cmInst.on("gutterClick", function (cm, n)
+            {
                 let info = _cmInst.lineInfo(n);
                 _cmInst.setGutterMarker(n, "breakpoints", info.gutterMarkers ? null : _makeMarker());
             });
         });
     };
 
-    let _changes = function (cm, changes) {
+    let _changes = function (cm, changes)
+    {
         let evt = jQuery.Event("changes");
         evt.changes = changes;
         evt.cmInst = cm;
         _self.trigger(evt);
     }
 
-    let _toggleFullScreen = function () {
+    let _toggleFullScreen = function ()
+    {
         _cmInst.setOption("fullScreen", !_cmInst.getOption("fullScreen"));
     };
 
-    let _exitFullScreen = function () {
+    let _exitFullScreen = function ()
+    {
         if (_cmInst.getOption("fullScreen")) _cmInst.setOption("fullScreen", false);
     };
 
-    let _makeMarker = function () {
+    let _makeMarker = function ()
+    {
         let marker = document.createElement("div");
         marker.style.color = "#822";
         marker.innerHTML = "●";
@@ -181,10 +215,12 @@ var Code = function (_props) {
         autoCloseBrackets: true,
         indentWithTabs: true,
         lint: {
-            "onUpdateLinting": function (_errs) {
+            "onUpdateLinting": function (_errs)
+            {
                 _errors = _errs;
             },
-            "getAnnotations": function (cm, updateLinting, options) {
+            "getAnnotations": function (cm, updateLinting, options)
+            {
                 let errors = CodeMirror.lint.javascript(cm, options);
                 updateLinting(errors);
                 _errors = errors;
@@ -217,6 +253,7 @@ var Code = function (_props) {
     return r;
 };
 Code.prototype.ctor = 'Code';
-export {
+export
+{
     Code
 };

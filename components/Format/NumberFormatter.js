@@ -1,7 +1,7 @@
 /**
  * This is a NumberFormatter Element, the default item renderer for a DataGrid
  * 
- * Kreatx 2021
+ * 
  */
 
 // import { isNumber } from "../../gaia/Code/require/addon/hint/jshint";

@@ -1,20 +1,24 @@
 /**
  * This is an Amount Element
  *
- * Kreatx 2019
+ * 
  */
 import { Container } from "/obvia/components/Container.js";
 import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
 import { DependencyContainer } from "/obvia/lib/DependencyContainer.js";
-var Amount = function (_props) {
+var Amount = function (_props)
+{
     let _self = this;
 
     Object.defineProperty(this, "value", {
-        get: function value() {
+        get: function value()
+        {
             return _value;
         },
-        set: function value(v) {
-            if (JSON.stringify(_value) != JSON.stringify(v)) {
+        set: function value(v)
+        {
+            if (JSON.stringify(_value) != JSON.stringify(v))
+            {
                 _value.amount = v.amount;
                 _value.currency = v.currency;
 
@@ -25,18 +29,22 @@ var Amount = function (_props) {
         enumerable: true,
     });
 
-    this.changeHandler = function (e) {
-        if (_mask.groupSeparator) {
+    this.changeHandler = function (e)
+    {
+        if (_mask.groupSeparator)
+        {
             let regex = new RegExp(_mask.groupSeparator, 'g');
             _value.amount = this.children.amountInput.value.replace(regex, '');
-        } else {
+        } else
+        {
             _value.amount = this.children.amountInput.value;
         }
         _value.currency = this.children.currencySelect.value;
     };
 
     let _cmps;
-    let fnContainerDelayInit = function () {
+    let fnContainerDelayInit = function ()
+    {
         _cmps = [
             {
                 ctor: TextInput,
@@ -64,7 +72,7 @@ var Amount = function (_props) {
                         float: 'left'
                     }
                 }
-            }   
+            }
         ];
     };
 
@@ -96,17 +104,20 @@ var Amount = function (_props) {
     let _labelField = _props.labelField;
     let _valueField = _props.valueField;
     let _mask = _props.mask;
-    if (_mask.groupSeparator == '.') {
+    if (_mask.groupSeparator == '.')
+    {
         _mask.groupSeparator = ',';
     }
     let _change = _props.change;
 
-    _props.change = function () {
+    _props.change = function ()
+    {
         if (typeof _change == 'function')
             _change.apply(this, arguments);
 
         let e = arguments[0];
-        if (!e.isDefaultPrevented()) {
+        if (!e.isDefaultPrevented())
+        {
             _self.changeHandler();
         }
     };
@@ -117,6 +128,7 @@ var Amount = function (_props) {
 };
 DependencyContainer.getInstance().register("Amount", Amount, DependencyContainer.simpleResolve);
 Amount.prototype.ctor = 'Amount';
-export {
+export
+{
     Amount
 };

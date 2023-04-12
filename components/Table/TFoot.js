@@ -1,27 +1,33 @@
 /**
  * This is a TFoot Element
  * 
- * Kreatx 2020
+ * 
  */
 
 import { Parent } from "/obvia/components/base/Parent.js";
 import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
 
-var TFoot = function (_props) {
-   
+var TFoot = function (_props)
+{
+
     let _beforeAttach = this.beforeAttach;
-    this.beforeAttach = function (e) {
-        if (e.target.id == this.domID) {
+    this.beforeAttach = function (e)
+    {
+        if (e.target.id == this.domID)
+        {
             if (typeof _beforeAttach == 'function')
                 _beforeAttach.apply(this, arguments);
         }
     };
 
-    this.afterAttach = function (e) {
-        if (e.target.id == this.domID) {
+    this.afterAttach = function (e)
+    {
+        if (e.target.id == this.domID)
+        {
         }
     };
-    this.template = function () {
+    this.template = function ()
+    {
         return "<tfoot id='" + this.domID + "'></tfoot>";
     };
 
@@ -34,6 +40,7 @@ var TFoot = function (_props) {
     return r;
 };
 TFoot.prototype.ctor = 'TFoot';
-export {
+export
+{
     TFoot
 };

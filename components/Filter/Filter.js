@@ -1,7 +1,7 @@
 /**
  * This is a Filter Component
  *
- * Kreatx 2020
+ * 
  */
 import { Container } from "/obvia/components/Container.js";
 import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";

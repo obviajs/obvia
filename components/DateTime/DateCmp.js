@@ -1,7 +1,7 @@
 /**
  * This is a DateCmp Input Element
  *
- * Kreatx 2019
+ * 
  */
 import { DateTime } from "/obvia/components/DateTime/DateTime.js";
 import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";

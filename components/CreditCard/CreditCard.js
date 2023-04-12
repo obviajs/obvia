@@ -1,13 +1,14 @@
 /**
  * This is a CreditCard Component
  * 
- * Kreatx 2019
+ * 
 */
 import { Container } from "/obvia/components/Container.js";
 import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
 import { CalendarConstants } from "/obvia/components/Calendar/CalendarConstants.js";
 
-var CreditCard = function (_props) {
+var CreditCard = function (_props)
+{
     let _self = this;
     let card_number_error;
     let card_month_expire;
@@ -27,24 +28,30 @@ var CreditCard = function (_props) {
     let _label_error;
     let _dpMonth = CreditCard.dpMonth, _dpYear = CreditCard.dpYear;
 
-    let _initDP = function () {
-        if (!CreditCard.init) {
+    let _initDP = function ()
+    {
+        if (!CreditCard.init)
+        {
             _dpMonth[0] = { "value": "MM", "label": "MM" };
-            for (let i = 1; i < 13; i++) {
+            for (let i = 1; i < 13; i++)
+            {
                 _dpMonth[i] = { "value": i, "label": CalendarConstants.Months[i - 1] };
             }
 
             let thisYear = new Date().getFullYear();
             _dpYear[0] = { "value": "YYYY", "label": "YYYY" };
-            for (let j = 1; j < 100; j++) {
+            for (let j = 1; j < 100; j++)
+            {
                 _dpYear[j] = { "value": thisYear, "label": thisYear };
                 thisYear = thisYear + 1;
             }
         }
     };
-   
-    this.beforeAttach = function (e) {
-        if (e.target.id == this.domID) {
+
+    this.beforeAttach = function (e)
+    {
+        if (e.target.id == this.domID)
+        {
             _cardNumber = this.container.container_2.card_number_value;
             _monthExpire = this.container.container_expire.expire_month_value;
             _yearExpire = this.container.container_expire.expire_year_value;
@@ -57,77 +64,93 @@ var CreditCard = function (_props) {
         }
     };
 
-    let _change = function (e) {
+    let _change = function (e)
+    {
         _label_error.label = " ";
-        if (_fullName.value !== " " && _cardNumber.value !== " " && _monthExpire.value !== null && _yearExpire.value !== null && _cvv.value !== "") {
-        
+        if (_fullName.value !== " " && _cardNumber.value !== " " && _monthExpire.value !== null && _yearExpire.value !== null && _cvv.value !== "")
+        {
+
             _validate_fullName();
             _validate_card_number();
             _validate_card_month();
             _validate_cvv();
-            
-            
+
+
             validationErrors = card_name_error | card_number_error | card_month_expire | card_cvv_error;
-            
-            if (validationErrors == 1) {
+
+            if (validationErrors == 1)
+            {
                 _label_error.visible = true;
-            } else {
+            } else
+            {
                 _label_error.visible = false;
             }
             let classes = _fullName.classes.slice(0);
             let classesCard = _cardNumber.classes.slice(0);
             let classesMonth = _monthExpire.classes.slice(0);
             let classesCvv = _cvv.classes.slice(0);
-            if ((validationErrors & card_name_error > 0)) {
+            if ((validationErrors & card_name_error > 0))
+            {
 
                 classes.pushUnique("fc-label-error");
                 _fullName.classes = classes;
                 _label_error.label = _label_error.label.toString() + "Invalid Name",
                     console.log("Error Name Invalid");
-            } else {
+            } else
+            {
                 let ind = classes.indexOf("fc-label-error");
-                if (ind > -1) {
+                if (ind > -1)
+                {
                     classes.pop("fc-label-error");
                 }
                 _fullName.classes = classes;
             }
-            if (validationErrors & card_number_error > 0) {
+            if (validationErrors & card_number_error > 0)
+            {
 
                 classesCard.pushUnique("fc-label-error");
                 _cardNumber.classes = classesCard;
                 _label_error.label = _label_error.label.toString() + "\n" + "Invalid CardNumber";
                 console.log("Error CardNumber");
-            } else {
+            } else
+            {
                 let ind = classesCard.indexOf("fc-label-error");
-                if (ind > -1) {
+                if (ind > -1)
+                {
                     classesCard.pop("fc-label-error");
                 }
                 _cardNumber.classes = classesCard;
             }
-            if ((validationErrors & card_month_expire > 0)) {
+            if ((validationErrors & card_month_expire > 0))
+            {
 
                 classesMonth.pushUnique("fc-label-error");
                 _monthExpire.classes = classesMonth;
                 _label_error.label = _label_error.label.toString() + "\n" + "Invalid Month",
                     console.log("Error Month Expire ");
-            } else {
+            } else
+            {
                 let ind = classesMonth.indexOf("fc-label-error");
-                if (ind > -1) {
+                if (ind > -1)
+                {
                     classesMonth.pop("fc-label-error");
                 }
                 _monthExpire.classes = classesMonth;
             }
-           
-            if ((validationErrors & card_cvv_error > 0)) {
+
+            if ((validationErrors & card_cvv_error > 0))
+            {
 
                 classesCvv.pushUnique("fc-label-error");
                 _cvv.classes = classesCvv;
                 _label_error.label = _label_error.label.toString() + "\n" + "Invalid CVV",
                     console.log("Error CVV Invalid ");
-            } else {
+            } else
+            {
 
                 let ind = classesCvv.indexOf("fc-label-error");
-                if (ind > -1) {
+                if (ind > -1)
+                {
                     classesCvv.pop("fc-label-error");
                 }
                 _cvv.classes = classesCvv;
@@ -138,17 +161,19 @@ var CreditCard = function (_props) {
         Luhn algorithm
         Takes a credit card string value and returns true on valid number
     */
-    this.valid_credit_card = function (value) {
+    this.valid_credit_card = function (value)
+    {
 
         //only digits,dashes or spaces
         if (/[^0-9-\s]+/.test(value))
             return false;
-        
+
         let nCheck = 0, bEven = false;
         //remove all non Digit charachters
         value = value.replace(/\D/g, "");
 
-        for (let i = value.length - 1; i >= 0; i--) {
+        for (let i = value.length - 1; i >= 0; i--)
+        {
             let cDigit = value.charAt(i);
             let nDigit = parseInt(cDigit, 10);
             if (bEven && (nDigit *= 2) > 9)
@@ -160,31 +185,36 @@ var CreditCard = function (_props) {
         return (nCheck % 10) == 0;
     };
 
-    let _validate_card_number = function () {
-       
+    let _validate_card_number = function ()
+    {
+
         let number = _self.container.container_2.card_number_value.value;
         if ((number && _self.valid_credit_card(number) &&
             number.length == 16 && (number[0] == 4 || number[0] == 5 && number[1] >= 1 && number[1] <= 5) ||
             number.length == 15 && (number.indexOf("34") == 0 || number.indexOf("37") == 0) ||
             number.length == 13 && number[0] == 4
-        ) == false) {
+        ) == false)
+        {
             card_number_error = 1;
         }
-        else {
+        else
+        {
             card_number_error = 0;
         }
         return card_number_error;
     };
 
-   
- 
-    let _validate_card_month = function () {
+
+
+    let _validate_card_month = function ()
+    {
 
         let valueForm = _monthExpire.value;
         let yearValue = _yearExpire.value;
         let resultFlag;
         let expired = false;
-        if (valueForm && yearValue) {
+        if (valueForm && yearValue)
+        {
             let month = parseInt(valueForm, 10);
             let year = parseInt(yearValue, 10);
             let now = new Date();
@@ -193,45 +223,54 @@ var CreditCard = function (_props) {
             expired = (nowYear > year) || ((nowYear == year) && (nowMonth > month));
             resultFlag = (month > 0) && (month < 13);
 
-            if (!resultFlag || expired) {
+            if (!resultFlag || expired)
+            {
                 card_month_expire = 1;
             }
-            else {
+            else
+            {
                 card_month_expire = 0;
             }
             return card_month_expire;
         }
     };
 
- 
-    let _validate_cvv = function () {
+
+    let _validate_cvv = function ()
+    {
         let cvv = _self.container.container_expire.cvv_card.value;
 
-        if (cvv.match(/^\d{3}$/)) {
+        if (cvv.match(/^\d{3}$/))
+        {
             card_cvv_error = 0;
         }
-        else {
+        else
+        {
             card_cvv_error = 1;
         }
         return card_cvv_error;
     };
-    
-    let _validate_fullName = function () {
+
+    let _validate_fullName = function ()
+    {
         let full_name = _fullName.$el[0].value;
         let validate_name = /^[a-zA-Z]+ [a-zA-Z]+$/;
         let isValid = validate_name.test(full_name);
-        
-        if (isValid) {
+
+        if (isValid)
+        {
             card_name_error = 0;
         }
-        else {
+        else
+        {
             card_name_error = 1;
         }
         return card_name_error;
     };
-   
+
     let _creditCardComponent;
-    let fnContaierDelayInit = function () {
+    let fnContaierDelayInit = function ()
+    {
         _creditCardComponent = [{
             ctor: Container,
             props: {
@@ -266,7 +305,7 @@ var CreditCard = function (_props) {
                             spacing: { colSpan: 8 },
                             label: 'Card number',
                             classes: ['text-emphasize'],
-                            
+
                         }
                     },
                     {

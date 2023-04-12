@@ -1,7 +1,7 @@
 /**
  * This is a RangeValidator Element
  * 
- * Kreatx 2020
+ * 
  */
 
 import { Validator } from "/obvia/components/Validation/Validator.js";
@@ -21,7 +21,7 @@ var RangeValidator = function (_props)
         {
             if (!_self.enabled || ((_self.min == null || parseFloat(_controlToValidateInstance.value) >= parseFloat(_self.min)) && (_self.max == null || parseFloat(_controlToValidateInstance.value) <= parseFloat(_self.max))))
             {
-                _self.isValid = true; 
+                _self.isValid = true;
             } else
                 _self.isValid = false;
         }

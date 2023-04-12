@@ -1,20 +1,24 @@
 /**
  * This is a Tab Element
  * 
- * Kreatx 2018
+ * 
  */
 
 import { Container } from "/obvia/components/Container.js";
 import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
 
-var Tab = function (_props) {
+var Tab = function (_props)
+{
 
     Object.defineProperty(this, "label", {
-        get: function label() {
+        get: function label()
+        {
             return _label;
         },
-        set: function label(v) {
-            if (_label != v) {
+        set: function label(v)
+        {
+            if (_label != v)
+            {
                 _label = v;
                 if (this.$anchor)
                     this.$anchor.html(v);
@@ -22,8 +26,10 @@ var Tab = function (_props) {
         }
     });
     let _init = this.init;
-    this.init = function (e) {
-        if (e.target.id == this.domID) {
+    this.init = function (e)
+    {
+        if (e.target.id == this.domID)
+        {
             this.$container = this.$el;
             this.$anchor = $('<a class="nav-link" data-toggle="tab" href="#' + this.domID + '">' + _label + '</a>');
             this.$header = $('<li class="nav-item"></li>');
@@ -33,13 +39,16 @@ var Tab = function (_props) {
                 _init.apply(this, arguments);
         }
     };
-    this.beforeAttach = function (e) {
-        if (e.target.id == this.domID) {
+    this.beforeAttach = function (e)
+    {
+        if (e.target.id == this.domID)
+        {
 
         }
     };
 
-    this.template = function () {
+    this.template = function ()
+    {
         return '<div id="' + this.domID + '" class="tab-pane fade"></div>';
     };
 

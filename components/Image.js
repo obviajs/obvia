@@ -1,18 +1,22 @@
 /**
  * This is an Image Element
  * 
- * Kreatx 2018
+ * 
  */
 import { Component } from "/obvia/components/base/Component.js";
 import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
 import { DependencyContainer } from "/obvia/lib/DependencyContainer.js";
-var Image = function (_props) {
+var Image = function (_props)
+{
     Object.defineProperty(this, "src", {
-        get: function src() {
+        get: function src()
+        {
             return _src;
         },
-        set: function src(v) {
-            if (_src != v) {
+        set: function src(v)
+        {
+            if (_src != v)
+            {
                 _src = v;
                 if (this.$el)
                     this.$el.attr('src', v);
@@ -22,11 +26,14 @@ var Image = function (_props) {
     });
 
     Object.defineProperty(this, "title", {
-        get: function title() {
+        get: function title()
+        {
             return _title;
         },
-        set: function title(v) {
-            if (_title != v) {
+        set: function title(v)
+        {
+            if (_title != v)
+            {
                 _title = v;
                 if (this.$el)
                     this.$el.attr('title', v);
@@ -36,11 +43,14 @@ var Image = function (_props) {
     });
 
     Object.defineProperty(this, "alt", {
-        get: function alt() {
+        get: function alt()
+        {
             return _alt;
         },
-        set: function alt(v) {
-            if (_alt != v) {
+        set: function alt(v)
+        {
+            if (_alt != v)
+            {
                 _alt = v;
                 if (this.$el)
                     this.$el.attr('alt', v);
@@ -50,11 +60,14 @@ var Image = function (_props) {
     });
 
     Object.defineProperty(this, "height", {
-        get: function height() {
+        get: function height()
+        {
             return _height;
         },
-        set: function height(v) {
-            if (_height != v) {
+        set: function height(v)
+        {
+            if (_height != v)
+            {
                 _height = v;
                 if (this.$el)
                     this.$el.attr('height', v);
@@ -64,11 +77,14 @@ var Image = function (_props) {
     });
 
     Object.defineProperty(this, "width", {
-        get: function width() {
+        get: function width()
+        {
             return _width;
         },
-        set: function width(v) {
-            if (_width != v) {
+        set: function width(v)
+        {
+            if (_width != v)
+            {
                 _width = v;
                 if (this.$el)
                     this.$el.attr('width', v);
@@ -77,22 +93,28 @@ var Image = function (_props) {
         enumerable: true
     });
 
-    this.beforeAttach = function () {
-        if (_props.width) {
+    this.beforeAttach = function ()
+    {
+        if (_props.width)
+        {
             this.width = _props.width;
         }
-        if (_props.height) {
+        if (_props.height)
+        {
             this.height = _props.height;
         }
-        if (_props.alt) {
+        if (_props.alt)
+        {
             this.alt = _props.alt;
         }
-        if (_props.title) {
+        if (_props.title)
+        {
             this.title = _props.title;
         }
     }
 
-    this.template = function () {
+    this.template = function ()
+    {
         return '<img id="' + this.domID + '" src="' + this.src + '">';
     };
     let _defaultParams = {
@@ -103,13 +125,16 @@ var Image = function (_props) {
     };
     ObjectUtils.fromDefault(_defaultParams, _props);
     //_props = ObjectUtils.extend(false, false, _defaultParams, _props);
-    if (!_props.attr) {
+    if (!_props.attr)
+    {
         _props.attr = {};
     }
     let myDtEvts = ["load"];
-    if (!ObjectUtils.isEmpty(_props.attr) && _props.attr["data-triggers"] && !ObjectUtils.isEmpty(_props.attr["data-triggers"])) {
+    if (!ObjectUtils.isEmpty(_props.attr) && _props.attr["data-triggers"] && !ObjectUtils.isEmpty(_props.attr["data-triggers"]))
+    {
         let dt = _props.attr["data-triggers"].split(" ");
-        for (let i = 0; i < dt.length; i++) {
+        for (let i = 0; i < dt.length; i++)
+        {
             myDtEvts.pushUnique(dt[i]);
         }
     }
@@ -120,8 +145,10 @@ var Image = function (_props) {
 
     Component.call(this, _props, true);
 
-    this.render = function () {
-        if (this.$el.complete) {
+    this.render = function ()
+    {
+        if (this.$el.complete)
+        {
             this.trigger('load');
         }
         this.trigger('beginDraw');
@@ -131,6 +158,7 @@ var Image = function (_props) {
 };
 Image.prototype.ctor = 'Image';
 DependencyContainer.getInstance().register("Image", Image, DependencyContainer.simpleResolve);
-export {
+export
+{
     Image
 };

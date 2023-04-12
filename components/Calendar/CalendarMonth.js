@@ -1,7 +1,7 @@
 /**
  * This is a Calendar Component
  * 
- * Kreatx 2019
+ * 
  */
 import { CalendarBase } from "/obvia/components/Calendar/CalendarBase.js";
 import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";

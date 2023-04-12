@@ -1,15 +1,17 @@
 /**
  * This is a Loader Element
  *
- * Kreatx 2018
+ * 
  */
 
 // import { Env } from "../lib/Env.js";
 import { Component } from "/obvia/components/base/Component.js";
 import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
 import { DependencyContainer } from "/obvia/lib/DependencyContainer.js";
-var Loader = function (_props) {
-	this.template = function () {
+var Loader = function (_props)
+{
+	this.template = function ()
+	{
 		return `
 		<div class="spinner"  id='` + this.domID + `' >
 		<svg class="svg_spinner">

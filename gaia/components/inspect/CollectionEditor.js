@@ -1,49 +1,60 @@
 /**
  * This is a CollectionEditor Definition Element
  * 
- * Kreatx 2018
+ * 
  */
 
-import {Container} from "/obvia/components/Container.js";
+import { Container } from "/obvia/components/Container.js";
 import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
 
-var CollectionEditor = function (_props) {
+var CollectionEditor = function (_props)
+{
     let _self = this;
     let _instance, _field, _memberType, _repeater, _itemLabel;
 
     Object.defineProperty(this, "dataProvider",
-    {
-        get: function dataProvider() {
-            return _field != null && _field != "" ? _instance[_field] : _instance;
-        },
-        enumerable:true
-    });
+        {
+            get: function dataProvider()
+            {
+                return _field != null && _field != "" ? _instance[_field] : _instance;
+            },
+            enumerable: true
+        });
 
-    this.initMembers = function () {
+    this.initMembers = function ()
+    {
         let c = _field != null && _field != "" ? _instance[_field] : _instance;
-        if (c == null || c.length == 0) {
+        if (c == null || c.length == 0)
+        {
             let obj = (new window[_memberType]());
             //let defaultObj = obj.props;
             //defaultObj.ctor = obj.ctor;
             c.splicea(0, 0, [obj]);
         }
     };
-    this.beginDraw = function (e) {
-        
+    this.beginDraw = function (e)
+    {
+
     };
-    this.endDraw = function (e) {
-        if (e.target.id == this.domID) {
+    this.endDraw = function (e)
+    {
+        if (e.target.id == this.domID)
+        {
             _repeater = this.repeater;
         }
     };
-    let _rowAdd = function (e, r, ra) {
-        if (e.target.id == this.children.internalRepeater.domID) {
+    let _rowAdd = function (e, r, ra)
+    {
+        if (e.target.id == this.children.internalRepeater.domID)
+        {
             console.log("rowAdd", e);
-            for (let p in ra.currentRow) {
+            for (let p in ra.currentRow)
+            {
                 ra.currentRow[p].scrollTo();
                 break;
             }
-            for (let i = 0; i < this.children.internalRepeater.itemLabel.length; i++) {
+            for (let i = 0; i < this.children.internalRepeater.itemLabel.length; i++)
+            {
                 this.children.internalRepeater.itemLabel[i].attr["data-toggle"] = "collapse";
                 this.children.internalRepeater.itemLabel[i].attr["data-target"] = "#" + this.children.internalRepeater.objectEditor[i].domID;
             }
@@ -51,13 +62,16 @@ var CollectionEditor = function (_props) {
         }
     };
 
-    this.beforeAttach = function (e) {
-        if (e.target.id == this.domID) {
+    this.beforeAttach = function (e)
+    {
+        if (e.target.id == this.domID)
+        {
             e.preventDefault();
         }
     };
     let _cmps;
-    let fnContainerDelayInit = function () {
+    let fnContainerDelayInit = function ()
+    {
         _cmps =
             [
                 {
@@ -76,7 +90,7 @@ var CollectionEditor = function (_props) {
                                 props: {
                                     id: "itemLabel",
                                     label: "Edit Item",
-                                    attr: {"data-toggle" : "collapse"}
+                                    attr: { "data-toggle": "collapse" }
                                 }
                             },
                             {
@@ -98,14 +112,15 @@ var CollectionEditor = function (_props) {
     let _defaultParams = {
         type: ContainerType.NONE,
         "components": [],
-        memberType:""
+        memberType: ""
     };
-    
+
     if (_props.memberType)
     {
         _memberType = _props.memberType;
     }
-    if(_props.instance){
+    if (_props.instance)
+    {
         _field = _props.field;
         _instance = _props.instance;
         this.initMembers();
@@ -117,6 +132,7 @@ var CollectionEditor = function (_props) {
     return r;
 };
 CollectionEditor.prototype.ctor = 'CollectionEditor';
-export {
-    CollectionEditor  
+export
+{
+    CollectionEditor
 };

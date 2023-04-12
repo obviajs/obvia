@@ -1,12 +1,13 @@
 /**
  * This is a HierarchialTree  Element
  *
- * Kreatx 2019
+ * 
  */
 
 import { Tree } from "/obvia/components/Tree/Tree.js";
 import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
-var HierarchialTree = function (_props) {
+var HierarchialTree = function (_props)
+{
     let _self = this;
 
 
@@ -29,6 +30,7 @@ var HierarchialTree = function (_props) {
     return r;
 }
 HierarchialTree.prototype.ctor = "HierarchialTree";
-export {
+export
+{
     HierarchialTree
 };

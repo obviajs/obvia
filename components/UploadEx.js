@@ -1,7 +1,7 @@
 /**
  * This is an UploadEx Element
  *
- * Kreatx 2019
+ * 
  */
 
 import { Container } from "/obvia/components/Container.js";

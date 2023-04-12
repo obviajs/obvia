@@ -1,7 +1,7 @@
 /**
  * This is an AutoBrowse Element
  *
- * Kreatx 2019
+ * 
  */
 
 import { Container } from "/obvia/components/Container.js";

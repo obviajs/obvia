@@ -1,7 +1,7 @@
 /**
  * This is a Text Input Element
  *
- * Kreatx 2019
+ * 
  */
 
 import { Parent } from "/obvia/components/base/Parent.js";

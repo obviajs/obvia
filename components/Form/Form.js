@@ -1,7 +1,7 @@
 /**
  * This is a Form component
  * 
- * Kreatx 2018
+ * 
  */
 import { HttpClient } from "/obvia/lib/http/HttpClient.js";
 import { Container } from "/obvia/components/Container.js";

@@ -1,7 +1,7 @@
 /**
  * This is a TokenRenderer Element, the default item renderer for an Autocomplete
  * 
- * Kreatx 2018
+ * 
  */
 
 import { Container } from "/obvia/components/Container.js";

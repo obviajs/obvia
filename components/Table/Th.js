@@ -1,7 +1,7 @@
 /**
  * This is a Th Element
  * 
- * Kreatx 2020
+ * 
  */
 
 //component definition
@@ -9,21 +9,27 @@ import { TCell } from "/obvia/components/Table/TCell.js";
 import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
 import { DependencyContainer } from "/obvia/lib/DependencyContainer.js";
 
-var Th = function (_props) {
-   
+var Th = function (_props)
+{
+
     let _beforeAttach = this.beforeAttach;
-    this.beforeAttach = function (e) {
-        if (e.target.id == this.domID) {
+    this.beforeAttach = function (e)
+    {
+        if (e.target.id == this.domID)
+        {
             if (typeof _beforeAttach == 'function')
                 _beforeAttach.apply(this, arguments);
         }
     };
 
-    this.afterAttach = function (e) {
-        if (e.target.id == this.domID) {
+    this.afterAttach = function (e)
+    {
+        if (e.target.id == this.domID)
+        {
         }
     };
-    this.template = function () {
+    this.template = function ()
+    {
         return "<th id='" + this.domID + "'></th>";
     };
 
@@ -37,6 +43,7 @@ var Th = function (_props) {
 };
 Th.prototype.ctor = 'Th';
 DependencyContainer.getInstance().register("Th", Th, DependencyContainer.simpleResolve);
-export {
+export
+{
     Th
 };

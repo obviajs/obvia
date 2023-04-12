@@ -1,24 +1,29 @@
 /**
  * This is a TCell Element
  * 
- * Kreatx 2020
+ * 
  */
 
-import {Parent} from "/obvia/components/base/Parent.js";
+import { Parent } from "/obvia/components/base/Parent.js";
 import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
 
-var TCell = function (_props) {
-    
+var TCell = function (_props)
+{
+
     let _colspan, _rowspan, _label;
 
     Object.defineProperty(this, "label", {
-        get: function label() {
+        get: function label()
+        {
             return _label;
         },
-        set: function label(v) {
-            if (_label != v) {
+        set: function label(v)
+        {
+            if (_label != v)
+            {
                 _props.label = _label = v;
-                if (this.$el) {
+                if (this.$el)
+                {
                     //convert html entities
                     v = $(`<div>${v}</div>`).get(0).innerText;
                     let last = this.$el.children().last();
@@ -37,80 +42,84 @@ var TCell = function (_props) {
         configurable: true
     });
 
-    Object.defineProperty(this, "colspan", 
-    {
-        get: function colspan() 
+    Object.defineProperty(this, "colspan",
         {
-            return _colspan;
-        },
-        set: function colspan(v) 
-        {
-            if(_colspan != v)
+            get: function colspan() 
             {
-                _colspan = v;
-                if(_colspan)
+                return _colspan;
+            },
+            set: function colspan(v) 
+            {
+                if (_colspan != v)
                 {
-                    if(this.$el)
+                    _colspan = v;
+                    if (_colspan)
                     {
-                        this.$el.attr('colspan', _colspan);
-                    }
-                }else
-                {
-                    if(this.$el)
+                        if (this.$el)
+                        {
+                            this.$el.attr('colspan', _colspan);
+                        }
+                    } else
                     {
-                        this.$el.removeAttr('colspan');
+                        if (this.$el)
+                        {
+                            this.$el.removeAttr('colspan');
+                        }
                     }
-                }                    
-            }
-        },
-        enumerable:true
-    });
+                }
+            },
+            enumerable: true
+        });
 
-    Object.defineProperty(this, "rowspan", 
-    {
-        get: function rowspan() 
+    Object.defineProperty(this, "rowspan",
         {
-            return _rowspan;
-        },
-        set: function rowspan(v) 
-        {
-            if(_rowspan != v)
+            get: function rowspan() 
             {
-                _rowspan = v;
-                if(_rowspan)
+                return _rowspan;
+            },
+            set: function rowspan(v) 
+            {
+                if (_rowspan != v)
                 {
-                    if(this.$el)
+                    _rowspan = v;
+                    if (_rowspan)
                     {
-                        this.$el.attr('rowspan', _rowspan);
-                    }
-                }else
-                {
-                    if(this.$el)
+                        if (this.$el)
+                        {
+                            this.$el.attr('rowspan', _rowspan);
+                        }
+                    } else
                     {
-                        this.$el.removeAttr('rowspan');
+                        if (this.$el)
+                        {
+                            this.$el.removeAttr('rowspan');
+                        }
                     }
-                }                    
-            }
-        },
-        enumerable:true
-    });
-    
+                }
+            },
+            enumerable: true
+        });
+
     let _beforeAttach = this.beforeAttach;
-    this.beforeAttach = function (e) {
-        if (e.target.id == this.domID) {
+    this.beforeAttach = function (e)
+    {
+        if (e.target.id == this.domID)
+        {
             if (typeof _beforeAttach == 'function')
                 _beforeAttach.apply(this, arguments);
-            if(_props.colspan)
+            if (_props.colspan)
                 this.colspan = _props.colspan;
-            if(_props.rowspan)
+            if (_props.rowspan)
                 this.rowspan = _props.rowspan;
             if (_props.label)
                 this.label = _props.label;
         }
     };
 
-    this.afterAttach = function (e) {
-        if (e.target.id == this.domID) {
+    this.afterAttach = function (e)
+    {
+        if (e.target.id == this.domID)
+        {
         }
     };
 
@@ -123,6 +132,7 @@ var TCell = function (_props) {
     return r;
 };
 TCell.prototype.ctor = 'TCell';
-export {
+export
+{
     TCell
 };

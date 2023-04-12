@@ -1,7 +1,7 @@
 /**
  * This is a Link Element
  * 
- * Kreatx 2018
+ * 
  */
 
 import { Parent } from "/obvia/components/base/Parent.js";

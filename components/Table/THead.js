@@ -1,26 +1,32 @@
 /**
  * This is a THead Element
  * 
- * Kreatx 2020
+ * 
  */
 import { Parent } from "/obvia/components/base/Parent.js";
 import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
 
-var THead = function (_props) {
-   
+var THead = function (_props)
+{
+
     let _beforeAttach = this.beforeAttach;
-    this.beforeAttach = function (e) {
-        if (e.target.id == this.domID) {
+    this.beforeAttach = function (e)
+    {
+        if (e.target.id == this.domID)
+        {
             if (typeof _beforeAttach == 'function')
                 _beforeAttach.apply(this, arguments);
         }
     };
 
-    this.afterAttach = function (e) {
-        if (e.target.id == this.domID) {
+    this.afterAttach = function (e)
+    {
+        if (e.target.id == this.domID)
+        {
         }
     };
-    this.template = function () {
+    this.template = function ()
+    {
         return "<thead id='" + this.domID + "'></thead>";
     };
 
@@ -33,6 +39,7 @@ var THead = function (_props) {
     return r;
 };
 THead.prototype.ctor = 'THead';
-export {
+export
+{
     THead
 };

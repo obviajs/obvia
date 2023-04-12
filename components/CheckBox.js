@@ -1,7 +1,7 @@
 /**
  * This is a CheckBox Element
  *
- * Kreatx 2019
+ * 
  */
 import { Component } from "/obvia/components/base/Component.js";
 import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";

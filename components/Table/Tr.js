@@ -1,26 +1,32 @@
 /**
  * This is a Tr Element
  * 
- * Kreatx 2020
+ * 
  */
-import {Parent} from "/obvia/components/base/Parent.js";
+import { Parent } from "/obvia/components/base/Parent.js";
 import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
 
-var Tr = function (_props) {
-   
+var Tr = function (_props)
+{
+
     let _beforeAttach = this.beforeAttach;
-    this.beforeAttach = function (e) {
-        if (e.target.id == this.domID) {
+    this.beforeAttach = function (e)
+    {
+        if (e.target.id == this.domID)
+        {
             if (typeof _beforeAttach == 'function')
                 _beforeAttach.apply(this, arguments);
         }
     };
 
-    this.afterAttach = function (e) {
-        if (e.target.id == this.domID) {
+    this.afterAttach = function (e)
+    {
+        if (e.target.id == this.domID)
+        {
         }
     };
-    this.template = function () {
+    this.template = function ()
+    {
         return "<tr id='" + this.domID + "'></tr>";
     };
 
@@ -33,6 +39,7 @@ var Tr = function (_props) {
     return r;
 };
 Tr.prototype.ctor = 'Tr';
-export {
+export
+{
     Tr
 };

@@ -1,7 +1,7 @@
 /**
  * This is a Calendar Component
  * 
- * Kreatx 2019
+ * 
 */
 import { Container } from "/obvia/components/Container.js";
 import { CalendarDay } from "/obvia/components/Calendar/CalendarDay.js";

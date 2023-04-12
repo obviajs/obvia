@@ -1,7 +1,7 @@
 /**
  * This is a Select Html Element
  *
- * Kreatx 2019
+ * 
  */
 
 //component definition
@@ -12,23 +12,29 @@ import { ChangeWatcher } from "/obvia/lib/binding/ChangeWatcher.js";
 import { Option } from "/obvia/components/Select/Option.js";
 import { Props } from "/obvia/components/base/Props.js";
 import { DependencyContainer } from "/obvia/lib/DependencyContainer.js";
-var Select = function (_props) {
+var Select = function (_props)
+{
     let _self = this,
         _value, _dataProvider, _rendering, _multiple, _labelField, _valueField, _valueLater;
 
     let myw;
 
     Object.defineProperty(this, "valueField", {
-        get: function valueField() {
+        get: function valueField()
+        {
             return _valueField;
         },
-        set: function valueField(v) {
-            if (_valueField != v) {
+        set: function valueField(v)
+        {
+            if (_valueField != v)
+            {
                 _valueField = v;
                 this.components = fnContainerDelayInit();
-                if (_dataProvider && _dataProvider.length > 0) {
+                if (_dataProvider && _dataProvider.length > 0)
+                {
                     let dpFields = Object.getOwnPropertyNames(_dataProvider[0]);
-                    if (propDataProvider && dpFields.includes(_labelField) && dpFields.includes(_valueField)) {
+                    if (propDataProvider && dpFields.includes(_labelField) && dpFields.includes(_valueField))
+                    {
                         propDataProvider['set'].call(_self, _dataProvider);
                     }
                 }
@@ -38,16 +44,21 @@ var Select = function (_props) {
     });
 
     Object.defineProperty(this, "labelField", {
-        get: function labelField() {
+        get: function labelField()
+        {
             return _labelField;
         },
-        set: function labelField(v) {
-            if (_labelField != v) {
+        set: function labelField(v)
+        {
+            if (_labelField != v)
+            {
                 _labelField = v;
                 this.components = fnContainerDelayInit();
-                if (_dataProvider && _dataProvider.length > 0) {
+                if (_dataProvider && _dataProvider.length > 0)
+                {
                     let dpFields = Object.getOwnPropertyNames(_dataProvider[0]);
-                    if (propDataProvider && dpFields.includes(_labelField) && dpFields.includes(_valueField)) {
+                    if (propDataProvider && dpFields.includes(_labelField) && dpFields.includes(_valueField))
+                    {
                         propDataProvider['set'].call(_self, _dataProvider);
                     }
                 }
@@ -57,14 +68,18 @@ var Select = function (_props) {
     });
 
     Object.defineProperty(this, "value", {
-        get: function value() {
+        get: function value()
+        {
             return _value;
         },
-        set: function value(v) {
-            if (_value != v) {
+        set: function value(v)
+        {
+            if (_value != v)
+            {
                 let oldValue = _value;
                 _value = v;
-                if (_self.$el) {
+                if (_self.$el)
+                {
                     _self.$el.val(v);
                     _self.trigger('change');
                     myw.propertyChanged("value", oldValue, _value);
@@ -75,16 +90,21 @@ var Select = function (_props) {
     });
 
     Object.defineProperty(this, "multiple", {
-        get: function multiple() {
+        get: function multiple()
+        {
             return _multiple;
         },
-        set: function multiple(v) {
-            if (_multiple != v) {
+        set: function multiple(v)
+        {
+            if (_multiple != v)
+            {
                 _multiple = v;
-                if (_multiple) {
+                if (_multiple)
+                {
                     if (this.$el)
                         this.$el.attr("multiple", _multiple);
-                } else {
+                } else
+                {
                     if (this.$el)
                         this.$el.removeAttr('multiple');
                 }
@@ -92,34 +112,43 @@ var Select = function (_props) {
         }
     });
 
-    let _changeHandler = function (e) {
+    let _changeHandler = function (e)
+    {
         let oldValue = _value;
         let v = _self.$el.val();
-        if (v != null) {
+        if (v != null)
+        {
             _value = v;
-            if (oldValue != _value) {
+            if (oldValue != _value)
+            {
                 myw.propertyChanged("value", oldValue, _value);
                 myw.propertyChanged("selectedItem", oldValue, _value);
             }
         }
     };
 
-    this.template = function () {
+    this.template = function ()
+    {
         return "<select data-triggers='change' id='" + this.domID + "'></select>";
     };
 
-    this.afterAttach = function (e) {
-        if (e.target.id == this.domID) {
-            if (_value == null && _props.value!=null && !this.getBindingExpression("value")) {
+    this.afterAttach = function (e)
+    {
+        if (e.target.id == this.domID)
+        {
+            if (_value == null && _props.value != null && !this.getBindingExpression("value"))
+            {
                 this.value = _props.value;
             }
-            if (_multiple == null && _props.multiple!=null) {
+            if (_multiple == null && _props.multiple != null)
+            {
                 this.multiple = _props.multiple;
             }
         }
     };
 
-    let fnContainerDelayInit = function () {
+    let fnContainerDelayInit = function ()
+    {
         return [{
             ctor: Option,
             props: {
@@ -147,9 +176,11 @@ var Select = function (_props) {
     _props.components = fnContainerDelayInit();
 
     let _change = _props.change;
-    _props.change = function () {
+    _props.change = function ()
+    {
         let e = arguments[0];
-        if (!e.isDefaultPrevented()) {
+        if (!e.isDefaultPrevented())
+        {
             _changeHandler.apply(_self, arguments);
         }
         if (typeof _change == 'function')
@@ -158,24 +189,30 @@ var Select = function (_props) {
 
     let r = Repeater.call(this, _props);
     myw = ChangeWatcher.getInstance(_self);
-    
+
     let propDataProvider = Object.getOwnPropertyDescriptor(this, "dataProvider");
     Object.defineProperty(this, "dataProvider", {
-        get: function dataProvider() {
+        get: function dataProvider()
+        {
             return propDataProvider['get'].call(_self);
         },
-        set: function dataProvider(v) {
+        set: function dataProvider(v)
+        {
             _dataProvider = v;
 
-            if (v && v.length > 0) {
+            if (v && v.length > 0)
+            {
                 let dpFields = Object.getOwnPropertyNames(v[0]);
-                if (dpFields.includes(_labelField) && dpFields.includes(_valueField)) {
+                if (dpFields.includes(_labelField) && dpFields.includes(_valueField))
+                {
                     propDataProvider['set'].call(_self, _dataProvider);
                 }
-            } else {
+            } else
+            {
                 propDataProvider['set'].call(_self, _dataProvider);
             }
-            Promise.all(_self.renders).then(() => {
+            Promise.all(_self.renders).then(() =>
+            {
                 _self.$el.val(_value);
             });
         },
@@ -183,14 +220,16 @@ var Select = function (_props) {
     });
 
     Object.defineProperty(this, "props", {
-        get: function props() {
+        get: function props()
+        {
             return new Props(_self, _props, ["components", "rendering"]);
         },
         configurable: true
     });
 
     Object.defineProperty(this, "rendering", {
-        get: function rendering() {
+        get: function rendering()
+        {
             return _rendering;
         },
         enumerable: false,
@@ -201,6 +240,7 @@ var Select = function (_props) {
 };
 Select.prototype.ctor = 'Select';
 DependencyContainer.getInstance().register("Select", Select, DependencyContainer.simpleResolve);
-export {
+export
+{
     Select
 };

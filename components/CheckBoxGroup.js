@@ -1,29 +1,35 @@
 /**
  * This is a CheckboxGroup component
  *
- * Kreatx 2019
+ * 
  */
 import { List } from "/obvia/components/List.js";
 import { CheckBoxEx } from "/obvia/components/CheckBoxEx.js";
 import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
 import { DependencyContainer } from "/obvia/lib/DependencyContainer.js";
-var CheckBoxGroup = function (_props) {
+var CheckBoxGroup = function (_props)
+{
     let _self = this,
         _dataProvider;
 
-    
+
     Object.defineProperty(this, "labelField", {
-        get: function labelField() {
+        get: function labelField()
+        {
             return _labelField;
         },
-        set: function labelField(v) {
-            if (_labelField != v) {
+        set: function labelField(v)
+        {
+            if (_labelField != v)
+            {
                 _labelField = v;
                 this.components = fnContainerDelayInit();
                 this.removeAllRows();
-                if (_dataProvider && _dataProvider.length > 0) {
+                if (_dataProvider && _dataProvider.length > 0)
+                {
                     let dpFields = Object.getOwnPropertyNames(_dataProvider[0]);
-                    if (propDataProvider && dpFields.includes(_labelField) && dpFields.includes(_valueField)) {
+                    if (propDataProvider && dpFields.includes(_labelField) && dpFields.includes(_valueField))
+                    {
                         propDataProvider['set'].call(_self, _dataProvider);
                     }
                 }
@@ -62,25 +68,27 @@ var CheckBoxGroup = function (_props) {
     let _selectedClasses = _props.selectedClasses;
     let _defaultClasses = _props.defaultClasses;
 
-    if (_props.states == null) {
+    if (_props.states == null)
+    {
         _props.states = [{
-                dataProviderField: _classesField,
-                states: {
-                    on: _selectedClasses,
-                    off: _defaultClasses
-                }
-            },
-            {
-                dataProviderField: _checkedField,
-                states: {
-                    on: true,
-                    off: false
-                }
+            dataProviderField: _classesField,
+            states: {
+                on: _selectedClasses,
+                off: _defaultClasses
             }
+        },
+        {
+            dataProviderField: _checkedField,
+            states: {
+                on: true,
+                off: false
+            }
+        }
         ];
     }
 
-    let fnContainerDelayInit = function () {
+    let fnContainerDelayInit = function ()
+    {
         return [{
             ctor: CheckBoxEx,
             props: {
@@ -105,36 +113,46 @@ var CheckBoxGroup = function (_props) {
 
     let propDataProvider = Object.getOwnPropertyDescriptor(this, "dataProvider");
     Object.defineProperty(this, "dataProvider", {
-        get: function dataProvider() {
+        get: function dataProvider()
+        {
             return propDataProvider['get'].call(_self);
         },
-        set: function dataProvider(v) {
+        set: function dataProvider(v)
+        {
             _dataProvider = v;
             this.removeAllRows();
 
-            if (v && v.length > 0) {
+            if (v && v.length > 0)
+            {
                 let dpFields = Object.getOwnPropertyNames(v[0]);
-                if (dpFields.includes(_labelField) && dpFields.includes(_valueField)) {
+                if (dpFields.includes(_labelField) && dpFields.includes(_valueField))
+                {
                     propDataProvider['set'].call(_self, _dataProvider);
                 }
-            } else {
+            } else
+            {
                 propDataProvider['set'].call(_self, _dataProvider);
             }
         },
         enumerable: true
     });
     Object.defineProperty(this, "valueField", {
-        get: function valueField() {
+        get: function valueField()
+        {
             return _valueField;
         },
-        set: function valueField(v) {
-            if (_valueField != v) {
+        set: function valueField(v)
+        {
+            if (_valueField != v)
+            {
                 _valueField = v;
                 this.components = fnContainerDelayInit();
                 this.removeAllRows();
-                if (_dataProvider && _dataProvider.length > 0) {
+                if (_dataProvider && _dataProvider.length > 0)
+                {
                     let dpFields = Object.getOwnPropertyNames(_dataProvider[0]);
-                    if (propDataProvider && dpFields.includes(_labelField) && dpFields.includes(_valueField)) {
+                    if (propDataProvider && dpFields.includes(_labelField) && dpFields.includes(_valueField))
+                    {
                         propDataProvider['set'].call(_self, _dataProvider);
                     }
                 }
@@ -146,6 +164,7 @@ var CheckBoxGroup = function (_props) {
 };
 DependencyContainer.getInstance().register("CheckBoxGroup", CheckBoxGroup, DependencyContainer.simpleResolve);
 CheckBoxGroup.prototype.ctor = "CheckBoxGroup";
-export {
+export
+{
     CheckBoxGroup
 };

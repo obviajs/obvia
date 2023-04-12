@@ -1,7 +1,7 @@
 /**
  * This is a Toggle Element
  *
- * Kreatx 2019
+ * 
  */
 import { Label, LabelType } from "/obvia/components/Label.js";
 import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";

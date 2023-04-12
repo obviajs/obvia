@@ -1,25 +1,31 @@
 /**
  * This is a Container Element
  * 
- * Kreatx 2018
+ * 
  */
 import { Parent } from "/obvia/components/base/Parent.js";
 import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
 import { StringUtils } from "/obvia/lib/StringUtils.js";
 import { DependencyContainer } from "/obvia/lib/DependencyContainer.js";
-var Container = function (_props) {
+var Container = function (_props)
+{
     let _self = this,
         _textAlign;
 
-    if (!this.hasOwnProperty("label")) {
+    if (!this.hasOwnProperty("label"))
+    {
         Object.defineProperty(this, "label", {
-            get: function label() {
+            get: function label()
+            {
                 return _label;
             },
-            set: function label(v) {
-                if (_label != v) {
+            set: function label(v)
+            {
+                if (_label != v)
+                {
                     _label = v;
-                    if (this.$el) {
+                    if (this.$el)
+                    {
                         //convert html entities
                         v = $(`<div>${v}</div>`).get(0).innerText;
                         let last = this.$el.children().last();
@@ -27,10 +33,10 @@ var Container = function (_props) {
                             if (last[0].nextSibling)
                                 last[0].nextSibling.textContent = v;
                             else
-                        if (_textAlign == "left")
-                            this.$el.prependText(v);
-                        else
-                            this.$el.appendText(v);
+                                if (_textAlign == "left")
+                                    this.$el.prependText(v);
+                                else
+                                    this.$el.appendText(v);
                         else
                             //this.$el.appendText(v);
                             this.$el.text(v);
@@ -40,18 +46,25 @@ var Container = function (_props) {
             configurable: true
         });
     }
-    if (!this.hasOwnProperty("width")) {
+    if (!this.hasOwnProperty("width"))
+    {
         Object.defineProperty(this, "width", {
-            get: function width() {
+            get: function width()
+            {
                 return _width;
             },
-            set: function width(v) {
-                if (_width != v) {
+            set: function width(v)
+            {
+                if (_width != v)
+                {
                     _width = v;
-                    if (this.$el) {
-                        if (v == null) {
+                    if (this.$el)
+                    {
+                        if (v == null)
+                        {
                             this.$el.css('width', '');
-                        } else {
+                        } else
+                        {
                             let s = (
                                 StringUtils.isString(_width) &&
                                 (
@@ -68,18 +81,25 @@ var Container = function (_props) {
             enumerable: true
         });
     }
-    if (!this.hasOwnProperty("minWidth")) {
+    if (!this.hasOwnProperty("minWidth"))
+    {
         Object.defineProperty(this, "minWidth", {
-            get: function minWidth() {
+            get: function minWidth()
+            {
                 return _minWidth;
             },
-            set: function minWidth(v) {
-                if (_minWidth != v) {
+            set: function minWidth(v)
+            {
+                if (_minWidth != v)
+                {
                     _minWidth = v;
-                    if (this.$el) {
-                        if (v == null) {
+                    if (this.$el)
+                    {
+                        if (v == null)
+                        {
                             this.$el.css('min-width', '');
-                        } else {
+                        } else
+                        {
                             let s = (
                                 StringUtils.isString(_minWidth) &&
                                 (
@@ -96,18 +116,25 @@ var Container = function (_props) {
             enumerable: true
         });
     }
-    if (!this.hasOwnProperty("minHeight")) {
+    if (!this.hasOwnProperty("minHeight"))
+    {
         Object.defineProperty(this, "minHeight", {
-            get: function minHeight() {
+            get: function minHeight()
+            {
                 return _minHeight;
             },
-            set: function minHeight(v) {
-                if (_minHeight != v) {
+            set: function minHeight(v)
+            {
+                if (_minHeight != v)
+                {
                     _minHeight = v;
-                    if (this.$el) {
-                        if (v == null) {
+                    if (this.$el)
+                    {
+                        if (v == null)
+                        {
                             this.$el.css('min-height', '');
-                        } else {
+                        } else
+                        {
                             let s = (
                                 StringUtils.isString(_minHeight) &&
                                 (
@@ -124,18 +151,25 @@ var Container = function (_props) {
             enumerable: true
         });
     }
-    if (!this.hasOwnProperty("height")) {
+    if (!this.hasOwnProperty("height"))
+    {
         Object.defineProperty(this, "height", {
-            get: function height() {
+            get: function height()
+            {
                 return _height;
             },
-            set: function height(v) {
-                if (_height != v) {
+            set: function height(v)
+            {
+                if (_height != v)
+                {
                     _height = v;
-                    if (this.$el) {
-                        if (v == null) {
+                    if (this.$el)
+                    {
+                        if (v == null)
+                        {
                             this.$el.css('height', '');
-                        } else {
+                        } else
+                        {
                             let s = (
                                 StringUtils.isString(_height) &&
                                 (
@@ -153,18 +187,25 @@ var Container = function (_props) {
             enumerable: true
         });
     }
-    if (!this.hasOwnProperty("top")) {
+    if (!this.hasOwnProperty("top"))
+    {
         Object.defineProperty(this, "top", {
-            get: function top() {
+            get: function top()
+            {
                 return _top;
             },
-            set: function top(v) {
-                if (_top != v) {
+            set: function top(v)
+            {
+                if (_top != v)
+                {
                     _top = v;
-                    if (this.$el) {
-                        if (v == null) {
+                    if (this.$el)
+                    {
+                        if (v == null)
+                        {
                             this.$el.css('top', '');
-                        } else {
+                        } else
+                        {
                             let s = (
                                 StringUtils.isString(_top) &&
                                 (
@@ -182,18 +223,25 @@ var Container = function (_props) {
             enumerable: true
         });
     }
-    if (!this.hasOwnProperty("marginTop")) {
+    if (!this.hasOwnProperty("marginTop"))
+    {
         Object.defineProperty(this, "marginTop", {
-            get: function marginTop() {
+            get: function marginTop()
+            {
                 return _marginTop;
             },
-            set: function marginTop(v) {
-                if (_marginTop != v) {
+            set: function marginTop(v)
+            {
+                if (_marginTop != v)
+                {
                     _marginTop = v;
-                    if (this.$el) {
-                        if (v == null) {
+                    if (this.$el)
+                    {
+                        if (v == null)
+                        {
                             this.$el.css('margin-top', '');
-                        } else {
+                        } else
+                        {
                             let s = (
                                 StringUtils.isString(_marginTop) &&
                                 (
@@ -211,18 +259,25 @@ var Container = function (_props) {
             enumerable: true
         });
     }
-    if (!this.hasOwnProperty("marginLeft")) {
+    if (!this.hasOwnProperty("marginLeft"))
+    {
         Object.defineProperty(this, "marginLeft", {
-            get: function marginLeft() {
+            get: function marginLeft()
+            {
                 return _marginLeft;
             },
-            set: function marginLeft(v) {
-                if (_marginLeft != v) {
+            set: function marginLeft(v)
+            {
+                if (_marginLeft != v)
+                {
                     _marginLeft = v;
-                    if (this.$el) {
-                        if (v == null) {
+                    if (this.$el)
+                    {
+                        if (v == null)
+                        {
                             this.$el.css('margin-left', '');
-                        } else {
+                        } else
+                        {
                             let s = (
                                 StringUtils.isString(_marginLeft) &&
                                 (
@@ -242,13 +297,17 @@ var Container = function (_props) {
     }
 
     Object.defineProperty(this, "contenteditable", {
-        get: function contenteditable() {
+        get: function contenteditable()
+        {
             return _contenteditable;
         },
-        set: function contenteditable(v) {
-            if (_contenteditable != v) {
+        set: function contenteditable(v)
+        {
+            if (_contenteditable != v)
+            {
                 _contenteditable = v;
-                if (this.$el) {
+                if (this.$el)
+                {
                     if (v)
                         this.$el.attr('contenteditable', v);
                     else
@@ -259,18 +318,25 @@ var Container = function (_props) {
     });
 
     Object.defineProperty(this, "role", {
-        get: function role() {
+        get: function role()
+        {
             return _role;
         },
-        set: function role(v) {
-            if (_role != v) {
+        set: function role(v)
+        {
+            if (_role != v)
+            {
                 _role = v;
-                if (_role) {
-                    if (this.$el) {
+                if (_role)
+                {
+                    if (this.$el)
+                    {
                         this.$el.attr('role', _role);
                     }
-                } else {
-                    if (this.$el) {
+                } else
+                {
+                    if (this.$el)
+                    {
                         this.$el.removeAttr('role');
                     }
                 }
@@ -280,12 +346,16 @@ var Container = function (_props) {
     });
 
     Object.defineProperty(this, "type", {
-        get: function type() {
+        get: function type()
+        {
             return _type;
         },
-        set: function type(v) {
-            if (_type != v) {
-                if (this.$el) {
+        set: function type(v)
+        {
+            if (_type != v)
+            {
+                if (this.$el)
+                {
                     this.$el.removeClass(_type);
                     this.$el.addClass(v);
                     _type = v;
@@ -296,21 +366,26 @@ var Container = function (_props) {
         configurable: true
     });
     //is template overrided ?
-    this.template = this.template || function () {
+    this.template = this.template || function ()
+    {
         return '<div id="' + this.domID + '" data-triggers="input"></div>';
     };
 
     let _init = this.init;
-    this.init = function (e) {
-        if (e.target.id == this.domID) {
+    this.init = function (e)
+    {
+        if (e.target.id == this.domID)
+        {
             if (typeof _init == 'function')
                 _init.apply(this, arguments);
         }
     };
 
     let _beforeAttach = this.beforeAttach;
-    this.beforeAttach = function (e) {
-        if (e.target.id == this.domID) {
+    this.beforeAttach = function (e)
+    {
+        if (e.target.id == this.domID)
+        {
             if (typeof _beforeAttach == 'function')
                 _beforeAttach.apply(this, arguments);
             if (_props.width)
@@ -323,14 +398,17 @@ var Container = function (_props) {
                 this.marginTop = _props.marginTop;
             if (_props.marginLeft)
                 this.marginLeft = _props.marginLeft;
-            if (_props.contenteditable) {
+            if (_props.contenteditable)
+            {
                 this.contenteditable = _props.contenteditable;
             }
         }
     };
     let _afterAttach = this.afterAttach;
-    this.afterAttach = function (e) {
-        if (e.target.id == this.domID) {
+    this.afterAttach = function (e)
+    {
+        if (e.target.id == this.domID)
+        {
             /*if(!_width)
                 _width = this.$el.width();
             if(!_height)     
@@ -338,10 +416,11 @@ var Container = function (_props) {
                 */
             if (typeof _afterAttach == 'function')
                 _afterAttach.apply(this, arguments);
-            if (!e.isDefaultPrevented()) {
+            if (!e.isDefaultPrevented())
+            {
                 if (_label == null && _props.label)
                     this.label = _props.label;
-                if (_textAlign ==null && _props.textAlign)
+                if (_textAlign == null && _props.textAlign)
                     _textAlign = _props.textAlign;
             }
             //e.preventDefault();
@@ -385,6 +464,7 @@ var Container = function (_props) {
 };
 Container.prototype.ctor = 'Container';
 DependencyContainer.getInstance().register("Container", Container, DependencyContainer.simpleResolve);
-export {
+export
+{
     Container
 };

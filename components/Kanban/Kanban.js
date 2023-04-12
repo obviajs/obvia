@@ -1,13 +1,14 @@
 /**
  * This is a Kanban Component
  * 
- * Kreatx 2020
+ * 
  */
 
 import { Container } from "/obvia/components/Container.js";
 import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
 
-var Kanban = function (_props) {
+var Kanban = function (_props)
+{
     let _self = this;
     let _dataProvider, _groupField, _descriptionField, _task, _panelRepeater, _bodyRepeater, _listItems, _items, _repeater;
 
@@ -17,15 +18,19 @@ var Kanban = function (_props) {
         task: " "
     };
 
-    this.beforeAttach = function (e) {
-        if (e.target.id == this.domID) {
+    this.beforeAttach = function (e)
+    {
+        if (e.target.id == this.domID)
+        {
             _panelRepeater = this.container_fluid.sortable.repeater;
             _listItems = _panelRepeater.list_items;
         }
     };
 
-    this.afterAttach = function (e) {
-        if (e.target.id == this.domID) {
+    this.afterAttach = function (e)
+    {
+        if (e.target.id == this.domID)
+        {
 
         }
     };
@@ -33,7 +38,8 @@ var Kanban = function (_props) {
 
 
     let _cmps;
-    let fnContainerDelayInit = function () {
+    let fnContainerDelayInit = function ()
+    {
 
         _repeater = [{
             ctor: Repeater,
@@ -51,65 +57,67 @@ var Kanban = function (_props) {
                         id: "list_items",
                         classes: ["card bg-light", "list-items"], //list-items
                         components: [{
-                                ctor: Container,
-                                props: {
-                                    id: "card_body",
-                                    type: ContainerType.NONE,
-                                    classes: ["card-body"],
-                                    components: [{
-                                            ctor: Heading,
-                                            props: {
-                                                id: "header_label",
-                                                classes: ["card-title", "text-uppercase", "text-truncate", "py-2", "panel-heading"], //panel-heading
-                                                type: HeadingType.h2,
-                                                align: 'center',
-                                                label: `{${_groupField}}`
-                                            }
-                                        },
+                            ctor: Container,
+                            props: {
+                                id: "card_body",
+                                type: ContainerType.NONE,
+                                classes: ["card-body"],
+                                components: [{
+                                    ctor: Heading,
+                                    props: {
+                                        id: "header_label",
+                                        classes: ["card-title", "text-uppercase", "text-truncate", "py-2", "panel-heading"], //panel-heading
+                                        type: HeadingType.h2,
+                                        align: 'center',
+                                        label: `{${_groupField}}`
+                                    }
+                                },
+                                {
+                                    ctor: Container,
+                                    props: {
+                                        id: "tasks_container",
+                                        classes: ["panel-body"], //panel-body
+                                        type: ContainerType.NONE,
+                                        dragover: function (e, ra)
                                         {
-                                            ctor: Container,
+                                            e.preventDefault();
+                                        },
+                                        dragenter: function (e, ra)
+                                        {
+                                            e.preventDefault();
+                                            //e.target.classList.add('drop');
+                                        },
+                                        drop: _drop,
+
+                                        components: [{
+                                            ctor: Repeater,
                                             props: {
-                                                id: "tasks_container",
-                                                classes: ["panel-body"], //panel-body
-                                                type: ContainerType.NONE,
-                                                dragover: function (e, ra) {
-                                                    e.preventDefault();
+                                                id: "repeater_body",
+                                                dataProvider: `{${_descriptionField}}`,
+                                                rendering: {
+                                                    direction: 'vertical',
+                                                    wrap: false
                                                 },
-                                                dragenter: function (e, ra) {
-                                                    e.preventDefault();
-                                                    //e.target.classList.add('drop');
-                                                },
-                                                drop: _drop,
-                                            
+                                                classes: ["kanban-centered", 'card', 'draggable', 'shadow-sm'],
                                                 components: [{
-                                                    ctor: Repeater,
+                                                    ctor: Container,
                                                     props: {
-                                                        id: "repeater_body",
-                                                        dataProvider: `{${_descriptionField }}`,
-                                                        rendering: {
-                                                            direction: 'vertical',
-                                                            wrap: false
-                                                        },
-                                                        classes: ["kanban-centered", 'card', 'draggable', 'shadow-sm'],
-                                                        components: [{
-                                                            ctor: Container,
-                                                            props: {
-                                                                id: "items",
-                                                                classes: ['kanban-entry', 'grab'], //kanban-entry', 'grab
-                                                                draggable: true,
-                                                                type: ContainerType.NONE,
-                                                                dragstart: dragStart,
-                                                                dragend: dragEnd,
-                                                                label: `{${_task}}`
-                                                            }
-                                                        }]
+                                                        id: "items",
+                                                        classes: ['kanban-entry', 'grab'], //kanban-entry', 'grab
+                                                        draggable: true,
+                                                        type: ContainerType.NONE,
+                                                        dragstart: dragStart,
+                                                        dragend: dragEnd,
+                                                        label: `{${_task}}`
                                                     }
                                                 }]
                                             }
-                                        }
-                                    ]
+                                        }]
+                                    }
                                 }
-                            },
+                                ]
+                            }
+                        },
 
 
                         ]
@@ -138,45 +146,57 @@ var Kanban = function (_props) {
     };
 
     let draggedItem = null;
-    let dragStart = function (e, ra) {
+    let dragStart = function (e, ra)
+    {
         draggedItem = e.target;
         e.originalEvent.dataTransfer.setData('text/html', draggedItem);
         draggedItem.classList.add('dragging');
-        setTimeout(function () {
+        setTimeout(function ()
+        {
             draggedItem.style.opacity = '0.5';
         }, 0);
     };
 
-    let dragEnd = function (e, ra) {
+    let dragEnd = function (e, ra)
+    {
         draggedItem.classList.remove('dragging');
-        setTimeout(function () {
+        setTimeout(function ()
+        {
             draggedItem.style.opacity = '1';
             draggedItem = null;
         }, 0);
     };
 
-    let _drop = function (e, ra) {
+    let _drop = function (e, ra)
+    {
         e.preventDefault();
         let el = e.currentTarget.firstChild;
         let offset = getBoundingClientOffset(e.target, e.clientX, e.clientY);
         let childCount = e.target.childElementCount - e.currentTarget.childElementCount;
 
-        if(childCount == 0){
+        if (childCount == 0)
+        {
             el.appendChild(draggedItem);
-        }else if(childCount < 0){
-            if(offset.y < 0){
+        } else if (childCount < 0)
+        {
+            if (offset.y < 0)
+            {
                 el.insertBefore(draggedItem, e.target);
-            }else {
-                if (e.target.nextSibling) {
+            } else
+            {
+                if (e.target.nextSibling)
+                {
                     el.insertBefore(draggedItem, e.target.nextSibling);
-                } else {
+                } else
+                {
                     el.appendChild(draggedItem);
                 }
             }
-        }else {
+        } else
+        {
             el.appendChild(draggedItem);
         }
-        
+
         draggedItem.style.display = 'block';
     };
     ObjectUtils.fromDefault(_defaultParams, _props);

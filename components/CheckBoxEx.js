@@ -1,69 +1,83 @@
 /**
  * This is a CheckBox Element
  *
- * Kreatx 2019
+ * 
  */
 import { Component } from "/obvia/components/base/Component.js";
 import { Label } from "/obvia/components/Label.js";
 import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
 import { DependencyContainer } from "/obvia/lib/DependencyContainer.js";
-var CheckBoxEx = function (_props) {
+var CheckBoxEx = function (_props)
+{
     let _self = this, _value, _checked, _name;
 
     Object.defineProperty(this, "value", {
-        get: function value() {
+        get: function value()
+        {
             return _self.proxyMaybe.checkBox.value;
         },
-        set: function value(v) {
+        set: function value(v)
+        {
             _self.proxyMaybe.checkBox.value = v;
         }
     });
 
     Object.defineProperty(this, "checked",
-    {
-        get: function checked() {
-            return _self.proxyMaybe.checkBox.checked;
-        },
-        set: function checked(v) {
-            _self.proxyMaybe.checkBox.checked = v;
-        }
-    });
-    
+        {
+            get: function checked()
+            {
+                return _self.proxyMaybe.checkBox.checked;
+            },
+            set: function checked(v)
+            {
+                _self.proxyMaybe.checkBox.checked = v;
+            }
+        });
+
     Object.defineProperty(this, "name", {
-        set: function name(v) {
+        set: function name(v)
+        {
             _self.proxyMaybe.checkBox.name = v;
         },
-        get: function name() {
+        get: function name()
+        {
             return _self.proxyMaybe.checkBox.name;
         }
     });
 
-    this.endDraw = function (e) {
-        if (e.target.id == this.domID) {
+    this.endDraw = function (e)
+    {
+        if (e.target.id == this.domID)
+        {
             this.$input = this.checkBox.$el;
         }
     };
-            
+
     this.beforeAttach = function (e) 
     {
         if (e.target.id == this.domID)
         {
-            if (_props.label && !this.getBindingExpression("label")){
+            if (_props.label && !this.getBindingExpression("label"))
+            {
                 this.label = _props.label;
             }
-            if (_props.value && !this.getBindingExpression("value")){
+            if (_props.value && !this.getBindingExpression("value"))
+            {
                 this.value = _props.value;
             }
-            if (_props.checked && !this.getBindingExpression("checked")){
+            if (_props.checked && !this.getBindingExpression("checked"))
+            {
                 this.checked = _props.checked;
             }
-            if (_props.enabled && !this.getBindingExpression("enabled")){
+            if (_props.enabled && !this.getBindingExpression("enabled"))
+            {
                 this.enabled = _props.enabled;
             }
         }
     };
 
-    let _clickHandler = function () {
+    let _clickHandler = function ()
+    {
         _checked = !_checked;
     };
 
@@ -71,7 +85,7 @@ var CheckBoxEx = function (_props) {
         {
             ctor: "CheckBox",
             props: {
-                id:"checkBox"
+                id: "checkBox"
 
             }
         }
@@ -89,12 +103,14 @@ var CheckBoxEx = function (_props) {
 
     let _click = _props.click;
 
-    _props.click = function () {
+    _props.click = function ()
+    {
         if (typeof _click == 'function')
             _click.apply(this, arguments);
 
         let e = arguments[0];
-        if (!e.isDefaultPrevented()) {
+        if (!e.isDefaultPrevented())
+        {
             _clickHandler.apply(this, arguments);
         }
     };
@@ -104,6 +120,7 @@ var CheckBoxEx = function (_props) {
 };
 DependencyContainer.getInstance().register("CheckBoxEx", CheckBoxEx, DependencyContainer.simpleResolve);
 CheckBoxEx.prototype.ctor = "CheckBoxEx";
-export {
+export
+{
     CheckBoxEx
 };

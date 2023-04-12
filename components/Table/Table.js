@@ -1,27 +1,33 @@
 /**
  * This is a Table Element
  * 
- * Kreatx 2020
+ * 
  */
 
 import { Parent } from "/obvia/components/base/Parent.js";
 import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
 
-var Table = function (_props) {
-   
+var Table = function (_props)
+{
+
     let _beforeAttach = this.beforeAttach;
-    this.beforeAttach = function (e) {
-        if (e.target.id == this.domID) {
+    this.beforeAttach = function (e)
+    {
+        if (e.target.id == this.domID)
+        {
             if (typeof _beforeAttach == 'function')
                 _beforeAttach.apply(this, arguments);
         }
     };
 
-    this.afterAttach = function (e) {
-        if (e.target.id == this.domID) {
+    this.afterAttach = function (e)
+    {
+        if (e.target.id == this.domID)
+        {
         }
     };
-    this.template = function () {
+    this.template = function ()
+    {
         return "<table id='" + this.domID + "'></table>";
     };
 
@@ -34,6 +40,7 @@ var Table = function (_props) {
     return r;
 };
 Table.prototype.ctor = 'Table';
-export {
+export
+{
     Table
 };

@@ -1,7 +1,7 @@
 /**
  * This is an AutoComplete Element
  *
- * Kreatx 2018
+ * 
  */
 
 import { Container } from "/obvia/components/Container.js";

@@ -2,7 +2,7 @@
 /**
  * This is a Modal component
  * 
- * Kreatx 2018
+ * 
  */
 import { ArrayEx } from "/obvia/lib/ArrayEx.js";
 import { Container } from "/obvia/components/Container.js";

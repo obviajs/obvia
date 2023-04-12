@@ -1,20 +1,24 @@
 /**
  * This is a RegularExpressionValidator Element
  * 
- * Kreatx 2020
+ * 
  */
 
 import { Validator } from "/obvia/components/Validation/Validator.js";
 import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
 import { DependencyContainer } from "/obvia/lib/DependencyContainer.js";
-var RegularExpressionValidator = function (_props) {
+var RegularExpressionValidator = function (_props)
+{
     let _self = this,
         _validationExpression, _validationExpressionCompiled, _modifiers;
 
-    this.validate = function () {
+    this.validate = function ()
+    {
         let _controlToValidateInstance = _self.controlToValidateInstance;
-        if (_controlToValidateInstance) {
-            if ((!_self.required && (_controlToValidateInstance.value ==null || _controlToValidateInstance.value=="")) || (!_self.enabled && _controlToValidateInstance.value=="") || (_controlToValidateInstance.value && _validationExpressionCompiled.test(_controlToValidateInstance.value))) {
+        if (_controlToValidateInstance)
+        {
+            if ((!_self.required && (_controlToValidateInstance.value == null || _controlToValidateInstance.value == "")) || (!_self.enabled && _controlToValidateInstance.value == "") || (_controlToValidateInstance.value && _validationExpressionCompiled.test(_controlToValidateInstance.value)))
+            {
                 _self.isValid = true;
             } else
                 _self.isValid = false;
@@ -23,11 +27,14 @@ var RegularExpressionValidator = function (_props) {
     };
 
     Object.defineProperty(this, "validationExpression", {
-        get: function validationExpression() {
+        get: function validationExpression()
+        {
             return _validationExpression;
         },
-        set: function validationExpression(v) {
-            if (_validationExpression != v) {
+        set: function validationExpression(v)
+        {
+            if (_validationExpression != v)
+            {
                 _validationExpression = v;
                 _validationExpressionCompiled = new RegExp(_validationExpression, _modifiers);
             }
@@ -37,11 +44,14 @@ var RegularExpressionValidator = function (_props) {
     });
 
     Object.defineProperty(this, "modifiers", {
-        get: function modifiers() {
+        get: function modifiers()
+        {
             return _modifiers;
         },
-        set: function modifiers(v) {
-            if (_modifiers != v) {
+        set: function modifiers(v)
+        {
+            if (_modifiers != v)
+            {
                 _modifiers = v;
                 _validationExpressionCompiled = new RegExp(_validationExpression, _modifiers);
             }
@@ -51,8 +61,10 @@ var RegularExpressionValidator = function (_props) {
     });
 
 
-    this.beforeAttach = function (e) {
-        if (e.target.id == this.domID) {
+    this.beforeAttach = function (e)
+    {
+        if (e.target.id == this.domID)
+        {
             if (_props.validationExpression && !this.getBindingExpression("validationExpression"))
                 this.validationExpression = _props.validationExpression;
             if (_props.modifiers && !this.getBindingExpression("modifiers"))
@@ -76,6 +88,7 @@ var RegularExpressionValidator = function (_props) {
 };
 RegularExpressionValidator.prototype.ctor = 'RegularExpressionValidator';
 DependencyContainer.getInstance().register("RegularExpressionValidator", RegularExpressionValidator, DependencyContainer.simpleResolve);
-export {
+export
+{
     RegularExpressionValidator
 };

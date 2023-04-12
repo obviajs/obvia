@@ -1,7 +1,7 @@
 /**
  * This is a DropEdit  Element
  *
- * Kreatx 2020
+ * 
  */
 
 import { Container } from "/obvia/components/Container.js";

@@ -1,7 +1,7 @@
 /**
  * This is a Validator Element
  * 
- * Kreatx 2020
+ * 
  */
 
 import { Label, LabelType } from "/obvia/components/Label.js";

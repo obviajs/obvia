@@ -1,7 +1,7 @@
 /**
  * This is a Label Element
  * 
- * Kreatx 2018
+ * 
  */
 
 import { Container } from "/obvia/components/Container.js";
