@@ -222,7 +222,8 @@ var DateTime = function (_props)
                     _shapeshift(e);
                 },
                 css: {
-                    width: "100%"
+                    width: "100%",
+                    display: "flex"
                 }
             }
         },
