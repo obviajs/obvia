@@ -40,7 +40,7 @@ var EasyFilter = function (_props)
         _rules, _initialRules,
         _valid = true,
         _advancedMode, _validationGroupUID = StringUtils.guid(),
-        _showOperator,
+        _showOperator, _clearButton,
         _defaultOperators = new ArrayEx([{
             value: "contains",
             operatorLabel: "contains",
@@ -677,6 +677,7 @@ var EasyFilter = function (_props)
                                     "justify-content": "center"
                                 },
                                 click: _self.clear,
+                                display: _clearButton,
                                 components: [
                                     {
                                         ctor: Label,
@@ -927,6 +928,7 @@ var EasyFilter = function (_props)
     _dataProvider = Array.isArray(_props.dataProvider) ? new ArrayEx(_props.dataProvider) : _props.dataProvider;
     _valueField = _props.valueField;
     _labelField = _props.labelField;
+    _clearButton = _props.clearButton;
     _operatorsField = _props.operatorsField;
     _itemEditorField = _props.itemEditorField;
     _getLabelField = _props.getLabelField;
