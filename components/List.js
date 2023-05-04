@@ -165,7 +165,7 @@ var List = function (_props)
         }
     };
 
-    let _dblclick = function (e)
+    let _dblclick = function (e, ra)
     {
         let itemDblClickEvent = jQuery.Event("itemDblClick");
         itemDblClickEvent.originalEvent = e;
