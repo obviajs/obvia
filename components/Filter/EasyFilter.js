@@ -700,20 +700,26 @@ var EasyFilter = function (_props)
     };
     this.clear = function (e)
     {
-        _self.rules.rules.forEach((el) =>
+        for (let i = 0; i < _self.rules.rules.length; i++)
         {
-            el.value = null;
-        });
-        _self.children.repeater.dataProvider.forEach((el) =>
-        {
-            el.value.value = null;
-        });
-        _self.children.repeater.rowItems.forEach((el) =>
-        {
-            let filter = el.repeater_container.children.mainRow.childAtIndex(0).children.valueInput;
-            let valueProp = filter.valueProp;
-            filter[valueProp] = null;
-        });
+            let allowReset;
+            // only in cases wheere we have the enabled property false, then we don't want to reset the value
+            if (_self.children.repeater.dataProvider[i].itemEditor.props.enabled === 0 || _self.children.repeater.dataProvider[i].itemEditor.props.enabled === false)
+            {
+                allowReset = false;
+            } else
+            {
+                allowReset = true;
+            }
+            if (_self.children.repeater.dataProvider[i].itemEditor.props.enabled)
+            {
+                _self.children.repeater.dataProvider[i].value.value = null;
+                _self.rules.rules[i].value = null;
+                let filter = _self.children.repeater.rowItems[i].repeater_container.children.mainRow.childAtIndex(0).children.valueInput;
+                let valueProp = filter.valueProp;
+                filter[valueProp] = null;
+            }
+        };
         _filter(e);
     };
 
@@ -746,12 +752,14 @@ var EasyFilter = function (_props)
             let f = repDp[ordinal - 1];
             t = {
                 "field": f[_valueField],
+                "alias": f['alias'],
                 "operator": f.operatorItem.value,
                 "value": null
             };
             if (_rules.rules)
             {
-                let or = ArrayUtils.arrayHierarchyGetMatching(_initialRules.rules, "field", t.field, "rules");
+                // let or = ArrayUtils.arrayHierarchyGetMatching(_initialRules.rules, "field", t.field, "rules");
+                let or = [..._initialRules.rules].find(rule => t.field == rule.field && t.alias == rule.alias);
                 ObjectUtils.fromDefault(or, t);
             }
             if (f.operatorItem.rangeInput)
@@ -807,26 +815,36 @@ var EasyFilter = function (_props)
         {
             let obj = {};
             // let ind = ArrayUtils.indexOfObject(_dataProvider, "field", crules.field, 0);
-            let ind = [..._dataProvider].findIndex(rule => crules.field == rule.field && (rule.alias ? rule.alias == crules.alias : true));
+            let ind = [..._dataProvider].findIndex(rule => crules.field == rule.field && crules.alias == rule.alias);
             //let ind = i - 1;
-            obj[_labelField] = _dataProvider[ind][_labelField];
-            obj[_valueField] = _dataProvider[ind][_valueField];
-            obj[_itemEditorField] = _dataProvider[ind][_itemEditorField];
-            obj[_getValueField] = _dataProvider[ind][_getValueField];
-            obj[_getLabelField] = _dataProvider[ind][_getLabelField];
-            obj[_operatorEnabledField] = _dataProvider[ind][_operatorEnabledField];
-            obj[_requiredField] = _dataProvider[ind][_requiredField] == false ? false : true;
-            let dpInd = ind;
-            if (Array.isArray(crules.value))
+            if (ind >= 0)
             {
-                _dataProvider[dpInd].value = obj.value = { "min": crules.value[0], "max": crules.value[1] };
+                obj[_labelField] = _dataProvider[ind][_labelField];
+                obj[_valueField] = _dataProvider[ind][_valueField];
+                obj[_itemEditorField] = _dataProvider[ind][_itemEditorField];
+                obj[_getValueField] = _dataProvider[ind][_getValueField];
+                obj[_getLabelField] = _dataProvider[ind][_getLabelField];
+                obj[_operatorEnabledField] = _dataProvider[ind][_operatorEnabledField];
+                obj[_requiredField] = _dataProvider[ind][_requiredField] == false ? false : true;
+                if (crules.alias)
+                {
+                    obj['alias'] = _dataProvider[ind]['alias'];
+                }
+                let dpInd = ind;
+                if (Array.isArray(crules.value))
+                {
+                    _dataProvider[dpInd].value = obj.value = { "min": crules.value[0], "max": crules.value[1] };
+                } else
+                    _dataProvider[dpInd].value = obj.value = { "value": crules.value };
+                ind = ArrayUtils.indexOfObject(_defaultOperators, "value", crules.operator, 0);
+                _dataProvider[dpInd]["operatorItem"] = obj["operatorItem"] = _defaultOperators[ind];
+                _dataProvider[dpInd]["filterHeading"] = obj["filterHeading"] = "";
+                ret.dataProvider.splice(ret.dataProvider.length, 0, obj);
+                ret.cond = i;
             } else
-                _dataProvider[dpInd].value = obj.value = { "value": crules.value };
-            ind = ArrayUtils.indexOfObject(_defaultOperators, "value", crules.operator, 0);
-            _dataProvider[dpInd]["operatorItem"] = obj["operatorItem"] = _defaultOperators[ind];
-            _dataProvider[dpInd]["filterHeading"] = obj["filterHeading"] = "";
-            ret.dataProvider.splice(ret.dataProvider.length, 0, obj);
-            ret.cond = i;
+            {
+                console.error('Filter not found on dataProvider. Check the specified alias for both the rules and the filter component.');
+            }
         }
         return ret;
     };
