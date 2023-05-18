@@ -640,7 +640,7 @@ var EasyFilter = function (_props)
                             ctor: Button,
                             props: {
                                 id: 'apply',
-                                classes: ["filter", "apply-easy"],
+                                classes: ["filter", "apply-easy", "fas", "fa-check"],
                                 click: _filter,
                                 css: {
                                     "height": '1.5rem',
@@ -648,28 +648,14 @@ var EasyFilter = function (_props)
                                     "display": "flex",
                                     "align-items": "center",
                                     "justify-content": "center"
-                                },
-                                components: [
-                                    {
-                                        ctor: Label,
-                                        props: {
-                                            id: 'faAccept',
-                                            labelType: "i",
-                                            label: "",
-                                            classes: ["fas", "fa-check"],
-                                            css: {
-                                                "text-decoration": "none"
-                                            }
-                                        }
-                                    }
-                                ]
+                                }
                             }
                         },
                         {
                             ctor: Button,
                             props: {
                                 id: 'clearFilters',
-                                classes: ["filter", "apply-easy"],
+                                classes: ["filter", "apply-easy", "fa", "fa-eraser"],
                                 css: {
                                     "height": "1.5rem",
                                     "width": '2rem',
@@ -677,21 +663,7 @@ var EasyFilter = function (_props)
                                     "align-items": "center",
                                     "justify-content": "center"
                                 },
-                                click: _self.clear,
-                                components: [
-                                    {
-                                        ctor: Label,
-                                        props: {
-                                            id: 'faClear',
-                                            labelType: "i",
-                                            label: "",
-                                            classes: ["fa", "fa-eraser"],
-                                            css: {
-                                                "text-decoration": "none"
-                                            },
-                                        }
-                                    }
-                                ]
+                                click: _self.clear
                             }
                         }]
                 }
