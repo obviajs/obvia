@@ -166,6 +166,14 @@ var TextInput = function (_props)
         }
     };
 
+    this.select = function ()
+    {
+        if (this.$el != null)
+        {
+            this.$el.select();
+        }
+    };
+
     this.template = function ()
     {
         return "<input data-triggers='input' type='" + this.type + "' id='" + this.domID + "'>";
