@@ -30,18 +30,14 @@ var NumberFormatter = function (_props)
         {
             if (_label != v)
             {
-                if (v != null && !NumberUtils.isNumber(v))
-                {
-                    this.$el.appendText(v);
-                    return;
-                }
                 _props.label = _label = v;
                 if (this.$el)
                 {
                     //convert html entities
                     v = $(`<div>${v}</div>`).get(0).innerText;
                     let last = this.$el.children().last();
-                    v = NumberUtils.addCommas(NumberUtils.toFixed(v, _precision));
+                    if(NumberUtils.isNumber(v))
+                        v = NumberUtils.addCommas(NumberUtils.toFixed(v, _precision));
                     if (last && last.length > 0)
                         if (last[0].nextSibling)
                             last[0].nextSibling.textContent = v;
