@@ -683,7 +683,7 @@ var EasyFilter = function (_props)
             {
                 allowReset = true;
             }
-            if (_self.children.repeater.dataProvider[i].itemEditor.props.enabled)
+            if (allowReset)
             {
                 _self.children.repeater.dataProvider[i].value.value = null;
                 _self.rules.rules[i].value = null;
