@@ -59,7 +59,7 @@ var DateRangeValidator = function (_props)
         let _controlToValidateInstance = _self.controlToValidateInstance;
         if (_controlToValidateInstance)
         {
-            let v = dayjs(_controlToValidateInstance.value, _outputFormat).valueOf();
+            let v = dayjs(_controlToValidateInstance.textInput.value, _outputFormat).valueOf();
             if (!_self.enabled || ((_self.min == null || v >= _self.min) && (_self.max == null || v <= _self.max)))
             {
                 _self.isValid = true;
