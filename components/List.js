@@ -159,7 +159,7 @@ var List = function (_props)
         let itemClickEvent = jQuery.Event("itemClick");
         itemClickEvent.originalEvent = e;
         this.trigger.apply(_self, [itemClickEvent, ra]);
-        if (!itemClickEvent.isDefaultPrevented())
+        if (!itemClickEvent.isDefaultPrevented() && e.target != e.currentTarget)
         {
             _self.selectComponent.apply(this, arguments);
         }
