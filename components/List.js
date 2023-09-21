@@ -159,9 +159,12 @@ var List = function (_props)
         let itemClickEvent = jQuery.Event("itemClick");
         itemClickEvent.originalEvent = e;
         this.trigger.apply(_self, [itemClickEvent, ra]);
-        if (!itemClickEvent.isDefaultPrevented() && e.target != e.currentTarget)
+        if (!itemClickEvent.isDefaultPrevented())
         {
-            _self.selectComponent.apply(this, arguments);
+            if (e.target.id.startsWith("radioButton") || e.target != e.currentTarget)
+            {
+                _self.selectComponent.apply(this, arguments);
+            }
         }
     };
 
