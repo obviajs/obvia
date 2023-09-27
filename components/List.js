@@ -161,10 +161,7 @@ var List = function (_props)
         this.trigger.apply(_self, [itemClickEvent, ra]);
         if (!itemClickEvent.isDefaultPrevented())
         {
-            if ((e.target.parentElement === _self.$el[0] && e.target != e.currentTarget) || e.target != e.currentTarget || e.target.id.startsWith("radioButton"))
-            {
-                _self.selectComponent.apply(this, arguments);
-            }
+            _self.selectComponent.apply(this, arguments);
         }
     };
 
