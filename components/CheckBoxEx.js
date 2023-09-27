@@ -4,7 +4,7 @@
  * 
  */
 import { Component } from "/obvia/components/base/Component.js";
-import { Label } from "/obvia/components/Label.js";
+import { Container } from "/obvia/components/Container.js";
 import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
 import { DependencyContainer } from "/obvia/lib/DependencyContainer.js";
 var CheckBoxEx = function (_props)
@@ -103,19 +103,21 @@ var CheckBoxEx = function (_props)
 
     let _click = _props.click;
 
-    _props.click = function ()
+    _props.click = function (e)
     {
         if (typeof _click == 'function')
             _click.apply(this, arguments);
-
-        let e = arguments[0];
+        if (e.target == _self.$el[0])
+        {
+            _self.proxyMaybe.checkBox.checked = !_self.proxyMaybe.checkBox.checked;
+        }
         if (!e.isDefaultPrevented())
         {
             _clickHandler.apply(this, arguments);
         }
     };
 
-    let r = Label.call(this, _props);
+    let r = Container.call(this, _props);
     return r;
 };
 DependencyContainer.getInstance().register("CheckBoxEx", CheckBoxEx, DependencyContainer.simpleResolve);
