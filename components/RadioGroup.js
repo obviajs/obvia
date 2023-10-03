@@ -53,7 +53,7 @@ var RadioGroup = function (_props)
         value: [],
         direction: "vertical",
         classes: ["radiogroup", "card"],
-        multiselect: false
+        multiSelect: false
     };
     ObjectUtils.fromDefault(_defaultParams, _props);
     //_props = ObjectUtils.extend(false, false, _defaultParams, _props);
