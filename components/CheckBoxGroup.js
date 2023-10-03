@@ -40,7 +40,7 @@ var CheckBoxGroup = function (_props)
 
     let _defaultParams = {
         id: 'checkBoxGroup',
-        multiselect: true,
+        multiSelect: true,
         dataProvider: [],
         valueField: "id",
         labelField: "text",
