@@ -256,10 +256,11 @@ var EasyFilter = function (_props)
             isRangeInput = ra.currentRow.repeater_container.mainCol.operator.selectedItem.rangeInput;
         if (isRangeInput)
         {
+              
             let minLit = Object.assign({}, filterItemEditor);
             let maxLit = Object.assign({}, filterItemEditor);
-            minLit.props = Object.assign({}, filterItemEditor.props);
-            maxLit.props = Object.assign({}, filterItemEditor.props);
+            minLit.props = Object.assign({ }, filterItemEditor.props);
+            maxLit.props = Object.assign({ }, filterItemEditor.props);
             minLit.props.id = "minInput";
             maxLit.props.id = "maxInput";
 
@@ -276,6 +277,9 @@ var EasyFilter = function (_props)
                             "type": "",
                             "id": "colMin",
                             "classes": ["col"],
+                            "css": {
+                                "padding-left": "0px"
+                            },
                             "components": [
                                 minLit,
                                 {
@@ -299,6 +303,9 @@ var EasyFilter = function (_props)
                             "type": "",
                             "id": "colMax",
                             "classes": ["col"],
+                            "css": {
+                                "padding-left": "0px"
+                            },
                             "components": [
                                 maxLit,
                                 {
