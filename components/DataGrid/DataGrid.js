@@ -810,6 +810,10 @@ var DataGrid = function (_props)
         }
     };
 
+    this.resetEditPosition = function(){
+        _editPosition = null;
+    }
+
     this.cellEditCanceled = function (rowIndex, columnIndex)
     {
         let e = jQuery.Event('cellEditCanceled');
