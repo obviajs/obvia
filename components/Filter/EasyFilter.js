@@ -694,9 +694,18 @@ var EasyFilter = function (_props)
             {
                 _self.children.repeater.dataProvider[i].value.value = null;
                 _self.rules.rules[i].value = null;
+                if(_self.children.repeater.rowItems[i].repeater_container.children.mainRow.childAtIndex(0).colMax && _self.children.repeater.rowItems[i].repeater_container.children.mainRow.childAtIndex(0).colMin){
+                    let filterMin = _self.children.repeater.rowItems[i].repeater_container.children.mainRow.childAtIndex(0).colMin.children.minInput;
+                    let filterMax = _self.children.repeater.rowItems[i].repeater_container.children.mainRow.childAtIndex(0).colMax.children.maxInput;
+                    let minValueProp = filterMin.valueProp;
+                    let maxValueProp = filterMax.valueProp;
+                    filterMin[minValueProp] = null;
+                    filterMax[maxValueProp] = null;
+                } else {
                 let filter = _self.children.repeater.rowItems[i].repeater_container.children.mainRow.childAtIndex(0).children.valueInput;
                 let valueProp = filter.valueProp;
                 filter[valueProp] = null;
+                }
             }
         };
         _filter(e);
