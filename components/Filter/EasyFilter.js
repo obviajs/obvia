@@ -720,7 +720,7 @@ var EasyFilter = function (_props)
         }
 
         /* called from clear button, no need to validate filters*/
-        if (!e.originalContext.id.startsWith('clearFilters'))
+        if (!e?.originalContext.id.startsWith('clearFilters'))
         {
             const valid = await _self.validate();
             if (valid == false) return;
