@@ -12,6 +12,7 @@ import { Button } from "/obvia/components/Button/Button.js";
 import { Modal, ModalSize } from "/obvia/components/Modal/Modal.js";
 import { Label, LabelType } from "/obvia/components/Label.js";
 import { DataGrid } from "/obvia/components/DataGrid/DataGrid.js";
+import { EasyFilter } from "/obvia/components/Filter/EasyFilter.js";
 import { AutoCompleteEx } from "/obvia/components/AutoComplete/AutoCompleteEx.js";
 import { DependencyContainer } from "/obvia/lib/DependencyContainer.js";
 var AutoBrowse = function (_props)
@@ -175,6 +176,21 @@ var AutoBrowse = function (_props)
 									"margin-bottom": ".5rem"
 								},
 								display: false
+							}
+						},
+						{
+							ctor: EasyFilter,
+							props: {
+							  id: "easyFilter",
+							  display: false,
+							  labelField: "description",
+							  valueField: "field",
+							  typeField: "type",
+							  itemEditorField: "itemEditor",
+							  css: {
+								"border-radius": "4px",
+								"background-color": "rgb(219 219 219)"
+							  }
 							}
 						},
 						{
