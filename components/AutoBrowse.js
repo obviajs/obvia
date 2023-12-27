@@ -26,7 +26,6 @@ var AutoBrowse = function (_props)
 		_value,
 		_columns = [],
 		_fields, _enabled = true, _btn;
-	let _dgUID = StringUtils.guid();
 
 	Object.defineProperty(this, "dataProvider", {
 		get: function dataProvider()
@@ -87,8 +86,8 @@ var AutoBrowse = function (_props)
 		{
 			_autocomplete = this["autocomplete"];
 			_modal = this.children[this.components[2].props.id];
-			_dg = _modal.modalDialog.modalContent.modalBody["dataGrid_" + _dgUID];
-			_btn = this["workArea_53_" + _dgUID]["selectBtn_" + _dgUID];
+			_dg = _modal.modalDialog.modalContent.modalBody["dataGrid"];
+			_btn = this["workArea_53"]["selectBtn"];
 		}
 	};
 
@@ -132,12 +131,12 @@ var AutoBrowse = function (_props)
 				ctor: Container,
 				props: {
 					type: "",
-					id: "workArea_53_" + _dgUID,
+					id: "workArea_53",
 					components: [
 						{
 							ctor: Button,
 							props: {
-								id: "selectBtn_" + _dgUID,
+								id: "selectBtn",
 								type: "button",
 								css: {
 									"border-radius": "3px",
@@ -196,7 +195,7 @@ var AutoBrowse = function (_props)
 						{
 							ctor: DataGrid,
 							props: {
-								id: "dataGrid_" + _dgUID,
+								id: "dataGrid",
 								allowNewItem: _props.allowNewItem, //allow the user to add items that are not included in the specified dataProvider
 								rowCount: 5, //visible rows count - virtual scrolling wil be applied on scroll
 								dataProvider: _dataProvider,
@@ -208,7 +207,7 @@ var AutoBrowse = function (_props)
 					],
 					accept: function (e)
 					{
-						const items = this.modalDialog.modalContent.modalBody["dataGrid_" + _dgUID].selectedItems;
+						const items = this.modalDialog.modalContent.modalBody["dataGrid"].selectedItems;
 						if (items.length == 0) return this.modalDialog.modalContent.modalBody['infoLabel'].display = true;
 
 						_selectItem(e, null, items);
