@@ -278,7 +278,7 @@ var EasyFilter = function (_props)
                             "id": "colMin",
                             "classes": ["col"],
                             "css": {
-                                "padding-left": "0px"
+                                "padding-left": "5px"
                             },
                             "components": [
                                 minLit,
@@ -304,7 +304,8 @@ var EasyFilter = function (_props)
                             "id": "colMax",
                             "classes": ["col"],
                             "css": {
-                                "padding-left": "0px"
+                                "padding-left": "5px",
+                                "padding-right": "5px"
                             },
                             "components": [
                                 maxLit,
