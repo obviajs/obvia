@@ -8,6 +8,7 @@ import { Container } from "/obvia/components/Container.js";
 import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
 import { DependencyContainer } from "/obvia/lib/DependencyContainer.js";
 import { ContainerType } from "/obvia/components/base/ContainerType.js";
+import { ArrayUtils } from "/obvia/lib/ArrayUtils.js";
 
 var LeafletMap = function (_props)
 {
