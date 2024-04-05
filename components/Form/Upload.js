@@ -103,8 +103,12 @@ var Upload = function (_props)
         this.$el[0].value = null;
     };
 
-    this.fileDialog = function ()
+    this.fileDialog = function (acceptType)
     {
+        if (acceptType == "pdf")
+        {
+            this.accept = '.pdf';
+        }
         this.$el.click();
     };
 

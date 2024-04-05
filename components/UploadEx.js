@@ -123,7 +123,7 @@ var UploadEx = function (_props)
 
     let selectBtn_click = function ()
     {
-        _upload.fileDialog();
+        _upload.fileDialog(_props.accept);
         console.log("selectBtn_click");
     };
 
@@ -131,6 +131,12 @@ var UploadEx = function (_props)
     {
         if (_form && _form.ctor && _form.ctor == 'Form')
         {
+            if (_props.accept === "pdf" && _upload.files[0].type !== "application/pdf"){
+                alert("Please select a PDF document.");
+                _upload.reset();
+                _setValue();
+                _lblFileName.label = "No file selected.";
+            }
             _form.removeFormData(_upload.id + "[]");
             _form.off(FormEventType.POST_ERROR, _ajaxUpload_error);
             _form.off(FormEventType.POST_SUCCESS, _ajaxUpload_success);
