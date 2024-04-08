@@ -130,26 +130,15 @@ var UploadEx = function (_props)
     this.acceptedFileTypesSelected = function() {
         let anyFileAccepted = false;
 
-        for (let i = 0; i < _upload.files.length; i++) {
+        for (let i = 0; i < _upload.files.length && !anyFileAccepted; i++) {
             const fileExtension = '.' + _upload.files[i].name.split('.').pop();
             const acceptedExtensions = this.accept.split(',').map(extension => extension.trim());
     
             if (acceptedExtensions.includes(fileExtension)) {
                 anyFileAccepted = true;
-                break;
             }
         }       
-        if (anyFileAccepted) {
-            return true;
-
-        } else {
-            this.value = null;
-            _upload.reset();
-            _setValue();
-            _lblFileName.label = "No file selected.";
-
-            return false;
-        }
+        return !anyFileAccepted;
     };
 
     this.ajaxUpload = function (queuee = false)
