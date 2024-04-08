@@ -127,6 +127,20 @@ var UploadEx = function (_props)
         console.log("selectBtn_click");
     };
 
+    this.acceptedFileTypesSelected = function() {
+        let anyFileAccepted = false;
+
+        for (let i = 0; i < _upload.files.length && !anyFileAccepted; i++) {
+            const fileExtension = '.' + _upload.files[i].name.split('.').pop();
+            const acceptedExtensions = this.accept.split(',').map(extension => extension.trim());
+    
+            if (acceptedExtensions.includes(fileExtension)) {
+                anyFileAccepted = true;
+            }
+        }       
+        return !anyFileAccepted;
+    };
+
     this.ajaxUpload = function (queuee = false)
     {
         if (_form && _form.ctor && _form.ctor == 'Form')
