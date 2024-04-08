@@ -127,9 +127,9 @@ var UploadEx = function (_props)
         console.log("selectBtn_click");
     };
 
-    this.acceptedFileTypesSelected = function(acceptTypes) {
+    this.acceptedFileTypesSelected = function() {
         const fileExtension = '.' + _upload.files[0].name.split('.').pop();
-        const acceptedExtensions = acceptTypes.split(',').map(extension => extension.trim());
+        const acceptedExtensions = this.accept.split(',').map(extension => extension.trim());
 
         if (acceptedExtensions.includes(fileExtension)){
             return true;
