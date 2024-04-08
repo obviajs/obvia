@@ -127,6 +127,23 @@ var UploadEx = function (_props)
         console.log("selectBtn_click");
     };
 
+    this.acceptedFileTypesSelected = function(acceptTypes) {
+        const fileExtension = '.' + _upload.files[0].name.split('.').pop();
+        const acceptedExtensions = acceptTypes.split(',').map(extension => extension.trim());
+
+        if (acceptedExtensions.includes(fileExtension)){
+            return true;
+
+        } else {
+            this.value = null;
+            _upload.reset();
+            _setValue();
+            _lblFileName.label = "No file selected.";
+
+            return false;
+        }
+    };
+
     this.ajaxUpload = function (queuee = false)
     {
         if (_form && _form.ctor && _form.ctor == 'Form')
