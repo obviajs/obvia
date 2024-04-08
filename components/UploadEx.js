@@ -481,11 +481,7 @@ var UploadEx = function (_props)
         {
             if (_accept != v)
             {
-                let fn = whenDefined(_upload, "accept", function ()
-                {
-                    _upload.accept = _accept = v;
-                });
-                fn();
+                _upload.accept = _accept = v;
             }
         }
     });
