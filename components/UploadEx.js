@@ -128,10 +128,18 @@ var UploadEx = function (_props)
     };
 
     this.acceptedFileTypesSelected = function() {
-        const fileExtension = '.' + _upload.files[0].name.split('.').pop();
-        const acceptedExtensions = this.accept.split(',').map(extension => extension.trim());
+        let anyFileAccepted = false;
 
-        if (acceptedExtensions.includes(fileExtension)){
+        for (let i = 0; i < _upload.files.length; i++) {
+            const fileExtension = '.' + _upload.files[i].name.split('.').pop();
+            const acceptedExtensions = this.accept.split(',').map(extension => extension.trim());
+    
+            if (acceptedExtensions.includes(fileExtension)) {
+                anyFileAccepted = true;
+                break;
+            }
+        }       
+        if (anyFileAccepted) {
             return true;
 
         } else {
