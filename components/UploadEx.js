@@ -130,15 +130,19 @@ var UploadEx = function (_props)
     this.acceptedFileTypesSelected = function() {
         let anyFileAccepted = false;
 
-        for (let i = 0; i < _upload.files.length && !anyFileAccepted; i++) {
-            const fileExtension = '.' + _upload.files[i].name.split('.').pop();
-            const acceptedExtensions = this.accept.split(',').map(extension => extension.trim());
-    
-            if (acceptedExtensions.includes(fileExtension)) {
-                anyFileAccepted = true;
-            }
-        }       
-        return !anyFileAccepted;
+        if (_upload.files){
+            for (let i = 0; i < _upload.files.length && !anyFileAccepted; i++) {
+                const fileExtension = '.' + _upload.files[i].name.split('.').pop();
+                const acceptedExtensions = this.accept.split(',').map(extension => extension.trim());
+        
+                if (acceptedExtensions.includes(fileExtension)) {
+                    anyFileAccepted = true;
+                }
+                return !anyFileAccepted;
+            }       
+        } else {
+            return anyFileAccepted;
+        }
     };
 
     this.ajaxUpload = function (queuee = false)
