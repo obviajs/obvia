@@ -137,8 +137,8 @@ var UploadEx = function (_props)
             if (!acceptedExtensions.includes(fileExtension)) {
                 anyFileAccepted = true;
             }
-            return anyFileAccepted;
         }
+        return anyFileAccepted;
     };
 
     this.ajaxUpload = function (queuee = false)
