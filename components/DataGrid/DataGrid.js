@@ -496,25 +496,78 @@ var DataGrid = function (_props)
         "asc": "desc"
     });
 
+	let _changeSingleIcon = function (e, columnArray)
+    {
+		let cls = _headerCells[columnArray[0][0]].sortSpan.classes;
+		let ind = cls.indexOf("fa-caret-" + DataGridColumn.sortDirFADic[columnArray[0][1].sortDirection.toLowerCase()]);
+		if (ind > -1)
+		{
+			cls.splice(ind, 1);
+		}
+		columnArray[0][1].sortDirection = DataGridColumn.twMap[columnArray[0][1].sortDirection.toLowerCase()];
+		cls.pushUnique("fa-caret-" + DataGridColumn.sortDirFADic[columnArray[0][1].sortDirection.toLowerCase()]);
+		_headerCells[columnArray[0][0]].sortSpan.classes = cls; 
+    };
+
+	let _changeMultipleIcon = function (e, columnsArray) {
+		for (let i = 0; i < columnsArray.length; i++) {
+			let column = columnsArray[i][1];
+			let columnIndex = columnsArray[i][0];
+			let cls = _headerCells[columnIndex].sortSpan.classes;
+			let ind = cls.indexOf("fa-caret-" + DataGridColumn.sortDirFADic[column.sortDirection.toLowerCase()]);
+			if (ind > -1) {
+				cls.splice(ind, 1);
+			}
+			column.sortDirection = DataGridColumn.twMap[column.sortDirection.toLowerCase()];
+			cls.pushUnique("fa-caret-" + DataGridColumn.sortDirFADic[column.sortDirection.toLowerCase()]);
+			_headerCells[columnIndex].sortSpan.classes = cls; 
+		}
+	};
+
+	let _sortColumns = [], _sortSingleColumn = [],columnSortEvent, multipleSortEvent, _multiColumnSort;
     let _headerClickHandler = function (e, columnIndex, column)
     {
         if (!e.isDefaultPrevented())
         {
-            let columnSortEvent = jQuery.Event("columnSort");
-            columnSortEvent.originalEvent = e;
-            let cls = _headerCells[columnIndex].sortSpan.classes;
-            let ind = cls.indexOf("fa-caret-" + DataGridColumn.sortDirFADic[column.sortDirection.toLowerCase()]);
-            if (ind > -1)
-            {
-                cls.splice(ind, 1);
-            }
-            column.sortDirection = DataGridColumn.twMap[column.sortDirection.toLowerCase()];
-            cls.pushUnique("fa-caret-" + DataGridColumn.sortDirFADic[column.sortDirection.toLowerCase()]);
-            _headerCells[columnIndex].sortSpan.classes = cls;
-            this.trigger(columnSortEvent, [columnIndex, column]);
+			_sortEventHandling(e, columnIndex, column);
         }
     };
 
+	let _multipleSort = function (e, columnIndex, column){
+		if (_sortColumns.length > 1){
+			multipleSortEvent = jQuery.Event("multipleSort");
+			multipleSortEvent.originalEvent = e;
+			_self.trigger(multipleSortEvent, _sortColumns);
+			if (!multipleSortEvent.isDefaultPrevented()){
+				_changeMultipleIcon(e, _sortColumns);
+			}
+		} else {
+			_sortColumns = [];
+		}
+	};
+
+	let _columnSort = function (e, columnIndex, column){
+		columnSortEvent = jQuery.Event("columnSort");
+		columnSortEvent.originalEvent = e;
+		_self.trigger(columnSortEvent, _sortSingleColumn);
+
+		if (!columnSortEvent.isDefaultPrevented())
+		{
+			_changeSingleIcon(e, _sortSingleColumn);
+		}
+	};
+
+	let _sortEventHandling = function (e, columnIndex, column){
+		if (_ctrlIsPressed)
+		{
+			_sortColumns.push([columnIndex, column]);
+			_multiColumnSort = true;
+		} else {
+			_sortColumns = [];
+			_sortSingleColumn = [];
+			_columnSort(e, _sortSingleColumn.push([columnIndex, column]));
+		}
+	}
 
     let _thOpt, _thNumbering;
     this.createHeader = async function ()
@@ -1087,7 +1140,13 @@ var DataGrid = function (_props)
             {
                 if ((Env.getInstance().current == EnvType.MAC && !event.metaKey) || event.which == "17")
                     _ctrlIsPressed = false;
-            });
+				if (event.which == "17" && _multiColumnSort)
+				{
+					_multipleSort();
+					_multiColumnSort = false;
+					_sortColumns = [];
+				}
+			});
         }
     };
 
