@@ -498,17 +498,17 @@ var DataGrid = function (_props)
 
 	let _changeIcon = function (e, columnsArray) {
         for (let i = 0; i < columnsArray.length; i++) {
-            let column = columnsArray[i][1];
-            let columnIndex = columnsArray[i][0];
+            let column = columnsArray[i];
+            let columnIndex = columnsArray[i].columnIndex;
             let cls = _headerCells[columnIndex].sortSpan.classes;
-            let ind = cls.indexOf("fa-caret-" + DataGridColumn.sortDirFADic[ column.sortDirection.toLowerCase()]);
+            let ind = cls.indexOf("fa-caret-" + DataGridColumn.sortDirFADic[column.column.sortDirection.toLowerCase()]);
             
             if (ind > -1) {
                 cls.splice(ind, 1);
             }
             
-            column.sortDirection = DataGridColumn.twMap[column.sortDirection.toLowerCase()];
-            cls.pushUnique("fa-caret-" + DataGridColumn.sortDirFADic[column.sortDirection]);
+            column.column.sortDirection = DataGridColumn.twMap[column.column.sortDirection.toLowerCase()];
+            cls.pushUnique("fa-caret-" + DataGridColumn.sortDirFADic[column.column.sortDirection]);
             _headerCells[columnIndex].sortSpan.classes = cls; 
         }
     };
@@ -520,11 +520,11 @@ var DataGrid = function (_props)
         {
 			if (_ctrlIsPressed)
             {
-                _sortColumns.push([columnIndex, column]);
+                _sortColumns.push({columnIndex, column});
                 _multiColumnSort = true;
             } else {
                 _sortColumns = [];
-                _sortColumns.push([columnIndex, column]);
+                _sortColumns.push({columnIndex, column});
                 _multiColumnSort = false;
                 _columnSort(e, _sortColumns);
             }
@@ -541,6 +541,8 @@ var DataGrid = function (_props)
 		{
 			_changeIcon(e, _sortColumns);
 		}
+        _multiColumnSort = false;
+        _sortColumns = [];
 	};
 
     let _thOpt, _thNumbering;
@@ -1113,13 +1115,13 @@ var DataGrid = function (_props)
             $(_self.ownerDocument).keyup(function ()
             {
                 if ((Env.getInstance().current == EnvType.MAC && !event.metaKey) || event.which == "17")
+                {
                     _ctrlIsPressed = false;
-				if (event.which == "17" && _multiColumnSort)
-				{
-					_columnSort();
-					_multiColumnSort = false;
-					_sortColumns = [];
-				}
+                    if (_multiColumnSort)
+                    {
+                        _columnSort();
+                    }
+                }
 			});
         }
     };
