@@ -526,16 +526,16 @@ var DataGrid = function (_props)
                 _sortColumns = [];
                 _sortColumns.push({columnIndex, column});
                 _multiColumnSort = false;
-                _columnSort(e, _sortColumns);
+                _columnSort(e);
             }
         }
     };
 
-	let _columnSort = function (e, columnIndex, column)
+	let _columnSort = function (e)
     {
 		columnSortEvent = jQuery.Event("columnSort");
 		columnSortEvent.originalEvent = e;
-		_self.trigger(columnSortEvent, _sortColumns);
+		_self.trigger(columnSortEvent, {_sortColumns});
 
 		if (!columnSortEvent.isDefaultPrevented())
 		{
@@ -1112,14 +1112,14 @@ var DataGrid = function (_props)
                     _ctrlIsPressed = true;
             });
 
-            $(_self.ownerDocument).keyup(function ()
+            $(_self.ownerDocument).keyup(function (event)
             {
                 if ((Env.getInstance().current == EnvType.MAC && !event.metaKey) || event.which == "17")
                 {
                     _ctrlIsPressed = false;
                     if (_multiColumnSort)
                     {
-                        _columnSort();
+                        _columnSort(e);
                     }
                 }
 			});
