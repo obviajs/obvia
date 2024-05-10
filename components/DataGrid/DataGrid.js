@@ -496,25 +496,54 @@ var DataGrid = function (_props)
         "asc": "desc"
     });
 
+	let _changeIcon = function (e, columnsArray) {
+        for (let i = 0; i < columnsArray.length; i++) {
+            let column = columnsArray[i];
+            let columnIndex = columnsArray[i].columnIndex;
+            let cls = _headerCells[columnIndex].sortSpan.classes;
+            let ind = cls.indexOf("fa-caret-" + DataGridColumn.sortDirFADic[column.column.sortDirection.toLowerCase()]);
+            
+            if (ind > -1) {
+                cls.splice(ind, 1);
+            }
+            
+            column.column.sortDirection = DataGridColumn.twMap[column.column.sortDirection.toLowerCase()];
+            cls.pushUnique("fa-caret-" + DataGridColumn.sortDirFADic[column.column.sortDirection]);
+            _headerCells[columnIndex].sortSpan.classes = cls; 
+        }
+    };
+
+	let _sortColumns = [], columnSortEvent, _multiColumnSort;
     let _headerClickHandler = function (e, columnIndex, column)
     {
         if (!e.isDefaultPrevented())
         {
-            let columnSortEvent = jQuery.Event("columnSort");
-            columnSortEvent.originalEvent = e;
-            let cls = _headerCells[columnIndex].sortSpan.classes;
-            let ind = cls.indexOf("fa-caret-" + DataGridColumn.sortDirFADic[column.sortDirection.toLowerCase()]);
-            if (ind > -1)
+			if (_ctrlIsPressed)
             {
-                cls.splice(ind, 1);
+                _sortColumns.push({columnIndex, column});
+                _multiColumnSort = true;
+            } else {
+                _sortColumns = [];
+                _sortColumns.push({columnIndex, column});
+                _multiColumnSort = false;
+                _columnSort(e);
             }
-            column.sortDirection = DataGridColumn.twMap[column.sortDirection.toLowerCase()];
-            cls.pushUnique("fa-caret-" + DataGridColumn.sortDirFADic[column.sortDirection.toLowerCase()]);
-            _headerCells[columnIndex].sortSpan.classes = cls;
-            this.trigger(columnSortEvent, [columnIndex, column]);
         }
     };
 
+	let _columnSort = function (e)
+    {
+		columnSortEvent = jQuery.Event("columnSort");
+		columnSortEvent.originalEvent = e;
+		_self.trigger(columnSortEvent, {_sortColumns});
+
+		if (!columnSortEvent.isDefaultPrevented())
+		{
+			_changeIcon(e, _sortColumns);
+		}
+        _multiColumnSort = false;
+        _sortColumns = [];
+	};
 
     let _thOpt, _thNumbering;
     this.createHeader = async function ()
@@ -1083,11 +1112,17 @@ var DataGrid = function (_props)
                     _ctrlIsPressed = true;
             });
 
-            $(_self.ownerDocument).keyup(function ()
+            $(_self.ownerDocument).keyup(function (event)
             {
                 if ((Env.getInstance().current == EnvType.MAC && !event.metaKey) || event.which == "17")
+                {
                     _ctrlIsPressed = false;
-            });
+                    if (_multiColumnSort)
+                    {
+                        _columnSort(e);
+                    }
+                }
+			});
         }
     };
 
