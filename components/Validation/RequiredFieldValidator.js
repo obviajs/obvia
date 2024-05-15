@@ -18,8 +18,14 @@ var RequiredFieldValidator = function (_props)
         if (_controlToValidateInstance)
         {
             let value = _controlToValidateInstance.valueProp ? _controlToValidateInstance[_controlToValidateInstance.valueProp] : _controlToValidateInstance.value;
-            const isValidStr = typeof value === "string" && value.trim() !== "";
-            if (!_self.enabled || (value != null && isValidStr && !Array.isArray(value) || (Array.isArray(value) && value.length > 0)))
+            let isArray = value instanceof ArrayEx || Array.isArray(value);
+            if (!_self.enabled)
+            {
+                _self.isValid = true;
+            } else if (typeof value === "string")
+            {
+                _self.isValid = value.trim() !== "";
+            } else if (value != null && !isArray || (isArray && value.length > 0))
             {
                 _self.isValid = true;
             } else
