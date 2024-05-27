@@ -25,6 +25,9 @@ var RequiredFieldValidator = function (_props)
             } else if (typeof value === "string")
             {
                 _self.isValid = value.trim() !== "";
+            } else if (typeof value === "boolean")
+            {
+                _self.isValid = value;
             } else if (value != null && !isArray || (isArray && value.length > 0))
             {
                 _self.isValid = true;
