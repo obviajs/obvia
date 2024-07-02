@@ -28,6 +28,29 @@ var AutoCompleteEx = function (_props)
 		_maxSuggestionsCount,
 		_matchType;
 	let _dpWatcher;
+
+	Object.defineProperty(this, "placeholder", {
+        get: function placeholder()
+        {
+            return _placeholder;
+        },
+        set: function placeholder(v)
+        {
+            if (_placeholder != v) _placeholder = v;
+        },
+        enumerable: true,
+    });
+	Object.defineProperty(this, "noresultsplaceholder", {
+        get: function noresultsplaceholder()
+        {
+            return _noresultsplaceholder;
+        },
+        set: function noresultsplaceholder(v)
+        {
+            if (_noresultsplaceholder != v) _noresultsplaceholder = v;
+        },
+        enumerable: true,
+    });
 	Object.defineProperty(this, "matchType", {
 		get: function matchType()
 		{
@@ -333,7 +356,7 @@ var AutoCompleteEx = function (_props)
 		{
 			_self.closeSuggestionsList();
 			_input.$el
-				.attr("placeholder", "No results found :(")
+				.attr("placeholder", _noresultsplaceholder)
 				.delay(1000)
 				.queue(function (n)
 				{
@@ -578,6 +601,7 @@ var AutoCompleteEx = function (_props)
 		valueField: "id",
 		labelField: "text",
 		placeholder: "Search...",
+		noresultsplaceholder: "No results found :(",
 		matchType: StringMatchType.CONTAINS,
 		classes: ["dropdown"]
 	};
@@ -597,6 +621,7 @@ var AutoCompleteEx = function (_props)
 	let _valueField = _props.valueField;
 	let _labelField = _props.labelField;
 	let _placeholder = _props.placeholder;
+	let _noresultsplaceholder = _props.noresultsplaceholder;
 	let _dataProvider;
 	_matchType = _props.matchType;
 
