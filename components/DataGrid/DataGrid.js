@@ -114,6 +114,14 @@ var DataGrid = function (_props)
     });
 
     let _bindingsPromise;
+    let createEmptyObject = function(di){
+        let len = _columns.length;
+        for (let i = 0; i < len; i++)
+        {
+            di[_columns[i]["field"]] = _headerCells[i].label;
+        }
+        return di;
+    }
     let _scroll = function (scrollTop)
     {
         if (_editPosition != null)
@@ -359,7 +367,8 @@ var DataGrid = function (_props)
     {
         if (!_defaultItem)
         {
-            _defaultItem = ArrayUtils.createEmptyObject(_columns, "field", "description");
+            _defaultItem = {};
+            createEmptyObject(_defaultItem);
         }
         return ObjectUtils.deepEqual(_defaultItem, o);
     };
@@ -448,7 +457,8 @@ var DataGrid = function (_props)
             {
                 if (!_defaultItem)
                 {
-                    _defaultItem = ArrayUtils.createEmptyObject(_columns, "field", "description");
+                    _defaultItem = {};
+                    createEmptyObject(_defaultItem);
                 }
 
                 if (!ObjectUtils.deepEqual(_defaultItem, _self.dataProvider[_self.dataProvider.length - 1]))
