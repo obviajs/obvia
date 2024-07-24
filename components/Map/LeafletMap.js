@@ -33,6 +33,9 @@ var LeafletMap = function (_props)
 				attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 			}).addTo(_map);
 			_self.centerMap();
+			setTimeout(function() {
+				_map.invalidateSize();
+			}, 1);
 			_map.on('click', _mapClick);
 			_map.on('zoomend', _zoomEnd);
 		}
