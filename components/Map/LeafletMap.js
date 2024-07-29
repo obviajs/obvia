@@ -63,6 +63,9 @@ var LeafletMap = function (_props)
 			_longitude = lng;
 			let center = [lat, lng];
 			_map.flyTo(center, _zoomLevel);
+			setTimeout(function() {
+				_map.invalidateSize();
+			}, 1);
 
 			if (_centerCircle)
 			{
