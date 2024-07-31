@@ -28,16 +28,17 @@ var LeafletMap = function (_props)
 	{
 		if (!_map)
 		{
-			_map = L.map(_self.domID).setView([_latitude | 0, _longitude | 0], _zoomLevel | 0);
+			_map = L.map(_self.domID).setView([_latitude || 0, _longitude || 0], _zoomLevel || 0);
 			L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 				attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 			}).addTo(_map);
-			_self.centerMap();
-			setTimeout(function() {
-				_map.invalidateSize();
-			}, 1);
 			_map.on('click', _mapClick);
 			_map.on('zoomend', _zoomEnd);
+		
+			_map.whenReady(function() {
+				_map.invalidateSize();
+				_self.centerMap();
+			});
 		}
 		if (!_layerGroup)
 		{
@@ -63,9 +64,9 @@ var LeafletMap = function (_props)
 			_longitude = lng;
 			let center = [lat, lng];
 			_map.flyTo(center, _zoomLevel);
-			setTimeout(function() {
+			_map.whenReady(function() {
 				_map.invalidateSize();
-			}, 1);
+			});
 
 			if (_centerCircle)
 			{
