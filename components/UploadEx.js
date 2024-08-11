@@ -22,13 +22,14 @@ var UploadEx = function (_props)
 {
     let _self = this;
     let _upload, _lblFileName, _btnRemove, _iconLbl, _lblFileSize, _progressBar, _progressRow, _btnUpload, _btnSelect, _additionalProperties, _action, _downloadUrl;
-    let _lastFileTypeIcon, _autoUpload, _readOnly;
+    let _lastFileTypeIcon, _autoUpload, _readOnly, _headers = {};
 
     let upload_change = function (e)
     {
         e.stopPropagation();
         e.stopImmediatePropagation();
         _self.value = e.target.files;
+        _headers = _headers;
     };
 
     let _init = function (files)
@@ -166,7 +167,7 @@ var UploadEx = function (_props)
                 }
             }
             if (!queuee)
-                return _form.post();
+                return _form.post(null, _headers);
         }
     };
 
@@ -498,6 +499,16 @@ var UploadEx = function (_props)
                 _upload.accept = _accept = v;
             }
         }
+    });
+    Object.defineProperty(this, "headers", {
+      get: function headers() {
+        return _headers;
+      },
+      set: function headers(v) {
+        if (_headers != v) {
+          _headers = v;
+        }
+      },
     });
 
     Object.defineProperty(this, "showBtnRemove", {
