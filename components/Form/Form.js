@@ -221,15 +221,16 @@ var Form = function (_props)
     _httpClient.on("xhrRejected", _xhrRejected);
     _httpClient.on("xhrResolved", _xhrResolved);
 
-    this.post = function (dataType)
+    this.post = function (dataType, headers)
     {
         let type = dataType ? dataType : "json";
         return _httpClient.body(this.getFormData())
-            .type('multipart/form-data')
+            .type("multipart/form-data")
             .query()
             .path()
-            .headers() //additional headers information
-        [_method.toLowerCase()](_action, type).finally(_requestComplete);
+            .headers(headers) //additional headers information
+            [_method.toLowerCase()](_action, type)
+            .finally(_requestComplete);
     };
 
     let _defaultParams = {
