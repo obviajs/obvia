@@ -141,15 +141,27 @@ var LeafletMap = function (_props)
 
 	let _mapClick = function (e)
 	{
-		if (_allowNewItem)
-		{
-			let pos = e.latlng;
+		let pos = e.latlng;
+	
+		if (_allowNewItem) {
+			if (!_props.multiselect) {
+				let len = _markers.length;
+				for (let i = 0; i < len; i++) {
+					_map.removeLayer(_markers[i]);
+				}
+				_markers = [];
+				_dataProvider = [];
+			}
+	
 			let m = _initMarker(pos);
 			let nr = {};
 			nr[_layerIdField] = _layerGroup.getLayerId(m);
 			nr[_latitudeField] = pos.lat;
 			nr[_longitudeField] = pos.lng;
+			
+			_markers.push(m);
 			_dataProvider.push(nr);
+	
 			_self.selectedItem = nr;
 		}
 	};
@@ -282,7 +294,8 @@ var LeafletMap = function (_props)
 		latitudeField: "lat",
 		longitudeField: "lng",
 		layerIdField: "layerId",
-		allowNewItem: false
+		allowNewItem: false,
+		multiselect: true
 	};
 	ObjectUtils.fromDefault(_defaultParams, _props);
 	//_props = ObjectUtils.extend(false, false, _defaultParams, _props);
