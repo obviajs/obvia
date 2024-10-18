@@ -76,35 +76,56 @@ var DropCheck = function (_props) {
       return _selectedItem;
     },
     set: function selectedItem(v) {
-      if (_selectedItem != v) {
-        let labelConcatenation;
+      if (v)
+      {
+        if (_selectedItem != v) {
+          let labelConcatenation;
 
-        let oldValue = _selectedItem;
-        if (v.length > 0) {
-          const isSelectAll =
-            v[0][_valueField] === _dataProvider[0][_valueField];
+          let existingValue = Array.isArray(_selectedItem) && _selectedItem.length > 0 ? v.find((item) => _selectedItem.some((item2) => item[_valueField] !== item2[_valueField])) : v[1] || v[0];
 
-          if (isSelectAll) {
-            _dataProvider.forEach((item, index) => {
-              item.currentRow.checkbox.checked = index === 0;
-            });
-            _selectedItem = v[0];
-            _btnDD.label = v[0][_labelField];
-          } else {
-            _selectedItem = v;
-            labelConcatenation = _selectedItem
-              .map((item) => item[_labelField])
-              .join(", ");
-            _btnDD.label = labelConcatenation;
+          let oldValue = Array.isArray(_selectedItem) ? [..._selectedItem] : { ..._selectedItem };
+          
+          if (v?.length > 0) 
+          {
+            let otherSelection = v.some((item) => typeof item[_valueField] == "string");
+
+            if (otherSelection && typeof existingValue[_valueField] == "string") {
+              _dataProvider[0].currentRow.checkbox.checked = false;
+              _selectedItem = v;
+              labelConcatenation = _selectedItem
+                .filter((item) => item.currentRow.checkbox.checked)
+                .map((item) => item[_labelField])
+                .join(", ");
+              _btnDD.label = labelConcatenation;
+            } 
+            else 
+            {
+              _dataProvider.forEach((item, index) => {
+                item.currentRow.checkbox.checked = index === 0;
+              });
+              _selectedItem = v[0];
+              _btnDD.label = v[0][_labelField];
+            }
           }
-        } else {
-          _selectedItem = [];
-          _btnDD.label = _props.label;
+          else 
+          {
+            _selectedItem = [];
+            _btnDD.label = _props.label;
+            _dataProvider.forEach((item) => {
+              item.currentRow.checkbox.checked = false;
+            });
+          }
+          this.trigger("change");
+          myw.propertyChanged("selectedItem", oldValue, _selectedItem);
         }
-        this.trigger("change");
-        myw.propertyChanged("selectedItem", oldValue, _selectedItem);
+      } else {
+        _selectedItem = [];
+        _btnDD.label = _props.label;
+        _dataProvider.forEach((item) => {
+          item.currentRow.checkbox.checked = false;
+        });
       }
-    },
+    }
   });
   if (!this.hasOwnProperty("label")) {
     Object.defineProperty(this, "label", {
@@ -164,9 +185,13 @@ var DropCheck = function (_props) {
       ctor: Button,
       props: {
         id: "button",
-        classes: [_size, _split, "btn", "btn-secondary", "dropdown-toggle"],
+        classes: [_size, _split, "btn", "btn-secondary", "dropdown-toggle", "p-0"],
         css: {
-          overflow: "hidden",
+          "overflow": "hidden",
+          "white-space": "nowrap",
+          "text-overflow": "ellipsis",
+          "width": "100%",
+          display: "block"
         },
         attr: {
           "data-toggle": "dropdown",
@@ -191,7 +216,7 @@ var DropCheck = function (_props) {
         css: {
           "max-height": "18em",
           "min-width": "100%",
-          padding: "0.2rem 0.2rem",
+          "padding": "0.25rem",
         },
       },
     };
