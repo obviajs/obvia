@@ -22,10 +22,9 @@ var DropCheck = function (_props) {
     _btnDD,
     _componentRepeater,
     _label,
-    _selectedItem,
+    _selectedItem = [],
     myw,
-    _enabled = true,
-    _selectOption;
+    _enabled = true;
 
   Object.defineProperty(this, "labelField", {
     get: function labelField() {
@@ -76,6 +75,7 @@ var DropCheck = function (_props) {
       return _selectedItem;
     },
     set: function selectedItem(v) {
+      let oldValue = Array.isArray(_selectedItem) ? [..._selectedItem] : { ..._selectedItem };
       if (v)
       {
         if (_selectedItem != v) {
@@ -83,7 +83,6 @@ var DropCheck = function (_props) {
 
           let existingValue = Array.isArray(_selectedItem) && _selectedItem.length > 0 ? v.find((item) => _selectedItem.some((item2) => item[_valueField] !== item2[_valueField])) : v[1] || v[0];
 
-          let oldValue = Array.isArray(_selectedItem) ? [..._selectedItem] : { ..._selectedItem };
           
           if (v?.length > 0) 
           {
@@ -118,12 +117,18 @@ var DropCheck = function (_props) {
           this.trigger("change");
           myw.propertyChanged("selectedItem", oldValue, _selectedItem);
         }
-      } else {
+      } else
+      {
         _selectedItem = [];
         _btnDD.label = _props.label;
         _dataProvider.forEach((item) => {
           item.currentRow.checkbox.checked = false;
         });
+        if (typeof oldValue === "object" || oldValue.length !== 0)
+        {
+          this.trigger("change");
+          myw.propertyChanged("selectedItem", oldValue, _selectedItem);
+        }
       }
     }
   });
@@ -261,7 +266,6 @@ var DropCheck = function (_props) {
   }
   _props.attr["data-triggers"] = "change";
 
-  _selectOption = _props.selectOption;
   let _hrefField = _props.hrefField;
   let _labelField = _props.labelField;
   let _valueField = _props.valueField;
