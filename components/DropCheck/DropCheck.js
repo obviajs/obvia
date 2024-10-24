@@ -83,6 +83,28 @@ var DropCheck = function (_props) {
 
           let existingValue = Array.isArray(_selectedItem) && _selectedItem.length > 0 ? v.find((item) => _selectedItem.some((item2) => item[_valueField] !== item2[_valueField])) : v[1] || v[0];
 
+
+          if (!ObjectUtils.isObject(v))
+          {
+              let o = {};
+              o[_valueField] = v;
+              v = o;
+          }
+          if (v.hasOwnProperty(_valueField))
+          {
+            let m = ArrayUtils.getMatching(_componentRepeater.dataProvider, _valueField, v[_valueField]).objects;
+            if (m.length > 0)
+            {
+              v = m[0];
+              _selectedItem = v;
+              _btnDD.label = v[_labelField];
+
+              this.trigger("change");
+              myw.propertyChanged("selectedItem", oldValue, _selectedItem);
+
+              return;
+            } 
+          }
           
           if (v?.length > 0) 
           {
