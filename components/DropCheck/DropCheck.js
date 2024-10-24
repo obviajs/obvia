@@ -98,6 +98,11 @@ var DropCheck = function (_props) {
               v = m[0];
               _selectedItem = v;
               _btnDD.label = v[_labelField];
+            
+              const matchedItem = _componentRepeater.dataProvider.find(item => item[_valueField] === v[_valueField]);
+              if (matchedItem) {
+                matchedItem.currentRow.checkbox.checked = true;
+              }
 
               this.trigger("change");
               myw.propertyChanged("selectedItem", oldValue, _selectedItem);
