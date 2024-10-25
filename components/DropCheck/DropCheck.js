@@ -295,14 +295,18 @@ var DropCheck = function (_props) {
   let _guidField = _props.guidField;
   let _defaultSelectAllLabel = _props.defaultSelectAllLabel || " Select All";
 
-  if (_props.dataProvider && !StringUtils.getBindingExp(_props.dataProvider)) {
-    _dataProvider = _props.dataProvider;
-    if (_dataProvider.length > 0) {
-      _dataProvider.unshift({
+  if (_props.dataProvider && !StringUtils.getBindingExp(_props.dataProvider)) 
+  {
+    const clonedDataProvider = [..._props.dataProvider];
+  
+    if (clonedDataProvider.length > 0) {
+      clonedDataProvider.unshift({
         [_labelField]: _defaultSelectAllLabel,
-        [_valueField]: _dataProvider.map((item) => item[this.valueField]),
+        [_valueField]: clonedDataProvider.map((item) => item[this.valueField]),
       });
     }
+  
+    _dataProvider = clonedDataProvider;
   }
   _props.components = fnContainerDelayInit();
 
