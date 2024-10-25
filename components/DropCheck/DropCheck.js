@@ -81,41 +81,33 @@ var DropCheck = function (_props) {
         if (_selectedItem != v) {
           let labelConcatenation;
 
-          let existingValue = Array.isArray(_selectedItem) && _selectedItem.length > 0 ? v.find((item) => _selectedItem.some((item2) => item[_valueField] !== item2[_valueField])) : v[1] || v[0];
-
-
-          if (!ObjectUtils.isObject(v))
+          let existingValue = !Array.isArray(oldValue[_valueField]) ? v[0] : Array.isArray(_selectedItem) && _selectedItem.length > 0 ? v.find((item) => _selectedItem.some((item2) => item[_valueField] !== item2[_valueField])) : v[1] || v[0];
+          
+          let m = ArrayUtils.getMatching(_componentRepeater.dataProvider, _valueField, v).objects;
+          if (m.length > 0)
           {
-              let o = {};
-              o[_valueField] = v;
-              v = o;
-          }
-          if (v.hasOwnProperty(_valueField))
-          {
-            let m = ArrayUtils.getMatching(_componentRepeater.dataProvider, _valueField, v[_valueField]).objects;
-            if (m.length > 0)
-            {
-              v = m[0];
-              _selectedItem = v;
-              _btnDD.label = v[_labelField];
-            
-              const matchedItem = _componentRepeater.dataProvider.find(item => item[_valueField] === v[_valueField]);
-              if (matchedItem) {
-                matchedItem.currentRow.checkbox.checked = true;
-              }
+            v = m[0];
+            _selectedItem = v;
+            _btnDD.label = v[_labelField];
+          
+            const matchedItem = _componentRepeater.dataProvider.find(item => item[_valueField] === v[_valueField]);
+            if (matchedItem) {
+              matchedItem.currentRow.checkbox.checked = true;
+            }
 
-              this.trigger("change");
-              myw.propertyChanged("selectedItem", oldValue, _selectedItem);
+            this.trigger("change");
+            myw.propertyChanged("selectedItem", oldValue, _selectedItem);
 
-              return;
-            } 
-          }
+            return;
+          } 
+          
           
           if (v?.length > 0) 
           {
-            let otherSelection = v.some((item) => typeof item[_valueField] == "string");
+            let otherSelection = v.some((item) => !Array.isArray(item));
 
-            if (otherSelection && typeof existingValue[_valueField] == "string") {
+            if (otherSelection && !Array.isArray(existingValue) && !Array.isArray(existingValue[_valueField]))
+            {
               _dataProvider[0].currentRow.checkbox.checked = false;
               _selectedItem = v;
               labelConcatenation = _selectedItem
