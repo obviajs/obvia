@@ -334,7 +334,7 @@ var DropSplitType = {
   SPLIT: "dropcheck-toggle-split",
 };
 var DropMenuDirection = {
-  DROPCHECK: "dropcheck",
+  DROPDOWN: "dropdown",
   DROPUP: "btn-group dropup",
   DROPLEFT: "btn-group dropleft",
   DROPRIGHT: "btn-group dropright",
