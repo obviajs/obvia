@@ -262,7 +262,12 @@ var DropCheck = function (_props) {
   let _defaultSelectAllLabel = _props.defaultSelectAllLabel || " Select All";
 
   if (_props.dataProvider && !StringUtils.getBindingExp(_props.dataProvider)) {
-    const clonedDataProvider = [..._props.dataProvider];
+    const clonedDataProvider = _props.dataProvider.map((item) => {
+      return {
+        ...item, // Spread the individual item, not the entire dataProvider array
+        checked: false,
+      };
+    });
 
     if (clonedDataProvider.length > 0) {
       clonedDataProvider.unshift({
