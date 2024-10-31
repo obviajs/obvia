@@ -11,6 +11,7 @@ import { ArrayUtils } from "/obvia/lib/ArrayUtils.js";
 import { Button, ButtonSize } from "/obvia/components/Button/Button.js";
 import { StringUtils } from "/obvia/lib/StringUtils.js";
 import { CheckBox } from "/obvia/components/CheckBox.js";
+import { CheckBoxGroup } from "/obvia/components/CheckBoxGroup.js";
 import { Repeater } from "/obvia/components/Repeater/Repeater.js";
 import { ChangeWatcher } from "/obvia/lib/binding/ChangeWatcher.js";
 import { DependencyContainer } from "/obvia/lib/DependencyContainer.js";
@@ -20,9 +21,8 @@ var DropCheck = function (_props) {
 
   let _dataProvider,
     _btnDD,
-    _componentRepeater,
+    labelConcatenation,
     _label,
-    _selectedItem = [],
     myw,
     _enabled = true;
 
@@ -33,17 +33,24 @@ var DropCheck = function (_props) {
     set: function labelField(v) {
       if (_labelField != v) {
         _labelField = v;
-        _componentRepeater.components = fnInitCmpLink();
+        this.components = fnContainerDelayInit();
+        this.removeAllRows();
         if (_dataProvider && _dataProvider.length > 0) {
           let dpFields = Object.getOwnPropertyNames(_dataProvider[0]);
-          if (dpFields.includes(_labelField)) {
-            _componentRepeater.dataProvider = _dataProvider;
+          if (
+            propDataProvider &&
+            dpFields.includes(_labelField) &&
+            dpFields.includes(_valueField)
+          ) {
+            propDataProvider["set"].call(_self, _dataProvider);
           }
         }
       }
     },
     enumerable: true,
   });
+
+  let propDataProvider = Object.getOwnPropertyDescriptor(this, "dataProvider");
 
   Object.defineProperty(this, "dataProvider", {
     get: function dataProvider() {
@@ -51,18 +58,20 @@ var DropCheck = function (_props) {
     },
     set: function dataProvider(v) {
       _dataProvider = v;
+      this.removeAllRows();
 
       if (v && v.length > 0) {
         let dpFields = Object.getOwnPropertyNames(v[0]);
-        if (dpFields.includes(_labelField)) {
-          _componentRepeater.dataProvider = _dataProvider;
+        if (dpFields.includes(_labelField) && dpFields.includes(_valueField)) {
+          propDataProvider["set"].call(_self, _dataProvider);
         }
       } else {
-        _componentRepeater.dataProvider = _dataProvider;
+        propDataProvider["set"].call(_self, _dataProvider);
       }
     },
     enumerable: true,
   });
+
   Object.defineProperty(this, "valueField", {
     get: function valueField() {
       return _valueField;
@@ -70,67 +79,45 @@ var DropCheck = function (_props) {
     enumerable: true,
   });
 
-  Object.defineProperty(this, "selectedItem", {
-    get: function selectedItem() {
-      return _selectedItem;
+  Object.defineProperty(this, "value", {
+    get: function value() {
+      return _value;
     },
-    set: function selectedItem(v) {
-      let oldValue = Array.isArray(_selectedItem) ? [..._selectedItem] : { ..._selectedItem };
-      if (v)
-      {
-        if (_selectedItem != v) {
-          let labelConcatenation;
+    set: function value(v) {
+      if (v) {
+        if (_value != v) {
+          let m = ArrayUtils.getMatching(_dataProvider, _valueField, v).objects;
+          if (m.length > 0) {
+            v = m[0];
+            _value = v;
+            _btnDD.label = v[_labelField];
 
-          let existingValue = Array.isArray(_selectedItem) && _selectedItem.length > 0 ? v.find((item) => _selectedItem.some((item2) => item[_valueField] !== item2[_valueField])) : v[1] || v[0];
-
-          
-          if (v?.length > 0) 
-          {
-            let otherSelection = v.some((item) => typeof item[_valueField] == "string");
-
-            if (otherSelection && typeof existingValue[_valueField] == "string") {
-              _dataProvider[0].currentRow.checkbox.checked = false;
-              _selectedItem = v;
-              labelConcatenation = _selectedItem
-                .filter((item) => item.currentRow.checkbox.checked)
-                .map((item) => item[_labelField])
-                .join(", ");
-              _btnDD.label = labelConcatenation;
-            } 
-            else 
-            {
-              _dataProvider.forEach((item, index) => {
-                item.currentRow.checkbox.checked = index === 0;
-              });
-              _selectedItem = v[0];
-              _btnDD.label = v[0][_labelField];
+            const matchedItem = _dataProvider.find(
+              (item) => item[_valueField] === v[_valueField]
+            );
+            if (matchedItem) {
+              matchedItem.currentRow.checkBox.checked = true;
             }
+
+            return;
+          } else {
+            labelConcatenation = _dataProvider
+              .filter((item) => item.currentRow.checkBox.checked)
+              .map((item) => item[_labelField])
+              .join(", ");
+            _btnDD.label =
+              labelConcatenation.length > 1 ? labelConcatenation : _label;
           }
-          else 
-          {
-            _selectedItem = [];
-            _btnDD.label = _props.label;
-            _dataProvider.forEach((item) => {
-              item.currentRow.checkbox.checked = false;
-            });
-          }
-          this.trigger("change");
-          myw.propertyChanged("selectedItem", oldValue, _selectedItem);
         }
-      } else
-      {
-        _selectedItem = [];
-        _btnDD.label = _props.label;
+      } else {
         _dataProvider.forEach((item) => {
-          item.currentRow.checkbox.checked = false;
+          item.currentRow.checkBox.checked = false;
         });
-        if (typeof oldValue === "object" || oldValue.length !== 0)
-        {
-          this.trigger("change");
-          myw.propertyChanged("selectedItem", oldValue, _selectedItem);
-        }
+        _btnDD.label = _label;
       }
-    }
+      this.trigger("change");
+      myw.propertyChanged("value", _value, v);
+    },
   });
   if (!this.hasOwnProperty("label")) {
     Object.defineProperty(this, "label", {
@@ -146,8 +133,6 @@ var DropCheck = function (_props) {
   this.endDraw = function (e) {
     if (e.target.id == this.domID) {
       _btnDD = this.button;
-      _componentRepeater = this.repeater;
-      _componentRepeater.attr["aria-labelledby"] = _btnDD.domID;
       if (_props.label && !this.getBindingExpression("label")) {
         _btnDD.label = this.label = _props.label;
       }
@@ -190,13 +175,20 @@ var DropCheck = function (_props) {
       ctor: Button,
       props: {
         id: "button",
-        classes: [_size, _split, "btn", "btn-secondary", "dropdown-toggle", "p-0"],
+        classes: [
+          _size,
+          _split,
+          "btn",
+          "btn-secondary",
+          "dropdown-toggle",
+          "p-0",
+        ],
         css: {
-          "overflow": "hidden",
+          overflow: "hidden",
           "white-space": "nowrap",
           "text-overflow": "ellipsis",
-          "width": "100%",
-          display: "block"
+          width: "100%",
+          display: "block",
         },
         attr: {
           "data-toggle": "dropdown",
@@ -210,19 +202,27 @@ var DropCheck = function (_props) {
     let _componentLink = fnInitCmpLink();
 
     let _componentRepeaterLit = {
-      ctor: Repeater,
+      ctor: "CheckBoxGroup",
       props: {
-        id: "repeater",
         type: "",
+        valueField: _props.valueField,
+        labelField: _props.labelField,
+        checkedField: "checkboxChecked",
+        rendering: {
+          direction: "",
+          separator: false,
+          wrap: false,
+          mode: "append",
+        },
+        id: "checkboxGroup",
         classes: ["dropdown-menu"],
-        components: [_componentLink],
         dataProvider: _dataProvider,
-        dataProviderUpdate: _addScrollableProp,
         css: {
           "max-height": "18em",
           "min-width": "100%",
-          "padding": "0.25rem",
+          padding: "0.25rem",
         },
+        click: _clickHandler,
       },
     };
     return [_componentButton, _componentRepeaterLit];
@@ -245,19 +245,9 @@ var DropCheck = function (_props) {
     guidField: "guid",
   };
 
-  const _addScrollableProp = function (e) {
-    if (this.dataProvider.length > 6) {
-      this.props.css["overflow-y"] = "scroll";
-    } else {
-      this.props.css["overflow-y"] = "hidden";
-    }
-  };
-
-  let _clickHandler = function (e) {
-    _self.selectedItem = [..._componentRepeater.dataProvider].filter(
-      (item) => item.currentRow?.checkbox?.checked
-    );
-
+  const _clickHandler = function (e, ra) {
+    this.display = true;
+    _self.value = _self.children.checkboxGroup.value;
     e.stopPropagation();
   };
   ObjectUtils.fromDefault(_defaultParams, _props);
@@ -274,16 +264,16 @@ var DropCheck = function (_props) {
   let _size = _props.size;
   let _split = _props.split;
   let _guidField = _props.guidField;
-  let _defaultSelectAllLabel = _props.defaultSelectAllLabel || " Select All";
 
   if (_props.dataProvider && !StringUtils.getBindingExp(_props.dataProvider)) {
-    _dataProvider = _props.dataProvider;
-    if (_dataProvider.length > 0) {
-      _dataProvider.unshift({
-        [_labelField]: _defaultSelectAllLabel,
-        [_valueField]: _dataProvider.map((item) => item[this.valueField]),
-      });
-    }
+    const clonedDataProvider = _props.dataProvider.map((item) => {
+      return {
+        ...item,
+        checked: false,
+      };
+    });
+
+    _dataProvider = clonedDataProvider;
   }
   _props.components = fnContainerDelayInit();
 
@@ -305,13 +295,14 @@ var DropCheck = function (_props) {
   return r;
 };
 DropCheck.prototype.ctor = "DropCheck";
-DropCheck.prototype.valueProp = "selectedItem";
+DropCheck.prototype.valueProp = "value";
+
 var DropSplitType = {
   NONE: "",
   SPLIT: "dropcheck-toggle-split",
 };
 var DropMenuDirection = {
-  DROPCHECK: "dropcheck",
+  DROPDOWN: "dropdown",
   DROPUP: "btn-group dropup",
   DROPLEFT: "btn-group dropleft",
   DROPRIGHT: "btn-group dropright",
