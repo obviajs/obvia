@@ -54,7 +54,7 @@ var DropCheck = function (_props) {
 
   Object.defineProperty(this, "dataProvider", {
     get: function dataProvider() {
-      return propDataProvider["get"].call(_self);
+      return _dataProvider;
     },
     set: function dataProvider(v) {
       _dataProvider = v;
@@ -99,19 +99,24 @@ var DropCheck = function (_props) {
               matchedItem.currentRow.checkBox.checked = true;
             }
 
-            this.trigger("change");
-            myw.propertyChanged("value", _value, v);
-
             return;
           } else {
             labelConcatenation = _dataProvider
               .filter((item) => item.currentRow.checkBox.checked)
               .map((item) => item[_labelField])
               .join(", ");
-            _btnDD.label = labelConcatenation;
+            _btnDD.label =
+              labelConcatenation.length > 1 ? labelConcatenation : _label;
           }
         }
+      } else {
+        _dataProvider.forEach((item) => {
+          item.currentRow.checkBox.checked = false;
+        });
+        _btnDD.label = _label;
       }
+      this.trigger("change");
+      myw.propertyChanged("value", _value, v);
     },
   });
   if (!this.hasOwnProperty("label")) {
@@ -209,7 +214,7 @@ var DropCheck = function (_props) {
           wrap: false,
           mode: "append",
         },
-        id: _props.valueField,
+        id: "checkboxGroup",
         classes: ["dropdown-menu"],
         dataProvider: _dataProvider,
         css: {
@@ -242,7 +247,7 @@ var DropCheck = function (_props) {
 
   const _clickHandler = function (e, ra) {
     this.display = true;
-    _self.value = _self.children[_valueField].value;
+    _self.value = _self.children.checkboxGroup.value;
     e.stopPropagation();
   };
   ObjectUtils.fromDefault(_defaultParams, _props);
@@ -259,22 +264,14 @@ var DropCheck = function (_props) {
   let _size = _props.size;
   let _split = _props.split;
   let _guidField = _props.guidField;
-  let _defaultSelectAllLabel = _props.defaultSelectAllLabel || " Select All";
 
   if (_props.dataProvider && !StringUtils.getBindingExp(_props.dataProvider)) {
     const clonedDataProvider = _props.dataProvider.map((item) => {
       return {
-        ...item, // Spread the individual item, not the entire dataProvider array
+        ...item,
         checked: false,
       };
     });
-
-    if (clonedDataProvider.length > 0) {
-      clonedDataProvider.unshift({
-        [_labelField]: _defaultSelectAllLabel,
-        [_valueField]: clonedDataProvider.map((item) => item[this.valueField]),
-      });
-    }
 
     _dataProvider = clonedDataProvider;
   }
@@ -298,6 +295,8 @@ var DropCheck = function (_props) {
   return r;
 };
 DropCheck.prototype.ctor = "DropCheck";
+DropCheck.prototype.valueProp = "value";
+
 var DropSplitType = {
   NONE: "",
   SPLIT: "dropcheck-toggle-split",
