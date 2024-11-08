@@ -34,7 +34,7 @@ var LeafletMap = function (_props)
 			}).addTo(_map);
 			_map.on('click', _mapClick);
 			_map.on('zoomend', _zoomEnd);
-		
+
 			_map.whenReady(function() {
 				_map.invalidateSize();
 				_self.centerMap();
@@ -99,11 +99,26 @@ var LeafletMap = function (_props)
 				m.objects[0][_longitudeField] = pos.lng;
 			});
 			marker.on('click', _markerClick);
+			marker.on('mouseover', _markerHover);
 			_map.addLayer(marker);
 		}
 		return marker;
 	};
-
+	let _markerHover = function (e)
+	{
+		let m = ArrayUtils.getMatching(_dataProvider, _layerIdField, e.target._leaflet_id, true);
+		_self.selectedItem = m.objects[0];
+		let tooltipContent = _self.selectedItem._tooltipContent;
+		if (tooltipContent)
+		{
+			this.bindTooltip(tooltipContent, {
+				permanent: false,
+				direction: _props.attr.tooltipDirection || 'top',
+				className: _props.attr.tooltipClass || ''
+			})
+			this.openTooltip();
+		}
+	};
 	let _markerClick = function (e)
 	{
 		let m = ArrayUtils.getMatching(_dataProvider, _layerIdField, e.target._leaflet_id, true);
@@ -142,7 +157,7 @@ var LeafletMap = function (_props)
 	let _mapClick = function (e)
 	{
 		let pos = e.latlng;
-	
+
 		if (_allowNewItem) {
 			if (!_props.multiselect) {
 				let len = _markers.length;
@@ -152,16 +167,16 @@ var LeafletMap = function (_props)
 				_markers = [];
 				_dataProvider = [];
 			}
-	
+
 			let m = _initMarker(pos);
 			let nr = {};
 			nr[_layerIdField] = _layerGroup.getLayerId(m);
 			nr[_latitudeField] = pos.lat;
 			nr[_longitudeField] = pos.lng;
-			
+
 			_markers.push(m);
 			_dataProvider.push(nr);
-	
+
 			_self.selectedItem = nr;
 		}
 	};
