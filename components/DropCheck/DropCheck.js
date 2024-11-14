@@ -58,15 +58,14 @@ var DropCheck = function (_props) {
     },
     set: function dataProvider(v) {
       _dataProvider = v;
-      this.removeAllRows();
 
       if (v && v.length > 0) {
         let dpFields = Object.getOwnPropertyNames(v[0]);
         if (dpFields.includes(_labelField) && dpFields.includes(_valueField)) {
-          propDataProvider["set"].call(_self, _dataProvider);
+          _self.children.checkboxGroup.dataProvider = _dataProvider;
         }
       } else {
-        propDataProvider["set"].call(_self, _dataProvider);
+        _self.children.checkboxGroup.dataProvider = _dataProvider;
       }
     },
     enumerable: true,
@@ -85,7 +84,7 @@ var DropCheck = function (_props) {
     },
     set: function value(v) {
       if (v) {
-        if (_value != v) {
+        if (!Array.isArray(_value) || !Array.isArray(v) && _value != v) {
           let m = ArrayUtils.getMatching(_dataProvider, _valueField, v).objects;
           if (m.length > 0) {
             v = m[0];

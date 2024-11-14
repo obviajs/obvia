@@ -339,6 +339,7 @@ var EasyFilter = function (_props)
             filterItemEditor = {
                 "ctor": "Container",
                 "props": {
+                    "id": 'itemEditorContainer',
                     "type": "",
                     "classes": [],
                     "css": { "width": "100%" },
@@ -404,7 +405,7 @@ var EasyFilter = function (_props)
                 }
             } else
             {
-                filterItemEditor.valueInput.ctor == ''
+                filterItemEditor.valueInput.ctor == '';
                 filterItemEditor.valueInput.on("change", _filterValueChange);
                 if (ra.currentItem.value)
                 {
