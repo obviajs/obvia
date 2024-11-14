@@ -84,7 +84,7 @@ var DropCheck = function (_props) {
     },
     set: function value(v) {
       if (v) {
-        if (_value != v) {
+        if (!Array.isArray(_value) || !Array.isArray(v) && _value != v) {
           let m = ArrayUtils.getMatching(_dataProvider, _valueField, v).objects;
           if (m.length > 0) {
             v = m[0];
