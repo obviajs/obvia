@@ -84,7 +84,7 @@ var DropCheck = function (_props) {
     },
     set: function value(v) {
       if (v) {
-        if (!Array.isArray(_value) || !Array.isArray(v) && _value != v) {
+        if (!Array.isArray(_value) || !Array.isArray(v) || _value != v) {
           let m = ArrayUtils.getMatching(_dataProvider, _valueField, v).objects;
           if (m.length > 0) {
             v = m[0];
@@ -104,6 +104,7 @@ var DropCheck = function (_props) {
               .filter((item) => item.currentRow.checkBox.checked)
               .map((item) => item[_labelField])
               .join(", ");
+            _value = v;
             _btnDD.label =
               labelConcatenation.length > 1 ? labelConcatenation : _label;
           }
