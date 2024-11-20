@@ -51,7 +51,7 @@ var LeafletMap = function (_props)
 		_zoomLevel = e.target._zoom;
 	};
 
-	this.centerMap = function (lat = _latitude, lng = _longitude)
+	this.centerMap = function (lat = _latitude, lng = _longitude, zoom = _zoomLevel)
 	{
 		if ((!lat || !lng) && _dataProvider.length > 0)
 		{
@@ -63,6 +63,8 @@ var LeafletMap = function (_props)
 			_latitude = lat;
 			_longitude = lng;
 			let center = [lat, lng];
+
+			_zoomLevel = zoom || _zoomLevel;
 			_map.flyTo(center, _zoomLevel);
 			_map.whenReady(function() {
 				_map.invalidateSize();
