@@ -174,7 +174,7 @@ var UploadEx = function (_props)
     this.ajaxDownload = function (i)
     {
         if (_value && Array.isArray(_value) && _value.length > 0 && i < _value.length)
-            downloadFromUrl(_value[i].name, _value[i][_fullUrlField]).then().catch();
+            downloadFromUrl(_value[i].name, _value[i][_fullUrlField], false, _headers.Authorization).then().catch();
     };
 
     let uploadBtn_click = function (e)
