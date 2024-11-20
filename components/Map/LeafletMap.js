@@ -63,7 +63,7 @@ var LeafletMap = function (_props)
 			_latitude = lat;
 			_longitude = lng;
 			let center = [lat, lng];
-			_map.flyTo(center, _zoomLevel);
+			_map.flyTo(center, this.zoomLevel || _zoomLevel);
 			_map.whenReady(function() {
 				_map.invalidateSize();
 			});
