@@ -201,6 +201,7 @@ var AutoBrowse = function (_props)
 								dataProvider: _dataProvider,
 								columns: _columns,
 								multiSelect: _multiSelect,
+								showRowIndex: _props.showRowIndex !== false,
 								rowDblClick: _selectItem.bind(_self),
 							}
 						}
