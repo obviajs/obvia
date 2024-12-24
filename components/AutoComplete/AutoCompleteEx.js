@@ -331,15 +331,21 @@ var AutoCompleteEx = function (_props)
 			_value,
 			_valueField
 		);
-		_suggestions = new ArrayEx(
-			StringUtils.sortBestMatch(
-				ac,
-				toMatch,
-				_self.matchType,
-				_labelField,
-				_maxSuggestionsCount
-			)
-		);
+		if (_self.matchType > 0)
+		{
+			_suggestions = new ArrayEx(
+						StringUtils.sortBestMatch(
+							ac,
+							toMatch,
+							_self.matchType,
+							_labelField,
+							_maxSuggestionsCount
+						)
+					);
+		} else 
+		{
+			_suggestions = new ArrayEx(ac ? ac.slice(0, _maxSuggestionsCount) : []);
+		}
 		_openSuggestionsList();
 	};
 	let _openSuggestionsList = function ()
