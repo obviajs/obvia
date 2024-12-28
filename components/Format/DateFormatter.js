@@ -8,7 +8,7 @@ import { Label } from "/obvia/components/Label.js";
 import { DependencyContainer } from "/obvia/lib/DependencyContainer.js";
 import { DateUtils } from "/obvia/lib/DateUtils.js";
 import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
-
+import { extractText } from "/obvia/lib/my.js";
 var DateFormatter = function (_props)
 {
     //component data
@@ -36,7 +36,7 @@ var DateFormatter = function (_props)
                 if (this.$el)
                 {
                     //convert html entities
-                    v = $(`<div>${v}</div>`).get(0).innerText;
+                    v = extractText(v);
                     let last = this.$el.children().last();
                     v = DateUtils.format(v, _inputFormat, _outputFormat);
                     if (last && last.length > 0)

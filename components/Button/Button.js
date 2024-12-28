@@ -7,6 +7,7 @@
 import { Container } from "/obvia/components/Container.js";
 import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
 import { DependencyContainer } from "/obvia/lib/DependencyContainer.js";
+import { extractText } from "/obvia/lib/my.js";
 var Button = function (_props)
 {
     Object.defineProperty(this, "label",
@@ -23,7 +24,7 @@ var Button = function (_props)
                     if (this.$el)
                     {
                         //convert html entities
-                        v = $(`<div>${v}</div>`).get(0).innerText;
+                        v = extractText(v);
                         let last = this.$el.children().last();
                         if (last && last.length > 0)
                             if (last[0].nextSibling)
@@ -49,18 +50,15 @@ var Button = function (_props)
             {
                 if (_value != v)
                 {
-                    _value = v;
-                    if (_value)
+                    _value = v; 
+                    if (this.$el)
                     {
-                        if (this.$el)
+                        if (_value)
+                        {                       
+                            this.$el[0].value = _value;
+                        } else
                         {
-                            this.$el.attr('value', _value);
-                        }
-                    } else
-                    {
-                        if (this.$el)
-                        {
-                            this.$el.removeAttr('value');
+                            this.$el[0].removeAttribute('value');                        
                         }
                     }
                 }
@@ -107,17 +105,14 @@ var Button = function (_props)
                 if (_type != v)
                 {
                     _type = v;
-                    if (_type)
+                    if (this.$el)
                     {
-                        if (this.$el)
+                        if (_type)
                         {
-                            this.$el.attr('type', _type);
-                        }
-                    } else
-                    {
-                        if (this.$el)
+                            this.$el[0].type =_type;
+                        } else
                         {
-                            this.$el.removeAttr('_type');
+                            this.$el[0].removeAttribute('type');                        
                         }
                     }
                 }

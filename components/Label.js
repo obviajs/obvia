@@ -7,6 +7,8 @@
 import { Container } from "/obvia/components/Container.js";
 import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
 import { DependencyContainer } from "/obvia/lib/DependencyContainer.js";
+import { extractText } from "/obvia/lib/my.js";
+
 var Label = function (_props)
 {
     let _label, _html, _labelType;
@@ -24,7 +26,9 @@ var Label = function (_props)
                 if (this.$el)
                 {
                     //convert html entities
-                    v = $(`<div>${v}</div>`).get(0).innerText;
+                    
+                    v = extractText(v);
+                    v = extractText(v);
                     let last = this.$el.children().last();
                     if (last && last.length > 0)
                         if (last[0].nextSibling)
@@ -44,7 +48,7 @@ var Label = function (_props)
     Object.defineProperty(this, "html", {
         get: function html()
         {
-            return _html = this.$el.html();
+            return _html = this.$el[0].innerHTML;
         },
         set: function html(v)
         {
@@ -53,7 +57,7 @@ var Label = function (_props)
                 _html = v;
                 if (this.$el)
                 {
-                    this.$el.html(v);
+                    this.$el[0].innerHTML = v;
                 }
             }
         },

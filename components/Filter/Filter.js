@@ -206,7 +206,7 @@ var Filter = function (_props)
                 let id = _self.domID + "_span_" + i;
                 _expression = _highlightUnknown(_expression, id, pr.badTokens[i].token.value, pr.badTokens[i].msg);
             }
-            _expressionContainer.$el.html(_expression);
+            _expressionContainer.$el[0].innerHTML = _expression;
             for (let i = 0; i < len; i++)
             {
                 let id = "#" + _self.domID + "_span_" + i;
@@ -216,7 +216,7 @@ var Filter = function (_props)
             }
         } else
         {
-            _expressionContainer.$el.html(_expression);
+            _expressionContainer.$el[0].innerHTML = _expression;
         }
         if (cp && cp.length > 0)
             setCaretPosition(_expressionContainer.$el[0], cp[0]);
@@ -231,7 +231,7 @@ var Filter = function (_props)
     */
     let _expressionInput = function (e)
     {
-        _expression = _expressionContainer.$el.text().toUpperCase();
+        _expression = _expressionContainer.$el[0].textContent.toUpperCase();
         _updateTokens();
     };
 
@@ -244,7 +244,7 @@ var Filter = function (_props)
             a.push(i);
         }
         _expression = a.join(" AND ");
-        _expressionContainer.$el.html(_expression);
+        _expressionContainer.$el[0].innerHTML = _expression;
         _updateTokens();
     };
 

@@ -7,6 +7,8 @@ import { Parent } from "/obvia/components/base/Parent.js";
 import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
 import { StringUtils } from "/obvia/lib/StringUtils.js";
 import { DependencyContainer } from "/obvia/lib/DependencyContainer.js";
+import { extractText } from "/obvia/lib/my.js";
+
 var Container = function (_props)
 {
     let _self = this,
@@ -27,7 +29,7 @@ var Container = function (_props)
                     if (this.$el)
                     {
                         //convert html entities
-                        v = $(`<div>${v}</div>`).get(0).innerText;
+                        v = extractText(v);
                         let last = this.$el.children().last();
                         if (last && last.length > 0)
                             if (last[0].nextSibling)
@@ -62,7 +64,7 @@ var Container = function (_props)
                     {
                         if (v == null)
                         {
-                            this.$el.css('width', '');
+                            this.$el[0].style.width = '';
                         } else
                         {
                             let s = (
@@ -73,7 +75,7 @@ var Container = function (_props)
                                     _width.indexOf("%") > -1
                                 )
                             );
-                            this.$el.css('width', v + (s ? "" : "px"));
+                            this.$el[0].style.width = v + (s ? "" : "px");
                         }
                     }
                 }
@@ -97,7 +99,7 @@ var Container = function (_props)
                     {
                         if (v == null)
                         {
-                            this.$el.css('min-width', '');
+                            this.$el[0].style.minWidth = '';
                         } else
                         {
                             let s = (
@@ -108,7 +110,7 @@ var Container = function (_props)
                                     _minWidth.indexOf("%") > -1
                                 )
                             );
-                            this.$el.css('min-width', v + (s ? "" : "px"));
+                            this.$el[0].style.minWidth = v + (s ? "" : "px");
                         }
                     }
                 }
@@ -132,7 +134,7 @@ var Container = function (_props)
                     {
                         if (v == null)
                         {
-                            this.$el.css('min-height', '');
+                            this.$el[0].style.minHeight = '';
                         } else
                         {
                             let s = (
@@ -143,7 +145,7 @@ var Container = function (_props)
                                     _minHeight.indexOf("%") > -1
                                 )
                             );
-                            this.$el.css('min-height', v + (s ? "" : "px"));
+                            this.$el[0].style.minHeight = v + (s ? "" : "px");
                         }
                     }
                 }
@@ -167,7 +169,7 @@ var Container = function (_props)
                     {
                         if (v == null)
                         {
-                            this.$el.css('height', '');
+                            this.$el[0].style.height = '';
                         } else
                         {
                             let s = (
@@ -178,7 +180,7 @@ var Container = function (_props)
                                     _height.indexOf("%") > -1
                                 )
                             );
-                            this.$el.css('height', v + (s ? "" : "px"));
+                            this.$el[0].style.height = v + (s ? "" : "px");
                         }
                     }
                 }
@@ -203,7 +205,7 @@ var Container = function (_props)
                     {
                         if (v == null)
                         {
-                            this.$el.css('top', '');
+                            this.$el[0].style.top = '';
                         } else
                         {
                             let s = (
@@ -214,7 +216,7 @@ var Container = function (_props)
                                     _top.indexOf("%") > -1
                                 )
                             );
-                            this.$el.css('top', v + (s ? "" : "px"));
+                            this.$el[0].style.top = v + (s ? "" : "px");
                         }
                     }
                 }
@@ -239,7 +241,7 @@ var Container = function (_props)
                     {
                         if (v == null)
                         {
-                            this.$el.css('margin-top', '');
+                            this.$el[0].style.marginTop = '';
                         } else
                         {
                             let s = (
@@ -250,7 +252,7 @@ var Container = function (_props)
                                     _marginTop.indexOf("%") > -1
                                 )
                             );
-                            this.$el.css('margin-top', v + (s ? "" : "px"));
+                            this.$el[0].style.marginTop = v + (s ? "" : "px");
                         }
                     }
                 }
@@ -275,7 +277,7 @@ var Container = function (_props)
                     {
                         if (v == null)
                         {
-                            this.$el.css('margin-left', '');
+                            this.$el[0].style.marginLeft = '';
                         } else
                         {
                             let s = (
@@ -286,7 +288,7 @@ var Container = function (_props)
                                     _marginLeft.indexOf("%") > -1
                                 )
                             );
-                            this.$el.css('margin-left', v + (s ? "" : "px"));
+                            this.$el[0].style.marginLeft = v + (s ? "" : "px");
                         }
                     }
                 }
@@ -308,10 +310,7 @@ var Container = function (_props)
                 _contenteditable = v;
                 if (this.$el)
                 {
-                    if (v)
-                        this.$el.attr('contenteditable', v);
-                    else
-                        this.$el.removeAttr('contenteditable');
+                    this.$el[0].contentEditable = v;
                 }
             }
         }
@@ -327,17 +326,14 @@ var Container = function (_props)
             if (_role != v)
             {
                 _role = v;
-                if (_role)
+                if (this.$el)
                 {
-                    if (this.$el)
+                    if (_role)
+                    {                        
+                        this.$el[0].role = _role;
+                    } else
                     {
-                        this.$el.attr('role', _role);
-                    }
-                } else
-                {
-                    if (this.$el)
-                    {
-                        this.$el.removeAttr('role');
+                       this.$el[0].removeAttribute('role');                       
                     }
                 }
             }
@@ -356,8 +352,8 @@ var Container = function (_props)
             {
                 if (this.$el)
                 {
-                    this.$el.removeClass(_type);
-                    this.$el.addClass(v);
+                    this.$el[0].classList.remove(_type);
+                    this.$el[0].classList.add(v);
                     _type = v;
                 }
             }
@@ -463,8 +459,22 @@ var Container = function (_props)
     return r;
 };
 Container.prototype.ctor = 'Container';
+var ContainerType =
+{
+    "CONTAINER": "container",
+    "CONTAINER_FLUID": "container-fluid",
+    "ROW": "row",
+    "FORM_ROW": "form-row",
+    "COLUMN": "col",
+    "NONE": "", //just sugar ;)
+    "BTN_GROUP": "btn-group",
+    "BTN_TOOLBAR": "btn-toolbar",
+    "INPUT_GROUP": "input-group",
+    "INPUT_GROUP_PREPEND": "input-group-prepend",
+    "INPUT_GROUP_TEXT": "input-group-text"
+};
 DependencyContainer.getInstance().register("Container", Container, DependencyContainer.simpleResolve);
 export
 {
-    Container
+    Container, ContainerType
 };

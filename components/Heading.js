@@ -7,6 +7,7 @@ import { Parent } from "/obvia/components/base/Parent.js";
 import { Align } from "/obvia/components/base/Align.js";
 import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
 import { DependencyContainer } from "/obvia/lib/DependencyContainer.js";
+import { extractText } from "/obvia/lib/my.js";
 var Heading = function (_props)
 {
     let _self, _label, _align;
@@ -23,7 +24,7 @@ var Heading = function (_props)
                 _label = v;
                 if (this.$el)
                 {
-                    v = $(`<div>${v}</div>`).get(0).innerText;
+                    v = extractText(v);
                     let last = this.$el.children().last();
                     if (last && last.length > 0)
                         if (last[0].nextSibling)
@@ -50,7 +51,7 @@ var Heading = function (_props)
             {
                 _align = v;
                 if (this.$el)
-                    this.$el.attr('align', _align);
+                    this.$el[0].align = _align;
             }
         },
         enumerable: true

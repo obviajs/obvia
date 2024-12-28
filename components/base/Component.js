@@ -327,9 +327,9 @@ var Component = function (_props)
                 if (this.$el)
                 {
                     if (_visible)
-                        this.$el.css({ "visibility": "visible" });
+                        this.$el[0].style.visibility = "visible";
                     else
-                        this.$el.css({ "visibility": "hidden" });
+                        this.$el[0].style.visibility = "hidden";
                 }
             }
         },
@@ -371,12 +371,12 @@ var Component = function (_props)
             {
                 _enabled = v;
                 if (this.$el)
-                    this.$el.find("input, select, textarea, button").addBack("input, select, textarea, button").each(function ()
+                    this.$el.find(":scope input, :scope select, :scope textarea, :scope button").each(function ()
                     {
                         if (!v)
-                            $(this).attr('disabled', 'disabled');
+                            $(this)[0].disabled = true;
                         else
-                            $(this).removeAttr('disabled');
+                            $(this)[0].removeAttribute('disabled');
                     });
             }
         },
@@ -395,12 +395,12 @@ var Component = function (_props)
             {
                 _readonly = v;
                 if (this.$el)
-                    this.$el.find("input, select, textarea, button").addBack("input, select, textarea, button").each(function ()
+                    this.$el.find(":scope input, :scope select, :scope textarea, :scope button").each(function ()
                     {
                         if (v)
-                            $(this).prop('readonly', 'readonly');
+                            $(this)[0].readonly = true;
                         else
-                            $(this).removeAttr('readonly');
+                            $(this)[0].removeAttribute('readonly');
                     });
             }
         },
@@ -417,10 +417,7 @@ var Component = function (_props)
             if (_draggable != v)
             {
                 _draggable = v;
-                if (!v)
-                    this.$el.prop('draggable', 'false');
-                else
-                    this.$el.prop('draggable', 'true');
+                this.$el[0].draggable = v;
             }
         },
         enumerable: true
@@ -445,15 +442,16 @@ var Component = function (_props)
                         let len = _classes.length;
                         for (let i = 0; i < len; i++)
                         {
-                            let _class = _classes[i];
-                            if (this.$el.hasClass(_class))
-                                this.$el.removeClass(_class);
+                            let _class = _classes[i].trim();
+                            if (this.$el[0].classList.contains(_class))
+                                this.$el[0].classList.remove(_class);
                         }
                         _classes = v;
                         len = _classes.length;
                         for (let i = 0; i < len; i++)
                         {
-                            this.$el.addClass(_classes[i]);
+                            let _class = _classes[i].trim();
+                            this.$el[0].classList.add(_class);
                         }
                         _classesClone = _classes.slice(0);
                     }
@@ -657,7 +655,7 @@ var Component = function (_props)
     {
         let customEvents = _defaultHandlers;
 
-        this.$el.find('[data-triggers]').addBack('[data-triggers]').each(function ()
+        this.$el.find(':scope [data-triggers]').each(function ()
         {
             let eventsObj = {};
             let events = $(this).data('triggers');

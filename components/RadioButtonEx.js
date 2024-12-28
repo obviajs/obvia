@@ -6,7 +6,7 @@
 
 import { Component } from "/obvia/components/base/Component.js";
 import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
-
+import { extractText } from "/obvia/lib/my.js";
 var RadioButtonEx = function (_props)
 {
 
@@ -25,7 +25,7 @@ var RadioButtonEx = function (_props)
                     _label = v;
                     if (this.$el)
                     {
-                        v = $(`<div>${v}</div>`).get(0).innerText;
+                        v = extractText(v);
                         let last = this.$el.children().last();
                         if (last && last.length > 0)
                             if (last[0].nextSibling)
@@ -53,7 +53,7 @@ var RadioButtonEx = function (_props)
                 else
                     _self.checked = true;
                 if (this.$input)
-                    this.$input.val(v);
+                    this.$input[0].value = v;
             }
         });
 
@@ -69,7 +69,7 @@ var RadioButtonEx = function (_props)
                 {
                     _checked = !!v;
                     if (this.$input)
-                        this.$input.prop('checked', v);
+                        this.$input[0].checked = v;
                 }
             }
         });
@@ -80,7 +80,7 @@ var RadioButtonEx = function (_props)
             if (_name != v)
             {
                 _name = v;
-                this.$input.attr("name", v);
+                this.$input[0].name = v;
             }
         },
         get: function name()

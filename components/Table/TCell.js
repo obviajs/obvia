@@ -6,7 +6,7 @@
 
 import { Parent } from "/obvia/components/base/Parent.js";
 import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
-
+import { extractText } from "/obvia/lib/my.js";
 var TCell = function (_props)
 {
 
@@ -25,7 +25,7 @@ var TCell = function (_props)
                 if (this.$el)
                 {
                     //convert html entities
-                    v = $(`<div>${v}</div>`).get(0).innerText;
+                    v = extractText(v);
                     let last = this.$el.children().last();
                     if (last && last.length > 0)
                         if (last[0].nextSibling)
@@ -53,17 +53,14 @@ var TCell = function (_props)
                 if (_colspan != v)
                 {
                     _colspan = v;
-                    if (_colspan)
+                    if (this.$el)
                     {
-                        if (this.$el)
+                        if (_colspan)
                         {
                             this.$el.attr('colspan', _colspan);
-                        }
-                    } else
-                    {
-                        if (this.$el)
+                        } else
                         {
-                            this.$el.removeAttr('colspan');
+                            this.$el.removeAttribute('colspan');
                         }
                     }
                 }
@@ -81,18 +78,15 @@ var TCell = function (_props)
             {
                 if (_rowspan != v)
                 {
-                    _rowspan = v;
-                    if (_rowspan)
+                    _rowspan = v;  
+                    if (this.$el)
                     {
-                        if (this.$el)
+                        if (_rowspan)
                         {
-                            this.$el.attr('rowspan', _rowspan);
-                        }
-                    } else
-                    {
-                        if (this.$el)
-                        {
-                            this.$el.removeAttr('rowspan');
+                            this.$el[0].rowspan = _rowspan;
+                        } else
+                        {                           
+                            this.$el[0].removeAttribute('rowspan');
                         }
                     }
                 }

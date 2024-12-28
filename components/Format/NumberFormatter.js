@@ -9,6 +9,7 @@ import { Label } from "/obvia/components/Label.js";
 import { DependencyContainer } from "/obvia/lib/DependencyContainer.js";
 import { NumberUtils } from "/obvia/lib/NumberUtils.js";
 import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
+import { extractText } from "/obvia/lib/my.js";
 var NumberFormatter = function (_props)
 {
     //component data
@@ -34,7 +35,7 @@ var NumberFormatter = function (_props)
                 if (this.$el)
                 {
                     //convert html entities
-                    v = $(`<div>${v}</div>`).get(0).innerText;
+                    v = extractText(v);
                     let last = this.$el.children().last();
                     if(NumberUtils.isNumber(v))
                         v = NumberUtils.addCommas(NumberUtils.toFixed(v, _precision));

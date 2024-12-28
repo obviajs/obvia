@@ -1,6 +1,7 @@
 import { Container } from "/obvia/components/Container.js";
 import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
 import { DependencyContainer } from "/obvia/lib/DependencyContainer.js";
+import { extractText } from "/obvia/lib/my.js";
 
 var Li = function (_props)
 {
@@ -18,7 +19,7 @@ var Li = function (_props)
                 _label = v;
                 if (this.$el)
                 {
-                    v = $(`<div>${v}</div>`).get(0).innerText;
+                    v = extractText(v);
                     let last = this.$el.children().last();
                     if (last && last.length > 0)
                         if (last[0].nextSibling)
@@ -47,7 +48,7 @@ var Li = function (_props)
                 {
                     _value = v;
                     if (this.$el)
-                        this.$el.attr('value', v);
+                        this.$el[0].value = v;
                 }
             },
             enumerable: true

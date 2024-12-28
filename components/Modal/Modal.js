@@ -190,7 +190,8 @@ var Modal = function (_props)
     let fnContainerDelayInit = function ()
     {
         Modal.all.push(_self);
-        _props.css["z-index"] = 1040 + Modal.all.length;
+        //commented out 2024
+        //_props.css["z-index"] = 1040 + Modal.all.length;
         if (!_backDrop)
         {
             _backDrop = new Container({

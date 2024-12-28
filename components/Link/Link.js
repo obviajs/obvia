@@ -7,6 +7,8 @@
 import { Parent } from "/obvia/components/base/Parent.js";
 import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
 import { DependencyContainer } from "/obvia/lib/DependencyContainer.js";
+import { extractText } from "/obvia/lib/my.js";
+
 var Link = function (_props)
 {
     Object.defineProperty(this, "title", {
@@ -20,7 +22,7 @@ var Link = function (_props)
             {
                 _title = v;
                 if (this.$el)
-                    this.$el.attr('title', v);
+                    this.$el[0].title = v;
             }
         },
         enumerable: true
@@ -36,17 +38,14 @@ var Link = function (_props)
             if (href != v)
             {
                 _href = v;
-                if (_href)
+                if (this.$el)
                 {
-                    if (this.$el)
+                    if (_href)
                     {
-                        this.$el.attr('href', _href);
-                    }
-                } else
-                {
-                    if (this.$el)
+                        this.$el[0].href = href;
+                    } else
                     {
-                        this.$el.removeAttr('href');
+                        this.$el[0].removeAttribute('href');                    
                     }
                 }
             }
@@ -64,17 +63,14 @@ var Link = function (_props)
             if (_target != v)
             {
                 _target = v;
-                if (_target)
+                if (this.$el)
                 {
-                    if (this.$el)
+                    if (_target)
                     {
-                        this.$el.attr('target', _target);
-                    }
-                } else
-                {
-                    if (this.$el)
+                        this.$el[0].target = _target;
+                    } else
                     {
-                        this.$el.removeAttr('target');
+                        this.$el[0].removeAttribute('target');                    
                     }
                 }
             }
@@ -94,7 +90,7 @@ var Link = function (_props)
                 _label = v;
                 if (this.$el)
                 {
-                    v = $(`<div>${v}</div>`).get(0).innerText;
+                    v = extractText(v);
                     let last = this.$el.children().last();
                     if (last && last.length > 0)
                         if (last[0].nextSibling)

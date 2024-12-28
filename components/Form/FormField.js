@@ -99,11 +99,11 @@ var FormField = function (_props)
                 if (_name)
                 {
                     if (_input && _input.$el)
-                        _input.$el.attr("name", _name);
+                        _input.$el[0].name = _name;
                 } else
                 {
                     if (_input && _input.$el)
-                        _input.$el.removeAttr('name');
+                        _input.$el[0].removeAttribute('name');
                 }
             }
         },
@@ -120,14 +120,15 @@ var FormField = function (_props)
             if (_required != v)
             {
                 _required = v;
-                if (_required)
+                if (_input && _input.$el)
                 {
-                    if (_input && _input.$el)
-                        _input.$el.attr('required', _required);
-                } else
-                {
-                    if (_input && _input.$el)
-                        _input.$el.removeAttr('required');
+                    if (_required)
+                    {
+                        _input.$el[0].required = _required;
+                    } else
+                    {
+                        _input.$el[0].removeAttribute('required');
+                    }
                 }
             }
         },
@@ -247,14 +248,15 @@ var FormField = function (_props)
             if (_placeholder != v)
             {
                 _placeholder = v;
-                if (_placeholder)
+                if (_input && _input.$el)
                 {
-                    if (_input && _input.$el)
-                        _input.$el.attr("placeholder", _placeholder);
-                } else
-                {
-                    if (_input && _input.$el)
-                        _input.$el.removeAttr('placeholder');
+                    if (_placeholder)
+                    {
+                        _input.$el[0].placeholder = _placeholder;
+                    } else
+                    {
+                        _input.$el[0].removeAttribute('placeholder');
+                    }
                 }
             }
         },

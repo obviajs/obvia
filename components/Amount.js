@@ -3,9 +3,10 @@
  *
  * 
  */
-import { Container } from "/obvia/components/Container.js";
+import { Container, ContainerType } from "/obvia/components/Container.js";
 import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
 import { DependencyContainer } from "/obvia/lib/DependencyContainer.js";
+
 var Amount = function (_props)
 {
     let _self = this;

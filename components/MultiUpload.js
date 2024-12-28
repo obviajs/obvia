@@ -3,12 +3,11 @@
  *
  * 
  */
-import { Container } from "/obvia/components/Container.js";
+import { Container, ContainerType } from "/obvia/components/Container.js";
 import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
 import { DependencyContainer } from "/obvia/lib/DependencyContainer.js";
 import { Repeater } from "/obvia/components/Repeater/Repeater.js";
 import { UploadEx } from "/obvia/components/UploadEx.js";
-import { ContainerType } from "/obvia/components/base/ContainerType.js";
 import { BgStyle } from "/obvia/components/base/BgStyle.js";
 import { Label, LabelType } from "/obvia/components/Label.js";
 
