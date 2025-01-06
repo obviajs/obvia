@@ -571,6 +571,9 @@ var DataGrid = function (_props)
             let column = _columns[columnIndex] = new DataGridColumn(_columns[columnIndex]);
             column.headerRenderer.props.id = column.headerRenderer.props.id ? column.headerRenderer.props.id : "header";
             let headerRenderer = await Component.fromLiteral(column.headerRenderer);
+            headerRenderer.on("endDraw", function () {
+                headerRenderer.$el.css(column.visible ? {} :  { display: 'none' });
+            });
             headerRenderer.on("click", function (e)
             {
                 _headerClickHandler.call(_self, e, columnIndex, column);
@@ -1354,6 +1357,7 @@ var DataGrid = function (_props)
                 });
                 //width='"+column.calculatedWidth+"'
                 let cell = $("<td id='cell_" + (index) + "_" + columnIndex + "'></td>");
+                cell.css(column.visible ? {} : { display: 'none' });
                 cell.on("click", function (evt)
                 {
                     let rargs = new RepeaterEventArgs(_self.rowItems[index], _self.dataProvider[index + _virtualIndex], index);
