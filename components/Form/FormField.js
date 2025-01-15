@@ -51,11 +51,19 @@ var FormField = function (_props)
                     return ($(this).closest(".no-form-control").length == 0);
                 });
             }
-            _cmpObj.addClass("form-control");
-            if (_size)
-                _cmpObj.addClass(_size);
-
-            _lbl.$el.prop("for", _input.domID);
+            if(_cmpObj)
+            {
+                if (_cmpObj[0] && (_cmpObj[0].type == "checkbox" || _cmpObj[0].type == "radio"))
+                    _cmpObj.addClass("form-check-input");
+                else
+                {
+                    _cmpObj.addClass("form-control");
+                    if (_size)
+                        _cmpObj.addClass(_size);
+                }
+            }
+            _input.$el[0].id = _input.domID;
+            _lbl.$el[0].htmlFor = _input.domID;
         }
     };
 

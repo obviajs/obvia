@@ -14,24 +14,6 @@ import { DependencyContainer } from "/obvia/lib/DependencyContainer.js";
 var Modal = function (_props)
 {
     let _self = this;
-    Object.defineProperty(this, "title", {
-        get: function title()
-        {
-            return _title;
-        },
-        set: function title(v)
-        {
-            if (_title != v)
-            {
-                _title = v;
-                if (_modalHeader.title)
-                {
-                    _modalHeader.title.label = v;
-                }
-            }
-        }
-    });
-
     let _displayed = false;
     this.DOMMutation = function (e)
     {
@@ -318,6 +300,23 @@ var Modal = function (_props)
         }
         _destruct(mode);
     };
+    Object.defineProperty(this, "title", {
+        get: function title()
+        {
+            return _title;
+        },
+        set: function title(v)
+        {
+            if (_title != v)
+            {
+                _title = v;
+                if (_modalHeader.title)
+                {
+                    _modalHeader.title.label = v;
+                }
+            }
+        }
+    });
     return r;
 };
 Modal.prototype.ctor = 'Modal';

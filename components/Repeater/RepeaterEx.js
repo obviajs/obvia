@@ -110,7 +110,7 @@ var RepeaterEx = function (_props) {
     };
 
     this.addRow = function () {
-        _props.dataProvider.splice(_props.dataProvider.length, 0, _props.dataProvider.length > 0 ? buildDefaultObject(_props.dataProvider[0]) : {});
+        _props.dataProvider.splice(_props.dataProvider.length, 0, _props.dataProvider.length > 0 ? ObjectUtils.buildDefaultObject(_props.dataProvider[0]) : {});
     };
 
     let _defaultParams = {

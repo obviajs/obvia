@@ -1,19 +1,27 @@
-var Spacing = function(_props, $el)
+var Spacing = function(cmp)
 {  
     this.setClass = function(className, v, max = 13)
     {
-        if(v=="auto"||!isNaN(v))
+        if(v=="auto" || !isNaN(v))
         {
-            var classArr = [];
-            for(var i=0;i<=max;i++)
+            let classArr = [];
+            for(let i=0;i<=max;i++)
             {
                 classArr.push(className+i);       
             }
-            var _classes = classArr.join(" ");
-            _$el.removeClass(_classes);
-            _$el.addClass(className + v);
+            let classes = cmp.classes.slice(0);
+            classArr.forEach(cls => {
+                let ind = classes.indexOf(cls);
+                if(ind > -1)
+                {
+                    classes.splice(ind, 1);
+                }
+            } );
+            classes.push(className + v);
+            cmp.classes = classes;
         }
     }
+
     Object.defineProperty(this, "colSpan", 
     {
         get: function colSpan() 
@@ -433,17 +441,11 @@ var Spacing = function(_props, $el)
         configurable: true,
         enumerable:true
     });
-//mx-auto, my-auto
-    var _$el = $el;
-    var _offset, _colSpan, _mb, _mt, _ml, _mr, _mx, _my, _pb, _pt, _pl, _pr, _px, _py, _mw, _mh, _w, _h, _m, _p;
-    if (_props)
-    {
-        var pArr = ['offset', 'colSpan', 'm', 'mb', 'mt', 'ml', 'mr', 'mx', 'my', 'p', 'pb', 'pt', 'pl', 'pr', 'px', 'py', 'mw', 'mh', 'w', 'h'];
-        for(var i=0;i<pArr.length;i++)
-        {
-            var prop = pArr[i];
-            if (_props[prop] !=null)
-                this[prop] = _props[prop];
-        }       
-    }
+
+    let _cmp = cmp;
+    let _offset, _colSpan, _mb, _mt, _ml, _mr, _mx, _my, _pb, _pt, _pl, _pr, _px, _py, _mw, _mh, _w, _h, _m, _p;
 }
+export
+{
+    Spacing
+};

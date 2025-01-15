@@ -11,22 +11,6 @@ import { extractText } from "/obvia/lib/my.js";
 
 var Link = function (_props)
 {
-    Object.defineProperty(this, "title", {
-        get: function title()
-        {
-            return _title;
-        },
-        set: function title(v)
-        {
-            if (_title != v)
-            {
-                _title = v;
-                if (this.$el)
-                    this.$el[0].title = v;
-            }
-        },
-        enumerable: true
-    });
 
     Object.defineProperty(this, "href", {
         get: function href()
@@ -108,10 +92,6 @@ var Link = function (_props)
 
     this.beforeAttach = function ()
     {
-        if (_props.title)
-        {
-            this.title = _props.title;
-        }
         if (_props.label && !this.getBindingExpression("label"))
         {
             this.label = _props.label;
@@ -134,13 +114,12 @@ var Link = function (_props)
     let _defaultParams = {
         label: "",
         href: "javascript:void(0)",
-        target: LinkTarget.self,
-        title: undefined
+        target: LinkTarget.self
     };
     ObjectUtils.fromDefault(_defaultParams, _props);
     //_props = ObjectUtils.extend(false, false, _defaultParams, _props);
 
-    let _label, _href, _target, _title;
+    let _label, _href, _target;
 
     let r = Parent.call(this, _props);
     return r;

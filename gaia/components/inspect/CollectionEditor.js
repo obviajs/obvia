@@ -55,8 +55,8 @@ var CollectionEditor = function (_props)
             }
             for (let i = 0; i < this.children.internalRepeater.itemLabel.length; i++)
             {
-                this.children.internalRepeater.itemLabel[i].attr["data-toggle"] = "collapse";
-                this.children.internalRepeater.itemLabel[i].attr["data-target"] = "#" + this.children.internalRepeater.objectEditor[i].domID;
+                this.children.internalRepeater.itemLabel[i].attr["data-bs-toggle"] = "collapse";
+                this.children.internalRepeater.itemLabel[i].attr["data-bs-target"] = "#" + this.children.internalRepeater.objectEditor[i].domID;
             }
             this.children.internalRepeater.focusComponent(ra.currentIndex, 0);
         }
@@ -90,7 +90,7 @@ var CollectionEditor = function (_props)
                                 props: {
                                     id: "itemLabel",
                                     label: "Edit Item",
-                                    attr: { "data-toggle": "collapse" }
+                                    attr: { "data-bs-toggle": "collapse" }
                                 }
                             },
                             {

@@ -4,6 +4,8 @@
  * 
  */
 import { Container, ContainerType } from "/obvia/components/Container.js";
+import { TextInput, TextInputType } from "/obvia/components/TextInput/TextInput.js";
+import { Select } from "/obvia/components/Select/Select.js";
 import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
 import { DependencyContainer } from "/obvia/lib/DependencyContainer.js";
 

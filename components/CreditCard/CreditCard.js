@@ -3,9 +3,14 @@
  * 
  * 
 */
-import { Container } from "/obvia/components/Container.js";
+import { Container, ContainerType } from "/obvia/components/Container.js";
+import { Label, LabelType } from "/obvia/components/Label.js";
+import { TextInput } from "/obvia/components/TextInput/TextInput.js";
+import { Select } from "/obvia/components/Select/Select.js";
 import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
 import { CalendarConstants } from "/obvia/components/Calendar/CalendarConstants.js";
+import { DependencyContainer } from "/obvia/lib/DependencyContainer.js";
+import { EventDispatcher } from "/obvia/lib/EventDispatcher.js";
 
 var CreditCard = function (_props)
 {
@@ -330,7 +335,7 @@ var CreditCard = function (_props)
                                         id: 'fab',
                                         spacing: { colSpan: 2 },
                                         labelType: LabelType.i,
-                                        classes: ["fab", "fa-cc-visa fa-4x", "fc-icon"]
+                                        classes: ["fab", "fa-cc-visa", "fa-4x", "fc-icon"]
                                     }
                                 },
                                 {
@@ -339,7 +344,7 @@ var CreditCard = function (_props)
                                         id: 'fab',
                                         spacing: { colSpan: 2 },
                                         labelType: LabelType.i,
-                                        classes: ["fab", "fa-cc-amex fa-4x", "fc-icon"]
+                                        classes: ["fab", "fa-cc-amex", "fa-4x", "fc-icon"]
                                     }
                                 },
                                 {
@@ -348,7 +353,7 @@ var CreditCard = function (_props)
                                         id: 'fab',
                                         spacing: { colSpan: 2 },
                                         labelType: LabelType.i,
-                                        classes: ["fab", "fa-cc-mastercard fa-4x "]
+                                        classes: ["fab", "fa-cc-mastercard", "fa-4x"]
                                     }
                                 },
                             ]
@@ -459,3 +464,9 @@ CreditCard.prototype.ctor = "CreditCard";
 CreditCard.init = false;
 CreditCard.dpMonth = new Array(13);
 CreditCard.dpYear = new Array(100);
+
+DependencyContainer.getInstance().register("CreditCard", CreditCard, DependencyContainer.simpleResolve);
+export
+{
+    CreditCard
+};

@@ -25,23 +25,6 @@ var Image = function (_props)
         enumerable: true
     });
 
-    Object.defineProperty(this, "title", {
-        get: function title()
-        {
-            return _title;
-        },
-        set: function title(v)
-        {
-            if (_title != v)
-            {
-                _title = v;
-                if (this.$el)
-                    this.$el.attr('title', v);
-            }
-        },
-        enumerable: true
-    });
-
     Object.defineProperty(this, "alt", {
         get: function alt()
         {
@@ -107,10 +90,6 @@ var Image = function (_props)
         {
             this.alt = _props.alt;
         }
-        if (_props.title)
-        {
-            this.title = _props.title;
-        }
     }
 
     this.template = function ()
@@ -139,7 +118,7 @@ var Image = function (_props)
         }
     }
     _props.attr["data-triggers"] = myDtEvts.join(" ");
-    let _width, _height, _alt, _title;
+    let _width, _height, _alt;
     let _src = _props.src;
     let _load = _props.load;
 

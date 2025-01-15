@@ -6,8 +6,8 @@
 
 import { Container } from "/obvia/components/Container.js";
 import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
-import { DropDown } from "../DropDown/DropDown.js";
-import { TextInput } from "../TextInput/TextInput.js";
+import { DropDown } from "/obvia/components/DropDown/DropDown.js";
+import { TextInput } from "/obvia/components/TextInput/TextInput.js";
 import { DependencyContainer } from "/obvia/lib/DependencyContainer.js";
 
 var CurrencyExRate = function (_props)

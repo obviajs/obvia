@@ -50,28 +50,43 @@ var ObjectEditor = function (_props, metaProps, literals)
                         itemEditorLit.props = ObjectUtils.extend(false, false, itemEditorLit.props, propsMeta.props);
                     else if (typeof propsMeta.props == 'function')
                         itemEditorLit.props = propsMeta.props.call(inst, this);
-
+                    
                     if (propsMeta.ctor in { "CollectionEditor": 1, "ObjectEditor": 1 })
                     {
                         itemEditorLit.props.instance = props[prop];
-                        itemEditorLit.props.field = null;
+                        itemEditorLit.props.field = null;                        
                     }
                     let ff = ObjectUtils.extend(true, literals["FormField"].literal);
                     ff.props.id = prop;
                     ff.props.label = propsMeta.label;
                     ff.props.placeholder = propsMeta.label;
                     ff.props.required = propsMeta.required;
+              
                     if (propsMeta.ctor in { "CollectionEditor": 1, "ObjectEditor": 1 } && (propsMeta.targetProps == null))
                     {
+                        ff.props.classes = ["rounded-section"];
+                        ff.props.props = {"labelForId":
+                        {
+                            "classes":[
+                                "section-label",
+                            ]
+                        }};
                         ff.props.afterAttach = function (e)
                         {
                             console.log("OE_END_DRAW" + this.id);
-                            this.inputLabel.attr["data-toggle"] = "collapse";
-                            this.inputLabel.attr["data-target"] = "#" + this.input.domID;
+                            this.inputLabel.attr["data-bs-toggle"] = "collapse";
+                            this.inputLabel.attr["data-bs-target"] = "#" + this.input.domID;
                         };
                     }
                     if (propsMeta.ctor in { "CollectionEditor": 1, "ObjectEditor": 1 })
                     {
+                        ff.props.classes = ["rounded-section"];
+                        ff.props.props = {"labelForId":
+                        {
+                            "classes":[
+                                "section-label",
+                            ]
+                        }};
                         if (!itemEditorLit.props.classes)
                         {
                             itemEditorLit.props.classes = ["collapse"];

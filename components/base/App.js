@@ -43,21 +43,6 @@ var App = function (_props)
         $("<style id='" + _self.domID + "_style' type='text/css'>" + _style + "</style>").appendTo("head");
     }
 
-    Object.defineProperty(this, "title", {
-        get: function title()
-        {
-            return _title;
-        },
-        set: function title(v)
-        {
-            if (title != v)
-            {
-                _browserManager.title = _title = v;
-            }
-        },
-        configurable: true
-    });
-
     Object.defineProperty(this, 'state', {
         get: function state()
         {
@@ -596,6 +581,22 @@ var App = function (_props)
 
     //_initDefaultBehaviors();
     //this.registerBehaviors();   
+
+    Object.defineProperty(this, "title", {
+        get: function title()
+        {
+            return _title;
+        },
+        set: function title(v)
+        {
+            if (title != v)
+            {
+                _browserManager.title = _title = v;
+            }
+        },
+        configurable: true
+    });
+    
     return r;
 };
 App.prototype.ctor = 'App';

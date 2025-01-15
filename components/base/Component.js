@@ -75,6 +75,7 @@ var Component = function (_props)
     let _attach = _props.attach;
     let _index = _props.index;
     let _appendTo = _props.appendTo;
+    let _title = _props.title;
 
     let _domID = _id + '_' + _guid;
     //let _propUpdateMap = {"label":{"o":$el, "fn":"html", "p":[] }, "hyperlink":{}};
@@ -421,6 +422,24 @@ var Component = function (_props)
             }
         },
         enumerable: true
+    });
+
+    Object.defineProperty(this, "title", {
+        get: function title()
+        {
+            return _title;
+        },
+        set: function title(v)
+        {
+            if (_title != v)
+            {
+                _title = v;
+                if (this.$el)
+                    this.$el[0].title = v;
+            }
+        },
+        enumerable: true,
+        configurable: true
     });
 
     let _classesClone;

@@ -9,7 +9,7 @@ import { CalendarConstants } from "/obvia/components/Calendar/CalendarConstants.
 import { DateTimeMode } from "./DateTimeMode.js";
 import { Select } from "../Select/Select.js";
 import { EventDispatcher } from "../../lib/EventDispatcher.js";
-
+import { DependencyContainer } from "/obvia/lib/DependencyContainer.js";
 
 var DateTimeCb = function (_props)
 {
@@ -358,6 +358,7 @@ DateTimeCb.dpMonth = new Array(12);
 DateTimeCb.dpYear = new Array();
 DateTimeCb.dpHour = new Array(24);
 DateTimeCb.dpMinute = DateTimeCb.dpSecond = new Array(60);
+DependencyContainer.getInstance().register("DateTimeCb", DateTimeCb, DependencyContainer.simpleResolve);
 export
 {
     DateTimeCb

@@ -24,19 +24,16 @@ var TextInput = function (_props)
             {
                 let oldValue = _value;
                 _value = v;
-                if (_value != null)
+                if (this.$el)
                 {
-                    if (this.$el)
+                    if (_value != null)
                     {
                         this.$el.attr('value', _value);
                         this.$el.val(_value);
-                    }
-                } else
-                {
-                    if (this.$el)
+                    } else
                     {
                         this.$el.removeAttr('value');
-                        this.$el.val("");
+                        this.$el.val("");                        
                     }
                 }
                 _myw.propertyChanged("value", oldValue, value);
@@ -58,12 +55,12 @@ var TextInput = function (_props)
                 if (_placeholder)
                 {
                     if (this.$el)
-                        this.$el.attr('placeholder', _placeholder);
+                        this.$el[0].placeholder = _placeholder;
 
                 }
             } else
             {
-                this.$el.removeAttr('placeholder');
+                this.$el[0].removeAttribute('placeholder');
             }
         },
         enumerable: true
@@ -79,17 +76,14 @@ var TextInput = function (_props)
             if (_type != v)
             {
                 _type = v;
-                if (_type != null)
+                if (this.$el)
                 {
-                    if (this.$el)
+                    if (_type != null)
                     {
-                        this.$el.attr('type', _type);
-                    }
-                } else
-                {
-                    if (this.$el)
+                        this.$el[0].type = _type;
+                    } else
                     {
-                        this.$el.removeAttr('type');
+                        this.$el[0].removeAttribute('type');                    
                     }
                 }
             }
@@ -107,17 +101,14 @@ var TextInput = function (_props)
             if (_autocomplete != v)
             {
                 _autocomplete = v;
-                if (_autocomplete != null)
+                if (this.$el)
                 {
-                    if (this.$el)
+                    if (_autocomplete != null)
                     {
-                        this.$el.attr('autocomplete', _autocomplete);
-                    }
-                } else
-                {
-                    if (this.$el)
+                        this.$el[0].autocomplete = _autocomplete;
+                    } else
                     {
-                        this.$el.removeAttr('autocomplete');
+                        this.$el[0].removeAttribute('autocomplete');                    
                     }
                 }
             }
