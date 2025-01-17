@@ -63,6 +63,7 @@ var Component = function (_props)
     let _keyup = _props.keyup;
     let _keypress = _props.keypress;
     let _change = _props.change;
+    let _input = _props.input;
     let _drop = _props.drop;
     let _dragover = _props.dragover;
     let _dragstart = _props.dragstart;
@@ -372,7 +373,7 @@ var Component = function (_props)
             {
                 _enabled = v;
                 if (this.$el)
-                    this.$el.find(":scope input, :scope select, :scope textarea, :scope button").each(function ()
+                    this.$el.find("input, select, textarea, button").addBack("input, select, textarea, button").each(function ()
                     {
                         if (!v)
                             $(this)[0].disabled = true;
@@ -396,7 +397,7 @@ var Component = function (_props)
             {
                 _readonly = v;
                 if (this.$el)
-                    this.$el.find(":scope input, :scope select, :scope textarea, :scope button").each(function ()
+                    this.$el.find("input, select, textarea, button").addBack("input, select, textarea, button").each(function ()
                     {
                         if (v)
                             $(this)[0].readonly = true;
@@ -653,6 +654,7 @@ var Component = function (_props)
             'keyup': _keyup && typeof _keyup == 'function' ? _keyup.bind(_self.proxyMaybe) : undefined,
             'keypress': _keypress && typeof _keypress == 'function' ? _keypress.bind(_self.proxyMaybe) : undefined,
             'change': _change && typeof _change == 'function' ? _change.bind(_self.proxyMaybe) : undefined,
+            'input': _input && typeof _input == 'function' ? _input.bind(_self.proxyMaybe) : undefined,
             'drop': _drop && typeof _drop == 'function' ? _drop.bind(_self.proxyMaybe) : undefined,
             'dragover': _dragover && typeof _dragover == 'function' ? _dragover.bind(_self.proxyMaybe) : undefined,
             'dragstart': _dragstart && typeof _dragstart == 'function' ? _dragstart.bind(_self.proxyMaybe) : undefined,
@@ -674,7 +676,7 @@ var Component = function (_props)
     {
         let customEvents = _defaultHandlers;
 
-        this.$el.find(':scope [data-triggers]').each(function ()
+        this.$el.find('[data-triggers]').addBack('[data-triggers]').each(function ()
         {
             let eventsObj = {};
             let events = $(this).data('triggers');

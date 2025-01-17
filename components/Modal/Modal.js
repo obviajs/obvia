@@ -144,7 +144,7 @@ var Modal = function (_props)
     let _title = _props.title;
     let _size = _props.size;
     let _click = _props.click;
-
+    
     _props.click = function ()
     {
         if (typeof _click == 'function')
