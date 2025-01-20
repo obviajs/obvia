@@ -2,6 +2,11 @@ import { Container } from "/obvia/components/Container.js";
 import { ObjectUtils } from "/obvia/lib/ObjectUtils.js";
 import { DependencyContainer } from "/obvia/lib/DependencyContainer.js";
 
+/* Implemented using Chart.js library
+  * This can be done adding the following script to the index.html file
+  * <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+*/
+
 var ChartCmp = function (_props) {
   let _self = this;
   let _chart, _ctx, _chartData, _chartOptions, _chartType;
