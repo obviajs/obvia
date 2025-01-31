@@ -331,21 +331,11 @@ var AutoCompleteEx = function (_props)
 			_value,
 			_valueField
 		);
-		if (_self.matchType > 0)
-		{
-			_suggestions = new ArrayEx(
-						StringUtils.sortBestMatch(
-							ac,
-							toMatch,
-							_self.matchType,
-							_labelField,
-							_maxSuggestionsCount
-						)
-					);
-		} else 
-		{
-			_suggestions = new ArrayEx(ac ? ac.slice(0, _maxSuggestionsCount) : []);
-		}
+		_suggestions = new ArrayEx(
+			_self.matchType > 0
+				? StringUtils.sortBestMatch(ac, toMatch, _self.matchType, _labelField, _maxSuggestionsCount)
+				: ac.slice(0, _maxSuggestionsCount)
+		);
 		_openSuggestionsList();
 	};
 	let _openSuggestionsList = function ()
@@ -407,15 +397,17 @@ var AutoCompleteEx = function (_props)
 			//TODO:check because concat will return a new value
 			// _self.value = _self.value.splicea(_self.value.length, 0, [repeaterEventArgs.currentItem]);
 			_self.value.splice(_self.value.length, 0, repeaterEventArgs.currentItem);
+			_self.children.tokenContainer.children.tokenInput.value = "";
 		} else
 		{
 			_self.value = repeaterEventArgs.currentItem;
+			_placeholder = "";
 		}
 
 		_self.removeSuggestionItemAt(repeaterEventArgs.currentIndex);
 		// acEx.closeSuggestionsList();
 		_self.closeSuggestionsList();
-		_input.$el.focus();
+		_self.multiSelect ? _input.$el.focus() : _input.$el.blur();
 	};
 	let _suggestionRendererDoubleClickHandler = function (e, repeaterEventArgs)
 	{
