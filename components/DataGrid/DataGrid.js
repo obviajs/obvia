@@ -1274,12 +1274,37 @@ var DataGrid = function (_props)
                 _self.trigger("rowClick", [_self, rargs]);
             });
 
-            renderedRow.on('dblclick', function (evt)
-            {
-                let rargs = new RepeaterEventArgs(_self.rowItems[index], _self.dataProvider[index + _virtualIndex], index);
+            function isMobile() {
+                return window.matchMedia("(max-width: 768px)").matches;
+            }
+            
+            if (isMobile()) {
+                let pressTimer;
+            
+                renderedRow.on("pointerdown", function (evt) {
+                    pressTimer = setTimeout(() => {
+                        triggerRowDblClick(evt);
+                    }, 500);
+                });
+            
+                renderedRow.on("pointerup pointercancel", function () {
+                    clearTimeout(pressTimer);
+                });
+            } else {
+                renderedRow.on("dblclick", function (evt) {
+                    triggerRowDblClick(evt);
+                });
+            }
+            
+            function triggerRowDblClick(evt) {
+                let rargs = new RepeaterEventArgs(
+                    _self.rowItems[index], 
+                    _self.dataProvider[index + _virtualIndex], 
+                    index
+                );
                 rargs.virtualIndex = _virtualIndex;
                 _self.trigger("rowDblClick", [_self, rargs]);
-            });
+            }
             let rargs = new RepeaterEventArgs(_self.rowItems[index], _self.dataProvider[index + _virtualIndex], index);
             rargs.virtualIndex = _virtualIndex;
             let rsEvt = jQuery.Event('rowStyling', [_self, rargs]);
