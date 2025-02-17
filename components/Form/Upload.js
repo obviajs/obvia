@@ -101,6 +101,7 @@ var Upload = function (_props)
     this.reset = function ()
     {
         this.$el[0].value = null;
+        this.files = [];
     };
 
     this.fileDialog = function ()
