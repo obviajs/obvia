@@ -385,6 +385,7 @@ var AutoCompleteEx = function (_props)
 			console.log(repeaterEventArgs);
 			//"this" refers to the components in the repeater
 			this.removeTokenItemAt(repeaterEventArgs.currentIndex);
+			_self.children.tokenContainer.children.tokenInput.display = true;
 			_input.$el.focus();
 		}
 	};
@@ -397,17 +398,16 @@ var AutoCompleteEx = function (_props)
 			//TODO:check because concat will return a new value
 			// _self.value = _self.value.splicea(_self.value.length, 0, [repeaterEventArgs.currentItem]);
 			_self.value.splice(_self.value.length, 0, repeaterEventArgs.currentItem);
-			_self.children.tokenContainer.children.tokenInput.value = "";
 		} else
 		{
 			_self.value = repeaterEventArgs.currentItem;
-			_placeholder = "";
+			_self.children.tokenContainer.children.tokenInput.display = false;
 		}
 
 		_self.removeSuggestionItemAt(repeaterEventArgs.currentIndex);
 		// acEx.closeSuggestionsList();
 		_self.closeSuggestionsList();
-		_self.multiSelect ? _input.$el.focus() : _input.$el.blur();
+		_input.$el.focus();
 	};
 	let _suggestionRendererDoubleClickHandler = function (e, repeaterEventArgs)
 	{
@@ -704,7 +704,8 @@ var AutoCompleteEx = function (_props)
 								width: "min-content",
 								"max-width": _multiSelect ? "70%" : "100%",
 								display: _multiSelect ? "block" : "flex",
-								"overflow-x": _multiSelect ? "scroll" : "none"
+								"overflow-x": _multiSelect ? "scroll" : "none",
+								height: "2rem"
 							},
 							ownerDocument: this.ownerDocument,
 							dataProvider: _value,
