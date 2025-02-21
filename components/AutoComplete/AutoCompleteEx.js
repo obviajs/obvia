@@ -331,11 +331,21 @@ var AutoCompleteEx = function (_props)
 			_value,
 			_valueField
 		);
-		_suggestions = new ArrayEx(
-			_self.matchType > 0
-				? StringUtils.sortBestMatch(ac, toMatch, _self.matchType, _labelField, _maxSuggestionsCount)
-				: ac.slice(0, _maxSuggestionsCount)
-		);
+		if (_self.matchType > 0)
+		{
+			_suggestions = new ArrayEx(
+						StringUtils.sortBestMatch(
+							ac,
+							toMatch,
+							_self.matchType,
+							_labelField,
+							_maxSuggestionsCount
+						)
+					);
+		} else 
+		{
+			_suggestions = new ArrayEx(ac ? ac.slice(0, _maxSuggestionsCount) : []);
+		}
 		_openSuggestionsList();
 	};
 	let _openSuggestionsList = function ()
@@ -385,7 +395,6 @@ var AutoCompleteEx = function (_props)
 			console.log(repeaterEventArgs);
 			//"this" refers to the components in the repeater
 			this.removeTokenItemAt(repeaterEventArgs.currentIndex);
-			_self.children.tokenContainer.children.tokenInput.display = true;
 			_input.$el.focus();
 		}
 	};
@@ -401,7 +410,6 @@ var AutoCompleteEx = function (_props)
 		} else
 		{
 			_self.value = repeaterEventArgs.currentItem;
-			_self.children.tokenContainer.children.tokenInput.display = false;
 		}
 
 		_self.removeSuggestionItemAt(repeaterEventArgs.currentIndex);
@@ -704,8 +712,7 @@ var AutoCompleteEx = function (_props)
 								width: "min-content",
 								"max-width": _multiSelect ? "70%" : "100%",
 								display: _multiSelect ? "block" : "flex",
-								"overflow-x": _multiSelect ? "scroll" : "none",
-								height: "2rem"
+								"overflow-x": _multiSelect ? "scroll" : "none"
 							},
 							ownerDocument: this.ownerDocument,
 							dataProvider: _value,
