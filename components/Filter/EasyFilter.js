@@ -267,8 +267,8 @@ var EasyFilter = function (_props)
             let mb = StringUtils.getBindingExp(minLit.props.placeholder);
             if(mb)
             {
-                minLit.props.placeholder = "{"+mb.expression + "' Min'"+"}";
-                maxLit.props.placeholder = "{"+mb.expression + "' Max'"+"}";
+                minLit.props.placeholder = "{"+mb.expression + " + ' Min'"+"}";
+                maxLit.props.placeholder = "{"+mb.expression + " + ' Max'"+"}";
             }else{
                 minLit.props.placeholder = (minLit.props.placeholder ?? "") + " Min";
                 maxLit.props.placeholder = (maxLit.props.placeholder ?? "") + " Max";
