@@ -263,10 +263,16 @@ var EasyFilter = function (_props)
             maxLit.props = Object.assign({ }, filterItemEditor.props);
             minLit.props.id = "minInput";
             maxLit.props.id = "maxInput";
-            
-            minLit.props.placeholder = (minLit.props.placeholder ?? "") + " Min";
-            maxLit.props.placeholder = (maxLit.props.placeholder ?? "") + " Max";
-            
+
+            let mb = StringUtils.getBindingExp(minLit.props.placeholder);
+            if(mb)
+            {
+                minLit.props.placeholder = "{"+mb.expression + "' Min'"+"}";
+                maxLit.props.placeholder = "{"+mb.expression + "' Max'"+"}";
+            }else{
+                minLit.props.placeholder = (minLit.props.placeholder ?? "") + " Min";
+                maxLit.props.placeholder = (maxLit.props.placeholder ?? "") + " Max";
+            }
             filterItemEditor = {
                 "ctor": "Container",
                 "props": {
