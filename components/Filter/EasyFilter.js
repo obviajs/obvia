@@ -264,8 +264,8 @@ var EasyFilter = function (_props)
             minLit.props.id = "minInput";
             maxLit.props.id = "maxInput";
             
-            minLit.props.placeholder = minLit.props.placeholder ?? "" + " Min";
-            maxLit.props.placeholder = maxLit.props.placeholder ?? "" + " Max";
+            minLit.props.placeholder = (minLit.props.placeholder ?? "") + " Min";
+            maxLit.props.placeholder = (maxLit.props.placeholder ?? "") + " Max";
             
             filterItemEditor = {
                 "ctor": "Container",
