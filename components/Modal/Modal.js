@@ -89,7 +89,7 @@ var Modal = function (_props)
                                 props: {
                                     id: 'fa',
                                     labelType: LabelType.i,
-                                    classes: ["fas", "fa-times"]
+                                    classes: ["las", "la-times"]
                                 }
                             }],
                             click: function (e)
@@ -119,7 +119,7 @@ var Modal = function (_props)
                                 props: {
                                     id: 'fa',
                                     labelType: LabelType.i,
-                                    classes: ["fas", "fa-check"]
+                                    classes: ["las", "la-check"]
                                 }
                             }],
                             click: function (e)

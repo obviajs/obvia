@@ -375,7 +375,7 @@ var CreditCard = function (_props)
                                 props: {
                                     id: 'fa',
                                     labelType: LabelType.i,
-                                    classes: ["fa", "fa-question-circle"]
+                                    classes: ["la", "la-question-circle"]
                                 }
                             }]
                         }

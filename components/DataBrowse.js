@@ -138,7 +138,7 @@ var DataBrowse = function (_props)
                             props: {
                                 id: 'fa',
                                 labelType: LabelType.i,
-                                classes: ["fas", "fa-folder-open"]
+                                classes: ["las", "la-folder-open"]
                             }
                         }],
                         click: _browse

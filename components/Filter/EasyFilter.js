@@ -658,7 +658,7 @@ var EasyFilter = function (_props)
                             ctor: Button,
                             props: {
                                 id: 'apply',
-                                classes: ["filter", "apply-easy", "fas", "fa-check"],
+                                classes: ["filter", "apply-easy", "las", "la-check"],
                                 click: _filter,
                                 css: {
                                     "height": '1.5rem',
@@ -673,7 +673,7 @@ var EasyFilter = function (_props)
                             ctor: Button,
                             props: {
                                 id: 'clearFilters',
-                                classes: ["filter", "apply-easy", "fa", "fa-eraser"],
+                                classes: ["filter", "apply-easy", "la", "la-eraser"],
                                 css: {
                                     "height": "1.5rem",
                                     "width": '2rem',

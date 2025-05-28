@@ -224,7 +224,7 @@ var Calendar = function (_props)
                         props: {
                             id: 'fa',
                             labelType: LabelType.i,
-                            classes: ["fas", "fa-arrow-left"],
+                            classes: ["las", "la-arrow-left"],
                         }
                     }],
                     "click": _prevHandler,
@@ -241,7 +241,7 @@ var Calendar = function (_props)
                         props: {
                             id: 'fad',
                             labelType: LabelType.i,
-                            classes: ["fas", "fa-arrow-right"],
+                            classes: ["las", "la-arrow-right"],
                         }
                     }],
                     "click": _nextHandler,
