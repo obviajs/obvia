@@ -206,7 +206,7 @@ var DropEdit = function (_props)
             ctor: Button,
             props: {
                 id: "toggleButton",
-                classes: ["fa", "fa-caret-down"],
+                classes: ["la", "la-caret-down"],
                 css: {
                     "background-color": "white",
                     "border": "none",

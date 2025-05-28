@@ -45,16 +45,16 @@ var UploadEx = function (_props)
             let classes = _iconLbl.classes.slice(0);
             if (_lastFileTypeIcon)
                 classes = classes.splice(classes.indexOf(_lastFileTypeIcon), 1);
-            classes.pushUnique("fas");
-            classes.pushUnique("fa-lg");
+            classes.pushUnique("la");
+            classes.pushUnique("la-lg");
             classes.pushUnique("align-middle");
             if (files.length > 1)
-                _lastFileTypeIcon = "fa-files";
+                _lastFileTypeIcon = "la-files";
             else if (files.length > 0 && files[0].type)
             {
                 _lastFileTypeIcon = getFontAwesomeIconFromMIME(files[0].type);
                 if (_lastFileTypeIcon == null)
-                    _lastFileTypeIcon = "fa-file";
+                    _lastFileTypeIcon = "la-file";
             } else
             {
                 let ind = classes.indexOf(_lastFileTypeIcon);
@@ -320,7 +320,7 @@ var UploadEx = function (_props)
                                 props: {
                                     id: 'fa',
                                     labelType: LabelType.i,
-                                    classes: ["fas", "fa-folder-open"]
+                                    classes: ["las", "la-folder-open"]
                                 }
                             }],
                             click: selectBtn_click
@@ -341,7 +341,7 @@ var UploadEx = function (_props)
                                 props: {
                                     id: 'fa',
                                     labelType: LabelType.i,
-                                    classes: ["fas", "fa-cloud-upload-alt"]
+                                    classes: ["las", "la-cloud-upload-alt"]
                                 }
                             }],
                             click: uploadBtn_click
@@ -362,7 +362,7 @@ var UploadEx = function (_props)
                                 props: {
                                     id: 'fa',
                                     labelType: LabelType.i,
-                                    classes: ["fas", "fa-trash"]
+                                    classes: ["las", "la-trash"]
                                 }
                             }],
                             click: removeBtn_click
