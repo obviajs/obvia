@@ -511,14 +511,14 @@ var DataGrid = function (_props)
             let column = columnsArray[i];
             let columnIndex = columnsArray[i].columnIndex;
             let cls = _headerCells[columnIndex].sortSpan.classes;
-            let ind = cls.indexOf("fa-caret-" + DataGridColumn.sortDirFADic[column.column.sortDirection.toLowerCase()]);
+            let ind = cls.indexOf("la-caret-" + DataGridColumn.sortDirFADic[column.column.sortDirection.toLowerCase()]);
             
             if (ind > -1) {
                 cls.splice(ind, 1);
             }
             
             column.column.sortDirection = DataGridColumn.twMap[column.column.sortDirection.toLowerCase()];
-            cls.pushUnique("fa-caret-" + DataGridColumn.sortDirFADic[column.column.sortDirection]);
+            cls.pushUnique("la-caret-" + DataGridColumn.sortDirFADic[column.column.sortDirection]);
             _headerCells[columnIndex].sortSpan.classes = cls; 
         }
     };
@@ -592,7 +592,7 @@ var DataGrid = function (_props)
                 els[i] = cmpInstance.$el;
             }
             $header.append(els);
-            _thOpt = $("<th style='width:50px'><i class='fa fa-chevron-circle-right' aria-hidden='true'></i></th>");
+            _thOpt = $("<th style='width:50px'><i class='la la-chevron-circle-right' aria-hidden='true'></i></th>");
             $header.append(_thOpt);
             _self.$header.append($header);
         });
@@ -1399,7 +1399,7 @@ var DataGrid = function (_props)
                 let actionsTh = $('<th scope="row" ' + style + '></i></th>');
                 if (_allowRemoveItem)
                 {
-                    let removeHref = $('<a href="javascript:void(0)" class="row-action-link action-delete"><i class="fa fa-times"></i></a>');
+                    let removeHref = $('<a href="javascript:void(0)" class="row-action-link action-delete"><i class="la la-times"></i></a>');
                     removeHref.on('click', () =>
                     {
                         _notifyRemoveRow(index);
