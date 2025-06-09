@@ -41,13 +41,22 @@ var EasyFilter = function (_props)
         _valid = true,
         _advancedMode, _validationGroupUID = StringUtils.guid(),
         _showOperator,
-        _defaultOperators = new ArrayEx([{
+        _defaultOperators = new ArrayEx([
+        {
+            value: "begins_with",
+            operatorLabel: "begins_with",
+            friendly: "begins_with ({value})",
+            inputVisible: true,
+            rangeInput: false
+        },
+        {
             value: "contains",
             operatorLabel: "contains",
             friendly: "contains ({value})",
             inputVisible: true,
             rangeInput: false
-        }, {
+        },
+        {
             value: "equal",
             operatorLabel: "equals",
             friendly: "equals to {value}",
