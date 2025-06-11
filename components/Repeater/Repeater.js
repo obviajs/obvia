@@ -218,7 +218,7 @@ var Repeater = function (_props)
             return Promise.resolve(p);
         };
     }
-    let _debouncedUpdateDataProvider = debounce(this.updateDataProvider, 1);
+    let _debouncedUpdateDataProvider = debounce(this.updateDataProvider, 1000);
 
     if (!this.hasOwnProperty("value"))
     {
@@ -279,6 +279,18 @@ var Repeater = function (_props)
             });
         } else
             data.currentIndex = index;
+    };
+
+    this.setDataProviderAsync = async function(data) {
+        this.dataProvider = data;
+        const all = [];
+
+        for (let i = 0; i < data.length; i++) {
+            const rowPromises = await this.addRow(data[i], i, false, false); // get rp array
+            all.push(...rowPromises); // flatten
+        }
+
+        await Promise.all(all); // Wait until everything rendered
     };
 
     let _createdRows = 0;
