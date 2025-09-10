@@ -26,6 +26,7 @@ var DataGrid = function (_props)
     let _multiSelect;
     let _defaultItem;
     let _virtualHeight;
+    let _resizeHandler = null;
 
     Object.defineProperty(this, "defaultItem", {
         get: function defaultItem()
@@ -986,7 +987,8 @@ var DataGrid = function (_props)
         {
             if (!_props.rowCount)
             {
-                this.$el.css("height", this.$el.height() + 'px');
+                let currentHeight = _self.$el[0].style.height || _self.$el.height() + 'px';
+                this.$el.css("height", currentHeight); // Ensure height is set on element
                 _rowCount = Math.floor(this.$bodyWrapper.height() / _props.defaultRowHeight);
             }
             _bodyHeight = _self.rowCount * _props.defaultRowHeight;
@@ -1109,6 +1111,22 @@ var DataGrid = function (_props)
     {
         if (e.target.id == this.domID)
         {
+            if (!_resizeHandler) {
+                _resizeHandler = debounce(function () {
+                    let currentHeight = _self.$el[0].style.height;
+                    if (currentHeight) {
+                         _self.$el.css("height", currentHeight);
+                    }
+                    let scrollTopBefore = _self.$bodyWrapper.scrollTop();
+                    _self.updateDisplayList();
+                    if (_virtualIndex === 0) {
+                         _self.$bodyWrapper.scrollTop(scrollTopBefore);
+                    }
+                }, 100);
+
+                window.addEventListener('resize', _resizeHandler);
+            }
+
             if (typeof _afterAttach == 'function')
                 _afterAttach.apply(this, arguments);
             if (_self.$bodyWrapper)
