@@ -240,10 +240,21 @@ var AutoBrowse = function (_props)
 		_modal.hide();
 		if (!_multiSelect) return _autocomplete.value = items.currentItem || items[0];
 
-		const newValue = [];
-		for (let i = 0; i < items.length; i++)
+		const newValue = (_autocomplete.value && typeof _autocomplete.value.push === "function")
+			? (_autocomplete.value.slice ? _autocomplete.value.slice() : [].concat(_autocomplete.value))
+			: [];
+
+		const exists = (arr, item) => arr.some(v => v === item || v?.[_props.valueField] === item?.[_props.valueField]);
+
+		if (items && typeof items.length === "number")
 		{
-			newValue.push(items[i]);
+			for (let i = 0; i < items.length; i++) {
+				if (!exists(newValue, items[i])) {
+					newValue.push(items[i]);
+				}
+			}
+		} else if (items.currentItem && !exists(newValue, items.currentItem)) {
+			newValue.push(items.currentItem);
 		}
 		_autocomplete.value = newValue;
 	};
