@@ -34,7 +34,7 @@ var DateTime = function (_props)
                 _textInput.value = _value.format(_displayFormat);
             } else
             {
-                _dateTimeInput.attr['date'] = "Choose Date";
+                _dateTimeInput.attr['date'] = _placeholder != null && _placeholder !== "" ? _placeholder : "Choose Date";
                 _self.children.dateTimeInput.$el[0].setAttribute("aria-invalid", "false");
                 _dateTimeInput.value = null;
                 _textInput.visible = false;
@@ -137,6 +137,25 @@ var DateTime = function (_props)
         enumerable: true
     });
 
+    Object.defineProperty(this, "placeholder", {
+        get: function placeholder()
+        {
+            return _placeholder;
+        },
+        set: function placeholder(v)
+        {
+            if (_placeholder !== v)
+            {
+                _placeholder = v;
+                if (this.$el && _dateTimeInput && (!_value || !_value.isValid()))
+                {
+                    _dateTimeInput.attr['date'] = _placeholder != null && _placeholder !== "" ? _placeholder : "Choose Date";
+                }
+            }
+        },
+        enumerable: true
+    });
+
     this.endDraw = function ()
     {
         _dateTimeInput = _self.children.dateTimeInput;
@@ -187,7 +206,7 @@ var DateTime = function (_props)
             _self.children.textInput.value = _value.format(_displayFormat);
         } else
         {
-            _dateTimeInput.attr['date'] = "Choose Date";
+            _dateTimeInput.attr['date'] = _placeholder != null && _placeholder !== "" ? _placeholder : "Choose Date";
             _dateTimeInput.value = "";
             _self.children.textInput.value = _displayFormat;
         }
@@ -438,7 +457,8 @@ var DateTime = function (_props)
         min: null,
         max: null,
         type: "",
-        css: { position: "relative" }
+        css: { position: "relative" },
+        placeholder: "Choose Date"
     };
     ObjectUtils.fromDefault(_defaultParams, _props);
 
@@ -446,6 +466,7 @@ var DateTime = function (_props)
     let _outputFormat = _props.outputFormat;
     let _displayFormat = _props.displayFormat;
     let _internalFormat = _props.internalFormat;
+    let _placeholder = _props.placeholder;
 
     let _dateTimeInput, _textInput, _value, _min, _max;
 
